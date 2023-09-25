@@ -9,6 +9,9 @@ import {
     Select,
     SelectChangeEvent,
     MenuItem,
+    FormControl,
+    useMediaQuery,
+    Theme,
 } from '@mui/material';
 import { MetParagraph, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
@@ -24,17 +27,17 @@ interface filterParams {
 
 const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     const { engagementProjectTypes } = AppConfig.constants;
+    const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
-    const intitialStatusList = {
-        [EngagementDisplayStatus[EngagementDisplayStatus.Draft]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Open]]: false,
-        [EngagementDisplayStatus[EngagementDisplayStatus.Closed]]: false,
+    const initialStatusFilters = {
+        [EngagementDisplayStatus.Draft]: false,
+        [EngagementDisplayStatus.Scheduled]: false,
+        [EngagementDisplayStatus.Upcoming]: false,
+        [EngagementDisplayStatus.Open]: false,
+        [EngagementDisplayStatus.Closed]: false,
+        [EngagementDisplayStatus.Unpublished]: false,
     };
-    const [statusFilter, setStatusFilter] = useState(() => {
-        return intitialStatusList;
-    });
+    const [statusFilters, setStatusFilters] = useState(initialStatusFilters);
 
     const initialFilterParams = {
         status_list: [],
@@ -48,20 +51,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         published_from_date: '',
         published_to_date: '',
     };
-
-    const [selectedStatusList, setSelectedStatusList] = useState<number[]>([]);
-
     const handleStatusFilterChange = (event: React.SyntheticEvent) => {
-        setStatusFilter({
-            ...statusFilter,
-            [(event.target as HTMLInputElement).value]: (event.target as HTMLInputElement).checked,
+        setStatusFilters({
+            ...statusFilters,
+            [(event.target as HTMLInputElement).name]: (event.target as HTMLInputElement).checked,
         });
-        const selectedStatusId = (event.target as HTMLInputElement).id;
-        setSelectedStatusList((currentParticipants: number[]) =>
-            currentParticipants.includes(parseInt(selectedStatusId))
-                ? currentParticipants.filter((f) => f !== parseInt(selectedStatusId))
-                : [...currentParticipants, parseInt(selectedStatusId)],
-        );
     };
 
     const [projectFilter, setProjectFilter] = useState({
@@ -119,6 +113,10 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fClientName = clientName ? clientName : '';
         const fAppNumber = applicationNumber ? applicationNumber : '';
 
+        const selectedStatusList = Object.entries(statusFilters)
+            .filter(([, value]) => value)
+            .map(([key]) => Number(key));
+
         setFilterParams({
             status_list: selectedStatusList,
             created_from_date: fCreatedFromDate,
@@ -134,8 +132,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
 
     const handleResetSearchFilters = () => {
-        setStatusFilter(intitialStatusList);
-        setSelectedStatusList([]);
+        setStatusFilters(initialStatusFilters);
 
         setProjectFilter({
             projectType: '',
@@ -156,235 +153,206 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
 
     return (
-        <>
-            <Grid container direction="row" item mt={3} ml={2} spacing={2}>
-                <Grid item md={1.5} xs={12} pr={1}>
-                    <Grid item xs={12}>
-                        <MetLabel>Status</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Draft.toString()}
-                                        data-testid={EngagementDisplayStatus.Draft.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
-                                        checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Draft]]}
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>
-                                        {EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
-                                    </MetParagraph>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Scheduled.toString()}
-                                        data-testid={EngagementDisplayStatus.Scheduled.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
-                                        checked={
-                                            statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]]
-                                        }
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>
-                                        {EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
-                                    </MetParagraph>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Upcoming.toString()}
-                                        data-testid={EngagementDisplayStatus.Upcoming.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
-                                        checked={
-                                            statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]]
-                                        }
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>
-                                        {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
-                                    </MetParagraph>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Open.toString()}
-                                        data-testid={EngagementDisplayStatus.Open.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Open]}
-                                        checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Open]]}
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Open]}</MetParagraph>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Closed.toString()}
-                                        data-testid={EngagementDisplayStatus.Closed.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
-                                        checked={statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Closed]]}
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>
-                                        {EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
-                                    </MetParagraph>
-                                }
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        size="small"
-                                        id={EngagementDisplayStatus.Unpublished.toString()}
-                                        data-testid={EngagementDisplayStatus.Unpublished.toString()}
-                                        name={EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
-                                        onChange={handleStatusFilterChange}
-                                        value={EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
-                                        checked={
-                                            statusFilter[EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]]
-                                        }
-                                        sx={{
-                                            height: 25,
-                                        }}
-                                    />
-                                }
-                                label={
-                                    <MetParagraph>
-                                        {EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
-                                    </MetParagraph>
-                                }
-                            />
-                        </FormGroup>
-                    </Grid>
-                </Grid>
-                <Grid item md={3} xs={12}>
+        <Grid
+            container
+            direction="row"
+            alignItems={'flex-start'}
+            justifyContent={'flex-start'}
+            spacing={1}
+            mt={{ md: 2 }}
+        >
+            <Grid item xs={12} lg={2}>
+                <FormControl component="fieldset">
+                    <MetLabel>Status</MetLabel>
+                    <FormGroup row={isMediumScreen}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Draft.toString()}
+                                    data-testid={EngagementDisplayStatus.Draft.toString()}
+                                    name={EngagementDisplayStatus.Draft.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Draft]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={
+                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Draft]}</MetParagraph>
+                            }
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Scheduled.toString()}
+                                    data-testid={EngagementDisplayStatus.Scheduled.toString()}
+                                    name={EngagementDisplayStatus.Scheduled.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Scheduled]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={
+                                <MetParagraph>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
+                                </MetParagraph>
+                            }
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Upcoming.toString()}
+                                    data-testid={EngagementDisplayStatus.Upcoming.toString()}
+                                    name={EngagementDisplayStatus.Upcoming.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Upcoming]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={
+                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}</MetParagraph>
+                            }
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Open.toString()}
+                                    data-testid={EngagementDisplayStatus.Open.toString()}
+                                    name={EngagementDisplayStatus.Open.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Open]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={<MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Open]}</MetParagraph>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Closed.toString()}
+                                    data-testid={EngagementDisplayStatus.Closed.toString()}
+                                    name={EngagementDisplayStatus.Closed.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Closed]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={
+                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Closed]}</MetParagraph>
+                            }
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id={EngagementDisplayStatus.Unpublished.toString()}
+                                    data-testid={EngagementDisplayStatus.Unpublished.toString()}
+                                    name={EngagementDisplayStatus.Unpublished.toString()}
+                                    onChange={handleStatusFilterChange}
+                                    checked={statusFilters[EngagementDisplayStatus.Unpublished]}
+                                    sx={{
+                                        height: 30,
+                                    }}
+                                />
+                            }
+                            label={
+                                <MetParagraph>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
+                                </MetParagraph>
+                            }
+                        />
+                    </FormGroup>
+                </FormControl>
+            </Grid>
+            <Grid
+                item
+                xs={12}
+                lg={10}
+                container
+                direction="row"
+                alignItems={'flex-start'}
+                justifyContent={'flex-start'}
+                spacing={2}
+                rowSpacing={4}
+            >
+                <Grid container item xs={12} md={6} xl={3} spacing={2}>
                     <Grid item xs={12}>
                         <MetLabel>Project Name</MetLabel>
+                        <TextField
+                            id="project-name"
+                            data-testid="project-name"
+                            type="project_name"
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            name="projectName"
+                            value={projectName}
+                            onChange={handleProjectDataChange}
+                            InputProps={{ inputProps: { max: projectName || null } }}
+                            fullWidth
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="project-name"
-                                data-testid="project-name"
-                                type="project_name"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="projectName"
-                                value={projectName}
-                                onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { max: projectName || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
                         <MetLabel>Project #</MetLabel>
+                        <TextField
+                            id="project_id"
+                            data-testid="project_id"
+                            type="project_id"
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            name="projectId"
+                            value={projectId}
+                            onChange={handleProjectDataChange}
+                            InputProps={{ inputProps: { max: projectId || null } }}
+                            fullWidth
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="project_id"
-                                data-testid="project_id"
-                                type="project_id"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="projectId"
-                                value={projectId}
-                                onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { max: projectId || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
                         <MetLabel>Application #</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="application_number"
-                                data-testid="application_number"
-                                type="application_number"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="applicationNumber"
-                                value={applicationNumber}
-                                onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { max: applicationNumber || null } }}
-                            />
-                        </Stack>
+                        <TextField
+                            id="application_number"
+                            data-testid="application_number"
+                            type="application_number"
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            name="applicationNumber"
+                            value={applicationNumber}
+                            onChange={handleProjectDataChange}
+                            InputProps={{ inputProps: { max: applicationNumber || null } }}
+                            fullWidth
+                        />
                     </Grid>
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid container item xs={12} md={6} xl={3} spacing={2}>
                     <Grid item xs={12}>
                         <MetLabel>Proponent</MetLabel>
+                        <TextField
+                            id="client_name"
+                            data-testid="client_name"
+                            type="clientName"
+                            label=" "
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            name="clientName"
+                            value={clientName}
+                            onChange={handleProjectDataChange}
+                            InputProps={{ inputProps: { min: clientName || null } }}
+                            fullWidth
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="client_name"
-                                data-testid="client_name"
-                                type="clientName"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="clientName"
-                                value={clientName}
-                                onChange={handleProjectDataChange}
-                                InputProps={{ inputProps: { min: clientName || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
                         <MetLabel>Project Type</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
                         <Select
                             id="project-type"
                             name="projectType"
@@ -392,9 +360,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                             label=" "
                             defaultValue=""
                             value={projectType}
-                            sx={{ width: '80%' }}
-                            size="small"
                             onChange={handleProjectDataChange}
+                            fullWidth
+                            size="small"
                         >
                             <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                                 none
@@ -408,108 +376,106 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                             })}
                         </Select>
                     </Grid>
-                    <Grid item xs={12} mt={2}>
-                        <FormControlLabel
-                            label={<MetParagraph>Has comments that need review</MetParagraph>}
-                            control={<Checkbox disabled={true} />}
+                </Grid>
+                <Grid
+                    item
+                    xs={12}
+                    xl={6}
+                    container
+                    direction="row"
+                    alignItems={'flex-start'}
+                    justifyContent={'flex-start'}
+                    spacing={2}
+                >
+                    <Grid item xs={12} sm={6}>
+                        <MetLabel>Date Created - From</MetLabel>
+                        <TextField
+                            id="createdFrom-date"
+                            data-testid="createdFrom-date"
+                            type="date"
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            fullWidth
+                            name="createdFromDate"
+                            value={createdFromDate}
+                            onChange={handleDateFilterChange}
+                            InputProps={{ inputProps: { max: createdToDate || null } }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <MetLabel>Date Created - To</MetLabel>
+                        <TextField
+                            id="createdTo-date"
+                            data-testid="createdTo-date"
+                            type="date"
+                            label=" "
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            fullWidth
+                            name="createdToDate"
+                            value={createdToDate}
+                            onChange={handleDateFilterChange}
+                            InputProps={{ inputProps: { min: createdFromDate || null } }}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <MetLabel>Date Published - From</MetLabel>
+                        <TextField
+                            id="publishedFrom-date"
+                            data-testid="publishedFrom-date"
+                            type="date"
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            fullWidth
+                            name="publishedFromDate"
+                            value={publishedFromDate}
+                            onChange={handleDateFilterChange}
+                            InputProps={{ inputProps: { max: publishedToDate || null } }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <MetLabel>Date Published - To</MetLabel>
+                        <TextField
+                            id="createdTo-date"
+                            data-testid="createdTo-date"
+                            type="date"
+                            label=" "
+                            InputLabelProps={{
+                                shrink: false,
+                            }}
+                            fullWidth
+                            name="createdToDate"
+                            value={createdToDate}
+                            onChange={handleDateFilterChange}
+                            InputProps={{ inputProps: { min: createdFromDate || null } }}
                         />
                     </Grid>
                 </Grid>
-                <Grid item md={2} xs={12}>
-                    <Grid item xs={12}>
-                        <MetLabel>Date Created - From</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="createdFrom-date"
-                                data-testid="createdFrom-date"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="createdFromDate"
-                                value={createdFromDate}
-                                onChange={handleDateFilterChange}
-                                InputProps={{ inputProps: { max: createdToDate || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
-                        <MetLabel>Date Published - From</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="publishedFrom-date"
-                                data-testid="publishedFrom-date"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="publishedFromDate"
-                                value={publishedFromDate}
-                                onChange={handleDateFilterChange}
-                                InputProps={{ inputProps: { max: publishedToDate || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                </Grid>
-                <Grid item md={2} xs={12}>
-                    <Grid item xs={12}>
-                        <MetLabel>Date Created - To</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="createdTo-date"
-                                data-testid="createdTo-date"
-                                type="date"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="createdToDate"
-                                value={createdToDate}
-                                onChange={handleDateFilterChange}
-                                InputProps={{ inputProps: { min: createdFromDate || null } }}
-                            />
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} mt={3}>
-                        <MetLabel>Date Published - To</MetLabel>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <TextField
-                                id="publishedTo-date"
-                                data-testid="publishedTo-date"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '80%' }}
-                                name="publishedToDate"
-                                value={publishedToDate}
-                                onChange={handleDateFilterChange}
-                                InputProps={{ inputProps: { min: publishedFromDate || null } }}
-                            />
-                        </Stack>
-                    </Grid>
+                <Grid item xs={12} container justifyContent="flex-end">
+                    <Stack
+                        direction={{ xs: 'column-reverse', md: 'row' }}
+                        spacing={2}
+                        width="100%"
+                        justifyContent="flex-end"
+                    >
+                        <SecondaryButton data-testid="reset-filter-button" onClick={() => handleResetSearchFilters()}>
+                            Reset All Filters
+                        </SecondaryButton>
+                        <PrimaryButton
+                            data-testid="search-button"
+                            sx={{ marginLeft: 1 }}
+                            onClick={() => handleSearch()}
+                        >
+                            Search
+                        </PrimaryButton>
+                    </Stack>
                 </Grid>
             </Grid>
-            <Grid container direction="row" item justifyContent="flex-end">
-                <SecondaryButton data-testid="reset-filter-button" onClick={() => handleResetSearchFilters()}>
-                    Reset All Filters
-                </SecondaryButton>
-                <PrimaryButton data-testid="search-button" sx={{ marginLeft: 1 }} onClick={() => handleSearch()}>
-                    Search
-                </PrimaryButton>
-            </Grid>
-        </>
+        </Grid>
     );
 };
 
