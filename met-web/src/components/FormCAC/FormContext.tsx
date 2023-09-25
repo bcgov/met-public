@@ -154,7 +154,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                             {
                                 text:
                                     `We have received your request to join the Community Advisory Committee for ` +
-                                    `${engagement?.name}. You will be notified of future updates to the Community Advisory Committee by email`,
+                                    `${engagement?.name}. You will be notified of future updates to the Community Advisory Committee by email.`,
                             },
                         ],
                     },
