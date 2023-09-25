@@ -198,15 +198,36 @@ class Engagement(BaseModel):
 
     @staticmethod
     def _filter_by_engagement_status(query, search_options):
-        if engagement_status := search_options.get('engagement_status'):
-            status_filter_conditions = [Engagement.status_id.in_(engagement_status)]
-            if str(EngagementDisplayStatus.Upcoming.value) in engagement_status:
-                status_filter_conditions.append(and_(Engagement.status_id == Status.Published.value,
-                                                     Engagement.start_date > datetime.now()))
-            if str(EngagementDisplayStatus.Open.value) in engagement_status:
-                status_filter_conditions.append(and_(Engagement.status_id == Status.Published.value,
-                                                     Engagement.start_date <= datetime.now()))
-            query = query.filter(or_(*status_filter_conditions))
+        statuses = [int(status) for status in search_options.get('engagement_status', [])]
+        if not statuses:
+            return query
+
+        status_filter = []
+        if EngagementDisplayStatus.Draft.value in statuses:
+            status_filter.append(Engagement.status_id == Status.Draft.value)
+        if EngagementDisplayStatus.Published.value in statuses:
+            status_filter.append(Engagement.status_id == Status.Published.value)
+        if EngagementDisplayStatus.Closed.value in statuses:
+            status_filter.append(Engagement.status_id == Status.Closed.value)
+        if EngagementDisplayStatus.Scheduled.value in statuses:
+            status_filter.append(Engagement.status_id == Status.Scheduled.value)
+        if EngagementDisplayStatus.Upcoming.value in statuses:
+            status_filter.append(
+                and_(
+                    Engagement.status_id == Status.Published.value,
+                    Engagement.start_date > datetime.now()
+                )
+            )
+        if EngagementDisplayStatus.Open.value in statuses:
+            status_filter.append(
+                and_(
+                    Engagement.status_id == Status.Published.value,
+                    Engagement.start_date <= datetime.now()
+                )
+            )
+        if EngagementDisplayStatus.Unpublished.value in statuses:
+            status_filter.append(Engagement.status_id == Status.Unpublished.value)
+        query = query.filter(or_(*status_filter))
         return query
 
     @classmethod

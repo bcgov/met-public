@@ -64,7 +64,10 @@ class ProjectService:
         end_date_utc = engagement.end_date.isoformat()
         epic_comment_period_payload = {
             'isMet': 'true',
-            'metURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=False)}',
+            # metURL is the public url using slug
+            'metURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=True)}',
+            # metURLAdmin is the staff url for editing the engagement
+            'metURLAdmin': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=False)}',
             'dateCompleted': end_date_utc,
             'dateStarted': start_date_utc,
             'instructions': '',

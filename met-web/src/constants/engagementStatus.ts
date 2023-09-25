@@ -20,6 +20,7 @@ export enum EngagementDisplayStatus {
     Scheduled = 4,
     Upcoming = 5,
     Open = 6,
+    Unpublished = 7,
 }
 
 export type SubmissionStatusTypes = 'Upcoming' | 'Open' | 'Closed';

@@ -33,8 +33,10 @@ export const USER_ROLES = {
     VIEW_FEEDBACKS: 'view_feedbacks',
     SHOW_ALL_COMMENT_STATUS: 'show_all_comment_status',
     TOGGLE_USER_STATUS: 'toggle_user_status',
-    EXPORT_TO_CSV: 'export_to_csv',
     VIEW_ALL_SURVEY_RESULTS: 'view_all_survey_results',
     EXPORT_CAC_FORM_TO_SHEET: 'export_cac_form_to_sheet',
     EXPORT_ALL_CAC_FORM_TO_SHEET: 'export_all_cac_form_to_sheet',
+    EXPORT_ALL_TO_CSV: 'export_all_to_csv',
+    EXPORT_INTERNAL_COMMENT_SHEET: 'export_internal_comment_sheet',
+    EXPORT_PROPONENT_COMMENT_SHEET: 'export_proponent_comment_sheet',
 };
