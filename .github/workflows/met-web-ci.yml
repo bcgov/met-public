@@ -41,7 +41,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install --no-platform-check --legacy-peer-deps
       - name: Lint
         id: lint
         run: |
@@ -61,7 +61,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install --no-platform-check --legacy-peer-deps
 
       - name: Test with jest
         id: test
@@ -96,7 +96,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm install --no-optional --legacy-peer-deps
+          npm install --no-platform-check --legacy-peer-deps
       - name: build to check strictness
         id: build
         run: |
