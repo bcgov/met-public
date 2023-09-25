@@ -76,9 +76,6 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
 
     const handleAddContactDrawerOpen = (open: boolean) => {
         setAddContactDrawerOpen(open);
-        if (!open && contactToEdit) {
-            setContactToEdit(null);
-        }
     };
 
     return (

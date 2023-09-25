@@ -115,7 +115,7 @@ const AddContactDrawer = () => {
             await saveContact(data);
             await loadContacts();
             setIsCreatingContact(false);
-            handleAddContactDrawerOpen(false);
+            handleCloseDrawer();
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to save contact' }));
@@ -133,15 +133,16 @@ const AddContactDrawer = () => {
         setAvatarFileName('');
     };
 
+    const handleCloseDrawer = () => {
+        handleAddContactDrawerOpen(false);
+        handleChangeContactToEdit(null);
+        methods.reset();
+        setAvatarFileName('');
+        setAvatarImage(null);
+    };
+
     return (
-        <Drawer
-            anchor="right"
-            open={addContactDrawerOpen}
-            onClose={() => {
-                handleAddContactDrawerOpen(false);
-                handleChangeContactToEdit(null);
-            }}
-        >
+        <Drawer anchor="right" open={addContactDrawerOpen} onClose={handleCloseDrawer}>
             <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
                 <FormProvider {...methods}>
                     <Grid
@@ -274,9 +275,7 @@ const AddContactDrawer = () => {
                                 </PrimaryButton>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton
-                                    onClick={() => handleAddContactDrawerOpen(false)}
-                                >{`Cancel`}</SecondaryButton>
+                                <SecondaryButton onClick={handleCloseDrawer}>{`Cancel`}</SecondaryButton>
                             </Grid>
                         </Grid>
                     </Grid>
