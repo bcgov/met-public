@@ -1,6 +1,5 @@
 export const formioOptions = {
     noDefaultSubmitButton: true,
-    submit: 'Submit',
     builder: {
         //change to true to show advanced components section
         advanced: false,
