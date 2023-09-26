@@ -100,7 +100,6 @@ class EmailVerificationService:
         """Send an verification email.Throws error if fails."""
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        participant_id = email_verification.get('participant_id')
         survey: SurveyModel = SurveyModel.find_by_id(survey_id)
 
         if not survey:
@@ -112,8 +111,7 @@ class EmailVerificationService:
             survey,
             email_verification.get('verification_token'),
             email_verification.get('type'),
-            subscription_type,
-            participant_id
+            subscription_type
         )
         try:
             # user hasn't been created yet.so create token using SA.
@@ -130,11 +128,9 @@ class EmailVerificationService:
     def _render_email_template(survey: SurveyModel,
                                token,
                                email_type: EmailVerificationType,
-                               subscription_type,
-                               participant_id):
+                               subscription_type):
         if email_type == EmailVerificationType.Subscribe:
-            return EmailVerificationService._render_subscribe_email_template(survey, token,
-                                                                             subscription_type, participant_id)
+            return EmailVerificationService._render_subscribe_email_template(survey, token, subscription_type)
         # if email_type == EmailVerificationType.RejectedComment:
             # TODO: move reject comment email verification logic here
         #    return
@@ -142,7 +138,7 @@ class EmailVerificationService:
 
     @staticmethod
     # pylint: disable-msg=too-many-locals
-    def _render_subscribe_email_template(survey: SurveyModel, token, subscription_type, participant_id):
+    def _render_subscribe_email_template(survey: SurveyModel, token, subscription_type):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(
             survey.engagement_id)
@@ -156,15 +152,12 @@ class EmailVerificationService:
         template = Template.get_template('subscribe_email.html')
         confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
             format(engagement_id=engagement.id, token=token)
-        unsubscribe_url = current_app.config.get('UNSUBSCRIBE_PATH'). \
-            format(engagement_id=engagement.id, participant_id=participant_id)
         confirm_url = notification.get_tenant_site_url(
             engagement.tenant_id, confirm_path)
         email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
         args = {
             'project_name': project_name,
             'confirm_url': confirm_url,
-            'unsubscribe_url': unsubscribe_url,
             'email_environment': email_environment,
             'tenant_name': tenant_name,
             'is_subscribing_to_tenant': is_subscribing_to_tenant,
@@ -174,7 +167,6 @@ class EmailVerificationService:
         body = template.render(
             project_name=args.get('project_name'),
             confirm_url=args.get('confirm_url'),
-            unsubscribe_url=args.get('unsubscribe_url'),
             email_environment=args.get('email_environment'),
             tenant_name=args.get('tenant_name'),
             is_subscribing_to_tenant=args.get('is_subscribing_to_tenant'),
