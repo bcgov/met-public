@@ -161,7 +161,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     GC_NOTIFY_CONFIG = {
         'DEFAULT': {
             'VERIFICATION_EMAIL_TEMPLATE_ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
-            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link'),
+            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Access link'),
             'SUBSCRIBE_EMAIL_TEMPLATE_ID': os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID'),
             'SUBSCRIBE_EMAIL_SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your subscription'),
             'REJECTED_EMAIL_TEMPLATE_ID': os.getenv('REJECTED_EMAIL_TEMPLATE_ID'),
