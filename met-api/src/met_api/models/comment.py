@@ -90,7 +90,7 @@ class Comment(BaseModel):
 
     @classmethod
     def get_accepted_comments_by_survey_id_paginated(
-            cls, survey_id, pagination_options: PaginationOptions, search_text=''):
+            cls, survey_id, pagination_options: PaginationOptions, search_text='', include_unpublished=False):
         """Get comments for closed engagements."""
         query = db.session.query(Comment)\
             .join(Submission, Submission.id == Comment.submission_id)\
@@ -103,9 +103,11 @@ class Comment(BaseModel):
                 and_(
                     Comment.survey_id == survey_id,
                     CommentStatusModel.id == CommentStatus.Approved.value,
-                    Engagement.status_id != EngagementStatus.Unpublished.value,
                     ReportSetting.display == true()
                 ))
+
+        if not include_unpublished:
+            query = query.filter(Engagement.status_id != EngagementStatus.Unpublished.value)
 
         if search_text:
             query = query.filter(Comment.text.ilike('%' + search_text + '%'))

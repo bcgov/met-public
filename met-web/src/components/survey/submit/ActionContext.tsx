@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { AxiosError } from 'axios';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -100,12 +101,17 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             setIsSurveyLoading(false);
             verifyToken();
         } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while loading saved survey',
-                }),
-            );
+            if ((error as AxiosError)?.response?.status === 500) {
+                navigate('/not-available');
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error occurred while loading saved survey',
+                    }),
+                );
+                navigate(`/not-available`);
+            }
         }
     };
 

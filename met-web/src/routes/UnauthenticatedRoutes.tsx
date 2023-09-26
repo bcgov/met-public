@@ -3,6 +3,7 @@ import EditSurvey from 'components/survey/edit';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import EngagementView from '../components/engagement/view';
+import NotAvailable from './NotAvailable';
 import NotFound from './NotFound';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
@@ -34,6 +35,7 @@ const UnauthenticatedRoutes = () => {
                 <Route path="/engagements/create/form" element={<RedirectLogin />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/not-found" element={<NotFound />} />
+                <Route path="/not-available" element={<NotAvailable />} />
             </Routes>
         </>
     );
