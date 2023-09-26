@@ -6,6 +6,7 @@ from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
+from met_api.utils.user_context import UserContext, user_context
 from met_api.utils.constants import Groups
 from met_api.utils.enums import UserStatus
 
@@ -14,7 +15,8 @@ class StaffUserMembershipService:
     """Staff User Membership management service."""
 
     @classmethod
-    def reassign_user(cls, user_id, group_name):
+    @user_context
+    def reassign_user(cls, user_id, group_name, **kwargs):
         """Add user to a new group and reassign memberships."""
         user = StaffUserService.get_user_by_id(user_id, include_groups=True)
         if not user:
@@ -39,6 +41,12 @@ class StaffUserMembershipService:
             raise BusinessException(
                 error='User is already a member of this group.',
                 status_code=HTTPStatus.BAD_REQUEST)
+
+        user_from_context: UserContext = kwargs['user_context']
+        if external_id == user_from_context.sub:
+            raise BusinessException(
+                error='User cannot change their own group.',
+                status_code=HTTPStatus.CONFLICT.value)
 
         StaffUserService.remove_user_from_group(external_id, Groups.get_name_by_value(main_group))
         StaffUserService.add_user_to_group(external_id, group_name)
