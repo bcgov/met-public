@@ -44,7 +44,7 @@ const SendReport = () => {
                                     }
                                     setSendReport(!sendReport);
                                 }}
-                                disabled={settingsLoading || hasBeenOpened}
+                                // disabled={settingsLoading || hasBeenOpened}
                             />
                         }
                         sx={{ fontWeight: 'bold' }}

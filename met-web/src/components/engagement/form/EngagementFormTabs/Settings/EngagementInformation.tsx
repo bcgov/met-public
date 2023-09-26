@@ -46,7 +46,6 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
-                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -58,7 +57,6 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
-                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -70,7 +68,6 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChange}
-                    disabled={hasBeenOpened}
                 />
             </Grid>
             <Grid item xs={12} lg={6} p={1}>
@@ -85,7 +82,6 @@ const EngagementInformation = () => {
                     fullWidth
                     size="small"
                     onChange={handleChangeMetadata}
-                    disabled={hasBeenOpened}
                 >
                     <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
                         none
@@ -108,7 +104,6 @@ const EngagementInformation = () => {
                     variant="outlined"
                     fullWidth
                     onChange={handleChangeMetadata}
-                    disabled={hasBeenOpened}
                 />
             </Grid>
         </Grid>

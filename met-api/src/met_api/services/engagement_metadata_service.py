@@ -71,8 +71,6 @@ class EngagementMetadataService:
             engagement_id=engagement_id
         )
 
-        EngagementMetadataService.validate_engagement_for_update(engagement_id)
-
         saved_metadata = EngagementMetadataModel.find_by_id(engagement_id)
 
         if saved_metadata:
@@ -84,10 +82,3 @@ class EngagementMetadataService:
         ProjectService.update_project_info(updated_metadata.project_id, updated_metadata.engagement_id)
 
         return updated_metadata
-
-    @staticmethod
-    def validate_engagement_for_update(engagement_id: int):
-        """Validate engagement can be edited."""
-        engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
-        if engagement.status_id == SubmissionStatus.Open.value:
-            raise ValueError('Engagement is already published, cannot update metadata.')
