@@ -15,7 +15,7 @@ interface ActionDropDownItem {
 export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
     const { setAddUserModalOpen, setassignRoleModalOpen, setUser, setReassignRoleModalOpen } =
         useContext(UserManagementContext);
-    const { roles } = useAppSelector((state) => state.user);
+    const { roles, userDetail } = useAppSelector((state) => state.user);
 
     const hasNoRole = (): boolean => {
         if (selectedUser.main_group) {
@@ -50,7 +50,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 condition:
                     hasNoRole() &&
                     roles.includes(USER_ROLES.EDIT_MEMBERS) &&
-                    selectedUser.status_id == USER_STATUS.ACTIVE.value,
+                    selectedUser.status_id == USER_STATUS.ACTIVE.value &&
+                    selectedUser.id != userDetail?.user?.id,
             },
             {
                 value: 2,
@@ -60,7 +61,11 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     setAddUserModalOpen(true);
                 },
                 condition:
-                    !hasNoRole() && !isAdmin() && !isViewer() && selectedUser.status_id == USER_STATUS.ACTIVE.value,
+                    !hasNoRole() &&
+                    !isAdmin() &&
+                    !isViewer() &&
+                    selectedUser.status_id == USER_STATUS.ACTIVE.value &&
+                    selectedUser.id != userDetail?.user?.id,
             },
             {
                 value: 3,
@@ -72,7 +77,8 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 condition:
                     !hasNoRole() &&
                     roles.includes(USER_ROLES.UPDATE_USER_GROUP) &&
-                    selectedUser.status_id == USER_STATUS.ACTIVE.value,
+                    selectedUser.status_id == USER_STATUS.ACTIVE.value &&
+                    selectedUser.id != userDetail?.user?.id,
             },
         ],
         [selectedUser.id, selectedUser.main_group],

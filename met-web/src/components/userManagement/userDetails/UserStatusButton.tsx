@@ -9,7 +9,7 @@ import { USER_ROLES } from 'services/userService/constants';
 import { USER_GROUP } from 'models/user';
 
 const UserStatusButton = () => {
-    const { roles } = useAppSelector((state) => state.user);
+    const { roles, userDetail } = useAppSelector((state) => state.user);
     const { savedUser, getUserDetails } = useContext(UserDetailsContext);
     const [userStatus, setUserStatus] = useState(false);
     const [togglingUserStatus, setTogglingUserStatus] = useState(false);
@@ -17,7 +17,7 @@ const UserStatusButton = () => {
 
     const isActive = savedUser?.status_id === 1;
 
-    const disabled = savedUser?.main_group === USER_GROUP.ADMIN.label;
+    const disabled = savedUser?.main_group === USER_GROUP.ADMIN.label || savedUser?.id === userDetail?.user?.id;
 
     useEffect(() => {
         setUserStatus(isActive);

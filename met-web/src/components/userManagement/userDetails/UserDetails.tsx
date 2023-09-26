@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Stack, Link } from '@mui/material';
+import { useAppSelector } from 'hooks';
 import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
 import { UserDetailsContext } from './UserDetailsContext';
 import { formatDate } from 'components/common/dateHelper';
@@ -19,6 +20,7 @@ export const UserDetail = ({ label, value }: { label: string; value: JSX.Element
 
 export const UserDetails = () => {
     const { savedUser, setAddUserModalOpen, isUserLoading } = useContext(UserDetailsContext);
+    const { userDetail } = useAppSelector((state) => state.user);
 
     if (isUserLoading) {
         return <UserDetailsSkeleton />;
@@ -91,7 +93,8 @@ export const UserDetails = () => {
                         onClick={() => setAddUserModalOpen(true)}
                         disabled={
                             savedUser?.main_group === USER_GROUP.VIEWER.label ||
-                            savedUser?.status_id === USER_STATUS.INACTIVE.value
+                            savedUser?.status_id === USER_STATUS.INACTIVE.value ||
+                            savedUser?.id === userDetail?.user?.id
                         }
                     >
                         + Add to an Engagement
