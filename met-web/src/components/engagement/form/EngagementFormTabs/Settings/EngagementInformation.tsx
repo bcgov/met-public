@@ -7,7 +7,6 @@ import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const EngagementInformation = () => {
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
-    const { hasBeenOpened } = useContext(EngagementSettingsContext);
     const { project_id, project_metadata } = engagementFormData;
     const { engagementProjectTypes } = AppConfig.constants;
 
