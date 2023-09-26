@@ -3,7 +3,6 @@ import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/mater
 import { MetLabel, MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { AppConfig } from 'config';
-import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const EngagementInformation = () => {
     const { engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
