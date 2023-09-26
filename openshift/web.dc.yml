@@ -7,6 +7,12 @@ metadata:
     tags: "met, web, reactjs, typescript, jest"
 objects:
 - apiVersion: v1
+  kind: Secret
+  metadata:
+    name: nginx-base-auth-secret
+  data:
+    htpasswd: base64_encoded_htpasswd_entry
+- apiVersion: v1
   kind: ConfigMap
   metadata:
     name: ${APP}
@@ -62,6 +68,9 @@ objects:
             configMap:
               defaultMode: 420
               name: ${APP}
+          - name: ${APP}-secret-volume
+            secret:
+              secretName: nginx-base-auth-secret
         containers:
           - resources:
               limits:
@@ -72,7 +81,7 @@ objects:
                 memory: 250Mi
             readinessProbe:
               httpGet:
-                path: /
+                path: /readiness
                 port: 8080
                 scheme: HTTP
               timeoutSeconds: 1
@@ -91,6 +100,10 @@ objects:
             volumeMounts:
             - mountPath: /usr/share/nginx/html/config/
               name: ${APP}-config
+              readOnly: true
+            - name: ${APP}-secret-volume
+              mountPath: /etc/nginx/.htpasswd
+              subPath: htpasswd  # Use the key from the Secret
               readOnly: true
         dnsPolicy: ClusterFirst
         restartPolicy: Always
@@ -149,7 +162,7 @@ objects:
   metadata:
     labels:
       app: ${APP}
-      app-group: met-app 
+      app-group: met-app
     name: ${APP}
   spec:
     host: ${APP}-${ENV}.apps.gold.devops.gov.bc.ca
@@ -167,7 +180,7 @@ parameters:
     value: met-web
   - name: IMAGE_NAMESPACE
     description: "The image stream location namespace"
-    value: e903c2-tools
+    value: c72cba-tools
   - name: ENV
     description: "The selected environment (dev, test, prod)"
     value: dev
