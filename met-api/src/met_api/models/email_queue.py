@@ -4,7 +4,6 @@ Manages the Email queue
 """
 from __future__ import annotations
 
-from datetime import datetime
 from typing import List
 from sqlalchemy import and_, func
 
