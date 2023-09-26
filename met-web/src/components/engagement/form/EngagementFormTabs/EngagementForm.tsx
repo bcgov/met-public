@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { SurveyBlock } from './SurveyBlock';
 import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import { EngagementStatus, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './constants';
 import RichTextEditor from 'components/common/RichTextEditor';
@@ -191,6 +191,10 @@ const EngagementForm = () => {
         navigate(`/engagements/${engagement.id}/view`);
     };
 
+    const isDateFieldDisabled = [EngagementStatus.Closed, EngagementStatus.Unpublished].includes(
+        savedEngagement.status_id,
+    );
+
     return (
         <MetPaper elevation={1}>
             <Grid
@@ -253,6 +257,7 @@ const EngagementForm = () => {
                                 fullWidth
                                 name="start_date"
                                 value={start_date}
+                                disabled={isDateFieldDisabled}
                                 onChange={handleChange}
                                 error={engagementFormError.start_date}
                                 helperText={engagementFormError.start_date ? 'From Date must be specified' : ''}
@@ -274,6 +279,7 @@ const EngagementForm = () => {
                                 fullWidth
                                 name="end_date"
                                 value={end_date}
+                                disabled={isDateFieldDisabled}
                                 onChange={handleChange}
                                 error={engagementFormError.end_date}
                                 helperText={engagementFormError.end_date ? 'To Date must be specified' : ''}
