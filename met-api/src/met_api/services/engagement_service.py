@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from flask import current_app
 
-from met_api.constants.engagement_status import Status, SubmissionStatus
+from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
@@ -220,7 +220,7 @@ class EngagementService:
         engagement = EngagementModel.find_by_id(engagement_id)
         draft_status_restricted_changes = (EngagementModel.is_internal.key,)
         engagement_has_been_opened = engagement.status_id != Status.Draft.value
-        if engagement_has_been_opened and any([field in data for field in draft_status_restricted_changes]):
+        if engagement_has_been_opened and any(field in data for field in draft_status_restricted_changes):
             raise ValueError('Some fields cannot be updated after the engagement has been published')
 
     @staticmethod
