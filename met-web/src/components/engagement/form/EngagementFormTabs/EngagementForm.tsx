@@ -22,6 +22,7 @@ const EngagementForm = () => {
         isSaving,
         savedEngagement,
         handleAddBannerImage,
+        fetchEngagement,
     } = useContext(ActionContext);
 
     const {
@@ -162,15 +163,14 @@ const EngagementForm = () => {
             return;
         }
 
-        const engagement = await handleUpdateEngagementRequest({
+        await handleUpdateEngagementRequest({
             ...engagementFormData,
             rich_description: richDescription,
             rich_content: richContent,
             status_block: surveyBlockList,
         });
 
-        navigate(`/engagements/${engagement.id}/form`);
-
+        fetchEngagement();
         return savedEngagement;
     };
 
