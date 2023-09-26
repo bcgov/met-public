@@ -100,8 +100,8 @@ class EmailVerificationService:
         """Send an verification email.Throws error if fails."""
         survey_id = email_verification.get('survey_id')
         email_to = email_verification.get('email_address')
-        participant_id = email_verification.get('participant_id')
         survey: SurveyModel = SurveyModel.find_by_id(survey_id)
+        participant_id = email_verification.get('participant_id')
 
         if not survey:
             raise ValueError('Survey not found')
