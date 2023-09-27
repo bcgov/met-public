@@ -75,7 +75,8 @@ class ProjectService:
             'milestone': current_app.config.get('EPIC_MILESTONE'),
             'openHouse': '',
             'relatedDocuments': '',
-            'project': project_id
+            'project': project_id,
+            'isPublished': 'true'
         }
         return epic_comment_period_payload
 
