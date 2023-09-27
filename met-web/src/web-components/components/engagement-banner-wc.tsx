@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom/client';
 import { EngagementBanner } from '../../components/engagement/view/EngagementBanner/StandAloneBanner';
 import createWcTheme from '../styles/wcTheme';
 import { store } from '../../store';
+import { PrimaryButton } from 'components/common';
 
 export default class EngagementBannerWC extends HTMLElement {
     root: any;
@@ -45,14 +46,17 @@ export default class EngagementBannerWC extends HTMLElement {
             ...this.getProps(this.attributes),
             ...this.getEvents(),
         };
-        console.log('Props', props);
         this.root.render(
             <React.StrictMode>
                 <Provider store={store}>
                     <CacheProvider value={cache}>
                         <ThemeProvider theme={shadowTheme}>
                             <EngagementBanner
-                                startSurvey={() => window.open(props['engagementurl'], '_blank')}
+                                surveyButton={
+                                    <PrimaryButton onClick={() => window.open(props['engagementurl'], '_blank')}>
+                                        Share Your Thoughts
+                                    </PrimaryButton>
+                                }
                                 engagementSlug={this._getSlugFromUrl(props['engagementurl'])}
                                 {...props}
                             />
