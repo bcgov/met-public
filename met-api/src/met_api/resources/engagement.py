@@ -58,7 +58,7 @@ class Engagement(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@cors_preflight('GET, POST, PUT, PATCH, OPTIONS')
+@cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('/')
 class Engagements(Resource):
     """Resource for managing engagements."""
@@ -131,26 +131,6 @@ class Engagements(Resource):
             engagement_schema = EngagementSchema()
             engagement_model = EngagementService().create_engagement(requestjson)
             return engagement_schema.dump(engagement_model), HTTPStatus.OK
-        except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    # @TRACER.trace()
-    @cross_origin(origins=allowedorigins())
-    @require_role([Role.EDIT_ENGAGEMENT.value])
-    def put():
-        """Update saved engagement."""
-        try:
-            requestjson = request.get_json()
-            engagment_schema = EngagementSchema().load(requestjson)
-            user_id = TokenInfo.get_id()
-            engagment_schema['updated_by'] = user_id
-            EngagementService().update_engagement(engagment_schema)
-            return engagment_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

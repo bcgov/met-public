@@ -10,7 +10,7 @@ import { EngagementSettingsContext } from './EngagementSettingsContext';
 const SendReport = () => {
     const { settings, settingsLoading } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
-    const { sendReport, setSendReport, hasBeenOpened } = useContext(EngagementSettingsContext);
+    const { sendReport, setSendReport } = useContext(EngagementSettingsContext);
 
     const dispatch = useAppDispatch();
 
@@ -44,7 +44,7 @@ const SendReport = () => {
                                     }
                                     setSendReport(!sendReport);
                                 }}
-                                disabled={settingsLoading || hasBeenOpened}
+                                disabled={settingsLoading}
                             />
                         }
                         sx={{ fontWeight: 'bold' }}
