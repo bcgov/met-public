@@ -27,7 +27,7 @@ class ProjectService:
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
 
             epic_comment_period_payload = ProjectService._construct_epic_payload(engagement, project_id)
-            logger.debug('epic_comment_period_payload: %s', epic_comment_period_payload)
+            logger.error('epic_comment_period_payload: %s', epic_comment_period_payload)
 
             eao_service_account_token = ProjectService._get_eao_service_account_token()
 
