@@ -27,6 +27,7 @@ class ProjectService:
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
 
             epic_comment_period_payload = ProjectService._construct_epic_payload(engagement, project_id)
+            logger.debug('epic_comment_period_payload: %s', epic_comment_period_payload)
 
             eao_service_account_token = ProjectService._get_eao_service_account_token()
 
@@ -75,7 +76,8 @@ class ProjectService:
             'milestone': current_app.config.get('EPIC_MILESTONE'),
             'openHouse': '',
             'relatedDocuments': '',
-            'project': project_id
+            'project': project_id,
+            'isPublished': 'true'
         }
         return epic_comment_period_payload
 
