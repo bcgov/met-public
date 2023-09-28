@@ -8,6 +8,7 @@ import { EngagementBanner } from '../../components/engagement/view/EngagementBan
 import createWcTheme from '../styles/wcTheme';
 import { store } from '../../store';
 import { PrimaryButton } from 'components/common';
+import { Grid } from '@mui/material';
 
 export default class EngagementBannerWC extends HTMLElement {
     root: any;
@@ -53,9 +54,17 @@ export default class EngagementBannerWC extends HTMLElement {
                         <ThemeProvider theme={shadowTheme}>
                             <EngagementBanner
                                 surveyButton={
-                                    <PrimaryButton onClick={() => window.open(props['engagementurl'], '_blank')}>
-                                        Share Your Thoughts
-                                    </PrimaryButton>
+                                    <Grid
+                                        item
+                                        container
+                                        direction={{ xs: 'column', sm: 'row' }}
+                                        xs={12}
+                                        justifyContent="flex-end"
+                                    >
+                                        <PrimaryButton onClick={() => window.open(props['engagementurl'], '_blank')}>
+                                            View Engagement
+                                        </PrimaryButton>
+                                    </Grid>
                                 }
                                 engagementSlug={this._getSlugFromUrl(props['engagementurl'])}
                                 {...props}
