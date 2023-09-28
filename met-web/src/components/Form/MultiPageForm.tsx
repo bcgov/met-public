@@ -23,7 +23,7 @@ const MultiPageForm = ({ handleFormChange, savedForm, handleFormSubmit }: FormSu
 
     return (
         <div className="formio" ref={stepperRef}>
-            <FormStepper currentPage={currentPage} pages={savedForm?.components || []} />
+            <FormStepper currentPage={currentPage} pages={savedForm?.components ?? []} />
             <Form
                 form={savedForm || { display: 'wizard' }}
                 options={{ noAlerts: true }}
