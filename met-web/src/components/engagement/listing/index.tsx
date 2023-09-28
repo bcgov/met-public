@@ -18,8 +18,6 @@ import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
-import AdvancedSearch from './AdvancedSearch/SearchComponent';
-import AdvancedSearchMobile from './AdvancedSearch/SearchComponentMobile';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
@@ -31,6 +29,7 @@ import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
 import { updateURLWithPagination } from 'components/common/Table/utils';
+import AdvancedSearch from './AdvancedSearch/SearchComponent';
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -480,11 +479,7 @@ const EngagementListing = () => {
             </Grid>
             <Grid item xs={12} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
-                    {isMediumScreen ? (
-                        <AdvancedSearchMobile setFilterParams={setSearchOptions} />
-                    ) : (
-                        <AdvancedSearch setFilterParams={setSearchOptions} />
-                    )}
+                    <AdvancedSearch setFilterParams={setSearchOptions} />
                 </Collapse>
             </Grid>
             <Grid item xs={12}>

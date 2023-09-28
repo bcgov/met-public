@@ -53,7 +53,7 @@ export const EngagementView = () => {
                     <PreviewBanner />
                 </Grid>
                 <Grid item xs={12}>
-                    <EngagementBanner startSurvey={handleStartSurvey} />
+                    <EngagementBanner />
                 </Grid>
                 <Grid
                     container

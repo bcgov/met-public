@@ -69,7 +69,7 @@ const mockEngagementTwo = {
     },
 };
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),

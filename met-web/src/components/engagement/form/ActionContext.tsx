@@ -121,9 +121,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
-
         setSavedBannerImageFileName(engagement.banner_filename);
-        setLoadingSavedEngagement(false);
+
         if (bannerImage) setBannerImage(null);
     };
 
@@ -152,9 +151,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setLoadingAuthorization(false);
     };
 
+    const loadData = async () => {
+        await fetchEngagement();
+        await fetchEngagementMetadata();
+        setLoadingSavedEngagement(false);
+    };
+
     useEffect(() => {
-        fetchEngagement();
-        fetchEngagementMetadata();
+        loadData();
     }, [engagementId]);
 
     useEffect(() => {

@@ -6,6 +6,7 @@ from flask import current_app
 
 from met_api.constants.comment_status import Status
 from met_api.constants.email_verification import EmailVerificationType
+from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
@@ -79,6 +80,9 @@ class SubmissionService:
         survey_id = submission.get('survey_id')
         survey = SurveyService.get(survey_id)
         engagement_id = survey.get('engagement_id')
+        # Restrict submission on unpublished engagement
+        if SubmissionService.is_unpublished(engagement_id):
+            return {}
 
         # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
         with session_scope() as session:
@@ -114,6 +118,10 @@ class SubmissionService:
         email_verification = EmailVerificationService().get_active(token)
         submission_id = email_verification.get('submission_id')
         submission = SubmissionModel.find_by_id(submission_id)
+
+        # Restrict submission on unpublished engagement
+        if SubmissionService.is_unpublished(submission.engagement_id):
+            return {}
 
         submission.comment_status_id = Status.Pending
 
@@ -154,7 +162,7 @@ class SubmissionService:
 
         with session_scope() as session:
             should_send_email = SubmissionService._should_send_email(
-                submission_id, staff_review_details)
+                submission_id, staff_review_details, submission.engagement_id)
             submission = SubmissionModel.update_comment_status(
                 submission_id, staff_review_details, session)
             if staff_notes := staff_review_details.get('staff_note', []):
@@ -235,16 +243,18 @@ class SubmissionService:
         return doc
 
     @staticmethod
-    def _should_send_email(submission_id: int, staff_comment_details: dict) -> bool:
+    def _should_send_email(submission_id: int, staff_comment_details: dict, engagement_id: int) -> bool:
         """Check if an email should be sent for a rejected submission."""
         # Dont send the mail
         #   if the comment has threat
         #   if notify_email is false
+        #   if engagement is unpublished
         # Send the mail
         #   if the status of the comment is rejected
         #      if review note has changed
         #      if review reason has changed
-
+        if SubmissionService.is_unpublished(engagement_id):
+            return False
         if staff_comment_details.get('has_threat') is True:
             return False
         if staff_comment_details.get('notify_email') is False:
@@ -435,3 +445,9 @@ class SubmissionService:
                 format(slug=engagement_slug.slug)
         return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
             format(engagement_id=engagement.id)
+
+    @staticmethod
+    def is_unpublished(engagement_id):
+        """Check if the engagement is unpublished."""
+        engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        return engagement.status_id == EngagementStatus.Unpublished.value

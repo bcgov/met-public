@@ -52,10 +52,11 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 
 const Form = () => {
     const dispatch = useAppDispatch();
-    const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap } = useContext(MapContext);
+    const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap, updateZoom } = useContext(MapContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
     const [uploadName, setUploadName] = useState('');
+    const [calculatingZoom, setCalculatingZoom] = useState(false);
 
     const methods = useForm<DetailsForm>({
         resolver: yupResolver(schema),
@@ -123,11 +124,11 @@ const Form = () => {
         if (!valid) {
             return;
         }
-        setPreviewMapOpen(true);
         if (shapefile) {
             previewGeoJson = await previewShapeFile({
                 file: shapefile,
             });
+            updateZoom(previewGeoJson);
         }
         setPreviewMap({
             longitude: validatedData.longitude,
@@ -135,6 +136,7 @@ const Form = () => {
             markerLabel: validatedData.markerLabel,
             geojson: previewGeoJson ? previewGeoJson : validatedData.geojson,
         });
+        setPreviewMapOpen(true);
     };
 
     const handleAddFile = async (files: File[]) => {
@@ -144,9 +146,12 @@ const Form = () => {
             previewGeoJson = (await previewShapeFile({
                 file: files[0],
             })) as unknown as turf.FeatureCollection<turf.Point>;
+            setCalculatingZoom(true);
+            updateZoom(previewGeoJson);
             const centerPoint = turf.center(previewGeoJson as turf.FeatureCollection<turf.Point>);
             methods.setValue('longitude', centerPoint.geometry.coordinates[0]);
             methods.setValue('latitude', centerPoint.geometry.coordinates[1]);
+            setCalculatingZoom(false);
             return;
         }
         methods.setValue('shapefile', undefined);
@@ -262,7 +267,9 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
                                 <Grid item>
-                                    <SecondaryButton onClick={handlePreviewMap}>Preview Map</SecondaryButton>
+                                    <SecondaryButton loading={calculatingZoom} onClick={handlePreviewMap}>
+                                        Preview Map
+                                    </SecondaryButton>
                                 </Grid>
                             </Grid>
                             <Grid

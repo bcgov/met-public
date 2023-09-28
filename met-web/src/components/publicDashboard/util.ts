@@ -1,8 +1,9 @@
 import { jsPDF } from 'jspdf';
 import * as htmlToImage from 'html-to-image';
 import { Map } from 'maplibre-gl';
-import { INITIAL_ZOOM, MAP_STYLE } from 'components/map';
+import { MAP_STYLE } from 'components/map';
 import { Map as IMap } from 'models/analytics/map';
+import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 const toPng = async (element: HTMLElement): Promise<string> => {
     try {
@@ -30,7 +31,7 @@ export const getMapImageDataUrl = async (projectMapData: IMap | null): Promise<s
         container: mapContainer,
         style: MAP_STYLE,
         center: [projectMapData.longitude, projectMapData.latitude],
-        zoom: INITIAL_ZOOM,
+        zoom: calculateZoomLevel(500, 500, geoJSONDecode(projectMapData.geojson)),
     });
     // Add marker
     map.on('load', function () {

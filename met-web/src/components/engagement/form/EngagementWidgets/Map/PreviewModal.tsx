@@ -6,7 +6,7 @@ import { MapContext } from './MapContext';
 import MetMap from 'components/map';
 
 export const PreviewModal = () => {
-    const { previewMapOpen, setPreviewMapOpen, previewMap } = useContext(MapContext);
+    const { previewMapOpen, setPreviewMapOpen, previewMap, zoomLevel, mapHeight, mapWidth } = useContext(MapContext);
 
     if (!previewMap) {
         return null;
@@ -23,8 +23,8 @@ export const PreviewModal = () => {
             <Paper sx={{ ...modalStyle, padding: '1px' }}>
                 <Box
                     sx={{
-                        width: '500px',
-                        height: '500px',
+                        width: `${mapWidth}px`,
+                        height: `${mapHeight}px`,
                     }}
                 >
                     <MetMap
@@ -32,6 +32,7 @@ export const PreviewModal = () => {
                         longitude={previewMap.longitude}
                         latitude={previewMap.latitude}
                         markerLabel={previewMap.markerLabel}
+                        zoom={zoomLevel}
                     />
                 </Box>
             </Paper>

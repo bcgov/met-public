@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Stack from '@mui/material/Stack';
 import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
 import { getMapData } from 'services/analytics/mapService';
@@ -7,7 +7,7 @@ import { Engagement } from 'models/engagement';
 import { MetLabel, MetPaper } from 'components/common';
 import { ErrorBox } from '../ErrorBox';
 import MetMap from 'components/map';
-import { geoJSONDecode } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 
@@ -21,9 +21,13 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [mapWidth, setMapWidth] = useState(250);
+    const [mapHeight, setMapHeight] = useState(250);
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const circleSize = isTablet ? 100 : 250;
     const mapExists = data?.latitude !== null && data?.longitude !== null;
+
     const setErrors = (error: AxiosError) => {
         if (error.response?.status !== HTTP_STATUS_CODES.NOT_FOUND) {
             setIsError(true);
@@ -51,6 +55,10 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     useEffect(() => {
         if (Number(engagement.id)) {
             fetchData();
+            if (mapContainerRef.current) {
+                setMapWidth(mapContainerRef.current.clientWidth);
+                setMapHeight(mapContainerRef.current.clientHeight);
+            }
         }
     }, [engagement.id]);
 
@@ -103,12 +111,14 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                             width: '100%',
                             height: '280px',
                         }}
+                        ref={mapContainerRef}
                     >
                         <MetMap
                             geojson={geoJSONDecode(data.geojson)}
                             latitude={data.latitude}
                             longitude={data.longitude}
                             markerLabel={data.marker_label}
+                            zoom={calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(data.geojson))}
                         />
                     </Box>
                 </MetPaper>

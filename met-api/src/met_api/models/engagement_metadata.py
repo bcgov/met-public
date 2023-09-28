@@ -38,7 +38,10 @@ class EngagementMetadataModel(BaseModel):
             return None
         update_fields = dict(
             project_id=engagement_metadata_data.get('project_id', engagement_metadata.project_id),
-            project_metadata=engagement_metadata_data.get('project_metadata', engagement_metadata.project_metadata),
+            project_metadata={
+                **engagement_metadata.project_metadata,
+                **engagement_metadata_data.get('project_metadata', {})
+            },
         )
         query.update(update_fields)
         db.session.commit()

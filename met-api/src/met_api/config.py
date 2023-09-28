@@ -152,8 +152,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     ENGAGEMENT_PATH_SLUG = os.getenv('ENGAGEMENT_PATH_SLUG', '/{slug}')
     # engagement dashboard path is used to pass the survey result to the public user.
     # The link is changed such that public user can access the comments page from the email and not the dashboard.
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments')
-    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments')
+    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public')
+    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public')
     USER_MANAGEMENT_PATH = os.getenv('USER_MANAGEMENT_PATH', '/usermanagement')
     SITE_URL = os.getenv('SITE_URL')
 
@@ -161,7 +161,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     GC_NOTIFY_CONFIG = {
         'DEFAULT': {
             'VERIFICATION_EMAIL_TEMPLATE_ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
-            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Survey link'),
+            'VERIFICATION_EMAIL_SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', '{engagement_name} - Access link'),
             'SUBSCRIBE_EMAIL_TEMPLATE_ID': os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID'),
             'SUBSCRIBE_EMAIL_SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 'Confirm your subscription'),
             'REJECTED_EMAIL_TEMPLATE_ID': os.getenv('REJECTED_EMAIL_TEMPLATE_ID'),

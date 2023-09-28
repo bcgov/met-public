@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { AxiosError } from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -90,13 +91,17 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
             setEngagementLoading(false);
         } catch (error) {
             console.log(error);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
-                }),
-            );
-            navigate('/');
+            if ((error as AxiosError)?.response?.status === 500) {
+                navigate('/not-available');
+            } else {
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: getErrorMessage(error) || 'Error occurred while fetching Engagement information',
+                    }),
+                );
+                navigate('/');
+            }
         }
     };
 

@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from flask import current_app
 
-from met_api.constants.engagement_status import Status, SubmissionStatus
+from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
@@ -196,28 +196,6 @@ class EngagementService:
         new_status_block.save_status_blocks(status_blocks)
 
     @staticmethod
-    def validate_engagement_status_update(engagement: EngagementModel):
-        """Validate engagement not published."""
-        if engagement.status_id == SubmissionStatus.Open.value:
-            raise ValueError('Cannot update published engagement')
-
-    def update_engagement(self, request_json: dict):
-        """Update engagement."""
-        self.validate_fields(request_json)
-        engagement_id = request_json.get('id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
-
-        saved_engagement = EngagementModel.find_by_id(engagement_id)
-        self.validate_engagement_status_update(saved_engagement)
-
-        engagement = EngagementModel.update_engagement(request_json)
-        if (status_block := request_json.get('status_block')) is not None:
-            EngagementService._save_or_update_eng_block(engagement_id, status_block)
-
-        return engagement
-
-    @staticmethod
     def _save_or_update_eng_block(engagement_id, status_block):
         for survey_block in status_block:
             # see if there is one existing for the status ;if not create one
@@ -238,12 +216,27 @@ class EngagementService:
                 new_status_block.save()
 
     @staticmethod
+    def _validate_engagement_edit_data(engagement_id: int, data: dict):
+        engagement = EngagementModel.find_by_id(engagement_id)
+        draft_status_restricted_changes = (EngagementModel.is_internal.key,)
+        engagement_has_been_opened = engagement.status_id != Status.Draft.value
+        if engagement_has_been_opened and any(field in data for field in draft_status_restricted_changes):
+            raise ValueError('Some fields cannot be updated after the engagement has been published')
+
+    @staticmethod
     def edit_engagement(data: dict):
         """Update engagement partially."""
         survey_block = data.pop('status_block', None)
         engagement_id = data.get('id', None)
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name,
-                                               Role.EDIT_ENGAGEMENT.value), engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
+
+        EngagementService._validate_engagement_edit_data(engagement_id, data)
         if data:
             updated_engagement = EngagementModel.edit_engagement(data)
             if not updated_engagement:

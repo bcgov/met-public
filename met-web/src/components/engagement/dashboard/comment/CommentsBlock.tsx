@@ -8,7 +8,11 @@ import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
-export const CommentsBlock = () => {
+interface CommentsBlockProps {
+    dashboardType: string;
+}
+
+export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) => {
     const { slug } = useParams();
     const { engagement, isEngagementLoading } = useContext(CommentViewContext);
     const navigate = useNavigate();
@@ -19,7 +23,7 @@ export const CommentsBlock = () => {
     const handleViewDashboard = () => {
         /* check to ensure that users with role access_dashboard can access the dashboard while engagement not closed*/
         if (canAccessDashboard) {
-            navigate(`/engagements/${engagement?.id}/dashboard`);
+            navigate(`/engagements/${engagement?.id}/dashboard/${dashboardType}`);
             return;
         }
 
@@ -42,7 +46,7 @@ export const CommentsBlock = () => {
             return;
         }
 
-        navigate(`${basePath}/dashboard`);
+        navigate(`${basePath}/dashboard/public`);
     };
 
     if (isEngagementLoading || !engagement) {

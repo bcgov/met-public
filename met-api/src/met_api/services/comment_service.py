@@ -80,19 +80,11 @@ class CommentService:
     @classmethod
     def get_comments_paginated(cls, survey_id, pagination_options: PaginationOptions, search_text=''):
         """Get comments paginated."""
-        can_view_unapproved_comments = CommentService.can_view_unapproved_comments(survey_id)
+        include_unpublished = CommentService.can_view_unapproved_comments(survey_id)
 
-        if not can_view_unapproved_comments:
-            comment_schema = CommentSchema(many=True, only=('text', 'submission_date'))
-            items, total = Comment.get_accepted_comments_by_survey_id_where_engagement_closed_paginated(
-                survey_id, pagination_options)
-        else:
-            comment_schema = CommentSchema(many=True)
-            items, total = Comment.get_comments_by_survey_id_paginated(
-                survey_id,
-                pagination_options,
-                search_text,
-            )
+        comment_schema = CommentSchema(many=True, only=('text', 'submission_date'))
+        items, total = Comment.get_accepted_comments_by_survey_id_paginated(
+            survey_id, pagination_options, search_text, include_unpublished)
         return {
             'items': comment_schema.dump(items),
             'total': total
@@ -159,12 +151,12 @@ class CommentService:
     @classmethod
     def export_comments_to_spread_sheet_staff(cls, survey_id):
         """Export comments to spread sheet."""
-        engagement = SurveyModel.find_by_id(survey_id)
+        survey = SurveyModel.find_by_id(survey_id)
         comments = Comment.get_comments_by_survey_id(survey_id)
-        metadata_model = EngagementMetadataModel.find_by_id(engagement.engagement_id)
+        metadata_model = EngagementMetadataModel.find_by_id(survey.engagement_id)
         project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
 
-        titles = cls.get_titles(comments)
+        titles = cls.get_titles(survey)
         data_rows = cls.get_data_rows(titles, comments, project_name)
 
         formatted_comments = {
@@ -180,15 +172,17 @@ class CommentService:
         return DocumentGenerationService().generate_document(data=formatted_comments, options=document_options)
 
     @classmethod
-    def get_titles(cls, comments):
+    def get_titles(cls, survey: SurveySchema):
         """Get the titles to be displayed on the sheet."""
         # Title could be dynamic based on the number of comment type questions on the survey
-        unique_labels = set()
-        for submission in comments:
-            for comment in submission.get('comments', []):
-                unique_labels.add(comment.get('label'))
+        survey_form = survey.form_json
+        labels = []
+        for component in survey_form.get('components', []):
+            if component.get('inputType', None) == 'text':
+                if 'label' in component:
+                    labels.append(component['label'])
 
-        return [{'label': label} for label in unique_labels if label is not None]
+        return [{'label': label} for label in labels if label is not None]
 
     @classmethod
     def get_data_rows(cls, titles, comments, project_name):
@@ -249,14 +243,14 @@ class CommentService:
     @classmethod
     def export_comments_to_spread_sheet_proponent(cls, survey_id):
         """Export comments to spread sheet."""
-        engagement = SurveyModel.find_by_id(survey_id)
+        survey = SurveyModel.find_by_id(survey_id)
         one_of_roles = (
             MembershipType.TEAM_MEMBER.name,
             Role.EXPORT_ALL_TO_CSV.value
         )
-        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.engagement_id)
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=survey.engagement_id)
         comments = Comment.get_public_viewable_comments_by_survey_id(survey_id)
-        formatted_comments = cls.format_comments(comments)
+        formatted_comments = cls.format_comments(survey, comments)
         document_options = {
             'document_type': GeneratedDocumentTypes.COMMENT_SHEET_PROPONENT.value,
             'template_name': 'proponent_comments_sheet.xlsx',
@@ -266,10 +260,9 @@ class CommentService:
         return DocumentGenerationService().generate_document(data=formatted_comments, options=document_options)
 
     @classmethod
-    def format_comments(cls, comments):
+    def group_comments_by_submission_id(cls, comments):
         """Group the comments together, arranging them in the same order as the titles."""
         grouped_comments = []
-        titles = []
         for comment in comments:
             submission_id = comment['submission_id']
             text = comment.get('text', '')  # Get the text, or an empty string if it's missing
@@ -286,20 +279,41 @@ class CommentService:
                 new_group = {'submission_id': submission_id, 'commentText': [{'text': text, 'label': label}]}
                 grouped_comments.append(new_group)
 
-            # Add unique labels to titles list in order of appearance
-            if label not in [title['label'] for title in titles]:
-                titles.append({'label': label})
+        return grouped_comments
 
-        # Sort commentText within each group based on the order of titles
+    @classmethod
+    def get_visible_titles(cls, survey, comments):
+        """Add unique labels to titles list in order of appearance."""
+        visible_titles = []
+        for comment in comments:
+            label = comment['label']
+            if label not in [title['label'] for title in visible_titles]:
+                visible_titles.append({'label': label})
+
+        return [title for title in cls.get_titles(survey) if title in visible_titles]
+
+    @classmethod
+    def sort_comments_by_titles(cls, titles, grouped_comments):
+        """Sort commentText within each group based on the order of titles."""
         for group in grouped_comments:
             sorted_comment_text = []
             for title in titles:
                 label = title['label']
                 matching_comments = [comment for comment in group['commentText'] if comment['label'] == label]
                 if not matching_comments:
-                    sorted_comment_text.append({'text': '', 'label': label})  # Add empty text for missing labels
+                    sorted_comment_text.append({'text': '', 'label': label})
                 else:
                     sorted_comment_text.extend(matching_comments)
             group['commentText'] = sorted_comment_text
 
-        return {'titles': titles, 'comments': grouped_comments}
+        return grouped_comments
+
+    @classmethod
+    def format_comments(cls, survey, comments):
+        """Format comments."""
+        grouped_comments = cls.group_comments_by_submission_id(comments)
+        visible_titles = cls.get_visible_titles(survey, comments)
+        titles = [title for title in cls.get_titles(survey) if title in visible_titles]
+        sorted_comments = cls.sort_comments_by_titles(titles, grouped_comments)
+
+        return {'titles': titles, 'comments': sorted_comments}

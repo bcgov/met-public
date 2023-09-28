@@ -43,6 +43,11 @@ class ShapefileService:   # pylint: disable=too-few-public-methods
     @staticmethod
     def _get_geojson(shapefile_path):
         gdf = gpd.read_file(shapefile_path)
+
+        # Check if the GeoDataFrame's CRS is not EPSG:4326, if so transform it to EPSG:4326
+        if gdf.crs and gdf.crs.to_epsg() != 4326:
+            gdf = gdf.to_crs(epsg=4326)
+
         geojson_dict = json.loads(gdf.to_json())
         geojson_string = json.dumps(geojson_dict)
         return geojson_string
