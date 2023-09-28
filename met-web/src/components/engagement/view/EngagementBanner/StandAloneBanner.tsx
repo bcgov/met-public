@@ -5,10 +5,10 @@ import { getEngagementIdBySlug } from 'services/engagementSlugService';
 import { getEngagement } from 'services/engagementService';
 
 interface EngagementBannerProps {
-    startSurvey: () => void;
     engagementSlug: string;
+    surveyButton?: React.ReactNode;
 }
-export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBannerProps) => {
+export const EngagementBanner = ({ engagementSlug, surveyButton }: EngagementBannerProps) => {
     const [isEngagementLoading, setIsEngagementLoading] = useState(true);
     const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
     const [engagementId, setEngagementId] = useState<number | null>(null);
@@ -52,7 +52,7 @@ export const EngagementBanner = ({ startSurvey, engagementSlug }: EngagementBann
 
     return (
         <BannerSection
-            startSurvey={startSurvey}
+            surveyButton={surveyButton}
             isEngagementLoading={isEngagementLoading}
             savedEngagement={savedEngagement}
             isLoggedIn={false}
