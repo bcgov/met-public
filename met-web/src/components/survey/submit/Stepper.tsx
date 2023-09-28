@@ -6,17 +6,17 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 export interface ProgressBarProps {
     currentPage: number;
-    totalPages: number;
     pages: Array<FormInfo>;
+    [prop: string]: unknown;
 }
 
-function FormStepper({ currentPage, totalPages, pages }: ProgressBarProps) {
+function FormStepper({ currentPage, pages, ...rest }: ProgressBarProps) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
         <Box sx={{ pb: 2 }}>
-            <Stepper activeStep={currentPage} alternativeLabel>
+            <Stepper activeStep={currentPage} alternativeLabel {...rest}>
                 {pages.map((page: FormInfo, index: number) => (
                     <Step key={index}>
                         <StepLabel> {(!isMobile || index === currentPage) && page.title}</StepLabel>
