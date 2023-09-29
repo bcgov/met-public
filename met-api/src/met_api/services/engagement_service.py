@@ -246,7 +246,7 @@ class EngagementService:
 
             has_epic_fields_getting_updated = 'end_date' in data or 'start_date' in data
             if has_epic_fields_getting_updated:
-                ProjectService.update_project_info(updated_engagement.engagement_id)
+                ProjectService.update_project_info(updated_engagement.id)
 
         if survey_block:
             EngagementService._save_or_update_eng_block(engagement_id, survey_block)

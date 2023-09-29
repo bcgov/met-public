@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Datetime object helper."""
-from datetime import datetime
-
 import pytz
+from flask import current_app
+
+from datetime import datetime
 
 
 def local_datetime():
@@ -29,3 +30,21 @@ def utc_datetime():
     utcmoment = datetime.utcnow().replace(tzinfo=pytz.utc)
     now = utcmoment.astimezone(pytz.timezone('UTC'))
     return now
+
+
+def get_local_time(date_val: datetime, timezone_override=None):
+    """Return local time value."""
+    tz_name = timezone_override or current_app.config['LEGISLATIVE_TIMEZONE']
+    tz_local = pytz.timezone(tz_name)
+    date_val = date_val.astimezone(tz_local)
+    return date_val
+
+
+def get_local_formatted_date_time(date_val: datetime, dt_format: str = '%Y-%m-%d %H:%M:%S'):
+    """Return formatted local time."""
+    return get_local_time(date_val).strftime(dt_format)
+
+
+def get_local_formatted_date(date_val: datetime, dt_format: str = '%Y-%m-%d'):
+    """Return formatted local time."""
+    return get_local_time(date_val).strftime(dt_format)

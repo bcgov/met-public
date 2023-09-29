@@ -9,6 +9,7 @@ from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.rest_service import RestService
 from met_api.utils import notification
+from met_api.utils.datetime import get_local_formatted_date_time
 
 
 class ProjectService:
@@ -27,7 +28,7 @@ class ProjectService:
             engagement_metadata: EngagementMetadataModel
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
 
-            if project_id := engagement_metadata.project_id:
+            if not (project_id := engagement_metadata.project_id):
                 # EPIC is not interested in the data without project Id.So Skip the process.
                 return
 
@@ -64,9 +65,13 @@ class ProjectService:
 
     @staticmethod
     def _construct_epic_payload(engagement, project_id):
+        print('----engagement.start_date----',engagement.start_date)
+        print('----engagement.end_date----', engagement.end_date)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
-        start_date_utc = engagement.start_date.isoformat()
-        end_date_utc = engagement.end_date.isoformat()
+        start_date_utc = get_local_formatted_date_time(engagement.start_date)
+        end_date_utc = get_local_formatted_date_time(engagement.end_date)
+        print('----start_date_utc----', start_date_utc)
+        print('----end_date_utc----', end_date_utc)
         epic_comment_period_payload = {
             'isMet': 'true',
             # metURL is the public url using slug
