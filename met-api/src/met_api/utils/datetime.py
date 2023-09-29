@@ -31,6 +31,7 @@ def utc_datetime():
     now = utcmoment.astimezone(pytz.timezone('UTC'))
     return now
 
+
 def convert_and_format_to_utc_str(date_val: datetime, dt_format='%Y-%m-%d %H:%M:%S', timezone_override=None):
     """Convert a datetime object to UTC and format it as a string."""
     tz_name = timezone_override or current_app.config['LEGISLATIVE_TIMEZONE']
