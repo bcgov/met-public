@@ -9,13 +9,14 @@ from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.rest_service import RestService
 from met_api.utils import notification
+from met_api.utils.datetime import convert_and_format_to_utc_str
 
 
 class ProjectService:
     """Project management service."""
 
     @staticmethod
-    def update_project_info(project_id: str, eng_id: str) -> EngagementModel:
+    def update_project_info(eng_id: str) -> EngagementModel:
         """Publish new comment period to EPIC/EAO system."""
         logger = logging.getLogger(__name__)
 
@@ -24,7 +25,12 @@ class ProjectService:
             if not is_eao_environment:
                 return
 
+            engagement_metadata: EngagementMetadataModel
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
+
+            if not (project_id := engagement_metadata.project_id):
+                # EPIC is not interested in the data without project Id.So Skip the process.
+                return
 
             epic_comment_period_payload = ProjectService._construct_epic_payload(engagement, project_id)
 
@@ -60,8 +66,10 @@ class ProjectService:
     @staticmethod
     def _construct_epic_payload(engagement, project_id):
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
-        start_date_utc = engagement.start_date.isoformat()
-        end_date_utc = engagement.end_date.isoformat()
+        # the dates have to be converted to UTC since EPIC accepts UTC date and converts to PST
+        start_date_utc = convert_and_format_to_utc_str(engagement.start_date)
+        end_date_utc = convert_and_format_to_utc_str(engagement.end_date)
+
         epic_comment_period_payload = {
             'isMet': 'true',
             # metURL is the public url using slug

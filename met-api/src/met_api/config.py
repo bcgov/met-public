@@ -214,6 +214,9 @@ class _Config():  # pylint: disable=too-few-public-methods
     EPIC_MILESTONE = os.getenv('EPIC_MILESTONE')
     EPIC_KC_CLIENT_ID = os.getenv('EPIC_KC_CLIENT_ID')
 
+    # Timezone in BC
+    LEGISLATIVE_TIMEZONE = os.getenv('LEGISLATIVE_TIMEZONE', 'America/Vancouver')
+
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
