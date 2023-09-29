@@ -9,7 +9,7 @@ from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.rest_service import RestService
 from met_api.utils import notification
-from met_api.utils.datetime import get_local_formatted_date_time
+from met_api.utils.datetime import convert_and_format_to_utc_str
 
 
 class ProjectService:
@@ -69,14 +69,10 @@ class ProjectService:
         print('----engagement.start_date----',engagement.start_date)
         print('----engagement.end_date----', engagement.end_date)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
-        start_date_utc = get_local_formatted_date_time(engagement.start_date)
-        end_date_utc = get_local_formatted_date_time(engagement.end_date)
+        start_date_utc = convert_and_format_to_utc_str(engagement.start_date)
+        end_date_utc = convert_and_format_to_utc_str(engagement.end_date)
         print('----start_date_utc----', start_date_utc)
         print('----end_date_utc----', end_date_utc)
-        start_date_utc = engagement.start_date.isoformat()
-        end_date_utc = engagement.end_date.isoformat()
-        print('----start_date_utc-ISO---', start_date_utc)
-        print('----end_date_utc--ISO--', end_date_utc)
 
         epic_comment_period_payload = {
             'isMet': 'true',
