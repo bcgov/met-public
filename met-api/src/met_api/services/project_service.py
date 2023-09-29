@@ -65,6 +65,7 @@ class ProjectService:
 
     @staticmethod
     def _construct_epic_payload(engagement, project_id):
+        print('\n'*5)
         print('----engagement.start_date----',engagement.start_date)
         print('----engagement.end_date----', engagement.end_date)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
@@ -72,6 +73,11 @@ class ProjectService:
         end_date_utc = get_local_formatted_date_time(engagement.end_date)
         print('----start_date_utc----', start_date_utc)
         print('----end_date_utc----', end_date_utc)
+        start_date_utc = engagement.start_date.isoformat()
+        end_date_utc = engagement.end_date.isoformat()
+        print('----start_date_utc-ISO---', start_date_utc)
+        print('----end_date_utc--ISO--', end_date_utc)
+
         epic_comment_period_payload = {
             'isMet': 'true',
             # metURL is the public url using slug
