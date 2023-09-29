@@ -43,7 +43,7 @@ class EngagementMetadataService:
         metadata_model.commit()
         updated_metadata: EngagementMetadataModel = metadata_model.find_by_id(metadata_model.engagement_id)
         # publish changes to EPIC
-        ProjectService.update_project_info(updated_metadata.project_id, updated_metadata.engagement_id)
+        ProjectService.update_project_info(updated_metadata.engagement_id)
         return updated_metadata
 
     @staticmethod
@@ -79,6 +79,6 @@ class EngagementMetadataService:
             updated_metadata = EngagementMetadataService._create_metadata_model(data)
 
         # publish changes to EPIC
-        ProjectService.update_project_info(updated_metadata.project_id, updated_metadata.engagement_id)
+        ProjectService.update_project_info(updated_metadata.engagement_id)
 
         return updated_metadata

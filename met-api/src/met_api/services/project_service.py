@@ -15,7 +15,7 @@ class ProjectService:
     """Project management service."""
 
     @staticmethod
-    def update_project_info(project_id: str, eng_id: str) -> EngagementModel:
+    def update_project_info(eng_id: str) -> EngagementModel:
         """Publish new comment period to EPIC/EAO system."""
         logger = logging.getLogger(__name__)
 
@@ -24,7 +24,12 @@ class ProjectService:
             if not is_eao_environment:
                 return
 
+            engagement_metadata: EngagementMetadataModel
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
+
+            if project_id := engagement_metadata.project_id:
+                # EPIC is not interested in the data without project Id.So Skip the process.
+                return
 
             epic_comment_period_payload = ProjectService._construct_epic_payload(engagement, project_id)
 

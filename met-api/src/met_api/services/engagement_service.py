@@ -18,6 +18,8 @@ from met_api.services import authorization
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.services.object_storage_service import ObjectStorageService
+
+from met_api.services.project_service import ProjectService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
@@ -241,6 +243,11 @@ class EngagementService:
             updated_engagement = EngagementModel.edit_engagement(data)
             if not updated_engagement:
                 raise ValueError('Engagement to update was not found')
+
+            has_epic_fields_getting_updated = 'end_date' in data or 'start_date' in data
+            if has_epic_fields_getting_updated:
+                ProjectService.update_project_info(updated_engagement.engagement_id)
+
         if survey_block:
             EngagementService._save_or_update_eng_block(engagement_id, survey_block)
         return EngagementModel.find_by_id(engagement_id)
