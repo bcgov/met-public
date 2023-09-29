@@ -65,14 +65,10 @@ class ProjectService:
 
     @staticmethod
     def _construct_epic_payload(engagement, project_id):
-        print('\n'*5)
-        print('----engagement.start_date----',engagement.start_date)
-        print('----engagement.end_date----', engagement.end_date)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
+        # the dates have to be converted to UTC since EPIC accepts UTC date and converts to PST
         start_date_utc = convert_and_format_to_utc_str(engagement.start_date)
         end_date_utc = convert_and_format_to_utc_str(engagement.end_date)
-        print('----start_date_utc----', start_date_utc)
-        print('----end_date_utc----', end_date_utc)
 
         epic_comment_period_payload = {
             'isMet': 'true',

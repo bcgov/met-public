@@ -31,24 +31,6 @@ def utc_datetime():
     now = utcmoment.astimezone(pytz.timezone('UTC'))
     return now
 
-
-def get_local_time(date_val: datetime, timezone_override=None):
-    """Return local time value."""
-    tz_name = timezone_override or current_app.config['LEGISLATIVE_TIMEZONE']
-    tz_local = pytz.timezone(tz_name)
-    date_val = date_val.astimezone(tz_local)
-    return date_val
-
-
-def get_local_formatted_date_time(date_val: datetime, dt_format: str = '%Y-%m-%d %H:%M:%S'):
-    """Return formatted local time."""
-    return get_local_time(date_val).strftime(dt_format)
-
-
-def get_local_formatted_date(date_val: datetime, dt_format: str = '%Y-%m-%d'):
-    """Return formatted local time."""
-    return get_local_time(date_val).strftime(dt_format)
-
 def convert_and_format_to_utc_str(date_val: datetime, dt_format='%Y-%m-%d %H:%M:%S', timezone_override=None):
     """Convert a datetime object to UTC and format it as a string."""
     tz_name = timezone_override or current_app.config['LEGISLATIVE_TIMEZONE']
