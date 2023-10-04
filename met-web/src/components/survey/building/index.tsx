@@ -31,6 +31,7 @@ import { Palette } from 'styles/Theme';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
+import { AutoSaveSnackBar } from './AutoSaveSnackBar';
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -53,6 +54,9 @@ const SurveyFormBuilder = () => {
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
     const [isHiddenSurvey, setIsHiddenSurvey] = useState(savedSurvey ? savedSurvey.is_hidden : false);
     const [isTemplateSurvey, setIsTemplateSurvey] = useState(savedSurvey ? savedSurvey.is_template : false);
+
+    const [autoSaveNotificationOpen, setAutoSaveNotificationOpen] = useState(false);
+    const AUTO_SAVE_INTERVAL = 60000;
 
     useEffect(() => {
         loadSurvey();
@@ -132,6 +136,38 @@ const SurveyFormBuilder = () => {
         setFormData(form);
     };
 
+    // Save the survey automatically at every specified interval
+    useEffect(() => {
+        if (!formData) {
+            return;
+        }
+        const interval = setInterval(() => {
+            autoSaveForm();
+        }, AUTO_SAVE_INTERVAL);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [Boolean(formData)]);
+
+    const autoSaveForm = async () => {
+        try {
+            await doSaveForm();
+            setAutoSaveNotificationOpen(true);
+        } catch (error) {
+            return;
+        }
+    };
+
+    const doSaveForm = async () => {
+        await putSurvey({
+            id: String(surveyId),
+            form_json: formData,
+            name: name,
+            is_hidden: isHiddenSurvey,
+            is_template: isTemplateSurvey,
+        });
+    };
+
     const handleSaveForm = async () => {
         if (!savedSurvey) {
             dispatch(
@@ -145,13 +181,7 @@ const SurveyFormBuilder = () => {
 
         try {
             setIsSaving(true);
-            await putSurvey({
-                id: String(surveyId),
-                form_json: formData,
-                name: name,
-                is_hidden: isHiddenSurvey,
-                is_template: isTemplateSurvey,
-            });
+            await doSaveForm();
             dispatch(
                 openNotification({
                     severity: 'success',
@@ -377,6 +407,12 @@ const SurveyFormBuilder = () => {
                     <SecondaryButton onClick={() => navigate('/surveys')}>Cancel</SecondaryButton>
                 </Stack>
             </Grid>
+            <AutoSaveSnackBar
+                open={autoSaveNotificationOpen}
+                handleClose={() => {
+                    setAutoSaveNotificationOpen(false);
+                }}
+            />
         </MetPageGridContainer>
     );
 };
