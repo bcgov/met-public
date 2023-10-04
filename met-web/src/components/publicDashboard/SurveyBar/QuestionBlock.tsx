@@ -30,12 +30,9 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
                                 '&:hover': {
                                     backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
                                 },
-                                '.Mui-selected': {
+                                ...(selected === result.position && {
                                     backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
-                                },
-                                '&:active': {
-                                    backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
-                                },
+                                }),
                             }}
                         >
                             <Stack direction="column">
