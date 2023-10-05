@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Grid,
     Stack,
@@ -32,6 +32,15 @@ import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
 import { AutoSaveSnackBar } from './AutoSaveSnackBar';
+import { debounce } from 'lodash';
+
+interface SurveyForm {
+    id: string;
+    form_json: unknown;
+    name: string;
+    is_hidden: boolean;
+    is_template: boolean;
+}
 
 const SurveyFormBuilder = () => {
     const navigate = useNavigate();
@@ -39,7 +48,7 @@ const SurveyFormBuilder = () => {
     const { surveyId } = useParams<SurveyParams>();
 
     const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
-    const [formData, setFormData] = useState<unknown>(null);
+    const [formData, setFormData] = useState<(unknown & { components: unknown[] }) | null>(null);
 
     const [loading, setLoading] = useState(true);
     const [isNameFocused, setIsNamedFocused] = useState(false);
@@ -129,29 +138,33 @@ const SurveyFormBuilder = () => {
         }
     };
 
+    const debounceAutoSaveForm = useRef(
+        debounce((newChanges: SurveyForm) => {
+            autoSaveForm(newChanges);
+        }, AUTO_SAVE_INTERVAL),
+    ).current;
+
+    const doDebounceSaveForm = (form: FormBuilderData) => {
+        debounceAutoSaveForm({
+            id: String(surveyId),
+            form_json: form,
+            name: name,
+            is_hidden: isHiddenSurvey,
+            is_template: isTemplateSurvey,
+        });
+    };
+
     const handleFormChange = (form: FormBuilderData) => {
         if (!form.components) {
             return;
         }
         setFormData(form);
+        doDebounceSaveForm(form);
     };
 
-    // Save the survey automatically at every specified interval
-    useEffect(() => {
-        if (!formData) {
-            return;
-        }
-        const interval = setInterval(() => {
-            autoSaveForm();
-        }, AUTO_SAVE_INTERVAL);
-        return () => {
-            clearInterval(interval);
-        };
-    }, [Boolean(formData)]);
-
-    const autoSaveForm = async () => {
+    const autoSaveForm = async (newForm: SurveyForm) => {
         try {
-            await doSaveForm();
+            await putSurvey(newForm);
             setAutoSaveNotificationOpen(true);
         } catch (error) {
             return;
