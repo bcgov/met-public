@@ -30,7 +30,9 @@ export const PublicUrls = () => {
     const baseUrl = getBaseUrl();
     const calculatedWidth = baseUrl ? `${baseUrl.length * 9}px` : '200px';
     const engagementUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${baseUrl}/${savedSlug}`;
-    const dashboardUrl = !savedSlug ? 'Link will appear when the engagement is saved' : `${engagementUrl}/dashboard`;
+    const dashboardUrl = !savedSlug
+        ? 'Link will appear when the engagement is saved'
+        : `${engagementUrl}/dashboard/public`;
 
     useEffect(() => {
         setSlug(savedSlug);
