@@ -19,7 +19,7 @@ const UserGuideNav = () => {
         '/surveys/1/build': `${HELP_URL}/posts/survey-builder/`,
         '/surveys/1/submit': `${HELP_URL}/posts/survey-builder/`,
         '/surveys/1/comments': `${HELP_URL}/posts/comments-listing/`,
-        '/surveys/1/comments/all': `${HELP_URL}/posts/read-all-comments-page/`,
+        '/surveys/1/comments/all': `${HELP_URL}/posts/read-all-comments/`,
         '/surveys/1/submissions/1/review': `${HELP_URL}/posts/comment-review-page/`,
         '/engagements/create/form': `${HELP_URL}/posts/create-engagement/`,
         '/engagements/1/form': `${HELP_URL}/posts/engagement-details/`,
