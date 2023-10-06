@@ -65,7 +65,7 @@ const SurveyFormBuilder = () => {
     const [isTemplateSurvey, setIsTemplateSurvey] = useState(savedSurvey ? savedSurvey.is_template : false);
 
     const [autoSaveNotificationOpen, setAutoSaveNotificationOpen] = useState(false);
-    const AUTO_SAVE_INTERVAL = 60000;
+    const AUTO_SAVE_INTERVAL = 5000;
 
     useEffect(() => {
         loadSurvey();
