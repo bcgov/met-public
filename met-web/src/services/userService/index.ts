@@ -78,6 +78,16 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
                 const refreshed = await KeycloakData.updateToken(3000);
                 if (refreshed) {
                     dispatch(userToken(KeycloakData.token));
+                    // Check if tokens are defined before storing them in session storage
+                    if (KeycloakData.token) {
+                        sessionStorage.setItem('accessToken', KeycloakData.token);
+                    }
+                    if (KeycloakData.idToken) {
+                        sessionStorage.setItem('idToken', KeycloakData.idToken);
+                    }
+                    if (KeycloakData.refreshToken) {
+                        sessionStorage.setItem('refreshToken', KeycloakData.refreshToken);
+                    }
                 }
             } catch (error) {
                 console.log(error);
