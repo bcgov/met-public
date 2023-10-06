@@ -29,7 +29,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData | null>(null);
     const [selectedData, setSelectedData] = useState(defaultData[0]);
-    const [selectedDataIndex, setSelectedDataIndex] = useState(-1);
+    const [selectedDataIndex, setSelectedDataIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [chartType, setChartType] = React.useState('bar');
