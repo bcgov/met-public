@@ -1,16 +1,16 @@
 import { Box, List, ListItem, ListItemButton, Stack } from '@mui/material';
-import { MetParagraph } from 'components/common';
+import { MetHeader1, MetParagraph } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
 
 interface QuestionBlockProps {
     data: SurveyBarData[];
-    selected: number;
-    handleSelected: (data: SurveyBarData) => void;
+    selectedQuestionIndex: number;
+    handleSelected: (data: SurveyBarData, index: number) => void;
 }
 
-export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockProps) => {
+export const QuestionBlock = ({ data, selectedQuestionIndex, handleSelected }: QuestionBlockProps) => {
     return (
         <Box
             sx={{
@@ -23,14 +23,14 @@ export const QuestionBlock = ({ data, selected, handleSelected }: QuestionBlockP
         >
             <List sx={{ paddingTop: '2.5em' }}>
                 {data.map((result, index) => (
-                    <ListItem key={result.position}>
+                    <ListItem key={`${index}-${result.label}`}>
                         <ListItemButton
-                            onClick={() => handleSelected(result)}
+                            onClick={() => handleSelected(result, index)}
                             sx={{
                                 '&:hover': {
                                     backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
                                 },
-                                ...(selected === result.position && {
+                                ...(selectedQuestionIndex === index && {
                                     backgroundColor: DASHBOARD.SURVEY_RESULT.HOVER_COLOR,
                                 }),
                             }}
