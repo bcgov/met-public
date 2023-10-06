@@ -1,5 +1,5 @@
 import { Box, List, ListItem, ListItemButton, Stack } from '@mui/material';
-import { MetHeader1, MetParagraph } from 'components/common';
+import { MetParagraph } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
