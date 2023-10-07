@@ -41,7 +41,7 @@
         "immutability-helper": "^3.1.1",
         "jsonwebtoken": "^9.0.0",
         "jspdf": "^2.5.1",
-        "keycloak-js": "^21.1.1",
+        "keycloak-js": "22.0.4",
         "lodash": "^4.17.21",
         "mapbox-gl": "^2.13.0",
         "maplibre-gl": "^1.15.3",
