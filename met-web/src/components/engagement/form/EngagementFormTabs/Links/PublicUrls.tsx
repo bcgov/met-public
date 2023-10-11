@@ -155,7 +155,7 @@ export const PublicUrls = () => {
                                                 shrink: false,
                                             }}
                                             variant={'outlined'}
-                                            value={baseUrl}
+                                            value={`${baseUrl}/`}
                                             fullWidth
                                             disabled
                                             sx={{
