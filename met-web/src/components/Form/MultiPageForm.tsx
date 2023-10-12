@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Form } from '@formio/react';
 import { FormSubmissionData, FormSubmitterProps } from './types';
 import FormStepper from 'components/survey/submit/Stepper';
+
 interface PageData {
     page: number;
     submission: unknown;
@@ -10,19 +11,15 @@ interface PageData {
 const MultiPageForm = ({ handleFormChange, savedForm, handleFormSubmit }: FormSubmitterProps) => {
     const [currentPage, setCurrentPage] = useState(0);
 
-    const stepperRef = useRef<HTMLDivElement>(null);
-
     const handleScrollUp = () => {
-        if (stepperRef.current) {
-            stepperRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end',
-            });
-        }
+        window.scrollTo({
+            top: 100,
+            behavior: 'smooth',
+        });
     };
 
     return (
-        <div className="formio" ref={stepperRef}>
+        <div className="formio">
             <FormStepper currentPage={currentPage} pages={savedForm?.components ?? []} />
             <Form
                 form={savedForm || { display: 'wizard' }}
