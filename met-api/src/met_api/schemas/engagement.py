@@ -82,10 +82,13 @@ class EngagementSchema(Schema):
         # Strip time off datetime object
         date_due = datetime(now.year, now.month, now.day)
 
+        print('--date_due-:',date_due)
+        print('-start_date -:', obj.start_date )
+        print('--end_date -:', obj.end_date)
         if obj.start_date <= date_due <= obj.end_date:
             return SubmissionStatus.Open.value
 
-        if datetime.now() <= obj.start_date:
+        if date_due <= obj.start_date:
             return SubmissionStatus.Upcoming.value
 
         return SubmissionStatus.Closed.value
