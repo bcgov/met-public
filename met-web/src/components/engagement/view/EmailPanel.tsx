@@ -76,8 +76,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                     <MetBody>
                         <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
                         not a robot, and ensures we have your consent to collect your feedback. Your email address will
-                        remain confidential, and will only be used to authenticate your participation in this public
-                        comment period and (TBD).
+                        remain confidential and will only be used to authenticate your participation in this public
+                        comment period.
                     </MetBody>
                 </Grid>
                 <Grid item xs={12}>
