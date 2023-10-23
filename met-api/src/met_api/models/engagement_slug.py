@@ -26,7 +26,7 @@ class EngagementSlug(BaseModel):
     @classmethod
     def find_by_slug(cls, slug):
         """Return engagement slug by slug."""
-        return cls.query.filter_by(slug=slug).first()
+        return cls.query.filter(cls.slug.ilike(slug)).first()
 
     @classmethod
     def find_by_engagement_id(cls, engagement_id):
