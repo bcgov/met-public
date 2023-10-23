@@ -177,7 +177,10 @@ class CommentService:
         # Title could be dynamic based on the number of comment type questions on the survey
         survey_form = survey.form_json
         labels = []
-        for component in survey_form.get('components', []):
+        components = cls.extract_components(survey_form)
+        if len(components) == 0:
+            return []
+        for component in components:
             if component.get('inputType', None) == 'text':
                 if 'label' in component:
                     labels.append(component['label'])
