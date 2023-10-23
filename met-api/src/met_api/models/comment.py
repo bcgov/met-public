@@ -134,13 +134,12 @@ class Comment(BaseModel):
         """Get submissions by survey id paginated."""
         null_value = None
         query = db.session.query(Submission)\
-            .join(Comment, Submission.id == Comment.submission_id)\
             .filter(and_(Submission.survey_id == survey_id,
-                         or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))\
+                         or_(Submission.reviewed_by != 'System', Submission.reviewed_by == null_value)))
 
         if search_text:
             # Remove all non-digit characters from search text
-            query = query.filter(Comment.text.ilike('%' + search_text + '%'))
+            query = query.filter(Submission.comments.any(Comment.text.ilike('%' + search_text + '%')))
 
         if advanced_search_filters:
             query = cls._filter_by_advanced_filters(query, advanced_search_filters)
