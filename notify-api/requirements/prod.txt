@@ -6,7 +6,7 @@ flask-jwt-oidc
 python-dotenv
 jsonschema
 requests
-Werkzeug<3
+Werkzeug<4
 Flask-Caching
 secure
 python-dotenv
