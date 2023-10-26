@@ -39,7 +39,7 @@ jobs:
   notify-api-cd:
     runs-on: ubuntu-20.04
 
-    if: github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/epic-engage'
     environment:
       name: "dev"
 
