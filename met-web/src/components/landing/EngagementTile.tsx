@@ -87,7 +87,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 },
             }}
             onClick={() => {
-                window.open(engagementUrl, '_blank');
+                window.location.href = engagementUrl;
             }}
         >
             <When condition={Boolean(banner_url)}>
@@ -124,7 +124,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
                                 event.stopPropagation();
-                                window.open(engagementUrl, '_blank');
+                                window.location.href = engagementUrl;
                             }}
                         >
                             Share Your Thoughts
@@ -141,7 +141,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
                                 event.stopPropagation();
-                                window.open(engagementUrl, '_blank');
+                                window.location.href = engagementUrl;
                             }}
                         >
                             View Engagement
