@@ -61,7 +61,7 @@ export default class EngagementBannerWC extends HTMLElement {
                                         xs={12}
                                         justifyContent="flex-end"
                                     >
-                                        <PrimaryButton onClick={() => window.open(props['engagementurl'], '_blank')}>
+                                        <PrimaryButton onClick={() => (window.location.href = props['engagementurl'])}>
                                             View Engagement
                                         </PrimaryButton>
                                     </Grid>
