@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. This projec
 
 ## v1.0.1 - 2023-10-26
 
+> **Bug Fix**: Upgraded BC-Sans font to newest version - [🎟️DESENG-413](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-413)
+>- BC-Sans font has been updated to version 2.0
+
 > **Bug Fix**: Open engagements in the same window -  [🎟️DESENG-421](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-421)
 >- Landing page links now open in the same browser tab & window by default
 
