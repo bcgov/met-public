@@ -5,8 +5,9 @@ All notable changes to this project will be documented in this file. This projec
 
 ## v1.0.1 - 2023-10-26
 
-> **Bug Fix**: Engagements will now open in the same browser window/tab, not a new one. [🎟️DSENG-421](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-421)
-> **Bug Fix**: Update sample .env files - [🎟️DSENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414)
+> **Bug Fix**: Upgraded BC-Sans font to version 2.0. [🎟️DESENG-413](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-413)
+> **Bug Fix**: Engagements will now open in the same browser window/tab, not a new one. [🎟️DESENG-421](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-421)
+> **Bug Fix**: Update sample .env files - [🎟️DESENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414)
 >- Sample .env files have been updated to reflect the current state of the project.
 >- *Breaking*: Keycloak URLs and resources now point to the BC Government's SSO service when using `sample.env` as a baseline
 >- *Breaking*: The `met_api` module has been updated slightly to consume Pathfinder SSO's API schema.
