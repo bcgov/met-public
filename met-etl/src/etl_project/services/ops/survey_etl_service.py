@@ -40,7 +40,8 @@ def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
 
 
 # extract the surveys that have been created or updated after the last run
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"new_survey": Out(), "updated_survey": Out(), "survey_new_runcycleid": Out()})
+@op(required_resource_keys={"met_db_session", "met_etl_db_session"},
+    out={"new_survey": Out(), "updated_survey": Out(), "survey_new_runcycleid": Out()})
 def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
     session = context.resources.met_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
@@ -71,7 +72,7 @@ def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
 
 
 # load the surveys created or updated after last run to the analytics database
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"},out={"survey_new_runcycleid": Out()})
+@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"survey_new_runcycleid": Out()})
 def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
     session = context.resources.met_etl_db_session
     all_surveys = new_survey + updated_survey
@@ -89,17 +90,21 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 
             form_type = survey.form_json.get('display', None)
 
+            page_position = 0  # Initialize the page-level position
+
             # check and load data for single page survey.
             if form_type == 'form':
                 form_components = survey.form_json.get('components', None)
-                extract_survey_components(context, session, survey, survey_new_runcycleid, form_components)
+                page_position = extract_survey_components(context, session, survey, survey_new_runcycleid,
+                                                          form_components, page_position)
 
             # check and load data for multi page survey.
             if form_type == 'wizard':
                 pages = survey.form_json.get('components', None)
                 for page in pages:
                     form_components = page.get('components', None)
-                    extract_survey_components(context, session, survey, survey_new_runcycleid, form_components)
+                    page_position = extract_survey_components(context, session, survey, survey_new_runcycleid,
+                                                              form_components, page_position)
 
     yield Output(survey_new_runcycleid, "survey_new_runcycleid")
 
@@ -107,25 +112,24 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 
     session.close()
 
+
 # extract components within a survey
-def extract_survey_components(context, session, survey, survey_new_runcycleid, form_components):
+def extract_survey_components(context, session, survey, survey_new_runcycleid, form_components, position):
     if (form_components) is None:
         context.log.info('Survey Found without any component in form_json: %s. Skipping it', survey.id)
-        return
+        return position
 
     _inactivate_old_questions(session, survey.id)
-
-    position = 0
 
     for component in form_components:
         position = position + 1
         component_type = component.get('type', None)
         context.log.info('Survey: %s.%s Processing component with id %s and type: %s and label %s ',
-                        survey.id,
-                        survey.name,
-                        component.get('id', None),
-                        component_type,
-                        component.get('label', None))
+                         survey.id,
+                         survey.name,
+                         component.get('id', None),
+                         component_type,
+                         component.get('label', None))
 
         if not component_type:
             continue
@@ -134,10 +138,13 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
 
         if has_valid_question_type:
             etl_survey = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
-                                                                EtlSurveyModel.is_active == True)
+                                                                 EtlSurveyModel.is_active == True)
             for survey_id in etl_survey:
-                _do_etl_survey_inputs(session, survey_id, component, component_type, 
-                                      survey_new_runcycleid, position)
+                position = _do_etl_survey_inputs(session, survey_id, component, component_type,
+                                                 survey_new_runcycleid, position)
+
+    return position
+
 
 # inactivate if record is existing in analytics database
 def _inactivate_old_questions(session, source_survey_id):
@@ -171,36 +178,39 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
         questions = component.get('questions', None)
 
         if not questions:
-            return
+            return position
 
         for question in questions:
+            position = position + 1
             model_name = EtlRequestTypeOption(survey_id=survey_id,
-                                                request_id=component['id'] + '-' + question['value'],
-                                                label=question['label'],
-                                                is_active=True,
-                                                key=component['key'] + '-' + question['value'],
-                                                type=component['type'],
-                                                runcycle_id=survey_new_runcycleid,
-                                                position=position
-                                                )
+                                              request_id=component['id'] + '-' + question['value'],
+                                              label=question['label'],
+                                              is_active=True,
+                                              key=component['key'] + '-' + question['value'],
+                                              type=component['type'],
+                                              runcycle_id=survey_new_runcycleid,
+                                              position=position
+                                              )
 
             session.add(model_name)
 
             session.commit()
     else:
         model_name = EtlRequestTypeOption(survey_id=survey_id,
-                                    request_id=component['id'],
-                                    label=component['label'],
-                                    is_active=True,
-                                    key=component['key'],
-                                    type=component['type'],
-                                    runcycle_id=survey_new_runcycleid,
-                                    position=position
-                                    )
+                                          request_id=component['id'],
+                                          label=component['label'],
+                                          is_active=True,
+                                          key=component['key'],
+                                          type=component['type'],
+                                          runcycle_id=survey_new_runcycleid,
+                                          position=position
+                                          )
 
         session.add(model_name)
 
         session.commit()
+
+    return position
 
 
 def _validate_form_type(context, component_type):
@@ -222,7 +232,8 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == survey_new_runcycleid, EtlRunCycleModel.packagename == 'survey',
         EtlRunCycleModel.success == False).update(
-        {'success': True, 'enddatetime': datetime.utcnow(), 'description': 'ended the load for tables survey and requests'})
+        {'success': True, 'enddatetime': datetime.utcnow(),
+         'description': 'ended the load for tables survey and requests'})
 
     context.log.info("run cycle ended for survey table")
 
