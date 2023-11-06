@@ -7,7 +7,10 @@ All notable changes to this project will be documented in this file. This projec
 > - Switch all role-based checks on the API to use a single callback function (`current_app.config['JWT_ROLE_CALLBACK']`) 
 > - Added a configurable path `JWT_ROLE_CLAIM` to indicate where your SSO instance places role information in the JWT token. If your access token looks like:
 > `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
+> - Explicitly disable single tenant mode to ensure correct multi-tenancy behaviour
 > - Remove local Keycloak instances and configuration
+> - Default to the "standard" realm for Keycloak
+> - Use tenancy information from DB rather than Keycloak
 
 
 ## v1.0.1 - 2023-10-26
