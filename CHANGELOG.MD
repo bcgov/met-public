@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. This projec
 > - Switch all role-based checks on the API to use a single callback function (`current_app.config['JWT_ROLE_CALLBACK']`) 
 > - Added a configurable path `JWT_ROLE_CLAIM` to indicate where your SSO instance places role information in the JWT token. If your access token looks like:
 > `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
-> - TODO: Remove local Keycloak instances and configuration
+> - Remove local Keycloak instances and configuration
 
 
 ## v1.0.1 - 2023-10-26
