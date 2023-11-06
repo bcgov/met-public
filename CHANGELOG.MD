@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This projec
 > - Remove local Keycloak instances and configuration
 > - Default to the "standard" realm for Keycloak
 > - Use tenancy information from DB rather than Keycloak
+> - Update sample.env files to properly reflect the current state of the project and document where to download credentials securely
 
 
 ## v1.0.1 - 2023-10-26
