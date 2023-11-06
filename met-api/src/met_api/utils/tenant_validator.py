@@ -74,7 +74,5 @@ def _get_token_info() -> Dict:
 
 def is_met_global_admin(token_info) -> bool:
     """Return True if the user is MET Admin ie who can manage all tenants."""
-    roles: list = token_info.get('realm_access', None).get('roles', []) if 'realm_access' in token_info \
-        else []
-
+    roles = current_app.config['JWT_ROLE_CALLBACK'](token_info)
     return Role.CREATE_TENANT.value in roles

@@ -128,8 +128,15 @@ def build_cache(app):
 def setup_jwt_manager(app_context, jwt_manager):
     """Use flask app to configure the JWTManager to work for a particular Realm."""
 
-    def get_roles(a_dict):
-        return a_dict['realm_access']['roles']  # pragma: no cover
-
+    def get_roles(token_info):
+        """
+        Consumes a token_info dictionary and returns a list of roles.
+        Uses a configurable path to the roles in the token_info dictionary.
+        """
+        role_access_path = app_context.config['JWT_ROLE_CLAIM']
+        for key in role_access_path.split('.'):
+            token_info = token_info.get(key, {})
+        return token_info
+        
     app_context.config['JWT_ROLE_CALLBACK'] = get_roles
     jwt_manager.init_app(app_context)

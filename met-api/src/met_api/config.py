@@ -122,6 +122,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
+    JWT_ROLE_CLAIM = os.getenv('JWT_ROLE_CLAIM', 'realm_access.roles')
+
     S3_CONFIG = {
         'DEFAULT': {
             'S3_BUCKET': os.getenv('S3_BUCKET'),
