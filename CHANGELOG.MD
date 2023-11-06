@@ -9,9 +9,12 @@ All notable changes to this project will be documented in this file. This projec
 > `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
 > - Explicitly disable single tenant mode to ensure correct multi-tenancy behaviour
 > - Remove local Keycloak instances and configuration
-> - Default to the "standard" realm for Keycloak
-> - Use tenancy information from DB rather than Keycloak
+> - *Potentially breaking*: Default to the "standard" realm for Keycloak
+> - *Potentially breaking*: Use tenancy information from DB rather than Keycloak
+
+> **Feature**: .env var audit and cleanup - [🎟️DESENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414) 
 > - Update sample.env files to properly reflect the current state of the project and document where to download credentials securely
+> *This ticket is not closed by this version*
 
 
 ## v1.0.1 - 2023-10-26
