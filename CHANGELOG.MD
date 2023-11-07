@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## December 11, 2023
+
+- **Task** Merge `gdx-sso`, `gdx-dev`, `gdx-main` into `main` [🎟️DESENG-442](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-442)
+
 ## December 5, 2023
 
 - **Task** Remove unused project metadata [🎟️DESENG-441](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-441)
