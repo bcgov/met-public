@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## December 11, 2023
+
+- **Task** Merge `gdx-sso`, `gdx-dev`, `gdx-main` into `main` [🎟️DESENG-442](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-442)
+
 ## December 5, 2023
 
 - **Task** Remove unused project metadata [🎟️DESENG-441](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-441)
@@ -23,6 +27,10 @@ All notable changes to this project will be documented in this file.
 
 - **Feature**: Superusers can publish engagements without attached surveys [🎟️DESENG-438](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-438)
 
+## November 21, 2023
+
+- **Feature**: Started logging source url path with feedback submission. Viewable in dashboard. [🎟️DESENG-415](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-415)
+
 ## November 11, 2023
 
 - **Bug Fix**: Removed a duplicate service class [🎟️DESENG-429](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-429)
@@ -43,11 +51,6 @@ All notable changes to this project will be documented in this file.
 ## October 26, 2023
 
 - **Bug Fix**: Upgraded BC-Sans font to the newest version [🎟️DESENG-413](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-413)
-All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/).
-
-- **Feature**: Started logging source url path with feedback submission. Viewable in dashboard. [🎟️DESENG-415](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-415)
-
-- **Bug Fix**: Engagements now open in the same browser window/tab [🎟️DESENG-421](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-421)
 
 ## October 19, 2023
 
