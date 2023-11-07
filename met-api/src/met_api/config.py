@@ -122,6 +122,8 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
+    JWT_ROLE_CLAIM = os.getenv('JWT_ROLE_CLAIM', 'realm_access.roles')
+
     S3_CONFIG = {
         'DEFAULT': {
             'S3_BUCKET': os.getenv('S3_BUCKET'),
@@ -135,7 +137,7 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # Service account details
     KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL')
-    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME', 'met')
+    KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME', 'standard')
     KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
     KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
     # TODO separate out clients for APIs and user management.

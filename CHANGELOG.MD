@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/).
 
+## v1.1.0 - 2023-11-06
+> **Feature**: Switch MET to use Keycloak SSO service - [🎟️DESENG-408](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-408)
+> - Switch all role-based checks on the API to use a single callback function (`current_app.config['JWT_ROLE_CALLBACK']`) 
+> - Added a configurable path `JWT_ROLE_CLAIM` to indicate where your SSO instance places role information in the JWT token. If your access token looks like:
+> `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
+> - Explicitly disable single tenant mode to ensure correct multi-tenancy behaviour
+> - Remove local Keycloak instances and configuration
+> - *Potentially breaking*: Default to the "standard" realm for Keycloak
+> - *Potentially breaking*: Use tenancy information from DB rather than Keycloak
+
+> **Feature**: .env var audit and cleanup - [🎟️DESENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414) 
+> - Update sample.env files to properly reflect the current state of the project and document where to download credentials securely
+> *This ticket is not closed by this version*
+
 
 ## v1.0.1 - 2023-10-26
 

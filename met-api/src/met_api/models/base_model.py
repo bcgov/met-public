@@ -67,16 +67,10 @@ class BaseModel(db.Model):
         db.session.flush()
         return self
 
-    def add_to_session(self):
-        """Save and flush."""
-        return self.flush()
-
     def save(self):
         """Save and commit."""
-        self._set_tenant_id()
-        db.session.add(self)
-        db.session.flush()
-        db.session.commit()
+        self.flush()
+        self.commit()
 
     def _set_tenant_id(self):
         # add tenant id to the model if the child model has tenant id column
