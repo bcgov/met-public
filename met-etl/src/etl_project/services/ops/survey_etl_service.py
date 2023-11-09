@@ -84,6 +84,8 @@ def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
 
             _do_etl_survey_data(session, survey, survey_new_runcycleid)
 
+            _update_survey_responses_with_active_survey_id(session, survey)
+
             if survey.form_json is None:
                 context.log.info('Survey Found without form_json: %s. Skipping it', survey.id)
                 continue
@@ -242,3 +244,19 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
     met_etl_db_session.close()
 
     yield Output("survey", "flag_to_run_step_after_survey")
+
+
+def _update_survey_responses_with_active_survey_id(session, survey):
+    etl_active_survey_id = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
+                                                                   EtlSurveyModel.is_active == True)
+
+    subquery = (
+        session.query(EtlSurveyModel.id)
+        .filter(EtlSurveyModel.source_survey_id == survey.id)
+        .subquery()
+    )
+
+    session.query(EtlResponseTypeOptionModel).filter(EtlResponseTypeOptionModel.survey_id.in_(subquery)).update(
+        {'survey_id': etl_active_survey_id}, synchronize_session=False)
+
+    session.commit()
