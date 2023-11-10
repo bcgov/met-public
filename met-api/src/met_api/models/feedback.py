@@ -24,6 +24,7 @@ class Feedback(BaseModel):
     rating = db.Column(db.Enum(RatingType), nullable=True)
     comment_type = db.Column(db.Enum(CommentType), nullable=True)
     comment = db.Column(db.Text, nullable=True)
+    submission_path = db.Column(db.Text, nullable=True)
     source = db.Column(db.Enum(FeedbackSourceType), nullable=True)
     tenant_id = db.Column(
         db.Integer, db.ForeignKey('tenant.id'), nullable=True)
@@ -65,6 +66,7 @@ class Feedback(BaseModel):
         new_feedback = Feedback(
             status=feedback.get('status', None),
             comment=feedback.get('comment', None),
+            submission_path=feedback.get('submission_path', None),
             created_date=datetime.utcnow(),
             rating=feedback.get('rating'),
             comment_type=feedback.get('comment_type', None),

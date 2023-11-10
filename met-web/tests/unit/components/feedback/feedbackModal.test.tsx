@@ -53,6 +53,7 @@ describe('Feedback modal tests', () => {
                 status: FeedbackStatusEnum.NotReviewed,
                 comment_type: CommentTypeEnum.None,
                 comment: '',
+                submission_path: '',
                 rating: 1,
                 created_date: '',
                 source: SourceTypeEnum.Public,
