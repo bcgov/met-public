@@ -758,6 +758,7 @@
 									"    var jsonData = pm.response.json().result;\r",
 									"    pm.expect(jsonData.rating).to.exist\r",
 									"    pm.expect(jsonData.comment).to.exist\r",
+									"    pm.expect(jsonData.submission_path).to.exist\r",
 									"    pm.expect(jsonData.comment_type).to.exist\r",
 									"    pm.expect(jsonData.created_date).to.exist\r",
 									"    pm.expect(jsonData.source).to.exist\r",
@@ -813,7 +814,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"rating\": {{FEEDBACK_RATING}},\r\n    \"comment\": \"{{FEEDBACK_COMMENT}}\",\r\n    \"comment_type\":{{FEEDBACK_COMMENT_TYPE}},\r\n    \"created_date\": \"{{FEEDBACK_CREATED_DATE}}\",\r\n    \"source\": {{FEEDBACK_SOURCE}}\r\n}",
+							"raw": "{\r\n    \"rating\": {{FEEDBACK_RATING}},\r\n    \"comment\": \"{{FEEDBACK_COMMENT}}\",\r\n    \"submission_path\": \"{{FEEDBACK_SUBMISSION_PATH}}\",\r\n    \"comment_type\":{{FEEDBACK_COMMENT_TYPE}},\r\n    \"created_date\": \"{{FEEDBACK_CREATED_DATE}}\",\r\n    \"source\": {{FEEDBACK_SOURCE}}\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -858,6 +859,7 @@
 									"      for (var i=0; i<jsonData.items.length; i++) {\r",
 									"    pm.expect(jsonData.items[i].rating).to.exist\r",
 									"    pm.expect(jsonData.items[i].comment).to.exist\r",
+									"    pm.expect(jsonData.items[i].submission_path).to.exist\r",
 									"    pm.expect(jsonData.items[i].comment_type).to.exist\r",
 									"    pm.expect(jsonData.items[i].created_date).to.exist\r",
 									"    pm.expect(jsonData.items[i].source).to.exist\r",
@@ -1081,6 +1083,11 @@
 		},
 		{
 			"key": "FEEDBACK_COMMENT",
+			"value": "US",
+			"type": "string"
+		},
+		{
+			"key": "FEEDBACK_SUBMISSION_PATH",
 			"value": "US",
 			"type": "string"
 		},

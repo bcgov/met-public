@@ -9,7 +9,8 @@
         {
             "rating": 1,
             "comment_type": "2",
-            "comment": "Custom comment"
+            "comment": "Custom comment",
+            "submission_path": "/gdx/"
         }
     ],
     "required": [
@@ -45,6 +46,15 @@
             "description": "The freetext comment.",
             "examples": [
                 "A comment example"
+            ]
+        },
+        "submission_path": {
+            "$id": "#/properties/verification_token",
+            "type": "string",
+            "title": "Path",
+            "description": "The path that the feedback was submitted from.",
+            "examples": [
+                "/gdx/"
             ]
         }
     }
