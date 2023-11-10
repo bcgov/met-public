@@ -1,13 +1,12 @@
-from dagster import Out, Output, op
-from sqlalchemy import func
-from datetime import datetime
-
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOption
 from analytics_api.models.response_type_option import ResponseTypeOption as EtlResponseTypeOptionModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
-from met_api.models.survey import Survey as MetSurveyModel
 from analytics_api.utils.util import FormIoComponentType
+from dagster import Out, Output, op
+from datetime import datetime
+from met_api.models.survey import Survey as MetSurveyModel
+from sqlalchemy import func
 
 
 # get the last run cycle id for survey etl
@@ -248,8 +247,8 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
 
 
 def _update_survey_responses_with_active_survey_id(session, survey):
-    etl_active_survey_id = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == survey.id,
-                                                                   EtlSurveyModel.is_active == True)
+    etl_active_survey_id = session.query(EtlSurveyModel.id).filter(
+        EtlSurveyModel.source_survey_id == survey.id, EtlSurveyModel.is_active == True).first()
 
     subquery = (
         session.query(EtlSurveyModel.id)
@@ -257,7 +256,13 @@ def _update_survey_responses_with_active_survey_id(session, survey):
         .subquery()
     )
 
-    session.query(EtlResponseTypeOptionModel).filter(EtlResponseTypeOptionModel.survey_id.in_(subquery)).update(
-        {'survey_id': etl_active_survey_id}, synchronize_session=False)
+    # Fetch response records
+    response_records = session.query(EtlResponseTypeOptionModel).filter(
+        EtlResponseTypeOptionModel.survey_id.in_(subquery)).all()
+
+    # Update each response record individually
+    for record in response_records:
+        session.query(EtlResponseTypeOptionModel).filter(EtlResponseTypeOptionModel.id == record.id).update(
+            {'survey_id': etl_active_survey_id}, synchronize_session='fetch')
 
     session.commit()
