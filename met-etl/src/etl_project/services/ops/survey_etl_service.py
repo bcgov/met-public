@@ -4,6 +4,7 @@ from datetime import datetime
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOption
+from analytics_api.models.response_type_option import ResponseTypeOption as EtlResponseTypeOptionModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from met_api.models.survey import Survey as MetSurveyModel
 from analytics_api.utils.util import FormIoComponentType
