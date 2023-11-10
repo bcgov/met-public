@@ -6,6 +6,7 @@ export interface Feedback {
     comment_type: CommentTypeEnum;
     source: SourceTypeEnum;
     status: FeedbackStatusEnum;
+    submission_path: string;
 }
 
 export enum FeedbackStatusEnum {
@@ -38,5 +39,13 @@ export const createDefaultFeedback = (): Feedback => {
         created_date: '',
         source: SourceTypeEnum.Public,
         status: FeedbackStatusEnum.NotReviewed,
+        submission_path: '',
+    };
+};
+
+export const setFeedbackPath = (existingFeedback: Feedback): Feedback => {
+    return {
+        ...existingFeedback,
+        submission_path: window.location.pathname,
     };
 };
