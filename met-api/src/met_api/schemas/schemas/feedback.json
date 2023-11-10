@@ -49,7 +49,7 @@
             ]
         },
         "submission_path": {
-            "$id": "#/properties/verification_token",
+            "$id": "#/properties/submission_path",
             "type": "string",
             "title": "Path",
             "description": "The path that the feedback was submitted from.",

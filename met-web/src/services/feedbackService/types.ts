@@ -1,5 +1,4 @@
 import { FeedbackStatusEnum } from 'models/feedback';
-import { string } from 'yup';
 
 export interface GetFeedbackRequest {
     page?: number;
