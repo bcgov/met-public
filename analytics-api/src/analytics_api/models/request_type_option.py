@@ -34,7 +34,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         if can_view_all_survey_results:
             survey_question = (db.session.query(RequestTypeOption.position.label('position'),
                                                 RequestTypeOption.label.label('label'),
-                                                RequestTypeOption.request_id)
+                                                RequestTypeOption.key)
                                .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
                                             RequestTypeOption.is_active == true()))
                                .order_by(RequestTypeOption.position)
@@ -42,7 +42,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         else:
             survey_question = (db.session.query(RequestTypeOption.position.label('position'),
                                                 RequestTypeOption.label.label('label'),
-                                                RequestTypeOption.request_id)
+                                                RequestTypeOption.key)
                                .filter(and_(RequestTypeOption.survey_id.in_(analytics_survey_id),
                                             RequestTypeOption.is_active == true(),
                                             or_(RequestTypeOption.display == true(),
@@ -52,11 +52,11 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
 
         # Get all the survey responses with the counts for each response specific to a survey id which
         # are in active status.
-        survey_response = (db.session.query(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value,
-                                            func.count(ResponseTypeOptionModel.request_id).label('response'))
+        survey_response = (db.session.query(ResponseTypeOptionModel.request_key, ResponseTypeOptionModel.value,
+                                            func.count(ResponseTypeOptionModel.request_key).label('response'))
                            .filter(and_(ResponseTypeOptionModel.survey_id.in_(analytics_survey_id),
                                         ResponseTypeOptionModel.is_active == true()))
-                           .group_by(ResponseTypeOptionModel.request_id, ResponseTypeOptionModel.value)
+                           .group_by(ResponseTypeOptionModel.request_key, ResponseTypeOptionModel.value)
                            .subquery())
 
         # Combine the data fetched above such that the result has a format as below
@@ -69,7 +69,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                                           func.json_agg(func.json_build_object('value', survey_response.c.value,
                                                                                'count', survey_response.c.response))
                                           .label('result'))
-                         .join(survey_response, survey_response.c.request_id == survey_question.c.request_id)
+                         .join(survey_response, survey_response.c.request_key == survey_question.c.key)
                          .group_by(survey_question.c.position, survey_question.c.label))
 
         return survey_result.all()
