@@ -49,11 +49,14 @@ All notable changes to this project will be documented in this file.
 - **Bug Fix**: Upgraded BC-Sans font to the newest version [🎟️DESENG-413](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-413)
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/).
 
-## v1.1.0 - 2023-11-10
+## v1.1.0 - 2023-11-21
 
 > **Feature**: Started logging source url path with feedback submission. Viewable in dashboard. [🎟️DESENG-415](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-415)
 
-- **Feature**: Started logging source url path with feedback submission. Viewable in dashboard. [🎟️DESENG-415](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-415)
+
+## v1.0.1 - 2023-10-26
+
+> **Bug Fix**: Upgraded BC-Sans font to newest version. [🎟️DESENG-413](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-413)
 
 - **Bug Fix**: Engagements now open in the same browser window/tab [🎟️DESENG-421](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-421)
 
