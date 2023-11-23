@@ -1,3 +1,4 @@
+from analytics_api.models.available_response_option import AvailableResponseOption as EtlAvailableResponseOption
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOption
 from analytics_api.models.response_type_option import ResponseTypeOption as EtlResponseTypeOptionModel
@@ -121,7 +122,7 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
         context.log.info('Survey Found without any component in form_json: %s. Skipping it', survey.id)
         return position
 
-    _inactivate_old_questions(session, survey.id)
+    _refresh_questions_and_available_option_status(session, survey.id)
 
     for component in form_components:
         position = position + 1
@@ -144,12 +145,14 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
             for survey_id in etl_survey:
                 position = _do_etl_survey_inputs(session, survey_id, component, component_type,
                                                  survey_new_runcycleid, position)
+                _load_available_response_option(context, session, survey_id, component, component_type,
+                                                survey_new_runcycleid)
 
     return position
 
 
 # inactivate if record is existing in analytics database
-def _inactivate_old_questions(session, source_survey_id):
+def _refresh_questions_and_available_option_status(session, source_survey_id):
     etl_survey_model = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == source_survey_id,
                                                                EtlSurveyModel.is_active == False)
     if not etl_survey_model:
@@ -159,6 +162,8 @@ def _inactivate_old_questions(session, source_survey_id):
 
     for survey_id in etl_survey_model:
         session.query(EtlRequestTypeOption).filter(EtlRequestTypeOption.survey_id == survey_id).update(deactive_flag)
+        session.query(EtlAvailableResponseOption).filter(
+            EtlAvailableResponseOption.survey_id == survey_id).update(deactive_flag)
 
 
 def _do_etl_survey_data(session, survey, survey_new_runcycleid):
@@ -213,6 +218,66 @@ def _do_etl_survey_inputs(session, survey_id, component, component_type, survey_
         session.commit()
 
     return position
+
+
+# load data to table available response option
+def _load_available_response_option(context, session, survey_id, component, component_type, survey_new_runcycleid):
+   
+    if component_type == FormIoComponentType.SURVEY.value:
+        _load_survey_available_response(session, component, survey_id, survey_new_runcycleid)
+    elif component_type == FormIoComponentType.SELECTLIST.value:
+        _load_selectlist_available_response(session, component, survey_id, survey_new_runcycleid)
+    else:
+        _load_default_available_response(session, component, survey_id, survey_new_runcycleid)
+
+
+def _load_survey_available_response(session, component, survey_id, survey_new_runcycleid):
+    values = component.get('values', None)
+    if not values:
+        return
+    
+    questions = component.get('questions', None)
+    if not questions:
+        return
+    
+    for question in questions:
+        request_key = component['key'] + '-' + question['value']
+        _do_etl_available_response_data(session, component, survey_id, values,
+                                        request_key, survey_new_runcycleid)
+
+def _load_selectlist_available_response(session, component, survey_id, survey_new_runcycleid):
+    data = component.get('data', None)
+    values = data.get('values', None)
+
+    if not values:
+        return
+    
+    request_key = component['key']
+    _do_etl_available_response_data(session, component, survey_id, values,
+                                    request_key, survey_new_runcycleid)
+
+def _load_default_available_response(session, component, survey_id, survey_new_runcycleid):
+    values = component.get('values', None)
+    if not values:
+        return
+    
+    request_key = component['key']
+    _do_etl_available_response_data(session, component, survey_id, values,
+                                    request_key, survey_new_runcycleid)
+
+
+def _do_etl_available_response_data(session, component, survey_id, values, request_key, survey_new_runcycleid):
+    for value in values:
+        model_name = EtlAvailableResponseOption(survey_id=survey_id,
+                                                request_key=request_key,
+                                                value=value['label'],
+                                                request_id=component['id'],
+                                                is_active=True,
+                                                runcycle_id=survey_new_runcycleid)
+
+        session.add(model_name)
+
+    session.commit()
 
 
 def _validate_form_type(context, component_type):

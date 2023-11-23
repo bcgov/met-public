@@ -4,6 +4,7 @@ Manages the option type questions (radio/checkbox) on a survey
 """
 from sqlalchemy import and_, func, or_
 from sqlalchemy.sql.expression import true
+from analytics_api.models.available_response_option import AvailableResponseOption as AvailableResponseOptionModel
 from analytics_api.models.survey import Survey as SurveyModel
 from analytics_api.models.response_type_option import ResponseTypeOption as ResponseTypeOptionModel
 from .base_model import BaseModel
@@ -50,6 +51,12 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                                .order_by(RequestTypeOption.position)
                                .subquery())
 
+        # Get all the available responses for each question within the survey.
+        available_response = (db.session.query(AvailableResponseOptionModel.request_key,
+                                               AvailableResponseOptionModel.value)
+                              .filter(and_(AvailableResponseOptionModel.survey_id.in_(
+                                  analytics_survey_id), AvailableResponseOptionModel.is_active == true()))
+                              .subquery())
         # Get all the survey responses with the counts for each response specific to a survey id which
         # are in active status.
         survey_response = (db.session.query(ResponseTypeOptionModel.request_key, ResponseTypeOptionModel.value,
@@ -59,17 +66,25 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                            .group_by(ResponseTypeOptionModel.request_key, ResponseTypeOptionModel.value)
                            .subquery())
 
-        # Combine the data fetched above such that the result has a format as below
-        # - position: is a unique value for each question which helps to get the order of question on the survey
-        # - label: is the the survey question
-        # - value: user selected response for each question
-        # - count: number of time the same value is selected as a response to each question
-        survey_result = (db.session.query((survey_question.c.position).label('position'),
-                                          (survey_question.c.label).label('question'),
-                                          func.json_agg(func.json_build_object('value', survey_response.c.value,
-                                                                               'count', survey_response.c.response))
-                                          .label('result'))
-                         .join(survey_response, survey_response.c.request_key == survey_question.c.key)
-                         .group_by(survey_question.c.position, survey_question.c.label))
+        # Check if there are records in survey_response before executing the final query
+        if db.session.query(survey_response.c.request_key).first():
+            # Combine the data fetched above such that the result has a format as below
+            # - position: is a unique value for each question which helps to get the order of question on the survey
+            # - label: is the the survey question
+            # - value: user selected response for each question
+            # - count: number of time the same value is selected as a response to each question
+            survey_result = (db.session.query((survey_question.c.position).label('position'),
+                                              (survey_question.c.label).label('question'),
+                                              func.json_agg(func.json_build_object(
+                                                  'value', available_response.c.value,
+                                                  'count', func.coalesce(survey_response.c.response, 0)))
+                             .label('result'))
+                             .outerjoin(available_response, survey_question.c.key == available_response.c.request_key)
+                             .outerjoin(survey_response,
+                                        (available_response.c.value == survey_response.c.value) &
+                                        (available_response.c.request_key == survey_response.c.request_key))
+                             .group_by(survey_question.c.position, survey_question.c.label))
 
-        return survey_result.all()
+            return survey_result.all()
+
+        return None  # Return None indicating no records
