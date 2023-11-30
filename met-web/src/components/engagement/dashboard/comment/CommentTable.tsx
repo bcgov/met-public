@@ -48,7 +48,7 @@ const CommentTable = () => {
                 <>
                     {row.comments.map((comment) => (
                         <div style={{ paddingTop: '10px' }} key={comment.label}>
-                            <MetLabel>{comment.label}:</MetLabel>
+                            <MetLabel>{comment.label}</MetLabel>
                             <div style={{ paddingTop: '5px' }}>
                                 <MetParagraph>{comment.text}</MetParagraph>
                             </div>
