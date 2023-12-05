@@ -68,6 +68,7 @@ class EngagementService:
         user_roles = TokenInfo.get_user_roles()
         has_team_access = search_options.get('has_team_access')
         scope_options = self._get_scope_options(user_roles, has_team_access)
+        
         items, total = EngagementModel.get_engagements_paginated(
             external_user_id,
             pagination_options,

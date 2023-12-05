@@ -24,9 +24,6 @@ declare global {
             REACT_APP_KEYCLOAK_REALM: string;
             REACT_APP_KEYCLOAK_ADMIN_ROLE: string;
 
-            // Constants
-            REACT_APP_ENGAGEMENT_PROJECT_TYPES: string;
-
             //tenant
             REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT: string;
             REACT_APP_DEFAULT_TENANT: string;
@@ -62,20 +59,6 @@ const KC_CLIENT = getEnv('REACT_APP_KEYCLOAK_CLIENT');
 const KC_REALM = getEnv('REACT_APP_KEYCLOAK_REALM');
 const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 
-// App constants
-const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv(
-    'REACT_APP_ENGAGEMENT_PROJECT_TYPES',
-    'Energy-Electricity,Energy - Petroleum & Natural Gas,' +
-        'Food Processing,' +
-        'Industrial,' +
-        'Mines,' +
-        'Other,' +
-        'Tourist Destination Resorts,' +
-        'Transportation,' +
-        'Waste Disposal,' +
-        'Water Management',
-).split(',');
-
 // tenant conifg
 const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT', 'true') === 'true';
 const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
@@ -99,9 +82,6 @@ export const AppConfig = {
         clientId: KC_CLIENT || '',
         realm: KC_REALM || '',
         adminRole: KC_ADMIN_ROLE || 'admin',
-    },
-    constants: {
-        engagementProjectTypes: ENGAGEMENT_PROJECT_TYPES,
     },
     tenant: {
         isSingleTenantEnvironment: IS_SINGLE_TENANT_ENVIRONMENT,

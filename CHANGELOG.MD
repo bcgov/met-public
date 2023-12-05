@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## December 5, 2023
+
+- **Task** Remove unused project metadata [🎟️DESENG-441](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-441)
+
 ## December 4, 2023
 
 - **Feature**: .env var audit and cleanup [🎟️DESENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414) (work finished)
@@ -14,7 +18,7 @@ All notable changes to this project will be documented in this file.
   - Enable file-watching reloader and debugger for development environments
   - Inline documentation added in config.py
   - Removed unused settings
-  
+
 ## November 29, 2023
 
 - **Feature**: Superusers can publish engagements without attached surveys [🎟️DESENG-438](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-438)

@@ -1,4 +1,4 @@
-import { Engagement, ProjectMetadata } from 'models/engagement';
+import { Engagement } from 'models/engagement';
 
 export interface EngagementState {
     allEngagements: Engagement[];
@@ -41,5 +41,4 @@ export interface PatchEngagementRequest {
     rich_content?: string;
     banner_filename?: string;
     status_block?: unknown[];
-    project_metadata?: ProjectMetadata;
 }

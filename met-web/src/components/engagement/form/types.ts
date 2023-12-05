@@ -1,4 +1,4 @@
-import { Engagement, EngagementMetadata, ProjectMetadata } from '../../../models/engagement';
+import { Engagement, EngagementMetadata } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
 export interface EngagementContext {
@@ -33,8 +33,6 @@ export interface EngagementForm {
     content: string;
     rich_content: string;
     status_block: EngagementStatusBlock[];
-    project_id: string;
-    project_metadata: ProjectMetadata;
 }
 
 export interface EngagementFormUpdate {
@@ -47,8 +45,6 @@ export interface EngagementFormUpdate {
     rich_content?: string;
     is_internal?: boolean;
     status_block?: EngagementStatusBlock[];
-    project_id: string;
-    project_metadata: ProjectMetadata;
 }
 
 export type EngagementParams = {

@@ -55,10 +55,8 @@ export const ActionContext = createContext<EngagementContext>({
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
-    // get projectId from query params
     const { search } = useLocation();
     const searchParams = new URLSearchParams(search);
-    const projectId = searchParams.get('projectId');
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -71,7 +69,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>({
         ...createDefaultEngagementMetadata(),
-        project_id: projectId ?? '',
     });
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
@@ -255,9 +252,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    const handleUpdateEngagementMetadataRequest = async (
-        engagement: EngagementFormUpdate,
-    ): Promise<EngagementMetadata> => {
+    const handleUpdateEngagementMetadataRequest = async (): Promise<EngagementMetadata> => {
         try {
             if (!savedEngagement.id) {
                 dispatch(
@@ -268,8 +263,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const state = { ...engagementMetadata };
             const engagementMetadataToUpdate: EngagementMetadata = {
                 engagement_id: Number(engagementId),
-                project_id: engagement.project_id,
-                project_metadata: engagement.project_metadata,
             };
             const metadataDiff = diff(state, engagementMetadataToUpdate) as EngagementMetadata;
 
