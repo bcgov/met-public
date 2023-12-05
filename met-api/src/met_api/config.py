@@ -36,7 +36,7 @@ load_dotenv(find_dotenv())
 os.environ = {k: v for k, v in os.environ.items() if v}
 
 
-def get_named_config(environment: str | None) -> None:
+def get_named_config(environment: str | None) -> 'Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 

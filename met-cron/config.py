@@ -37,7 +37,7 @@ CONFIGURATION = {
 }
 
 
-def get_named_config(environment: str | None) -> None:
+def get_named_config(environment: str | None) -> '_Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 
