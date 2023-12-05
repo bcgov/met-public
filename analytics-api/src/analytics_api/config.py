@@ -28,20 +28,26 @@ from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
 
-def get_named_config(config_name: str = 'development'):
-    """Return the configuration object based on the name.
-
-    :raise: KeyError: if an unknown configuration is requested
+def get_named_config(environment: str | None) -> None:
     """
-    if config_name in ['production', 'staging', 'default']:
-        config = ProdConfig()
-    elif config_name == 'testing':
-        config = TestConfig()
-    elif config_name == 'development':
-        config = DevConfig()
-    else:
-        raise KeyError("Unknown configuration '{config_name}'")
-    return config
+    Retrieve a configuration object by name. Used by the Flask app factory.
+
+    :param config_name: The name of the configuration.
+    :return: The requested configuration object.
+    :raises: KeyError if the requested configuration is not found.
+    """
+    config_mapping = {
+        'development': DevConfig,
+        'default':   ProdConfig,
+        'staging':    ProdConfig,
+        'production': ProdConfig,
+        'testing':    TestConfig,
+    }
+    try:
+        print(f'Loading configuration: {environment}...')
+        return config_mapping[environment]()
+    except KeyError:
+        raise KeyError(f'Configuration "{environment}" not found.')
 
 
 class _Config():  # pylint: disable=too-few-public-methods

@@ -27,7 +27,7 @@ def send_email(subject, email, html_body, args, template_id):
     if not email or not is_valid_email(email):
         return
 
-    sender = current_app.config.get('MAIL_FROM_ID')
+    sender = current_app.config['EMAIL_TEMPLATES']['FROM_ADDRESS']
     service_account_token = RestService.get_service_account_token()
     send_email_endpoint = current_app.config.get('NOTIFICATIONS_EMAIL_ENDPOINT')
     payload = {
