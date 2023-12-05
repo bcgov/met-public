@@ -1,3 +1,6 @@
+## December 5, 2023
+- **Task** Remove unused project metadata [🎟️DESENG-441](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-441)
+
 ## November 29, 2023
 - **Feature** Superusers can publish engagements without attached surveys [🎟️DESENG-438](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-438)
 

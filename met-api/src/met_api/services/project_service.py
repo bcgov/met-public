@@ -28,11 +28,7 @@ class ProjectService:
             engagement_metadata: EngagementMetadataModel
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
 
-            if not (project_id := engagement_metadata.project_id):
-                # EPIC is not interested in the data without project Id.So Skip the process.
-                return
-
-            epic_comment_period_payload = ProjectService._construct_epic_payload(engagement, project_id)
+            epic_comment_period_payload = ProjectService._construct_epic_payload(engagement)
 
             eao_service_account_token = ProjectService._get_eao_service_account_token()
 
@@ -64,7 +60,7 @@ class ProjectService:
         return engagement, engagement_metadata
 
     @staticmethod
-    def _construct_epic_payload(engagement, project_id):
+    def _construct_epic_payload(engagement):
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         # the dates have to be converted to UTC since EPIC accepts UTC date and converts to PST
         start_date_utc = convert_and_format_to_utc_str(engagement.start_date)
@@ -83,7 +79,6 @@ class ProjectService:
             'milestone': current_app.config.get('EPIC_MILESTONE'),
             'openHouse': '',
             'relatedDocuments': '',
-            'project': project_id,
             'isPublished': 'true'
         }
         return epic_comment_period_payload

@@ -71,7 +71,8 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_engagement_status(query, search_options)
 
-            query = cls._filter_by_project_metadata(query, search_options)
+            # TODO: Uncomment for metadata changes coming soon.
+            # query = cls._filter_by_project_metadata(query, search_options)
 
         query = cls._filter_by_internal(query, search_options)
 
@@ -263,29 +264,7 @@ class Engagement(BaseModel):
     def _filter_by_project_metadata(query, search_options):
         query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
 
-        if project_type := search_options.get('project_type'):
-            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext.ilike(f'%{project_type}%')) \
-                .params(val=project_type)
-
-        if project_name := search_options.get('project_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['project_name']
-                                 .astext.ilike(f'%{project_name}%')) \
-                .params(val=project_name)
-
-        if project_id := search_options.get('project_id'):
-            query = query.filter(EngagementMetadataModel.project_id == project_id) \
-                .params(val=project_id)
-
-        if application_number := search_options.get('application_number'):
-            query = query.filter(EngagementMetadataModel.project_metadata['application_number']
-                                 .astext.ilike(f'%{application_number}%')) \
-                .params(val=application_number)
-
-        if client_name := search_options.get('client_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['client_name']
-                                 .astext.ilike(f'%{client_name}%')) \
-                .params(val=client_name)
-
+        # TODO: Populate or remove this method dependent on changes resulting from adding the new Engagement metadata
         return query
 
     @staticmethod

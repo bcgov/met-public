@@ -14,7 +14,6 @@ import { useAppTranslation } from 'hooks';
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [didMount, setDidMount] = useState(false);
-    const { engagementProjectTypes } = AppConfig.constants;
     const { t: translate } = useAppTranslation();
 
     const debounceSetSearchFilters = useRef(
@@ -106,7 +105,7 @@ const LandingComponent = () => {
                         marginTop={'2em'}
                         ref={tileBlockRef}
                     >
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                             <MetLabel>Engagement name</MetLabel>
                             <TextField
                                 fullWidth
@@ -119,7 +118,7 @@ const LandingComponent = () => {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
                             <MetLabel>Status</MetLabel>
                             <TextField
                                 id="status"
@@ -148,41 +147,6 @@ const LandingComponent = () => {
                                 <MenuItem value={EngagementDisplayStatus.Open}>Open</MenuItem>
                                 <MenuItem value={EngagementDisplayStatus.Upcoming}>Upcoming</MenuItem>
                                 <MenuItem value={EngagementDisplayStatus.Closed}>Closed</MenuItem>
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel>Project Type</MetLabel>
-                            <TextField
-                                id="project-type"
-                                name="projectType"
-                                variant="outlined"
-                                label=" "
-                                defaultValue=""
-                                value={searchFilters.project_type}
-                                fullWidth
-                                size="small"
-                                onChange={(event) => {
-                                    setSearchFilters({
-                                        ...searchFilters,
-                                        project_type: event.target.value || '',
-                                    });
-                                    setPage(1);
-                                }}
-                                select
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                            >
-                                <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                    {' '}
-                                </MenuItem>
-                                {engagementProjectTypes.map((type: string) => {
-                                    return (
-                                        <MenuItem key={type} value={type}>
-                                            {type}
-                                        </MenuItem>
-                                    );
-                                })}
                             </TextField>
                         </Grid>
                     </Grid>

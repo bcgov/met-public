@@ -7,7 +7,6 @@ export interface Subscription {
     email_address: string;
     is_subscribed: boolean;
     participant_id: number;
-    project_id: string;
     type: string;
 }
 

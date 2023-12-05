@@ -19,9 +19,8 @@ class EngagementMetadataModel(BaseModel):
 
     __tablename__ = 'engagement_metadata'
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), primary_key=True)
-    project_id = db.Column(db.String(50), unique=False, nullable=True)
-    project_metadata = db.Column(postgresql.JSONB(astext_type=db.Text()), unique=False, nullable=True)
-    project_tracking_id = db.Column(db.String(100), unique=False, nullable=True)
+    # TODO: Uncomment when upcoming changes to app metadata take place
+    # project_metadata = db.Column(postgresql.JSONB(astext_type=db.Text()), unique=False, nullable=True)
 
     @classmethod
     def find_by_engagement_id(cls, engagement_id):
@@ -36,13 +35,7 @@ class EngagementMetadataModel(BaseModel):
         engagement_metadata: EngagementMetadataModel = query.first()
         if not engagement_metadata:
             return None
-        update_fields = dict(
-            project_id=engagement_metadata_data.get('project_id', engagement_metadata.project_id),
-            project_metadata={
-                **engagement_metadata.project_metadata,
-                **engagement_metadata_data.get('project_metadata', {})
-            },
-        )
-        query.update(update_fields)
+
+        # TODO: Restore partial functionality to this method when the new Engagement Metadata is added.
         db.session.commit()
         return engagement_metadata
