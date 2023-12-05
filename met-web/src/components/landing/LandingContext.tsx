@@ -6,7 +6,6 @@ import { PAGE_SIZE } from './constants';
 interface SearchFilters {
     name: string;
     status: number[];
-    project_type: string;
 }
 
 export interface LandingContextProps {
@@ -22,7 +21,6 @@ export interface LandingContextProps {
 const initialSearchFilters = {
     name: '',
     status: [],
-    project_type: '',
 };
 export const LandingContext = createContext<LandingContextProps>({
     engagements: [],
@@ -47,7 +45,7 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
 
     const loadEngagements = async () => {
         try {
-            const { status, name, project_type } = searchFilters;
+            const { status, name } = searchFilters;
             const loadedEngagements = await getEngagements({
                 page: page,
                 size: PAGE_SIZE,
@@ -56,7 +54,6 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
                 include_banner_url: true,
                 engagement_status: status,
                 search_text: name,
-                project_type: project_type,
             });
             setEngagements(loadedEngagements.items);
             setTotalEngagements(loadedEngagements.total);

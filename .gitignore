@@ -68,6 +68,9 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# Colima
+met-api/colima.yaml
+
 # Sphinx documentation
 docs/_build/
 
@@ -137,5 +140,6 @@ met-api/.DS_Store
 /.idea/modules.xml
 /.idea/met-public.iml
 
-# VSCode Chrome extension user data
+# VSCode config and Chrome extension user data
 .vscode/chrome
+met-web/.vscode/

@@ -244,9 +244,9 @@ class EmailVerificationService:
             return tenant_name
 
         if subscription_type == SubscriptionTypes.PROJECT.value:
-            metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
-            project_name = metadata_model.project_metadata.get('project_name', None)
-            return project_name or engagement.name
+            # TODO: Uncomment depending on future metadata work
+            # metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
+            return engagement.name
 
         if subscription_type == SubscriptionTypes.ENGAGEMENT.value:
             return engagement.name

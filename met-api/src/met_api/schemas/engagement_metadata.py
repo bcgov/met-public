@@ -15,5 +15,5 @@ class EngagementMetadataSchema(Schema):
         unknown = EXCLUDE
 
     engagement_id = fields.Int(data_key='engagement_id')
-    project_id = fields.Str(data_key='project_id')
-    project_metadata = fields.Dict(data_key='project_metadata')
+    # TODO: Uncomment depending on future metadata work
+    # project_metadata = fields.Dict(data_key='project_metadata')
