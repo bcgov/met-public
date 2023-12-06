@@ -142,6 +142,15 @@ class Config:  # pylint: disable=too-few-public-methods
     # Timezone in Victoria, BC
     LEGISLATIVE_TIMEZONE = os.getenv('LEGISLATIVE_TIMEZONE', 'America/Vancouver')
 
+    # Used to create the default tenant when setting up the database.
+    # Also used for some test cases.
+    DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'DEFAULT')
+    DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Default Tenant')
+    DEFAULT_TENANT_DESCRIPTION = os.getenv(
+        'DEFAULT_TENANT_DESCRIPTION',
+        'The default tenant for MET. Used for testing and development.'
+    )
+
     # CORS settings
     CORS_ORIGINS = os.getenv('CORS_ORIGINS', '').split(',')
 
@@ -330,9 +339,6 @@ class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-metho
     JWT_OIDC_TEST_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_TEST_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
     JWT_OIDC_TEST_ALGORITHMS = os.getenv('JWT_OIDC_TEST_ALGORITHMS')
-
-    # Used to create a simple tenant for testing purposes
-    DEFAULT_TENANT_SHORT_NAME = os.getenv('TEST_TENANT_SHORT_NAME', 'GDX')
 
     # Override the DB config to use the test database, if one is configured
     DB_CONFIG = {
