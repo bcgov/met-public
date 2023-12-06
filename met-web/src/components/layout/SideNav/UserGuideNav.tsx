@@ -6,7 +6,7 @@ import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
 
 const THRESHOLD_SIMILARITY_SCORE = 10;
-const HELP_URL = 'https://bcgov.github.io/met-guide';
+const HELP_URL = 'https://bcgov.github.io/epic-engage-guide';
 
 const UserGuideNav = () => {
     const { pathname } = useLocation();
