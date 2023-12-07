@@ -339,9 +339,7 @@ class CommentService:
             comments_by_label[label].append({'text': text, 'submission_id': submission_id})
 
         # Create a list of titles with label information in order of appearance
-        titles = [{'label': title} for title in unique_titles for _ in range(2)]
-        # Insert "Proponent Answer" after each label in titles
-        titles = [{'label': 'Proponent Answer'} if i % 2 else title for i, title in enumerate(titles)]
+        titles = [{'label': title, 'proponent_answers': 'Proponent Answer'} for title in unique_titles]
 
         # Create a list of comments organized by label order
         formatted_comments = []
