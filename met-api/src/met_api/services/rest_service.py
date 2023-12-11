@@ -57,8 +57,10 @@ class RestService:
         response = None
         try:
             invoke_rest_method = getattr(requests, rest_method)
-            response = invoke_rest_method(endpoint, data=data, headers=headers,
-                                          timeout=current_app.config.get('CONNECT_TIMEOUT', 60))
+            response = invoke_rest_method(
+                endpoint, data=data, headers=headers,
+                timeout=current_app.config['KEYCLOAK_CONFIG']['CONNECT_TIMEOUT']
+            )
             if raise_for_status:
                 response.raise_for_status()
         except (ReqConnectionError, ConnectTimeout) as exc:
@@ -106,9 +108,10 @@ class RestService:
     @staticmethod
     def get_service_account_token(kc_service_id: str = None, kc_secret: str = None, issuer_url: str = None) -> str:
         """Generate a service account token."""
-        kc_service_id = kc_service_id or current_app.config.get('KEYCLOAK_SERVICE_ACCOUNT_ID')
-        kc_secret = kc_secret or current_app.config.get('KEYCLOAK_SERVICE_ACCOUNT_SECRET')
-        issuer_url = issuer_url or current_app.config.get('JWT_OIDC_ISSUER')
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        kc_service_id = kc_service_id or keycloak.get('SERVICE_ACCOUNT_ID')
+        kc_secret = kc_secret or keycloak.get('SERVICE_ACCOUNT_SECRET')
+        issuer_url = issuer_url or current_app.config['JWT_OIDC_ISSUER']
 
         if kc_service_id is None or kc_secret is None or issuer_url is None:
             raise ValueError('Missing required parameters')

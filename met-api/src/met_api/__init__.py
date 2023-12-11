@@ -15,7 +15,6 @@ from met_api.models import db, ma, migrate
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.utils import constants
 from met_api.utils.cache import cache
-from met_api.utils.util import allowedorigins
 
 # Security Response headers
 csp = (
@@ -48,10 +47,10 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
     # Flask app initialize
     app = Flask(__name__)
 
-    # All configuration are in config file
+    # Configure app from config.py
     app.config.from_object(get_named_config(run_mode))
 
-    CORS(app, origins=allowedorigins(), supports_credentials=True)
+    CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=True)
 
     # Register blueprints
     app.register_blueprint(API_BLUEPRINT)
@@ -133,7 +132,7 @@ def setup_jwt_manager(app_context, jwt_manager):
         Consumes a token_info dictionary and returns a list of roles.
         Uses a configurable path to the roles in the token_info dictionary.
         """
-        role_access_path = app_context.config['JWT_ROLE_CLAIM']
+        role_access_path = app_context.config['JWT_CONFIG']['ROLE_CLAIM']
         for key in role_access_path.split('.'):
             token_info = token_info.get(key, {})
         return token_info
