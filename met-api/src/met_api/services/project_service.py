@@ -21,8 +21,8 @@ class ProjectService:
         logger = logging.getLogger(__name__)
 
         try:
-            is_eao_environment = current_app.config.get('IS_EAO_ENVIRONMENT')
-            if not is_eao_environment:
+            epic_integration = current_app.config.get('EPIC_CONFIG')
+            if not epic_integration['ENABLED']:
                 return
 
             engagement_metadata: EngagementMetadataModel
@@ -33,14 +33,14 @@ class ProjectService:
             eao_service_account_token = ProjectService._get_eao_service_account_token()
 
             if engagement_metadata and engagement_metadata.project_tracking_id:
-                update_url = f'{current_app.config.get("EPIC_URL")}/{engagement_metadata.project_tracking_id}'
+                update_url = f'{epic_integration["URL"]}/{engagement_metadata.project_tracking_id}'
                 api_response = RestService.put(endpoint=update_url, token=eao_service_account_token,
                                                data=epic_comment_period_payload,
                                                raise_for_status=False)
                 # no handling of return so far since epic doesnt return anything
 
             else:
-                create_url = f'{current_app.config.get("EPIC_URL")}'
+                create_url = f'{epic_integration["URL"]}'
                 api_response = RestService.post(endpoint=create_url, token=eao_service_account_token,
                                                 data=epic_comment_period_payload, raise_for_status=False)
                 response_data = api_response.json()
@@ -76,7 +76,7 @@ class ProjectService:
             'dateStarted': start_date_utc,
             'instructions': '',
             'commentTip': '',
-            'milestone': current_app.config.get('EPIC_MILESTONE'),
+            'milestone': current_app.config['EPIC_CONFIG']['MILESTONE_ID'],
             'openHouse': '',
             'relatedDocuments': '',
             'isPublished': 'true'
@@ -85,8 +85,9 @@ class ProjectService:
 
     @staticmethod
     def _get_eao_service_account_token():
-        kc_service_id = current_app.config.get('EPIC_KEYCLOAK_SERVICE_ACCOUNT_ID')
-        kc_secret = current_app.config.get('EPIC_KEYCLOAK_SERVICE_ACCOUNT_SECRET')
-        issuer_url = current_app.config.get('EPIC_JWT_OIDC_ISSUER')
-        client_id = current_app.config.get('EPIC_KC_CLIENT_ID')
+        epic = current_app.config['EPIC_CONFIG']
+        kc_service_id = epic.get('KEYCLOAK_SERVICE_ACCOUNT_ID')
+        kc_secret = epic.get('KEYCLOAK_SERVICE_ACCOUNT_SECRET')
+        client_id = epic.get('KEYCLOAK_CLIENT_ID')
+        issuer_url = epic.get('JWT_OIDC_ISSUER')
         return RestService.get_access_token_with_password(kc_service_id, kc_secret, client_id, issuer_url)

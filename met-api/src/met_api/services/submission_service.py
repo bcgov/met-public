@@ -32,7 +32,6 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
-from met_api.config import get_gc_notify_config
 
 
 class SubmissionService:
@@ -329,7 +328,8 @@ class SubmissionService:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
-        template_id = get_gc_notify_config('REJECTED_EMAIL_TEMPLATE_ID')
+        templates = current_app.config.get('EMAIL_TEMPLATES')
+        template_id = templates['REJECTED']['ID']
         subject, body, args = SubmissionService._render_email_template(
             staff_review_details, submission, review_note, token)
         try:
@@ -353,18 +353,20 @@ class SubmissionService:
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
         survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
+        templates = current_app.config['EMAIL_TEMPLATES']
+        paths = current_app.config['PATH_CONFIG']
         engagement_name = engagement.name
         survey_name = survey.name
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
-        submission_path = current_app.config.get('SUBMISSION_PATH'). \
-            format(engagement_id=submission.engagement_id,
-                   submission_id=submission.id, token=token)
+        submission_path = paths['SUBMISSION'].format(
+            engagement_id=submission.engagement_id,
+            submission_id=submission.id, token=token
+        )
         submission_url = notification.get_tenant_site_url(
             engagement.tenant_id, submission_path)
-        subject = get_gc_notify_config('REJECTED_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement_name)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        subject = templates['REJECTED']['SUBJECT']
+        email_environment = templates['ENVIRONMENT']
         args = {
             'engagement_name': engagement_name,
             'survey_name': survey_name,
@@ -395,7 +397,8 @@ class SubmissionService:
     def _send_submission_response_email(participant_id, engagement_id) -> None:
         """Send response to survey submission."""
         participant = ParticipantModel.find_by_id(participant_id)
-        template_id = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        template_id = templates['SUBMISSION_RESPONSE']['ID']
         subject, body, args = SubmissionService._render_submission_response_email_template(engagement_id)
         try:
             notification.send_email(subject=subject,
@@ -414,16 +417,17 @@ class SubmissionService:
     @staticmethod
     def _render_submission_response_email_template(engagement_id):
         engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        templates = current_app.config['EMAIL_TEMPLATES']
         template = Template.get_template('submission_response.html')
-        subject = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_SUBJECT')
+        subject = templates['SUBMISSION_RESPONSE']['SUBJECT']
         dashboard_path = SubmissionService._get_dashboard_path(engagement)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        email_environment = templates['ENVIRONMENT']
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
         args = {
             'engagement_url': engagement_url,
-            'engagement_time': get_gc_notify_config('ENGAGEMENT_END_TIME'),
+            'engagement_time': templates['CLOSING_TIME'],
             'engagement_end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'tenant_name': tenant_name,
             'email_environment': email_environment,
@@ -440,11 +444,14 @@ class SubmissionService:
     @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
-            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
-                format(slug=engagement_slug.slug)
-        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.id)
+            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(
+                slug=engagement_slug.slug
+            )
+        return paths['ENGAGEMENT']['DASHBOARD'].format(
+            engagement_id=engagement.id
+        )
 
     @staticmethod
     def is_unpublished(engagement_id):

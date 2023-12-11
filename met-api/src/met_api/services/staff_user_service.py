@@ -12,8 +12,6 @@ from met_api.utils import notification
 from met_api.utils.constants import GROUP_NAME_MAPPING, Groups
 from met_api.utils.enums import KeycloakGroupName
 from met_api.utils.template import Template
-from met_api.config import get_gc_notify_config
-
 
 KEYCLOAK_SERVICE = KeycloakService()
 
@@ -56,11 +54,11 @@ class StaffUserService:
     @staticmethod
     def _send_access_request_email(user: StaffUserModel) -> None:
         """Send a new user email.Throws error if fails."""
-        to_email_address = get_gc_notify_config('ACCESS_REQUEST_EMAIL_ADDRESS')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        to_email_address = templates['ACCESS_REQUEST']['DEST_EMAIL_ADDRESS']
         if to_email_address is None:
             return
-
-        template_id = get_gc_notify_config('ACCESS_REQUEST_EMAIL_TEMPLATE_ID')
+        template_id = templates['ACCESS_REQUEST']['ID']
         subject, body, args = StaffUserService._render_email_template(user)
         try:
             notification.send_email(subject=subject,
@@ -77,10 +75,13 @@ class StaffUserService:
     @staticmethod
     def _render_email_template(user: StaffUserModel):
         template = Template.get_template('email_access_request.html')
-        subject = get_gc_notify_config('ACCESS_REQUEST_EMAIL_SUBJECT')
-        grant_access_url = \
-            notification.get_tenant_site_url(user.tenant_id, current_app.config.get('USER_MANAGEMENT_PATH'))
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        paths = current_app.config['PATHS']
+        subject = templates['ACCESS_REQUEST']['SUBJECT']
+        grant_access_url = notification.get_tenant_site_url(
+            user.tenant_id, paths['USER_MANAGEMENT']
+        )
+        email_environment = templates['ENVIRONMENT']
         args = {
             'first_name': user.first_name,
             'last_name': user.last_name,
