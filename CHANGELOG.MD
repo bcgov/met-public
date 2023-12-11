@@ -61,7 +61,8 @@ All notable changes to this project will be documented in this file.
   - Remove one old production .env file with obsolete settings
 - Changes to DEVELOPMENT.md to reflect the current state of the project
 
-## October 1, 2023
+
+## v1.0.0 - 2023-10-01
 
 - App handoff from EAO to GDX
 - Added changelog
