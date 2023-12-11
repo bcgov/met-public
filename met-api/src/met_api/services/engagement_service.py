@@ -26,8 +26,6 @@ from met_api.utils.roles import Role
 from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
 from met_api.models import Tenant as TenantModel
-from met_api.config import get_gc_notify_config
-
 
 class EngagementService:
     """Engagement management service."""
@@ -70,6 +68,7 @@ class EngagementService:
         user_roles = TokenInfo.get_user_roles()
         has_team_access = search_options.get('has_team_access')
         scope_options = self._get_scope_options(user_roles, has_team_access)
+        
         items, total = EngagementModel.get_engagements_paginated(
             external_user_id,
             pagination_options,
@@ -98,7 +97,7 @@ class EngagementService:
             return EngagementScopeOptions(restricted=False)
         if has_team_access:
             # return those engagements where user has access for edit members..
-            # either he has edit_member role or check if he is a team member
+            # either they have edit_member role or check if they are a team member
             has_edit_role = Role.EDIT_MEMBERS.value in user_roles
             if has_edit_role:
                 return EngagementScopeOptions(restricted=False)
@@ -268,7 +267,7 @@ class EngagementService:
         """Send the engagement closeout emails.Throws error if fails."""
         subject, body, args = EngagementService._render_email_template(engagement)
         participants = SubmissionModel.get_engaged_participants(engagement.id)
-        template_id = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID', None)
+        template_id = current_app.config['EMAIL_TEMPLATES']['CLOSEOUT']['ID']
         emails = [participant.decode_email(participant.email_address) for participant in participants]
         # Removes duplicated records
         emails = list(set(emails))
@@ -286,9 +285,9 @@ class EngagementService:
         template = Template.get_template('email_engagement_closeout.html')
         dashboard_path = EngagementService._get_dashboard_path(engagement)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
-        subject = current_app.config.get('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement.name)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        subject = templates['CLOSEOUT']['SUBJECT'].format(engagement_name=engagement.name)
+        email_environment = templates['ENVIROMENT']
         tenant_name = EngagementService._get_tenant_name(
             engagement.tenant_id)
         args = {
@@ -313,8 +312,7 @@ class EngagementService:
     @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
-            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
-                format(slug=engagement_slug.slug)
-        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.id)
+            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(slug=engagement_slug.slug)
+        return paths['ENGAGEMENT']['DASHBOARD'].format(engagement_id=engagement.id)

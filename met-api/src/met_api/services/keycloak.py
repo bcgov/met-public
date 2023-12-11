@@ -28,9 +28,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def get_user_groups(user_id):
         """Get user group from Keycloak by userid."""
-        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
-        realm = current_app.config.get('KEYCLOAK_REALMNAME')
-        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        timeout = keycloak['CONNECT_TIMEOUT']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
         admin_token = KeycloakService._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,
@@ -51,8 +52,9 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         # TODO fix this during tests and remove below
         if not base_url:
             return {}
-        realm = current_app.config.get('KEYCLOAK_REALMNAME')
-        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         admin_token = KeycloakService._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,
@@ -75,10 +77,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _get_group_id(admin_token: str, group_name: str):
         """Get a group id for the group name."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         get_group_url = f'{base_url}/auth/admin/realms/{realm}/groups?search={group_name}'
         headers = {
             'Content-Type': ContentType.JSON.value,
@@ -100,31 +102,32 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _get_admin_token():
         """Create an admin token."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        admin_client_id = config.get(
-            'KEYCLOAK_ADMIN_USERNAME')
-        admin_secret = config.get('KEYCLOAK_ADMIN_SECRET')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        admin_client_id = keycloak['ADMIN_USERNAME']
+        admin_secret = keycloak['ADMIN_SECRET']
+        timeout = keycloak['CONNECT_TIMEOUT']
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        token_url = f'{base_url}/auth/realms/{realm}/protocol/openid-connect/token'
+        TOKEN_ISSUER = current_app.config['JWT_CONFIG']['ISSUER']
+        token_url = f'{TOKEN_ISSUER}/protocol/openid-connect/token'
 
-        response = requests.post(token_url,
-                                 data=f'client_id={admin_client_id}&grant_type=client_credentials'
-                                      f'&client_secret={admin_secret}', headers=headers,
-                                 timeout=timeout)
+        response = requests.post(
+            token_url,
+            headers=headers,
+            timeout=timeout,
+            data=f'client_id={admin_client_id}&grant_type=client_credentials'
+                 f'&client_secret={admin_secret}'
+        )
         return response.json().get('access_token')
 
     @staticmethod
     def _remove_user_from_group(user_id: str, group_name: str):
         """Remove user from the keycloak group."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         # Create an admin token
         admin_token = KeycloakService._get_admin_token()
         # Get the '$group_name' group
@@ -143,10 +146,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def add_user_to_group(user_id: str, group_name: str):
         """Add user to the keycloak group."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         # Create an admin token
         admin_token = KeycloakService._get_admin_token()
         # Get the '$group_name' group
@@ -185,10 +188,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def remove_user_from_group(user_id: str, group_name: str):
         """Remove user from the keycloak group."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         # Create an admin token
         admin_token = KeycloakService._get_admin_token()
         # Get the '$group_name' group
@@ -206,13 +209,12 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def add_user(user: dict):
         """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
-        config = current_app.config
         # Add user and set password
         admin_token = KeycloakService._get_admin_token()
-
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
-        timeout = config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
 
         # Add user to the keycloak group '$group_name'
         headers = {
@@ -230,9 +232,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def get_user_by_username(username, admin_token=None):
         """Get user from Keycloak by username."""
-        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
-        realm = current_app.config.get('KEYCLOAK_REALMNAME')
-        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         if not admin_token:
             admin_token = KeycloakService._get_admin_token()
 
@@ -249,9 +252,10 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def toggle_user_enabled_status(user_id, enabled):
         """Toggle the enabled status of a user in Keycloak."""
-        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
-        realm = current_app.config.get('KEYCLOAK_REALMNAME')
-        timeout = current_app.config.get('CONNECT_TIMEOUT', 60)
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
+        realm = keycloak['REALMNAME']
+        timeout = keycloak['CONNECT_TIMEOUT']
         admin_token = KeycloakService._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,

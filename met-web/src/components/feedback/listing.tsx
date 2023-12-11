@@ -99,6 +99,14 @@ const FeedbackListing = () => {
             renderCell: (row: Feedback) => SourceTypeEnum[row.source ?? 0].toString(),
         },
         {
+            key: 'submission_path',
+            numeric: false,
+            disablePadding: false,
+            label: 'Path',
+            allowSort: true,
+            renderCell: (row: Feedback) => row.submission_path,
+        },
+        {
             key: 'comment_type',
             numeric: false,
             disablePadding: false,

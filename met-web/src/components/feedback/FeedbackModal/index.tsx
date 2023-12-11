@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
 import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton, MetDisclaimer } from '../../common';
-import { CommentTypeEnum, createDefaultFeedback, RatingTypeEnum } from 'models/feedback';
+import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
 import { createFeedback } from 'services/feedbackService';
@@ -29,8 +29,8 @@ import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDiss
 export const FeedbackModal = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const [feedbackFormData, setFeedbackFormData] = useState(createDefaultFeedback());
     const [isSaving, setIsSaving] = useState(false);
+    const [feedbackFormData, setFeedbackFormData] = useState(setFeedbackPath(createDefaultFeedback()));
     const { comment, rating, comment_type } = feedbackFormData;
     const dispatch = useAppDispatch();
 
