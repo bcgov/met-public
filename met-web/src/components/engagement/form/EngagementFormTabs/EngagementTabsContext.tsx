@@ -6,7 +6,7 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { EngagementSettings, ProjectMetadata, createDefaultEngagementSettings } from 'models/engagement';
+import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
 import { updatedDiff } from 'deep-object-diff';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import {
@@ -22,8 +22,6 @@ interface EngagementFormData {
     description: string;
     content: string;
     is_internal: boolean;
-    project_id: string;
-    project_metadata: ProjectMetadata;
 }
 
 interface EngagementSettingsFormData {
@@ -37,13 +35,6 @@ const initialEngagementFormData = {
     description: '',
     content: '',
     is_internal: false,
-    project_id: '',
-    project_metadata: {
-        project_name: '',
-        type: '',
-        client_name: '',
-        application_number: '',
-    },
 };
 
 interface EngagementFormError {
@@ -148,13 +139,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         description: savedEngagement.description || '',
         content: savedEngagement.content || '',
         is_internal: savedEngagement.is_internal || false,
-        project_id: engagementMetadata.project_id,
-        project_metadata: {
-            project_name: engagementMetadata?.project_metadata?.project_name || '',
-            client_name: engagementMetadata?.project_metadata?.client_name || '',
-            type: engagementMetadata?.project_metadata?.type || '',
-            application_number: engagementMetadata?.project_metadata?.application_number || '',
-        },
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');

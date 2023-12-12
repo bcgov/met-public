@@ -1,10 +1,10 @@
 {
     "name": "client",
-    "version": "0.1.0",
+    "version": "1.1.0",
     "private": true,
     "dependencies": {
         "@arcgis/core": "^4.26.5",
-        "@bcgov/bc-sans": "^1.0.1",
+        "@bcgov/bc-sans": "^2.0",
         "@emotion/react": "^11.9.0",
         "@emotion/styled": "^11.8.1",
         "@formio/react": "^5.2.4-rc.1",
