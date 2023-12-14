@@ -20,7 +20,7 @@ export interface ModalProps {
     header: string;
     subText: Array<ModalSubtext>;
     email: string;
-    signupoptions: ReactNode;
+    signupoptions: ReactNode | null;
     termsOfService: ReactNode;
     handleConfirm: () => void;
     updateEmail: (email: string) => void;

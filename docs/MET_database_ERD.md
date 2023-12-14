@@ -286,6 +286,7 @@ erDiagram
         type rating
         type comment_type
         string comment
+        string submission_path
         type source
         timestamp created_date
         timestamp updated_date        

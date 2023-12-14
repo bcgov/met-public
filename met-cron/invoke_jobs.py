@@ -21,7 +21,7 @@ import sys
 from flask import Flask
 from utils.logger import setup_logging
 
-import config
+from config import get_named_config
 
 setup_logging(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'logging.conf'))  # important to do this first
 
@@ -32,9 +32,10 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
 
     app = Flask(__name__)
     print(f'>>>>> Creating app in run_mode: {run_mode}')
-    print(f'>>>>> Creating app in run_mode: {config.CONFIGURATION[run_mode]}')
 
-    app.config.from_object(config.CONFIGURATION[run_mode])
+    # Configure app from config.py
+    app.config.from_object(get_named_config(run_mode))
+
     # Configure Sentry
     app.logger.info(f'<<<< Starting Jobs >>>>')
     db.init_app(app)
