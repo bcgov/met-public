@@ -1,0 +1,30 @@
+<h1>Thank you for taking the time to provide your feedback on {{ engagement_name }}.</h1>
+<br />
+<p>We have reviewed your feedback and can't accept it for the following reason(s):</p>
+<br>
+<ul>
+  {% if has_personal_info %}
+  <li>
+    Your feedback contains personal information
+  </li>
+  {% endif %} {% if has_profanity %}
+  <li> Your feedback contains profanity or innapropriate language</li>
+  {% endif %} {% if has_other_reason %}
+  <li>
+   Your feedback contains {{ other_reason
+    }}
+  </li>
+  {% endif %}
+</ul>
+<br />
+<p>{{review_notes}}</p>
+<br/>
+<p>
+  We are sorry but the public commenting period for {{ engagement_name }}
+  is now closed and your feedback cannot be edited.
+</p>
+<br />
+<p>Thank you,</p>
+<br />
+<p>The {{tenant_name}} Team</p>
+<p>{{email_environment}}</p>

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { ClickAwayListener, Grid, InputAdornment, TextField, Tooltip } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { ClickAwayListener, Grid, Stack, InputAdornment, TextField, Tooltip } from '@mui/material';
 import {
     MetHeader3,
     MetLabel,
@@ -17,6 +18,8 @@ import { getBaseUrl } from 'helper';
 const SettingsForm = () => {
     const { setSavingSettings, savingSettings, engagementSlug, loadingEngagementSlug, survey } =
         useContext(ReportSettingsContext);
+
+    const navigate = useNavigate();
 
     const [copyTooltip, setCopyTooltip] = useState(false);
 
@@ -111,13 +114,18 @@ const SettingsForm = () => {
                             <SettingsTable />
                         </Grid>
                         <Grid item xs={12}>
-                            <PrimaryButton
-                                data-testid={'survey/report/save-button'}
-                                onClick={() => setSavingSettings(true)}
-                                loading={savingSettings}
-                            >
-                                Save
-                            </PrimaryButton>
+                            <Stack direction="row" spacing={2}>
+                                <PrimaryButton
+                                    data-testid={'survey/report/save-button'}
+                                    onClick={() => setSavingSettings(true)}
+                                    loading={savingSettings}
+                                >
+                                    Save
+                                </PrimaryButton>
+                                <SecondaryButton onClick={() => navigate(`/surveys/${survey?.id}/build`)}>
+                                    Back
+                                </SecondaryButton>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </MetPaper>

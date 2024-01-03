@@ -206,7 +206,8 @@ objects:
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
     SUBSCRIBE_EMAIL_TEMPLATE_ID: ${SUBSCRIBE_EMAIL_TEMPLATE_ID}
-    REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}    
+    REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}
+    CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID: ${CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID}    
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID: ${ACCESS_REQUEST_EMAIL_TEMPLATE_ID}
     KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
     KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
@@ -272,6 +273,10 @@ parameters:
     description: "The rejected comment email template id"
     required: true
     value: '8410c055-587b-4788-bd2f-b563562bcb2d'
+  - name: CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID
+    description: "The rejected comment email template id for closed engagement"
+    required: true
+    value: 'e942dea1-094e-4021-9aac-21a0ac1f240d'
   - name: ACCESS_REQUEST_EMAIL_TEMPLATE_ID
     description: "The access request email template id"
     required: true
