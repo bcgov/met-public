@@ -51,8 +51,8 @@ class EngagementMetadataService:
         """Save engagement metadata."""
         new_metadata_model = EngagementMetadataModel(
             engagement_id=metadata.get('engagement_id', None),
-            project_id=metadata.get('project_id', None),
-            project_metadata=metadata.get('project_metadata', None),
+            # TODO: Uncomment depending on future metadata work
+            # project_metadata=metadata.get('project_metadata', None),
             created_date=datetime.utcnow(),
             updated_date=None,
         )

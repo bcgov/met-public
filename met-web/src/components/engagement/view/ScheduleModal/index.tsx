@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ActionContext } from 'components/engagement/view/ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { formatToUTC } from 'components/common/dateHelper';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 interface ScheduleModalProps {
     reschedule: boolean;
@@ -24,12 +25,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
     const dispatch = useAppDispatch();
 
     const isEngagementReady = () => {
-        return (
-            savedEngagement.surveys.length === 1 &&
-            savedEngagement.content &&
-            savedEngagement.description &&
-            savedEngagement.banner_url
-        );
+        return savedEngagement.content && savedEngagement.description && savedEngagement.banner_url;
     };
 
     const handleChange = (newDate: Dayjs | null) => {
@@ -52,7 +48,30 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
         }
     };
 
-    const handleSchedule = async () => {
+    const confirmNoSurvey = () => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'No survey',
+                    subText: [
+                        {
+                            text: 'There is no survey attached to this engagement.',
+                        },
+                        {
+                            text: ' Are you sure you want to schedule it for publish?',
+                        },
+                    ],
+                    handleConfirm: () => {
+                        proceedToScheduling();
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
+    };
+
+    const handleSchedule = () => {
         if (!isEngagementReady()) {
             dispatch(
                 openNotification({
@@ -62,13 +81,20 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
             );
             return;
         }
+        if (savedEngagement.surveys.length < 1) {
+            confirmNoSurvey();
+        } else {
+            proceedToScheduling();
+        }
+    };
+
+    const proceedToScheduling = async () => {
         if (validateDate())
             await scheduleEngagement({
                 id: savedEngagement.id,
                 scheduled_date: scheduledDate !== null ? formatToUTC(scheduledDate) : '',
                 status_id: EngagementStatus.Scheduled,
             });
-
         updateModal(false);
     };
 

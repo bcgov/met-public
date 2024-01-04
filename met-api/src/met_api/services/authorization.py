@@ -21,12 +21,13 @@ def check_auth(**kwargs):
     """Check if user is authorized to perform action on the service."""
     skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
     user_from_context: UserContext = kwargs['user_context']
+    user_from_db = StaffUserModel.get_user_by_external_id(user_from_context.sub)
     token_roles = set(user_from_context.roles)
     permitted_roles = set(kwargs.get('one_of_roles', []))
     has_valid_roles = token_roles & permitted_roles
     if has_valid_roles:
         if not skip_tenant_check:
-            user_tenant_id = user_from_context.tenant_id
+            user_tenant_id = user_from_db.tenant_id
             _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
         return
 
@@ -47,8 +48,8 @@ def _validate_tenant(eng_id, tenant_id):
         return
     engagement_tenant_id = EngagementModel.find_tenant_id_by_id(eng_id)
     if engagement_tenant_id and str(tenant_id) != str(engagement_tenant_id):
-        current_app.logger.debug(f'Aborting . Tenant Id on Engagement and user context Mismatch'
-                                 f'engagement_tenant_id:{engagement_tenant_id} '
+        current_app.logger.debug(f'Aborting . Tenant Id on Engagement and user context Mismatch\n'
+                                 f'engagement_tenant_id:{engagement_tenant_id}\n'
                                  f'tenant_id: {tenant_id}')
 
         abort(HTTPStatus.FORBIDDEN)

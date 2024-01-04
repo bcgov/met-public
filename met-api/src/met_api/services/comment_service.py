@@ -153,11 +153,11 @@ class CommentService:
         """Export comments to spread sheet."""
         survey = SurveyModel.find_by_id(survey_id)
         comments = Comment.get_comments_by_survey_id(survey_id)
-        metadata_model = EngagementMetadataModel.find_by_id(survey.engagement_id)
-        project_name = metadata_model.project_metadata.get('project_name') if metadata_model else None
+        # TODO: Uncomment depending on future metadata work
+        # metadata_model = EngagementMetadataModel.find_by_id(survey.engagement_id)
 
         titles = cls.get_titles(survey)
-        data_rows = cls.get_data_rows(titles, comments, project_name)
+        data_rows = cls.get_data_rows(titles, comments)
 
         formatted_comments = {
             'titles': titles,

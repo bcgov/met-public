@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { MetLabel, MetParagraph } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Grid, Link, Typography, Box, RadioGroup, Radio, FormControlLabel, useMediaQuery, Theme } from '@mui/material';
+import { Link, Typography, Box, useMediaQuery, Theme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -15,7 +15,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
     const dispatch = useAppDispatch();
     const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const { savedEngagement, engagementMetadata } = useContext(ActionContext);
-    const defaultType = engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT;
+    const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [subscriptionType, setSubscriptionType] = useState<string>(defaultType);
@@ -38,7 +38,6 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                 email_address: email_verification.email_address,
                 is_subscribed: false,
                 participant_id: email_verification.participant_id,
-                project_id: engagementMetadata.project_id,
                 type: subscriptionType || defaultType,
             });
 
@@ -135,39 +134,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     text: 'Sign up to receive news and updates on public engagements.',
                 },
             ]}
-            signupoptions={
-                <Grid item xs={12}>
-                    <MetLabel sx={{ mb: isSmallScreen ? 1 : 0 }}>
-                        Please choose your preferred email update option:
-                    </MetLabel>
-                    <RadioGroup defaultValue={defaultType} onChange={(e) => handleSubscriptionChange(e.target.value)}>
-                        <FormControlLabel
-                            value={
-                                engagementMetadata.project_id ? SubscriptionType.PROJECT : SubscriptionType.ENGAGEMENT
-                            }
-                            control={<Radio />}
-                            label={
-                                <MetParagraph mb={isSmallScreen ? 1 : 0}>
-                                    I want to receive updates for {''}
-                                    {engagementMetadata.project_id
-                                        ? engagementMetadata.project_metadata.project_name
-                                        : savedEngagement.name}
-                                    {''} only
-                                </MetParagraph>
-                            }
-                        />
-                        <FormControlLabel
-                            value={SubscriptionType.TENANT}
-                            control={<Radio />}
-                            label={
-                                <MetParagraph>
-                                    I want to receive updates for all the projects at the {tenant.name}
-                                </MetParagraph>
-                            }
-                        />
-                    </RadioGroup>
-                </Grid>
-            }
+            signupoptions={null}
         />
     );
 };
