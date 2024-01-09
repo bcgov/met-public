@@ -172,8 +172,8 @@ class Engagement(BaseModel):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[Engagement]:
         """Update scheduled engagements to published."""
-        datetime_due = datetime.now()
-        print('Publish due date ------------------------', datetime_due)
+        datetime_due = datetime.utcnow()
+        print('Publish due date (UTC) ------------------------', datetime_due)
         update_fields = dict(
             status_id=Status.Published.value,
             published_date=datetime.utcnow(),

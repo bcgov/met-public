@@ -136,6 +136,11 @@ class EngagementService:
     def publish_scheduled_engagements():
         """Publish scheduled engagement due."""
         engagements = EngagementModel.publish_scheduled_engagements_due()
+
+        if not engagements:
+            print('There are no engagements scheduled for publication')
+            return None
+
         print('Engagements published: ', engagements)
         for engagement in engagements:
             email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagement.id,
