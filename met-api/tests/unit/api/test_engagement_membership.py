@@ -31,7 +31,7 @@ def test_create_engagement_membership_team_member(mocker, client, jwt, session):
     )
     mock_get_users_groups_keycloak = mocker.patch(
         'met_api.services.keycloak.KeycloakService.get_users_groups',
-        return_value={staff_user.external_id: [KeycloakGroupName.EAO_TEAM_MEMBER.value]}
+        return_value={staff_user.external_id: [KeycloakGroupName.TEAM_MEMBER.value]}
     )
 
     data = {'user_id': staff_user.external_id}
@@ -65,7 +65,7 @@ def test_create_engagement_membership_reviewer(mocker, client, jwt, session):
     )
     mock_get_users_groups_keycloak = mocker.patch(
         'met_api.services.keycloak.KeycloakService.get_users_groups',
-        return_value={staff_user.external_id: [KeycloakGroupName.EAO_REVIEWER.value]}
+        return_value={staff_user.external_id: [KeycloakGroupName.REVIEWER.value]}
     )
 
     data = {'user_id': staff_user.external_id}

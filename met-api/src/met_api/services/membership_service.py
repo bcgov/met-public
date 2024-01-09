@@ -56,7 +56,7 @@ class MembershipService:
         user_id = user_details.get('id')
 
         groups = user_details.get('groups')
-        if KeycloakGroups.EAO_IT_ADMIN.value in groups:
+        if KeycloakGroups.IT_ADMIN.value in groups:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)
@@ -81,19 +81,19 @@ class MembershipService:
     @staticmethod
     def _get_membership_details(user_details):
         """Get the group name and membership type for the user based on their assigned groups."""
-        default_group_name = Groups.EAO_TEAM_MEMBER.name
+        default_group_name = Groups.TEAM_MEMBER.name
         default_membership_type = MembershipType.TEAM_MEMBER
 
-        is_reviewer = Groups.EAO_REVIEWER.value in user_details.get('groups')
-        is_team_member = Groups.EAO_TEAM_MEMBER.value in user_details.get('groups')
+        is_reviewer = Groups.REVIEWER.value in user_details.get('groups')
+        is_team_member = Groups.TEAM_MEMBER.value in user_details.get('groups')
 
         if is_reviewer:
-            # If the user is assigned to the EAO_REVIEWER group, set the group name and membership type accordingly
-            group_name = Groups.EAO_REVIEWER.name
+            # If the user is assigned to the REVIEWER group, set the group name and membership type accordingly
+            group_name = Groups.REVIEWER.name
             membership_type = MembershipType.REVIEWER
         elif is_team_member:
-            # If the user is assigned to the EAO_TEAM_MEMBER group, set the group name and membership type accordingly
-            group_name = Groups.EAO_TEAM_MEMBER.name
+            # If the user is assigned to the TEAM_MEMBER group, set the group name and membership type accordingly
+            group_name = Groups.TEAM_MEMBER.name
             membership_type = MembershipType.TEAM_MEMBER
         else:
             # If the user is not assigned to either group, return default values for group name and membership type
@@ -103,8 +103,8 @@ class MembershipService:
         return group_name, membership_type
 
     @staticmethod
-    def _add_user_group(user: StaffUserModel, group_name=Groups.EAO_TEAM_MEMBER.name):
-        valid_member_teams = [Groups.EAO_TEAM_MEMBER.name, Groups.EAO_REVIEWER.name]
+    def _add_user_group(user: StaffUserModel, group_name=Groups.TEAM_MEMBER.name):
+        valid_member_teams = [Groups.TEAM_MEMBER.name, Groups.REVIEWER.name]
         if group_name not in valid_member_teams:
             raise BusinessException(
                 error='Invalid Group name.',

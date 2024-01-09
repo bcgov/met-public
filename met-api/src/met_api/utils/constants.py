@@ -19,10 +19,10 @@ from enum import Enum
 class Groups(Enum):
     """Enumeration representing user groups."""
 
-    EAO_IT_ADMIN = 'Superuser'
-    EAO_TEAM_MEMBER = 'Team Member'
-    EAO_REVIEWER = 'Reviewer'
-    EAO_IT_VIEWER = 'Viewer'
+    IT_ADMIN = 'Superuser'
+    TEAM_MEMBER = 'Team Member'
+    REVIEWER = 'Reviewer'
+    IT_VIEWER = 'Viewer'
 
     @staticmethod
     def get_name_by_value(value):

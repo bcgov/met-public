@@ -107,19 +107,19 @@ class StaffUserService:
             [user.get('external_id') for user in user_collection])
 
         for user in user_collection:
-            # Transform group name from EAO_ADMINISTRATOR to Administrator
+            # Transform group name from ADMINISTRATOR to Administrator
             # TODO etc;Arrive at a better implementation than keeping a static list
             # TODO Probably add a custom attribute in the keycloak as title against a group?
             groups = group_user_details.get(user.get('external_id'))
             user['groups'] = ''
             if groups:
                 user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
-                if Groups.EAO_IT_ADMIN.value in user['groups']:
-                    user['main_group'] = Groups.EAO_IT_ADMIN.value
-                elif Groups.EAO_TEAM_MEMBER.value in user['groups']:
-                    user['main_group'] = Groups.EAO_TEAM_MEMBER.value
-                elif Groups.EAO_REVIEWER.value in user['groups']:
-                    user['main_group'] = Groups.EAO_REVIEWER.value
+                if Groups.IT_ADMIN.value in user['groups']:
+                    user['main_group'] = Groups.IT_ADMIN.value
+                elif Groups.TEAM_MEMBER.value in user['groups']:
+                    user['main_group'] = Groups.TEAM_MEMBER.value
+                elif Groups.REVIEWER.value in user['groups']:
+                    user['main_group'] = Groups.REVIEWER.value
                 else:
                     user['main_group'] = user['groups'][0]
 
@@ -186,7 +186,7 @@ class StaffUserService:
 
         groups = KEYCLOAK_SERVICE.get_user_groups(user_id=db_user.external_id)
         group_names = [group.get('name') for group in groups]
-        if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
+        if KeycloakGroupName.IT_ADMIN.value in group_names:
             raise BusinessException(
                 error='This user is already a Superuser.',
                 status_code=HTTPStatus.CONFLICT.value)

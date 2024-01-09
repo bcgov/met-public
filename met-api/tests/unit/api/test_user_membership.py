@@ -78,12 +78,12 @@ def test_reassign_user_reviewer_team_member(mocker, client, jwt, session):
         mock_remove_user_from_group_keycloak
     ) = mock_keycloak_methods(
         mocker,
-        [KeycloakGroupName.EAO_REVIEWER.value]
+        [KeycloakGroupName.REVIEWER.value]
     )
 
     mock_get_users_groups_keycloak = mocker.patch(
         f'{KEYCLOAK_SERVICE_MODULE}.get_users_groups',
-        return_value={user.external_id: [KeycloakGroupName.EAO_REVIEWER.value]}
+        return_value={user.external_id: [KeycloakGroupName.REVIEWER.value]}
     )
 
     assert user.status_id == UserStatus.ACTIVE.value
@@ -91,7 +91,7 @@ def test_reassign_user_reviewer_team_member(mocker, client, jwt, session):
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     rv = client.put(
-        f'/api/user/{user.id}/groups?group=EAO_TEAM_MEMBER',
+        f'/api/user/{user.id}/groups?group=TEAM_MEMBER',
         headers=headers,
         content_type=ContentType.JSON.value
     )

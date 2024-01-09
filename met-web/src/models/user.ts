@@ -1,20 +1,20 @@
-export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER' | 'EAO_TEAM_MEMBER' | 'EAO_REVIEWER';
+export type UserGroup = 'IT_ADMIN' | 'IT_VIEWER' | 'TEAM_MEMBER' | 'REVIEWER';
 
 export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = {
     ADMIN: {
-        value: 'EAO_IT_ADMIN',
+        value: 'IT_ADMIN',
         label: 'Superuser',
     },
     VIEWER: {
-        value: 'EAO_IT_VIEWER',
+        value: 'IT_VIEWER',
         label: 'Viewer',
     },
     TEAM_MEMBER: {
-        value: 'EAO_TEAM_MEMBER',
+        value: 'TEAM_MEMBER',
         label: 'Team Member',
     },
     REVIEWER: {
-        value: 'EAO_REVIEWER',
+        value: 'REVIEWER',
         label: 'Reviewer',
     },
 };

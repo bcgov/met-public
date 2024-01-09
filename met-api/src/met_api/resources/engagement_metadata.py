@@ -44,8 +44,8 @@ class EngagementMetadata(Resource):
     def get(engagement_id):
         """Fetch a single engagement metadata matching the provided id."""
         try:
-            metadata_record = EngagementMetadataService().get_metadata(engagement_id)
-            return metadata_record, HTTPStatus.OK
+            # metadata_record = EngagementMetadataService().get_metadata(engagement_id)
+            return {}, HTTPStatus.OK
         except KeyError:
             return 'Engagement metadata was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

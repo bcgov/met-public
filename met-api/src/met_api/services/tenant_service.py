@@ -27,5 +27,5 @@ class TenantService:
         """Get a tenant by id."""
         tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
-            raise ValueError('Tenant not found.')
+            raise ValueError('Tenant not found.', cls, tenant_id)
         return TenantSchema().dump(tenant)
