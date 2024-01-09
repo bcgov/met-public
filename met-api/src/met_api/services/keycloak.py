@@ -109,8 +109,8 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        TOKEN_ISSUER = current_app.config['JWT_CONFIG']['ISSUER']
-        token_url = f'{TOKEN_ISSUER}/protocol/openid-connect/token'
+        token_issuer = current_app.config['JWT_CONFIG']['ISSUER']
+        token_url = f'{token_issuer}/protocol/openid-connect/token'
 
         response = requests.post(
             token_url,

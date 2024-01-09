@@ -23,7 +23,6 @@ from typing import Dict
 from flask import abort, current_app, g
 
 from met_api.auth import jwt as _jwt
-from met_api.utils.constants import TENANT_ID_JWT_CLAIM
 from met_api.utils.roles import Role
 from met_api.models.staff_user import StaffUser
 

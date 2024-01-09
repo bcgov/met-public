@@ -27,6 +27,7 @@ from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
 from met_api.models import Tenant as TenantModel
 
+
 class EngagementService:
     """Engagement management service."""
 
@@ -68,7 +69,7 @@ class EngagementService:
         user_roles = TokenInfo.get_user_roles()
         has_team_access = search_options.get('has_team_access')
         scope_options = self._get_scope_options(user_roles, has_team_access)
-        
+
         items, total = EngagementModel.get_engagements_paginated(
             external_user_id,
             pagination_options,

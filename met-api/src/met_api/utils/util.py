@@ -23,6 +23,7 @@ import urllib
 
 from humps.main import camelize, decamelize
 
+
 def cors_preflight(methods):
     """Render an option method on the class."""
 
@@ -40,6 +41,7 @@ def cors_preflight(methods):
 
     return wrapper
 
+
 def is_truthy(value: str) -> bool:
     """
     Check if a value is truthy or not.
@@ -50,7 +52,6 @@ def is_truthy(value: str) -> bool:
     return str(value).lower() in ('1', 'true', 'yes', 'y', 'on')
 
 
-
 def camelback2snake(camel_dict: dict):
     """Convert the passed dictionary's keys from camelBack case to snake_case."""
     return decamelize(camel_dict)
@@ -59,6 +60,7 @@ def camelback2snake(camel_dict: dict):
 def snake2camelback(snake_dict: dict):
     """Convert the passed dictionary's keys from snake_case to camelBack case."""
     return camelize(snake_dict)
+
 
 def allowedorigins():
     """Return the allowed origins for CORS."""
