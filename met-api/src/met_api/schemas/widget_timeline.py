@@ -20,20 +20,18 @@ from marshmallow import Schema
 from marshmallow_sqlalchemy.fields import Nested
 
 class TimelineEventSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
-    """This is the schema for the timeline event model."""
 
     class Meta:  # pylint: disable=too-few-public-methods
-        """Events all of the Widget timeline event fields to a default schema."""
+        """All of the fields in the Timeline Event schema."""
 
         model = TimelineEventModel
         fields = ('id', 'engagement_id', 'widget_id', 'timeline_id', 'description', 'time', 'position', 'status')
 
 
 class WidgetTimelineSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
-    """This is the schema for the timeline model."""
 
     class Meta:  # pylint: disable=too-few-public-methods
-        """Timelines all of the Widget timeline fields to a default schema."""
+        """All of the fields in the Widget Timeline schema."""
 
         model = WidgetTimelineModel
         fields = ('id', 'engagement_id', 'widget_id', 'title', 'description', 'events')

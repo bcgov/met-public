@@ -10,13 +10,13 @@ class WidgetTimelineService:
     """Widget Timeline management service."""
 
     @staticmethod
-    def get_timeline(widget_id):
+    def get_timeline(widget_id: int):
         """Get timeline by widget id."""
         widget_timeline = WidgetTimelineModel.get_timeline(widget_id)
         return widget_timeline
 
     @staticmethod
-    def create_timeline(widget_id, timeline_details):
+    def create_timeline(widget_id: int, timeline_details: dict):
         """Create timeline for the widget."""
         timeline_data = dict(timeline_details)
         eng_id = timeline_data.get('engagement_id')
@@ -28,7 +28,7 @@ class WidgetTimelineService:
         return widget_timeline
 
     @staticmethod
-    def update_timeline(widget_id, timeline_id, timeline_data):
+    def update_timeline(widget_id: int, timeline_id: int, timeline_data: dict):
         """Update timeline widget."""
         events = timeline_data.get("events")
         first_event = events[0]
@@ -47,7 +47,7 @@ class WidgetTimelineService:
         return WidgetTimelineModel.update_timeline(timeline_id, timeline_data)
 
     @staticmethod
-    def _create_timeline_model(widget_id, timeline_data: dict):
+    def _create_timeline_model(widget_id: int, timeline_data: dict):
         timeline_model: WidgetTimelineModel = WidgetTimelineModel()
         timeline_model.widget_id = widget_id
         timeline_model.engagement_id = timeline_data.get('engagement_id')

@@ -30,7 +30,7 @@ API = Namespace('widget_timelines', description='Endpoints for Timeline Widget M
 """Widget Timelines"""
 
 
-@cors_preflight('GET, POST, PATCH, OPTIONS')
+@cors_preflight('GET, POST')
 @API.route('')
 class Timelines(Resource):
     """Resource for managing timeline widgets."""

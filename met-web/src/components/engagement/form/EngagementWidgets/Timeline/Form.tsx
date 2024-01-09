@@ -40,7 +40,7 @@ const Form = () => {
     };
 
     const [timelineEvents, setTimelineEvents] = React.useState<TimelineEvent[]>(
-        timelineWidget ? timelineWidget.events : [newEvent],
+        timelineWidget ? timelineWidget.events.sort((a, b) => a.position - b.position) : [newEvent],
     );
     const [timelineWidgetState, setTimelineWidgetState] = React.useState<WidgetState>({
         description: timelineWidget?.description || '',
@@ -64,7 +64,7 @@ const Form = () => {
 
     useEffect(() => {
         if (timelineWidget) {
-            setTimelineEvents(timelineWidget.events);
+            setTimelineEvents(timelineWidget.events.sort((a, b) => a.position - b.position));
             setTimelineWidgetState(timelineWidget);
         }
     }, [timelineWidget]);
@@ -126,6 +126,7 @@ const Form = () => {
         eventsForSubmission.forEach((event, index) => {
             event.position = index;
         });
+        eventsForSubmission.sort((a, b) => a.position - b.position);
         /* eslint "no-warning-comments": [1, { "terms": ["todo", "fix me, replace any type"] }] */
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const eventTarget = event.target as any;
@@ -142,7 +143,9 @@ const Form = () => {
         if (!timelineEvents) {
             return;
         }
-        setTimelineEvents([...timelineEvents, newEvent]);
+        const newEventWithCorrectIndex = newEvent;
+        newEventWithCorrectIndex.position = timelineEvents.length;
+        setTimelineEvents([...timelineEvents, newEventWithCorrectIndex]);
     };
 
     const handleRemoveEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,6 +155,9 @@ const Form = () => {
         const position = Number(event.target.value);
         const dataToSplice: TimelineEvent[] = [...timelineEvents];
         dataToSplice.splice(position, 1);
+        dataToSplice.forEach((event, index) => {
+            event.position = index;
+        });
         setTimelineEvents([...dataToSplice]);
     };
 

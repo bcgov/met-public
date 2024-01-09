@@ -27,6 +27,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
         try {
             const timelines = await fetchTimelineWidgets(widget.id);
             const timeline = timelines[timelines.length - 1];
+            timeline.events.sort((a, b) => a.position - b.position);
             setTimelineWidget(timeline);
             setIsLoading(false);
         } catch (error) {
@@ -47,11 +48,11 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
 
     const handleRenderTimelineEvent = (tEvent: TimelineEvent, index: number) => {
         const containerStylesObject = {
-            minHeight: index + 1 == timelineWidget.events.length ? '60px' : '80px',
+            minHeight: index + 1 === timelineWidget.events.length ? '60px' : '80px',
             display: 'flex',
             flexDirection: 'row',
-            marginLeft: index + 1 == timelineWidget.events.length ? '24px' : '22px',
-            borderLeft: index + 1 == timelineWidget.events.length ? 'none' : '2px solid grey',
+            marginLeft: index + 1 === timelineWidget.events.length ? '24px' : '22px',
+            borderLeft: index + 1 === timelineWidget.events.length ? 'none' : '2px solid grey',
         };
         const circleContainerStylesObject = {
             padding: '2px',
@@ -68,8 +69,8 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             height: '40px',
             borderRadius: '50%',
             content: '""',
-            border: 2 == tEvent.status || 3 == tEvent.status ? '20px solid' : 'none',
-            borderColor: 3 == tEvent.status ? '#2e8540' : '#036',
+            border: 1 !== tEvent.status ? '20px solid' : 'none',
+            borderColor: 3 === tEvent.status ? '#2e8540' : '#036',
         };
         const checkmarkStylesObject = {
             marginLeft: '-12px',
@@ -90,7 +91,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                 </Grid>
                 <Grid item sx={{ paddingLeft: '10px' }}>
                     <MetHeader4 bold>{tEvent.description}</MetHeader4>
-                    <MetParagraph style={{ paddingBottom: index + 1 == timelineWidget.events.length ? '0' : '20px' }}>
+                    <MetParagraph style={{ paddingBottom: index + 1 === timelineWidget.events.length ? '0' : '20px' }}>
                         {tEvent.time}
                     </MetParagraph>
                 </Grid>
