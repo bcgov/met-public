@@ -1,6 +1,10 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/).
+
+## December 28, 2023
+
+> **Feature**: Added the timeline widget. [🎟️DESENG-439](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-439)
 
 ## December 11, 2023
 
