@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/timeline_widget_update",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "title": "A timeline widget title",
+      "description": "A timeline widget description",
+      "events": [
+        {
+          "id": 3,
+          "engagement_id": 4,
+          "timeline_id": 9,
+          "widget_id": 111,
+          "description": "An event description",
+          "time": "An event time",
+          "position": 0,
+          "status": 1
+        },
+        {
+          "id": 4,
+          "engagement_id": 4,
+          "timeline_id": 9,
+          "widget_id": 111,
+          "description": "An event description",
+          "time": "An event time",
+          "position": 1,
+          "status": 2
+        }
+      ]
+    }
+  ],
+  "required": [],
+  "properties": {
+    "title": {
+      "$id": "#/properties/title",
+      "type": "string",
+      "title": "Timeline title",
+      "description": "The title of this timeline.",
+      "examples": ["A timeline widget title"]
+    },
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "Timeline description",
+      "description": "The description of this timeline.",
+      "examples": ["A timeline widget description"]
+    },
+    "events": {
+      "$id": "#/properties/events",
+      "type": "array",
+      "title": "Timeline events",
+      "description": "The events of this timeline.",
+      "examples": [{
+        "id": 3,
+        "engagement_id": 4,
+        "timeline_id": 9,
+        "widget_id": 111,
+        "description": "An event description",
+        "time": "An event time",
+        "position": 0,
+        "status": 1
+      },
+      {
+        "id": 4,
+        "engagement_id": 4,
+        "timeline_id": 9,
+        "widget_id": 111,
+        "description": "An event description",
+        "time": "An event time",
+        "position": 1,
+        "status": 2
+      }]
+    }
+  }
+}

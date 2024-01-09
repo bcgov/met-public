@@ -8,6 +8,7 @@ import SubscribeOptionCard from './Subscribe/SubscribeOptionCard';
 import EventsOptionCard from './Events/EventsOptionCard';
 import MapOptionCard from './Map/MapOptionCard';
 import VideoOptionCard from './Video/VideoOptionCard';
+import TimelineOptionCard from './Timeline/TimelineOptionCard';
 
 const WidgetOptionCards = () => {
     return (
@@ -36,6 +37,9 @@ const WidgetOptionCards = () => {
             </Grid>
             <Grid item xs={12} lg={6}>
                 <VideoOptionCard />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+                <TimelineOptionCard />
             </Grid>
         </Grid>
     );

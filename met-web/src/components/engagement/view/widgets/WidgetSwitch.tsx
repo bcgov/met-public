@@ -7,6 +7,7 @@ import SubscribeWidget from './Subscribe/SubscribeWidget';
 import EventsWidget from './Events/EventsWidget';
 import MapWidget from './Map/MapWidget';
 import VideoWidgetView from './Video/VideoWidgetView';
+import TimelineWidgetView from './Timeline/TimelineWidgetView';
 interface WidgetSwitchProps {
     widget: Widget;
 }
@@ -32,6 +33,9 @@ export const WidgetSwitch = ({ widget }: WidgetSwitchProps) => {
                 </Case>
                 <Case condition={widget.widget_type_id === WidgetType.Video}>
                     <VideoWidgetView widget={widget} />
+                </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Timeline}>
+                    <TimelineWidgetView widget={widget} />
                 </Case>
             </Switch>
         </>
