@@ -76,7 +76,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
         # - count: number of time the same value is selected as a response to each question
 
         # Check if there are records in survey_response and available_response before executing the final query
-        # which fetches all the available responses along with the corresponding reponses.
+        # which fetches all the available responses along with the corresponding responses.
         if survey_response_exists and available_response_exists:
             survey_result = (db.session.query((survey_question.c.position).label('position'),
                                               (survey_question.c.label).label('question'),
