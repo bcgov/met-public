@@ -93,7 +93,7 @@ class Membership(BaseModel):
     @classmethod
     def find_by_engagement_and_user_id(cls, eng_id, userid, status=None) \
             -> Membership:
-        """Get a survey."""
+        """Get a membership by engagement and user ID."""
         query = db.session.query(Membership) \
             .join(StaffUser, StaffUser.id == Membership.user_id) \
             .filter(and_(Membership.engagement_id == eng_id,

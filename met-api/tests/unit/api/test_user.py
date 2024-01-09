@@ -107,7 +107,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session, side_effect, expe
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
-        [KeycloakGroupName.EAO_IT_VIEWER.value]
+        [KeycloakGroupName.IT_VIEWER.value]
     )
 
     user, claims = setup_admin_user_and_claims
@@ -147,7 +147,7 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session,
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
-        [KeycloakGroupName.EAO_IT_VIEWER.value]
+        [KeycloakGroupName.IT_VIEWER.value]
     )
 
     user, claims = setup_admin_user_and_claims
@@ -169,7 +169,7 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session,
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
-        [KeycloakGroupName.EAO_IT_VIEWER.value]
+        [KeycloakGroupName.IT_VIEWER.value]
     )
 
     user, claims = setup_admin_user_and_claims
@@ -191,7 +191,7 @@ def test_add_user_to_team_member_group_across_tenants(mocker, client, jwt, sessi
 
     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group(
         mocker,
-        [KeycloakGroupName.EAO_IT_VIEWER.value]
+        [KeycloakGroupName.IT_VIEWER.value]
     )
 
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
