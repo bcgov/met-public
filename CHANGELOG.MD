@@ -1,14 +1,10 @@
 ## January 09, 2024
 
-<<<<<<< HEAD
-- **Bug Fix**: Fixing timezone issue while publishing using met coron [🎟️DESENG-437](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-437)
-=======
-All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](https://semver.org/).
+- **Bug Fix**: Fixing timezone issue while publishing using met cron [🎟️DESENG-437](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-437)
 
 ## December 28, 2023
 
 > **Feature**: Added the timeline widget. [🎟️DESENG-439](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-439)
->>>>>>> upstream/main
 
 ## December 11, 2023
 
