@@ -86,7 +86,7 @@ class Config:  # pylint: disable=too-few-public-methods
         in the normal class definition.
         """
         # If extending this class, call super().__init__() in your constructor.
-        print(f'SQLAlchemy URL: {self.sqlalchemy_database_uri}')
+        print(f'SQLAlchemy URL: {self.SQLALCHEMY_DATABASE_URI}')
 
         # apply configs to _Config in the format that flask_jwt_oidc expects
         # this flattens the JWT_CONFIG dict into individual attributes
@@ -97,7 +97,7 @@ class Config:  # pylint: disable=too-few-public-methods
         os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
     @property
-    def sqlalchemy_database_uri(self) -> str:
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
         """
         Dynamically fetch the SQLAlchemy Database URI based on the DB config.
 
