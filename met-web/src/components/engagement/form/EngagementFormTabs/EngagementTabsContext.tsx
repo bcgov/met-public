@@ -22,6 +22,7 @@ interface EngagementFormData {
     description: string;
     content: string;
     is_internal: boolean;
+    consent_message: string;
 }
 
 interface EngagementSettingsFormData {
@@ -35,6 +36,7 @@ const initialEngagementFormData = {
     description: '',
     content: '',
     is_internal: false,
+    consent_message: '',
 };
 
 interface EngagementFormError {
@@ -139,6 +141,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         description: savedEngagement.description || '',
         content: savedEngagement.content || '',
         is_internal: savedEngagement.is_internal || false,
+        consent_message: savedEngagement.consent_message || '',
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');

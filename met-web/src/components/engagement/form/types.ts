@@ -45,6 +45,7 @@ export interface EngagementFormUpdate {
     rich_content?: string;
     is_internal?: boolean;
     status_block?: EngagementStatusBlock[];
+    consent_message?: string;
 }
 
 export type EngagementParams = {
