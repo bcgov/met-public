@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import { MetHeader4, MetDescription } from 'components/common';
+import { MetHeader4 } from 'components/common';
 import { EngagementSettingsContext } from './EngagementSettingsContext';
 import RichTextEditor from 'components/common/RichTextEditor';
 
