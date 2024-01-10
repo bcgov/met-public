@@ -22,13 +22,14 @@ rather than reading environment variables directly or by accessing this configur
 import os
 import sys
 
+from typing import Union
 from dotenv import find_dotenv, load_dotenv
 
 # this will load all the envars from a .env file located in the project root (api)
 load_dotenv(find_dotenv())
 
 
-def get_named_config(environment: 'str | None') -> '_Config':
+def get_named_config(environment: Union[str, None]) -> '_Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 
@@ -38,16 +39,16 @@ def get_named_config(environment: 'str | None') -> '_Config':
     """
     config_mapping = {
         'development': DevConfig,
-        'default':   ProdConfig,
-        'staging':    ProdConfig,
+        'default': ProdConfig,
+        'staging': ProdConfig,
         'production': ProdConfig,
-        'testing':    TestConfig,
+        'testing': TestConfig,
     }
     try:
         print(f'Loading configuration: {environment}...')
         return config_mapping[environment]()
-    except KeyError:
-        raise KeyError(f'Configuration "{environment}" not found.')
+    except KeyError as e:
+        raise KeyError(f'Configuration "{environment}" not found.') from e
 
 
 class _Config():  # pylint: disable=too-few-public-methods
