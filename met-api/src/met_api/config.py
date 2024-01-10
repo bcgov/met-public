@@ -24,6 +24,7 @@ and create an entry for it in the sample .env file.
 
 import os
 
+from typing import Union
 from dotenv import find_dotenv, load_dotenv
 
 from met_api.utils.constants import TestKeyConfig
@@ -36,7 +37,7 @@ load_dotenv(find_dotenv())
 os.environ = {k: v for k, v in os.environ.items() if v}
 
 
-def get_named_config(environment: 'str | None') -> 'Config':
+def get_named_config(environment: Union[str, None]) -> 'Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 
@@ -46,40 +47,46 @@ def get_named_config(environment: 'str | None') -> 'Config':
     """
     config_mapping = {
         'development': DevConfig,
-        'default':   ProdConfig,
-        'staging':    ProdConfig,
+        'default': ProdConfig,
+        'staging': ProdConfig,
         'production': ProdConfig,
-        'testing':    TestConfig,
-        'docker':     DockerConfig,
+        'testing': TestConfig,
+        'docker': DockerConfig,
     }
     try:
         print(f'Loading configuration: {environment}...')
-        return config_mapping[environment]()
-    except KeyError:
-        raise KeyError(f'Configuration "{environment}" not found.')
+        return config_mapping.get(environment, ProdConfig)()
+    except KeyError as e:
+        raise KeyError(f'Configuration "{environment}" not found.') from e
+
 
 def env_truthy(env_var, default: bool = False):
     """
     Return True if the environment variable is set to a truthy value.
+
     Accepts a default value, which is returned if the environment variable is
     not set.
     """
     return is_truthy(os.getenv(env_var, str(default)))
 
+
 class Config:  # pylint: disable=too-few-public-methods
     """
-    Base configuration that sets reasonable defaults for all other configs. 
+    Base configuration that sets reasonable defaults for all other configs.
+
     New configurations should inherit from this one where possible.
     Reference: https://flask.palletsprojects.com/en/3.0.x/config/
     """
 
     def __init__(self) -> None:
         """
-        Initializes the configuration object. Performs more advanced
-        configuration logic that is not possible in the normal class definition.
+        Initialize the configuration object.
+
+        Performs more advanced configuration logic that is not possible
+        in the normal class definition.
         """
         # If extending this class, call super().__init__() in your constructor.
-        print(f'SQLAlchemy URL: {self.SQLALCHEMY_DATABASE_URI}')
+        print(f'SQLAlchemy URL: {self.sqlalchemy_database_uri}')
 
         # apply configs to _Config in the format that flask_jwt_oidc expects
         # this flattens the JWT_CONFIG dict into individual attributes
@@ -87,14 +94,16 @@ class Config:  # pylint: disable=too-few-public-methods
             setattr(self, f'JWT_OIDC_{key}', value)
 
         # Enable live reload and interactive API debugger for developers
-        os.environ["FLASK_DEBUG"] = str(self.USE_DEBUG)
+        os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
     @property
-    def SQLALCHEMY_DATABASE_URI(self) -> str:
+    def sqlalchemy_database_uri(self) -> str:
         """
         Dynamically fetch the SQLAlchemy Database URI based on the DB config.
+
         This avoids having to redefine the URI after setting the DB access
-        credentials in subclasses. Can be overridden by env variables."""
+        credentials in subclasses. Can be overridden by env variables.
+        """
         return os.environ.get(
             'SQLALCHEMY_DATABASE_URI',
             f'postgresql://'
@@ -103,21 +112,20 @@ class Config:  # pylint: disable=too-few-public-methods
             f'{self.DB_CONFIG.get("NAME")}'
         )
 
-
     # If enabled, Exceptions are propagated up, instead of being handled
     # by the the app’s error handlers. Enable this for tests.
     TESTING = env_truthy('FLASK_TESTING', default=False)
-    
+
     # If enabled, the interactive debugger will be shown for any
     # unhandled Exceptions, and the server will be reloaded when code changes.
     USE_DEBUG = env_truthy('FLASK_DEBUG', default=False)
-    
+
     # SQLAlchemy settings
     # Echoes the SQL queries generated - useful for debugging
     SQLALCHEMY_ECHO = env_truthy('SQLALCHEMY_ECHO')
     # Disable modification tracking for performance
     SQLALCHEMY_TRACK_MODIFICATIONS = env_truthy('SQLALCHEMY_TRACK_MODIFICATIONS')
-    
+
     # Used for session management. Randomized by default for security, but
     # should be set to a fixed value in production to avoid invalidating sessions.
     SECRET_KEY = os.getenv('SECRET_KEY', os.urandom(24))
@@ -164,7 +172,6 @@ class Config:  # pylint: disable=too-few-public-methods
         'KEYCLOAK_CLIENT_ID': os.getenv('EPIC_KC_CLIENT_ID'),
     }
 
-
     # Keycloak configuration
     KEYCLOAK_CONFIG = KC = {
         'BASE_URL': os.getenv('KEYCLOAK_BASE_URL', ''),
@@ -173,7 +180,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
         'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
         'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
-        'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', 60)),
+        'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
     }
 
     # JWT OIDC Settings (for Keycloak)
@@ -184,14 +191,14 @@ class Config:  # pylint: disable=too-few-public-methods
                 f'{KC["BASE_URL"]}/realms/{KC["REALMNAME"]}'
             )),
         'WELL_KNOWN_CONFIG': os.getenv(
-            'JWT_OIDC_WELL_KNOWN_CONFIG', 
+            'JWT_OIDC_WELL_KNOWN_CONFIG',
             f'{_issuer}/.well-known/openid-configuration',
         ),
         'JWKS_URI': os.getenv('JWT_OIDC_JWKS_URI', f'{_issuer}/protocol/openid-connect/certs'),
         'ALGORITHMS': os.getenv('JWT_OIDC_ALGORITHMS', 'RS256'),
         'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
-        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', True)),
-        'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', 300)),
+        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', 'True')),
+        'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
         'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'realm_access.roles'),
     }
 
@@ -230,11 +237,11 @@ class Config:  # pylint: disable=too-few-public-methods
         'UNSUBSCRIBE': os.getenv(
             'UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}'
         ),
-        "ENGAGEMENT": {
+        'ENGAGEMENT': {
             'VIEW': os.getenv('ENGAGEMENT_PATH', '/engagements/{engagement_id}/view'),
             'SLUG': os.getenv('ENGAGEMENT_PATH_SLUG', '/{slug}'),
             'DASHBOARD': os.getenv(
-                'ENGAGEMENT_DASHBOARD_PATH','/engagements/{engagement_id}/comments/public'
+                'ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public'
             ),
             'DASHBOARD_SLUG': os.getenv(
                 'ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public'
@@ -252,35 +259,40 @@ class Config:  # pylint: disable=too-few-public-methods
         # value in met-cron/cron/crontab
         'CLOSING_TIME': os.getenv('ENGAGEMENT_END_TIME', '5 PM'),
         'FROM_ADDRESS': os.getenv('EMAIL_FROM_ADDRESS'),
-        'ENVIRONMENT' : os.getenv('EMAIL_ENVIRONMENT'),
+        'ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT'),
         'SUBSCRIBE': {
             'ID': os.getenv('SUBSCRIBE_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT', 
-                'Confirm your subscription'),
+            'SUBJECT': os.getenv('SUBSCRIBE_EMAIL_SUBJECT',
+                                 'Confirm your subscription'),
         },
         'REJECTED': {
             'ID': os.getenv('REJECTED_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('REJECTED_EMAIL_SUBJECT', 
-                                 '{engagement_name} - About your Comments'),
+            'SUBJECT': os.getenv('REJECTED_EMAIL_SUBJECT',
+                                 'Your comment on {engagement_name} needs to be edited'),
+        },
+        'CLOSED_ENGAGEMENT_REJECTED': {
+            'ID': os.getenv('CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID'),
+            'SUBJECT': os.getenv('CLOSED_ENGAGEMENT_REJECTED_EMAIL_SUBJECT',
+                                 'Your comment on {engagement_name} has been rejected'),
         },
         'VERIFICATION': {
             'ID': os.getenv('VERIFICATION_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT', 
+            'SUBJECT': os.getenv('VERIFICATION_EMAIL_SUBJECT',
                                  '{engagement_name} - Access link'),
         },
         'SUBMISSION_RESPONSE': {
             'ID': os.getenv('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('SUBMISSION_RESPONSE_EMAIL_SUBJECT', 
+            'SUBJECT': os.getenv('SUBMISSION_RESPONSE_EMAIL_SUBJECT',
                                  'MET - Your feedback was successfully submitted'),
         },
-        "CLOSEOUT":{
+        'CLOSEOUT': {
             'ID': os.getenv('CLOSEOUT_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('CLOSEOUT_EMAIL_SUBJECT', 
+            'SUBJECT': os.getenv('CLOSEOUT_EMAIL_SUBJECT',
                                  'MET - Engagement Closed'),
         },
         'ACCESS_REQUEST': {
             'ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
-            'SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT', 
+            'SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT',
                                  'MET - New User Access Request'),
             'DEST_EMAIL_ADDRESS': os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS'),
         }
@@ -306,17 +318,25 @@ class DevConfig(Config):  # pylint: disable=too-few-public-methods
 class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-methods
     """
     The configuration used when running the test suite.
+
     Extends TestKeyConfig, which contains some large constant keys that are used
     in the tests. It is stored in a separate file to avoid clutter.
     TestKeyConfig, in turn, extends the default Config class from above.
     """
 
     def __init__(self) -> None:
+        """
+        Initialize the object.
+
+        This method is called when an object is created. It sets up the initial
+        state of the object.
+
+        """
         super().__init__()
-        
+
         # Override Keycloak variables here
         self.KC['ADMIN_USERNAME'] = os.getenv(
-            'KEYCLOAK_TEST_ADMIN_CLIENTID', 
+            'KEYCLOAK_TEST_ADMIN_CLIENTID',
             self.KC['ADMIN_USERNAME']
         )
         self.KC['ADMIN_SECRET'] = os.getenv(
@@ -329,12 +349,12 @@ class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-metho
     # Propagate exceptions up to the test runner
     TESTING = env_truthy('TESTING', default=True)
 
-    # explicitly disable the debugger; we want the tests to fail if an 
+    # explicitly disable the debugger; we want the tests to fail if an
     # unhandled exception occurs
-    USE_DEBUG = False 
+    USE_DEBUG = False
 
     # JWT OIDC Settings for the test environment
-    JWT_OIDC_TEST_MODE = True # enables the test mode for flask_jwt_oidc
+    JWT_OIDC_TEST_MODE = True  # enables the test mode for flask_jwt_oidc
     JWT_OIDC_TEST_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_TEST_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_TEST_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
@@ -365,4 +385,3 @@ class DockerConfig(Config):  # pylint: disable=too-few-public-methods
 
 class ProdConfig(Config):  # pylint: disable=too-few-public-methods
     """Production Config."""
-

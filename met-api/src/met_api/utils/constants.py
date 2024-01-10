@@ -39,9 +39,11 @@ GROUP_NAME_MAPPING = {group.name: group.value for group in Groups}
 
 TENANT_ID_JWT_CLAIM = 'tenant_id'
 
+
 class TestKeyConfig:  # pylint: disable=too-few-public-methods
-    """This config is used to hold bulky test keys so they don't clutter up the
-    main configuration file for the app.
+    """
+    This config is used to hold bulky test keys so they don't clutter up the main configuration file for the app.
+
     These keys are publicly available and can be used for testing purposes.
     """
 

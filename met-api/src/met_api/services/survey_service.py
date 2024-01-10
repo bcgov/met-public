@@ -180,7 +180,7 @@ class SurveyService:
         is_template = survey.get('is_template', None)
         cls.validate_template_surveys_edit_access(is_template, user_roles)
 
-        if engagement and engagement.get('status_id', None) != Status.Draft.value:
+        if engagement and engagement.get('status_id', None) not in [Status.Draft.value, Status.Published.value]:
             raise ValueError('Engagement already published')
 
         updated_survey = SurveyModel.update_survey(data)

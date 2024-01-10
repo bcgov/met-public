@@ -112,9 +112,9 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
                         barSize={circleSize / 4}
                         data={[data]}
                         startAngle={225}
-                        endAngle={-270}
+                        endAngle={-225}
                     >
-                        <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
+                        <PolarAngleAxis type="number" domain={[0, data?.value]} angleAxisId={0} tick={false} />
                         <RadialBar
                             background={{ fill: DASHBOARD.KPI.RADIALBAR.BACKGROUND_COLOR }}
                             dataKey="value"

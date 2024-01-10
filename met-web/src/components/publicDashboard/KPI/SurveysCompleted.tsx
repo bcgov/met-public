@@ -19,6 +19,7 @@ interface SurveysCompletedProps {
 
 const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedProps) => {
     const [data, setData] = useState<AggregatorData | null>(null);
+    const [emailVerificationData, setEmailVerificationData] = useState<AggregatorData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -40,6 +41,11 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                 count_for: 'survey_completed',
             });
             setData(response);
+            const emailVerification = await getAggregatorData({
+                engagement_id: Number(engagement.id),
+                count_for: 'email_verification',
+            });
+            setEmailVerificationData(emailVerification);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error);
@@ -113,9 +119,14 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                         barSize={circleSize / 4}
                         data={[data]}
                         startAngle={225}
-                        endAngle={-270}
+                        endAngle={-225}
                     >
-                        <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
+                        <PolarAngleAxis
+                            type="number"
+                            domain={[0, emailVerificationData?.value]}
+                            angleAxisId={0}
+                            tick={false}
+                        />
                         <RadialBar
                             background={{ fill: DASHBOARD.KPI.RADIALBAR.BACKGROUND_COLOR }}
                             dataKey="value"

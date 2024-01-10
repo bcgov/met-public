@@ -16,7 +16,7 @@
 import functools
 from typing import Dict
 
-from flask import g, request, current_app
+from flask import current_app, g, request
 
 from met_api.utils.constants import TENANT_ID_JWT_CLAIM
 from met_api.utils.roles import Role

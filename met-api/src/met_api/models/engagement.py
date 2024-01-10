@@ -15,7 +15,7 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
-from met_api.models.engagement_metadata import EngagementMetadataModel
+# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
@@ -260,12 +260,11 @@ class Engagement(BaseModel):
                 query = query.filter(Engagement.is_internal.is_(False))
         return query
 
-    @staticmethod
-    def _filter_by_project_metadata(query, search_options):
-        query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
-
-        # TODO: Populate or remove this method dependent on changes resulting from adding the new Engagement metadata
-        return query
+    # TODO: Populate or remove this method dependent on changes resulting from adding the new Engagement metadata
+    # @staticmethod
+    # def _filter_by_project_metadata(query, search_options):
+    #     query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
+    #     return query
 
     @staticmethod
     def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: Optional[list[int]] = None):

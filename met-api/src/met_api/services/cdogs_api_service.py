@@ -16,7 +16,6 @@
 """Service for receipt generation."""
 import base64
 import json
-import os
 import re
 from http import HTTPStatus
 
@@ -32,9 +31,9 @@ class CdogsApiService:
     def __init__(self):
         """Initiate class."""
         # we can't use current_app.config here because it isn't initialized yet
-        config = Config().CDOGS_CONFIG 
+        config = Config().CDOGS_CONFIG
         self.base_url = config['BASE_URL']
-            
+
         self.access_token = self._get_access_token()
 
     def generate_document(self, template_hash_code: str, data, options):
@@ -111,9 +110,9 @@ class CdogsApiService:
 
     @staticmethod
     def _get_access_token():
-        token_url = CdogsApiService.config['TOKEN_URL']
-        service_client = CdogsApiService.config['SERVICE_CLIENT']
-        service_client_secret = CdogsApiService.config['SERVICE_CLIENT_SECRET']
+        token_url = Config().CDOGS_CONFIG['TOKEN_URL']
+        service_client = Config().CDOGS_CONFIG['SERVICE_CLIENT']
+        service_client_secret = Config().CDOGS_CONFIG['SERVICE_CLIENT_SECRET']
 
         basic_auth_encoded = base64.b64encode(
             bytes(f'{service_client}:{service_client_secret}', 'utf-8')).decode('utf-8')

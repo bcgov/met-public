@@ -112,7 +112,7 @@ class Comment(BaseModel):
         if search_text:
             query = query.filter(Comment.text.ilike('%' + search_text + '%'))
 
-        query = query.order_by(Comment.id.desc())
+        query = query.order_by(Comment.id.asc())
 
         no_pagination_options = not pagination_options or not pagination_options.page or not pagination_options.size
         if no_pagination_options:

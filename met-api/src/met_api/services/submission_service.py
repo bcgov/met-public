@@ -328,9 +328,7 @@ class SubmissionService:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
-        templates = current_app.config.get('EMAIL_TEMPLATES')
-        template_id = templates['REJECTED']['ID']
-        subject, body, args = SubmissionService._render_email_template(
+        template_id, subject, body, args = SubmissionService._render_email_template(
             staff_review_details, submission, review_note, token)
         try:
             notification.send_email(subject=subject,
@@ -349,13 +347,23 @@ class SubmissionService:
     @staticmethod
     # pylint: disable-msg=too-many-locals
     def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token):
-        template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
-        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         templates = current_app.config['EMAIL_TEMPLATES']
         paths = current_app.config['PATH_CONFIG']
         engagement_name = engagement.name
+        templates = current_app.config.get('EMAIL_TEMPLATES')
+        if engagement.status_id == EngagementStatus.Closed.value:
+            template_id = templates['CLOSED_ENGAGEMENT_REJECTED']['ID']
+            template = Template.get_template('email_rejected_comment_closed.html')
+            subject = templates['CLOSED_ENGAGEMENT_REJECTED']['SUBJECT']. \
+                format(engagement_name=engagement_name)
+        else:
+            template_id = templates['REJECTED']['ID']
+            template = Template.get_template('email_rejected_comment.html')
+            subject = templates['REJECTED']['SUBJECT']. \
+                format(engagement_name=engagement_name)
+        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         survey_name = survey.name
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
@@ -365,7 +373,6 @@ class SubmissionService:
         )
         submission_url = notification.get_tenant_site_url(
             engagement.tenant_id, submission_path)
-        subject = templates['REJECTED']['SUBJECT']
         email_environment = templates['ENVIRONMENT']
         args = {
             'engagement_name': engagement_name,
@@ -391,7 +398,7 @@ class SubmissionService:
             end_date=args.get('end_date'),
             email_environment=args.get('email_environment'),
         )
-        return subject, body, args
+        return template_id, subject, body, args
 
     @staticmethod
     def _send_submission_response_email(participant_id, engagement_id) -> None:
