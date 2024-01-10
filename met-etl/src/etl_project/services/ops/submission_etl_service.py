@@ -286,7 +286,7 @@ def _save_survey(met_etl_session, context, answer_key, component, survey, partic
             # id and the key
             radio_response = EtlResponseTypeOptionModel(
                 survey_id=survey.id,
-                request_key=component['key'],
+                request_key=component['key']+'-'+key,
                 value=answer_label,
                 request_id=component['id']+'-'+key,
                 participant_id=getattr(participant, 'id', None),

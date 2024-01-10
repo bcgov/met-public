@@ -6,6 +6,15 @@
 
 > **Feature**: Added the timeline widget. [🎟️DESENG-439](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-439)
 
+## January 9, 2024
+
+- **Task** Improvements from Epic [🎟️DESENG-468](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-468)
+  - Improvements to Survey Result Tracking analytics
+  - New Rejection Email Template for Closed Engagements
+  - Export Format for Proponent updated to be in excel format
+  - Formio Version Update
+  - Enable Survey Editing for Open Engagements
+
 ## December 11, 2023
 
 - **Task** Merge `gdx-sso`, `gdx-dev`, `gdx-main` into `main` [🎟️DESENG-442](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-442)

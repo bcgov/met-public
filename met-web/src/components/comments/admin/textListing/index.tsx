@@ -94,7 +94,7 @@ const CommentTextListing = () => {
         try {
             setIsExporting(true);
             const response = await getProponentCommentSheet({ survey_id: survey.id });
-            downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
+            downloadFile(response, `PUBLIC - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.xlsx`);
             setIsExporting(false);
             handleExportToCSVClose(); // Close the menu after export
         } catch (error) {

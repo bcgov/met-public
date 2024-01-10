@@ -2,6 +2,7 @@
 from slugify import UniqueSlugify
 from met_api.config import Config
 
+
 class SlugGenerationService:
     """Service for generating slugs."""
 

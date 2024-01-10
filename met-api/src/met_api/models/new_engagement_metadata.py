@@ -1,21 +1,19 @@
-"""
-The Engagement Metadata models.
-"""
+"""The Engagement Metadata models."""
 
-from sqlalchemy.dialects import postgresql
+# from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import ForeignKey
 
 from .base_model import BaseModel
 from .db import db
 
+
 class MetadataModel(BaseModel):
-    """
-    Metadata for an Engagement. Can be used to store any arbitrary data.
-    """
+    """Metadata for an Engagement. Can be used to store any arbitrary data."""
+
     __tablename__ = 'metadata_relationship'
     tenant_id = db.Column(
         db.Integer,
-        ForeignKey('tenant.id', ondelete='CASCADE'), 
+        ForeignKey('tenant.id', ondelete='CASCADE'),
         primary_key=True
     )
     engagement_id = db.Column(
@@ -24,7 +22,7 @@ class MetadataModel(BaseModel):
         primary_key=True
     )
     category_id = db.Column(
-        db.Integer, 
+        db.Integer,
         ForeignKey('metadata_category.category_id', ondelete='CASCADE'),
         primary_key=True
     )
@@ -33,10 +31,10 @@ class MetadataModel(BaseModel):
     category = db.relationship('MetadataTaxonomy', backref='metadata')
     engagements = db.relationship('Engagement', backref='metadata')
 
+
 class MetadataTaxonomyModel(BaseModel):
-    """
-    Defines a category of metadata fields.
-    """
+    """Defines a category of metadata fields."""
+
     __tablename__ = 'metadata_category'
     category_id = db.Column(db.Integer, primary_key=True)
     tenant_id = db.Column(

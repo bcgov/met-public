@@ -1,4 +1,3 @@
-
 """Service for object storage management."""
 import os
 import uuid
@@ -18,15 +17,15 @@ class ObjectStorageService:
     def __init__(self):
         """Initialize the service."""
         # initialize s3 config from environment variables
-        s3 = current_app.config['S3_CONFIG']
+        s3_client = current_app.config['S3_CONFIG']
         self.s3_auth = AWSRequestsAuth(
-            aws_access_key=s3["ACCESS_KEY_ID"],
-            aws_secret_access_key=s3["SECRET_ACCESS_KEY"],
-            aws_host=s3["HOST"],
-            aws_region=s3["REGION"],
-            aws_service=s3["SERVICE"]
+            aws_access_key=s3_client['ACCESS_KEY_ID'],
+            aws_secret_access_key=s3_client['SECRET_ACCESS_KEY'],
+            aws_host=s3_client['HOST'],
+            aws_region=s3_client['REGION'],
+            aws_service=s3_client['SERVICE']
         )
-        self.s3_bucket = s3["BUCKET"]
+        self.s3_bucket = s3_client['BUCKET']
 
     def get_url(self, filename: string):
         """Get the object url."""
@@ -36,16 +35,15 @@ class ObjectStorageService:
            ):
             return ''
 
-
         return f'https://{self.s3_auth.aws_host}/{self.s3_bucket}/{filename}'
 
     def get_auth_headers(self, documents: List[Document]):
         """Get the S3 auth headers for the provided documents."""
         if (
-            self.s3_auth.aws_access_key is None
-            or self.s3_auth.aws_secret_access_key is None
-            or self.s3_auth.aws_host is None
-            or self.s3_bucket is None
+            self.s3_auth.aws_access_key is None or
+            self.s3_auth.aws_secret_access_key is None or
+            self.s3_auth.aws_host is None or
+            self.s3_bucket is None
         ):
             return {
                 'status': 'Configuration Issue',
@@ -58,7 +56,7 @@ class ObjectStorageService:
             uniquefilename = f'{uuid.uuid4()}{filenamesplittext[1]}'
 
             s3uri = s3sourceuri if s3sourceuri is not None else self.get_url(uniquefilename)
-            
+
             if s3sourceuri is None:
                 response = requests.put(s3uri, data=None, auth=self.s3_auth)
             else:

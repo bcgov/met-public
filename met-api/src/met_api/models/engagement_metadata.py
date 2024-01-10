@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from sqlalchemy.dialects import postgresql
+# from sqlalchemy.dialects import postgresql
 from sqlalchemy.sql.schema import ForeignKey
 
 from .base_model import BaseModel
