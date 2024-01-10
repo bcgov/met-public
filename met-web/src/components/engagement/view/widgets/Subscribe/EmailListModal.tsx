@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { MetLabel, MetParagraph } from 'components/common';
+import { MetDisclaimer } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { Link, Typography, Box, useMediaQuery, Theme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -10,6 +10,8 @@ import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
 import { TenantState } from 'reduxSlices/tenantSlice';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
@@ -106,27 +108,13 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
             handleConfirm={sendEmail}
             isSaving={isSaving}
             termsOfService={
-                <Box
-                    sx={{
-                        p: '1em',
-                        borderLeft: 8,
-                        borderColor: '#003366',
-                        backgroundColor: '#F2F2F2',
-                        mt: '0.5em',
-                    }}
-                >
-                    <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
-                        Personal information is collected under Section 26(c) of the Freedom of Information and
-                        Protection of Privacy Act, for the purpose of providing content updates and future opportunities
-                        to participate in engagements, as well as for the purpose of providing general feedback to
-                        evaluate engagements conducted by the Environmental Assessment Office.
-                    </Typography>
-                    <Typography sx={{ fontSize: '0.8rem', mb: 1 }}>
-                        If you have any questions about the collection, use and disclosure of your personal information,
-                        please contact the Director of Digital Services at{' '}
-                        <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
-                    </Typography>
-                </Box>
+                <MetDisclaimer>
+                    <Editor
+                        editorState={getEditorStateFromRaw(savedEngagement.consent_message)}
+                        readOnly={true}
+                        toolbarHidden
+                    />
+                </MetDisclaimer>
             }
             header={'Sign Up for Updates'}
             subText={[

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
 import { MetPaper, PrimaryButton } from 'components/common';
 import EngagementInformation from './EngagementInformation';
+import ConsentMessage from './ConsentMessage';
 import InternalEngagement from './InternalEngagement';
 import SendReport from './SendReport';
 import { EngagementSettingsContext } from './EngagementSettingsContext';
@@ -33,6 +34,12 @@ const EngagementSettingsForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <SendReport />
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <ConsentMessage />
                 </Grid>
                 <Grid item xs={12}>
                     <PrimaryButton loading={updatingSettings} onClick={handleSaveSettings}>

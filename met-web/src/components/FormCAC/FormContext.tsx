@@ -29,6 +29,7 @@ export interface FormContextProps {
     loading: boolean;
     submitting: boolean;
     setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+    consentMessage: string;
 }
 
 export const FormContext = createContext<FormContextProps>({
@@ -52,6 +53,7 @@ export const FormContext = createContext<FormContextProps>({
     setSubmitting: () => {
         return;
     },
+    consentMessage: '',
 });
 export const FormContextProvider = ({ children }: { children: JSX.Element }) => {
     const { widgetId, engagementId } = useParams<{ widgetId: string; engagementId: string }>();
@@ -68,6 +70,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
     const [submitting, setSubmitting] = useState(false);
     const [engagement, setEngagement] = useState<Engagement | null>(null);
     const [engagementSlug, setEngagementSlug] = useState<string>('');
+    const [consentMessage, setConsentMessage] = useState<string>('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -116,6 +119,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
     const loadData = async () => {
         const engagement = await loadEngagement();
         setEngagement(engagement ?? null);
+        setConsentMessage(engagement?.consent_message ?? '');
         const subscribeWidget = await loadWidget();
         verifyData(engagement, subscribeWidget);
         loadEngagementSlug();
@@ -185,6 +189,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                 loading,
                 submitting,
                 setSubmitting,
+                consentMessage,
             }}
         >
             {children}

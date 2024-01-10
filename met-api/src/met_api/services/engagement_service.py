@@ -183,7 +183,8 @@ class EngagementService:
             banner_filename=engagement_data.get('banner_filename', None),
             content=engagement_data.get('content', None),
             rich_content=engagement_data.get('rich_content', None),
-            is_internal=engagement_data.get('is_internal', False)
+            is_internal=engagement_data.get('is_internal', False),
+            consent_message=engagement_data.get('consent_message', None)
         )
         new_engagement.save()
         return new_engagement
