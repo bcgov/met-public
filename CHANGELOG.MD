@@ -1,11 +1,3 @@
-## January 09, 2024
-
-- **Bug Fix**: Fixing timezone issue while publishing using met cron [🎟️DESENG-437](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-437)
-
-## December 28, 2023
-
-> **Feature**: Added the timeline widget. [🎟️DESENG-439](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-439)
-
 ## January 9, 2024
 
 - **Task** Improvements from Epic [🎟️DESENG-468](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-468)
@@ -14,6 +6,12 @@
   - Export Format for Proponent updated to be in excel format
   - Formio Version Update
   - Enable Survey Editing for Open Engagements
+
+- **Bug Fix**: Fixing timezone issue while publishing using met cron [🎟️DESENG-437](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-437)
+
+## December 28, 2023
+
+> **Feature**: Added the timeline widget. [🎟️DESENG-439](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-439)
 
 ## December 11, 2023
 
