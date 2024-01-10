@@ -1,16 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import React, { useContext } from 'react';
+import { Box, Grid } from '@mui/material';
 import { MetHeader4 } from 'components/common';
 import { EngagementSettingsContext } from './EngagementSettingsContext';
 import RichTextEditor from 'components/common/RichTextEditor';
 
 const ConsentMessage = () => {
-    const [descriptionCharCount, setDescriptionCharCount] = useState(0);
     const { consentMessage, setConsentMessage } = useContext(EngagementSettingsContext);
-
-    const handleContentChange = (rawText: string) => {
-        setDescriptionCharCount(rawText.length);
-    };
 
     const handleRichContentChange = (newState: string) => {
         setConsentMessage(newState);
@@ -24,11 +19,9 @@ const ConsentMessage = () => {
             <Grid item xs={12}>
                 <Box display="flex" flexDirection="column" justifyContent="space-between">
                     <RichTextEditor
-                        setRawText={handleContentChange}
                         handleEditorStateChange={handleRichContentChange}
                         initialRawEditorState={consentMessage || ''}
                     />
-                    <Typography alignSelf="flex-end">Character Count: {descriptionCharCount}</Typography>
                 </Box>
             </Grid>
         </Grid>
