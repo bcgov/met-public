@@ -29,6 +29,12 @@ const EngagementSettingsForm = () => {
                     <SendReport />
                 </Grid>
                 <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <ConsentMessage />
+                </Grid>
+                <Grid item xs={12}>
                     <PrimaryButton loading={updatingSettings} onClick={handleSaveSettings}>
                         Save
                     </PrimaryButton>
