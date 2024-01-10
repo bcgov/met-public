@@ -1,6 +1,11 @@
 ## January 10, 2024
 
 - **Task** Custom Consent per Engagement [🎟️DESENG-456](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-456)
+- **Task** Engagement Edit Screen Reorder/Redesign [🎟️DESENG-448](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-448)
+  - Added new tab Addional Details and moved metadata inside that
+  - Moved public url section inside Settings tab
+  - Changed Engagement Details to Engagement Core
+  - Removed Links tab
 
 ## January 9, 2024
 
