@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
 import { MetPaper, PrimaryButton } from 'components/common';
-import EngagementInformation from './EngagementInformation';
 import InternalEngagement from './InternalEngagement';
 import SendReport from './SendReport';
 import { EngagementSettingsContext } from './EngagementSettingsContext';
+import { PublicUrls } from './PublicUrls';
 
 const EngagementSettingsForm = () => {
     const { handleSaveSettings, updatingSettings } = useContext(EngagementSettingsContext);
@@ -20,12 +20,6 @@ const EngagementSettingsForm = () => {
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12}>
-                    <EngagementInformation />
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12}>
                     <InternalEngagement />
                 </Grid>
                 <Grid item xs={12}>
@@ -38,6 +32,12 @@ const EngagementSettingsForm = () => {
                     <PrimaryButton loading={updatingSettings} onClick={handleSaveSettings}>
                         Save
                     </PrimaryButton>
+                </Grid>
+                <Grid item xs={12}>
+                    <Divider />
+                </Grid>
+                <Grid item xs={12}>
+                    <PublicUrls />
                 </Grid>
             </Grid>
         </MetPaper>
