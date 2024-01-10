@@ -13,7 +13,7 @@ from met_api.models import EngagementSlug as EngagementSlugModel
 from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
-from met_api.models.engagement_metadata import EngagementMetadataModel
+# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.participant_service import ParticipantService
 from met_api.utils import notification
@@ -193,9 +193,7 @@ class EmailVerificationService:
         engagement_name = engagement.name
         paths = current_app.config['PATH_CONFIG']
         templates = current_app.config['EMAIL_TEMPLATES']
-        template_id = templates['VERIFICATION']['ID']
         subject_template = templates['VERIFICATION']['SUBJECT']
-        email_environment = templates['ENVIRONMENT']
         template = Template.get_template('email_verification.html')
         survey_path = paths['SURVEY'].format(survey_id=survey.id, token=token)
         engagement_path = EmailVerificationService.get_engagement_path(engagement)
@@ -207,7 +205,7 @@ class EmailVerificationService:
             'engagement_url': f'{site_url}{engagement_path}',
             'tenant_name': tenant_name,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
-            'email_environment': email_environment,
+            'email_environment': templates['ENVIRONMENT'],
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
@@ -218,7 +216,7 @@ class EmailVerificationService:
             end_date=args.get('end_date'),
             email_environment=args.get('email_environment'),
         )
-        return subject, body, args, template_id
+        return subject, body, args, templates['VERIFICATION']['ID']
 
     @staticmethod
     def get_engagement_path(engagement: EngagementModel, is_public_url=True):
@@ -237,7 +235,7 @@ class EmailVerificationService:
 
     @staticmethod
     def _get_project_name(subscription_type, tenant_name, engagement):
-        metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
+        # metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
         if subscription_type == SubscriptionTypes.TENANT.value:
             return tenant_name
 

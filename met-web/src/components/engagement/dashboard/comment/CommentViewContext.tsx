@@ -11,14 +11,20 @@ import { Comment } from 'models/comment';
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
+export interface TransformedComment {
+    submission_id: number;
+    submission_date: string;
+    comments: { label: string; text: string }[];
+}
+
 export interface EngagementCommentContextProps {
     engagement: Engagement | null;
     comments: Comment[];
     isEngagementLoading: boolean;
     isCommentsListLoading: boolean;
-    paginationOptions: PaginationOptions<Comment>;
+    paginationOptions: PaginationOptions<TransformedComment>;
     pageInfo: PageInfo;
-    handleChangePagination: (_paginationOptions: PaginationOptions<Comment>) => void;
+    handleChangePagination: (_paginationOptions: PaginationOptions<TransformedComment>) => void;
     tableLoading: boolean;
 }
 
@@ -34,7 +40,7 @@ export const CommentViewContext = createContext<EngagementCommentContextProps>({
     comments: [],
     paginationOptions: { page: 0, size: 10 },
     pageInfo: { total: 0 },
-    handleChangePagination: (_paginationOptions: PaginationOptions<Comment>) => {
+    handleChangePagination: (_paginationOptions: PaginationOptions<TransformedComment>) => {
         throw new Error('Unimplemented');
     },
     tableLoading: false,
@@ -52,7 +58,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isCommentsListLoading, setIsCommentsListLoading] = useState(true);
     const [comments, setComments] = useState<Comment[]>([]);
-    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Comment>>({
+    const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<TransformedComment>>({
         page: 1,
         size: 10,
     });
@@ -140,7 +146,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
         }
     };
 
-    const handleChangePagination = (paginationOptions: PaginationOptions<Comment>) => {
+    const handleChangePagination = (paginationOptions: PaginationOptions<TransformedComment>) => {
         setPaginationOptions(paginationOptions);
     };
 
