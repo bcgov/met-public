@@ -8,6 +8,8 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 export interface EngagementSettingsContextState {
     isInternal: boolean;
     setIsInternal: (isInternal: boolean) => void;
+    consentMessage: string;
+    setConsentMessage: (richContent: string) => void;
     sendReport: boolean;
     setSendReport: (sendReport: boolean) => void;
     handleSaveSettings: () => void;
@@ -18,6 +20,10 @@ export interface EngagementSettingsContextState {
 export const EngagementSettingsContext = createContext<EngagementSettingsContextState>({
     isInternal: false,
     setIsInternal: () => {
+        return;
+    },
+    consentMessage: '',
+    setConsentMessage: () => {
         return;
     },
     sendReport: false,
@@ -41,6 +47,7 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
     const [isInternal, setIsInternal] = useState(savedIsInternal);
     const [sendReport, setSendReport] = useState(Boolean(settings.send_report));
     const [updatingSettings, setUpdatingSettings] = useState(false);
+    const [consentMessage, setConsentMessage] = useState(savedEngagement?.consent_message || '');
 
     const handleUpdateEngagementMetadata = () => {
         return handleUpdateEngagementMetadataRequest({
@@ -53,6 +60,7 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
         return handleUpdateEngagementRequest({
             ...engagementFormData,
             is_internal: isInternal,
+            consent_message: consentMessage,
         });
     };
 
@@ -89,6 +97,8 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
             value={{
                 isInternal,
                 sendReport,
+                consentMessage,
+                setConsentMessage,
                 setIsInternal,
                 setSendReport,
                 handleSaveSettings,

@@ -1,4 +1,5 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useContext, useState } from 'react';
+import { ActionContext } from './ActionContext';
 import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack, Link } from '@mui/material';
 import { EmailPanelProps } from './types';
 import {
@@ -13,8 +14,11 @@ import {
 } from 'components/common';
 import { When } from 'react-if';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
+    const { savedEngagement } = useContext(ActionContext);
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -82,18 +86,11 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 </Grid>
                 <Grid item xs={12}>
                     <MetDisclaimer>
-                        {`
-                            Personal information (your email address) is collected under Section 26(c) and 26(e) of the Freedom of Information\
-                            and Protection of Privacy Act, for the purpose of providing content updates and future opportunities to participate.\
-                            Your email is never shared with third parties.
-                        `}
-                        <br />
-                        <br />
-                        {
-                            'If you have any questions about the collection, use and disclosure of your personal information,\
-                            please contact the Director of Digital Services at '
-                        }
-                        <Link href="mailto:Sid.Tobias@gov.bc.ca">Sid.Tobias@gov.bc.ca</Link>
+                        <Editor
+                            editorState={getEditorStateFromRaw(savedEngagement.consent_message)}
+                            readOnly={true}
+                            toolbarHidden
+                        />
                     </MetDisclaimer>
                 </Grid>
                 <Grid

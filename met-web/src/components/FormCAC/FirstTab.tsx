@@ -8,6 +8,8 @@ import { useAppTranslation } from 'hooks';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
 import { When } from 'react-if';
+import { Editor } from 'react-draft-wysiwyg';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 // Define the Yup schema for validation
 const schema = yup.object({
@@ -22,7 +24,7 @@ interface FormData {
 
 export const FirstTab: React.FC = () => {
     const { t: translate } = useAppTranslation();
-    const { setTabValue, setFormSubmission } = useContext(FormContext);
+    const { consentMessage, setTabValue, setFormSubmission } = useContext(FormContext);
 
     // Initialize form state and validation using react-hook-form
     const {
@@ -86,11 +88,7 @@ export const FirstTab: React.FC = () => {
                 <MetLabel>I understand that...</MetLabel>
             </Grid>
             <Grid item xs={12}>
-                Personal information is collected under Section 26(c) of the Freedom of Information and Protection of
-                Privacy Act, for the purpose of participating in the Community Advisory Committee conducted by the
-                Environmental Assessment Office. If you have any questions about the collection, use and disclosure of
-                your personal information, please contact {translate('cacForm.contactTitle')} at{' '}
-                <Link href={`mailto:${contactEmail}`}>{contactEmail}</Link>.
+                <Editor editorState={getEditorStateFromRaw(consentMessage)} readOnly={true} toolbarHidden />
             </Grid>
 
             <Grid item xs={12}>
