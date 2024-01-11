@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
 import { MetPaper, PrimaryButton } from 'components/common';
-import InternalEngagement from './InternalEngagement';
-import SendReport from './SendReport';
-import { EngagementSettingsContext } from './EngagementSettingsContext';
-import { PublicUrls } from './PublicUrls';
+import ConsentMessage from './ConsentMessage';
+import EngagementInformation from './EngagementInformation';
 
-const EngagementSettingsForm = () => {
-    const { handleSaveSettings, updatingSettings } = useContext(EngagementSettingsContext);
+import { AdditionalDetailsContext } from './AdditionalDetailsContext';
+
+const AdditionalTabContent = () => {
+    const { handleSaveAdditional, updatingAdditional } = useContext(AdditionalDetailsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -20,28 +20,22 @@ const EngagementSettingsForm = () => {
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12}>
-                    <InternalEngagement />
+                    <EngagementInformation />
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
                 <Grid item xs={12}>
-                    <SendReport />
+                    <ConsentMessage />
                 </Grid>
                 <Grid item xs={12}>
-                    <PrimaryButton loading={updatingSettings} onClick={handleSaveSettings}>
+                    <PrimaryButton loading={updatingAdditional} onClick={handleSaveAdditional}>
                         Save
                     </PrimaryButton>
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                    <PublicUrls />
                 </Grid>
             </Grid>
         </MetPaper>
     );
 };
 
-export default EngagementSettingsForm;
+export default AdditionalTabContent;
