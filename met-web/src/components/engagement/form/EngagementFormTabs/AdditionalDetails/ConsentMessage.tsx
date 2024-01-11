@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { Box, Grid } from '@mui/material';
 import { MetHeader4 } from 'components/common';
-import { EngagementSettingsContext } from './EngagementSettingsContext';
+import { AdditionalDetailsContext } from './AdditionalDetailsContext';
 import RichTextEditor from 'components/common/RichTextEditor';
 
 const ConsentMessage = () => {
-    const { consentMessage, setConsentMessage } = useContext(EngagementSettingsContext);
+    const { initialConsentMessage, setConsentMessage } = useContext(AdditionalDetailsContext);
 
     const handleRichContentChange = (newState: string) => {
         setConsentMessage(newState);
@@ -20,7 +20,7 @@ const ConsentMessage = () => {
                 <Box display="flex" flexDirection="column" justifyContent="space-between">
                     <RichTextEditor
                         handleEditorStateChange={handleRichContentChange}
-                        initialRawEditorState={consentMessage || ''}
+                        initialRawEditorState={initialConsentMessage || ''}
                     />
                 </Box>
             </Grid>
