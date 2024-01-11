@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { useAppDispatch } from 'hooks';
@@ -67,19 +67,18 @@ export const AdditionalDetailsContextProvider = ({ children }: { children: React
         savedEngagement.engagement_status.id,
     );
 
-    return (
-        <AdditionalDetailsContext.Provider
-            value={{
-                initialConsentMessage,
-                setInitialConsentMessage,
-                consentMessage,
-                setConsentMessage,
-                handleSaveAdditional,
-                updatingAdditional,
-                hasBeenOpened,
-            }}
-        >
-            {children}
-        </AdditionalDetailsContext.Provider>
+    const contextValue = useMemo(
+        () => ({
+            initialConsentMessage,
+            setInitialConsentMessage,
+            consentMessage,
+            setConsentMessage,
+            handleSaveAdditional,
+            updatingAdditional,
+            hasBeenOpened,
+        }),
+        [initialConsentMessage, consentMessage, updatingAdditional, hasBeenOpened],
     );
+
+    return <AdditionalDetailsContext.Provider value={contextValue}>{children}</AdditionalDetailsContext.Provider>;
 };
