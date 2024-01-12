@@ -175,9 +175,10 @@ def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unu
         mock_mail.assert_called()
 
 
-def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disable=unused-argument
+def test_get_comments_spreadsheet(mocker, client, jwt, session,
+                                  setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that comments sheet can be fetched."""
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
 
     mock_post_generate_document_response = MagicMock()
     mock_post_generate_document_response.content = b'mock data'

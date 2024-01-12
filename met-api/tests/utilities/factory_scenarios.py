@@ -53,6 +53,24 @@ class TestUserInfo(dict, Enum):
         'tenant_id': '1'
     }
 
+    user_staff_2 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '2'
+    }
+
+    user_staff_3 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '3'
+    }
+
 
 class TestParticipantInfo(dict, Enum):
     """Test scenarios of participant."""
@@ -137,7 +155,7 @@ class TestTenantInfo(dict, Enum):
     """Test scenarios of tenants."""
 
     tenant1 = {
-        'short_name': 'GDX',
+        'short_name': 'EAO',
         'name': fake.name(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
@@ -252,10 +270,8 @@ class TestJwtClaims(dict, Enum):
         'firstname': fake.first_name(),
         'lastname': fake.last_name(),
         'preferred_username': fake.user_name(),
-        'realm_access': {
-            'roles': [
+        'client_roles': [
             ]
-        }
     }
 
     public_user_role = {
@@ -266,11 +282,9 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': fake.user_name(),
         'email': fake.email(),
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
+        'client_roles': [
                 'public_user'
             ]
-        }
     }
 
     met_admin_role = {
@@ -283,8 +297,7 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
+        'client_roles': [
                 'staff',
                 'view_engagement',
                 'create_survey',
@@ -296,7 +309,6 @@ class TestJwtClaims(dict, Enum):
                 'update_user_group',
                 'create_tenant'
             ]
-        }
     }
 
     staff_admin_role = {
@@ -309,8 +321,7 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
+        'client_roles': [
                 'staff',
                 'view_engagement',
                 'create_engagement',
@@ -335,7 +346,6 @@ class TestJwtClaims(dict, Enum):
                 'export_proponent_comment_sheet',
                 'export_internal_comment_sheet'
             ]
-        }
     }
     team_member_role = {
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
@@ -347,15 +357,13 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
+        'client_roles': [
                 'staff',
                 'view_engagement',
                 'view_users',
                 'clone_survey',
                 'export_proponent_comment_sheet'
             ]
-        }
     }
 
     reviewer_role = {
@@ -368,12 +376,10 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
+        'client_roles': [
                 'staff',
                 'view_users',
             ]
-        }
     }
 
 

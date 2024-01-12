@@ -68,7 +68,8 @@ def test_create_staff_user(client, jwt, session):
     assert rv.json.get('tenant_id') == str(tenant.id)
 
 
-def test_get_staff_users(client, jwt, session):
+def test_get_staff_users(client, jwt, session,
+                         setup_admin_user_and_claims):
     """Assert that a user can be POSTed."""
     set_global_tenant()
     staff_1 = dict(TestUserInfo.user_staff_1)
@@ -76,15 +77,16 @@ def test_get_staff_users(client, jwt, session):
     factory_staff_user_model(user_info=staff_1)
     factory_staff_user_model(user_info=staff_2)
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 3
-    assert len(rv.json.get('items')) == 3
+    assert rv.json.get('total') == 4
+    assert len(rv.json.get('items')) == 4
 
 
-def test_add_user_to_admin_group(mocker, client, jwt, session):
+def test_add_user_to_admin_group(mocker, client, jwt, session,
+                                 setup_admin_user_and_claims):
     """Assert that a user can be added to the admin group."""
     user = factory_staff_user_model()
 
@@ -93,7 +95,7 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
         f'/api/user/{user.external_id}/groups?group=Administrator',
@@ -106,7 +108,8 @@ def test_add_user_to_admin_group(mocker, client, jwt, session):
     mock_add_attribute_to_user.assert_called()
 
 
-def test_add_user_to_reviewer_group(mocker, client, jwt, session):
+def test_add_user_to_reviewer_group(mocker, client, jwt, session,
+                                    setup_admin_user_and_claims):
     """Assert that a user can be added to the reviewer group."""
     user = factory_staff_user_model()
 
@@ -115,7 +118,7 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session):
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
         f'/api/user/{user.external_id}/groups?group=Reviewer',
@@ -127,7 +130,8 @@ def test_add_user_to_reviewer_group(mocker, client, jwt, session):
     mock_get_user_groups_keycloak.assert_called()
 
 
-def test_add_user_to_team_member_group(mocker, client, jwt, session):
+def test_add_user_to_team_member_group(mocker, client, jwt, session,
+                                       setup_admin_user_and_claims):
     """Assert that a user can be added to the team member group."""
     user = factory_staff_user_model()
 
@@ -136,7 +140,7 @@ def test_add_user_to_team_member_group(mocker, client, jwt, session):
         [KeycloakGroupName.EAO_IT_VIEWER.value]
     )
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
         f'/api/user/{user.external_id}/groups?group=TeamMember',
@@ -199,13 +203,14 @@ def mock_toggle_user_status(mocker):
     return mock_toggle_user_status
 
 
-def test_toggle_user_active_status(mocker, client, jwt, session):
+def test_toggle_user_active_status(mocker, client, jwt, session,
+                                   setup_admin_user_and_claims):
     """Assert that a user can be toggled."""
     user = factory_staff_user_model()
     mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
@@ -218,13 +223,14 @@ def test_toggle_user_active_status(mocker, client, jwt, session):
     mocked_toggle_user_status.assert_called()
 
 
-def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, session):
+def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, session,
+                                                      setup_team_member_and_claims):
     """Assert that a team member cannot toggle user status."""
     user = factory_staff_user_model()
     mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    claims = TestJwtClaims.team_member_role
+    user, claims = setup_team_member_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
@@ -236,13 +242,14 @@ def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, sessi
     mocked_toggle_user_status.assert_not_called()
 
 
-def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session):
+def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session,
+                                                   setup_reviewer_and_claims):
     """Assert that a reviewer cannot toggle user status."""
     user = factory_staff_user_model()
     mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    claims = TestJwtClaims.reviewer_role
+    user, claims = setup_reviewer_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
@@ -254,13 +261,14 @@ def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session)
     mocked_toggle_user_status.assert_not_called()
 
 
-def test_toggle_user_active_status_empty_body(mocker, client, jwt, session):
+def test_toggle_user_active_status_empty_body(mocker, client, jwt, session,
+                                              setup_admin_user_and_claims):
     """Assert that returns bad request if bad request body."""
     user = factory_staff_user_model()
     mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
