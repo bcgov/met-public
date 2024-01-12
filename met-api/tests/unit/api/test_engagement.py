@@ -109,7 +109,7 @@ def test_add_engagements_invalid(client, jwt, session, engagement_info,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 401
+    assert rv.status_code == 403
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
