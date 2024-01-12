@@ -182,7 +182,6 @@ def setup_admin_user_and_claims(jwt):
     user = factory_staff_user_model(user_info=staff_info)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     claims['sub'] = str(user.external_id)
-
     return user, claims
 
 
@@ -206,7 +205,6 @@ def setup_team_member_and_claims(jwt):
     user = factory_staff_user_model(user_info=staff_info)
     claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
     claims['sub'] = str(user.external_id)
-
     return user, claims
 
 
