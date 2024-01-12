@@ -200,7 +200,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
         'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', 'True')),
         'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
-        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
+        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'realm_access.roles'),
     }
 
     # PostgreSQL configuration
