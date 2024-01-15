@@ -23,8 +23,8 @@ from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.services.widget_service import WidgetService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import (
-    factory_engagement_model, factory_widget_item_model, factory_widget_model, patch_token_info,
-    factory_staff_user_model)
+    factory_engagement_model, factory_staff_user_model, factory_widget_item_model, factory_widget_model,
+    patch_token_info)
 
 
 fake = Faker()

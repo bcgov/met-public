@@ -23,7 +23,7 @@ import pytest
 
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetItemInfo
+from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
 
 

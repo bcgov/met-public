@@ -32,7 +32,7 @@ from met_api.utils.enums import ContentType, MembershipStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestTenantInfo, TestUserInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model,
-    factory_survey_model, factory_tenant_model, set_global_tenant)
+    factory_survey_model, set_global_tenant)
 
 
 surveys_url = '/api/surveys/'
@@ -74,7 +74,6 @@ def test_create_survey_with_tenant(client, jwt, session,
 
     # Create a tenant
     tenant_data = TestTenantInfo.tenant2
-    tenant_model = factory_tenant_model(tenant_data)
     tenant2_short_name = tenant_data['short_name']
     tenant_2 = TenantModel.find_by_short_name(tenant2_short_name)
     # Verify that the tenant was created successfully

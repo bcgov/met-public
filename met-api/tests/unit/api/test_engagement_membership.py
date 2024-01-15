@@ -9,7 +9,6 @@ from unittest.mock import MagicMock
 
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus
-from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
 
