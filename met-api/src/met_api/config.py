@@ -97,6 +97,7 @@ class Config:  # pylint: disable=too-few-public-methods
         os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
     @property
+    # pylint: disable=invalid-name
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         """
         Dynamically fetch the SQLAlchemy Database URI based on the DB config.
