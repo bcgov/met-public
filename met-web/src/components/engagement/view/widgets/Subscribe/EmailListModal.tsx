@@ -1,27 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { MetDisclaimer } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { Link, Typography, Box, useMediaQuery, Theme } from '@mui/material';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createSubscribeEmailVerification } from 'services/emailVerificationService';
 import { createSubscription } from 'services/subscriptionService';
 import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
-import { TenantState } from 'reduxSlices/tenantSlice';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
-    const isSmallScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-    const { savedEngagement, engagementMetadata } = useContext(ActionContext);
+    const { savedEngagement } = useContext(ActionContext);
     const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [subscriptionType, setSubscriptionType] = useState<string>(defaultType);
-    const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     const sendEmail = async () => {
         try {
@@ -93,10 +89,6 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
         } finally {
             setIsSaving(false);
         }
-    };
-
-    const handleSubscriptionChange = (type: string) => {
-        setSubscriptionType(type);
     };
 
     return (
