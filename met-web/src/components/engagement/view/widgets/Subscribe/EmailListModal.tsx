@@ -17,7 +17,6 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
     const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);
-    const [subscriptionType, setSubscriptionType] = useState<string>(defaultType);
 
     const sendEmail = async () => {
         try {
@@ -28,7 +27,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     survey_id: savedEngagement.surveys[0].id,
                     type: EmailVerificationType.Subscribe,
                 },
-                subscriptionType || defaultType,
+                defaultType,
             );
 
             await createSubscription({
@@ -36,7 +35,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                 email_address: email_verification.email_address,
                 is_subscribed: false,
                 participant_id: email_verification.participant_id,
-                type: subscriptionType || defaultType,
+                type: defaultType,
             });
 
             window.snowplow('trackSelfDescribingEvent', {
