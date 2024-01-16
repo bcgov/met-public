@@ -198,7 +198,7 @@ def setup_reviewer_and_claims(jwt):
     return user, claims
 
 
-# Fixture for setting up user and claims for an team member
+# Fixture for setting up user and claims for a team member
 @pytest.fixture
 def setup_team_member_and_claims(jwt):
     """Set up a user with the team member role."""
