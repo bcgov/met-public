@@ -19,7 +19,9 @@ from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
 from marshmallow import Schema
 from marshmallow_sqlalchemy.fields import Nested
 
+
 class TimelineEventSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
+    """This is the schema for the timeline event model."""
 
     class Meta:  # pylint: disable=too-few-public-methods
         """All of the fields in the Timeline Event schema."""
@@ -29,11 +31,12 @@ class TimelineEventSchema(Schema):  # pylint: disable=too-many-ancestors, too-fe
 
 
 class WidgetTimelineSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
+    """This is the schema for the widget timeline model."""
 
     class Meta:  # pylint: disable=too-few-public-methods
         """All of the fields in the Widget Timeline schema."""
 
         model = WidgetTimelineModel
         fields = ('id', 'engagement_id', 'widget_id', 'title', 'description', 'events')
-    
+
     events = Nested(TimelineEventSchema, many=True)

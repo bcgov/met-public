@@ -5,7 +5,7 @@ import {
     getEngagementMetadata,
     patchEngagementMetadata,
 } from '../../../services/engagementMetadataService';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import {
     createDefaultEngagement,
@@ -55,8 +55,6 @@ export const ActionContext = createContext<EngagementContext>({
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { engagementId } = useParams<EngagementParams>();
-    const { search } = useLocation();
-    const searchParams = new URLSearchParams(search);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 

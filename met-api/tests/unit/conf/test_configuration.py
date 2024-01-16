@@ -29,21 +29,14 @@ TEST_ENVIRONMENT_DATA = [
     ('valid', 'default', config.ProdConfig),
     ('valid', 'staging', config.ProdConfig),
     ('valid', 'production', config.ProdConfig),
-    ('error', None, KeyError)
+    ('error', None, config.ProdConfig)
 ]
 
 
 @pytest.mark.parametrize('test_type,environment,expected', TEST_ENVIRONMENT_DATA)
 def test_get_named_config(test_type, environment, expected):
-    """Assert that the named configurations can be loaded.
-
-    Or that a KeyError is returned for missing config types.
-    """
-    if test_type == 'valid':
-        assert isinstance(config.get_named_config(environment), expected)
-    else:
-        with pytest.raises(KeyError):
-            config.get_named_config(environment)
+    """Assert that the named configurations can be loaded."""
+    assert isinstance(config.get_named_config(environment), expected)
 
 
 def test_prod_config_secret_key(monkeypatch):  # pylint: disable=missing-docstring

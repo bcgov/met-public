@@ -39,17 +39,21 @@ fake = Faker()
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_add_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+def test_add_engagements(client, jwt, session, engagement_info,
+                         setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
 
-def test_tenant_id_in_create_engagements(client, jwt, session):  # pylint:disable=unused-argument
+def test_tenant_id_in_create_engagements(client, jwt, session,
+                                         setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed with tenant id."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant = TenantModel.find_by_short_name(tenant_short_name)
     assert tenant is not None
@@ -83,8 +87,10 @@ def test_tenant_id_in_create_engagements(client, jwt, session):  # pylint:disabl
     assert response.status_code == 403
 
     # set users tenant id to be same as engagment tenant id
+    staff_2 = dict(TestUserInfo.user_staff_2)
+    user = factory_staff_user_model(user_info=staff_2)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
-    claims['tenant_id'] = tenant_2.id
+    claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     headers[TENANT_ID_HEADER] = tenant2_short_name
     response = client.post('/api/engagements/',
@@ -95,19 +101,23 @@ def test_tenant_id_in_create_engagements(client, jwt, session):  # pylint:disabl
     assert response.json['tenant_id'] == str(tenant_2.id)
 
 
-@pytest.mark.parametrize('role', [TestJwtClaims.no_role, TestJwtClaims.public_user_role])
-def test_add_engagements_invalid(client, jwt, session, role):  # pylint:disable=unused-argument
-    """Assert that an engagement can not be POSTed without authorisaiton."""
-    headers = factory_auth_header(jwt=jwt, claims=role)
-    rv = client.post('/api/engagements/', data=json.dumps(TestEngagementInfo.engagement1),
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_add_engagements_invalid(client, jwt, session, engagement_info,
+                                 setup_unprivileged_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that an engagement can not be POSTed without authorization."""
+    user, claims = setup_unprivileged_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 401
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+def test_get_engagements(client, jwt, session, engagement_info,
+                         setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -121,16 +131,18 @@ def test_get_engagements(client, jwt, session, engagement_info):  # pylint:disab
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement_draft])
-def test_get_engagements_reviewer(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+def test_get_engagements_reviewer(client, jwt, session, engagement_info,
+                                  setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert reviewers access on an engagement."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK.value
     created_eng = rv.json
     eng_id = created_eng.get('id')
-    staff_1 = dict(TestUserInfo.user_staff_1)
-    user = factory_staff_user_model(user_info=staff_1)
+    staff_2 = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_2)
     claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -148,9 +160,11 @@ def test_get_engagements_reviewer(client, jwt, session, engagement_info):  # pyl
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_search_engagements_by_status(client, jwt,
-                                      session, engagement_info):  # pylint:disable=unused-argument
+                                      session, engagement_info,
+                                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be fetched by filtering using the engagement status."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -278,9 +292,11 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_patch_engagement(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
+def test_patch_engagement(client, jwt, session, engagement_info,
+                          setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be updated."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement = factory_engagement_model()
     engagement_id = str(engagement.id)
 
@@ -349,9 +365,11 @@ def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unu
     assert rv.json.get('name') == engagement_edits.get('name')
 
 
-def test_patch_new_survey_block_engagement(client, jwt, session):  # pylint:disable=unused-argument
+def test_patch_new_survey_block_engagement(client, jwt, session,
+                                           setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement's survey status blocks can be updated."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement = factory_engagement_model()
     engagement_id = str(engagement.id)
 
@@ -375,9 +393,11 @@ def test_patch_new_survey_block_engagement(client, jwt, session):  # pylint:disa
     assert actual_status_blocks[0].get('survey_status') == engagement_edits.get('status_block')[0].get('survey_status')
 
 
-def test_update_survey_block_engagement(client, jwt, session):  # pylint:disable=unused-argument
+def test_update_survey_block_engagement(client, jwt, session,
+                                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement's survey status blocks can be updated."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement = factory_engagement_model(TestEngagementInfo.engagement2)
     engagement_id = str(engagement.id)
 

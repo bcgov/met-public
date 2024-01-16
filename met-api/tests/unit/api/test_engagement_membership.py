@@ -9,7 +9,6 @@ from unittest.mock import MagicMock
 
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus
-from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
 
@@ -17,11 +16,13 @@ from tests.utilities.factory_utils import (
 memberships_url = '/api/engagements/{}/members'
 
 
-def test_create_engagement_membership_team_member(mocker, client, jwt, session):
+def test_create_engagement_membership_team_member(mocker, client, jwt, session,
+                                                  setup_admin_user_and_claims):
     """Assert that a team member engagement membership can be created."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     mock_add_user_to_group_keycloak_response = MagicMock()
     mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
@@ -51,11 +52,13 @@ def test_create_engagement_membership_team_member(mocker, client, jwt, session):
     mock_get_users_groups_keycloak.assert_called()
 
 
-def test_create_engagement_membership_reviewer(mocker, client, jwt, session):
+def test_create_engagement_membership_reviewer(mocker, client, jwt, session,
+                                               setup_admin_user_and_claims):
     """Assert that a reviewer engagement membership can be created."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     mock_add_user_to_group_keycloak_response = MagicMock()
     mock_add_user_to_group_keycloak_response.status_code = HTTPStatus.NO_CONTENT
@@ -85,11 +88,13 @@ def test_create_engagement_membership_reviewer(mocker, client, jwt, session):
     mock_get_users_groups_keycloak.assert_called()
 
 
-def test_create_engagement_membership_unauthorized(client, jwt, session):
+def test_create_engagement_membership_unauthorized(client, jwt, session,
+                                                   setup_unprivileged_user_and_claims):
     """Assert that creating an engagement membership without proper authorization fails."""
+    user, claims = setup_unprivileged_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {'user_id': staff_user.external_id}
 
     rv = client.post(
@@ -101,12 +106,14 @@ def test_create_engagement_membership_unauthorized(client, jwt, session):
     assert rv.status_code == HTTPStatus.FORBIDDEN
 
 
-def test_revoke_membership(client, jwt, session):
+def test_revoke_membership(client, jwt, session,
+                           setup_admin_user_and_claims):
     """Test that a membership can be revoked."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'action': 'revoke'
     }
@@ -121,8 +128,10 @@ def test_revoke_membership(client, jwt, session):
     assert rv.status_code == HTTPStatus.OK
 
 
-def test_reinstate_membership(client, jwt, session):
+def test_reinstate_membership(client, jwt, session,
+                              setup_admin_user_and_claims):
     """Test that a membership can be reinstated."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(
@@ -130,7 +139,7 @@ def test_reinstate_membership(client, jwt, session):
         engagement_id=engagement.id,
         status=MembershipStatus.REVOKED.value
     )
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'action': 'reinstate'
     }
@@ -145,12 +154,14 @@ def test_reinstate_membership(client, jwt, session):
     assert rv.status_code == HTTPStatus.OK
 
 
-def test_update_membership_status_invalid_action(client, jwt, session):
+def test_update_membership_status_invalid_action(client, jwt, session,
+                                                 setup_admin_user_and_claims):
     """Test that an invalid action cannot be performed on a membership."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'action': 'invalid'
     }
@@ -165,8 +176,10 @@ def test_update_membership_status_invalid_action(client, jwt, session):
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
-def test_revoke_already_revoked_membership(client, jwt, session):
+def test_revoke_already_revoked_membership(client, jwt, session,
+                                           setup_admin_user_and_claims):
     """Test that an already revoked membership cannot be revoked again."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(
@@ -174,7 +187,7 @@ def test_revoke_already_revoked_membership(client, jwt, session):
         engagement_id=engagement.id,
         status=MembershipStatus.REVOKED.value
     )
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'action': 'revoke'
     }
@@ -189,12 +202,14 @@ def test_revoke_already_revoked_membership(client, jwt, session):
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
-def reinstate_already_active_membership(client, jwt, session):
+def reinstate_already_active_membership(client, jwt, session,
+                                        setup_admin_user_and_claims):
     """Test that an already active membership cannot be activated again."""
+    user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
     staff_user = factory_staff_user_model()
     membership = factory_membership_model(user_id=staff_user.id, engagement_id=engagement.id)
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'action': 'reinstate'
     }

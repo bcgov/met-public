@@ -1,5 +1,11 @@
 ## January 15, 2024
 
+- **Task** Audit for missing unit tests [🎟️DESENG-436](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-436)
+  - Corrected tests to execute smoothly in the local environment using development variables.
+  - Established continuous integration configuration to automatically run tests upon each commit.
+  - Ensured that the tests pass successfully in our GitHub test environment.
+- **Task** Audit for missing unit tests [🎟️DESENG-449](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-449)
+  - Identified and corrected failing unit test for api and web
 - **Bug Fix**: Fixing Form.io error when reordering Radio Button options [🎟️DESENG-446](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-446)
 
 ## January 10, 2024

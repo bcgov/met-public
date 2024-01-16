@@ -71,8 +71,10 @@ def test_get_nonexistent_engagement_slug(client, jwt, session):
 
 
 @pytest.mark.parametrize('engagement_slug_info', [TestEngagementSlugInfo.slug1])
-def test_patch_engagement_slug(client, jwt, session, engagement_slug_info):
+def test_patch_engagement_slug(client, jwt, session, engagement_slug_info,
+                               setup_admin_user_and_claims):
     """Test patch request for engagement_slug endpoint."""
+    user, claims = setup_admin_user_and_claims
     eng = factory_engagement_model(status=Status.Draft)
     engagement_slug_info = {
         **engagement_slug_info,
@@ -84,29 +86,33 @@ def test_patch_engagement_slug(client, jwt, session, engagement_slug_info):
         'slug': updated_slug,
         'engagement_id': eng.id
     }
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(f'/api/slugs/{updated_slug}', data=json.dumps(patch_data),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
 
-def test_patch_create_nonexistent_engagement_slug(client, jwt, session):
+def test_patch_create_nonexistent_engagement_slug(client, jwt, session,
+                                                  setup_admin_user_and_claims):
     """Test patch request for non-existent engagement_slug endpoint."""
+    user, claims = setup_admin_user_and_claims
     eng = factory_engagement_model(status=Status.Draft)
     updated_slug = fake.text(max_nb_chars=20)
     patch_data = {
         'slug': updated_slug,
         'engagement_id': eng.id
     }
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(f'/api/slugs/{updated_slug}', data=json.dumps(patch_data),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
 
 @pytest.mark.parametrize('engagement_slug_info', [TestEngagementSlugInfo.slug1])
-def test_patch_unauthorized_engagement_slug(client, jwt, session, engagement_slug_info):
+def test_patch_unauthorized_engagement_slug(client, jwt, session, engagement_slug_info,
+                                            setup_unprivileged_user_and_claims):
     """Test unauthorized patch request for engagement_slug endpoint."""
+    user, claims = setup_unprivileged_user_and_claims
     eng = factory_engagement_model(status=Status.Draft)
     engagement_slug_info = {
         **engagement_slug_info,
@@ -118,7 +124,7 @@ def test_patch_unauthorized_engagement_slug(client, jwt, session, engagement_slu
         'slug': updated_slug,
         'engagement_id': eng.id
     }
-    headers = factory_auth_header(jwt=jwt, claims=TestUserInfo.user_staff_1)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(f'/api/slugs/{updated_slug}', data=json.dumps(patch_data),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.UNAUTHORIZED

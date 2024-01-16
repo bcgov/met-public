@@ -81,7 +81,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
 
     # default tenant configs ; Set to EAO for now.Overwrite using openshift variables
-    DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'EAO')
+    DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'GDX')
     DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Environment Assessment Office')
     DEFAULT_TENANT_DESCRIPTION = os.getenv('DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
 

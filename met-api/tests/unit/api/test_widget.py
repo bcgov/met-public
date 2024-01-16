@@ -23,16 +23,18 @@ import pytest
 
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetItemInfo
+from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
 
 
 @pytest.mark.parametrize('widget_info', [TestWidgetInfo.widget1])
-def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unused-argument
+def test_create_widget(client, jwt, session, widget_info,
+                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -43,19 +45,21 @@ def test_create_widget(client, jwt, session, widget_info):  # pylint:disable=unu
     assert rv.json[0].get('sort_index') == 1
 
 
-def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argument
+def test_create_widget_sort(client, jwt, session,
+                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1
     widget_info_1['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
     widget_info_2 = TestWidgetInfo.widget2
     widget_info_2['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_2),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -96,12 +100,14 @@ def test_create_widget_sort(client, jwt, session):  # pylint:disable=unused-argu
     assert doc_widget.get('sort_index') == 1
 
 
-def test_create_widget_sort_invalid(client, jwt, session):  # pylint:disable=unused-argument
+def test_create_widget_sort_invalid(client, jwt, session,
+                                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1
     widget_info_1['engagement_id'] = engagement.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -126,13 +132,15 @@ def _find_widget(widgets, widget_type):
 
 
 @pytest.mark.parametrize('widget_item_info', [TestWidgetItemInfo.widget_item1])
-def test_create_widget_items(client, jwt, session, widget_item_info):  # pylint:disable=unused-argument
+def test_create_widget_items(client, jwt, session, widget_item_info,
+                             setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that widget items can be POSTed."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
+    user, claims = setup_admin_user_and_claims
 
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     data = {
         'widget_data_id': widget_item_info.get('widget_data_id'),

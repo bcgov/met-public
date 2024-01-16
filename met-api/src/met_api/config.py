@@ -97,6 +97,7 @@ class Config:  # pylint: disable=too-few-public-methods
         os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
     @property
+    # pylint: disable=invalid-name
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         """
         Dynamically fetch the SQLAlchemy Database URI based on the DB config.
@@ -307,6 +308,8 @@ class Config:  # pylint: disable=too-few-public-methods
         'TOKEN_URL': os.getenv('CDOGS_TOKEN_URL'),
     }
 
+    PROPAGATE_EXCEPTIONS = True
+
 
 class DevConfig(Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
@@ -368,6 +371,7 @@ class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-metho
         'HOST': os.getenv('DATABASE_TEST_HOST', Config.DB.get('HOST')),
         'PORT': os.getenv('DATABASE_TEST_PORT', Config.DB.get('PORT')),
     }
+    IS_SINGLE_TENANT_ENVIRONMENT = False
 
 
 class DockerConfig(Config):  # pylint: disable=too-few-public-methods

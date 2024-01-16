@@ -6,9 +6,6 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Select,
-    SelectChangeEvent,
-    MenuItem,
     FormControl,
     useMediaQuery,
     Theme,
@@ -19,7 +16,6 @@ import { PrimaryButton, SecondaryButton } from '../../../common';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
-import { AppConfig } from 'config';
 
 interface filterParams {
     setFilterParams: (newsearchOptions: SearchOptions) => void;
@@ -38,13 +34,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
     const [statusFilters, setStatusFilters] = useState(initialStatusFilters);
 
-    const initialFilterParams = {
-        status_list: [],
-        created_from_date: '',
-        created_to_date: '',
-        published_from_date: '',
-        published_to_date: '',
-    };
     const handleStatusFilterChange = (event: React.SyntheticEvent) => {
         setStatusFilters({
             ...statusFilters,
