@@ -33,8 +33,8 @@ def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argum
     engagement_data = TestEngagementInfo.engagement1
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
-    factory_staff_user_model()
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id
     assert fetched_engagement.get('name') == engagement_data.get('name')
@@ -47,8 +47,8 @@ def test_create_engagement_with_survey_block(session, monkeypatch):  # pylint:di
     """Assert that an Org can be created."""
     engagement_data = TestEngagementInfo.engagement2
     saved_engagament = EngagementService().create_engagement(engagement_data)
-    factory_staff_user_model()
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     # fetch the engagement with id and assert
     fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id

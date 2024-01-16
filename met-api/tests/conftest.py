@@ -15,6 +15,7 @@
 import time
 from random import random
 
+import copy
 import pytest
 from flask_migrate import Migrate, upgrade
 from sqlalchemy import event, text
@@ -22,6 +23,8 @@ from sqlalchemy import event, text
 from met_api import create_app, setup_jwt_manager
 from met_api.auth import jwt as _jwt
 from met_api.models import db as _db
+from tests.utilities.factory_utils import factory_staff_user_model
+from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 
 
 @pytest.fixture(scope='session')
@@ -169,3 +172,51 @@ def docker_compose_files(pytestconfig):
 def auth_mock(monkeypatch):
     """Mock check_auth."""
     pass
+
+
+# Fixture for setting up user and claims for an admin user
+@pytest.fixture
+def setup_admin_user_and_claims(jwt):
+    """Set up a user with the staff admin role."""
+    staff_info = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_info)
+    claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
+    claims['sub'] = str(user.external_id)
+
+    return user, claims
+
+
+# Fixture for setting up user and claims for a reviewer
+@pytest.fixture
+def setup_reviewer_and_claims(jwt):
+    """Set up a user with the reviewer role."""
+    staff_info = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_info)
+    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
+    claims['sub'] = str(user.external_id)
+
+    return user, claims
+
+
+# Fixture for setting up user and claims for a team member
+@pytest.fixture
+def setup_team_member_and_claims(jwt):
+    """Set up a user with the team member role."""
+    staff_info = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_info)
+    claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
+    claims['sub'] = str(user.external_id)
+
+    return user, claims
+
+
+# Fixture for setting up user and claims for a user with no role
+@pytest.fixture
+def setup_unprivileged_user_and_claims(jwt):
+    """Set up a user with the no role."""
+    staff_info = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_info)
+    claims = copy.deepcopy(TestJwtClaims.no_role.value)
+    claims['sub'] = str(user.external_id)
+
+    return user, claims
