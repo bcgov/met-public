@@ -35,15 +35,19 @@ from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
+from met_api.models.widget_map import WidgetMap as WidgetMapModel
+from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
+from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
-    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo,
-    TestWidgetInfo, TestWidgetItemInfo)
+    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo,
+    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetVideo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -334,3 +338,55 @@ def factory_engagement_setting_model(engagement_id):
     )
     setting.save()
     return setting
+
+
+def factory_video_model(video_info: dict = TestWidgetVideo.video1):
+    """Produce a comment model."""
+    video = WidgetVideoModel(
+        video_url=video_info.get('video_url'),
+        description=video_info.get('description'),
+        widget_id=video_info.get('widget_id'),
+        engagement_id=video_info.get('engagement_id'),
+    )
+    video.save()
+    return video
+
+
+def factory_widget_timeline_model(widget_timeline: dict = TestTimelineInfo.widget_timeline):
+    """Produce a widget timeline model."""
+    widget_timeline = WidgetTimelineModel(
+        widget_id=widget_timeline.get('widget_id'),
+        engagement_id=widget_timeline.get('engagement_id'),
+        title=widget_timeline.get('title'),
+        description=widget_timeline.get('description'),
+    )
+    widget_timeline.save()
+    return widget_timeline
+
+
+def factory_timeline_event_model(timeline_event: dict = TestTimelineInfo.timeline_event):
+    """Produce a widget timeline model."""
+    timeline_event = TimelineEventModel(
+        widget_id=timeline_event.get('widget_id'),
+        engagement_id=timeline_event.get('engagement_id'),
+        timeline_id=timeline_event.get('timeline_id'),
+        status=timeline_event.get('status'),
+        position=timeline_event.get('position'),
+        description=timeline_event.get('description'),
+        time=timeline_event.get('time'),
+    )
+    timeline_event.save()
+    return timeline_event
+
+
+def factory_widget_map_model(widget_map: dict = TestWidgetMap.map1):
+    """Produce a widget map model."""
+    widget_map = WidgetMapModel(
+        widget_id=widget_map.get('widget_id'),
+        engagement_id=widget_map.get('engagement_id'),
+        longitude=widget_map.get('longitude'),
+        latitude=widget_map.get('latitude'),
+        marker_label=widget_map.get('marker_label'),
+    )
+    widget_map.save()
+    return widget_map
