@@ -283,9 +283,11 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': fake.user_name(),
         'email': fake.email(),
         'tenant_id': 1,
-        'client_roles': [
-            'public_user'
-        ]
+        'realm_access': {
+            'roles': [
+                'public_user'
+            ]
+        }
     }
 
     met_admin_role = {
@@ -298,18 +300,20 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'client_roles': [
-            'staff',
-            'view_engagement',
-            'create_survey',
-            'view_users',
-            'create_admin_user',
-            'edit_members',
-            'toggle_user_status',
-            'export_to_csv',
-            'update_user_group',
-            'create_tenant'
-        ]
+        'realm_access': {
+            'roles': [
+                'staff',
+                'view_engagement',
+                'create_survey',
+                'view_users',
+                'create_admin_user',
+                'edit_members',
+                'toggle_user_status',
+                'export_to_csv',
+                'update_user_group',
+                'create_tenant'
+            ]
+        }
     }
 
     staff_admin_role = {
@@ -360,13 +364,15 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'client_roles': [
-            'staff',
-            'view_engagement',
-            'view_users',
-            'clone_survey',
-            'export_proponent_comment_sheet'
-        ]
+        'realm_access': {
+            'roles': [
+                'staff',
+                'view_engagement',
+                'view_users',
+                'clone_survey',
+                'export_proponent_comment_sheet'
+            ]
+        }
     }
 
     reviewer_role = {
@@ -379,10 +385,12 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'client_roles': [
-            'staff',
-            'view_users',
-        ]
+        'realm_access': {
+            'roles': [
+                'staff',
+                'view_users',
+            ]
+        }
     }
 
 
