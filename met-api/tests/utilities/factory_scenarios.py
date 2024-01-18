@@ -725,14 +725,14 @@ class TestWidgetMap(dict, Enum):
     """Test scenarios of video widget."""
 
     map1 = {
-        'longitude': -121.49923,
-        'latitude': 51.209837,
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
         'marker_label': fake.name()
     }
 
     map2 = {
-        'longitude': -121.49923,
-        'latitude': 51.209837,
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
         'marker_label': fake.name()
     }
 

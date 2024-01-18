@@ -55,7 +55,7 @@ def test_create_map_widget(client, jwt, session,
     )
 
     assert rv.status_code == HTTPStatus.OK.value
-    assert rv.json.get('longitude') == map_info.get('longitude')
+    assert float(rv.json.get('longitude')) == float(map_info.get('longitude'))
 
 
 def test_get_map(client, jwt, session):  # pylint:disable=unused-argument
