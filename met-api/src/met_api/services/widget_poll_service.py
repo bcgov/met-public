@@ -15,7 +15,7 @@ class WidgetPollService:
     """WidgetPoll management service."""
 
     @staticmethod
-    def get_poll_by_widget_id(widget_id: int):
+    def get_polls_by_widget_id(widget_id: int):
         """Get poll by widget id."""
         widget_poll = PollModel.get_polls(widget_id)
         return widget_poll
