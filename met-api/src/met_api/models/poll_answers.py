@@ -18,7 +18,7 @@ class PollAnswer(BaseModel):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     answer_text = db.Column(db.String(255), nullable=False)
     poll_id = db.Column(db.Integer, ForeignKey('widget_polls.id',
-                                               ondelete='CASCADE'))
+                                               ondelete='CASCADE'), nullable=False)
 
     @classmethod
     def get_answers(cls, poll_id) -> list[PollAnswer]:

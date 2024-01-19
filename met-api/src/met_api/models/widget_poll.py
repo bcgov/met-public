@@ -24,9 +24,9 @@ class Poll(BaseModel):
     status = db.Column(
         Enum('active', 'inactive', name='poll_status'), default='inactive')
     widget_id = db.Column(db.Integer, ForeignKey(
-        'widget.id', ondelete='CASCADE'))
+        'widget.id', ondelete='CASCADE'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey(
-        'engagement.id', ondelete='CASCADE'), nullable=True)
+        'engagement.id', ondelete='CASCADE'), nullable=False)
 
     # Relationship to timeline_event
     answers = db.relationship(PollAnswer, backref='widget_poll', lazy=True)
