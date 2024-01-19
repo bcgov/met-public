@@ -26,7 +26,7 @@ class Polls(Resource):
     def get(widget_id):
         """Get poll widget."""
         try:
-            widget_poll = WidgetPollService().get_poll(widget_id)
+            widget_poll = WidgetPollService().get_poll_by_widget_id(widget_id)
             return jsonify(WidgetPollSchema().dump(widget_poll, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
