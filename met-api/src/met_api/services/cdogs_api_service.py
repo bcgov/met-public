@@ -28,6 +28,9 @@ from met_api.config import Config
 class CdogsApiService:
     """cdogs api Service class."""
 
+    config = Config.CDOGS_CONFIG 
+    base_url = config['BASE_URL']
+
     def __init__(self):
         """Initiate class."""
         # we can't use current_app.config here because it isn't initialized yet

@@ -248,6 +248,80 @@ class TestEngagementInfo(dict, Enum):
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
+class TestEngagementMetadataInfo(dict, Enum):
+    """Test data for engagement metadata."""
+    metadata0 = {
+        'engagement_id': None,
+        'taxon_id': None,
+        'value': fake.name()
+    }
+    metadata1 = {
+        'engagement_id': 1,
+        'taxon_id': 1,
+        'value': fake.name()
+    }
+    metadata2 = {
+        'engagement_id': 1,
+        'taxon_id': 2,
+        'value': fake.name()
+    }
+    metadata3 = {
+        'engagement_id': 1,
+        'taxon_id': 2,
+        'value': fake.name()
+    }
+    metadata4 = {
+        'engagement_id': 2,
+        'taxon_id': 1,
+        'value': fake.name()
+    }
+
+
+class TestEngagementMetadataTaxonInfo(dict, Enum):
+    """Test data for engagement metadata taxa."""
+
+    taxon1 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'string',
+        'freeform': True,
+        'one_per_engagement': False,
+        'default_value': None,
+        'position': 1
+    }
+
+    taxon2 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'tenant_id': 1,
+        'data_type': 'url',
+        'freeform': True,
+        'one_per_engagement': False,
+        'default_value': None,
+        'position': 2
+    }
+
+    taxon3 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'tenant_id': 1,
+        'data_type': 'string',
+        'freeform': False,
+        'one_per_engagement': True,
+        'default_value': None,
+        'position': 3
+    }
+
+    taxon4 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'tenant_id': 1,
+        'data_type': 'string',
+        'freeform': False,
+        'one_per_engagement': False,
+        'default_value': fake.name(),
+        'position': 4
+    }
 
 class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
@@ -351,7 +425,9 @@ class TestJwtClaims(dict, Enum):
                 'export_all_to_csv',
                 'update_user_group',
                 'export_proponent_comment_sheet',
-                'export_internal_comment_sheet'
+                'export_internal_comment_sheet',
+                'create_tenant',
+                'view_tenant',
             ]
         }
     }

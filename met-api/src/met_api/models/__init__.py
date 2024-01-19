@@ -51,3 +51,4 @@ from .widget_video import WidgetVideo
 from .cac_form import CACForm
 from .widget_timeline import WidgetTimeline
 from .timeline_event import TimelineEvent
+from .engagement_metadata import MetadataTaxon, EngagementMetadata
