@@ -58,3 +58,16 @@ def test_update_subscription(client, jwt, session):  # pylint:disable=unused-arg
                       headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
+
+
+def test_get_subscription(client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that an subscription can be fetched."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role)
+    subscription = factory_subscription_model()
+    subscription_participant_id = str(subscription.participant_id)
+
+    rv = client.get(f'/api/subscription/{subscription_participant_id}',
+                    headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == 200
+    assert rv.json.get('participant_id') == subscription.participant_id

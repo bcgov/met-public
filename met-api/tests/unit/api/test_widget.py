@@ -20,11 +20,15 @@ import json
 from http import HTTPStatus
 
 import pytest
+from faker import Faker
 
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
+
+
+fake = Faker()
 
 
 @pytest.mark.parametrize('widget_info', [TestWidgetInfo.widget1])
@@ -149,3 +153,39 @@ def test_create_widget_items(client, jwt, session, widget_item_info,
     rv = client.post('/api/widgets/' + str(widget.id) + '/items', data=json.dumps([data]),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+
+def test_delete_widget(client, jwt, session,
+                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that a widget can be deleted."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    user, claims = setup_admin_user_and_claims
+
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    rv = client.delete(f'/api/widgets/{widget.id}/engagements/' + str(engagement.id),
+                       headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.OK
+
+
+def test_patch_widget(client, jwt, session,
+                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that a widget can be PATCHed."""
+    engagement = factory_engagement_model()
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    user, claims = setup_admin_user_and_claims
+
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    data = {
+        'title': fake.text(max_nb_chars=10),
+    }
+    rv = client.patch(f'/api/widgets/{widget.id}/engagements/' + str(engagement.id), data=json.dumps(data),
+                      headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('title') == data.get('title')
