@@ -200,7 +200,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
         'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', 'True')),
         'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
-        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'realm_access.roles'),
+        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
     }
 
     # PostgreSQL configuration
@@ -348,7 +348,6 @@ class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-metho
         )
         self.KC['BASE_URL'] = os.getenv('KEYCLOAK_TEST_BASE_URL', self.KC['BASE_URL'])
         self.KC['REALMNAME'] = os.getenv('KEYCLOAK_TEST_REALMNAME', self.KC['REALMNAME'])
-        self.JWT['ROLE_CLAIM'] = os.getenv('JWT_OIDC_TEST_ROLE_CLAIM', 'realm_access.roles')
 
     # Propagate exceptions up to the test runner
     TESTING = env_truthy('TESTING', default=True)
