@@ -39,9 +39,11 @@ surveys_url = '/api/surveys/'
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
-def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+def test_create_survey(client, jwt, session, survey_info,
+                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     data = {
         'name': survey_info.get('name'),
         'display': survey_info.get('form_json').get('display'),
@@ -52,9 +54,11 @@ def test_create_survey(client, jwt, session, survey_info):  # pylint:disable=unu
     assert rv.json.get('form_json') == survey_info.get('form_json')
 
 
-def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unused-argument
+def test_create_survey_with_tenant(client, jwt, session,
+                                   setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant = TenantModel.find_by_short_name(tenant_short_name)
     assert tenant is not None
@@ -70,7 +74,7 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
 
     # Create a tenant
     tenant_data = TestTenantInfo.tenant2
-    tenant_model = factory_tenant_model(tenant_data)
+    factory_tenant_model(tenant_data)
     tenant2_short_name = tenant_data['short_name']
     tenant_2 = TenantModel.find_by_short_name(tenant2_short_name)
     # Verify that the tenant was created successfully
@@ -87,8 +91,10 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
     assert rv.status_code == 403
 
     # emulate Tenant 2 staff admin by setting tenant id
+    staff_info = dict(TestUserInfo.user_staff_3)
+    user = factory_staff_user_model(user_info=staff_info)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
-    claims['tenant_id'] = str(tenant_model.id)
+    claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     headers[TENANT_ID_HEADER] = tenant2_short_name
 
@@ -105,9 +111,11 @@ def test_create_survey_with_tenant(client, jwt, session):  # pylint:disable=unus
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused-argument
+def test_put_survey(client, jwt, session, survey_info,
+                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     survey = factory_survey_model()
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
@@ -123,11 +131,13 @@ def test_put_survey(client, jwt, session, survey_info):  # pylint:disable=unused
     assert rv.json.get('name') == new_survey_name
 
 
-def test_survey_link(client, jwt, session):  # pylint:disable=unused-argument
+def test_survey_link(client, jwt, session,
+                     setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a survey can be POSTed."""
+    user, claims = setup_admin_user_and_claims
     survey = factory_survey_model()
     survey_id = survey.id
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     eng = factory_engagement_model()
     eng_id = eng.id
@@ -262,9 +272,11 @@ def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-arg
     assert rv.json.get('total') == 1
 
 
-def test_edit_template_survey_for_admins(client, jwt, session):  # pylint:disable=unused-argument
+def test_edit_template_survey_for_admins(client, jwt, session,
+                                         setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     survey = factory_survey_model(TestSurveyInfo.survey_template)
     survey_id = str(survey.id)
     new_survey_name = 'new_survey_name'
@@ -287,10 +299,12 @@ def test_edit_template_survey_for_team_member(client, jwt, session):  # pylint:d
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-def test_surveys_clone_admin(mocker, client, jwt, session, survey_info):
+def test_surveys_clone_admin(mocker, client, jwt, session, survey_info,
+                             setup_admin_user_and_claims):
     """Assert that a survey can be cloned."""
+    user, claims = setup_admin_user_and_claims
     survey = factory_survey_model()
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     # Prepare test data
     request_data = {'name': 'New Survey'}
@@ -315,10 +329,12 @@ def test_surveys_clone_admin(mocker, client, jwt, session, survey_info):
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info):
+def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info,
+                                   setup_team_member_and_claims):
     """Assert that a survey can be cloned."""
+    user, claims = setup_team_member_and_claims
     survey = factory_survey_model()
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.team_member_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
 
     # Prepare test data
     request_data = {'name': 'New Survey'}

@@ -27,8 +27,8 @@ def test_create_survey(session, monkeypatch,):  # pylint:disable=unused-argument
         'name': TestSurveyInfo.survey1.get('name'),
         'display': TestSurveyInfo.survey1.get('form_json').get('display'),
     }
-    factory_staff_user_model()
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
     fetched_survey = SurveyService().get(saved_survey.id)

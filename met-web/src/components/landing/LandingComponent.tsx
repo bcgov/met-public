@@ -7,7 +7,6 @@ import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
-import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation } from 'hooks';
 

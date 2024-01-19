@@ -203,12 +203,13 @@ describe('Engagement form page tests', () => {
 
         fireEvent.click(settingsTabButton);
 
-        expect(screen.getByText('Engagement Information')).toBeInTheDocument();
         expect(screen.getByText('Internal Engagement')).toBeInTheDocument();
         expect(screen.getByText('Send Report')).toBeInTheDocument();
+        expect(screen.getByText('Link to Public Engagement Page')).toBeInTheDocument();
+        expect(screen.getByText('Link to Public Dashboard Report')).toBeInTheDocument();
     });
 
-    test('Can move to links tab', async () => {
+    test('Can move to additional details tab', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getEngagementMock.mockReturnValueOnce(
             Promise.resolve({
@@ -222,16 +223,10 @@ describe('Engagement form page tests', () => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
 
-        const settingsTabButton = screen.getByText('URL (links)');
+        const settingsTabButton = screen.getByText('Additional Details');
 
         fireEvent.click(settingsTabButton);
 
-        expect(screen.getByText('Public URLs (links)')).toBeInTheDocument();
-        expect(screen.getByText('Link to Public Engagement Page')).toBeInTheDocument();
-        expect(screen.getByText('Link to Public Dashboard Report')).toBeInTheDocument();
-        await waitFor(() => {
-            expect(getEngagementSlugMock).toHaveReturned();
-            expect(screen.getAllByDisplayValue(engagementSlugData.slug, { exact: false })).toBeArrayOfSize(2);
-        });
+        expect(screen.getByText('Collection Notice/Consent Message')).toBeInTheDocument();
     });
 });

@@ -53,6 +53,24 @@ class TestUserInfo(dict, Enum):
         'tenant_id': '1'
     }
 
+    user_staff_2 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '2'
+    }
+
+    user_staff_3 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '3'
+    }
+
 
 class TestParticipantInfo(dict, Enum):
     """Test scenarios of participant."""
@@ -137,7 +155,7 @@ class TestTenantInfo(dict, Enum):
     """Test scenarios of tenants."""
 
     tenant1 = {
-        'short_name': 'GDX',
+        'short_name': 'EAO',
         'name': fake.name(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),

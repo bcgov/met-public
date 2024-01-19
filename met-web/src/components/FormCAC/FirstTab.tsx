@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
 import { MetLabel, MetParagraph, PrimaryButton } from 'components/common';
-import { useAppTranslation } from 'hooks';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
 import { When } from 'react-if';
@@ -23,7 +22,6 @@ interface FormData {
 }
 
 export const FirstTab: React.FC = () => {
-    const { t: translate } = useAppTranslation();
     const { consentMessage, setTabValue, setFormSubmission } = useContext(FormContext);
 
     // Initialize form state and validation using react-hook-form
@@ -47,8 +45,6 @@ export const FirstTab: React.FC = () => {
         setFormSubmission((prev) => ({ ...prev, ...data }));
         setTabValue(TAB_TWO);
     };
-
-    const contactEmail = translate('cacForm.contactEmail');
 
     return (
         <Grid container spacing={2}>

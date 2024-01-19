@@ -48,7 +48,8 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     def get_users_groups(user_ids: List):
         """Get user groups from Keycloak by user ids.For bulk purposes."""
         # TODO if List is bigger than a number ; if so reject.
-        base_url = current_app.config.get('KEYCLOAK_BASE_URL')
+        keycloak = current_app.config['KEYCLOAK_CONFIG']
+        base_url = keycloak['BASE_URL']
         # TODO fix this during tests and remove below
         if not base_url:
             return {}
@@ -106,12 +107,12 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         admin_client_id = keycloak['ADMIN_USERNAME']
         admin_secret = keycloak['ADMIN_SECRET']
         timeout = keycloak['CONNECT_TIMEOUT']
+
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         token_issuer = current_app.config['JWT_CONFIG']['ISSUER']
         token_url = f'{token_issuer}/protocol/openid-connect/token'
-
         response = requests.post(
             token_url,
             headers=headers,
@@ -243,7 +244,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-
         # Get the user and return
         query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
