@@ -1,3 +1,9 @@
+## January 22, 2024
+- **Task** Poll Widget: Back-end [🎟️DESENG-463](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-463)
+  - Created Database models for Widget Poll, Poll Answers, Poll Response.
+  - Created API to manage  Widget Poll, Poll Answers, Poll Response.
+  - Created Unit tests to test the code.
+
 ## January 15, 2024
 
 - **Task** Audit for missing unit tests [🎟️DESENG-436](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-436)
