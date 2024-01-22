@@ -49,6 +49,8 @@ class Polls(Resource):
     @staticmethod
     def validate_response_format(data):
         valid_format, errors = schema_utils.validate(data, 'poll_widget')
+        if not valid_format:
+            errors = schema_utils.serialize(errors)
         return valid_format, errors
 
 
@@ -76,7 +78,9 @@ class Poll(Resource):
 
     @staticmethod
     def validate_response_format(data):
-        valid_format, errors = schema_utils.validate(data, 'poll_widget')
+        valid_format, errors = schema_utils.validate(data, 'poll_widget_update')
+        if not valid_format:
+            errors = schema_utils.serialize(errors)
         return valid_format, errors
 
 @cors_preflight('POST')
@@ -110,6 +114,8 @@ class PollResponseRecord(Resource):
     @staticmethod
     def validate_response_format(data):
         valid_format, errors = schema_utils.validate(data, 'poll_response')
+        if not valid_format:
+            errors = schema_utils.serialize(errors)
         return valid_format, errors
 
     @staticmethod
@@ -121,12 +127,12 @@ class PollResponseRecord(Resource):
         return response_dict
 
     @staticmethod
-    def is_poll_active(poll_widget_id):
-        return WidgetPollService.is_poll_active(poll_widget_id)
+    def is_poll_active(poll_id):
+        return WidgetPollService.is_poll_active(poll_id)
 
     @staticmethod
-    def is_poll_limit_exceeded(poll_widget_id, participant_id):
-        return WidgetPollService.check_already_polled(poll_widget_id, participant_id, 10)
+    def is_poll_limit_exceeded(poll_id, participant_id):
+        return WidgetPollService.check_already_polled(poll_id, participant_id, 10)
 
     @staticmethod
     def record_poll_response(response_dict):
