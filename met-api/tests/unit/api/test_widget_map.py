@@ -55,7 +55,7 @@ def test_create_map_widget(client, jwt, session,
         f'/api/widgets/{widget.id}/maps',
         data=data,
         headers=headers,
-        content_type=ContentType.FORM.value
+        content_type=ContentType.FORM_URL_ENCODED.value
     )
 
     assert rv.status_code == HTTPStatus.OK.value
@@ -67,7 +67,7 @@ def test_create_map_widget(client, jwt, session,
             f'/api/widgets/{widget.id}/maps',
             data=data,
             headers=headers,
-            content_type=ContentType.FORM.value
+            content_type=ContentType.FORM_URL_ENCODED.value
         )
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
