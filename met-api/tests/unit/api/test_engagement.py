@@ -21,11 +21,14 @@ import json
 from http import HTTPStatus
 
 import pytest
+from unittest.mock import patch
 from faker import Faker
+from marshmallow import ValidationError
 from flask import current_app
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.models.tenant import Tenant as TenantModel
+from met_api.services.engagement_service import EngagementService
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import (
@@ -39,7 +42,11 @@ fake = Faker()
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_add_engagements(client, jwt, session, engagement_info,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_add_engagements(client, jwt, session, engagement_info, side_effect, expected_status,
                          setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     user, claims = setup_admin_user_and_claims
@@ -47,6 +54,16 @@ def test_add_engagements(client, jwt, session, engagement_info,
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+    with patch.object(EngagementService, 'create_engagement', side_effect=side_effect):
+        rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
+
+    with patch.object(EngagementService, 'create_engagement', side_effect=ValidationError('Test error')):
+        rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_tenant_id_in_create_engagements(client, jwt, session,
@@ -113,7 +130,11 @@ def test_add_engagements_invalid(client, jwt, session, engagement_info,
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_get_engagements(client, jwt, session, engagement_info,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_get_engagements(client, jwt, session, engagement_info, side_effect, expected_status,
                          setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     user, claims = setup_admin_user_and_claims
@@ -128,6 +149,16 @@ def test_get_engagements(client, jwt, session, engagement_info,
 
     assert created_eng.get('name') == rv.json.get('name')
     assert created_eng.get('content') == rv.json.get('content')
+
+    with patch.object(EngagementService, 'get_engagement', side_effect=side_effect):
+        rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
+
+    engagement_id = fake.pyint()
+    rv = client.get(f'/api/engagements/{engagement_id}', data=json.dumps(engagement_info),
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement_draft])
@@ -159,8 +190,11 @@ def test_get_engagements_reviewer(client, jwt, session, engagement_info,
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
 def test_search_engagements_by_status(client, jwt,
-                                      session, engagement_info,
+                                      session, engagement_info, side_effect, expected_status,
                                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be fetched by filtering using the engagement status."""
     user, claims = setup_admin_user_and_claims
@@ -181,6 +215,13 @@ def test_search_engagements_by_status(client, jwt,
                     headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.json.get('total') == 1
+
+    with patch.object(EngagementService, 'get_engagements_paginated', side_effect=side_effect):
+        rv = client.get(f'/api/engagements/?page={page}&size={page_size}&sort_key={sort_key}\
+                        &sort_order={sort_order}&engagement_status={[engagement_status]}',
+                        data=json.dumps(engagement_info),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
 
 
 def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argument
@@ -292,7 +333,11 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
-def test_patch_engagement(client, jwt, session, engagement_info,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_patch_engagement(client, jwt, session, engagement_info, side_effect, expected_status,
                           setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement can be updated."""
     user, claims = setup_admin_user_and_claims
@@ -324,6 +369,16 @@ def test_patch_engagement(client, jwt, session, engagement_info,
     assert rv.json.get('description') == engagement_edits.get('description')
     assert rv.json.get('content') == engagement_edits.get('content')
     assert engagement_edits.get('created_date') in rv.json.get('created_date')
+
+    with patch.object(EngagementService, 'edit_engagement', side_effect=side_effect):
+        rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
+
+    with patch.object(EngagementService, 'edit_engagement', side_effect=ValidationError('Test error')):
+        rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unused-argument

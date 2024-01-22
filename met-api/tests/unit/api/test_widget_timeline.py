@@ -19,10 +19,13 @@ is working as expected.
 """
 import json
 from http import HTTPStatus
+from unittest.mock import patch
 
 from faker import Faker
 
 from met_api.constants.timeline_event_status import TimelineEventStatus
+from met_api.exceptions.business_exception import BusinessException
+from met_api.services.widget_timeline_service import WidgetTimelineService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestTimelineInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
@@ -67,6 +70,16 @@ def test_create_timeline_widget(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('engagement_id') == engagement.id
 
+    with patch.object(WidgetTimelineService, 'create_timeline',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.post(
+            f'/api/widgets/{widget.id}/timelines',
+            data=json.dumps(data),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
 
 def test_get_timeline(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that timeline can be fetched."""
@@ -105,6 +118,15 @@ def test_get_timeline(client, jwt, session):  # pylint:disable=unused-argument
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('id') == widget_timeline.id
     assert len(rv.json[0]['events']) == 1
+
+    with patch.object(WidgetTimelineService, 'get_timeline',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.get(
+            f'/api/widgets/{widget.id}/timelines',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_patch_timeline(client, jwt, session,
@@ -165,3 +187,10 @@ def test_patch_timeline(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('description') == timeline_edits.get('description')
     assert len(rv.json[0]['events']) == 1
+
+    with patch.object(WidgetTimelineService, 'update_timeline',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.patch(f'/api/widgets/{widget.id}/timelines/{timeline_event.id}',
+                          data=json.dumps(timeline_edits),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.BAD_REQUEST

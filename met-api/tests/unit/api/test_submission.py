@@ -18,10 +18,14 @@ Test-Suite to ensure that the /Submission endpoint is working as expected.
 """
 import copy
 import json
+from http import HTTPStatus
 
+from unittest.mock import patch
 import pytest
+from faker import Faker
 
 from met_api.constants.membership_type import MembershipType
+from met_api.services.submission_service import SubmissionService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
@@ -31,9 +35,14 @@ from tests.utilities.factory_utils import (
 
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+fake = Faker()
 
 
-def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argument
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_valid_submission(client, jwt, session, side_effect, expected_status):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
     claims = TestJwtClaims.public_user_role
 
@@ -49,6 +58,12 @@ def test_valid_submission(client, jwt, session):  # pylint:disable=unused-argume
     rv = client.post(f'/api/submissions/public/{email_verification.verification_token}', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+    with patch.object(SubmissionService, 'create', side_effect=side_effect):
+        rv = client.post(f'/api/submissions/public/{email_verification.verification_token}',
+                         data=json.dumps(to_dict),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
 
 
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])

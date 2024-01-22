@@ -24,6 +24,7 @@ from faker import Faker
 
 from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
+from met_api.services.comment_service import CommentService
 from met_api.utils import notification
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
@@ -46,6 +47,11 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+    with patch.object(CommentService, 'get_comments_paginated', side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
@@ -215,6 +221,12 @@ def test_get_comments_spreadsheet_staff(mocker, client, jwt, session,
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()
 
+    with patch.object(CommentService, 'export_comments_to_spread_sheet_staff',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}/sheet/staff',
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
 
 def test_get_comments_spreadsheet_proponent(mocker, client, jwt, session,
                                             setup_admin_user_and_claims):  # pylint:disable=unused-argument
@@ -255,6 +267,12 @@ def test_get_comments_spreadsheet_proponent(mocker, client, jwt, session,
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()
+
+    with patch.object(CommentService, 'export_comments_to_spread_sheet_proponent',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}/sheet/proponent',
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_get_comments_spreadsheet_without_role(mocker, client, jwt, session):  # pylint:disable=unused-argument

@@ -346,7 +346,8 @@ class TestJwtClaims(dict, Enum):
             'update_user_group',
             'export_proponent_comment_sheet',
             'export_internal_comment_sheet',
-            'export_cac_form_to_sheet'
+            'export_cac_form_to_sheet',
+            'view_members'
         ]
     }
     team_member_role = {

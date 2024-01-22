@@ -18,8 +18,11 @@ Test-Suite to ensure that the /cacform endpoint is working as expected.
 """
 import json
 from http import HTTPStatus
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
+import pytest
 
+from met_api.exceptions.business_exception import BusinessException
+from met_api.services.cac_form_service import CACFormService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestCACForm, TestJwtClaims, TestSubscribeInfo, TestWidgetInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
@@ -49,7 +52,12 @@ def create_cac_form_submission(client, jwt, engagement_id, widget_id, form_data,
     )
 
 
-def test_create_form_submission(client, jwt, session):  # pylint:disable=unused-argument
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.BAD_REQUEST),
+    (ValueError('Test error'), HTTPStatus.BAD_REQUEST),
+])
+def test_create_form_submission(client, jwt, session, side_effect,
+                                expected_status):  # pylint:disable=unused-argument
     """Assert that cac form submission can be POSTed."""
     engagement = factory_engagement_model()
     TestWidgetInfo.widget_subscribe['engagement_id'] = engagement.id
@@ -69,8 +77,31 @@ def test_create_form_submission(client, jwt, session):  # pylint:disable=unused-
     response_data = json.loads(rv.data)
     assert response_data.get('engagement_id') == engagement.id
 
+    with patch.object(CACFormService, 'create_form_submission', side_effect=side_effect):
+        rv = client.post(
+            f'/api/engagements/{engagement.id}/cacform/{widget.id}',
+            data=json.dumps(form_data),
+            headers=headers,
+            content_type=ContentType.JSON.value,
+        )
+    assert rv.status_code == expected_status
 
-def test_get_cac_form_spreadsheet(mocker, client, jwt, session,
+    with patch.object(CACFormService, 'create_form_submission',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.post(
+            f'/api/engagements/{engagement.id}/cacform/{widget.id}',
+            data=json.dumps(form_data),
+            headers=headers,
+            content_type=ContentType.JSON.value,
+        )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
+
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_get_cac_form_spreadsheet(mocker, client, jwt, session, side_effect, expected_status,
                                   setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that cac form submissions sheet can be fetched."""
     user, claims = setup_admin_user_and_claims
@@ -118,3 +149,8 @@ def test_get_cac_form_spreadsheet(mocker, client, jwt, session,
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()
+
+    with patch.object(CACFormService, 'export_cac_form_submissions_to_spread_sheet', side_effect=side_effect):
+        rv = client.get(f'/api/engagements/{engagement.id}/cacform/sheet',
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status

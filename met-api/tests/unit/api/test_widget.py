@@ -18,11 +18,14 @@ Test-Suite to ensure that the Widget endpoint is working as expected.
 """
 import json
 from http import HTTPStatus
+from marshmallow import ValidationError
+from unittest.mock import patch
 
 import pytest
 from faker import Faker
 
 from met_api.constants.widget import WidgetType
+from met_api.services.widget_service import WidgetService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model
@@ -47,6 +50,39 @@ def test_create_widget(client, jwt, session, widget_info,
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('sort_index') == 1
+
+    with patch.object(WidgetService, 'create_widget', side_effect=ValueError('Test error')):
+        rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(WidgetService, 'create_widget', side_effect=ValidationError('Test error')):
+        rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@pytest.mark.parametrize('widget_info', [TestWidgetInfo.widget1])
+def test_get_widget(client, jwt, session, widget_info,
+                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that a widget can be fetched."""
+    engagement = factory_engagement_model()
+    widget_info['engagement_id'] = engagement.id
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+
+    rv = client.get('/api/widgets/engagement/' + str(engagement.id),
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    assert rv.json[0].get('sort_index') == 1
+
+    with patch.object(WidgetService, 'get_widgets_by_engagement_id', side_effect=ValueError('Test error')):
+        rv = client.get('/api/widgets/engagement/' + str(engagement.id),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_create_widget_sort(client, jwt, session,
@@ -154,6 +190,11 @@ def test_create_widget_items(client, jwt, session, widget_item_info,
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
+    with patch.object(WidgetService, 'save_widget_items_bulk', side_effect=ValueError('Test error')):
+        rv = client.post('/api/widgets/' + str(widget.id) + '/items', data=json.dumps([data]),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
 
 def test_delete_widget(client, jwt, session,
                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
@@ -169,6 +210,12 @@ def test_delete_widget(client, jwt, session,
                        headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == HTTPStatus.OK
+
+    widget = factory_widget_model(TestWidgetInfo.widget1)
+    with patch.object(WidgetService, 'delete_widget', side_effect=ValueError('Test error')):
+        rv = client.delete(f'/api/widgets/{widget.id}/engagements/' + str(engagement.id),
+                           headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_patch_widget(client, jwt, session,
@@ -189,3 +236,13 @@ def test_patch_widget(client, jwt, session,
 
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('title') == data.get('title')
+
+    with patch.object(WidgetService, 'update_widget', side_effect=ValueError('Test error')):
+        rv = client.patch(f'/api/widgets/{widget.id}/engagements/' + str(engagement.id), data=json.dumps(data),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(WidgetService, 'update_widget', side_effect=ValidationError('Test error')):
+        rv = client.patch(f'/api/widgets/{widget.id}/engagements/' + str(engagement.id), data=json.dumps(data),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

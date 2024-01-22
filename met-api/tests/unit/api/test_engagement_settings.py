@@ -21,8 +21,12 @@ import json
 from http import HTTPStatus
 
 from faker import Faker
+from unittest.mock import patch
+import pytest
+from marshmallow import ValidationError
 
 from met_api.constants.engagement_status import Status
+from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
@@ -32,7 +36,11 @@ from tests.utilities.factory_utils import (
 fake = Faker()
 
 
-def test_get_engagement_settings(client, jwt, session,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_get_engagement_settings(client, jwt, session, side_effect, expected_status,
                                  setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that engagement settings can be fetched."""
     user, claims = setup_admin_user_and_claims
@@ -50,6 +58,14 @@ def test_get_engagement_settings(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK
     response_data = rv.json
     assert response_data.get('send_report') == engagement_settings.send_report
+
+    with patch.object(EngagementSettingsService, 'get', side_effect=side_effect):
+        rv = client.get(
+            f'/api/engagementsettings/{engagement.id}',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
 
 
 def test_get_engagement_settings_for_draft_engagement(client, jwt, session,
@@ -80,7 +96,11 @@ def test_get_engagement_settings_for_draft_engagement(client, jwt, session,
     assert rv.status_code == HTTPStatus.FORBIDDEN, 'Not a team member.So throws exception.'
 
 
-def test_patch_engagement_settings(client, jwt, session,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_patch_engagement_settings(client, jwt, session, side_effect, expected_status,
                                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that engagement settings can be PATCHed."""
     user, claims = setup_admin_user_and_claims
@@ -112,3 +132,21 @@ def test_patch_engagement_settings(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK
     response_data = rv.json
     assert response_data.get('send_report') == patch_data.get('send_report')
+
+    with patch.object(EngagementSettingsService, 'update_settings', side_effect=side_effect):
+        rv = client.patch(
+            '/api/engagementsettings/',
+            data=json.dumps(patch_data),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
+    with patch.object(EngagementSettingsService, 'update_settings', side_effect=ValidationError('Test error')):
+        rv = client.patch(
+            '/api/engagementsettings/',
+            data=json.dumps(patch_data),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

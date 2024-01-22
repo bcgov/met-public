@@ -19,10 +19,13 @@ is working as expected.
 """
 import json
 from http import HTTPStatus
+from unittest.mock import patch
 
 from faker import Faker
 
 from met_api.utils.enums import ContentType
+from met_api.exceptions.business_exception import BusinessException
+from met_api.services.widget_video_service import WidgetVideoService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetVideo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_video_model, factory_widget_model)
@@ -56,6 +59,16 @@ def test_create_video_widget(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('video_url') == video_info.get('video_url')
 
+    with patch.object(WidgetVideoService, 'create_video',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.post(
+            f'/api/widgets/{widget.id}/videos',
+            data=json.dumps(data),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
 
 def test_get_video(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that video can be fetched."""
@@ -79,6 +92,15 @@ def test_get_video(client, jwt, session):  # pylint:disable=unused-argument
 
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('id') == video.id
+
+    with patch.object(WidgetVideoService, 'get_video',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.get(
+            f'/api/widgets/{widget.id}/videos',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_patch_video(client, jwt, session,
@@ -115,3 +137,10 @@ def test_patch_video(client, jwt, session,
     )
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('description') == video_edits.get('description')
+
+    with patch.object(WidgetVideoService, 'update_video',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
+        rv = client.patch(f'/api/widgets/{widget.id}/videos/{video.id}',
+                          data=json.dumps(video_edits),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
