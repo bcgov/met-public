@@ -1,3 +1,4 @@
+"""Service for Poll Response management."""
 from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.services.poll_answers_service import PollAnswerService
 
@@ -26,17 +27,17 @@ class PollResponseService:
             return poll_response
         except Exception as e:
             # Log the exception or handle it as needed
-            raise ValueError(f'Error creating poll response: {e}')
+            raise ValueError(f'Error creating poll response: {e}') from e
 
     @staticmethod
-    def get_poll_count(poll_id: int, ip: str = None) -> int:
+    def get_poll_count(poll_id: int, ip_addr: str = None) -> int:
         """
         Get the count of responses for a given poll.
         Optionally filters by participant IP.
         """
         try:
-            responses = PollResponseModel.get_responses_by_participant_id(poll_id, ip)
+            responses = PollResponseModel.get_responses_by_participant_id(poll_id, ip_addr)
             return len(responses)
         except Exception as e:
             # Log the exception or handle it as needed
-            raise ValueError(f'Error retrieving poll count: {e}')
+            raise ValueError(f'Error creating poll response: {e}') from e

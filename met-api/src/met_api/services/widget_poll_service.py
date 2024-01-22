@@ -1,11 +1,14 @@
+"""Service for Widget Poll management."""
+from http import HTTPStatus
+
+from met_api.constants.membership_type import MembershipType
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_poll import Poll as PollModel
 from met_api.services import authorization
 from met_api.services.poll_answers_service import PollAnswerService
-from met_api.constants.membership_type import MembershipType
-from met_api.utils.roles import Role
 from met_api.services.poll_response_service import PollResponseService
-from met_api.exceptions.business_exception import BusinessException
-from http import HTTPStatus
+from met_api.utils.roles import Role
+
 
 class WidgetPollService:
     """Service for managing WidgetPolls."""
@@ -31,7 +34,7 @@ class WidgetPollService:
             WidgetPollService._check_authorization(eng_id)
             return WidgetPollService._create_poll_model(widget_id, poll_details)
         except Exception as exc:
-            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST)
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
     def update_poll(widget_id: int, poll_widget_id: int, poll_data: dict):
@@ -45,7 +48,7 @@ class WidgetPollService:
 
             return WidgetPollService._update_poll_model(poll_widget_id, poll_data)
         except Exception as exc:
-            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST)
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
     def record_response(response_data: dict):
@@ -53,16 +56,16 @@ class WidgetPollService:
         try:
             return PollResponseService.create_response(response_data)
         except Exception as exc:
-            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST)
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
-    def check_already_polled(poll_id: int, ip: str, count: int) -> bool:
+    def check_already_polled(poll_id: int, ip_addr: str, count: int) -> bool:
         """Check if an IP has already polled more than the given count."""
         try:
-            poll_count = PollResponseService.get_poll_count(poll_id, ip)
+            poll_count = PollResponseService.get_poll_count(poll_id, ip_addr)
             return poll_count >= count
         except Exception as exc:
-            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST)
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
     def is_poll_active(poll_id: int) -> bool:
@@ -71,7 +74,7 @@ class WidgetPollService:
             poll = WidgetPollService.get_poll_by_id(poll_id)
             return poll.status == 'active'
         except Exception as exc:
-            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST)
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
     def _create_poll_model(widget_id: int, poll_data: dict):

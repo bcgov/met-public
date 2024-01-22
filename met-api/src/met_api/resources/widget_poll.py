@@ -1,7 +1,7 @@
 """API endpoints for managing a poll widget resource."""
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -139,5 +139,5 @@ class PollResponseRecord(Resource):
         poll_response = WidgetPollService.record_response(response_dict)
         if poll_response.id:
             return {'message': 'Response recorded successfully'}, HTTPStatus.CREATED
-        else:
-            return {'message': 'Response failed to record'}, HTTPStatus.INTERNAL_SERVER_ERROR
+
+        return {'message': 'Response failed to record'}, HTTPStatus.INTERNAL_SERVER_ERROR

@@ -5,6 +5,7 @@ Manages the Poll Responses
 """
 from __future__ import annotations
 
+from sqlalchemy.sql.expression import false
 from sqlalchemy.sql.schema import ForeignKey
 
 from .base_model import BaseModel
@@ -30,7 +31,9 @@ class PollResponse(BaseModel):
     @classmethod
     def get_responses_by_participant_id(cls, poll_id, participant_id) -> list[PollResponse]:
         """Get responses for a poll."""
-        return db.session.query(PollResponse).filter(PollResponse.poll_id == poll_id, PollResponse.participant_id == participant_id,PollResponse.is_deleted == False).all()
+        return db.session.query(PollResponse).filter(PollResponse.poll_id == poll_id,
+                                                     PollResponse.participant_id == participant_id,
+                                                     PollResponse.is_deleted == false()).all()
 
     @classmethod
     def update_response(cls, response_id, response_data: dict) -> PollResponse:

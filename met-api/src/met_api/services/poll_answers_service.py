@@ -1,9 +1,9 @@
 """Service for PollAnswer management."""
-from met_api.models.poll_answers import PollAnswer as PollAnswerModel
-from met_api.services import authorization
-from met_api.utils.roles import Role
-from met_api.exceptions.business_exception import BusinessException
 from http import HTTPStatus
+
+from met_api.exceptions.business_exception import BusinessException
+from met_api.models.poll_answers import PollAnswer as PollAnswerModel
+
 
 class PollAnswerService:
     """PollAnswer management service."""
@@ -14,7 +14,6 @@ class PollAnswerService:
         poll_answer = PollAnswerModel.get_answers(poll_id)
         return poll_answer
 
-    
     @staticmethod
     def create_bulk_poll_answers(poll_id: int, answers_data: list):
         """Bulk insert of poll answers."""
@@ -22,8 +21,7 @@ class PollAnswerService:
             if len(answers_data) > 0:
                 PollAnswerModel.bulk_insert_answers(poll_id, answers_data)
         except Exception as e:
-            raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR)
-
+            raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR) from e
 
     @staticmethod
     def delete_poll_answers(poll_id: int):
