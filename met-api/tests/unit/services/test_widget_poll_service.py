@@ -19,14 +19,14 @@ from http import HTTPStatus
 from unittest.mock import patch
 
 import pytest
-from tests.utilities.factory_scenarios import TestWidgetPollInfo, TestPollAnswerInfo, TestPollResponseInfo
-from tests.utilities.factory_utils import factory_widget_model, factory_poll_model, factory_engagement_model, \
-    factory_poll_answer_model
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services import authorization
 from met_api.services.poll_response_service import PollResponseService
 from met_api.services.widget_poll_service import WidgetPollService
+from tests.utilities.factory_scenarios import TestPollAnswerInfo, TestPollResponseInfo, TestWidgetPollInfo
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model)
 
 
 def test_get_polls_by_widget_id(session):
@@ -73,7 +73,6 @@ def test_create_poll(session, monkeypatch):
 
 def test_update_poll(session):
     """Assert that a poll can be updated."""
-
     with patch.object(authorization, 'check_auth', return_value=True):
         widget = _create_widget()
         poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
@@ -82,7 +81,7 @@ def test_update_poll(session):
             'title': 'Updated Title',
             'answers': [
                 {
-                    "answer_text": "Python"
+                    'answer_text': 'Python'
                 }
             ]
         }
@@ -94,7 +93,7 @@ def test_update_poll(session):
         with pytest.raises(BusinessException) as exc_info:
             _ = WidgetPollService.update_poll(widget.id, 150, updated_data)
 
-        assert exc_info.value.status_code == HTTPStatus.BAD_REQUEST
+        assert exc_info.value.status_code == HTTPStatus.NOT_FOUND
 
         # Test invalid widget ID
         with pytest.raises(BusinessException) as exc_info:
@@ -126,45 +125,46 @@ def test_record_response(session):
 
 
 def test_check_already_polled(session):
-    # Check already polled or not before poll response
+    """Checking whether the poll is already polled the specfied limit with same ip."""
     response_data = TestPollResponseInfo.response1
     widget = _create_widget()
     poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
     already_polled = WidgetPollService.check_already_polled(poll.id, response_data['participant_id'], 1)
-    assert already_polled == False
+    assert already_polled is False
 
     # Check already polled or not after poll response is created
     answer = factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
     response_data['poll_id'] = poll.id
     response_data['widget_id'] = widget.id
     response_data['selected_answer_id'] = answer.id
-    response = PollResponseService.create_response(response_data)
+    PollResponseService.create_response(response_data)
 
     already_polled = WidgetPollService.check_already_polled(poll.id, response_data['participant_id'], 1)
-    assert already_polled == True
+    assert already_polled is True
 
     # Test wrong poll id
     with pytest.raises(BusinessException) as exc_info:
         _ = WidgetPollService.check_already_polled('wrong_string', response_data['participant_id'], 1)
 
-    assert exc_info.value.status_code == HTTPStatus.BAD_REQUEST
+    assert exc_info.value.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_is_poll_active(session):
+    """Check if poll is active or not."""
     widget = _create_widget()
     poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
     is_active = WidgetPollService.is_poll_active(poll.id)
-    assert is_active == True
+    assert is_active is True
 
     # Test wrong poll id
     with pytest.raises(BusinessException) as exc_info:
         _ = WidgetPollService.is_poll_active(100)
 
-    assert exc_info.value.status_code == HTTPStatus.BAD_REQUEST
+    assert exc_info.value.status_code == HTTPStatus.NOT_FOUND
 
 
 def _create_widget():
-    """Helper function to create a widget for testing."""
+    """Create a widget for testing."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     return widget

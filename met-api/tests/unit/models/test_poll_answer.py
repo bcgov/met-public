@@ -16,18 +16,17 @@
 Test suite to ensure that the Engagement model routines are working as expected.
 """
 
-from tests.utilities.factory_scenarios import TestPollAnswerInfo
-from tests.utilities.factory_utils import factory_poll_model, factory_poll_answer_model, factory_engagement_model, \
-    factory_widget_model
-
 from met_api.models.poll_answers import PollAnswer
+from tests.utilities.factory_scenarios import TestPollAnswerInfo
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model)
 
 
 def test_get_answers(session):
     """Assert that answers for a poll can be fetched."""
     poll = _create_poll()
-    answer1 = factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
-    answer2 = factory_poll_answer_model(poll, TestPollAnswerInfo.answer2)
+    factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
+    factory_poll_answer_model(poll, TestPollAnswerInfo.answer2)
     session.commit()
     answers = PollAnswer.get_answers(poll.id)
     assert len(answers) == 2
@@ -64,13 +63,13 @@ def test_bulk_insert_answers(session):
 
 
 def _create_poll():
-    """Helper function to create a poll for testing."""
+    """Create and return a sample poll for testing."""
     widget = _create_widget()
     return factory_poll_model(widget, {'title': 'Sample Poll', 'engagement_id': widget.engagement_id})
 
 
 def _create_widget():
-    """Helper function to create a widget for testing."""
+    """Create and return a sample widget for testing."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     return widget

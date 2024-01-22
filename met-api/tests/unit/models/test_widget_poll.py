@@ -17,10 +17,11 @@ Test suite to ensure that the Engagement model routines are working as expected.
 """
 
 from faker import Faker
-from tests.utilities.factory_scenarios import TestWidgetPollInfo
-from tests.utilities.factory_utils import factory_widget_model, factory_engagement_model, factory_poll_model
 
 from met_api.models.widget_poll import Poll
+from tests.utilities.factory_scenarios import TestWidgetPollInfo
+from tests.utilities.factory_utils import factory_engagement_model, factory_poll_model, factory_widget_model
+
 
 fake = Faker()
 
@@ -37,8 +38,8 @@ def test_create_poll(session):
 def test_get_polls_by_widget_id(session):
     """Assert that polls for a widget can be fetched."""
     widget = _create_widget()
-    poll1 = factory_poll_model(widget, TestWidgetPollInfo.poll1)
-    poll2 = factory_poll_model(widget, TestWidgetPollInfo.poll2)
+    factory_poll_model(widget, TestWidgetPollInfo.poll1)
+    factory_poll_model(widget, TestWidgetPollInfo.poll2)
     session.commit()
     polls = Poll.get_polls(widget.id)
     assert len(polls) == 2
@@ -54,10 +55,8 @@ def test_update_poll(session):
     assert updated_poll.title == updated_title
 
 
-# Additional relevant tests can be added here
-
 def _create_widget():
-    """Helper function to create a widget for testing."""
+    """Create sample widget for testing."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     return widget

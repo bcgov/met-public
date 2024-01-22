@@ -1,3 +1,14 @@
+"""
+This module provides utility functions for handling IP addresses in a Flask application.
+
+It includes a function for hashing IP addresses using SHA256, ensuring secure and consistent
+hashing by combining each IP address with the Flask application's secret key. This approach
+is typically used for anonymizing IP addresses while maintaining the ability to identify
+sessions or users without storing their actual IP addresses.
+
+Functions:
+    hash_ip(ip_address): Hashes an IP address with the Flask secret key.
+"""
 from hashlib import sha256
 from flask import current_app
 
@@ -16,4 +27,4 @@ def hash_ip(ip_address):
     secret_key = current_app.config.get('SECRET_KEY', '')
 
     # Concatenate the IP address and secret key, and hash the resulting string
-    return sha256(f"{ip_address}{secret_key}".encode()).hexdigest()
+    return sha256(f'{ip_address}{secret_key}'.encode()).hexdigest()

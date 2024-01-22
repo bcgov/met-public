@@ -668,6 +668,7 @@ class TestSubscribeInfo(Enum):
         ]
     }
 
+
 class TestWidgetPollInfo(dict, Enum):
     """Test scenarios of widget polls."""
 
@@ -692,6 +693,7 @@ class TestWidgetPollInfo(dict, Enum):
         'engagement_id': 2  # Placeholder, should be replaced with another engagement ID in tests
     }
 
+
 class TestPollAnswerInfo(dict, Enum):
     """Test scenarios for poll answers."""
 
@@ -706,11 +708,6 @@ class TestPollAnswerInfo(dict, Enum):
     answer3 = {
         'answer_text': 'Answer 3'
     }
-
-    random_answer = lambda: {
-        'answer_text': fake.sentence()
-    }
-
 
 
 class TestPollResponseInfo(dict, Enum):

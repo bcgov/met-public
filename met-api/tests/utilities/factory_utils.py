@@ -30,6 +30,8 @@ from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.participant import Participant as ParticipantModel
+from met_api.models.poll_answers import PollAnswer as PollAnswerModel
+from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
@@ -37,16 +39,15 @@ from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
-from met_api.models.widget_poll import Poll as WidgetPollModel
-from met_api.models.poll_answers import PollAnswer as PollAnswerModel
-from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
+from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
-    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestUserInfo, TestWidgetDocumentInfo,
-    TestWidgetInfo, TestWidgetItemInfo, TestWidgetPollInfo, TestPollAnswerInfo, TestPollResponseInfo)
+    TestPollAnswerInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo,
+    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetPollInfo)
+
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -338,34 +339,37 @@ def factory_engagement_setting_model(engagement_id):
     setting.save()
     return setting
 
+
 def factory_poll_model(widget, poll_info: dict = TestWidgetPollInfo.poll1):
     """Produce a Poll  model."""
     poll = WidgetPollModel(
-        title = poll_info.get('title'),
-        description = poll_info.get('description'),
-        status = poll_info.get('status'),
-        engagement_id = widget.engagement_id,
-        widget_id = widget.id
+        title=poll_info.get('title'),
+        description=poll_info.get('description'),
+        status=poll_info.get('status'),
+        engagement_id=widget.engagement_id,
+        widget_id=widget.id
     )
     poll.save()
     return poll
 
+
 def factory_poll_answer_model(poll, answer_info: dict = TestPollAnswerInfo.answer1):
     """Produce a Poll  model."""
     answer = PollAnswerModel(
-        answer_text = answer_info.get('answer_text'),
-        poll_id = poll.id
+        answer_text=answer_info.get('answer_text'),
+        poll_id=poll.id
     )
     answer.save()
     return answer
 
+
 def factory_poll_response_model(poll, answer, response_info: dict = TestPollResponseInfo.response1):
     """Produce a Poll  model."""
     response = PollResponseModel(
-        participant_id = response_info.get('participant_id'),
-        selected_answer_id = answer.id,
-        poll_id = poll.id,
-        widget_id = poll.widget_id
+        participant_id=response_info.get('participant_id'),
+        selected_answer_id=answer.id,
+        poll_id=poll.id,
+        widget_id=poll.widget_id
     )
     response.save()
     return response

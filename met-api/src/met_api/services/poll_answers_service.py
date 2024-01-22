@@ -1,6 +1,7 @@
 """Service for PollAnswer management."""
 from http import HTTPStatus
 
+from sqlalchemy.exc import SQLAlchemyError
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.poll_answers import PollAnswer as PollAnswerModel
 
@@ -20,7 +21,7 @@ class PollAnswerService:
         try:
             if len(answers_data) > 0:
                 PollAnswerModel.bulk_insert_answers(poll_id, answers_data)
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR) from e
 
     @staticmethod

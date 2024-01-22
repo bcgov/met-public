@@ -1,6 +1,7 @@
 """Service for Widget Poll management."""
 from http import HTTPStatus
 
+from sqlalchemy.exc import SQLAlchemyError
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_poll import Poll as PollModel
@@ -33,7 +34,7 @@ class WidgetPollService:
             eng_id = poll_details.get('engagement_id')
             WidgetPollService._check_authorization(eng_id)
             return WidgetPollService._create_poll_model(widget_id, poll_details)
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
@@ -47,7 +48,7 @@ class WidgetPollService:
                 raise BusinessException('Invalid widget ID', HTTPStatus.BAD_REQUEST)
 
             return WidgetPollService._update_poll_model(poll_widget_id, poll_data)
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
@@ -55,7 +56,7 @@ class WidgetPollService:
         """Record a response for a poll."""
         try:
             return PollResponseService.create_response(response_data)
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
@@ -64,7 +65,7 @@ class WidgetPollService:
         try:
             poll_count = PollResponseService.get_poll_count(poll_id, ip_addr)
             return poll_count >= count
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
@@ -73,7 +74,7 @@ class WidgetPollService:
         try:
             poll = WidgetPollService.get_poll_by_id(poll_id)
             return poll.status == 'active'
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod

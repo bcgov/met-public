@@ -16,18 +16,18 @@
 Test suite to ensure that the Engagement model routines are working as expected.
 """
 
-from tests.utilities.factory_scenarios import TestPollResponseInfo, TestPollAnswerInfo
-from tests.utilities.factory_utils import factory_poll_response_model, factory_poll_model, factory_poll_answer_model, \
-    factory_engagement_model, factory_widget_model
-
 from met_api.models.poll_responses import PollResponse
+from tests.utilities.factory_scenarios import TestPollAnswerInfo, TestPollResponseInfo
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_poll_response_model,
+    factory_widget_model)
 
 
 def test_get_responses(session):
     """Assert that responses for a poll can be fetched."""
     poll, answer = _create_poll_answer()
-    poll_response1 = factory_poll_response_model(poll, answer, TestPollResponseInfo.response1)
-    poll_response2 = factory_poll_response_model(poll, answer, TestPollResponseInfo.response2)
+    factory_poll_response_model(poll, answer, TestPollResponseInfo.response1)
+    factory_poll_response_model(poll, answer, TestPollResponseInfo.response2)
     session.commit()
     responses = PollResponse.get_responses(poll.id)
     assert len(responses) == 2
@@ -50,25 +50,24 @@ def test_update_or_delete_response(session):
     session.commit()
     updated_data = {'is_deleted': True}
     updated_response = PollResponse.update_response(poll_response1.id, updated_data)
-    assert updated_response.is_deleted == True
+    assert updated_response.is_deleted is True
 
 
 def _create_poll():
-    """Helper function to create a poll for testing."""
+    """Create sample poll for testing."""
     widget = _create_widget()
     return factory_poll_model(widget, {'title': 'Sample Poll', 'engagement_id': widget.engagement_id})
 
 
 def _create_widget():
-    """Helper function to create a widget for testing."""
+    """Create sample widget for testing."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     return widget
 
 
 def _create_poll_answer():
-    """Helper function to create a widget for testing."""
+    """Create sample poll answer for testing."""
     poll = _create_poll()
     answer = factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
     return poll, answer
-# Additional relevant tests can be added here

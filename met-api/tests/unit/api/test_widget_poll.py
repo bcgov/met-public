@@ -21,17 +21,18 @@ import json
 from http import HTTPStatus
 
 from faker import Faker
-from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetPollInfo, TestPollAnswerInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_engagement_model, factory_widget_model, \
-    factory_poll_model, factory_poll_answer_model
 
 from met_api.utils.enums import ContentType
+from tests.utilities.factory_scenarios import TestJwtClaims, TestPollAnswerInfo, TestWidgetPollInfo
+from tests.utilities.factory_utils import (
+    factory_auth_header, factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model)
+
 
 fake = Faker()
 
 
 def test_get_widget(client, jwt, session):
-    """Assert that a get API endpoint is working as expected"""
+    """Assert that a get API endpoint is working as expected."""
     # Test setup: create a poll widget and a response model
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
     engagement = factory_engagement_model()
@@ -52,7 +53,6 @@ def test_get_widget(client, jwt, session):
     assert len(json_data) > 0
     assert json_data[0]['title'] == poll.title
     assert json_data[0]['answers'][0]['answer_text'] == answer.answer_text
-
 
 
 def test_create_poll_widget(client, jwt, session, setup_admin_user_and_claims):
@@ -99,7 +99,7 @@ def test_create_poll_widget(client, jwt, session, setup_admin_user_and_claims):
 
     # Sending POST request
     rv = client.post(
-        f'/api/widgets/100/polls',
+        '/api/widgets/100/polls',
         data=json.dumps(data),
         headers=headers,
         content_type=ContentType.JSON.value,
@@ -151,7 +151,7 @@ def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
-def test_record_poll_response(client, jwt, session):
+def test_record_poll_response(client, session, jwt):
     """Assert that a response for a poll widget can be POSTed."""
     # Test setup: create a poll widget and a response model
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)

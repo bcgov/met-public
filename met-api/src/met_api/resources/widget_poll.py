@@ -38,7 +38,7 @@ class Polls(Resource):
         """Create poll widget."""
         try:
             request_json = request.get_json()
-            valid_format, errors = Polls.validate_response_format(request_json)
+            valid_format, errors = Polls.validate_request_format(request_json)
             if not valid_format:
                 return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
             widget_poll = WidgetPollService().create_poll(widget_id, request_json)
@@ -47,7 +47,8 @@ class Polls(Resource):
             return str(err), err.status_code
 
     @staticmethod
-    def validate_response_format(data):
+    def validate_request_format(data):
+        """Validate response format."""
         valid_format, errors = schema_utils.validate(data, 'poll_widget')
         if not valid_format:
             errors = schema_utils.serialize(errors)
@@ -64,10 +65,9 @@ class Poll(Resource):
     @_jwt.requires_auth
     def patch(widget_id, poll_widget_id):
         """Update poll widget."""
-
         try:
             request_json = request.get_json()
-            valid_format, errors = Poll.validate_response_format(request_json)
+            valid_format, errors = Poll.validate_request_format(request_json)
             if not valid_format:
                 return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
 
@@ -77,11 +77,13 @@ class Poll(Resource):
             return str(err), err.status_code
 
     @staticmethod
-    def validate_response_format(data):
+    def validate_request_format(data):
+        """Validate request format."""
         valid_format, errors = schema_utils.validate(data, 'poll_widget_update')
         if not valid_format:
             errors = schema_utils.serialize(errors)
         return valid_format, errors
+
 
 @cors_preflight('POST')
 @API.route('/<int:poll_widget_id>/responses')
@@ -94,7 +96,7 @@ class PollResponseRecord(Resource):
         """Record a response for a given poll widget."""
         try:
             response_data = request.get_json()
-            valid_format, errors = PollResponseRecord.validate_response_format(response_data)
+            valid_format, errors = PollResponseRecord.validate_request_format(response_data)
             if not valid_format:
                 return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
 
@@ -112,7 +114,8 @@ class PollResponseRecord(Resource):
             return err.error, err.status_code
 
     @staticmethod
-    def validate_response_format(data):
+    def validate_request_format(data):
+        """Validate Request format."""
         valid_format, errors = schema_utils.validate(data, 'poll_response')
         if not valid_format:
             errors = schema_utils.serialize(errors)
@@ -120,6 +123,7 @@ class PollResponseRecord(Resource):
 
     @staticmethod
     def prepare_response_data(data, widget_id, poll_widget_id):
+        """Prepare poll response object."""
         response_dict = dict(data)
         response_dict['poll_id'] = poll_widget_id
         response_dict['widget_id'] = widget_id
@@ -128,14 +132,17 @@ class PollResponseRecord(Resource):
 
     @staticmethod
     def is_poll_active(poll_id):
+        """Check if poll active or not."""
         return WidgetPollService.is_poll_active(poll_id)
 
     @staticmethod
     def is_poll_limit_exceeded(poll_id, participant_id):
+        """Check poll limt execeeded or not."""
         return WidgetPollService.check_already_polled(poll_id, participant_id, 10)
 
     @staticmethod
     def record_poll_response(response_dict):
+        """Record poll respinse in database."""
         poll_response = WidgetPollService.record_response(response_dict)
         if poll_response.id:
             return {'message': 'Response recorded successfully'}, HTTPStatus.CREATED

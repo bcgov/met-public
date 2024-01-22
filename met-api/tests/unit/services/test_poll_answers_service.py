@@ -19,12 +19,12 @@ Test suite to ensure that the document widget service routines are working as ex
 from http import HTTPStatus
 
 import pytest
-from tests.utilities.factory_scenarios import TestPollAnswerInfo, TestWidgetPollInfo
-from tests.utilities.factory_utils import factory_poll_model, factory_poll_answer_model, factory_widget_model, \
-    factory_engagement_model
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.poll_answers_service import PollAnswerService
+from tests.utilities.factory_scenarios import TestPollAnswerInfo, TestWidgetPollInfo
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model)
 
 
 def test_get_poll_answer(session):
@@ -66,7 +66,7 @@ def test_create_bulk_poll_answers(session):
 
 
 def _create_widget():
-    """Helper function to create a widget for testing."""
+    """Create sample widget for testing."""
     engagement = factory_engagement_model()
     widget = factory_widget_model({'engagement_id': engagement.id})
     return widget
