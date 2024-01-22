@@ -92,6 +92,7 @@ def test_create_survey_with_tenant(client, jwt, session,
 
     # emulate Tenant 2 staff admin by setting tenant id
     staff_info = dict(TestUserInfo.user_staff_3)
+    staff_info['tenant_id'] = tenant_2.id
     user = factory_staff_user_model(user_info=staff_info)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     claims['sub'] = str(user.external_id)

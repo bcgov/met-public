@@ -30,9 +30,9 @@ export const ActionContext = createContext<EngagementContext>({
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
     },
-    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
-        return Promise.reject();
-    },
+    // handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+    //     return Promise.reject();
+    // },
     handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
         return Promise.reject();
     },
@@ -160,26 +160,26 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         verifyUserCanEdit();
     }, [savedEngagement, engagementId]);
 
-    const handleCreateEngagementMetadataRequest = async (
-        engagement: EngagementMetadata,
-    ): Promise<EngagementMetadata> => {
-        setSaving(true);
-        try {
-            const result = await postEngagementMetadata(engagement);
-            setSaving(false);
-            return Promise.resolve(result);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: getErrorMessage(error) || 'Error Creating Engagement Metadata',
-                }),
-            );
-            setSaving(false);
-            console.log(error);
-            return Promise.reject(error);
-        }
-    };
+    // const handleCreateEngagementMetadataRequest = async (
+    //     engagement: EngagementMetadata,
+    // ): Promise<EngagementMetadata> => {
+    //     setSaving(true);
+    //     try {
+    //         const result = await postEngagementMetadata(engagement);
+    //         setSaving(false);
+    //         return Promise.resolve(result);
+    //     } catch (error) {
+    //         dispatch(
+    //             openNotification({
+    //                 severity: 'error',
+    //                 text: getErrorMessage(error) || 'Error Creating Engagement Metadata',
+    //             }),
+    //         );
+    //         setSaving(false);
+    //         console.log(error);
+    //         return Promise.reject(error);
+    //     }
+    // };
 
     const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
@@ -287,7 +287,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             value={{
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
-                handleCreateEngagementMetadataRequest,
+                // handleCreateEngagementMetadataRequest,
                 handleUpdateEngagementMetadataRequest,
                 isSaving,
                 savedEngagement,

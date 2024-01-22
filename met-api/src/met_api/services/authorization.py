@@ -22,6 +22,8 @@ def check_auth(**kwargs):
     skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
     user_from_context: UserContext = kwargs['user_context']
     user_from_db = StaffUserModel.get_user_by_external_id(user_from_context.sub)
+    if not user_from_db:
+        abort(HTTPStatus.FORBIDDEN, 'User not found')
     token_roles = set(user_from_context.roles)
     permitted_roles = set(kwargs.get('one_of_roles', []))
     has_valid_roles = token_roles & permitted_roles
@@ -39,7 +41,7 @@ def check_auth(**kwargs):
         if has_valid_team_access:
             return
 
-    abort(403)
+    abort(HTTPStatus.FORBIDDEN, 'User not authorized')
 
 
 def _validate_tenant(eng_id, tenant_id):
@@ -52,7 +54,7 @@ def _validate_tenant(eng_id, tenant_id):
                                  f'engagement_tenant_id:{engagement_tenant_id}\n'
                                  f'tenant_id: {tenant_id}')
 
-        abort(HTTPStatus.FORBIDDEN)
+        abort(HTTPStatus.FORBIDDEN, f'User not authorized')
 
 
 def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> bool:
@@ -78,6 +80,6 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
             current_app.logger.debug(f'Aborting . Tenant Id on membership and user context Mismatch'
                                      f'membership.tenant_id:{membership.tenant_id} '
                                      f'user_from_context.tenant_id: {user_from_context.tenant_id}')
-            abort(HTTPStatus.FORBIDDEN)
+            abort(HTTPStatus.FORBIDDEN, 'User not authorized')
 
     return membership.type.name in team_permitted_roles

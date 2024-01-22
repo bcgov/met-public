@@ -49,5 +49,6 @@ from .engagement_slug import EngagementSlug
 from .report_setting import ReportSetting
 from .widget_video import WidgetVideo
 from .cac_form import CACForm
+from .engagement_metadata import MetadataTaxon, EngagementMetadata
 from .widget_timeline import WidgetTimeline
 from .timeline_event import TimelineEvent

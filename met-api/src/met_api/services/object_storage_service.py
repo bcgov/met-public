@@ -4,7 +4,7 @@ import uuid
 from typing import List
 
 import requests
-from flask import current_app
+from met_api.config import Config
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 from markupsafe import string
 
@@ -17,7 +17,7 @@ class ObjectStorageService:
     def __init__(self):
         """Initialize the service."""
         # initialize s3 config from environment variables
-        s3_client = current_app.config['S3_CONFIG']
+        s3_client = Config().S3_CONFIG
         self.s3_auth = AWSRequestsAuth(
             aws_access_key=s3_client['ACCESS_KEY_ID'],
             aws_secret_access_key=s3_client['SECRET_ACCESS_KEY'],

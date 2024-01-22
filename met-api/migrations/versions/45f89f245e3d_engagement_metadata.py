@@ -22,11 +22,10 @@ def upgrade():
     sa.Column('created_date', sa.DateTime(), nullable=False),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
     sa.Column('engagement_id', sa.Integer(), nullable=False),
-    # sa.Column('project_metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('engagement_id')
+    sa.PrimaryKeyConstraint('engagement_id', name='pk_engagement_metadata')
     )
     # ### end Alembic commands ###
 
