@@ -21,7 +21,6 @@ class ContentType(Enum):
     JSON = 'application/json'
     FORM_URL_ENCODED = 'application/x-www-form-urlencoded'
     PDF = 'application/pdf'
-    FORM = 'application/x-www-form-urlencoded'
 
 
 class AuthHeaderType(Enum):
