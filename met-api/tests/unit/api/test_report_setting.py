@@ -16,13 +16,24 @@
 
 Test-Suite to ensure that the Report setting endpoint is working as expected.
 """
+import json
+from http import HTTPStatus
+from unittest.mock import patch
+import pytest
+from marshmallow import ValidationError
+
+from met_api.services.report_setting_service import ReportSettingService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestReportSettingInfo, TestSurveyInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_survey_and_eng_model, factory_survey_report_setting_model)
 
 
-def test_get_report_setting(client, jwt, session):  # pylint:disable=unused-argument
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_get_report_setting(client, jwt, session, side_effect, expected_status):  # pylint:disable=unused-argument
     """Assert that report setting can be fetched."""
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     survey, _ = factory_survey_and_eng_model(TestSurveyInfo.survey3)
@@ -39,4 +50,75 @@ def test_get_report_setting(client, jwt, session):  # pylint:disable=unused-argu
         content_type=ContentType.JSON.value
     )
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
+
+    with patch.object(ReportSettingService, 'get_report_setting', side_effect=side_effect):
+        rv = client.get(
+            f'/api/surveys/{survey.id}/reportsettings',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
+
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_patch_report_setting(client, jwt, session, side_effect, expected_status):  # pylint:disable=unused-argument
+    """Assert that report setting can be PATCHed."""
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    survey, _ = factory_survey_and_eng_model(TestSurveyInfo.survey3)
+
+    report_setting_data = {
+        **TestReportSettingInfo.report_setting_1,
+        'survey_id': survey.id,
+    }
+    factory_survey_report_setting_model(report_setting_data)
+
+    rv = client.get(
+        f'/api/surveys/{survey.id}/reportsettings',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json[0].get('display') is True
+
+    report_setting_edits = {
+        'id': rv.json[0].get('id'),
+        'display': False,
+    }
+
+    rv = client.patch(
+        f'/api/surveys/{survey.id}/reportsettings',
+        data=json.dumps([report_setting_edits]),
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+
+    rv = client.get(
+        f'/api/surveys/{survey.id}/reportsettings',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json[0].get('display') is False
+
+    with patch.object(ReportSettingService, 'update_report_setting', side_effect=side_effect):
+        rv = client.patch(
+            f'/api/surveys/{survey.id}/reportsettings',
+            data=json.dumps([report_setting_edits]),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
+    with patch.object(ReportSettingService, 'update_report_setting', side_effect=ValidationError('Test error')):
+        rv = client.patch(
+            f'/api/surveys/{survey.id}/reportsettings',
+            data=json.dumps([report_setting_edits]),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

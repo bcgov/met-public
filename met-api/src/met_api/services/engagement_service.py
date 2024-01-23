@@ -56,7 +56,8 @@ class EngagementService:
 
             engagement = EngagementSchema().dump(engagement_model)
             engagement['banner_url'] = self.object_storage.get_url(engagement['banner_filename'])
-        return engagement
+            return engagement
+        return None
 
     def get_engagements_paginated(
             self,
