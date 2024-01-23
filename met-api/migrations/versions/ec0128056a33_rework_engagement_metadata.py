@@ -42,7 +42,7 @@ def upgrade():
     sa.UniqueConstraint('id', name='uq_engagement_metadata_taxa_id')
     )
     # remove old primary key constraint from engagement_metadata.engagement_id
-    op.drop_constraint('pk_engagement_metadata', 'engagement_metadata', type_='primary')
+    op.drop_constraint('engagement_metadata_pkey', 'engagement_metadata', type_='primary')
     op.create_index(op.f('ix_engagement_metadata_taxa_position'), 'engagement_metadata_taxa', ['position'], unique=False)
     op.add_column('engagement_metadata', sa.Column('id', sa.Integer(), nullable=False))
     # add new primary key constraint on engagement_metadata.id

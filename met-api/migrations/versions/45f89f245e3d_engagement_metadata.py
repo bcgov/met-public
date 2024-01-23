@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['engagement_id'], ['engagement.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('engagement_id', name='pk_engagement_metadata')
+    sa.PrimaryKeyConstraint('engagement_id')
     )
     # ### end Alembic commands ###
 
