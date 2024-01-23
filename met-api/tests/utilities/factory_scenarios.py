@@ -679,7 +679,7 @@ class TestSubscribeInfo(Enum):
             }
         ]
     }
-    
+
     subscribe_info_2 = {
         'widget_id': 1,
         'type': 'SIGN_UP',
@@ -695,6 +695,7 @@ class TestSubscribeInfo(Enum):
             }
         ]
     }
+
 
 class TestCACForm(dict, Enum):
     """Test scenarios of cac form."""
@@ -750,7 +751,8 @@ class TestTimelineInfo(dict, Enum):
         'position': 1,
         'status': TimelineEventStatus.Pending.value
     }
-    
+
+
 class TestWidgetPollInfo(dict, Enum):
     """Test scenarios of widget polls."""
 
