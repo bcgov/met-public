@@ -17,9 +17,12 @@
 Test-Suite to ensure that the user membership endpoints are working as expected.
 """
 from http import HTTPStatus
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
+import pytest
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.membership import Membership as MembershipModel
+from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
@@ -62,7 +65,11 @@ def mock_keycloak_methods(mocker, mock_group_names):
     )
 
 
-def test_reassign_user_reviewer_team_member(mocker, client, jwt, session):
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_reassign_user_reviewer_team_member(mocker, client, jwt, session, side_effect, expected_status):
     """Assert that returns bad request if bad request body."""
     user = factory_staff_user_model()
     eng = factory_engagement_model()
@@ -106,3 +113,20 @@ def test_reassign_user_reviewer_team_member(mocker, client, jwt, session):
     memberships = MembershipModel.find_by_user_id(user.id)
     assert len(memberships) == 1
     assert memberships[0].status == MembershipStatus.REVOKED.value
+
+    with patch.object(StaffUserMembershipService, 'reassign_user', side_effect=side_effect):
+        rv = client.put(
+            f'/api/user/{user.id}/groups?group=EAO_TEAM_MEMBER',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
+    with patch.object(StaffUserMembershipService, 'reassign_user',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.put(
+            f'/api/user/{user.id}/groups?group=EAO_TEAM_MEMBER',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
