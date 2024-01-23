@@ -14,6 +14,7 @@ from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.ip_util import hash_ip
 
 API = Namespace('widget_polls', description='Endpoints for Poll Widget Management')
+INVALID_REQUEST_MESSAGE = 'Invalid request format'
 
 
 @cors_preflight('GET, POST')
@@ -40,7 +41,7 @@ class Polls(Resource):
             request_json = request.get_json()
             valid_format, errors = Polls.validate_request_format(request_json)
             if not valid_format:
-                return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
+                return {'message': INVALID_REQUEST_MESSAGE, 'errors': errors}, HTTPStatus.BAD_REQUEST
             widget_poll = WidgetPollService().create_poll(widget_id, request_json)
             return WidgetPollSchema().dump(widget_poll), HTTPStatus.OK
         except BusinessException as err:
@@ -69,7 +70,7 @@ class Poll(Resource):
             request_json = request.get_json()
             valid_format, errors = Poll.validate_request_format(request_json)
             if not valid_format:
-                return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
+                return {'message': INVALID_REQUEST_MESSAGE, 'errors': errors}, HTTPStatus.BAD_REQUEST
 
             widget_poll = WidgetPollService().update_poll(widget_id, poll_widget_id, request_json)
             return WidgetPollSchema().dump(widget_poll), HTTPStatus.OK
@@ -98,7 +99,7 @@ class PollResponseRecord(Resource):
             response_data = request.get_json()
             valid_format, errors = PollResponseRecord.validate_request_format(response_data)
             if not valid_format:
-                return {'message': 'Invalid response format', 'errors': errors}, HTTPStatus.BAD_REQUEST
+                return {'message': INVALID_REQUEST_MESSAGE, 'errors': errors}, HTTPStatus.BAD_REQUEST
 
             response_dict = PollResponseRecord.prepare_response_data(response_data, widget_id, poll_widget_id)
 

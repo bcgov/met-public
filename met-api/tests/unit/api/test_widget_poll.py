@@ -59,7 +59,7 @@ def test_create_poll_widget(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a poll widget can be POSTed."""
     # Test setup: create a poll widget model
 
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     engagement = factory_engagement_model()
@@ -111,7 +111,7 @@ def test_create_poll_widget(client, jwt, session, setup_admin_user_and_claims):
 def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a poll widget can be PATCHed."""
     # Test setup: create and post a poll widget model
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     engagement = factory_engagement_model()

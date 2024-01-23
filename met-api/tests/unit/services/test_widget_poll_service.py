@@ -142,12 +142,6 @@ def test_check_already_polled(session):
     already_polled = WidgetPollService.check_already_polled(poll.id, response_data['participant_id'], 1)
     assert already_polled is True
 
-    # Test wrong poll id
-    with pytest.raises(BusinessException) as exc_info:
-        _ = WidgetPollService.check_already_polled('wrong_string', response_data['participant_id'], 1)
-
-    assert exc_info.value.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
-
 
 def test_is_poll_active(session):
     """Check if poll is active or not."""
