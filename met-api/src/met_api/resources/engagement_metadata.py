@@ -29,8 +29,8 @@ from met_api.services.engagement_metadata_service import EngagementMetadataServi
 from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
-ENGAGEMENT_MODIFY_ROLES = [Role.EDIT_ENGAGEMENT.value]
-ENGAGEMENT_VIEW_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
+EDIT_ENGAGEMENT_ROLES = [Role.EDIT_ENGAGEMENT.value]
+VIEW_ENGAGEMENT_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
 
 API = Namespace('engagement_metadata',
                 path='/engagements/<engagement_id>/metadata', 
@@ -63,10 +63,9 @@ class EngagementMetadata(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
     @API.doc(security='apikey')
-    @auth.has_one_of_roles(ENGAGEMENT_VIEW_ROLES)
     @API.marshal_list_with(metadata_return_model)
+    @auth.has_one_of_roles(VIEW_ENGAGEMENT_ROLES)
     def get(engagement_id):
         """Fetch engagement metadata entries by engagement id."""
         return metadata_service.get_by_engagement(engagement_id)
@@ -76,10 +75,10 @@ class EngagementMetadata(Resource):
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
     @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED.value)
-    @auth.has_one_of_roles(ENGAGEMENT_MODIFY_ROLES)
+    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
     def post(engagement_id, **kwargs):
         """Create a new metadata entry for an engagement."""
-        authorization.check_auth(one_of_roles=ENGAGEMENT_MODIFY_ROLES,
+        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                                  engagement_id=engagement_id)
         try:
             engagement_metadata = metadata_service.create(
@@ -101,10 +100,10 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(ENGAGEMENT_VIEW_ROLES)
+    @auth.has_one_of_roles(VIEW_ENGAGEMENT_ROLES)
     def get(engagement_id, metadata_id):
         """Fetch an engagement metadata entry by id."""
-        authorization.check_auth(one_of_roles=ENGAGEMENT_VIEW_ROLES,
+        authorization.check_auth(one_of_roles=VIEW_ENGAGEMENT_ROLES,
                                  engagement_id=engagement_id)
         try:
             metadata = metadata_service.get(metadata_id)
@@ -120,10 +119,10 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(ENGAGEMENT_MODIFY_ROLES)
+    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
     def patch(engagement_id, metadata_id):
         """Update the values of an existing metadata entry for an engagement."""
-        authorization.check_auth(one_of_roles=ENGAGEMENT_MODIFY_ROLES,
+        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                                  engagement_id=engagement_id)
         try:
             value = request.json.get('value')
@@ -144,11 +143,11 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(ENGAGEMENT_MODIFY_ROLES)
+    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
     def delete(engagement_id, metadata_id):
         """Delete an existing metadata entry for an engagement."""
         try:
-            authorization.check_auth(one_of_roles=ENGAGEMENT_MODIFY_ROLES,
+            authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                             engagement_id=engagement_id)
             metadata_service.delete(engagement_id, metadata_id)
             return None, HTTPStatus.NO_CONTENT

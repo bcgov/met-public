@@ -34,8 +34,8 @@ from met_api.utils.user_context import UserContext
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-TAXON_VIEW_ROLES = [Role.VIEW_TENANT, Role.CREATE_TENANT]
-TAXON_MODIFY_ROLES = [Role.CREATE_TENANT]
+VIEW_TAXA_ROLES = [Role.VIEW_TENANT, Role.CREATE_TENANT]
+MODIFY_TAXA_ROLES = [Role.CREATE_TENANT]
 
 API = Namespace('metadata_taxa', description="Endpoints for managing the taxa "
                 "that organize a tenant's metadata. Admin-level users only.",
@@ -84,7 +84,7 @@ responses = {
     HTTPStatus.INTERNAL_SERVER_ERROR.value: 'Internal server error'
 }
 
-def ensure_tenant_access(roles=TAXON_MODIFY_ROLES):
+def ensure_tenant_access(roles=MODIFY_TAXA_ROLES):
     def wrapper(f: Callable):
         @auth.requires_auth
         @wraps(f)
@@ -110,7 +110,7 @@ class MetadataTaxa(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.marshal_list_with(taxon_return_model)
-    @ensure_tenant_access(roles=TAXON_VIEW_ROLES)
+    @ensure_tenant_access(roles=VIEW_TAXA_ROLES)
     def get(tenant, **kwargs):
         """Fetch a list of metadata taxa by tenant id."""
         tenant_taxa = taxon_service.get_by_tenant(tenant.id)
@@ -159,7 +159,7 @@ class MetadataTaxon(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @ensure_tenant_access(roles=TAXON_VIEW_ROLES)
+    @ensure_tenant_access(roles=VIEW_TAXA_ROLES)
     @API.marshal_with(taxon_return_model)
     def get(tenant: Tenant, taxon_id: int):
         """Fetch a single metadata taxon matching the provided id."""
