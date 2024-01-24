@@ -34,11 +34,11 @@ def test_create_basic_engagement_metadata(session):
         "taxon_id": taxon.id,
         "value": fake.text(max_nb_chars=256)
     })
-    assert (engagement_metadata.id is not None, 
-            "Engagement Metadata ID is missing")
+    assert engagement_metadata.id is not None, (
+        "Engagement Metadata ID is missing")
     engagement_metadata_existing = EngagementMetadata.find_by_id(engagement_metadata.id)
-    assert (engagement_metadata.value == engagement_metadata_existing.value, 
-            "Engagement Metadata value is missing or incorrect")
+    assert engagement_metadata.value == engagement_metadata_existing.value, ( 
+        "Engagement Metadata value is missing or incorrect")
     
 def test_engagement_metadata_relationships(session):
     """Assert that engagement metadata relationships are working."""
@@ -75,9 +75,9 @@ def test_create_engagement_metadata(session):
     })
     assert engagement_metadata.id is not None, "Engagement Metadata ID is missing"
     engagement_metadata_existing = EngagementMetadata.find_by_id(engagement_metadata.id)
-    assert (engagement_metadata.value == engagement_metadata_existing.value, 
+    assert engagement_metadata.value == engagement_metadata_existing.value, (
             "Engagement Metadata value is missing or incorrect")
-    assert (engagement_metadata.taxon_id == engagement_metadata_existing.taxon_id,
+    assert engagement_metadata.taxon_id == engagement_metadata_existing.taxon_id, (
             "Engagement Metadata taxon ID is missing or incorrect")
-    assert (engagement_metadata.engagement_id == engagement_metadata_existing.engagement_id,
+    assert engagement_metadata.engagement_id == engagement_metadata_existing.engagement_id, (
             "Engagement Metadata engagement ID is missing or incorrect")
