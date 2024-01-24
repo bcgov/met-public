@@ -18,9 +18,6 @@ class EngagementMetadata(BaseModel):
     """
     __tablename__ = 'engagement_metadata'
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-    # tenant_id = db.Column(db.Integer,
-    #     db.ForeignKey('tenant.id', ondelete='CASCADE'), index=True)
-    # tenant = relationship('Tenant', backref='engagement_metadata')
     engagement_id = db.Column(db.Integer,
         db.ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True, index=True)
     engagement = db.relationship('Engagement', backref='metadata')
