@@ -141,5 +141,5 @@ def test_delete_engagement_metadata(client, jwt, session):
     response = client.delete(f'/api/engagements/{engagement.id}/metadata/{metadata.id}',
                             headers=headers,
                             content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.OK, (f"Wrong response code; "
+    assert response.status_code == HTTPStatus.NO_CONTENT, (f"Wrong response code; "
             f"HTTP {response.status_code} -> {response.text}")

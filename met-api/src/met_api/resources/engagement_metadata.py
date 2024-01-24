@@ -149,8 +149,13 @@ class EngagementMetadataById(Resource):
         try:
             authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                             engagement_id=engagement_id)
-            metadata_service.delete(engagement_id, metadata_id)
-            return None, HTTPStatus.NO_CONTENT
+            metadata = metadata_service.get(metadata_id)
+            if str(metadata['engagement_id']) != str(engagement_id):
+                raise ValidationError('Metadata does not belong to this '
+                                      f"engagement:{metadata['engagement_id']}"
+                                      f" != {engagement_id}")
+            metadata_service.delete(metadata_id)
+            return {}, HTTPStatus.NO_CONTENT
         except KeyError as err:
             return str(err), HTTPStatus.NOT_FOUND
         except Exception as err:

@@ -38,7 +38,7 @@ def test_get_tenant_metadata_taxa(client, jwt, session):
     assert metatada_taxon_service.get_by_tenant(tenant.id) is not None
     response = client.get(f'/api/tenants/{tenant.short_name}/metadata/taxa',
                             headers=headers, content_type=ContentType.JSON.value)
-    assert response.status_code == HTTPStatus.OK, response.text 
+    assert response.status_code == HTTPStatus.OK
     metadata_taxon_list = response.json
     assert len(metadata_taxon_list) == 1, metadata_taxon_list
     assert metadata_taxon_list[0]['id'] == metadata_taxon.id
@@ -51,7 +51,7 @@ def test_get_taxon_by_id(client, jwt, session):
     assert metatada_taxon_service.get_by_id(metadata_taxon.id) is not None
     response = client.get(f'/api/tenants/{tenant.short_name}/metadata/taxon/{metadata_taxon.id}',
                             headers=headers, content_type=ContentType.JSON.value)
-    assert response.status_code == HTTPStatus.OK, response.text 
+    assert response.status_code == HTTPStatus.OK
     metadata_taxon = response.json
     assert metadata_taxon['id'] is not None
     assert metadata_taxon['tenant_id'] == tenant.id
@@ -79,7 +79,7 @@ def test_update_metadata_taxon(client, jwt, session):
                             headers=headers,
                             data=json.dumps(data),
                             content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.OK, response.text
+    assert response.status_code == HTTPStatus.OK
     assert response.json.get('id') is not None, response.json
     assert response.json.get('name') == TestEngagementMetadataTaxonInfo.taxon2['name']
     assert MetadataTaxonService.get_by_id(response.json.get('id')) is not None
@@ -97,7 +97,7 @@ def test_reorder_tenant_metadata_taxa(client, jwt, session):
                                 taxon3.id, taxon1.id, taxon2.id
                             ]}),
                             content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.OK, response.text
+    assert response.status_code == HTTPStatus.OK
     assert len(response.json) == 3
     assert response.json[0].get('id') == taxon3.id
     assert response.json[1].get('id') == taxon1.id
@@ -105,3 +105,14 @@ def test_reorder_tenant_metadata_taxa(client, jwt, session):
     assert MetadataTaxon.query.get(taxon3.id).position == 1
     assert MetadataTaxon.query.get(taxon1.id).position == 2
     assert MetadataTaxon.query.get(taxon2.id).position == 3
+
+def test_delete_taxon(client, jwt, session):
+    """Test that a metadata taxon can be deleted."""
+    tenant, headers = factory_taxon_requirements(jwt)
+    taxon = factory_metadata_taxon_model(tenant.id)
+    assert metatada_taxon_service.get_by_id(taxon.id) is not None
+    response = client.delete(f'/api/tenants/{tenant.short_name}/metadata/taxon/{taxon.id}',
+                            headers=headers,
+                            content_type=ContentType.JSON.value)  
+    assert response.status_code == HTTPStatus.NO_CONTENT
+    assert metatada_taxon_service.get_by_id(taxon.id) is None

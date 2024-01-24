@@ -36,6 +36,7 @@ from met_api.utils.util import allowedorigins, cors_preflight
 
 VIEW_TAXA_ROLES = [Role.VIEW_TENANT, Role.CREATE_TENANT]
 MODIFY_TAXA_ROLES = [Role.CREATE_TENANT]
+TAXON_NOT_FOUND_MSG = 'Metadata taxon was not found'
 
 API = Namespace('metadata_taxa', description="Endpoints for managing the taxa "
                 "that organize a tenant's metadata. Admin-level users only.",
@@ -165,7 +166,7 @@ class MetadataTaxon(Resource):
         """Fetch a single metadata taxon matching the provided id."""
         metadata_taxon = taxon_service.get_by_id(taxon_id)
         if not metadata_taxon or metadata_taxon['tenant_id'] != tenant.id:
-            return 'Metadata taxon was not found', HTTPStatus.NOT_FOUND
+            return TAXON_NOT_FOUND_MSG, HTTPStatus.NOT_FOUND
         return metadata_taxon, HTTPStatus.OK
 
     @staticmethod
@@ -177,7 +178,7 @@ class MetadataTaxon(Resource):
         """Update a metadata taxon."""
         metadata_taxon = taxon_service.get_by_id(taxon_id)
         if not metadata_taxon or metadata_taxon['tenant_id'] != tenant.id:
-            return 'Metadata taxon was not found', HTTPStatus.NOT_FOUND
+            return TAXON_NOT_FOUND_MSG, HTTPStatus.NOT_FOUND
         patch = {**request.json, 'tenant_id': tenant.id}
         return taxon_service.update(taxon_id, patch), HTTPStatus.OK
 
@@ -189,7 +190,10 @@ class MetadataTaxon(Resource):
     def delete(tenant: Tenant, taxon_id: int):
         """Delete a metadata taxon."""
         try:
-            taxon_service.delete(tenant.id, taxon_id)
-            return 'Metadata taxon deleted', HTTPStatus.NO_CONTENT
+            metadata_taxon = taxon_service.get_by_id(taxon_id)
+            if not metadata_taxon or metadata_taxon['tenant_id'] != tenant.id:
+                return TAXON_NOT_FOUND_MSG, HTTPStatus.NOT_FOUND
+            taxon_service.delete(taxon_id)
+            return {}, HTTPStatus.NO_CONTENT
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
