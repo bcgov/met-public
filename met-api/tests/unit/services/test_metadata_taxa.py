@@ -26,7 +26,6 @@ engagement_metadata_service = EngagementMetadataService()
 def test_create_taxon(session):
     """Assert that taxa can be created and retrieved by id."""
     tenant, _ = factory_taxon_requirements()
-    taxon = factory_metadata_taxon_model(tenant.id)
     taxon_service = MetadataTaxonService()
     taxon = taxon_service.create(tenant.id,
                                  TestEngagementMetadataTaxonInfo.taxon1)

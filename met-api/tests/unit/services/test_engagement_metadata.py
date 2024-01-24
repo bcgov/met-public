@@ -26,6 +26,8 @@ from tests.utilities.factory_utils import factory_engagement_metadata_model, \
 fake = Faker()
 engagement_metadata_service = EngagementMetadataService()
 
+TAXON_ID_INCORRECT_MSG = "Taxon ID is incorrect"
+ENGAGEMENT_ID_INCORRECT_MSG = "Engagement ID is incorrect or missing"
 
 def test_get_engagement_metadata(session):
     """Assert that engagement metadata can be retrieved by engagement id."""
@@ -49,8 +51,8 @@ def test_get_engagement_metadata_by_id(session):
         value=TestEngagementMetadataInfo.metadata1['value']
     )
     existing_metadata = engagement_metadata_service.get(eng_meta['id'])
-    assert existing_metadata.get('id') == eng_meta['id'], "Engagement Metadata ID is incorrect"
-    assert existing_metadata.get('taxon_id') == taxon.id, "Taxon ID is incorrect"
+    assert existing_metadata.get('id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
+    assert existing_metadata.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
 
 def test_create_engagement_metadata(session):
     """Assert that engagement metadata can be created."""
@@ -61,11 +63,11 @@ def test_create_engagement_metadata(session):
         engagement_id=engagement.id, taxon_id=taxon.id,
         value=TestEngagementMetadataInfo.metadata1['value'],
     )
-    assert eng_meta.get('id') is not None, "Engagement Metadata ID is missing"
-    assert eng_meta.get('taxon_id') == taxon.id, "Taxon ID is incorrect"
+    assert eng_meta.get('id') is not None, ENGAGEMENT_ID_INCORRECT_MSG
+    assert eng_meta.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
     existing_metadata = engagement_metadata_service.get(eng_meta['id'])
-    assert existing_metadata.get('id') == eng_meta['id'], "Engagement Metadata ID is incorrect"
-    assert existing_metadata.get('taxon_id') == taxon.id, "Taxon ID is incorrect"
+    assert existing_metadata.get('id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
+    assert existing_metadata.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
 
 def test_default_engagement_metadata(session):
     """Assert that engagement metadata can be created with default value."""
@@ -77,25 +79,27 @@ def test_default_engagement_metadata(session):
         engagement_id=engagement.id, tenant_id=tenant.id
     )
     assert len(eng_meta) == 1, "Default engagement metadata not created"
-    assert eng_meta[0].get('id') is not None, "Engagement Metadata ID is missing"
+    assert eng_meta[0].get('id') is not None, ENGAGEMENT_ID_INCORRECT_MSG
     assert eng_meta[0].get('value') == 'default value', "Default value is incorrect"
 
 def test_update_engagement_metadata(session):
     """Assert that engagement metadata can be updated."""
+    NEW_VALUE = 'new value'
+    OLD_VALUE = 'old value'
     taxon, engagement, _ , _ = factory_metadata_requirements()
     assert engagement.id is not None
     assert taxon.id is not None
     eng_meta = factory_engagement_metadata_model({
         'engagement_id': engagement.id,
         'taxon_id': taxon.id,
-        'value': 'old value'
+        'value': OLD_VALUE
     })
     existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
     assert existing_metadata
-    metadata_updated = engagement_metadata_service.update(eng_meta.id, 'new value')
-    assert metadata_updated['value'] == 'new value'
+    metadata_updated = engagement_metadata_service.update(eng_meta.id, NEW_VALUE)
+    assert metadata_updated['value'] == NEW_VALUE
     existing_metadata2 = engagement_metadata_service.get_by_engagement(engagement.id)
-    assert any(meta['value'] == 'new value' for meta in existing_metadata2)
+    assert any(meta['value'] == NEW_VALUE for meta in existing_metadata2)
 
 def test_delete_engagement_metadata(session):
     """Assert that engagement metadata can be deleted."""
