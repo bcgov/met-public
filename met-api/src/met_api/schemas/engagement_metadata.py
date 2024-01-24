@@ -53,7 +53,8 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
             if 'tenant_id' in data and data['tenant_id'] != self.instance.tenant_id:
                 raise ValidationError('tenant_id field cannot be changed.')
             if 'position' in data and data['position'] != self.instance.position:
-                raise ValidationError('position field cannot be changed.')
+                raise ValidationError('Position field cannot be updated directly;'
+                                      ' use a reorder operation instead.')
         return data
 
     # Nested field

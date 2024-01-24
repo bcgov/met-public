@@ -6,7 +6,7 @@ determine how it is displayed in the UI.
 """
 from __future__ import annotations
 import enum
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 from .base_model import BaseModel
 from .db import db, transactional
@@ -29,6 +29,25 @@ class EngagementMetadata(BaseModel):
     @property
     def tenant(self):
         return self.taxon.tenant if self.taxon else None
+    
+    # Prevent primary key and foreign keys from being updated after creation
+    @validates('id')
+    def validate_id(self, _, id):
+        if self.id and self.id != id:
+            raise ValueError('Cannot change own ID')
+        return id
+    
+    @validates('tenant_id')
+    def validate_tenant_id(self, _, tenant_id):
+        if self.tenant_id and self.tenant_id != tenant_id:
+            raise ValueError('Cannot change tenant_id')
+        return tenant_id
+    
+    @validates('engagement_id')
+    def validate_engagement_id(self, _, engagement_id):
+        if self.engagement_id and self.engagement_id != engagement_id:
+            raise ValueError('Cannot change engagement_id')
+        return engagement_id
 
     def __repr__(self) -> str:
         if not self:
@@ -98,6 +117,19 @@ class MetadataTaxon(BaseModel):
             max_position = MetadataTaxon.query.filter_by(tenant_id=self.tenant_id).count()
             self.position = max_position + 1
 
+    # Prevent primary key and foreign keys from being updated after creation
+    @validates('id')
+    def validate_id(self, _, id):
+        if self.id and self.id != id:
+            raise ValueError('Cannot change own ID')
+        return id
+    
+    @validates('tenant_id')
+    def validate_tenant_id(self, _, tenant_id):
+        if self.tenant_id and self.tenant_id != tenant_id:
+            raise ValueError('Cannot change tenant_id')
+        return tenant_id
+    
     def __repr__(self) -> str:
         if not self:
             return '<MetadataTaxon: None>'
