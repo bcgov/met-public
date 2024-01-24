@@ -22,7 +22,6 @@ defaults:
 env:
   APP_NAME: "analytics-api"
   TAG_NAME: "${{github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
-  PROJECT_TYPE: "${{ 'GDX' }}" # Use 'GDX' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
   OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}

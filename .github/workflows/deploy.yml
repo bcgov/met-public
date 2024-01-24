@@ -15,7 +15,6 @@ defaults:
 
 env:
   TAG_NAME: "${{ github.event.inputs.environment || 'test' }}" # If the environment type is manually selected, use the input value; otherwise, use 'test' as default
-  PROJECT_TYPE: "${{ 'GDX' }}" # Use 'GDX' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
   OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}

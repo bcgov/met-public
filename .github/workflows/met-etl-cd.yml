@@ -24,8 +24,6 @@ env:
   APP_NAME: "dagster-etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
   TAG_NAME: "dev"
-  
-  PROJECT_TYPE: "${{ 'GDX' }}" # Use 'GDX' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
   OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}
