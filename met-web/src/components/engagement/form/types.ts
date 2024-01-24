@@ -4,7 +4,7 @@ import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
-    // handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
+    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
     handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
     isSaving: boolean;
     savedEngagement: Engagement;
