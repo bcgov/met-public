@@ -50,11 +50,11 @@ def _validate_tenant(eng_id, tenant_id):
         return
     engagement_tenant_id = EngagementModel.find_tenant_id_by_id(eng_id)
     if engagement_tenant_id and str(tenant_id) != str(engagement_tenant_id):
-        current_app.logger.debug(f'Aborting . Tenant Id on Engagement and user context Mismatch\n'
+        current_app.logger.debug('Aborting . Tenant Id on Engagement and user context Mismatch\n'
                                  f'engagement_tenant_id:{engagement_tenant_id}\n'
                                  f'tenant_id: {tenant_id}')
 
-        abort(HTTPStatus.FORBIDDEN, f'User not authorized')
+        abort(HTTPStatus.FORBIDDEN, 'User not authorized')
 
 
 def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> bool:
