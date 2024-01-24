@@ -4,7 +4,7 @@ import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 
 export const getEngagementMetadata = async (engagementId: number): Promise<EngagementMetadata> => {
-    const url = replaceUrl(Endpoints.EngagementMetadata.GET, 'engagement_id', String(engagementId));
+    const url = replaceUrl(Endpoints.EngagementMetadata.GET_BY_ENG, 'engagement_id', String(engagementId));
     if (!engagementId || isNaN(Number(engagementId))) {
         return Promise.reject('Invalid Engagement Id ' + engagementId);
     }
