@@ -122,8 +122,6 @@ class MetadataTaxon(BaseModel):
             MetadataTaxon.tenant_id == tenant_id,
             MetadataTaxon.position.between(start, end)
         ).all()
-        print(affected_taxa)
-        print([taxon.position for taxon in affected_taxa])
         # Determine the direction of the position update
         position_delta = -1 if new_position > current_position else 1
         # Update positions for each affected taxon
@@ -134,8 +132,6 @@ class MetadataTaxon(BaseModel):
         # Finally, update the position of the current taxon
         self.position = new_position
         db.session.commit()
-        print(affected_taxa)
-        print([taxon.position for taxon in affected_taxa])
 
     @transactional()
     def delete(self) -> None:
