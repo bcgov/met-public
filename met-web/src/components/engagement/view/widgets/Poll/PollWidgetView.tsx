@@ -10,6 +10,7 @@ import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import Cookies from 'universal-cookie';
+import { useAppSelector } from 'hooks';
 
 interface PollWidgetViewProps {
     widget: Widget;
@@ -37,6 +38,8 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
         status: '',
         answers: [],
     });
+
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedOption, setSelectedOption] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -122,6 +125,10 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
         setSelectedOption(option);
     };
 
+    if (pollWidget && pollWidget.status === 'inactive') {
+        return null;
+    }
+
     if (isLoading) {
         return (
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
@@ -159,17 +166,21 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                 <Grid item xs={12}>
                     <PollDisplay
                         pollWidget={pollWidget}
-                        interactionEnabled={interactionEnabled && !isSubmitted}
+                        interactionEnabled={interactionEnabled && !isSubmitted && !isLoggedIn}
                         onOptionChange={handleOptionChange}
                     />
-                    {!isSubmitted ? (
+                    {!isLoggedIn && (
                         <>
-                            <CardActions>
-                                <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
-                            </CardActions>
+                            {!isSubmitted ? (
+                                <>
+                                    <Grid item xs={12} sx={{ marginTop: '1em' }}>
+                                        <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
+                                    </Grid>
+                                </>
+                            ) : (
+                                <p style={{ color: responseMessage.color }}>{responseMessage.message}</p>
+                            )}
                         </>
-                    ) : (
-                        <p style={{ color: responseMessage.color }}>{responseMessage.message}</p>
                     )}
                 </Grid>
             </Grid>

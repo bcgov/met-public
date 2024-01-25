@@ -11,6 +11,9 @@ import { patchPoll, postPoll } from 'services/widgetService/PollService';
 import { WidgetTitle } from '../WidgetTitle';
 import { PollAnswer, PollStatus } from 'models/pollWidget';
 import PollDisplay from './PollDisplay';
+import { ActionContext } from '../../ActionContext';
+import { EngagementStatus } from 'constants/engagementStatus';
+import Alert from '@mui/material/Alert';
 
 interface WidgetState {
     id: number;
@@ -48,6 +51,8 @@ const Form = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
     const [interactionEnabled, setInteractionEnabled] = React.useState(false);
+    const { savedEngagement } = useContext(ActionContext);
+    const [isEngagementPublished, setIsEngagementPublished] = React.useState(false);
 
     const newAnswer: PollAnswer = {
         id: 0,
@@ -83,6 +88,10 @@ const Form = () => {
         if (pollWidget) {
             setPollAnswers(pollWidget.answers);
             setPollWidgetState(pollWidget);
+        }
+
+        if (savedEngagement && savedEngagement.status_id === EngagementStatus.Published) {
+            setIsEngagementPublished(true);
         }
     }, [pollWidget]);
 
@@ -204,6 +213,12 @@ const Form = () => {
         setPollAnswers([...pollAnswers, newAnswerCorrectIndex]);
     };
 
+    const engagementPublishedAlert = (
+        <Alert variant="filled" severity="info">
+            Editing of the Poll details is not available once the engagement has been published.
+        </Alert>
+    );
+
     if (isLoadingPollWidget || !widget) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
@@ -224,40 +239,116 @@ const Form = () => {
                 <form onSubmit={(event) => handleOnSubmit(event)} id="timelineForm">
                     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
                         <Grid item xs={12}>
-                            <MetLabel>Title</MetLabel>
-                            <MetDescription>The title must be less than 255 characters.</MetDescription>
-                            <TextField
-                                name="title"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
-                                value={pollWidgetState?.title}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleTextChange(event, 'title');
-                                }}
-                            />
+                            {engagementPublishedAlert}
                         </Grid>
+                        {(!isEngagementPublished || (isEngagementPublished && !pollWidget)) && (
+                            <>
+                                <Grid item xs={12}>
+                                    <MetLabel>Title</MetLabel>
+                                    <MetDescription>The title must be less than 255 characters.</MetDescription>
+                                    <TextField
+                                        name="title"
+                                        variant="outlined"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        fullWidth
+                                        value={pollWidgetState?.title}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            handleTextChange(event, 'title');
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <MetLabel>Description</MetLabel>
+                                    <TextField
+                                        name="description"
+                                        variant="outlined"
+                                        label=" "
+                                        InputLabelProps={{
+                                            shrink: false,
+                                        }}
+                                        fullWidth
+                                        multiline
+                                        rows={4}
+                                        value={pollWidgetState?.description}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            handleTextChange(event, 'description');
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Divider sx={{ marginTop: '1em' }} />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    container
+                                    direction="column"
+                                    alignItems={'stretch'}
+                                    justifyContent="flex-start"
+                                    spacing={2}
+                                    mt={'3em'}
+                                >
+                                    {pollAnswers &&
+                                        pollAnswers.map((tAnswer, index) => (
+                                            <Grid
+                                                item
+                                                className={'answer' + (index + 1)}
+                                                key={'answer' + index + 1}
+                                                spacing={1}
+                                                container
+                                                mb={'1em'}
+                                                xs={12}
+                                            >
+                                                <MetLabel sx={{ paddingLeft: '8px' }}>
+                                                    {'ANSWER ' + (index + 1)}
+                                                </MetLabel>
+
+                                                <Grid item xs={12}>
+                                                    <MetLabel>Answer Text</MetLabel>
+                                                    <TextField
+                                                        name={'answerText' + (index + 1)}
+                                                        id={'answerText' + (index + 1)}
+                                                        variant="outlined"
+                                                        value={tAnswer.answer_text}
+                                                        fullWidth
+                                                        onChange={(answer: React.ChangeEvent<HTMLInputElement>) => {
+                                                            handleaAnswerTextChange(answer, index, 'answer_text');
+                                                        }}
+                                                    />
+                                                </Grid>
+
+                                                {1 < pollAnswers.length && (
+                                                    <Grid item xs={12} sx={{ marginTop: '8px' }}>
+                                                        <SecondaryButton
+                                                            value={index}
+                                                            onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                                handleRemoveAnswer(event);
+                                                            }}
+                                                        >
+                                                            Remove Answer
+                                                        </SecondaryButton>
+                                                    </Grid>
+                                                )}
+
+                                                <Grid item xs={12}>
+                                                    <Divider sx={{ marginTop: '1em' }} />
+                                                </Grid>
+                                            </Grid>
+                                        ))}
+                                    <Grid item>
+                                        <PrimaryButton onClick={() => handleAddAnswer()}>Add Answer</PrimaryButton>
+                                    </Grid>
+                                </Grid>
+                            </>
+                        )}
+
                         <Grid item xs={12}>
-                            <MetLabel>Description</MetLabel>
-                            <TextField
-                                name="description"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
-                                multiline
-                                rows={4}
-                                value={pollWidgetState?.description}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleTextChange(event, 'description');
-                                }}
-                            />
+                            <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
+
                         <Grid item xs={12}>
                             <MetLabel>Status</MetLabel>
                             <Select
@@ -279,65 +370,11 @@ const Form = () => {
                                 ))}
                             </Select>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            container
-                            direction="column"
-                            alignItems={'stretch'}
-                            justifyContent="flex-start"
-                            spacing={2}
-                            mt={'3em'}
-                        >
-                            {pollAnswers &&
-                                pollAnswers.map((tAnswer, index) => (
-                                    <Grid
-                                        item
-                                        className={'answer' + (index + 1)}
-                                        key={'answer' + index + 1}
-                                        spacing={1}
-                                        container
-                                        mb={'1em'}
-                                        xs={12}
-                                    >
-                                        <MetLabel sx={{ paddingLeft: '8px' }}>{'ANSWER ' + (index + 1)}</MetLabel>
 
-                                        <Grid item xs={12}>
-                                            <MetLabel>Answer Text</MetLabel>
-                                            <TextField
-                                                name={'answerText' + (index + 1)}
-                                                id={'answerText' + (index + 1)}
-                                                variant="outlined"
-                                                value={tAnswer.answer_text}
-                                                fullWidth
-                                                onChange={(answer: React.ChangeEvent<HTMLInputElement>) => {
-                                                    handleaAnswerTextChange(answer, index, 'answer_text');
-                                                }}
-                                            />
-                                        </Grid>
-
-                                        {1 < pollAnswers.length && (
-                                            <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                                                <SecondaryButton
-                                                    value={index}
-                                                    onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                        handleRemoveAnswer(event);
-                                                    }}
-                                                >
-                                                    Remove Answer
-                                                </SecondaryButton>
-                                            </Grid>
-                                        )}
-
-                                        <Grid item xs={12}>
-                                            <Divider sx={{ marginTop: '1em' }} />
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            <Grid item>
-                                <PrimaryButton onClick={() => handleAddAnswer()}>Add Answer</PrimaryButton>
-                            </Grid>
+                        <Grid item xs={12}>
+                            <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
+
                         <Grid item xs={12} style={previewStyle}>
                             <MetLabel style={{ color: '#31a287' }}>Preview</MetLabel>
                             <Grid item xs={12}>
