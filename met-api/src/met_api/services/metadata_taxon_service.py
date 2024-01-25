@@ -52,7 +52,7 @@ class MetadataTaxonService:
 
     @staticmethod
     @transactional()
-    def reorder_tenant(tenant_id: int, taxon_ids: list[int]) -> List[dict]:
+    def reorder_tenant(tenant_id: int, taxon_ids: List[int]) -> List[dict]:
         """
         Reorder all taxa within a specific tenant based on a provided list of taxon IDs,
         setting their positions accordingly.
