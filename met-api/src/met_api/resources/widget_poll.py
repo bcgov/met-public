@@ -89,7 +89,7 @@ class Poll(Resource):
 @cors_preflight('POST')
 @API.route('/<int:poll_widget_id>/responses')
 class PollResponseRecord(Resource):
-    """Resource for recording responses for a poll widget. Not require authentication."""
+    """Resource for recording responses for a poll widget. Does not require authentication."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -138,7 +138,7 @@ class PollResponseRecord(Resource):
 
     @staticmethod
     def is_poll_limit_exceeded(poll_id, participant_id):
-        """Check poll limt execeeded or not."""
+        """Check poll limit execeeded or not."""
         return WidgetPollService.check_already_polled(poll_id, participant_id, 10)
 
     @staticmethod

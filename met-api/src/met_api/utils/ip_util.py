@@ -25,6 +25,9 @@ def hash_ip(ip_address):
     """
     # Retrieve the secret key from Flask configuration with a fallback empty string
     secret_key = current_app.config.get('SECRET_KEY', '')
+    
+    # Extract the fragment (e.g., first three octets of an IPv4 address)
+    ip_fragment = '.'.join(ip_address.split('.')[:3])
 
     # Concatenate the IP address and secret key, and hash the resulting string
-    return sha256(f'{ip_address}{secret_key}'.encode()).hexdigest()
+    return sha256(f'{ip_fragment}{secret_key}'.encode()).hexdigest()
