@@ -4,10 +4,9 @@ import uuid
 from typing import List
 
 import requests
-from met_api.config import Config
 from aws_requests_auth.aws_auth import AWSRequestsAuth
-from markupsafe import string
 
+from met_api.config import Config
 from met_api.schemas.document import Document
 
 
@@ -27,7 +26,7 @@ class ObjectStorageService:
         )
         self.s3_bucket = s3_client['BUCKET']
 
-    def get_url(self, filename: string):
+    def get_url(self, filename: str):
         """Get the object url."""
         if(not self.s3_auth.aws_host or
             not self.s3_bucket or

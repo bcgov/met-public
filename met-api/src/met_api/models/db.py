@@ -2,12 +2,11 @@
 """Initializations for db, migration and marshmallow."""
 
 import logging
-from contextlib import contextmanager
+from typing import Callable, Optional, TypeVar
+from functools import wraps
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from functools import wraps
-from typing import Callable, TypeVar
 # DB initialize in __init__ file
 # db variable use for create models from here
 db = SQLAlchemy()
@@ -26,14 +25,14 @@ class AbortTransaction(Exception):
     when already inside a transactional block.
     """
 
-ReturnType = TypeVar('ReturnType')
+T = TypeVar('T')
 
-def transactional(db=db, autocommit=True, end_session=False
-                  ) -> Callable[[Callable[..., ReturnType]], Callable[..., ReturnType]]:
+def transactional(database=db, autocommit=True, end_session=False
+                  ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """
     A decorator to quickly make an operation transactional.
-    If there is an exception during execution, the entire session will be 
-    safely rolled back to a point in time just before the decorated function 
+    If there is an exception during execution, the entire session will be
+    safely rolled back to a point in time just before the decorated function
     was called. If not, the session will be saved, unless autocommit is set
     to False. This helps replace most session management boilerplate.
 
@@ -44,26 +43,27 @@ def transactional(db=db, autocommit=True, end_session=False
     Returns:
         The result of the wrapped function `f`.
     """
-    def decorator(f: Callable[..., ReturnType]) -> Callable[..., ReturnType]:
+    def decorator(f: Callable[..., T]) -> Callable[..., T]:
         @wraps(f)
-        def decorated_function(*args, **kwargs) -> ReturnType:
+        def decorated_function(*args, **kwargs)-> Optional[T]:
             try:
                 result = f(*args, **kwargs)
                 if autocommit:
-                    db.session.commit()
+                    database.session.commit()
                 else:
-                    db.session.flush()
+                    database.session.flush()
                 return result
             except AbortTransaction:
                 logging.info("Transaction aborted.")
-                db.session.rollback() # we meant to roll back; don't raise :)
+                database.session.rollback() # we meant to roll back; don't raise :)
             except Exception as e: # all other exceptions
                 logging.exception(
                     "An error occurred during a transaction; rolling back.")
-                db.session.rollback()
+                database.session.rollback()
                 raise e
             finally:
                 if end_session:
-                  db.session.close()
-        return decorated_function
+                    database.session.close()
+            return None
+        return decorated_function  # type: ignore
     return decorator

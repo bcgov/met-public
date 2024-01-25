@@ -1,6 +1,6 @@
 """Service for engagement management."""
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from met_api.models import db
 from met_api.models.db import transactional
@@ -17,7 +17,7 @@ class MetadataTaxonService:
         taxon = MetadataTaxon.query.get(taxon_id)
         if not taxon:
             return None
-        return MetadataTaxonSchema().dump(taxon)
+        return dict(MetadataTaxonSchema().dump(taxon))
 
 
     @staticmethod
@@ -36,11 +36,11 @@ class MetadataTaxonService:
         taxon: MetadataTaxon = MetadataTaxonSchema().load(taxon_data, session=db.session)
         taxon.position = MetadataTaxon.query.filter_by(tenant_id=tenant_id).count() + 1
         taxon.save()
-        return MetadataTaxonSchema().dump(taxon)
-    
+        return dict(MetadataTaxonSchema().dump(taxon))
+
 
     @staticmethod
-    def update(taxon_id: int, taxon_data: dict) -> MetadataTaxon:
+    def update(taxon_id: int, taxon_data: dict) -> Union[dict, list]:
         """Update a taxon."""
         taxon = MetadataTaxon.query.get(taxon_id)
         if not taxon:
@@ -79,8 +79,8 @@ class MetadataTaxonService:
     def auto_order_tenant(tenant_id: int) -> list[dict]:
         """
         Automatically order all taxa within a specific tenant based on their
-        current positions. This has the benefit of ensuring that the position 
-        indices are contiguous and that there are no gaps or duplicates. The 
+        current positions. This has the benefit of ensuring that the position
+        indices are contiguous and that there are no gaps or duplicates. The
         new ordering will be as close to the original as possible.
         """
         tenant = Tenant.query.get(tenant_id)

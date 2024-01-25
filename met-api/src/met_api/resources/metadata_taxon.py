@@ -19,19 +19,16 @@ engagement. This API is located at /api/tenants/<tenant_id>/metadata/taxa
 
 from functools import wraps
 from http import HTTPStatus
-from typing import Callable, List, Optional, Union
+from typing import Callable
 from flask import request, g, abort
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
 from marshmallow import ValidationError
-from met_api.auth import auth, auth_methods
+from met_api.auth import auth_methods
 from met_api.models.tenant import Tenant
-from met_api.models.staff_user import StaffUser
-from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.services.metadata_taxon_service import MetadataTaxonService
 from met_api.utils.roles import Role
 from met_api.utils.tenant_validator import require_role
-from met_api.utils.user_context import UserContext
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -58,7 +55,7 @@ taxon_modify_model = API.model('MetadataTaxon', taxon_model_dict := {
 taxon_return_model = API.model('MetadataTaxonReturn', {
     'id': fields.Integer(required=True, description='The id of the taxon'),
     'tenant_id': fields.Integer(required=True, description='The tenant id'),
-    'position': fields.Integer(required=False, 
+    'position': fields.Integer(required=False,
                                description="The taxon's position within the tenant"),
     **taxon_model_dict
 })
@@ -74,16 +71,21 @@ responses = {
 }
 
 def ensure_tenant_access():
+    """
+    Ensure that the user is authorized to access the tenant specified in the
+    request. This decorator should be used on any endpoint that requires
+    access to a tenant's data. Makes the tenant accessible via kwargs.
+    """
     def wrapper(f: Callable):
         @wraps(f)
         def decorated_function(*args, **func_kwargs):
             tenant_short_name = func_kwargs.pop('tenant_name')
             tenant = Tenant.find_by_short_name(tenant_short_name)
             if not tenant:
-                abort(HTTPStatus.NOT_FOUND, 
+                abort(HTTPStatus.NOT_FOUND,
                     f'Tenant with short name {tenant_short_name} not found')
             if tenant.short_name.upper() != g.tenant_name:
-                abort(HTTPStatus.FORBIDDEN, 
+                abort(HTTPStatus.FORBIDDEN,
                     f'You are not authorized to access tenant {tenant_short_name}')
             func_kwargs['tenant'] = tenant
             return f(*args, **func_kwargs)
@@ -100,7 +102,7 @@ class MetadataTaxa(Resource):
     @API.marshal_list_with(taxon_return_model)
     @ensure_tenant_access()
     @require_role(VIEW_TAXA_ROLES)
-    def get(tenant, **kwargs):
+    def get(tenant: Tenant):
         """Fetch a list of metadata taxa by tenant id."""
         tenant_taxa = taxon_service.get_by_tenant(tenant.id)
         return tenant_taxa, HTTPStatus.OK
@@ -108,19 +110,20 @@ class MetadataTaxa(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.expect(taxon_modify_model)
-    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED.value)
+    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED) # type: ignore
     @ensure_tenant_access()
     @require_role(MODIFY_TAXA_ROLES)
     def post(tenant: Tenant):
         """Create a new metadata taxon for a tenant and return it."""
+        request_json = request.get_json(force=True)
         try:
-            metadata_taxon = taxon_service.create(tenant.id, request.json)
+            metadata_taxon = taxon_service.create(tenant.id, request_json)
             return metadata_taxon, HTTPStatus.CREATED
         except ValidationError as err:
             return err.messages, HTTPStatus.BAD_REQUEST
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.expect({'taxon_ids': fields.List(fields.Integer(required=True))})
@@ -129,8 +132,9 @@ class MetadataTaxa(Resource):
     @require_role(MODIFY_TAXA_ROLES)
     def patch(tenant: Tenant):
         """Reorder the tenant's metadata taxa."""
+        request_json = request.get_json(force=True)
         try:
-            taxon_ids = request.json['taxon_ids']
+            taxon_ids = request_json['taxon_ids']
             taxon_service.reorder_tenant(tenant.id, taxon_ids)
             return taxon_service.get_by_tenant(tenant.id), HTTPStatus.OK
         except ValidationError as err:
@@ -171,7 +175,7 @@ class MetadataTaxon(Resource):
         metadata_taxon = taxon_service.get_by_id(taxon_id)
         if not metadata_taxon or metadata_taxon['tenant_id'] != tenant.id:
             return TAXON_NOT_FOUND_MSG, HTTPStatus.NOT_FOUND
-        patch = {**request.json, 'tenant_id': tenant.id}
+        patch = {**request.get_json(), 'tenant_id': tenant.id}
         return taxon_service.update(taxon_id, patch), HTTPStatus.OK
 
 

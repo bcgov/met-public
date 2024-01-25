@@ -13,7 +13,7 @@
 # limitations under the License.
 """
 API endpoints for managing the metadata for an engagement resource.
-This API is located at /api/engagements/<engagement_id>/metadata 
+This API is located at /api/engagements/<engagement_id>/metadata
 """
 
 from http import HTTPStatus
@@ -23,7 +23,7 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
 from marshmallow import ValidationError
 from met_api.auth import auth, auth_methods
-from met_api.services import authorization 
+from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from met_api.services.engagement_metadata_service import EngagementMetadataService
 from met_api.utils.roles import Role
@@ -33,7 +33,7 @@ EDIT_ENGAGEMENT_ROLES = [Role.EDIT_ENGAGEMENT.value]
 VIEW_ENGAGEMENT_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
 
 API = Namespace('engagement_metadata',
-                path='/engagements/<engagement_id>/metadata', 
+                path='/engagements/<engagement_id>/metadata',
                 description='Endpoints for Engagement Metadata Management',
                 authorizations=auth_methods)
 
@@ -74,15 +74,16 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
-    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED.value)
+    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED) # type: ignore
     @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
-    def post(engagement_id, **kwargs):
+    def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
         authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                                  engagement_id=engagement_id)
+        request_json = request.get_json(force=True)
         try:
             engagement_metadata = metadata_service.create(
-                engagement_id, request.json['taxon_id'], request.json['value']
+                engagement_id, request_json['taxon_id'], request_json['value']
             )
             return engagement_metadata, HTTPStatus.CREATED
         except KeyError as err:
@@ -124,8 +125,9 @@ class EngagementMetadataById(Resource):
         """Update the values of an existing metadata entry for an engagement."""
         authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
                                  engagement_id=engagement_id)
+        request_json = request.get_json(force=True)
         try:
-            value = request.json.get('value')
+            value = request_json.get('value')
             if not value:
                 raise ValidationError('Value is required')
             metadata = metadata_service.get(metadata_id)
@@ -158,5 +160,3 @@ class EngagementMetadataById(Resource):
             return {}, HTTPStatus.NO_CONTENT
         except KeyError as err:
             return str(err), HTTPStatus.NOT_FOUND
-        except Exception as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

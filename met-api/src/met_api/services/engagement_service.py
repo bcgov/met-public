@@ -15,7 +15,6 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.engagement_metadata_service import EngagementMetadataService
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.services.object_storage_service import ObjectStorageService

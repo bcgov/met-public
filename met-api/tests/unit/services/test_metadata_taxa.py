@@ -31,6 +31,7 @@ def test_create_taxon(session):
                                  TestEngagementMetadataTaxonInfo.taxon1)
     assert taxon.get('id') is not None
     taxon_existing = taxon_service.get_by_id(taxon['id'])
+    assert taxon_existing is not None
     assert taxon['name'] == taxon_existing['name']
 
 def test_insert_taxon(session):
@@ -43,10 +44,12 @@ def test_insert_taxon(session):
     taxon2 = taxon_service.create(tenant.id, 
                                   TestEngagementMetadataTaxonInfo.taxon3)
     assert taxon2.get('id') is not None
-    taxon_existing = taxon_service.get_by_id(taxon2['id'])
-    assert taxon2['name'] == taxon_existing['name']
-    taxon_existing = taxon_service.get_by_id(taxon1['id'])
-    assert taxon1['name'] == taxon_existing['name']
+    taxon2_existing = taxon_service.get_by_id(taxon2['id'])
+    assert taxon2_existing is not None
+    assert taxon2['name'] == taxon2_existing['name']
+    taxon1_existing = taxon_service.get_by_id(taxon1['id'])
+    assert taxon1_existing is not None
+    assert taxon1['name'] == taxon1_existing['name']
     assert taxon1['position'] == 1
     assert taxon2['position'] == 2
 
@@ -68,6 +71,7 @@ def test_get_by_id(session):
     taxon = factory_metadata_taxon_model(tenant.id)
     assert taxon.id is not None
     taxon_existing = taxon_service.get_by_id(taxon.id)
+    assert taxon_existing is not None
     assert taxon.name == taxon_existing['name']
 
 def test_update_taxon(session):
@@ -78,6 +82,7 @@ def test_update_taxon(session):
                                 TestEngagementMetadataTaxonInfo.taxon1)
     assert taxon.get('id') is not None
     taxon_existing = taxon_service.get_by_id(taxon['id'])
+    assert taxon_existing is not None
     assert taxon['name'] == taxon_existing['name']
     taxon['name'] = 'Updated Taxon'
     taxon_updated = taxon_service.update(taxon['id'], taxon)

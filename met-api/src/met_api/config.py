@@ -55,12 +55,12 @@ def get_named_config(environment: Union[str, None]) -> 'Config':
     }
     try:
         print(f'Loading configuration: {environment}...')
-        return config_mapping.get(environment, ProdConfig)()
+        return config_mapping.get(environment or 'production', ProdConfig)()
     except KeyError as e:
         raise KeyError(f'Configuration "{environment}" not found.') from e
 
 
-def env_truthy(env_var, default: bool = False):
+def env_truthy(env_var, default: Union[bool, str] = False):
     """
     Return True if the environment variable is set to a truthy value.
 
@@ -198,7 +198,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'JWKS_URI': os.getenv('JWT_OIDC_JWKS_URI', f'{_issuer}/protocol/openid-connect/certs'),
         'ALGORITHMS': os.getenv('JWT_OIDC_ALGORITHMS', 'RS256'),
         'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
-        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', 'True')),
+        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', True)),
         'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
         'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
     }

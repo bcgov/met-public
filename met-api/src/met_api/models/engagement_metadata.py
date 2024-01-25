@@ -21,7 +21,7 @@ class EngagementMetadata(BaseModel):
     engagement_id = db.Column(db.Integer,
         db.ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True, index=True)
     engagement = db.relationship('Engagement', backref='metadata')
-    taxon_id = db.Column(db.Integer, 
+    taxon_id = db.Column(db.Integer,
         db.ForeignKey('engagement_metadata_taxa.id', ondelete='CASCADE'), nullable=False, index=True)
     taxon = db.relationship('MetadataTaxon', backref='entries')
     value = db.Column(db.Text, index=True, nullable=False)
@@ -29,25 +29,25 @@ class EngagementMetadata(BaseModel):
     @property
     def tenant(self):
         return self.taxon.tenant if self.taxon else None
-    
+
     # Prevent primary key and foreign keys from being updated after creation
     @validates('id')
-    def validate_id(self, _, id):
-        if self.id and self.id != id:
+    def validate_id(self, _, new_id):
+        if self.id and self.id != new_id:
             raise ValueError('Cannot change own ID')
-        return id
-    
+        return new_id
+
     @validates('tenant_id')
-    def validate_tenant_id(self, _, tenant_id):
-        if self.tenant_id and self.tenant_id != tenant_id:
+    def validate_tenant_id(self, _, new_tenant_id):
+        if self.tenant_id and self.tenant_id != new_tenant_id:
             raise ValueError('Cannot change tenant_id')
-        return tenant_id
-    
+        return new_tenant_id
+
     @validates('engagement_id')
-    def validate_engagement_id(self, _, engagement_id):
-        if self.engagement_id and self.engagement_id != engagement_id:
+    def validate_engagement_id(self, _, new_engagement_id):
+        if self.engagement_id and self.engagement_id != new_engagement_id:
             raise ValueError('Cannot change engagement_id')
-        return engagement_id
+        return new_engagement_id
 
     def __repr__(self) -> str:
         if not self:
@@ -83,6 +83,7 @@ class MetadataTaxonDataType(str, enum.Enum):
     OTHER = 'other'
 
     @classmethod
+    # pylint: disable=no-member
     def has_value(cls, value: str) -> bool:
         """Return True if the value is a valid data type."""
         return value in cls._value2member_map_
@@ -119,17 +120,17 @@ class MetadataTaxon(BaseModel):
 
     # Prevent primary key and foreign keys from being updated after creation
     @validates('id')
-    def validate_id(self, _, id):
-        if self.id and self.id != id:
+    def validate_id(self, _, new_id):
+        if self.id and self.id != new_id:
             raise ValueError('Cannot change own ID')
-        return id
-    
+        return new_id
+
     @validates('tenant_id')
-    def validate_tenant_id(self, _, tenant_id):
-        if self.tenant_id and self.tenant_id != tenant_id:
+    def validate_tenant_id(self, _, new_tenant_id):
+        if self.tenant_id and self.tenant_id != new_tenant_id:
             raise ValueError('Cannot change tenant_id')
-        return tenant_id
-    
+        return new_tenant_id
+
     def __repr__(self) -> str:
         if not self:
             return '<MetadataTaxon: None>'
