@@ -1,3 +1,8 @@
+## January 24, 2024
+- **Task** Update default project type to GDX for all deployments by default. [🎟️DESENG-472](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-472)
+  - Set the default project type to GDX on all continuous deployment (CD) files.
+  - Removed the option to deploy to EAO.
+
 ## January 22, 2024
 - **Task** Add missing unit tests for met api [🎟️DESENG-481](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-481)
   - Added missing unit tests for met api
