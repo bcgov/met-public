@@ -51,3 +51,6 @@ from .widget_video import WidgetVideo
 from .cac_form import CACForm
 from .widget_timeline import WidgetTimeline
 from .timeline_event import TimelineEvent
+from .widget_poll import Poll
+from .poll_answers import PollAnswer
+from .poll_responses import PollResponse

@@ -4,6 +4,10 @@
   - Removed the option to deploy to EAO.
 
 ## January 22, 2024
+- **Task** Poll Widget: Back-end [🎟️DESENG-463](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-463)
+  - Created Database models for Widget Poll, Poll Answers, Poll Response.
+  - Created API to manage  Widget Poll, Poll Answers, Poll Response.
+  - Created Unit tests to test the code.
 - **Task** Add missing unit tests for met api [🎟️DESENG-481](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-481)
   - Added missing unit tests for met api
   - Added unit tests for error handling for met api
