@@ -108,7 +108,7 @@ class EngagementMetadataService:
 
 
     @staticmethod
-    def create_defaults(engagement_id: int, tenant_id:int) -> list[dict]:
+    def create_defaults(engagement_id: int, tenant_id:int) -> List[dict]:
         """Create default metadata for an engagement."""
         # Get metadata taxa for the tenant
         taxa = MetadataTaxon.query.filter_by(tenant_id=tenant_id).all()

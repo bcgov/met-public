@@ -21,7 +21,7 @@ class MetadataTaxonService:
 
 
     @staticmethod
-    def get_by_tenant(tenant_id: int) -> list[dict]:
+    def get_by_tenant(tenant_id: int) -> List[dict]:
         """Get all taxa for a tenant."""
         tenant = Tenant.query.get(tenant_id)
         results = tenant.metadata_taxa if tenant else []
@@ -52,7 +52,7 @@ class MetadataTaxonService:
 
     @staticmethod
     @transactional()
-    def reorder_tenant(tenant_id: int, taxon_ids: list[int]) -> list[dict]:
+    def reorder_tenant(tenant_id: int, taxon_ids: list[int]) -> List[dict]:
         """
         Reorder all taxa within a specific tenant based on a provided list of taxon IDs,
         setting their positions accordingly.
@@ -76,7 +76,7 @@ class MetadataTaxonService:
 
     @staticmethod
     @transactional()
-    def auto_order_tenant(tenant_id: int) -> list[dict]:
+    def auto_order_tenant(tenant_id: int) -> List[dict]:
         """
         Automatically order all taxa within a specific tenant based on their
         current positions. This has the benefit of ensuring that the position

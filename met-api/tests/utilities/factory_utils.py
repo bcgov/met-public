@@ -54,7 +54,8 @@ from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
     TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo,
     TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetVideo, TestJwtClaims,
-    TestEngagementMetadataTaxonInfo, TestEngagementMetadataInfo, TestPollAnswerInfo, TestPollResponseInfo)
+    TestEngagementMetadataTaxonInfo, TestEngagementMetadataInfo, TestPollAnswerInfo, TestPollResponseInfo,
+    TestWidgetPollInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()

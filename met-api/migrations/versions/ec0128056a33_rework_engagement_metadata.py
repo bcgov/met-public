@@ -1,7 +1,7 @@
 """Rework engagement metadata 
 
 Revision ID: ec0128056a33
-Revises: bd0eb0d25caf
+Revises: 08f69642b7ae
 Create Date: 2023-12-18 18:37:08.781433
 
 """
@@ -17,7 +17,7 @@ from met_api.models.tenant import Tenant as TenantModel
 
 # revision identifiers, used by Alembic.
 revision = 'ec0128056a33'
-down_revision = 'bd0eb0d25caf'
+down_revision = '08f69642b7ae'
 branch_labels = None
 depends_on = None
 
