@@ -30,12 +30,13 @@ from met_api.models.staff_user import StaffUser
 from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.services.metadata_taxon_service import MetadataTaxonService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.user_context import UserContext
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-VIEW_TAXA_ROLES = [Role.VIEW_TENANT, Role.CREATE_TENANT]
-MODIFY_TAXA_ROLES = [Role.CREATE_TENANT]
+VIEW_TAXA_ROLES = [Role.VIEW_TENANT.value, Role.CREATE_TENANT.value]
+MODIFY_TAXA_ROLES = [Role.CREATE_TENANT.value]
 TAXON_NOT_FOUND_MSG = 'Metadata taxon was not found'
 
 API = Namespace('metadata_taxa', description="Endpoints for managing the taxa "
@@ -62,19 +63,6 @@ taxon_return_model = API.model('MetadataTaxonReturn', {
     **taxon_model_dict
 })
 
-def check_tenant_access(roles: Union[List[str], List[Role]], 
-                tenant_id: Optional[str] = None,
-                usr: Optional[UserContext] = None) -> bool:
-    """Check if the user has any of the provided roles on this tenant."""
-    g.authorization_header = request.headers.get('Authorization', None)
-    g.token_info = g.jwt_oidc_token_info
-    usr = usr or UserContext()
-    roles = [(r.value if hasattr(r, 'value') else r) for r in roles]
-    db_user = StaffUser.get_user_by_external_id(usr.sub)
-    if not db_user or not db_user.tenant_id or str(db_user.tenant_id) != str(tenant_id):
-        return False
-    return usr.has_roles(roles)
-
 params = {'tenant_id': 'The short name of the tenant'}
 
 responses = {
@@ -85,9 +73,8 @@ responses = {
     HTTPStatus.INTERNAL_SERVER_ERROR.value: 'Internal server error'
 }
 
-def ensure_tenant_access(roles=MODIFY_TAXA_ROLES):
+def ensure_tenant_access():
     def wrapper(f: Callable):
-        @auth.requires_auth
         @wraps(f)
         def decorated_function(*args, **func_kwargs):
             tenant_short_name = func_kwargs.pop('tenant_name')
@@ -95,10 +82,10 @@ def ensure_tenant_access(roles=MODIFY_TAXA_ROLES):
             if not tenant:
                 abort(HTTPStatus.NOT_FOUND, 
                     f'Tenant with short name {tenant_short_name} not found')
+            if tenant.short_name.upper() != g.tenant_name:
+                abort(HTTPStatus.FORBIDDEN, 
+                    f'You are not authorized to access tenant {tenant_short_name}')
             func_kwargs['tenant'] = tenant
-            if not check_tenant_access(roles, tenant.id):
-                abort(HTTPStatus.FORBIDDEN,
-                    f'Not authorized to access taxa for tenant {tenant.id}')
             return f(*args, **func_kwargs)
         return decorated_function
     return wrapper
@@ -111,7 +98,8 @@ class MetadataTaxa(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.marshal_list_with(taxon_return_model)
-    @ensure_tenant_access(roles=VIEW_TAXA_ROLES)
+    @ensure_tenant_access()
+    @require_role(VIEW_TAXA_ROLES)
     def get(tenant, **kwargs):
         """Fetch a list of metadata taxa by tenant id."""
         tenant_taxa = taxon_service.get_by_tenant(tenant.id)
@@ -122,6 +110,7 @@ class MetadataTaxa(Resource):
     @API.expect(taxon_modify_model)
     @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED.value)
     @ensure_tenant_access()
+    @require_role(MODIFY_TAXA_ROLES)
     def post(tenant: Tenant):
         """Create a new metadata taxon for a tenant and return it."""
         try:
@@ -137,6 +126,7 @@ class MetadataTaxa(Resource):
     @API.expect({'taxon_ids': fields.List(fields.Integer(required=True))})
     @API.marshal_list_with(taxon_return_model)
     @ensure_tenant_access()
+    @require_role(MODIFY_TAXA_ROLES)
     def patch(tenant: Tenant):
         """Reorder the tenant's metadata taxa."""
         try:
@@ -160,7 +150,8 @@ class MetadataTaxon(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @ensure_tenant_access(roles=VIEW_TAXA_ROLES)
+    @ensure_tenant_access()
+    @require_role(VIEW_TAXA_ROLES)
     @API.marshal_with(taxon_return_model)
     def get(tenant: Tenant, taxon_id: int):
         """Fetch a single metadata taxon matching the provided id."""
@@ -174,6 +165,7 @@ class MetadataTaxon(Resource):
     @API.expect(taxon_modify_model)
     @API.marshal_with(taxon_return_model)
     @ensure_tenant_access()
+    @require_role(MODIFY_TAXA_ROLES)
     def patch(tenant: Tenant, taxon_id: int):
         """Update a metadata taxon."""
         metadata_taxon = taxon_service.get_by_id(taxon_id)
@@ -186,6 +178,7 @@ class MetadataTaxon(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @ensure_tenant_access()
+    @require_role(MODIFY_TAXA_ROLES)
     @API.doc(responses={**responses, HTTPStatus.NO_CONTENT.value: 'Taxon deleted'})
     def delete(tenant: Tenant, taxon_id: int):
         """Delete a metadata taxon."""

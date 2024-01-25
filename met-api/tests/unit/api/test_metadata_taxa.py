@@ -97,7 +97,7 @@ def test_reorder_tenant_metadata_taxa(client, jwt, session):
                                 taxon3.id, taxon1.id, taxon2.id
                             ]}),
                             content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.OK, response.json
     assert len(response.json) == 3
     assert response.json[0].get('id') == taxon3.id
     assert response.json[1].get('id') == taxon1.id

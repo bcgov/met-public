@@ -177,17 +177,19 @@ def factory_metadata_requirements(auth: Optional[Auth]=None):
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
     taxon = factory_metadata_taxon_model(tenant.id)
-    headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role) if auth else None
-    return taxon, engagement, tenant, headers
+    if auth:
+        headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role, tenant_id=tenant.short_name)
+        return taxon, engagement, tenant, headers
+    return taxon, engagement, tenant, None
 
 def factory_taxon_requirements(auth: Optional[Auth]=None):
     """Create a tenant and staff user, and headers for auth."""
-    tenant = factory_tenant_model(TestTenantInfo.tenant1)
+    tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
     if auth:
-        headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role)
+        headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role, tenant_id=tenant.short_name)
         return tenant, headers
     return tenant, None
 
@@ -262,11 +264,12 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
     return feedback
 
 
-def factory_auth_header(jwt, claims):
+def factory_auth_header(jwt, claims, tenant_id=None):
     """Produce JWT tokens for use in tests."""
     return {
         'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
-        TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME'),
+        TENANT_ID_HEADER: (tenant_id or
+                           current_app.config.get('DEFAULT_TENANT_SHORT_NAME')),
     }
 
 
