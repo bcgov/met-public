@@ -827,3 +827,62 @@ class TestTimelineInfo(dict, Enum):
         'position': 1,
         'status': TimelineEventStatus.Pending.value
     }
+
+
+class TestWidgetPollInfo(dict, Enum):
+    """Test scenarios of widget polls."""
+
+    poll1 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'active',
+        'engagement_id': 1  # Placeholder, should be replaced with actual engagement ID in tests
+    }
+
+    poll2 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'inactive',
+        'engagement_id': 1  # Placeholder, should be replaced with actual engagement ID in tests
+    }
+
+    poll3 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'active',
+        'engagement_id': 2  # Placeholder, should be replaced with another engagement ID in tests
+    }
+
+
+class TestPollAnswerInfo(dict, Enum):
+    """Test scenarios for poll answers."""
+
+    answer1 = {
+        'answer_text': 'Answer 1'
+    }
+
+    answer2 = {
+        'answer_text': 'Answer 2'
+    }
+
+    answer3 = {
+        'answer_text': 'Answer 3'
+    }
+
+
+class TestPollResponseInfo(dict, Enum):
+    """Test scenarios for poll responses."""
+
+    response1 = {
+        'participant_id': fake.uuid4(),
+        'selected_answer_id': 1,  # should be replaced with an actual answer ID in tests
+        'poll_id': 1,            # should be replaced with an actual poll ID in tests
+        'widget_id': 1,          # Placeholder, should be replaced with an actual widget ID in tests
+    }
+
+    response2 = {
+        'participant_id': fake.uuid4(),
+        'selected_answer_id': 2,  # should be replaced with an actual answer ID in tests
+        'poll_id': 1,            # should be replaced with an actual poll ID in tests
+        'widget_id': 1,          # should be replaced with an actual widget ID in tests
+    }

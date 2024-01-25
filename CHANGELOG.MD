@@ -1,5 +1,18 @@
-## January 22, 2024
+## January 25, 2024
+- **Task** Resolve issue preventing met-web from deploying on the Dev OpenShift environment. [🎟️DESENG-469](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-469)
+  - Remove Epic Engage-related links and update Keycloak link.
+  - Remove additional authentication method.
 
+## January 24, 2024
+- **Task** Update default project type to GDX for all deployments by default. [🎟️DESENG-472](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-472)
+  - Set the default project type to GDX on all continuous deployment (CD) files.
+  - Removed the option to deploy to EAO.
+
+## January 22, 2024
+- **Task** Poll Widget: Back-end [🎟️DESENG-463](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-463)
+  - Created Database models for Widget Poll, Poll Answers, Poll Response.
+  - Created API to manage  Widget Poll, Poll Answers, Poll Response.
+  - Created Unit tests to test the code.
 - **Task** Add missing unit tests for met api [🎟️DESENG-481](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-481)
   - Added missing unit tests for met api
   - Added unit tests for error handling for met api
