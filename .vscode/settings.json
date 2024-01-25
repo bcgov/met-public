@@ -2,5 +2,14 @@
   "makefile.extensionOutputFolder": "./.vscode",
   "python.defaultInterpreterPath": "${workspaceFolder}/met-api/venv/bin/python",
   "python.envFile": "${workspaceFolder}/met-api/.env",
-  "python.analysis.extraPaths": ["./met-api/src", "./met-cron/src", "./analytics-api/src"]
+  "python.analysis.extraPaths": [
+    "./analytics-api/src",
+    "./met-cron/src",
+    "./met-api/src",
+  ],
+  "pylint.args": [
+    "--load-plugins",
+    "pylint_flask_sqlalchemy",
+    "pylint_flask"],
+  "python.analysis.autoImportCompletions": true
 }

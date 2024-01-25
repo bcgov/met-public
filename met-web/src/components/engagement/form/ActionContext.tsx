@@ -24,6 +24,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
+    // TODO: Reimplement handle*MetadataRequest methods using the new engagement metadata API
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
     },
@@ -160,27 +161,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         verifyUserCanEdit();
     }, [savedEngagement, engagementId]);
 
-    const handleCreateEngagementMetadataRequest = async (
-        engagement: EngagementMetadata,
-    ): Promise<EngagementMetadata> => {
-        setSaving(true);
-        try {
-            const result = await postEngagementMetadata(engagement);
-            setSaving(false);
-            return Promise.resolve(result);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: getErrorMessage(error) || 'Error Creating Engagement Metadata',
-                }),
-            );
-            setSaving(false);
-            console.log(error);
-            return Promise.reject(error);
-        }
-    };
-
     const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
         setSaving(true);
         try {
@@ -250,36 +230,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    // TODO: replace these stubs with new handlers
+    const handleCreateEngagementMetadataRequest = async (): Promise<EngagementMetadata> => {
+        return Promise.reject();
+    };
+
     const handleUpdateEngagementMetadataRequest = async (): Promise<EngagementMetadata> => {
-        try {
-            if (!savedEngagement.id) {
-                dispatch(
-                    openNotification({ severity: 'error', text: 'Please save the engagement before adding metadata' }),
-                );
-                return engagementMetadata;
-            }
-            const state = { ...engagementMetadata };
-            const engagementMetadataToUpdate: EngagementMetadata = {
-                engagement_id: Number(engagementId),
-            };
-            const metadataDiff = diff(state, engagementMetadataToUpdate) as EngagementMetadata;
-
-            if (Object.keys(metadataDiff).length === 0) {
-                return engagementMetadata;
-            }
-
-            const updatedEngagementMetadata = await patchEngagementMetadata({
-                ...metadataDiff,
-                engagement_id: Number(engagementId),
-            });
-            setEngagementMetadata(updatedEngagementMetadata);
-            return Promise.resolve(updatedEngagementMetadata);
-        } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error saving engagement metadata' }));
-            setSaving(false);
-            console.log(error);
-            return Promise.reject(error);
-        }
+        return Promise.reject();
     };
 
     return (

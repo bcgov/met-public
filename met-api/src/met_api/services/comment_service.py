@@ -6,7 +6,6 @@ from met_api.constants.membership_type import MembershipType
 from met_api.constants.export_comments import RejectionReason
 from met_api.models import Survey as SurveyModel
 from met_api.models.comment import Comment
-# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel

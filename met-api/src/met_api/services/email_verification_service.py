@@ -13,7 +13,6 @@ from met_api.models import EngagementSlug as EngagementSlugModel
 from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
-# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.participant_service import ParticipantService
 from met_api.utils import notification

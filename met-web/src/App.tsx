@@ -205,7 +205,6 @@ const App = () => {
                     backgroundColor: 'white',
                     zIndex: ZIndex.footer,
                     position: 'relative',
-                    paddingTop: '5em',
                 }}
             >
                 <Footer />

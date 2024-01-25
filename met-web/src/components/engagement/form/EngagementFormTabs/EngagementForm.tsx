@@ -18,7 +18,6 @@ const EngagementForm = () => {
     const {
         handleCreateEngagementRequest,
         handleUpdateEngagementRequest,
-        handleCreateEngagementMetadataRequest,
         isSaving,
         savedEngagement,
         handleAddBannerImage,
@@ -144,11 +143,6 @@ const EngagementForm = () => {
             rich_description: richDescription,
             rich_content: richContent,
             status_block: surveyBlockList,
-        });
-
-        await handleCreateEngagementMetadataRequest({
-            ...engagementFormData,
-            engagement_id: Number(engagement.id),
         });
 
         navigate(`/engagements/${engagement.id}/form`);
