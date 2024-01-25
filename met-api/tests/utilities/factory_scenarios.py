@@ -25,6 +25,7 @@ from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.timeline_event_status import TimelineEventStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
 from met_api.utils.enums import LoginSource, UserStatus
@@ -344,10 +345,8 @@ class TestJwtClaims(dict, Enum):
         'firstname': fake.first_name(),
         'lastname': fake.last_name(),
         'preferred_username': fake.user_name(),
-        'realm_access': {
-            'roles': [
-            ]
-        }
+        'client_roles': [
+        ]
     }
 
     public_user_role = {
@@ -358,11 +357,9 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': fake.user_name(),
         'email': fake.email(),
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'public_user'
-            ]
-        }
+        'client_roles': [
+            'public_user'
+        ]
     }
 
     met_admin_role = {
@@ -375,20 +372,18 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'create_survey',
-                'view_users',
-                'create_admin_user',
-                'edit_members',
-                'toggle_user_status',
-                'export_to_csv',
-                'update_user_group',
-                'create_tenant'
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'create_survey',
+            'view_users',
+            'create_admin_user',
+            'edit_members',
+            'toggle_user_status',
+            'export_to_csv',
+            'update_user_group',
+            'create_tenant'
+        ]
     }
 
     staff_admin_role = {
@@ -401,35 +396,35 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'create_engagement',
-                'edit_engagement',
-                'create_survey',
-                'view_users',
-                'view_private_engagements',
-                'create_admin_user',
-                'view_all_surveys',
-                'view_surveys',
-                'edit_all_surveys',
-                'edit_survey',
-                'view_unapproved_comments',
-                'clone_survey',
-                'edit_members',
-                'review_comments',
-                'review_all_comments',
-                'view_all_engagements',
-                'toggle_user_status',
-                'export_all_to_csv',
-                'update_user_group',
-                'export_proponent_comment_sheet',
-                'export_internal_comment_sheet',
-                'create_tenant',
-                'view_tenant',
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'create_engagement',
+            'edit_engagement',
+            'create_survey',
+            'view_users',
+            'view_private_engagements',
+            'create_admin_user',
+            'view_all_surveys',
+            'view_surveys',
+            'edit_all_surveys',
+            'edit_survey',
+            'view_unapproved_comments',
+            'clone_survey',
+            'edit_members',
+            'review_comments',
+            'review_all_comments',
+            'view_all_engagements',
+            'toggle_user_status',
+            'export_all_to_csv',
+            'update_user_group',
+            'export_proponent_comment_sheet',
+            'export_internal_comment_sheet',
+            'export_cac_form_to_sheet',
+            'view_members',
+            'create_tenant',
+            'view_tenant',
+        ]
     }
     team_member_role = {
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
@@ -441,15 +436,13 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'view_users',
-                'clone_survey',
-                'export_proponent_comment_sheet'
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'view_users',
+            'clone_survey',
+            'export_proponent_comment_sheet'
+        ]
     }
 
     reviewer_role = {
@@ -462,12 +455,10 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_users',
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_users',
+        ]
     }
 
 
@@ -497,6 +488,27 @@ class TestWidgetInfo(dict, Enum):
     }
     widget_subscribe = {
         'widget_type_id': WidgetType.SUBSCRIBE.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_map = {
+        'widget_type_id': WidgetType.Map.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_video = {
+        'widget_type_id': WidgetType.Video.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_timeline = {
+        'widget_type_id': WidgetType.Timeline.value,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -742,4 +754,76 @@ class TestSubscribeInfo(Enum):
                 'form_type': 'EMAIL_LIST'
             }
         ]
+    }
+
+    subscribe_info_2 = {
+        'widget_id': 1,
+        'type': 'SIGN_UP',
+        'items': [
+            {
+                'description': '{\"blocks\":[{\"key\":\"2ku94\",\"text\":\
+                    "Rich Description Sample\",\"type\":\"unstyled\", \
+                    "depth\":0,\"inlineStyleRanges\":[],\
+                    "entityRanges\":[],\"data\":{}}],\"entityMap\":{}}',
+                'call_to_action_type': 'link',
+                'call_to_action_text': 'Click here to sign up',
+                'form_type': 'SIGN_UP'
+            }
+        ]
+    }
+
+
+class TestCACForm(dict, Enum):
+    """Test scenarios of cac form."""
+
+    form_data = {
+        'understand': True,
+        'terms_of_reference': True,
+        'first_name': fake.name(),
+        'last_name': fake.name(),
+        'city': 'City',
+        'email': fake.email(),
+    }
+
+
+class TestWidgetMap(dict, Enum):
+    """Test scenarios of video widget."""
+
+    map1 = {
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
+        'marker_label': fake.name()
+    }
+
+    map2 = {
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
+        'marker_label': fake.name()
+    }
+
+
+class TestWidgetVideo(dict, Enum):
+    """Test scenarios of video widget."""
+
+    video1 = {
+        'id': '1',
+        'video_url': fake.url(),
+        'description': fake.text(max_nb_chars=50),
+    }
+
+
+class TestTimelineInfo(dict, Enum):
+    """Test scenarios of event."""
+
+    widget_timeline = {
+        'title': fake.name(),
+        'description': fake.text(max_nb_chars=50),
+    }
+
+    timeline_event = {
+        'timeline_id': '1',
+        'description': fake.text(max_nb_chars=50),
+        'time': datetime.now().strftime('%Y-%m-%d'),
+        'position': 1,
+        'status': TimelineEventStatus.Pending.value
     }

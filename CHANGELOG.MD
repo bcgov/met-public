@@ -1,3 +1,9 @@
+## January 22, 2024
+
+- **Task** Add missing unit tests for met api [🎟️DESENG-481](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-481)
+  - Added missing unit tests for met api
+  - Added unit tests for error handling for met api
+
 ## January 19, 2024
 
 - **Feature**: Add metadata management to the API [🎟️DESENG-442](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-442)

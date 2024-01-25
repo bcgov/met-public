@@ -20,16 +20,20 @@ import copy
 import json
 from http import HTTPStatus
 
+from unittest.mock import patch
 import pytest
 from flask import current_app
 
 from met_api.constants.engagement_status import Status
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.tenant import Tenant as TenantModel
+from met_api.services.survey_service import SurveyService
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import ContentType, MembershipStatus
-from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo, TestTenantInfo, TestUserInfo
+from tests.utilities.factory_scenarios import (
+    TestEngagementInfo, TestJwtClaims, TestSurveyInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model,
     factory_survey_model, factory_tenant_model, set_global_tenant)
@@ -39,7 +43,11 @@ surveys_url = '/api/surveys/'
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey1])
-def test_create_survey(client, jwt, session, survey_info,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_create_survey(client, jwt, session, survey_info, side_effect, expected_status,
                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
     user, claims = setup_admin_user_and_claims
@@ -50,8 +58,13 @@ def test_create_survey(client, jwt, session, survey_info,
     }
     rv = client.post(surveys_url, data=json.dumps(data),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('form_json') == survey_info.get('form_json')
+
+    with patch.object(SurveyService, 'create', side_effect=side_effect):
+        rv = client.post(surveys_url, data=json.dumps(data),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
 
 
 def test_create_survey_with_tenant(client, jwt, session,
@@ -68,7 +81,7 @@ def test_create_survey_with_tenant(client, jwt, session,
         'name': TestSurveyInfo.survey1.get('name'),
         'display': TestSurveyInfo.survey1.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     survey_tenant_id = rv.json.get('tenant_id')
     assert survey_tenant_id == str(tenant.id)
 
@@ -104,7 +117,7 @@ def test_create_survey_with_tenant(client, jwt, session,
         'name': TestSurveyInfo.survey2.get('name'),
         'display': TestSurveyInfo.survey2.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
 
     # Verify that the new survey belongs to the correct tenant
     survey_tenant_id = rv.json.get('tenant_id')
@@ -112,7 +125,11 @@ def test_create_survey_with_tenant(client, jwt, session,
 
 
 @pytest.mark.parametrize('survey_info', [TestSurveyInfo.survey2])
-def test_put_survey(client, jwt, session, survey_info,
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_put_survey(client, jwt, session, survey_info, side_effect, expected_status,
                     setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an survey can be POSTed."""
     user, claims = setup_admin_user_and_claims
@@ -123,16 +140,31 @@ def test_put_survey(client, jwt, session, survey_info,
     rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
 
     rv = client.get(f'{surveys_url}{survey_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('form_json') == survey_info.get('form_json')
     assert rv.json.get('name') == new_survey_name
 
+    with patch.object(SurveyService, 'update', side_effect=side_effect):
+        rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == expected_status
 
-def test_survey_link(client, jwt, session,
+    with patch.object(SurveyService, 'update',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_survey_link(client, jwt, session, side_effect, expected_status,
                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a survey can be POSTed."""
     user, claims = setup_admin_user_and_claims
@@ -158,9 +190,33 @@ def test_survey_link(client, jwt, session,
         content_type=ContentType.JSON.value
     )
 
+    with patch.object(SurveyService, 'link', side_effect=side_effect):
+        rv = client.put(
+            f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
     rv = client.get(
         f'{surveys_url}{survey_id}',
         headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.json.get('engagement_id') == str(eng_id)
+
+    with patch.object(SurveyService, 'get', side_effect=side_effect):
+        rv = client.get(
+            f'{surveys_url}{survey_id}',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
+
+    # test if public user can fetch open surveys
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role),
         content_type=ContentType.JSON.value
     )
     assert rv.json.get('engagement_id') == str(eng_id)
@@ -180,7 +236,7 @@ def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=u
     rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('total') == 1
 
 
@@ -215,7 +271,7 @@ def test_get_survey_for_reviewer(client, jwt, session):  # pylint:disable=unused
     # Assert Reviewer can see the survey since he is added to the team.
     rv = client.get(f'{surveys_url}{survey1.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
 
     # Deactivate membership
     membership_model: MembershipModel = MembershipModel.find_by_engagement_and_user_id(eng.id, user.id)
@@ -234,7 +290,7 @@ def test_get_survey_for_reviewer(client, jwt, session):  # pylint:disable=unused
                     headers=headers, content_type=ContentType.JSON.value)
 
     # Assert user can access  the survey even when he is removed from the team since its published.
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
 
 
 def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disable=unused-argument
@@ -251,7 +307,7 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
     rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('total') == 0
 
 
@@ -269,7 +325,7 @@ def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-arg
     rv = client.get(f'{surveys_url}?page={page}&size={page_size}&sort_key={sort_key}\
                     &sort_order={sort_order}&search_text=',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('total') == 1
 
 
@@ -284,7 +340,7 @@ def test_edit_template_survey_for_admins(client, jwt, session,
     rv = client.put(surveys_url, data=json.dumps({'id': survey_id, 'name': new_survey_name}),
                     headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200, 'Admins are able to edit template surveys'
+    assert rv.status_code == HTTPStatus.OK.value, 'Admins are able to edit template surveys'
 
 
 def test_edit_template_survey_for_team_member(client, jwt, session):  # pylint:disable=unused-argument
@@ -357,3 +413,65 @@ def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info,
     # Assert the response status code and data
     assert response.status_code == HTTPStatus.OK
     assert response.get_json().get('form_json') == survey.form_json
+
+
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_survey_unlink(client, jwt, session, side_effect, expected_status,
+                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that a survey can be unlinked from an engagement."""
+    user, claims = setup_admin_user_and_claims
+    survey = factory_survey_model()
+    survey_id = survey.id
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    eng = factory_engagement_model(TestEngagementInfo.engagement_draft)
+    eng_id = eng.id
+
+    # assert eng id is none in GET Survey
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.json.get('engagement_id') is None
+
+    # link them together
+    rv = client.put(
+        f'{surveys_url}{survey_id}/link/engagement/{eng_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.json.get('engagement_id') == str(eng_id)
+
+    # unlink the survey
+    rv = client.delete(
+        f'{surveys_url}{survey_id}/unlink/engagement/{eng_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+
+    rv = client.get(
+        f'{surveys_url}{survey_id}',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.json.get('engagement_id') is None
+
+    with patch.object(SurveyService, 'unlink', side_effect=side_effect):
+        rv = client.delete(
+            f'{surveys_url}{survey_id}/unlink/engagement/{eng_id}',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
