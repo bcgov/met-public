@@ -23,4 +23,5 @@ export enum WidgetType {
     Video = 7,
     CACForm = 8,
     Timeline = 9,
+    Poll = 10,
 }
