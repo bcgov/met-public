@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { PollWidget } from 'models/pollWidget';
 
-// Define a type for the component's props
+// type for the component's props
 interface PollDisplayProps {
     pollWidget: PollWidget;
     interactionEnabled: boolean;

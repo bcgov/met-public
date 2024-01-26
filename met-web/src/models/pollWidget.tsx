@@ -7,17 +7,10 @@ export interface PollWidget {
     status: string;
     answers: PollAnswer[];
 }
-
 export interface PollAnswer {
     id: number;
     answer_text: string;
 }
-
-export enum PollStatus {
-    Active = 'active',
-    Inactive = 'inactive',
-}
-
 export interface PollResponse {
     selected_answer_id: string;
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MetPaper, MetHeader2 } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
-import { Card, CardActions, CardContent } from '@mui/material';
 import { PrimaryButton } from 'components/common';
 import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
 import { Widget } from 'models/widget';
@@ -11,7 +10,7 @@ import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollS
 import { openNotification } from 'services/notificationService/notificationSlice';
 import Cookies from 'universal-cookie';
 import { useAppSelector } from 'hooks';
-
+import { PollStatus } from 'constants/engagementStatus';
 interface PollWidgetViewProps {
     widget: Widget;
 }
@@ -19,13 +18,28 @@ interface PollWidgetViewProps {
 interface HttpResponseError extends Error {
     response?: {
         status: number;
-        data?: any;
-        // ... other relevant response properties
     };
-    // ... other relevant error properties
 }
 
+const RESPONSE_MESSAGE_SUCCESS = { color: 'green', message: 'Thank you for the response.' };
+const RESPONSE_MESSAGE_ERROR = { color: 'red', message: 'An error occurred while submitting the poll.' };
+const RESPONSE_MESSAGE_LIMIT = { color: 'red', message: 'Limit exceeded for this poll.' };
+
 const cookies = new Cookies();
+
+// Custom hook for cookie management
+const useSubmittedPolls = () => {
+    const cookies = new Cookies();
+    const getSubmittedPolls = () => cookies.get('submitted_polls') || [];
+    const addSubmittedPoll = (widget_id: number) => {
+        const submittedPolls = getSubmittedPolls();
+        if (!submittedPolls.includes(widget_id)) {
+            submittedPolls.push(widget_id);
+            cookies.set('submitted_polls', submittedPolls, { path: '/' });
+        }
+    };
+    return { getSubmittedPolls, addSubmittedPoll };
+};
 
 const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const dispatch = useAppDispatch();
@@ -44,7 +58,16 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const [selectedOption, setSelectedOption] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [interactionEnabled, setInteractionEnabled] = useState(true);
-    const [responseMessage, setResponseMessage] = useState({ color: 'green', message: 'Thank you for the response.' });
+    const [responseMessage, setResponseMessage] = useState(RESPONSE_MESSAGE_SUCCESS);
+    const { getSubmittedPolls, addSubmittedPoll } = useSubmittedPolls();
+
+    useEffect(() => {
+        // Check if the current widget ID is in the submitted polls
+        if (getSubmittedPolls().includes(widget.id)) {
+            setIsSubmitted(true);
+        }
+        fetchPollDetails();
+    }, [widget]);
 
     const fetchPollDetails = async () => {
         try {
@@ -63,18 +86,6 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             );
         }
     };
-
-    useEffect(() => {
-        // Retrieve the submitted polls array from the cookie
-        const submittedPolls = cookies.get('submitted_polls') || [];
-
-        // Check if the current widget ID is in the array
-        if (submittedPolls.includes(widget.id)) {
-            setIsSubmitted(true);
-        }
-        fetchPollDetails();
-    }, [widget]);
-
     // Type guard for HttpResponseError
     const isHttpResponseError = (error: unknown): error is HttpResponseError => {
         return error instanceof Error && 'response' in error;
@@ -96,36 +107,33 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                 selected_answer_id: parseInt(selectedOption),
             });
         } catch (error: unknown) {
-            if (isHttpResponseError(error)) {
-                if (error.response && error.response.status === 403) {
-                    setResponseMessage({ color: 'red', message: 'Limit exceeded for this poll.' });
-                } else {
-                    setResponseMessage({ color: 'red', message: 'An error occurred while submitting the poll.' });
-                }
-            }
+            const responseMessage =
+                isHttpResponseError(error) && error.response?.status === 403
+                    ? RESPONSE_MESSAGE_LIMIT
+                    : RESPONSE_MESSAGE_ERROR;
+            setResponseMessage(responseMessage);
+        } finally {
+            setInteractionEnabled(true);
         }
         // Irrespective of the error mark the poll as submitted to avoid re-submitting
         setIsSubmitted(true);
-        // Set a cookie indicating this poll has been submitted
-        addToCookie(widget.id);
-    };
-
-    const addToCookie = (widget_id: number) => {
-        // Retrieve the current submitted polls array from the cookie, or initialize it if not present
-        const submittedPolls = cookies.get('submitted_polls') || [];
-
-        // Add the current widget ID to the array if it's not already there
-        if (!submittedPolls.includes(widget_id)) {
-            submittedPolls.push(widget_id);
-            cookies.set('submitted_polls', submittedPolls, { path: '/' });
-        }
+        // Add poll to the submitted list of polls
+        addSubmittedPoll(widget.id);
     };
 
     const handleOptionChange = (option: string) => {
         setSelectedOption(option);
     };
 
-    if (pollWidget && pollWidget.status === 'inactive') {
+    const isPollNotReady = () => {
+        if (pollWidget) {
+            return pollWidget.status === PollStatus.Inactive || pollWidget.answers.length == 0;
+        } else {
+            return true;
+        }
+    };
+
+    if (isPollNotReady()) {
         return null;
     }
 
@@ -160,9 +168,6 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                     <MetHeader2 bold>{widget.title}</MetHeader2>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
-                {/* <Grid item xs={12}>
-                    <MetParagraph>{timelineWidget.description}</MetParagraph>
-                </Grid> */}
                 <Grid item xs={12}>
                     <PollDisplay
                         pollWidget={pollWidget}
