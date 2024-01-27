@@ -1,3 +1,8 @@
+## January 26, 2024
+- **Task** Poll Widget: Front-end. [🎟️DESENG-464](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-464)
+  - Created UI for Poll Widget.
+  - Updated Poll widget API and unit tests.
+
 ## January 24, 2024
 - **Task** Update default project type to GDX for all deployments by default. [🎟️DESENG-472](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-472)
   - Set the default project type to GDX on all continuous deployment (CD) files.
