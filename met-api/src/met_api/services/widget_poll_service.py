@@ -2,10 +2,13 @@
 from http import HTTPStatus
 
 from sqlalchemy.exc import SQLAlchemyError
+
+from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget_poll import Poll as PollModel
 from met_api.services import authorization
+from met_api.services.engagement_service import EngagementService
 from met_api.services.poll_answers_service import PollAnswerService
 from met_api.services.poll_response_service import PollResponseService
 from met_api.utils.roles import Role
@@ -24,7 +27,9 @@ class WidgetPollService:
         """Get poll by poll ID."""
         poll = PollModel.query.get(poll_id)
         if not poll:
-            raise BusinessException('Poll widget not found', HTTPStatus.NOT_FOUND)
+            raise BusinessException(
+                'Poll widget not found', HTTPStatus.NOT_FOUND
+            )
         return poll
 
     @staticmethod
@@ -33,7 +38,9 @@ class WidgetPollService:
         try:
             eng_id = poll_details.get('engagement_id')
             WidgetPollService._check_authorization(eng_id)
-            return WidgetPollService._create_poll_model(widget_id, poll_details)
+            return WidgetPollService._create_poll_model(
+                widget_id, poll_details
+            )
         except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
@@ -45,9 +52,13 @@ class WidgetPollService:
             WidgetPollService._check_authorization(widget_poll.engagement_id)
 
             if widget_poll.widget_id != widget_id:
-                raise BusinessException('Invalid widget ID', HTTPStatus.BAD_REQUEST)
+                raise BusinessException(
+                    'Invalid widget ID', HTTPStatus.BAD_REQUEST
+                )
 
-            return WidgetPollService._update_poll_model(poll_widget_id, poll_data)
+            return WidgetPollService._update_poll_model(
+                poll_widget_id, poll_data
+            )
         except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
@@ -78,6 +89,21 @@ class WidgetPollService:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
 
     @staticmethod
+    def is_poll_engagement_published(poll_id: int) -> bool:
+        """Check if the poll is active."""
+        try:
+            poll = WidgetPollService.get_poll_by_id(poll_id)
+            engagement = EngagementService().get_engagement(poll.engagement_id)
+            pub_val = EngagementStatus.Published.value
+            # Return False immediately if engagement is None
+            if engagement is None:
+                return False
+            # Check if the engagement's status matches the published value
+            return engagement.get('status_id') == pub_val
+        except SQLAlchemyError as exc:
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
+
+    @staticmethod
     def _create_poll_model(widget_id: int, poll_data: dict):
         """Private method to create poll model."""
         poll_model = PollModel.create_poll(widget_id, poll_data)
@@ -94,8 +120,13 @@ class WidgetPollService:
     @staticmethod
     def _check_authorization(engagement_id):
         """Check user authorization."""
-        authorization.check_auth(one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
-                                 engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value,
+            ),
+            engagement_id=engagement_id,
+        )
 
     @staticmethod
     def _handle_poll_answers(poll_id: int, poll_data: dict):

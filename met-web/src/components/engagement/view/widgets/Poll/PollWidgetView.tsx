@@ -4,11 +4,11 @@ import { Grid, Skeleton, Divider } from '@mui/material';
 import { PrimaryButton } from 'components/common';
 import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
 import { Widget } from 'models/widget';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useSubmittedPolls } from 'hooks';
 import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import Cookies from 'universal-cookie';
+
 import { useAppSelector } from 'hooks';
 import { PollStatus } from 'constants/engagementStatus';
 interface PollWidgetViewProps {
@@ -24,22 +24,6 @@ interface HttpResponseError extends Error {
 const RESPONSE_MESSAGE_SUCCESS = { color: 'green', message: 'Thank you for the response.' };
 const RESPONSE_MESSAGE_ERROR = { color: 'red', message: 'An error occurred while submitting the poll.' };
 const RESPONSE_MESSAGE_LIMIT = { color: 'red', message: 'Limit exceeded for this poll.' };
-
-const cookies = new Cookies();
-
-// Custom hook for cookie management
-const useSubmittedPolls = () => {
-    const cookies = new Cookies();
-    const getSubmittedPolls = () => cookies.get('submitted_polls') || [];
-    const addSubmittedPoll = (widget_id: number) => {
-        const submittedPolls = getSubmittedPolls();
-        if (!submittedPolls.includes(widget_id)) {
-            submittedPolls.push(widget_id);
-            cookies.set('submitted_polls', submittedPolls, { path: '/' });
-        }
-    };
-    return { getSubmittedPolls, addSubmittedPoll };
-};
 
 const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const dispatch = useAppDispatch();

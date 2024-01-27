@@ -20,6 +20,7 @@ from unittest.mock import patch
 
 import pytest
 
+from met_api.constants.engagement_status import Status as EngagementStatus
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services import authorization
 from met_api.services.poll_response_service import PollResponseService
@@ -79,15 +80,15 @@ def test_update_poll(session):
         session.commit()
         updated_data = {
             'title': 'Updated Title',
-            'answers': [
-                {
-                    'answer_text': 'Python'
-                }
-            ]
+            'answers': [{'answer_text': 'Python'}],
         }
-        updated_poll = WidgetPollService.update_poll(widget.id, poll.id, updated_data)
+        updated_poll = WidgetPollService.update_poll(
+            widget.id, poll.id, updated_data
+        )
         assert updated_poll.title == updated_data['title']
-        assert updated_poll.answers[0].answer_text == updated_data['answers'][0]['answer_text']
+        assert (
+            updated_poll.answers[0].answer_text == updated_data['answers'][0]['answer_text']
+        )
 
         # Test invalid poll ID
         with pytest.raises(BusinessException) as exc_info:
@@ -129,7 +130,9 @@ def test_check_already_polled(session):
     response_data = TestPollResponseInfo.response1
     widget = _create_widget()
     poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
-    already_polled = WidgetPollService.check_already_polled(poll.id, response_data['participant_id'], 1)
+    already_polled = WidgetPollService.check_already_polled(
+        poll.id, response_data['participant_id'], 1
+    )
     assert already_polled is False
 
     # Check already polled or not after poll response is created
@@ -139,7 +142,9 @@ def test_check_already_polled(session):
     response_data['selected_answer_id'] = answer.id
     PollResponseService.create_response(response_data)
 
-    already_polled = WidgetPollService.check_already_polled(poll.id, response_data['participant_id'], 1)
+    already_polled = WidgetPollService.check_already_polled(
+        poll.id, response_data['participant_id'], 1
+    )
     assert already_polled is True
 
 
@@ -149,6 +154,29 @@ def test_is_poll_active(session):
     poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
     is_active = WidgetPollService.is_poll_active(poll.id)
     assert is_active is True
+
+    # Test wrong poll id
+    with pytest.raises(BusinessException) as exc_info:
+        _ = WidgetPollService.is_poll_active(100)
+
+    assert exc_info.value.status_code == HTTPStatus.NOT_FOUND
+
+
+def test_is_poll_engagement_published(session):
+    """Check if poll engagement is published or not."""
+    widget = _create_widget()
+    poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
+    is_published = WidgetPollService.is_poll_engagement_published(poll.id)
+    assert is_published is True
+
+    # Test not published status
+    engagement = factory_engagement_model(
+        status=EngagementStatus.Unpublished.value
+    )
+    widget = factory_widget_model({'engagement_id': engagement.id})
+    poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
+    is_published = WidgetPollService.is_poll_engagement_published(poll.id)
+    assert is_published is False
 
     # Test wrong poll id
     with pytest.raises(BusinessException) as exc_info:

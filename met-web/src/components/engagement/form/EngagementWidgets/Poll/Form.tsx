@@ -32,11 +32,6 @@ interface DetailsForm {
     status: string;
 }
 
-interface StatusDropDownItem {
-    value: string;
-    label: string;
-}
-
 const previewStyle = {
     backgroundColor: '#f5f5f5',
     padding: '1em',
@@ -52,9 +47,8 @@ const STATUS_ITEMS = [
 
 const interactionEnabled = false;
 
-const newAnswer = { id: 0, answer_text: '' };
-
 const Form = () => {
+    const newAnswer = { id: 0, answer_text: '' };
     const dispatch = useAppDispatch();
     const { widget, isLoadingPollWidget, pollWidget } = useContext(PollContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
@@ -133,7 +127,13 @@ const Form = () => {
             return;
         }
 
-        await patchPoll(widget.id, pollWidget.id, { ...data });
+        if (!isEngagementPublished) {
+            await patchPoll(widget.id, pollWidget.id, { ...data });
+        } else {
+            // if already published then only update status
+            await patchPoll(widget.id, pollWidget.id, { status: data.status });
+        }
+
         dispatch(openNotification({ severity: 'success', text: 'The Poll widget was successfully updated' }));
     };
 

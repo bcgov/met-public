@@ -22,6 +22,7 @@ from http import HTTPStatus
 
 from faker import Faker
 
+from met_api.constants.engagement_status import Status
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestPollAnswerInfo, TestWidgetPollInfo
 from tests.utilities.factory_utils import (
@@ -74,8 +75,8 @@ def test_create_poll_widget(client, jwt, session, setup_admin_user_and_claims):
         'answers': [
             TestPollAnswerInfo.answer1.value,
             TestPollAnswerInfo.answer2.value,
-            TestPollAnswerInfo.answer3.value
-        ]
+            TestPollAnswerInfo.answer3.value,
+        ],
     }
 
     # Preparing data for POST request
@@ -114,7 +115,7 @@ def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
-    engagement = factory_engagement_model()
+    engagement = factory_engagement_model(status=Status.Draft.value)
     widget = factory_widget_model({'engagement_id': engagement.id})
     poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
 
@@ -123,7 +124,27 @@ def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
         'title': 'Updated Title',
         'engagement_id': engagement.id,
         'widget_id': widget.id,
-        'answers': [TestPollAnswerInfo.answer3.value]
+        'answers': [TestPollAnswerInfo.answer3.value],
+    }
+
+    # Sending PATCH request
+    rv = client.patch(
+        f'/api/widgets/{widget.id}/polls/{poll.id}',
+        data=json.dumps(data),
+        headers=headers,
+        content_type=ContentType.JSON.value,
+    )
+
+    # Checking updating title if Engagement is published
+
+    engagement = factory_engagement_model(status=Status.Published.value)
+    widget = factory_widget_model({'engagement_id': engagement.id})
+    poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
+
+    # Preparing data for PATCH request
+    data = {
+        'title': 'Updated Title',
+        'answers': [TestPollAnswerInfo.answer3.value],
     }
 
     # Sending PATCH request
@@ -135,15 +156,13 @@ def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
     )
 
     # Checking response
-    assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('title') == data.get('title')
-    assert len(rv.json.get('answers')) == 1
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
     # testing Exceptions with wrong data
     # Sending patch request
     rv = client.patch(
         f'/api/widgets/{widget.id}/polls/{poll.id}',
-        data=json.dumps({'title_wrong_key': 'Updated'}),
+        data=json.dumps({'title': 5}),
         headers=headers,
         content_type=ContentType.JSON.value,
     )
