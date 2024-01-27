@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { MetPaper, MetHeader2 } from 'components/common';
+import { MetPaper, MetHeader2, PrimaryButton } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
-import { PrimaryButton } from 'components/common';
 import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
 import { Widget } from 'models/widget';
-import { useAppDispatch, useSubmittedPolls } from 'hooks';
+import { useAppDispatch, useSubmittedPolls, useAppSelector } from 'hooks';
 import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
-
-import { useAppSelector } from 'hooks';
 import { PollStatus } from 'constants/engagementStatus';
 interface PollWidgetViewProps {
     widget: Widget;
@@ -161,11 +158,9 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                     {!isLoggedIn && (
                         <>
                             {!isSubmitted ? (
-                                <>
-                                    <Grid item xs={12} sx={{ marginTop: '1em' }}>
-                                        <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
-                                    </Grid>
-                                </>
+                                <Grid item xs={12} sx={{ marginTop: '1em' }}>
+                                    <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
+                                </Grid>
                             ) : (
                                 <p style={{ color: responseMessage.color }}>{responseMessage.message}</p>
                             )}

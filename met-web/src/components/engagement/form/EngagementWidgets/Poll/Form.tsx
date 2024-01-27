@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
 import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
@@ -171,7 +171,7 @@ const Form = () => {
         }
     };
 
-    const handleaAnswerTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, property: string) => {
+    const handleAnswerTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, property: string) => {
         if (!pollAnswers) {
             return;
         }
@@ -279,51 +279,50 @@ const Form = () => {
             spacing={2}
             mt={'3em'}
         >
-            {pollAnswers &&
-                pollAnswers.map((tAnswer, index) => (
-                    <Grid
-                        item
-                        className={'answer' + (index + 1)}
-                        key={'answer' + index + 1}
-                        spacing={1}
-                        container
-                        mb={'1em'}
-                        xs={12}
-                    >
-                        <MetLabel sx={{ paddingLeft: '8px' }}>{'ANSWER ' + (index + 1)}</MetLabel>
+            {pollAnswers?.map((tAnswer, index) => (
+                <Grid
+                    item
+                    className={'answer' + (index + 1)}
+                    key={'answer' + index + 1}
+                    spacing={1}
+                    container
+                    mb={'1em'}
+                    xs={12}
+                >
+                    <MetLabel sx={{ paddingLeft: '8px' }}>{'ANSWER ' + (index + 1)}</MetLabel>
 
-                        <Grid item xs={12}>
-                            <MetLabel>Answer Text</MetLabel>
-                            <TextField
-                                name={'answerText' + (index + 1)}
-                                id={'answerText' + (index + 1)}
-                                variant="outlined"
-                                value={tAnswer.answer_text}
-                                fullWidth
-                                onChange={(answer: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleaAnswerTextChange(answer, index, 'answer_text');
-                                }}
-                            />
-                        </Grid>
-
-                        {1 < pollAnswers.length && (
-                            <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                                <SecondaryButton
-                                    value={index}
-                                    onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        handleRemoveAnswer(event);
-                                    }}
-                                >
-                                    Remove Answer
-                                </SecondaryButton>
-                            </Grid>
-                        )}
-
-                        <Grid item xs={12}>
-                            <Divider sx={{ marginTop: '1em' }} />
-                        </Grid>
+                    <Grid item xs={12}>
+                        <MetLabel>Answer Text</MetLabel>
+                        <TextField
+                            name={'answerText' + (index + 1)}
+                            id={'answerText' + (index + 1)}
+                            variant="outlined"
+                            value={tAnswer.answer_text}
+                            fullWidth
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                handleAnswerTextChange(e, index, 'answer_text');
+                            }}
+                        />
                     </Grid>
-                ))}
+
+                    {pollAnswers.length > 1 && (
+                        <Grid item xs={12} sx={{ marginTop: '8px' }}>
+                            <SecondaryButton
+                                value={index}
+                                onClick={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    handleRemoveAnswer(e);
+                                }}
+                            >
+                                Remove Answer
+                            </SecondaryButton>
+                        </Grid>
+                    )}
+
+                    <Grid item xs={12}>
+                        <Divider sx={{ marginTop: '1em' }} />
+                    </Grid>
+                </Grid>
+            ))}
             <Grid item>
                 <PrimaryButton onClick={() => handleAddAnswer()}>Add Answer</PrimaryButton>
             </Grid>
