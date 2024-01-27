@@ -15,8 +15,10 @@
 
 Test Utility for creating model factory.
 """
+from typing import Optional
 from faker import Faker
 from flask import current_app, g
+from met_api.auth import Auth
 
 from met_api.config import get_named_config
 from met_api.constants.engagement_status import Status
@@ -26,6 +28,7 @@ from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_settings import EngagementSettingsModel
+from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon as MetadataTaxon
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
@@ -49,10 +52,10 @@ from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
-    TestPollAnswerInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo,
-    TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap,
-    TestWidgetPollInfo, TestWidgetVideo)
-
+    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo,
+    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetVideo, TestJwtClaims,
+    TestEngagementMetadataTaxonInfo, TestEngagementMetadataInfo, TestPollAnswerInfo, TestPollResponseInfo,
+    TestWidgetPollInfo)
 
 CONFIG = get_named_config('testing')
 fake = Faker()
@@ -144,6 +147,8 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, na
         end_date=eng_info.get('end_date'),
         is_internal=eng_info.get('is_internal')
     )
+    if tenant_id := eng_info.get('tenant_id'):
+        engagement.tenant_id = tenant_id
     engagement.save()
     return engagement
 
@@ -161,17 +166,69 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
     return tenant
 
 
+def factory_engagement_metadata_model(
+        metadata_info: dict = TestEngagementMetadataInfo.metadata0):
+    """Produce a test-ready engagement metadata model."""
+    metadata = EngagementMetadata(
+        engagement_id=metadata_info.get('engagement_id'),
+        taxon_id=metadata_info.get('taxon_id'),
+        value=metadata_info.get('value', fake.text()),
+    )
+    metadata.save()
+    return metadata
+
+def factory_metadata_requirements(auth: Optional[Auth]=None):
+    """Create a tenant, an associated staff user, and engagement, for tests."""
+    tenant = factory_tenant_model()
+    tenant.short_name = fake.lexify(text='????').upper()
+    (engagement_info := TestEngagementInfo.engagement1.copy())['tenant_id'] = tenant.id
+    engagement = factory_engagement_model(engagement_info)
+    (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
+    factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
+    taxon = factory_metadata_taxon_model(tenant.id)
+    if auth:
+        headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role, tenant_id=tenant.short_name)
+        return taxon, engagement, tenant, headers
+    return taxon, engagement, tenant, None
+
+def factory_taxon_requirements(auth: Optional[Auth]=None):
+    """Create a tenant and staff user, and headers for auth."""
+    tenant = factory_tenant_model()
+    tenant.short_name = fake.lexify(text='????').upper()
+    (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
+    if auth:
+        headers = factory_auth_header(auth, claims=TestJwtClaims.staff_admin_role, tenant_id=tenant.short_name)
+        return tenant, headers
+    return tenant, None
+
+def factory_metadata_taxon_model(tenant_id: int = 1,
+        taxon_info: dict = TestEngagementMetadataTaxonInfo.taxon1):
+    """Produce a test-ready metadata taxon model."""
+    taxon = MetadataTaxon(
+        tenant_id=tenant_id,
+        name=taxon_info.get('name'),
+        description=taxon_info.get('description'),
+        freeform=taxon_info.get('freeform'),
+        data_type=taxon_info.get('data_type'),
+        default_value=taxon_info.get('default_value'),
+        one_per_engagement=taxon_info.get('one_per_engagement'),
+        position=taxon_info.get('position'),
+    )
+    taxon.save()
+    return taxon
+
+
 def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
     """Produce a staff user model."""
     # Generate a external id if not passed
-    external_id = fake.random_number(
-        digits=5) if external_id is None else external_id
+    external_id = external_id or fake.uuid4()
     user = StaffUserModel(
+        external_id=str(external_id),
         first_name=user_info['first_name'],
         last_name=user_info['last_name'],
         middle_name=user_info['middle_name'],
         email_address=user_info['email_address'],
-        external_id=str(external_id),
         status_id=user_info['status_id'],
         tenant_id=user_info['tenant_id'],
     )
@@ -216,11 +273,12 @@ def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, sta
     return feedback
 
 
-def factory_auth_header(jwt, claims):
+def factory_auth_header(jwt, claims, tenant_id=None):
     """Produce JWT tokens for use in tests."""
     return {
         'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
-        TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME'),
+        TENANT_ID_HEADER: (tenant_id or
+                           current_app.config.get('DEFAULT_TENANT_SHORT_NAME')),
     }
 
 
@@ -309,6 +367,8 @@ def patch_token_info(claims, monkeypatch):
     monkeypatch.setattr(
         'met_api.utils.user_context._get_token_info', token_info)
 
+    # Add a database user that matches the token
+    # factory_staff_user_model(external_id=claims.get('sub'))
 
 def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.slug1):
     """Produce a engagement model."""

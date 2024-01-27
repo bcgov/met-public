@@ -39,7 +39,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         }
 
         # Get the user and return
-        query_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups'
+        query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
         response.raise_for_status()
         return response.json()
@@ -64,7 +64,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         user_group_mapping = {}
         # Get the user and return
         for user_id in user_ids:
-            query_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups'
+            query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
             response = requests.get(query_user_url, headers=headers, timeout=timeout)
 
             if response.status_code == 200:
@@ -82,7 +82,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         base_url = keycloak['BASE_URL']
         realm = keycloak['REALMNAME']
         timeout = keycloak['CONNECT_TIMEOUT']
-        get_group_url = f'{base_url}/auth/admin/realms/{realm}/groups?search={group_name}'
+        get_group_url = f'{base_url}/admin/realms/{realm}/groups?search={group_name}'
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
@@ -139,7 +139,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-        remove_group_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+        remove_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
         response = requests.delete(remove_group_url, headers=headers,
                                    timeout=timeout)
         response.raise_for_status()
@@ -161,7 +161,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-        add_to_group_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+        add_to_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
         response = requests.put(add_to_group_url, headers=headers,
                                 timeout=timeout)
         response.raise_for_status()
@@ -169,16 +169,16 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def add_attribute_to_user(user_id: str, attribute_value: str, attribute_id: str = 'tenant_id'):
         """Add attribute to a keyclaok user.Default is set as tenant Id."""
-        config = current_app.config
-        base_url = config.get('KEYCLOAK_BASE_URL')
-        realm = config.get('KEYCLOAK_REALMNAME')
+        config = current_app.config['KEYCLOAK_CONFIG']
+        base_url = config.get('BASE_URL')
+        realm = config.get('REALMNAME')
         admin_token = KeycloakService._get_admin_token()
 
         tenant_attributes = {
             attribute_id: attribute_value
         }
 
-        user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}'
+        user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}'
         headers = {'Authorization': f'Bearer {admin_token}'}
         response = requests.get(user_url, headers=headers)
         user_data = response.json()
@@ -203,7 +203,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-        remove_from_group_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+        remove_from_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
         response = requests.delete(remove_from_group_url, headers=headers, timeout=timeout)
         response.raise_for_status()
 
@@ -223,7 +223,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Authorization': f'Bearer {admin_token}'
         }
 
-        add_user_url = f'{base_url}/auth/admin/realms/{realm}/users'
+        add_user_url = f'{base_url}/admin/realms/{realm}/users'
         response = requests.post(add_user_url, data=json.dumps(user), headers=headers,
                                  timeout=timeout)
         response.raise_for_status()
@@ -245,7 +245,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
             'Authorization': f'Bearer {admin_token}'
         }
         # Get the user and return
-        query_user_url = f'{base_url}/auth/admin/realms/{realm}/users?username={username}'
+        query_user_url = f'{base_url}/admin/realms/{realm}/users?username={username}'
         response = requests.get(query_user_url, headers=headers, timeout=timeout)
         return response.json()[0]
 
@@ -267,6 +267,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         }
 
         # Update the user's enabled status
-        update_user_url = f'{base_url}/auth/admin/realms/{realm}/users/{user_id}'
+        update_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}'
         response = requests.put(update_user_url, json=user_data, headers=headers, timeout=timeout)
         response.raise_for_status()

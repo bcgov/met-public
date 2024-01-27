@@ -17,7 +17,7 @@ from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
-from met_api.models.db import session_scope
+from met_api.models.db import db, transactional
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.participant import Participant as ParticipantModel
@@ -73,6 +73,7 @@ class SubmissionService:
         return PublicSubmissionSchema().dump(submission)
 
     @classmethod
+    @transactional()
     def create(cls, token, submission: SubmissionSchema):
         """Create submission."""
         cls._validate_fields(submission)
@@ -83,26 +84,24 @@ class SubmissionService:
         if SubmissionService.is_unpublished(engagement_id):
             return {}
 
-        # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
-        with session_scope() as session:
-            email_verification = EmailVerificationService().verify(
-                token, survey_id, None, session)
-            participant_id = email_verification.get('participant_id')
-            submission['participant_id'] = participant_id
-            submission['created_by'] = participant_id
-            submission['engagement_id'] = engagement_id
+        email_verification = EmailVerificationService().verify(
+            token, survey_id, None, db.session)
+        participant_id = email_verification.get('participant_id')
+        submission['participant_id'] = participant_id
+        submission['created_by'] = participant_id
+        submission['engagement_id'] = engagement_id
 
-            submission_result = SubmissionModel.create(submission, session)
-            submission['id'] = submission_result.id
-            comments = CommentService.extract_comments_from_survey(
-                submission, survey)
-            CommentService().create_comments(comments, session)
+        submission_result = SubmissionModel.create(submission, db.session)
+        submission['id'] = submission_result.id
+        comments = CommentService.extract_comments_from_survey(
+            submission, survey)
+        CommentService().create_comments(comments, db.session)
 
-            engagement_settings: EngagementSettingsModel =\
-                EngagementSettingsModel.find_by_id(engagement_id)
-            if engagement_settings:
-                if engagement_settings.send_report:
-                    SubmissionService._send_submission_response_email(participant_id, engagement_id)
+        engagement_settings: EngagementSettingsModel =\
+            EngagementSettingsModel.find_by_id(engagement_id)
+        if engagement_settings:
+            if engagement_settings.send_report:
+                SubmissionService._send_submission_response_email(participant_id, engagement_id)
         return submission_result
 
     @classmethod
@@ -123,14 +122,12 @@ class SubmissionService:
             return {}
 
         submission.comment_status_id = Status.Pending
-
-        with session_scope() as session:
-            EmailVerificationService().verify(
-                token, submission.survey_id, submission.id, session)
-            comments_result = [Comment.update(
-                submission.id, comment, session) for comment in data.get('comments', [])]
-            SubmissionModel.update(SubmissionSchema().dump(submission), session)
-            return comments_result
+        EmailVerificationService().verify(
+            token, submission.survey_id, submission.id, db.session)
+        comments_result = [Comment.update(submission.id, comment, db.session)
+                           for comment in data.get('comments', [])]
+        SubmissionModel.update(SubmissionSchema().dump(submission), db.session)
+        return comments_result
 
     @staticmethod
     def _validate_fields(submission):
@@ -158,22 +155,19 @@ class SubmissionService:
 
         staff_review_details['reviewed_by'] = reviewed_by
         staff_review_details['user_id'] = user.get('id')
+        should_send_email = SubmissionService._should_send_email(
+            submission_id, staff_review_details, submission.engagement_id)
+        submission = SubmissionModel.update_comment_status(
+            submission_id, staff_review_details, db.session)
+        if staff_notes := staff_review_details.get('staff_note', []):
+            cls.add_or_update_staff_note(
+                submission.survey_id, submission_id, staff_notes)
 
-        with session_scope() as session:
-            should_send_email = SubmissionService._should_send_email(
-                submission_id, staff_review_details, submission.engagement_id)
-            submission = SubmissionModel.update_comment_status(
-                submission_id, staff_review_details, session)
-            if staff_notes := staff_review_details.get('staff_note', []):
-                cls.add_or_update_staff_note(
-                    submission.survey_id, submission_id, staff_notes)
-
-            if should_send_email:
-                rejection_review_note = StaffNote.get_staff_note_by_type(
-                    submission_id, StaffNoteType.Review.name)
-                SubmissionService._trigger_email(
-                    rejection_review_note[0].note, session, staff_review_details, submission)
-        session.commit()
+        if should_send_email:
+            rejection_review_note = StaffNote.get_staff_note_by_type(
+                submission_id, StaffNoteType.Review.name)
+            SubmissionService._trigger_email(
+                rejection_review_note[0].note, db.session, staff_review_details, submission)
         return SubmissionSchema().dump(submission)
 
     @staticmethod

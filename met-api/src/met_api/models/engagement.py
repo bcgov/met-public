@@ -15,7 +15,6 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
-# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
@@ -39,6 +38,7 @@ class Engagement(BaseModel):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
+    status = db.relationship('EngagementStatus', backref='engagement')
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
@@ -47,6 +47,7 @@ class Engagement(BaseModel):
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    tenant = db.relationship('Tenant', backref='engagements')
     is_internal = db.Column(db.Boolean, nullable=False)
     consent_message = db.Column(JSON, unique=False, nullable=True)
 

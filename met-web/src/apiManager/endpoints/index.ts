@@ -8,9 +8,19 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
     EngagementMetadata: {
-        CREATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
-        UPDATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
-        GET: `${AppConfig.apiUrl}/engagementsmetadata/engagement_id`,
+        GET_BY_ENG: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
+        GET_BY_KEY: `${AppConfig.apiUrl}/engagements/engagement_id/tenant/tenant_id/key`,
+        CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
+        UPDATE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata/key`,
+        DELETE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata/key`,
+    },
+    MetadataTaxa: {
+        GET_BY_TENANT: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/`,
+        REORDER: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/`,
+        CREATE: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/tenant_id`,
+        GET: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/taxon_id`,
+        UPDATE: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/taxon_id`,
+        DELETE: `${AppConfig.apiUrl}/tenants/tenant_id/taxa/taxon_id`,
     },
     EngagementSettings: {
         CREATE: `${AppConfig.apiUrl}/engagementsettings/`,

@@ -29,12 +29,12 @@ def cors_preflight(methods):
 
     def wrapper(f):
         def options(self, *args, **kwargs):  # pylint: disable=unused-argument
-            return {'Allow': 'GET, DELETE, PUT, POST'}, 200, \
-                   {
-                       'Access-Control-Allow-Origin': '*',
-                       'Access-Control-Allow-Methods': methods,
-                       'Access-Control-Allow-Headers': 'Authorization, Content-Type, registries-trace-id, '
-                                                       'invitation_token'}
+            return {'Allow': 'GET, DELETE, PUT, POST'}, 200, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': methods,
+                'Access-Control-Allow-Headers': 'Authorization, Content-Type, '
+                                                'registries-trace-id, invitation_token'
+            }
 
         setattr(f, 'options', options)
         return f
