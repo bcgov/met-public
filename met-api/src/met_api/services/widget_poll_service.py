@@ -90,7 +90,7 @@ class WidgetPollService:
 
     @staticmethod
     def is_poll_engagement_published(poll_id: int) -> bool:
-        """Check if the poll is active."""
+        """Check if the poll is published."""
         try:
             poll = WidgetPollService.get_poll_by_id(poll_id)
             engagement = EngagementService().get_engagement(poll.engagement_id)
@@ -131,6 +131,12 @@ class WidgetPollService:
     @staticmethod
     def _handle_poll_answers(poll_id: int, poll_data: dict):
         """Handle poll answers creation and deletion."""
-        PollAnswerService.delete_poll_answers(poll_id)
-        answers_data = poll_data.get('answers', [])
-        PollAnswerService.create_bulk_poll_answers(poll_id, answers_data)
+        try:
+            if 'answers' in poll_data and len(poll_data['answers']) > 0:
+                PollAnswerService.delete_poll_answers(poll_id)
+                answers_data = poll_data.get('answers', [])
+                PollAnswerService.create_bulk_poll_answers(
+                    poll_id, answers_data
+                )
+        except Exception as exc:
+            raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc

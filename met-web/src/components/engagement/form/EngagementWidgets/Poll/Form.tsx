@@ -14,6 +14,8 @@ import PollDisplay from './PollDisplay';
 import { ActionContext } from '../../ActionContext';
 import { EngagementStatus, PollStatus } from 'constants/engagementStatus';
 import Alert from '@mui/material/Alert';
+import usePollWidgetState from './PollWidget.hook';
+import PollAnswerForm from './PollAnswerForm';
 
 interface WidgetState {
     id: number;
@@ -48,35 +50,13 @@ const STATUS_ITEMS = [
 const interactionEnabled = false;
 
 const Form = () => {
-    const newAnswer = { id: 0, answer_text: '' };
     const dispatch = useAppDispatch();
     const { widget, isLoadingPollWidget, pollWidget } = useContext(PollContext);
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
     const { savedEngagement } = useContext(ActionContext);
-    const [isEngagementPublished, setIsEngagementPublished] = React.useState(false);
-
-    const [pollAnswers, setPollAnswers] = React.useState<PollAnswer[]>(pollWidget ? pollWidget.answers : [newAnswer]);
-    const [pollWidgetState, setPollWidgetState] = React.useState<WidgetState>({
-        id: pollWidget?.id || 0,
-        description: pollWidget?.description || '',
-        title: pollWidget?.title || '',
-        answers: pollWidget?.answers || [],
-        status: pollWidget?.status || PollStatus.Active,
-        widget_id: widget?.id || 0,
-        engagement_id: widget?.engagement_id || 0,
-    });
-
-    useEffect(() => {
-        if (pollWidget) {
-            setPollAnswers(pollWidget.answers);
-            setPollWidgetState(pollWidget);
-        }
-
-        if (savedEngagement && savedEngagement.status_id === EngagementStatus.Published) {
-            setIsEngagementPublished(true);
-        }
-    }, [pollWidget]);
+    const { pollAnswers, setPollAnswers, pollWidgetState, setPollWidgetState, isEngagementPublished } =
+        usePollWidgetState(pollWidget, savedEngagement, widget);
 
     const handleOnSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -171,36 +151,9 @@ const Form = () => {
         }
     };
 
-    const handleAnswerTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, property: string) => {
-        if (!pollAnswers) {
-            return;
-        }
-        const newValue = e.currentTarget.value;
-        const newArray = [...pollAnswers];
-        if ('answer_text' === property) {
-            newArray[index].answer_text = newValue;
-            setPollAnswers([...newArray]);
-            setPollWidgetState({ ...pollWidgetState, answers: [...newArray] });
-        }
-    };
-
-    const handleRemoveAnswer = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!pollAnswers) {
-            return;
-        }
-        const position = Number(event.target.value);
-        const dataToSplice: PollAnswer[] = [...pollAnswers];
-        dataToSplice.splice(position, 1);
-        setPollAnswers([...dataToSplice]);
-        setPollWidgetState({ ...pollWidgetState, answers: [...dataToSplice] });
-    };
-
-    const handleAddAnswer = () => {
-        if (!pollAnswers) {
-            return;
-        }
-        const newAnswerCorrectIndex = newAnswer;
-        setPollAnswers([...pollAnswers, newAnswerCorrectIndex]);
+    const handlePollAnswersChange = (answers: PollAnswer[]) => {
+        setPollAnswers(answers);
+        setPollWidgetState({ ...pollWidgetState, answers: [...answers] });
     };
 
     const engagementPublishedAlert = (
@@ -269,64 +222,7 @@ const Form = () => {
     );
 
     const pollAnswersField = (
-        <Grid
-            item
-            xs={12}
-            container
-            direction="column"
-            alignItems={'stretch'}
-            justifyContent="flex-start"
-            spacing={2}
-            mt={'3em'}
-        >
-            {pollAnswers?.map((tAnswer, index) => (
-                <Grid
-                    item
-                    className={'answer' + (index + 1)}
-                    key={'answer' + index + 1}
-                    spacing={1}
-                    container
-                    mb={'1em'}
-                    xs={12}
-                >
-                    <MetLabel sx={{ paddingLeft: '8px' }}>{'ANSWER ' + (index + 1)}</MetLabel>
-
-                    <Grid item xs={12}>
-                        <MetLabel>Answer Text</MetLabel>
-                        <TextField
-                            name={'answerText' + (index + 1)}
-                            id={'answerText' + (index + 1)}
-                            variant="outlined"
-                            value={tAnswer.answer_text}
-                            fullWidth
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                handleAnswerTextChange(e, index, 'answer_text');
-                            }}
-                        />
-                    </Grid>
-
-                    {pollAnswers.length > 1 && (
-                        <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                            <SecondaryButton
-                                value={index}
-                                onClick={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleRemoveAnswer(e);
-                                }}
-                            >
-                                Remove Answer
-                            </SecondaryButton>
-                        </Grid>
-                    )}
-
-                    <Grid item xs={12}>
-                        <Divider sx={{ marginTop: '1em' }} />
-                    </Grid>
-                </Grid>
-            ))}
-            <Grid item>
-                <PrimaryButton onClick={() => handleAddAnswer()}>Add Answer</PrimaryButton>
-            </Grid>
-        </Grid>
+        <PollAnswerForm initialPollAnswers={pollAnswers} onPollAnswersChange={handlePollAnswersChange} />
     );
 
     const pollStatusField = (
