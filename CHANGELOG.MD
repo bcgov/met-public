@@ -1,3 +1,7 @@
+## January 29, 2024
+- **Task** Updated Babel Traverse library. [🎟️DESENG-474](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-474)
+  - Run `npm audit fix` to update the vulnerable Babel traverse library.
+
 ## January 25, 2024
 - **Task** Resolve issue preventing met-web from deploying on the Dev OpenShift environment. [🎟️DESENG-469](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-469)
   - Remove Epic Engage-related links and update Keycloak link.
