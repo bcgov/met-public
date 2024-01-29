@@ -32,8 +32,8 @@ from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-VIEW_TAXA_ROLES = [Role.VIEW_TENANT.value, Role.CREATE_TENANT.value]
-MODIFY_TAXA_ROLES = [Role.CREATE_TENANT.value]
+VIEW_TAXA_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.CREATE_ENGAGEMENT.value]
+MODIFY_TAXA_ROLES = [Role.EDIT_ENGAGEMENT.value]
 TAXON_NOT_FOUND_MSG = 'Metadata taxon was not found'
 
 API = Namespace('metadata_taxa', description="Endpoints for managing the taxa "

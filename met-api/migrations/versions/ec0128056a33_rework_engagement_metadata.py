@@ -69,8 +69,9 @@ def upgrade():
     # Create a foreign key constraint
     op.create_foreign_key('fk_engagement_meta_taxon', 'engagement_metadata', 'engagement_metadata_taxa', ['taxon_id'], ['id'], ondelete='CASCADE')
 
-    # Remove the 'project_tracking_id' column
+    # Remove the 'project_tracking_id' and 'project_metadata' column
     op.drop_column('engagement_metadata', 'project_tracking_id')
+    op.drop_column('engagement_metadata', 'project_metadata')
 
     # add default taxa for default tenant
     default_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
@@ -147,6 +148,7 @@ def upgrade():
 
 
 def downgrade():
+    op.add_column('engagement_metadata', sa.Column('project_metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True))
     op.add_column('engagement_metadata', sa.Column('project_tracking_id', sa.VARCHAR(length=100), autoincrement=False, nullable=True))
     op.alter_column('engagement_metadata', 'engagement_id', existing_type=sa.INTEGER(), nullable=False)
     op.drop_constraint('fk_engagement_meta_taxon', 'engagement_metadata', type_='foreignkey')
@@ -157,6 +159,6 @@ def downgrade():
     op.drop_column('engagement_metadata', 'id')
     op.drop_index(op.f('ix_engagement_metadata_taxa_position'), table_name='engagement_metadata_taxa')
     # add primary key constraint to engagement_metadata.engagement_id
-    op.create_primary_key('pk_engagement_metadata', 'engagement_metadata', ['engagement_id'])
+    op.create_primary_key('engagement_metadata_pkey', 'engagement_metadata', ['engagement_id'])
     op.drop_table('engagement_metadata_taxa')
     # ### end Alembic commands ###
