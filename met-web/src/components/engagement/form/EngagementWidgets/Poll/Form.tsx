@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
 import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
@@ -12,20 +12,10 @@ import { WidgetTitle } from '../WidgetTitle';
 import { PollAnswer } from 'models/pollWidget';
 import PollDisplay from './PollDisplay';
 import { ActionContext } from '../../ActionContext';
-import { EngagementStatus, PollStatus } from 'constants/engagementStatus';
+import { PollStatus } from 'constants/engagementStatus';
 import Alert from '@mui/material/Alert';
 import usePollWidgetState from './PollWidget.hook';
 import PollAnswerForm from './PollAnswerForm';
-
-interface WidgetState {
-    id: number;
-    title: string;
-    description: string;
-    answers: PollAnswer[];
-    status: string;
-    widget_id: number;
-    engagement_id: number;
-}
 
 interface DetailsForm {
     title: string;
