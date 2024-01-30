@@ -25,80 +25,80 @@ from met_api.utils.enums import ContentType
 class KeycloakService:  # pylint: disable=too-few-public-methods
     """Keycloak services."""
 
-    @staticmethod
-    def get_user_groups(user_id):
-        """Get user group from Keycloak by userid."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        admin_token = KeycloakService._get_admin_token()
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
+    # @staticmethod
+    # def get_user_groups(user_id):
+    #     """Get user group from Keycloak by userid."""
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     base_url = keycloak['BASE_URL']
+    #     realm = keycloak['REALMNAME']
+    #     admin_token = KeycloakService._get_admin_token()
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
 
-        # Get the user and return
-        query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
-        response = requests.get(query_user_url, headers=headers, timeout=timeout)
-        response.raise_for_status()
-        return response.json()
+    #     # Get the user and return
+    #     query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
+    #     response = requests.get(query_user_url, headers=headers, timeout=timeout)
+    #     response.raise_for_status()
+    #     return response.json()
 
-    @staticmethod
-    def get_users_groups(user_ids: List):
-        """Get user groups from Keycloak by user ids.For bulk purposes."""
-        # TODO if List is bigger than a number ; if so reject.
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        # TODO fix this during tests and remove below
-        if not base_url:
-            return {}
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        admin_token = KeycloakService._get_admin_token()
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        user_group_mapping = {}
-        # Get the user and return
-        for user_id in user_ids:
-            query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
-            response = requests.get(query_user_url, headers=headers, timeout=timeout)
+    # @staticmethod
+    # def get_users_groups(user_ids: List):
+    #     """Get user groups from Keycloak by user ids.For bulk purposes."""
+    #     # TODO if List is bigger than a number ; if so reject.
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     base_url = keycloak['BASE_URL']
+    #     # TODO fix this during tests and remove below
+    #     if not base_url:
+    #         return {}
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     realm = keycloak['REALMNAME']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     admin_token = KeycloakService._get_admin_token()
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
+    #     user_group_mapping = {}
+    #     # Get the user and return
+    #     for user_id in user_ids:
+    #         query_user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups'
+    #         response = requests.get(query_user_url, headers=headers, timeout=timeout)
 
-            if response.status_code == 200:
-                if (groups := response.json()) is not None:
-                    user_group_mapping[user_id] = [group.get('name') for group in groups]
-            else:
-                user_group_mapping[user_id] = []
+    #         if response.status_code == 200:
+    #             if (groups := response.json()) is not None:
+    #                 user_group_mapping[user_id] = [group.get('name') for group in groups]
+    #         else:
+    #             user_group_mapping[user_id] = []
 
-        return user_group_mapping
+    #     return user_group_mapping
 
-    @staticmethod
-    def _get_group_id(admin_token: str, group_name: str):
-        """Get a group id for the group name."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        get_group_url = f'{base_url}/admin/realms/{realm}/groups?search={group_name}'
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        response = requests.get(get_group_url, headers=headers, timeout=timeout)
-        return KeycloakService._find_group_or_subgroup_id(response.json(), group_name)
+    # @staticmethod
+    # def _get_group_id(admin_token: str, group_name: str):
+    #     """Get a group id for the group name."""
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     base_url = keycloak['BASE_URL']
+    #     realm = keycloak['REALMNAME']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     get_group_url = f'{base_url}/admin/realms/{realm}/groups?search={group_name}'
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
+    #     response = requests.get(get_group_url, headers=headers, timeout=timeout)
+    #     return KeycloakService._find_group_or_subgroup_id(response.json(), group_name)
 
-    @staticmethod
-    def _find_group_or_subgroup_id(groups: list, group_name: str):
-        """Return group id by searching main and sub groups."""
-        for group in groups:
-            if group['name'] == group_name:
-                return group['id']
-            if group_id := KeycloakService._find_group_or_subgroup_id(group['subGroups'], group_name):
-                return group_id
-        return None
+    # @staticmethod
+    # def _find_group_or_subgroup_id(groups: list, group_name: str):
+    #     """Return group id by searching main and sub groups."""
+    #     for group in groups:
+    #         if group['name'] == group_name:
+    #             return group['id']
+    #         if group_id := KeycloakService._find_group_or_subgroup_id(group['subGroups'], group_name):
+    #             return group_id
+    #     return None
 
     @staticmethod
     def _get_admin_token():
@@ -122,49 +122,49 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         )
         return response.json().get('access_token')
 
-    @staticmethod
-    def _remove_user_from_group(user_id: str, group_name: str):
-        """Remove user from the keycloak group."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        # Create an admin token
-        admin_token = KeycloakService._get_admin_token()
-        # Get the '$group_name' group
-        group_id = KeycloakService._get_group_id(admin_token, group_name)
+    # @staticmethod
+    # def _remove_user_from_group(user_id: str, group_name: str):
+    #     """Remove user from the keycloak group."""
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     base_url = keycloak['BASE_URL']
+    #     realm = keycloak['REALMNAME']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     # Create an admin token
+    #     admin_token = KeycloakService._get_admin_token()
+    #     # Get the '$group_name' group
+    #     group_id = KeycloakService._get_group_id(admin_token, group_name)
 
-        # Add user to the keycloak group '$group_name'
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        remove_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
-        response = requests.delete(remove_group_url, headers=headers,
-                                   timeout=timeout)
-        response.raise_for_status()
+    #     # Add user to the keycloak group '$group_name'
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
+    #     remove_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+    #     response = requests.delete(remove_group_url, headers=headers,
+    #                                timeout=timeout)
+    #     response.raise_for_status()
 
-    @staticmethod
-    def add_user_to_group(user_id: str, group_name: str):
-        """Add user to the keycloak group."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        # Create an admin token
-        admin_token = KeycloakService._get_admin_token()
-        # Get the '$group_name' group
-        group_id = KeycloakService._get_group_id(admin_token, group_name)
+    # @staticmethod
+    # def add_user_to_group(user_id: str, group_name: str):
+    #     """Add user to the keycloak group."""
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     base_url = keycloak['BASE_URL']
+    #     realm = keycloak['REALMNAME']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     # Create an admin token
+    #     admin_token = KeycloakService._get_admin_token()
+    #     # Get the '$group_name' group
+    #     group_id = KeycloakService._get_group_id(admin_token, group_name)
 
-        # Add user to the keycloak group '$group_name'
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        add_to_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
-        response = requests.put(add_to_group_url, headers=headers,
-                                timeout=timeout)
-        response.raise_for_status()
+    #     # Add user to the keycloak group '$group_name'
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
+    #     add_to_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+    #     response = requests.put(add_to_group_url, headers=headers,
+    #                             timeout=timeout)
+    #     response.raise_for_status()
 
     @staticmethod
     def add_attribute_to_user(user_id: str, attribute_value: str, attribute_id: str = 'tenant_id'):
@@ -186,26 +186,26 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         requests.put(user_url, json=user_data, headers=headers)
         response.raise_for_status()
 
-    @staticmethod
-    def remove_user_from_group(user_id: str, group_name: str):
-        """Remove user from the keycloak group."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        # Create an admin token
-        admin_token = KeycloakService._get_admin_token()
-        # Get the '$group_name' group
-        group_id = KeycloakService._get_group_id(admin_token, group_name)
+    # @staticmethod
+    # def remove_user_from_group(user_id: str, group_name: str):
+    #     """Remove user from the keycloak group."""
+    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
+    #     base_url = keycloak['BASE_URL']
+    #     realm = keycloak['REALMNAME']
+    #     timeout = keycloak['CONNECT_TIMEOUT']
+    #     # Create an admin token
+    #     admin_token = KeycloakService._get_admin_token()
+    #     # Get the '$group_name' group
+    #     group_id = KeycloakService._get_group_id(admin_token, group_name)
 
-        # Remove user from the keycloak group '$group_name'
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        remove_from_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
-        response = requests.delete(remove_from_group_url, headers=headers, timeout=timeout)
-        response.raise_for_status()
+    #     # Remove user from the keycloak group '$group_name'
+    #     headers = {
+    #         'Content-Type': ContentType.JSON.value,
+    #         'Authorization': f'Bearer {admin_token}'
+    #     }
+    #     remove_from_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
+    #     response = requests.delete(remove_from_group_url, headers=headers, timeout=timeout)
+    #     response.raise_for_status()
 
     @staticmethod
     def add_user(user: dict):
@@ -217,7 +217,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         realm = keycloak['REALMNAME']
         timeout = keycloak['CONNECT_TIMEOUT']
 
-        # Add user to the keycloak group '$group_name'
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'

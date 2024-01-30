@@ -7,51 +7,40 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
 from met_api.utils.user_context import UserContext, user_context
-from met_api.utils.constants import Groups
 from met_api.utils.enums import UserStatus
 
 
 class StaffUserMembershipService:
     """Staff User Membership management service."""
 
+    # TODO: Restore a way to add users to composite roles.
     @classmethod
     @user_context
-    def reassign_user(cls, user_id, group_name, **kwargs):
-        """Add user to a new group and reassign memberships."""
-        user = StaffUserService.get_user_by_id(user_id, include_groups=True)
+    def reassign_user(cls, user_id, **kwargs):
+        """Add user to a new composite role and reassign memberships."""
+        user = StaffUserService.get_user_by_id(user_id, include_roles=True)
         if not user:
             raise BusinessException(
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
         external_id = user.get('external_id', None)
-        main_group = user.get('main_group', None)
 
-        if any([not external_id, not main_group]):
+        # TODO: Put check for composite role membership into this conditional.
+        if not external_id:
             raise BusinessException(
                 error='Invalid User.',
                 status_code=HTTPStatus.BAD_REQUEST)
 
-        if group_name not in Groups.__members__:
-            raise BusinessException(
-                error='Invalid Group.',
-                status_code=HTTPStatus.BAD_REQUEST)
-
-        if main_group == group_name:
-            raise BusinessException(
-                error='User is already a member of this group.',
-                status_code=HTTPStatus.BAD_REQUEST)
-
         user_from_context: UserContext = kwargs['user_context']
+
         if external_id == user_from_context.sub:
             raise BusinessException(
-                error='User cannot change their own group.',
+                error='User cannot change their own permission level.',
                 status_code=HTTPStatus.CONFLICT.value)
 
-        StaffUserService.remove_user_from_group(external_id, Groups.get_name_by_value(main_group))
-        StaffUserService.add_user_to_group(external_id, group_name)
         MembershipService.revoke_memberships_bulk(user_id)
-        new_user = StaffUserService.get_user_by_id(user_id, include_groups=True)
+        new_user = StaffUserService.get_user_by_id(user_id, include_roles=True)
         return StaffUserSchema().dump(new_user)
 
     @staticmethod

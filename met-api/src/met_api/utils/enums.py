@@ -59,8 +59,7 @@ class LoginSource(Enum):
     IDIR = 'idir'
 
 
-class KeycloakGroups(Enum):
-    """Login Source."""
+class KeycloakPermissionLevels(Enum):
 
     IT_ADMIN = 'Administrator'
     IT_VIEWER = 'Viewer'
@@ -68,8 +67,8 @@ class KeycloakGroups(Enum):
     REVIEWER = 'Reviewer'
 
 
-class KeycloakGroupName(Enum):
-    """Keycloak group names."""
+class KeycloakCompositeRoleNames(Enum):
+    """Keycloak composite role names."""
 
     IT_ADMIN = 'IT_ADMIN'
     IT_VIEWER = 'IT_VIEWER'
