@@ -16,6 +16,7 @@ from met_api.utils.user_context import UserContext, user_context
 
 UNAUTHORIZED_MSG = 'You are not authorized to perform this action!'
 
+
 # pylint: disable=unused-argument
 @user_context
 def check_auth(**kwargs):

@@ -27,8 +27,8 @@ from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
-from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon as MetadataTaxon
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.membership import Membership as MembershipModel
@@ -51,14 +51,16 @@ from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestEngagementSlugInfo, TestFeedbackInfo, TestParticipantInfo,
-    TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetVideo, TestJwtClaims,
-    TestEngagementMetadataTaxonInfo, TestEngagementMetadataInfo, TestPollAnswerInfo, TestPollResponseInfo,
-    TestWidgetPollInfo)
+    TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
+    TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo, TestPollAnswerInfo,
+    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo,
+    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
+    TestWidgetVideo)
+
+
+fake = Faker()
 
 CONFIG = get_named_config('testing')
-fake = Faker()
 
 JWT_HEADER = {
     'alg': CONFIG.JWT_OIDC_TEST_ALGORITHMS,
@@ -177,7 +179,8 @@ def factory_engagement_metadata_model(
     metadata.save()
     return metadata
 
-def factory_metadata_requirements(auth: Optional[Auth]=None):
+
+def factory_metadata_requirements(auth: Optional[Auth] = None):
     """Create a tenant, an associated staff user, and engagement, for tests."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
@@ -191,7 +194,8 @@ def factory_metadata_requirements(auth: Optional[Auth]=None):
         return taxon, engagement, tenant, headers
     return taxon, engagement, tenant, None
 
-def factory_taxon_requirements(auth: Optional[Auth]=None):
+
+def factory_taxon_requirements(auth: Optional[Auth] = None):
     """Create a tenant and staff user, and headers for auth."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
@@ -202,8 +206,9 @@ def factory_taxon_requirements(auth: Optional[Auth]=None):
         return tenant, headers
     return tenant, None
 
+
 def factory_metadata_taxon_model(tenant_id: int = 1,
-        taxon_info: dict = TestEngagementMetadataTaxonInfo.taxon1):
+                                 taxon_info: dict = TestEngagementMetadataTaxonInfo.taxon1):
     """Produce a test-ready metadata taxon model."""
     taxon = MetadataTaxon(
         tenant_id=tenant_id,
@@ -369,6 +374,7 @@ def patch_token_info(claims, monkeypatch):
 
     # Add a database user that matches the token
     # factory_staff_user_model(external_id=claims.get('sub'))
+
 
 def factory_engagement_slug_model(eng_slug_info: dict = TestEngagementSlugInfo.slug1):
     """Produce a engagement model."""

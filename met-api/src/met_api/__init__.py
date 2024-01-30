@@ -138,8 +138,8 @@ def setup_jwt_manager(app_context, jwt_manager):
             token_info = token_info.get(key, None)
             if token_info is None:
                 app_context.logger.warning('Unable to find role in token_info. '
-                                         'Please check your JWT_ROLE_CALLBACK '
-                                         'configuration.')
+                                           'Please check your JWT_ROLE_CALLBACK '
+                                           'configuration.')
                 return []
         return token_info
 

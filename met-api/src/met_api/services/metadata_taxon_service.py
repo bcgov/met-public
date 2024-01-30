@@ -8,6 +8,7 @@ from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.models.tenant import Tenant
 from met_api.schemas.engagement_metadata import MetadataTaxonSchema
 
+
 class MetadataTaxonService:
     """Metadata taxon management service."""
 
@@ -19,7 +20,6 @@ class MetadataTaxonService:
             return None
         return dict(MetadataTaxonSchema().dump(taxon))
 
-
     @staticmethod
     def get_by_tenant(tenant_id: int) -> List[dict]:
         """Get all taxa for a tenant."""
@@ -27,7 +27,6 @@ class MetadataTaxonService:
         results = tenant.metadata_taxa if tenant else []
         sorted_results = sorted(results, key=lambda taxon: taxon.position)
         return MetadataTaxonSchema(many=True).dump(sorted_results)
-
 
     @staticmethod
     def create(tenant_id: int, taxon_data: dict) -> dict:
@@ -37,7 +36,6 @@ class MetadataTaxonService:
         taxon.position = MetadataTaxon.query.filter_by(tenant_id=tenant_id).count() + 1
         taxon.save()
         return dict(MetadataTaxonSchema().dump(taxon))
-
 
     @staticmethod
     def update(taxon_id: int, taxon_data: dict) -> Union[dict, list]:
@@ -54,6 +52,8 @@ class MetadataTaxonService:
     @transactional()
     def reorder_tenant(tenant_id: int, taxon_ids: List[int]) -> List[dict]:
         """
+        Reorder Tenant.
+
         Reorder all taxa within a specific tenant based on a provided list of taxon IDs,
         setting their positions accordingly.
         """
@@ -73,13 +73,13 @@ class MetadataTaxonService:
         # contiguous, so we need to ensure that all taxa have a valid position
         return MetadataTaxonService.auto_order_tenant(tenant_id)
 
-
     @staticmethod
     @transactional()
     def auto_order_tenant(tenant_id: int) -> List[dict]:
         """
-        Automatically order all taxa within a specific tenant based on their
-        current positions. This has the benefit of ensuring that the position
+        Automatically order all taxa within a specific tenant based on their current positions.
+
+        This has the benefit of ensuring that the position
         indices are contiguous and that there are no gaps or duplicates. The
         new ordering will be as close to the original as possible.
         """
