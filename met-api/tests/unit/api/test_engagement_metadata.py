@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Tests for the Engagement Metadata endpoints.
-"""
+"""Tests for the Engagement Metadata endpoints."""
 
 import json
 from http import HTTPStatus
@@ -22,18 +20,17 @@ from faker import Faker
 from met_api.utils.enums import ContentType
 from met_api.services.engagement_metadata_service import EngagementMetadataService
 from met_api.services.metadata_taxon_service import MetadataTaxonService
+from tests.utilities.factory_scenarios import TestEngagementMetadataInfo, TestJwtClaims, TestTenantInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_metadata_model,
-    factory_metadata_taxon_model,
-    factory_tenant_model, factory_metadata_requirements)
-from tests.utilities.factory_scenarios import (
-    TestJwtClaims, TestEngagementMetadataInfo, 
-    TestTenantInfo)
+    factory_auth_header, factory_engagement_metadata_model, factory_metadata_requirements, factory_metadata_taxon_model,
+    factory_tenant_model)
+
+
+fake = Faker()
 
 engagement_metadata_service = EngagementMetadataService()
 metatada_taxon_service = MetadataTaxonService()
 
-fake = Faker()
 
 def test_get_engagement_metadata(client, jwt, session):
     """Test that metadata can be retrieved by engagement id."""
@@ -41,14 +38,14 @@ def test_get_engagement_metadata(client, jwt, session):
     assert engagement and engagement.id is not None
     assert taxon and taxon.id is not None
     metadata = factory_engagement_metadata_model({
-        'engagement_id':engagement.id,
-        'taxon_id':taxon.id,
+        'engagement_id': engagement.id,
+        'taxon_id': taxon.id,
         'value': fake.sentence(),
     })
     existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
     assert existing_metadata is not None
     response = client.get(f'/api/engagements/{engagement.id}/metadata',
-                            headers=headers, content_type=ContentType.JSON.value)
+                          headers=headers, content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
     metadata_list = response.json
     assert len(metadata_list) == 1
@@ -60,28 +57,29 @@ def test_add_engagement_metadata(client, jwt, session):
     """Test that metadata can be added to an engagement."""
     taxon, engagement, _, headers = factory_metadata_requirements(jwt)
     data = {
-        'taxon_id':taxon.id,
+        'taxon_id': taxon.id,
         'value': fake.sentence(),
     }
     response = client.post(f'/api/engagements/{engagement.id}/metadata',
-                            headers=headers,
-                            data=json.dumps(data),
-                            content_type=ContentType.JSON.value)
+                           headers=headers,
+                           data=json.dumps(data),
+                           content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.CREATED
     assert response.json.get('id') is not None
     assert response.json.get('value') == data['value']
     assert response.json.get('engagement_id') == engagement.id
 
+
 def test_add_engagement_metadata_invalid_engagement(client, jwt, session):
     """Test that metadata cannot be added to an invalid engagement."""
     taxon, engagement, _, headers = factory_metadata_requirements(jwt)
-    data = {'taxon_id':taxon.id, 'value': fake.sentence()}
+    data = {'taxon_id': taxon.id, 'value': fake.sentence()}
     response = client.post(f'/api/engagements/{engagement.id+1}/metadata',
-                            headers=headers,
-                            data=json.dumps(data),
-                            content_type=ContentType.JSON.value)
-    assert response.status_code == HTTPStatus.NOT_FOUND, (f"Wrong response code; "
-            f"HTTP {response.status_code} -> {response.text}")
+                           headers=headers,
+                           data=json.dumps(data),
+                           content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.NOT_FOUND, (f'Wrong response code; '
+                                                          f'HTTP {response.status_code} -> {response.text}')
 
 
 def test_add_engagement_metadata_invalid_tenant(client, jwt, session):
@@ -91,13 +89,14 @@ def test_add_engagement_metadata_invalid_tenant(client, jwt, session):
     tenant2 = factory_tenant_model(TestTenantInfo.tenant2)
     assert tenant2.id != tenant.id
     taxon = factory_metadata_taxon_model(tenant2.id)
-    data = {'taxon_id':taxon.id, 'value': fake.sentence()}
+    data = {'taxon_id': taxon.id, 'value': fake.sentence()}
     response = client.post(f'/api/engagements/{engagement.id}/metadata',
-                            headers=headers,
-                            data=json.dumps(data),
-                            content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.BAD_REQUEST, (f"Wrong response code; "
-            f"HTTP {response.status_code} -> {response.text}")
+                           headers=headers,
+                           data=json.dumps(data),
+                           content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.BAD_REQUEST, (f'Wrong response code; '
+                                                            f'HTTP {response.status_code} -> {response.text}')
+
 
 def test_add_engagement_metadata_invalid_user(client, jwt, session):
     """Test that metadata cannot be added by an unauthorized user."""
@@ -106,40 +105,42 @@ def test_add_engagement_metadata_invalid_user(client, jwt, session):
     metadata_info = TestEngagementMetadataInfo.metadata1
     metadata_info['taxon_id'] = taxon.id
     response = client.post(f'/api/engagements/{engagement.id}/metadata',
-                            headers=headers,
-                            data=json.dumps(metadata_info),
-                            content_type=ContentType.JSON.value)  
+                           headers=headers,
+                           data=json.dumps(metadata_info),
+                           content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.UNAUTHORIZED
+
 
 def test_update_engagement_metadata(client, jwt, session):
     """Test that metadata values can be updated."""
     taxon, engagement, _, headers = factory_metadata_requirements(jwt)
     metadata = factory_engagement_metadata_model({
-        'taxon_id':taxon.id, 
-        'engagement_id':engagement.id,
+        'taxon_id': taxon.id,
+        'engagement_id': engagement.id,
         'value': 'old value'
     })
     response = client.patch(f'/api/engagements/{engagement.id}/metadata/{metadata.id}',
                             headers=headers,
                             data=json.dumps({'value': 'new value'}),
                             content_type=ContentType.JSON.value)
-    assert response.status_code == HTTPStatus.OK, (f"Wrong response code; "
-            f"HTTP {response.status_code} -> {response.text}")
+    assert response.status_code == HTTPStatus.OK, (f'Wrong response code; '
+                                                   f'HTTP {response.status_code} -> {response.text}')
     assert response.json is not None
     assert response.json.get('id') == metadata.id
     assert response.json.get('engagement_id') == engagement.id
     assert response.json.get('value') == 'new value'
 
+
 def test_delete_engagement_metadata(client, jwt, session):
     """Test that metadata can be deleted."""
     taxon, engagement, _, headers = factory_metadata_requirements(jwt)
     metadata = factory_engagement_metadata_model({
-        'engagement_id':engagement.id,
-        'taxon_id':taxon.id,
+        'engagement_id': engagement.id,
+        'taxon_id': taxon.id,
         'value': fake.sentence(),
     })
     response = client.delete(f'/api/engagements/{engagement.id}/metadata/{metadata.id}',
-                            headers=headers,
-                            content_type=ContentType.JSON.value)  
-    assert response.status_code == HTTPStatus.NO_CONTENT, (f"Wrong response code; "
-            f"HTTP {response.status_code} -> {response.text}")
+                             headers=headers,
+                             content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.NO_CONTENT, (f'Wrong response code; '
+                                                           f'HTTP {response.status_code} -> {response.text}')

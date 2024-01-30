@@ -23,6 +23,7 @@ from tests.utilities.factory_utils import factory_metadata_taxon_model, factory_
 fake = Faker()
 engagement_metadata_service = EngagementMetadataService()
 
+
 def test_create_taxon(session):
     """Assert that taxa can be created and retrieved by id."""
     tenant, _ = factory_taxon_requirements()
@@ -34,14 +35,15 @@ def test_create_taxon(session):
     assert taxon_existing is not None
     assert taxon['name'] == taxon_existing['name']
 
+
 def test_insert_taxon(session):
     """Assert that created taxa are positioned correctly by inserting 2 taxa."""
     tenant, _ = factory_taxon_requirements()
     taxon_service = MetadataTaxonService()
-    taxon1 = taxon_service.create(tenant.id, 
+    taxon1 = taxon_service.create(tenant.id,
                                   TestEngagementMetadataTaxonInfo.taxon1)
     assert taxon1.get('id') is not None
-    taxon2 = taxon_service.create(tenant.id, 
+    taxon2 = taxon_service.create(tenant.id,
                                   TestEngagementMetadataTaxonInfo.taxon3)
     assert taxon2.get('id') is not None
     taxon2_existing = taxon_service.get_by_id(taxon2['id'])
@@ -52,6 +54,7 @@ def test_insert_taxon(session):
     assert taxon1['name'] == taxon1_existing['name']
     assert taxon1['position'] == 1
     assert taxon2['position'] == 2
+
 
 def test_get_by_tenant(session):
     """Assert that all taxa for a tenant can be retrieved."""
@@ -64,6 +67,7 @@ def test_get_by_tenant(session):
     tenant_taxa = taxon_service.get_by_tenant(tenant.id)
     assert taxon1 in tenant_taxa and taxon2 in tenant_taxa
 
+
 def test_get_by_id(session):
     """Assert that taxa can be retrieved by id."""
     tenant, _ = factory_taxon_requirements()
@@ -74,12 +78,13 @@ def test_get_by_id(session):
     assert taxon_existing is not None
     assert taxon.name == taxon_existing['name']
 
+
 def test_update_taxon(session):
     """Assert that taxa can be updated."""
     taxon_service = MetadataTaxonService()
     tenant, _ = factory_taxon_requirements()
     taxon = taxon_service.create(tenant.id,
-                                TestEngagementMetadataTaxonInfo.taxon1)
+                                 TestEngagementMetadataTaxonInfo.taxon1)
     assert taxon.get('id') is not None
     taxon_existing = taxon_service.get_by_id(taxon['id'])
     assert taxon_existing is not None
@@ -87,6 +92,7 @@ def test_update_taxon(session):
     taxon['name'] = 'Updated Taxon'
     taxon_updated = taxon_service.update(taxon['id'], taxon)
     assert taxon_updated['name'] == 'Updated Taxon'
+
 
 def test_delete_taxon(session):
     """Assert that taxa can be deleted."""
@@ -97,6 +103,7 @@ def test_delete_taxon(session):
     taxon_service.delete(taxon.id)
     taxon_existing = taxon_service.get_by_id(taxon.id)
     assert taxon_existing is None
+
 
 def test_reorder_tenant(session):
     """Assert that taxa can be reordered within a tenant."""
@@ -112,6 +119,7 @@ def test_reorder_tenant(session):
     # Assert new order
     assert updated_taxa[0]['id'] == taxon2['id'] and updated_taxa[0]['position'] == 1
     assert updated_taxa[1]['id'] == taxon1['id'] and updated_taxa[1]['position'] == 2
+
 
 def test_auto_order_tenant(session):
     """Assert that taxa positions are automatically ordered correctly."""
@@ -130,5 +138,5 @@ def test_auto_order_tenant(session):
     tenant_taxa = taxon_service.auto_order_tenant(tenant.id)
     # Assert new order
     for i in range(10):
-        #Every number appears once
+        # Every number appears once
         assert tenant_taxa[i]['position'] == i + 1

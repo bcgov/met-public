@@ -18,13 +18,14 @@ from flask import g, request
 from flask_jwt_oidc import JwtManager
 from flask_jwt_oidc.exceptions import AuthError
 
-auth_methods = { # for swagger documentation
+auth_methods = {  # for swagger documentation
     'apikey': {
         'type': 'apiKey',
         'in': 'header',
         'name': 'Authorization'
     }
 }
+
 
 class Auth(JwtManager):  # pylint: disable=too-few-public-methods
     """Extends the JwtManager to include additional functionalities."""
@@ -60,6 +61,7 @@ class Auth(JwtManager):  # pylint: disable=too-few-public-methods
             return f(*args, **kwargs)
 
         return decorated
+
 
 jwt = auth = (
     Auth()

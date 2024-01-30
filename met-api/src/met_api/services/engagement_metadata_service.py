@@ -15,6 +15,7 @@ class EngagementMetadataService:
     def get(metadata_id) -> dict:
         """
         Get engagement metadata by id.
+
         Args:
             id: The ID of the engagement metadata.
         Returns:
@@ -32,6 +33,7 @@ class EngagementMetadataService:
     def get_by_engagement(engagement_id) -> List[dict]:
         """
         Get metadata by engagement id.
+
         Args:
             engagement_id: The ID of the engagement.
         Returns:
@@ -48,6 +50,7 @@ class EngagementMetadataService:
     def check_association(engagement_id, metadata_id) -> bool:
         """
         Check if some metadata is actually associated with an engagement.
+
         Used to prevent users from accessing metadata that does not belong to
         an engagement they have access to.
         Args:
@@ -63,9 +66,10 @@ class EngagementMetadataService:
 
     @staticmethod
     @transactional(database=db)
-    def create(engagement_id: int, taxon_id:int, value:str) -> dict:
+    def create(engagement_id: int, taxon_id: int, value: str) -> dict:
         """
         Create engagement metadata.
+
         Args:
             engagement_id: The ID of the engagement.
             taxon_id: The ID of the metadata taxon.
@@ -90,13 +94,14 @@ class EngagementMetadataService:
         engagement_metadata = EngagementMetadataSchema().load(
             metadata, session=db.session
         )
-        db.session.add(engagement_metadata) # type: ignore
+        db.session.add(engagement_metadata)  # type: ignore
         engagement_metadata.save()
         return dict(EngagementMetadataSchema().dump(engagement_metadata))
 
     def create_for_engagement(self, engagement_id: int, metadata: dict, **kwargs) -> Optional[dict]:
         """
         Create engagement metadata.
+
         Args:
             engagement_id: The ID of the engagement.
             metadata: The point of engagement metadata to create.
@@ -106,9 +111,8 @@ class EngagementMetadataService:
         metadata = metadata or {}
         metadata = self.create(metadata, engagement_id, **kwargs)
 
-
     @staticmethod
-    def create_defaults(engagement_id: int, tenant_id:int) -> List[dict]:
+    def create_defaults(engagement_id: int, tenant_id: int) -> List[dict]:
         """Create default metadata for an engagement."""
         # Get metadata taxa for the tenant
         taxa = MetadataTaxon.query.filter_by(tenant_id=tenant_id).all()
@@ -122,12 +126,12 @@ class EngagementMetadataService:
                     taxon.default_value))
         return metadata
 
-
     @staticmethod
     @transactional()
     def update(metadata_id: int, value: str) -> dict:
         """
         Update engagement metadata.
+
         Args:
             id: The ID of the engagement metadata.
             metadata: The fields to update.
@@ -146,6 +150,7 @@ class EngagementMetadataService:
     def delete(metadata_id: int) -> None:
         """
         Delete engagement metadata.
+
         Args:
             id: The ID of the engagement metadata.
         """
@@ -153,5 +158,4 @@ class EngagementMetadataService:
         if not metadata:
             raise KeyError(f'Engagement metadata with id {metadata_id}'
                            ' does not exist.')
-        db.session.delete(metadata) # type: ignore
-        
+        db.session.delete(metadata)  # type: ignore

@@ -249,8 +249,10 @@ class TestEngagementInfo(dict, Enum):
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
+
 class TestEngagementMetadataInfo(dict, Enum):
     """Test data for engagement metadata."""
+
     metadata0 = {
         'engagement_id': None,
         'taxon_id': None,
@@ -323,6 +325,7 @@ class TestEngagementMetadataTaxonInfo(dict, Enum):
         'default_value': fake.name(),
         'position': 4
     }
+
 
 class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
