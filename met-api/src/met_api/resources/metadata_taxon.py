@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-API endpoints for managing a tenant's metadata taxa. This determines what taxa
-are available for a tenant's normal users to select when creating a new
+API endpoints for managing a tenant's metadata taxa.
+
+This determines what taxa are available for a tenant's normal users to select when creating a new
 engagement. This API is located at /api/tenants/<tenant_id>/metadata/taxa
 """
 
 from functools import wraps
 from http import HTTPStatus
 from typing import Callable
-from flask import request, g, abort
+from flask import abort, g, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
 from marshmallow import ValidationError
@@ -32,11 +33,11 @@ from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-VIEW_TAXA_ROLES = [Role.VIEW_TENANT.value, Role.CREATE_TENANT.value]
-MODIFY_TAXA_ROLES = [Role.CREATE_TENANT.value]
+VIEW_TAXA_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.CREATE_ENGAGEMENT.value]
+MODIFY_TAXA_ROLES = [Role.EDIT_ENGAGEMENT.value]
 TAXON_NOT_FOUND_MSG = 'Metadata taxon was not found'
 
-API = Namespace('metadata_taxa', description="Endpoints for managing the taxa "
+API = Namespace('metadata_taxa', description='Endpoints for managing the taxa '
                 "that organize a tenant's metadata. Admin-level users only.",
                 authorizations=auth_methods)
 
@@ -70,10 +71,12 @@ responses = {
     HTTPStatus.INTERNAL_SERVER_ERROR.value: 'Internal server error'
 }
 
+
 def ensure_tenant_access():
     """
-    Ensure that the user is authorized to access the tenant specified in the
-    request. This decorator should be used on any endpoint that requires
+    Ensure that the user is authorized to access the tenant specified in the request.
+
+    This decorator should be used on any endpoint that requires
     access to a tenant's data. Makes the tenant accessible via kwargs.
     """
     def wrapper(f: Callable):
@@ -83,20 +86,22 @@ def ensure_tenant_access():
             tenant = Tenant.find_by_short_name(tenant_short_name)
             if not tenant:
                 abort(HTTPStatus.NOT_FOUND,
-                    f'Tenant with short name {tenant_short_name} not found')
+                      f'Tenant with short name {tenant_short_name} not found')
             if tenant.short_name.upper() != g.tenant_name:
                 abort(HTTPStatus.FORBIDDEN,
-                    f'You are not authorized to access tenant {tenant_short_name}')
+                      f'You are not authorized to access tenant {tenant_short_name}')
             func_kwargs['tenant'] = tenant
             return f(*args, **func_kwargs)
         return decorated_function
     return wrapper
 
+
 @cors_preflight('GET,POST,PATCH,OPTIONS')
-@API.route('/taxa') # /api/tenants/{tenant.short_name}/metadata/taxa
+@API.route('/taxa')  # /api/tenants/{tenant.short_name}/metadata/taxa
 @API.doc(params=params, security='apikey', responses=responses)
 class MetadataTaxa(Resource):
     """Resource for managing engagement metadata taxa."""
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.marshal_list_with(taxon_return_model)
@@ -110,7 +115,7 @@ class MetadataTaxa(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.expect(taxon_modify_model)
-    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED) # type: ignore
+    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED)  # type: ignore
     @ensure_tenant_access()
     @require_role(MODIFY_TAXA_ROLES)
     def post(tenant: Tenant):
@@ -146,8 +151,9 @@ class MetadataTaxa(Resource):
 params['taxon_id'] = 'The numeric id of the taxon'
 responses[HTTPStatus.NOT_FOUND.value] = 'Metadata taxon or tenant not found'
 
+
 @cors_preflight('GET,PATCH,DELETE,OPTIONS')
-@API.route('/taxon/<taxon_id>') # /tenants/<tenant_id>/metadata/taxon/<taxon_id>
+@API.route('/taxon/<taxon_id>')  # /tenants/<tenant_id>/metadata/taxon/<taxon_id>
 @API.doc(security='apikey', params=params, responses=responses)
 class MetadataTaxon(Resource):
     """Resource for managing a single metadata taxon."""
@@ -177,7 +183,6 @@ class MetadataTaxon(Resource):
             return TAXON_NOT_FOUND_MSG, HTTPStatus.NOT_FOUND
         patch = {**request.get_json(), 'tenant_id': tenant.id}
         return taxon_service.update(taxon_id, patch), HTTPStatus.OK
-
 
     @staticmethod
     @cross_origin(origins=allowedorigins())

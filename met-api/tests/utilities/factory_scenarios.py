@@ -249,8 +249,10 @@ class TestEngagementInfo(dict, Enum):
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
     }
 
+
 class TestEngagementMetadataInfo(dict, Enum):
     """Test data for engagement metadata."""
+
     metadata0 = {
         'engagement_id': None,
         'taxon_id': None,
@@ -323,6 +325,7 @@ class TestEngagementMetadataTaxonInfo(dict, Enum):
         'default_value': fake.name(),
         'position': 4
     }
+
 
 class TestFeedbackInfo(dict, Enum):
     """Test scenarios of feedback."""
@@ -421,9 +424,7 @@ class TestJwtClaims(dict, Enum):
             'export_proponent_comment_sheet',
             'export_internal_comment_sheet',
             'export_cac_form_to_sheet',
-            'view_members',
-            'create_tenant',
-            'view_tenant',
+            'view_members'
         ]
     }
     team_member_role = {

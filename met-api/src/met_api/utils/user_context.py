@@ -81,7 +81,7 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
     def has_role(self, role_name: str) -> bool:
         """Return True if the user has the role."""
         return role_name in self._roles
-    
+
     def has_roles(self, role_names: List[str]) -> bool:
         """Return True if the user has some of the roles."""
         return bool(set(self._roles) & set(role_names))

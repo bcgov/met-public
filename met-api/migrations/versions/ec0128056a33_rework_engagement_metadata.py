@@ -41,23 +41,38 @@ def upgrade():
     sa.PrimaryKeyConstraint('id', name='pk_engagement_metadata_taxa'),
     sa.UniqueConstraint('id', name='uq_engagement_metadata_taxa_id')
     )
-    # remove old primary key constraint from engagement_metadata.engagement_id
+    # remove old data from engagement_metadata table
+    op.execute('DELETE FROM engagement_metadata')
+
+    # Drop the existing primary key constraint
     op.drop_constraint('engagement_metadata_pkey', 'engagement_metadata', type_='primary')
+
+    # Create a new index on engagement_metadata_taxa
     op.create_index(op.f('ix_engagement_metadata_taxa_position'), 'engagement_metadata_taxa', ['position'], unique=False)
+
+    # Add new columns to engagement_metadata
     op.add_column('engagement_metadata', sa.Column('id', sa.Integer(), nullable=False))
-    # add new primary key constraint on engagement_metadata.id
+    op.add_column('engagement_metadata', sa.Column('taxon_id', sa.Integer(), nullable=False))
+    op.add_column('engagement_metadata', sa.Column('value', sa.Text(), nullable=False))
+
+    # Create a new primary key constraint on the 'id' column
     op.create_primary_key('pk_engagement_metadata', 'engagement_metadata', ['id'])
-    # add autoincrement to engagement_metadata.id by creating a sequence
+
+    # Create a new sequence and set it as the default for the 'id' column
     op.execute('CREATE SEQUENCE engagement_metadata_id_seq START 1')
     op.execute('ALTER TABLE engagement_metadata ALTER COLUMN id SET DEFAULT nextval(\'engagement_metadata_id_seq\')')
     op.execute('ALTER SEQUENCE engagement_metadata_id_seq OWNED BY engagement_metadata.id')
-    # remove not-null constraint from engagement_metadata.engagement_id
+
+    # Remove the not-null constraint from 'engagement_id'
     op.alter_column('engagement_metadata', 'engagement_id', existing_type=sa.INTEGER(), nullable=True)
 
-    op.add_column('engagement_metadata', sa.Column('taxon_id', sa.Integer(), nullable=False))
-    op.add_column('engagement_metadata', sa.Column('value', sa.Text(), nullable=False))
+    # Create a foreign key constraint
     op.create_foreign_key('fk_engagement_meta_taxon', 'engagement_metadata', 'engagement_metadata_taxa', ['taxon_id'], ['id'], ondelete='CASCADE')
+
+    # Remove the 'project_tracking_id' and 'project_metadata' column
     op.drop_column('engagement_metadata', 'project_tracking_id')
+    op.drop_column('engagement_metadata', 'project_metadata')
+
     # add default taxa for default tenant
     default_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
     tenant_id = TenantModel.find_by_short_name(default_short_name).id
@@ -133,16 +148,17 @@ def upgrade():
 
 
 def downgrade():
+    op.add_column('engagement_metadata', sa.Column('project_metadata', postgresql.JSONB(astext_type=sa.Text()), nullable=True))
     op.add_column('engagement_metadata', sa.Column('project_tracking_id', sa.VARCHAR(length=100), autoincrement=False, nullable=True))
     op.alter_column('engagement_metadata', 'engagement_id', existing_type=sa.INTEGER(), nullable=False)
     op.drop_constraint('fk_engagement_meta_taxon', 'engagement_metadata', type_='foreignkey')
-    op.drop_column('engagement_metadata', 'value')
-    op.drop_column('engagement_metadata', 'taxon_id')
     # remove primary key constraint from engagement_metadata.id
     op.drop_constraint('pk_engagement_metadata', 'engagement_metadata', type_='primary')
+    op.drop_column('engagement_metadata', 'value')
+    op.drop_column('engagement_metadata', 'taxon_id')
     op.drop_column('engagement_metadata', 'id')
     op.drop_index(op.f('ix_engagement_metadata_taxa_position'), table_name='engagement_metadata_taxa')
     # add primary key constraint to engagement_metadata.engagement_id
-    op.create_primary_key('pk_engagement_metadata', 'engagement_metadata', ['engagement_id'])
+    op.create_primary_key('engagement_metadata_pkey', 'engagement_metadata', ['engagement_id'])
     op.drop_table('engagement_metadata_taxa')
     # ### end Alembic commands ###

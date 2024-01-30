@@ -13,6 +13,7 @@
 # limitations under the License.
 """
 API endpoints for managing the metadata for an engagement resource.
+
 This API is located at /api/engagements/<engagement_id>/metadata
 """
 
@@ -41,7 +42,7 @@ metadata_update_model = API.model('EngagementMetadataUpdate', model_dict := {
     'value': fields.String(required=True, description='The value of the metadata entry'),
 })
 
-metadata_create_model = API.model('EngagementMetadataCreate', model_dict :={
+metadata_create_model = API.model('EngagementMetadataCreate', model_dict := {
     'taxon_id': fields.Integer(required=True, description='The id of the taxon'),
     **model_dict
 })
@@ -55,8 +56,9 @@ metadata_return_model = API.model('EngagementMetadataReturn', {
 engagement_service = EngagementService()
 metadata_service = EngagementMetadataService()
 
+
 @cors_preflight('GET,POST')
-@API.route('') # /api/engagements/{engagement.id}/metadata
+@API.route('')  # /api/engagements/{engagement.id}/metadata
 @API.doc(params={'engagement_id': 'The numeric id of the engagement'})
 class EngagementMetadata(Resource):
     """Resource for managing engagements' metadata."""
@@ -74,7 +76,7 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
-    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED) # type: ignore
+    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)  # type: ignore
     @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
@@ -91,10 +93,11 @@ class EngagementMetadata(Resource):
         except (ValueError, ValidationError) as err:
             return str(err), HTTPStatus.BAD_REQUEST
 
+
 @cors_preflight('GET,PUT,DELETE')
-@API.route('/<metadata_id>') # /api/engagements/{engagement.id}/metadata/{metadata.id}
+@API.route('/<metadata_id>')  # /api/engagements/{engagement.id}/metadata/{metadata.id}
 @API.doc(params={'engagement_id': 'The numeric id of the engagement',
-                    'metadata_id': 'The numeric id of the metadata entry'})
+                 'metadata_id': 'The numeric id of the metadata entry'})
 @API.doc(security='apikey')
 class EngagementMetadataById(Resource):
     """Resource for managing invividual engagement metadata entries."""
@@ -111,7 +114,7 @@ class EngagementMetadataById(Resource):
             if str(metadata['engagement_id']) != str(engagement_id):
                 raise ValidationError('Metadata does not belong to this '
                                       f"engagement:{metadata['engagement_id']}"
-                                      f" != {engagement_id}")
+                                      f' != {engagement_id}')
             return metadata, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.NOT_FOUND
@@ -134,14 +137,13 @@ class EngagementMetadataById(Resource):
             if str(metadata['engagement_id']) != str(engagement_id):
                 raise ValidationError('Metadata does not belong to this '
                                       f"engagement:{metadata['engagement_id']}"
-                                      f" != {engagement_id}")
+                                      f' != {engagement_id}')
             metadata = metadata_service.update(metadata_id, value)
             return metadata, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.NOT_FOUND
         except ValidationError as err:
             return err.messages, HTTPStatus.BAD_REQUEST
-
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -150,12 +152,12 @@ class EngagementMetadataById(Resource):
         """Delete an existing metadata entry for an engagement."""
         try:
             authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
-                            engagement_id=engagement_id)
+                                     engagement_id=engagement_id)
             metadata = metadata_service.get(metadata_id)
             if str(metadata['engagement_id']) != str(engagement_id):
                 raise ValidationError('Metadata does not belong to this '
                                       f"engagement:{metadata['engagement_id']}"
-                                      f" != {engagement_id}")
+                                      f' != {engagement_id}')
             metadata_service.delete(metadata_id)
             return {}, HTTPStatus.NO_CONTENT
         except KeyError as err:

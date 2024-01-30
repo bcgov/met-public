@@ -1,3 +1,7 @@
+## January 29, 2024
+- **Task** Updated Babel Traverse library. [🎟️DESENG-474](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-474)
+  - Run `npm audit fix` to update the vulnerable Babel traverse library.
+
 ## January 26, 2024
 - **Task** Poll Widget: Front-end. [🎟️DESENG-464](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-464)
   - Created UI for Poll Widget.

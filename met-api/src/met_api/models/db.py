@@ -18,19 +18,24 @@ migrate = Migrate()
 # Marshmallow for database model schema
 ma = Marshmallow()
 
-class AbortTransaction(Exception):
+
+class AbortTransaction(Exception):  # noqa
     """
-    An exception to be raised when a transaction should be aborted. Handled
-    gracefully in the transactional decorator. Only raise this exception
+    An exception to be raised when a transaction should be aborted.
+
+    Handled gracefully in the transactional decorator. Only raise this exception
     when already inside a transactional block.
     """
 
+
 T = TypeVar('T')
+
 
 def transactional(database=db, autocommit=True, end_session=False
                   ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """
-    A decorator to quickly make an operation transactional.
+    Decorate an operation to quickly make it transactional.
+
     If there is an exception during execution, the entire session will be
     safely rolled back to a point in time just before the decorated function
     was called. If not, the session will be saved, unless autocommit is set
@@ -45,7 +50,7 @@ def transactional(database=db, autocommit=True, end_session=False
     """
     def decorator(f: Callable[..., T]) -> Callable[..., T]:
         @wraps(f)
-        def decorated_function(*args, **kwargs)-> Optional[T]:
+        def decorated_function(*args, **kwargs) -> Optional[T]:
             try:
                 result = f(*args, **kwargs)
                 if autocommit:
@@ -54,11 +59,11 @@ def transactional(database=db, autocommit=True, end_session=False
                     database.session.flush()
                 return result
             except AbortTransaction:
-                logging.info("Transaction aborted.")
-                database.session.rollback() # we meant to roll back; don't raise :)
-            except Exception as e: # all other exceptions
+                logging.info('Transaction aborted.')
+                database.session.rollback()  # we meant to roll back; don't raise :)
+            except Exception as e:  # noqa: B902
                 logging.exception(
-                    "An error occurred during a transaction; rolling back.")
+                    'An error occurred during a transaction; rolling back.')
                 database.session.rollback()
                 raise e
             finally:
