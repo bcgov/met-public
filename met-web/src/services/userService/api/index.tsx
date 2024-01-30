@@ -12,7 +12,7 @@ interface GetUserListParams {
     sort_order?: 'asc' | 'desc';
     search_text?: string;
     // If yes, user groups will be fetched as well from keycloak
-    include_groups?: boolean;
+    include_roles?: boolean;
     include_inactive?: boolean;
 }
 export const getUserList = async (params: GetUserListParams = {}): Promise<Page<User>> => {
@@ -28,7 +28,7 @@ export const getUserList = async (params: GetUserListParams = {}): Promise<Page<
 interface GetUserParams {
     user_id: number;
     // If yes, user groups will be fetched as well from keycloak
-    include_groups?: boolean;
+    include_roles?: boolean;
 }
 export const getUser = async (params: GetUserParams): Promise<User> => {
     const url = replaceUrl(Endpoints.User.GET, 'user_id', String(params.user_id));

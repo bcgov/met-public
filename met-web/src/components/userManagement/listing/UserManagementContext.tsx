@@ -101,7 +101,7 @@ export const UserManagementContextProvider = ({ children }: { children: JSX.Elem
                 size,
                 sort_key: nested_sort_key || sort_key,
                 sort_order,
-                include_groups: true,
+                include_roles: true,
                 search_text: searchText,
                 include_inactive: true,
             });
