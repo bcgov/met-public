@@ -169,6 +169,12 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/widget_id`,
         GET_SHEET: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/sheet`,
     },
+    PollWidgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/polls`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/polls`,
+        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id`,
+        RECORD_RESPONSE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id/responses`,
+    },
 };
 
 export default Endpoints;

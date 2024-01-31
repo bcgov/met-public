@@ -28,7 +28,7 @@
       ]
     }
   ],
-  "required": ["widget_id", "engagement_id"],
+  "required": [],
   "properties": {
     "title": {
       "$id": "#/properties/title",

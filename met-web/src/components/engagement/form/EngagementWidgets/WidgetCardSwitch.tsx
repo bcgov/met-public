@@ -120,6 +120,19 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
                         }}
                     />
                 </Case>
+                <Case condition={widget.widget_type_id === WidgetType.Poll}>
+                    <MetWidget
+                        testId={`event-${widget.widget_type_id}`}
+                        title={widget.title}
+                        onDelete={() => {
+                            removeWidget(widget.id);
+                        }}
+                        onEdit={() => {
+                            handleWidgetDrawerTabValueChange(WidgetTabValues.POLL_FORM);
+                            handleWidgetDrawerOpen(true);
+                        }}
+                    />
+                </Case>
             </Switch>
         </>
     );

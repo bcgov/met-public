@@ -30,3 +30,8 @@ export const SUBMISSION_STATUS: { [status: string]: SubmissionStatusTypes } = {
     OPEN: 'Open',
     CLOSED: 'Closed',
 };
+
+export enum PollStatus {
+    Active = 'active',
+    Inactive = 'inactive',
+}

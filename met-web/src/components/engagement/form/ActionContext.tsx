@@ -1,10 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
-import {
-    postEngagementMetadata,
-    getEngagementMetadata,
-    patchEngagementMetadata,
-} from '../../../services/engagementMetadataService';
+import { getEngagementMetadata } from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import {
@@ -17,7 +13,7 @@ import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { getErrorMessage } from 'utils';
-import { updatedDiff, diff } from 'deep-object-diff';
+import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
