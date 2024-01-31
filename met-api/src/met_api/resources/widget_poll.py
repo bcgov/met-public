@@ -1,7 +1,7 @@
 """API endpoints for managing a poll widget resource."""
 from http import HTTPStatus
 
-from flask import request
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -29,10 +29,7 @@ class Polls(Resource):
         """Get poll widgets."""
         try:
             widget_poll = WidgetPollService().get_polls_by_widget_id(widget_id)
-            return (
-                WidgetPollSchema().dump(widget_poll, many=True),
-                HTTPStatus.OK,
-            )
+            return jsonify(WidgetPollSchema().dump(widget_poll, many=True)), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
 
