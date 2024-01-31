@@ -16,7 +16,6 @@ from met_api.utils.ip_util import hash_ip
 API = Namespace(
     'widget_polls', description='Endpoints for Poll Widget Management'
 )
-INVALID_REQUEST_MESSAGE = 'Invalid request format'
 
 
 @cors_preflight('GET, POST')
@@ -44,26 +43,21 @@ class Polls(Resource):
         """Create poll widget."""
         try:
             request_json = request.get_json()
-            valid_format, errors = Polls.validate_request_format(request_json)
+            valid_format, errors = schema_utils.validate(
+                request_json, 'poll_widget'
+            )
             if not valid_format:
-                return {
-                    'message': INVALID_REQUEST_MESSAGE,
-                    'errors': errors,
-                }, HTTPStatus.BAD_REQUEST
+                raise BusinessException(
+                    error=schema_utils.serialize(errors),
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
+
             widget_poll = WidgetPollService().create_poll(
                 widget_id, request_json
             )
             return WidgetPollSchema().dump(widget_poll), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
-    @staticmethod
-    def validate_request_format(data):
-        """Validate response format."""
-        valid_format, errors = schema_utils.validate(data, 'poll_widget')
-        if not valid_format:
-            errors = schema_utils.serialize(errors)
-        return valid_format, errors
 
 
 @cors_preflight('PATCH')
@@ -78,20 +72,23 @@ class Poll(Resource):
         """Update poll widget."""
         try:
             request_json = request.get_json()
-            valid_format, errors = Poll.validate_request_format(request_json)
+            valid_format, errors = schema_utils.validate(
+                request_json, 'poll_widget_update'
+            )
             if not valid_format:
-                return {
-                    'message': INVALID_REQUEST_MESSAGE,
-                    'errors': errors,
-                }, HTTPStatus.BAD_REQUEST
+                raise BusinessException(
+                    error=schema_utils.serialize(errors),
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
             # Check if the poll engagement is published
-            if Poll.is_poll_engagement_published(poll_widget_id):
+            if WidgetPollService.is_poll_engagement_published(poll_widget_id):
                 # Define the keys to check in the request_json
                 keys_to_check = ['title', 'description', 'answers']
                 if any(key in request_json for key in keys_to_check):
-                    return {
-                        'message': 'Cannot update poll widget as the engagement is published'
-                    }, HTTPStatus.BAD_REQUEST
+                    raise BusinessException(
+                        error='Cannot update poll widget as the engagement is published',
+                        status_code=HTTPStatus.BAD_REQUEST,
+                    )
 
             widget_poll = WidgetPollService().update_poll(
                 widget_id, poll_widget_id, request_json
@@ -99,21 +96,6 @@ class Poll(Resource):
             return WidgetPollSchema().dump(widget_poll), HTTPStatus.OK
         except BusinessException as err:
             return str(err), err.status_code
-
-    @staticmethod
-    def validate_request_format(data):
-        """Validate request format."""
-        valid_format, errors = schema_utils.validate(
-            data, 'poll_widget_update'
-        )
-        if not valid_format:
-            errors = schema_utils.serialize(errors)
-        return valid_format, errors
-
-    @staticmethod
-    def is_poll_engagement_published(poll_id):
-        """Check if engagement of this poll is published or not."""
-        return WidgetPollService.is_poll_engagement_published(poll_id)
 
 
 @cors_preflight('POST')
@@ -124,89 +106,65 @@ class PollResponseRecord(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def post(widget_id, poll_widget_id):
+        # pylint: disable=too-many-return-statements
         """Record a response for a given poll widget."""
         try:
-            response_data = request.get_json()
-            valid_format, errors = PollResponseRecord.validate_request_format(
-                response_data
+            poll_response_data = request.get_json()
+            valid_format, errors = schema_utils.validate(
+                poll_response_data, 'poll_response'
             )
             if not valid_format:
-                return {
-                    'message': INVALID_REQUEST_MESSAGE,
-                    'errors': errors,
-                }, HTTPStatus.BAD_REQUEST
+                raise BusinessException(
+                    error=schema_utils.serialize(errors),
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
 
-            response_dict = PollResponseRecord.prepare_response_data(
-                response_data, widget_id, poll_widget_id
-            )
+            # Prepare poll request object
+            poll_response_dict = {
+                **poll_response_data,
+                'poll_id': poll_widget_id,
+                'widget_id': widget_id,
+                'participant_id': hash_ip(request.remote_addr),
+            }
 
-            if not PollResponseRecord.is_poll_active(poll_widget_id):
-                return {
-                    'message': 'Poll is not active'
-                }, HTTPStatus.BAD_REQUEST
+            # Check if poll active or not
+            if not WidgetPollService.is_poll_active(poll_widget_id):
+                raise BusinessException(
+                    error='Poll is not active',
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
 
-            if not PollResponseRecord.is_poll_engagement_published(
+            # Check if engagement of this poll is published or not
+            if not WidgetPollService.is_poll_engagement_published(
                 poll_widget_id
             ):
-                return {
-                    'message': 'Poll engagement is not published'
-                }, HTTPStatus.BAD_REQUEST
+                raise BusinessException(
+                    error='Poll engagement is not published',
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
 
-            if PollResponseRecord.is_poll_limit_exceeded(
-                poll_widget_id, response_dict['participant_id']
+            # Check poll limit execeeded or not
+            if WidgetPollService.check_already_polled(
+                poll_widget_id, poll_response_dict['participant_id'], 10
             ):
-                return {
-                    'message': 'Limit exceeded for this poll'
-                }, HTTPStatus.FORBIDDEN
+                raise BusinessException(
+                    error='Limit exceeded for this poll',
+                    status_code=HTTPStatus.BAD_REQUEST,
+                )
 
-            return PollResponseRecord.record_poll_response(response_dict)
+            # Record poll response in database
+            poll_response = WidgetPollService.record_response(
+                poll_response_dict
+            )
+            if poll_response.id:
+                return {
+                    'message': 'Response recorded successfully'
+                }, HTTPStatus.CREATED
+
+            raise BusinessException(
+                error='Response failed to record',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            )
 
         except BusinessException as err:
             return err.error, err.status_code
-
-    @staticmethod
-    def validate_request_format(data):
-        """Validate Request format."""
-        valid_format, errors = schema_utils.validate(data, 'poll_response')
-        if not valid_format:
-            errors = schema_utils.serialize(errors)
-        return valid_format, errors
-
-    @staticmethod
-    def prepare_response_data(data, widget_id, poll_widget_id):
-        """Prepare poll response object."""
-        response_dict = dict(data)
-        response_dict['poll_id'] = poll_widget_id
-        response_dict['widget_id'] = widget_id
-        response_dict['participant_id'] = hash_ip(request.remote_addr)
-        return response_dict
-
-    @staticmethod
-    def is_poll_active(poll_id):
-        """Check if poll active or not."""
-        return WidgetPollService.is_poll_active(poll_id)
-
-    @staticmethod
-    def is_poll_engagement_published(poll_id):
-        """Check if engagement of this poll is published or not."""
-        return WidgetPollService.is_poll_engagement_published(poll_id)
-
-    @staticmethod
-    def is_poll_limit_exceeded(poll_id, participant_id):
-        """Check poll limit execeeded or not."""
-        return WidgetPollService.check_already_polled(
-            poll_id, participant_id, 10
-        )
-
-    @staticmethod
-    def record_poll_response(response_dict):
-        """Record poll respinse in database."""
-        poll_response = WidgetPollService.record_response(response_dict)
-        if poll_response.id:
-            return {
-                'message': 'Response recorded successfully'
-            }, HTTPStatus.CREATED
-
-        return {
-            'message': 'Response failed to record'
-        }, HTTPStatus.INTERNAL_SERVER_ERROR

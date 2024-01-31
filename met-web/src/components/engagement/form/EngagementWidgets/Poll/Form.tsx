@@ -64,12 +64,7 @@ const Form = () => {
         onSubmit(restructuredData);
     };
 
-    const savePollWidget = (data: DetailsForm) => {
-        if (!pollWidget) {
-            return createPoll(data);
-        }
-        return updatePoll(data);
-    };
+    const savePollWidget = (data: DetailsForm) => (!pollWidget ? createPoll(data) : updatePoll(data));
 
     const createPoll = async (data: DetailsForm) => {
         if (!widget) {

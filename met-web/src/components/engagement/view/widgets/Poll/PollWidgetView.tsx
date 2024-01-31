@@ -18,9 +18,15 @@ interface HttpResponseError extends Error {
     };
 }
 
-const RESPONSE_MESSAGE_SUCCESS = { color: 'green', message: 'Thank you for the response.' };
-const RESPONSE_MESSAGE_ERROR = { color: 'red', message: 'An error occurred while submitting the poll.' };
-const RESPONSE_MESSAGE_LIMIT = { color: 'red', message: 'Limit exceeded for this poll.' };
+interface ResponseMessage {
+    color: string;
+    message: string;
+}
+
+const RESPONSE_MESSAGE_SUCCESS: ResponseMessage = { color: 'green', message: 'Thank you for the response.' };
+const RESPONSE_MESSAGE_RECORDED: ResponseMessage = { color: 'green', message: 'Response already recorded.' };
+const RESPONSE_MESSAGE_ERROR: ResponseMessage = { color: 'red', message: 'An error occurred.' };
+const RESPONSE_MESSAGE_LIMIT: ResponseMessage = { color: 'red', message: 'Limit exceeded for this poll.' };
 
 const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const dispatch = useAppDispatch();
@@ -39,22 +45,23 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const [selectedOption, setSelectedOption] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [interactionEnabled, setInteractionEnabled] = useState(true);
-    const [responseMessage, setResponseMessage] = useState(RESPONSE_MESSAGE_SUCCESS);
+    const [responseMessage, setResponseMessage] = useState<ResponseMessage | null>(null);
     const { getSubmittedPolls, addSubmittedPoll } = useSubmittedPolls();
 
     useEffect(() => {
         // Check if the current widget ID is in the submitted polls
         if (getSubmittedPolls().includes(widget.id)) {
             setIsSubmitted(true);
+            setResponseMessage(RESPONSE_MESSAGE_RECORDED);
         }
         fetchPollDetails();
     }, [widget]);
 
     const fetchPollDetails = async () => {
         try {
-            const poll_widgets = await fetchPollWidgets(widget.id);
-            const poll_widget = poll_widgets[poll_widgets.length - 1];
-            setPollWidget(poll_widget);
+            const pollWidgets = await fetchPollWidgets(widget.id);
+            const pollWidget = pollWidgets[pollWidgets.length - 1];
+            setPollWidget(pollWidget);
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
@@ -73,6 +80,9 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     };
 
     const handleSubmit = async () => {
+        // Resetting error message
+        setResponseMessage(null);
+
         if (selectedOption == '') {
             dispatch(
                 openNotification({
@@ -87,19 +97,24 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             await postPollResponse(widget.id, pollWidget.id, {
                 selected_answer_id: parseInt(selectedOption),
             });
+
+            setIsSubmitted(true);
+            addSubmittedPoll(widget.id);
+            setResponseMessage(RESPONSE_MESSAGE_SUCCESS);
         } catch (error: unknown) {
-            const responseMessage =
-                isHttpResponseError(error) && error.response?.status === 403
-                    ? RESPONSE_MESSAGE_LIMIT
-                    : RESPONSE_MESSAGE_ERROR;
+            let responseMessage = RESPONSE_MESSAGE_ERROR;
+            if (isHttpResponseError(error) && error.response?.status === 400) {
+                // If  exceed limit error, do not allow them to poll again and added poll to already poll list
+                responseMessage = RESPONSE_MESSAGE_LIMIT;
+                setIsSubmitted(true);
+                addSubmittedPoll(widget.id);
+            } else {
+                // If not exceed limit error, allow them to poll again
+                setIsSubmitted(false);
+                setInteractionEnabled(true);
+            }
             setResponseMessage(responseMessage);
-        } finally {
-            setInteractionEnabled(true);
         }
-        // Irrespective of the error mark the poll as submitted to avoid re-submitting
-        setIsSubmitted(true);
-        // Add poll to the submitted list of polls
-        addSubmittedPoll(widget.id);
     };
 
     const handleOptionChange = (option: string) => {
@@ -157,12 +172,13 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                     />
                     {!isLoggedIn && (
                         <>
-                            {!isSubmitted ? (
+                            {!isSubmitted && (
                                 <Grid item xs={12} sx={{ marginTop: '1em' }}>
                                     <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
                                 </Grid>
-                            ) : (
-                                <p style={{ color: responseMessage.color }}>{responseMessage.message}</p>
+                            )}
+                            {responseMessage?.message && (
+                                <p style={{ color: responseMessage?.color }}>{responseMessage?.message}</p>
                             )}
                         </>
                     )}

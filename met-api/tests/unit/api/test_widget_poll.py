@@ -135,6 +135,8 @@ def test_update_poll_widget(client, jwt, session, setup_admin_user_and_claims):
         content_type=ContentType.JSON.value,
     )
 
+    assert rv.status_code == HTTPStatus.OK
+
     # Checking updating title if Engagement is published
 
     engagement = factory_engagement_model(status=Status.Published.value)

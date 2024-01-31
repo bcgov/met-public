@@ -138,5 +138,5 @@ class WidgetPollService:
                 PollAnswerService.create_bulk_poll_answers(
                     poll_id, answers_data
                 )
-        except Exception as exc:
+        except SQLAlchemyError as exc:
             raise BusinessException(str(exc), HTTPStatus.BAD_REQUEST) from exc
