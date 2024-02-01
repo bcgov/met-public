@@ -112,7 +112,7 @@ describe('Engagement form page tests', () => {
         setupEnv();
     });
 
-    test('Engagement form tabsand their titles should be populated correctly', async () => {
+    test('Engagement form tabs and their titles should be populated correctly', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         render(<EngagementForm />);
 
