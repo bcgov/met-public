@@ -9,7 +9,7 @@ import EngagementAdditionalDetails from './AdditionalDetails';
 import EngagementSettings from './Settings';
 
 const FormTabs = () => {
-    const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.CORE);
+    const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.CONTENT);
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -24,13 +24,13 @@ const FormTabs = () => {
                         }}
                         variant="scrollable"
                     >
-                        <MetTab label="Engagement Core" value={ENGAGEMENT_FORM_TABS.CORE} />
+                        <MetTab label="Engagement Content" value={ENGAGEMENT_FORM_TABS.CONTENT} />
                         <MetTab label="Additional Details" value={ENGAGEMENT_FORM_TABS.ADDITIONAL} />
                         <MetTab label="User Management" value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT} />
                         <MetTab label="Settings" value={ENGAGEMENT_FORM_TABS.SETTINGS} />
                     </MetTabList>
                 </Box>
-                <MetTabPanel value={ENGAGEMENT_FORM_TABS.CORE}>
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.CONTENT}>
                     <EngagementForm />
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.ADDITIONAL}>

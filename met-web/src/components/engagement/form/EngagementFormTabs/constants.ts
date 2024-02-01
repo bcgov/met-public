@@ -1,7 +1,7 @@
-export type EngagementFormTabValues = 'core' | 'settings' | 'User Management' | 'additional';
+export type EngagementFormTabValues = 'content' | 'settings' | 'User Management' | 'additional';
 
 export const ENGAGEMENT_FORM_TABS: { [x: string]: EngagementFormTabValues } = {
-    CORE: 'core',
+    CONTENT: 'content',
     ADDITIONAL: 'additional',
     USER_MANAGEMENT: 'User Management',
     SETTINGS: 'settings',
