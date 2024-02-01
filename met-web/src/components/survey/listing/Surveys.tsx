@@ -114,7 +114,7 @@ const Surveys = () => {
                                 <>
                                     <strong>Hidden</strong>
                                     <p>
-                                        This survey is only visible to Superusers. Toggle off on the survey edit page to
+                                        This survey is only visible to Administrators. Toggle off on the survey edit
                                         make it ready and available.
                                     </p>
                                 </>

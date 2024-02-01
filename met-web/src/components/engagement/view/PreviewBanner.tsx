@@ -150,7 +150,7 @@ export const PreviewBanner = () => {
                                         </IconButton>
                                     </Grid>
                                     <Grid item sm={11}>
-                                        <MetBody>A Superuser can schedule the engagement when ready.</MetBody>
+                                        <MetBody>An Administrator can schedule the engagement when ready.</MetBody>
                                     </Grid>
                                 </Grid>
                             </Grid>

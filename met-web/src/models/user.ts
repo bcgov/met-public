@@ -3,7 +3,7 @@ export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER' | 'EAO_TEAM_MEMBER' | '
 export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = {
     ADMIN: {
         value: 'EAO_IT_ADMIN',
-        label: 'Superuser',
+        label: 'Administrator',
     },
     VIEWER: {
         value: 'EAO_IT_VIEWER',
