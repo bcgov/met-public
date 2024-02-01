@@ -112,6 +112,19 @@ describe('Engagement form page tests', () => {
         setupEnv();
     });
 
+    test('Engagement form tabs and their titles should be populated correctly', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByText('Engagement Content')).toBeInTheDocument();
+        });
+
+        expect(screen.getByText('Additional Details')).toBeInTheDocument();
+        expect(screen.getByText('User Management')).toBeInTheDocument();
+        expect(screen.getByText('Settings')).toBeInTheDocument();
+    });
+
     test('Engagement form with saved engagement should display saved info', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         render(<EngagementForm />);
