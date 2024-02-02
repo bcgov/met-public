@@ -111,7 +111,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                 <Grid item fontWeight="bold" xs={0.5}>
                     {renderIcon(tEvent.status)}
                 </Grid>
-                <Grid item xs={11} paddingLeft={1}>
+                <Grid item xs={11} sx={{ paddingLeft: '10px' }}>
                     <MetHeader4 bold>{tEvent.description}</MetHeader4>
                     <MetParagraph
                         style={{
