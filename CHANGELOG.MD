@@ -1,3 +1,6 @@
+## February 05, 2024
+- **Task** Change "Superuser" to "Administrator" [DESENG-476](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-476)
+
 ## February 01, 2024
 - **Task** Change name from "Engagement Core" to "Engagement Content". [🎟️DESENG-489](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-489)
 
