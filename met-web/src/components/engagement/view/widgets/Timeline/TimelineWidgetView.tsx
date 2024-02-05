@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2, MetParagraph, MetHeader4 } from 'components/common';
-import { Grid, Skeleton, Divider } from '@mui/material';
+import { Avatar, Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { TimelineWidget, TimelineEvent } from 'models/timelineWidget';
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
+import CheckIcon from '@mui/icons-material/Check';
+import LensRoundedIcon from '@mui/icons-material/LensRounded';
+import { Palette } from 'styles/Theme';
+import { EventStatus } from 'models/timelineWidget';
 
 interface TimelineWidgetProps {
     widget: Widget;
@@ -46,52 +50,74 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
         fetchTimeline();
     }, [widget]);
 
+    const containerStylesObject = (index: number) => ({
+        minHeight: index + 1 === timelineWidget.events.length ? '60px' : '80px',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginLeft: index + 1 === timelineWidget.events.length ? '18px' : '16px',
+        borderLeft: index + 1 === timelineWidget.events.length ? 'none' : '2px solid grey',
+    });
+
+    const commonAvatarStyles = {
+        height: 30,
+        width: 30,
+        marginLeft: '-16px',
+        backgroundColor: Palette.info.main,
+    };
+
+    const commonWhiteAvatarStyles = {
+        height: 23,
+        width: 23,
+        backgroundColor: '#FFF',
+    };
+
+    const renderIcon = (status: EventStatus) => {
+        const icons: { [key in EventStatus]: JSX.Element } = {
+            [EventStatus.Pending]: (
+                <Avatar sx={commonAvatarStyles}>
+                    <Avatar sx={commonWhiteAvatarStyles} />
+                </Avatar>
+            ),
+            [EventStatus.InProgress]: (
+                <Avatar sx={commonAvatarStyles}>
+                    <Avatar sx={commonWhiteAvatarStyles}>
+                        <LensRoundedIcon sx={{ fontSize: '20px', color: Palette.action.active }} />
+                    </Avatar>
+                </Avatar>
+            ),
+            [EventStatus.Completed]: (
+                <Avatar sx={commonAvatarStyles}>
+                    <Avatar sx={commonWhiteAvatarStyles}>
+                        <CheckIcon
+                            sx={{
+                                stroke: Palette.action.active,
+                                strokeWidth: 3,
+                                fontSize: '20px',
+                                color: Palette.action.active,
+                            }}
+                        />
+                    </Avatar>
+                </Avatar>
+            ),
+        };
+
+        return icons[status] || null;
+    };
+
     const handleRenderTimelineEvent = (tEvent: TimelineEvent, index: number) => {
-        const containerStylesObject = {
-            minHeight: index + 1 === timelineWidget.events.length ? '60px' : '80px',
-            display: 'flex',
-            flexDirection: 'row',
-            marginLeft: index + 1 === timelineWidget.events.length ? '24px' : '22px',
-            borderLeft: index + 1 === timelineWidget.events.length ? 'none' : '2px solid grey',
-        };
-        const circleContainerStylesObject = {
-            padding: '2px',
-            border: '2px solid grey',
-            marginLeft: '-25px',
-            display: 'inline-flex',
-            backgroundColor: '#fff',
-            borderRadius: '50%',
-            height: '48px',
-            width: '48px',
-        };
-        const circleStylesObject = {
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            content: '""',
-            border: 1 !== tEvent.status ? '20px solid' : 'none',
-            borderColor: 3 === tEvent.status ? '#2e8540' : '#036',
-        };
-        const checkmarkStylesObject = {
-            marginLeft: '-12px',
-            marginTop: '-23px',
-            fontSize: '31px',
-            color: '#fff',
-        };
         return (
-            <Grid item xs={12} sx={containerStylesObject} key={'event' + (index + 1)}>
-                <Grid item sx={circleContainerStylesObject}>
-                    <Grid item sx={circleStylesObject}>
-                        {3 == tEvent.status && (
-                            <Grid sx={checkmarkStylesObject} item>
-                                ✓
-                            </Grid>
-                        )}
-                    </Grid>
+            <Grid container item xs={12} sx={containerStylesObject(index)} key={'event' + (index + 1)}>
+                <Grid item fontWeight="bold" xs={0.5}>
+                    {renderIcon(tEvent.status)}
                 </Grid>
-                <Grid item sx={{ paddingLeft: '10px' }}>
+                <Grid item xs={11} sx={{ paddingLeft: '10px' }}>
                     <MetHeader4 bold>{tEvent.description}</MetHeader4>
-                    <MetParagraph style={{ paddingBottom: index + 1 === timelineWidget.events.length ? '0' : '20px' }}>
+                    <MetParagraph
+                        style={{
+                            paddingBottom: index + 1 === timelineWidget.events.length ? '0' : '20px',
+                        }}
+                    >
                         {tEvent.time}
                     </MetParagraph>
                 </Grid>
