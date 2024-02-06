@@ -295,7 +295,7 @@ class EngagementService:
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         templates = current_app.config['EMAIL_TEMPLATES']
         subject = templates['CLOSEOUT']['SUBJECT'].format(engagement_name=engagement.name)
-        email_environment = templates['ENVIROMENT']
+        email_environment = templates['ENVIRONMENT']
         tenant_name = EngagementService._get_tenant_name(
             engagement.tenant_id)
         args = {

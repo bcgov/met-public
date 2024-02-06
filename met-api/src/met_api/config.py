@@ -289,7 +289,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'CLOSEOUT': {
             'ID': os.getenv('CLOSEOUT_EMAIL_TEMPLATE_ID'),
             'SUBJECT': os.getenv('CLOSEOUT_EMAIL_SUBJECT',
-                                 'MET - Engagement Closed'),
+                                 'The public commenting period for {engagement_name} is now closed.'),
         },
         'ACCESS_REQUEST': {
             'ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
