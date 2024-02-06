@@ -21,8 +21,9 @@ class PublishEmailService:  # pylint: disable=too-few-public-methods
         email_batch_size: int = int(current_app.config.get('MAIL_BATCH_SIZE'))
         mails = EmailQueueModel.get_unprocessed_mails_for_open_engagements(email_batch_size)
         mail: EmailQueueModel
-        template_id = current_app.config.get('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID', None)
-        subject = current_app.config.get('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        template_id = templates['PUBLISH']['ID']
+        subject = templates['PUBLISH']['SUBJECT']
         template = Template.get_template('publish_engagement.html')
         for mail in mails:
             # Process each mails.First set status as PROCESSING

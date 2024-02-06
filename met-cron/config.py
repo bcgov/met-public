@@ -20,24 +20,21 @@ rather than reading environment variables directly or by accessing this configur
 """
 
 import os
-import sys
 
+from typing import Union
 from dotenv import find_dotenv, load_dotenv
 
-# this will load all the envars from a .env file located in the project root (api)
+from met_api.utils.constants import TestKeyConfig
+from met_api.utils.util import is_truthy
+
+# Search in increasingly higher folders for a .env file, then load it,
+# appending any variables we find to the current environment.
 load_dotenv(find_dotenv())
-
-CONFIGURATION = {
-    'development': 'config.DevConfig',
-    'testing': 'config.TestConfig',
-    'production': 'config.ProdConfig',
-    'default': 'config.ProdConfig',
-    # Alembic connects to migration config which is MET Analytics Database
-    'migration': 'config.MigrationConfig',
-}
+# remove all env variables with no text (allows for entries to be unset easily)
+os.environ = {k: v for k, v in os.environ.items() if v}
 
 
-def get_named_config(environment: 'str | None') -> '_Config':
+def get_named_config(environment: Union[str, None]) -> '_Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 
@@ -56,110 +53,174 @@ def get_named_config(environment: 'str | None') -> '_Config':
     }
     try:
         print(f'Loading configuration: {environment}...')
-        return config_mapping[environment]()
-    except KeyError:
-        raise KeyError(f'Configuration "{environment}" not found.')
+        return config_mapping.get(environment or 'production', ProdConfig)()
+    except KeyError as e:
+        raise KeyError(f'Configuration "{environment}" not found.') from e
+
+
+def env_truthy(env_var, default: Union[bool, str] = False):
+    """
+    Return True if the environment variable is set to a truthy value.
+
+    Accepts a default value, which is returned if the environment variable is
+    not set.
+    """
+    return is_truthy(os.getenv(env_var, str(default)))
 
 
 class _Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
 
+    def __init__(self) -> None:
+        """
+        Initialize the configuration object.
+
+        Performs more advanced configuration logic that is not possible
+        in the normal class definition.
+        """
+        # If extending this class, call super().__init__() in your constructor.
+        print(f'SQLAlchemy URL: {self.SQLALCHEMY_DATABASE_URI}')
+
+        # apply configs to _Config in the format that flask_jwt_oidc expects
+        # this flattens the JWT_CONFIG dict into individual attributes
+        for key, value in self.JWT_CONFIG.items():
+            setattr(self, f'JWT_OIDC_{key}', value)
+
+        # Enable live reload and interactive API debugger for developers
+        os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
+
+    @property
+    # pylint: disable=invalid-name
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
+        """
+        Dynamically fetch the SQLAlchemy Database URI based on the DB config.
+
+        This avoids having to redefine the URI after setting the DB access
+        credentials in subclasses. Can be overridden by env variables.
+        """
+        return os.environ.get(
+            'SQLALCHEMY_DATABASE_URI',
+            f'postgresql://'
+            f'{self.DB_CONFIG.get("USER")}:{self.DB_CONFIG.get("PASSWORD")}@'
+            f'{self.DB_CONFIG.get("HOST")}:{self.DB_CONFIG.get("PORT")}/'
+            f'{self.DB_CONFIG.get("NAME")}'
+        )
+
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-    SECRET_KEY = 'a secret'
+    # Used for session management. Randomized by default for security, but
+    # should be set to a fixed value in production to avoid invalidating sessions.
+    SECRET_KEY = os.getenv('SECRET_KEY', os.urandom(24))
 
-    TESTING = False
-    DEBUG = False
+    # If enabled, Exceptions are propagated up, instead of being handled
+    # by the the app’s error handlers. Enable this for tests.
+    TESTING = env_truthy('FLASK_TESTING', default=False)
 
-    # POSTGRESQL CONFIGURATION FOR MET ANALYTICS DATABASE .Used in the Bind and Migration config
-    DB_USER = os.getenv('DATABASE_USERNAME', '')
-    DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
-    DB_NAME = os.getenv('DATABASE_NAME', '')
-    DB_HOST = os.getenv('DATABASE_HOST', '')
-    DB_PORT = os.getenv('DATABASE_PORT', '5432')
+    # If enabled, the interactive debugger will be shown for any
+    # unhandled Exceptions, and the server will be reloaded when code changes.
+    USE_DEBUG = env_truthy('FLASK_DEBUG', default=False)
 
-    # POSTGRESQL CONFIGURATION FOR MET MASTER DATABASE
-    MET_DB_USER = os.getenv('MET_DATABASE_USERNAME', '')
-    MET_DB_PASSWORD = os.getenv('MET_DATABASE_PASSWORD', '')
-    MET_DB_HOST = os.getenv('MET_DATABASE_HOST', '')
-    MET_DB_PORT = os.getenv('MET_DATABASE_PORT', '5432')
-    MET_DB_NAME = os.getenv('MET_DB_NAME', '')
-
-    """
-    Though the main data base assosiated with this microservice is MET Analytics database , its configured as a bind.
-    MET DB is configured as the main database since the models are used from the met-api python module and we cant change it to add bind.
-    So all the models in this project will have a bind.
-
-    To handle migrations ,we need to connect to MET Analytics database.For that a new Miigration config is added.
-    """
-
-    # MET MASTER DB.
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{MET_DB_USER}:{MET_DB_PASSWORD}@{MET_DB_HOST}:{int(MET_DB_PORT)}/{MET_DB_NAME}'
-
-    # MET ANALYTICS DB.
-    SQLALCHEMY_BINDS = {
-        'met_db_analytics': f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
+    # PostgreSQL configuration
+    DB_CONFIG = DB = {
+        'USER': os.getenv('DATABASE_USERNAME', ''),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+        'NAME': os.getenv('DATABASE_NAME', ''),
+        'HOST': os.getenv('DATABASE_HOST', ''),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
-    SQLALCHEMY_ECHO = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    # JWT_OIDC Settings
-    JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv('JWT_OIDC_WELL_KNOWN_CONFIG')
-    JWT_OIDC_ALGORITHMS = os.getenv('JWT_OIDC_ALGORITHMS', 'RS256')
-    JWT_OIDC_JWKS_URI = os.getenv('JWT_OIDC_JWKS_URI')
-    JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_ISSUER')
-    JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE', 'account')
-    JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
-    JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
+    # SQLAlchemy settings
+    # Echoes the SQL queries generated - useful for debugging
+    SQLALCHEMY_ECHO = env_truthy('SQLALCHEMY_ECHO')
+    # Disable modification tracking for performance
+    SQLALCHEMY_TRACK_MODIFICATIONS = env_truthy('SQLALCHEMY_TRACK_MODIFICATIONS')
 
-    S3_BUCKET = os.getenv('S3_BUCKET')
-    S3_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY_ID')
-    S3_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY')
-    S3_HOST = os.getenv('S3_HOST')
-    S3_REGION = os.getenv('S3_REGION')
-    S3_SERVICE = os.getenv('S3_SERVICE')
+    # Keycloak configuration
+    KEYCLOAK_CONFIG = KC = {
+        'BASE_URL': os.getenv('KEYCLOAK_BASE_URL', ''),
+        'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
+        'SERVICE_ACCOUNT_ID': os.getenv('MET_ADMIN_CLIENT_ID'),
+        'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
+        'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
+    }
 
-    TIME_DELTA_IN_MINUTES = os.getenv('TIME_DELTA_IN_MINUTES', 30)
+    # JWT OIDC Settings (for Keycloak)
+    JWT_CONFIG = JWT = {
+        'ISSUER': (
+            _issuer := os.getenv(
+                'JWT_OIDC_ISSUER',
+                f'{KC["BASE_URL"]}/realms/{KC["REALMNAME"]}'
+            )),
+        'WELL_KNOWN_CONFIG': os.getenv(
+            'JWT_OIDC_WELL_KNOWN_CONFIG',
+            f'{_issuer}/.well-known/openid-configuration',
+        ),
+        'JWKS_URI': os.getenv('JWT_OIDC_JWKS_URI', f'{_issuer}/protocol/openid-connect/certs'),
+        'ALGORITHMS': os.getenv('JWT_OIDC_ALGORITHMS', 'RS256'),
+        'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
+        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', True)),
+        'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
+        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
+    }
 
-    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
+    # The following are the paths used in the email templates. They do not
+    # determine the actual paths used in the application. They are used to
+    # construct the links in the emails sent to users.
+    PATH_CONFIG = PATHS = {
+        'SITE': os.getenv('SITE_URL'),
+        'SUBSCRIBE': os.getenv(
+            'SUBSCRIBE_PATH', '/engagements/{engagement_id}/subscribe/{token}'
+        ),
+        'UNSUBSCRIBE': os.getenv(
+            'UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}'
+        ),
+        'ENGAGEMENT': {
+            'VIEW': os.getenv('ENGAGEMENT_PATH', '/engagements/{engagement_id}/view'),
+            'SLUG': os.getenv('ENGAGEMENT_PATH_SLUG', '/{slug}'),
+            'DASHBOARD': os.getenv(
+                'ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public'
+            ),
+            'DASHBOARD_SLUG': os.getenv(
+                'ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public'
+            ),
+        }
+    }
 
-    # Service account details
-    KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('MET_ADMIN_CLIENT_ID')
-    KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('MET_ADMIN_CLIENT_SECRET')
+    # Templates for sending users various notifications by email.
+    EMAIL_TEMPLATES = {
+        # The time of day when engagements get closed. This should match the
+        # value in met-cron/cron/crontab
+        'CLOSING_TIME': os.getenv('ENGAGEMENT_END_TIME', '5 PM'),
+        'FROM_ADDRESS': os.getenv('EMAIL_FROM_ADDRESS'),
+        'ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT'),
+        'CLOSEOUT': {
+            'ID': os.getenv('CLOSEOUT_EMAIL_TEMPLATE_ID'),
+            'SUBJECT': os.getenv('CLOSEOUT_EMAIL_SUBJECT',
+                                 'The public commenting period for {engagement_name} is now closed.'),
+        },
+        'CLOSING_SOON': {
+            'ID': os.getenv('CLOSING_SOON_EMAIL_TEMPLATE_ID'),
+            'SUBJECT': os.getenv('CLOSING_SOON_EMAIL_SUBJECT',
+                                 'Public comment period closes in 2 days'),
+        },
+        'PUBLISH': {
+            'ID': os.getenv('PUBLISH_EMAIL_TEMPLATE_ID'),
+            'SUBJECT': os.getenv('PUBLISH_EMAIL_SUBJECT', 'Share your feedback'),
+        }
+    }
 
-    # front end endpoints
-    SITE_URL = os.getenv('SITE_URL')
-    # needed for close out emails for met api
-    ENGAGEMENT_DASHBOARD_PATH = os.getenv('ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public')
-    ENGAGEMENT_DASHBOARD_PATH_SLUG = os.getenv('ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public')
-    # needed for publish emails for met api
-    ENGAGEMENT_VIEW_PATH = os.getenv('ENGAGEMENT_VIEW_PATH', '/engagements/{engagement_id}/view')
-    ENGAGEMENT_VIEW_PATH_SLUG = os.getenv('ENGAGEMENT_VIEW_PATH_SLUG', '/{slug}')
-    UNSUBSCRIBE_PATH = os.getenv('UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}')
+    # The secret key used for encryption when sending emails to participants.
+    EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', os.urandom(24))
 
-    # The GC notify email variables
-    # Publish Email Service
-    EMAIL_SECRET_KEY = os.getenv('EMAIL_SECRET_KEY', 'secret')
-    PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID')
-    PUBLISH_ENGAGEMENT_EMAIL_SUBJECT = os.getenv('PUBLISH_ENGAGEMENT_EMAIL_SUBJECT', 'Share your feedback')
+    # Single tenant environment mode - disables certain checks for user
+    # permissions and tenant access. When enabled, all users are assumed to
+    # have access to all tenants. Will probably cause bugs if enabled.
+    IS_SINGLE_TENANT_ENVIRONMENT = env_truthy('IS_SINGLE_TENANT_ENVIRONMENT')
 
-    # EAO is a single Tenant Environment where EAO is the only env and should be set to True
-    # This flag decides if additonal tenant based checks has to be carried or not
-    IS_SINGLE_TENANT_ENVIRONMENT = os.getenv('IS_SINGLE_TENANT_ENVIRONMENT', 'False').lower() == 'true'
-
-    # Closing Soon Email Service
-    ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID')
-    ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT = os.getenv('ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT',
-                                                      'Public comment period closes in 2 days')
-
-    # Email Service
-    ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID = os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID')
-    ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT = \
-        os.getenv('ENGAGEMENT_CLOSEOUT_EMAIL_SUBJECT', '{engagement_name} - What we heard')
+    # The API endpoint used to send emails to participants.
     NOTIFICATIONS_EMAIL_ENDPOINT = os.getenv('NOTIFICATIONS_EMAIL_ENDPOINT')
-
-    # Environment from which email is sent
-    EMAIL_ENVIRONMENT = os.getenv('EMAIL_ENVIRONMENT', '')
 
     # config for comment_redact_service
     N_DAYS = os.getenv('N_DAYS', 14)
@@ -174,54 +235,63 @@ class _Config():  # pylint: disable=too-few-public-methods
 class MigrationConfig():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
 
-    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-
-    SECRET_KEY = 'a secret'
-
-    TESTING = False
-    DEBUG = False
-
-    # Migration connects to the MET Analytics database
-    DB_USER = os.getenv('DATABASE_USERNAME', '')
-    DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
-    DB_NAME = os.getenv('DATABASE_NAME', '')
-    DB_HOST = os.getenv('DATABASE_HOST', '')
-    DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    SQLALCHEMY_ECHO = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = True
-
-    print(f'SQLAlchemy URL (_Config): {SQLALCHEMY_DATABASE_URI}')
+    # SQLAlchemy settings
+    # Echoes the SQL queries generated - useful for debugging
+    SQLALCHEMY_ECHO = env_truthy('SQLALCHEMY_ECHO', True)
+    # Disable modification tracking for performance
+    SQLALCHEMY_TRACK_MODIFICATIONS = env_truthy('SQLALCHEMY_TRACK_MODIFICATIONS', True)
 
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
 
-    TESTING = False
-    DEBUG = True
-    print(f'SQLAlchemy URL (DevConfig): {_Config.SQLALCHEMY_DATABASE_URI}')
+    # Default to using the debugger for development
+    USE_DEBUG = env_truthy('USE_DEBUG', True)
 
 
 class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
 
-    DEBUG = True
-    TESTING = True
-    DEBUG = True
-    TESTING = True
-    # POSTGRESQL
-    DB_USER = os.getenv('DATABASE_TEST_USERNAME', 'postgres')
-    DB_PASSWORD = os.getenv('DATABASE_TEST_PASSWORD', 'postgres')
-    DB_NAME = os.getenv('DATABASE_TEST_NAME', 'postgres')
-    DB_HOST = os.getenv('DATABASE_TEST_HOST', 'localhost')
-    DB_PORT = os.getenv('DATABASE_TEST_PORT', '54334')
-    MET_DB_PORT = os.getenv('DATABASE_TEST_PORT', '54333')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL',
-                                        f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}')
+    def __init__(self) -> None:
+        """
+        Initialize the object.
+
+        This method is called when an object is created. It sets up the initial
+        state of the object.
+
+        """
+        super().__init__()
+
+        # Override Keycloak variables here
+        self.KC['ADMIN_USERNAME'] = os.getenv(
+            'KEYCLOAK_TEST_ADMIN_CLIENTID',
+            self.KC['ADMIN_USERNAME']
+        )
+        self.KC['ADMIN_SECRET'] = os.getenv(
+            'KEYCLOAK_TEST_ADMIN_SECRET',
+            self.KC['ADMIN_SECRET']
+        )
+        self.KC['BASE_URL'] = os.getenv('KEYCLOAK_TEST_BASE_URL', self.KC['BASE_URL'])
+        self.KC['REALMNAME'] = os.getenv('KEYCLOAK_TEST_REALMNAME', self.KC['REALMNAME'])
+
+    # Propagate exceptions up to the test runner
+    TESTING = env_truthy('FLASK_TESTING', default=True)
+    # explicitly disable the debugger; we want the tests to fail if an
+    # unhandled exception occurs
+    USE_DEBUG = False
+
+    # Override the DB config to use the test database, if one is configured
+    DB_CONFIG = {
+        'USER': os.getenv('DATABASE_TEST_USERNAME', _Config.DB.get('USER')),
+        'PASSWORD': os.getenv('DATABASE_TEST_PASSWORD', _Config.DB.get('PASSWORD')),
+        'NAME': os.getenv('DATABASE_TEST_NAME', _Config.DB.get('NAME')),
+        'HOST': os.getenv('DATABASE_TEST_HOST', _Config.DB.get('HOST')),
+        'PORT': os.getenv('DATABASE_TEST_PORT', _Config.DB.get('PORT')),
+    }
 
     # JWT OIDC settings
-    # JWT_OIDC_TEST_MODE will set jwt_manager to use
-    JWT_OIDC_TEST_MODE = True
+    # JWT OIDC Settings for the test environment
+    JWT_OIDC_TEST_MODE = True  # enables the test mode for flask_jwt_oidc
     JWT_OIDC_TEST_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_TEST_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_TEST_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
@@ -279,25 +349,9 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     4H8UZcVFN95vEKxJiLRjAmj6g273pu9kK4ymXNEjWWJn
     -----END RSA PRIVATE KEY-----"""
 
-    KEYCLOAK_ADMIN_USERNAME = KEYCLOAK_BCROS_ADMIN_CLIENTID = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
-    KEYCLOAK_ADMIN_SECRET = KEYCLOAK_BCROS_ADMIN_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')
-    KEYCLOAK_BASE_URL = KEYCLOAK_BCROS_BASE_URL = os.getenv('KEYCLOAK_TEST_BASE_URL')
-    KEYCLOAK_REALMNAME = KEYCLOAK_BCROS_REALMNAME = os.getenv('KEYCLOAK_TEST_REALMNAME')
     JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_TEST_AUDIENCE')
     JWT_OIDC_CLIENT_SECRET = os.getenv('JWT_OIDC_TEST_CLIENT_SECRET')
     JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_TEST_ISSUER')
-
-    # Service account details
-    KEYCLOAK_SERVICE_ACCOUNT_ID = os.getenv('KEYCLOAK_TEST_ADMIN_CLIENTID')
-    KEYCLOAK_SERVICE_ACCOUNT_SECRET = os.getenv('KEYCLOAK_TEST_ADMIN_SECRET')
-
-    # Legal-API URL
-    LEGAL_API_URL = 'https://mock-auth-tools.pathfinder.gov.bc.ca/rest/legal-api/2.7/api/v1'
-
-    NOTIFY_API_URL = 'http://localhost:8080/notify-api/api/v1'
-    BCOL_API_URL = 'http://localhost:8080/bcol-api/api/v1'
-    PAY_API_URL = 'http://localhost:8080/pay-api/api/v1'
-    PAY_API_SANDBOX_URL = 'http://localhost:8080/pay-api/api/v1'
 
     # If any value is present in this flag, starts up a keycloak docker
     USE_TEST_KEYCLOAK_DOCKER = os.getenv('USE_TEST_KEYCLOAK_DOCKER', None)
@@ -307,25 +361,15 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
 class DockerConfig(_Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
 
-    # POSTGRESQL
-    DB_USER = os.getenv('DATABASE_DOCKER_USERNAME')
-    DB_PASSWORD = os.getenv('DATABASE_DOCKER_PASSWORD')
-    DB_NAME = os.getenv('DATABASE_DOCKER_NAME')
-    DB_HOST = os.getenv('DATABASE_DOCKER_HOST')
-    DB_PORT = os.getenv('DATABASE_DOCKER_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-
-    print(f'SQLAlchemy URL (Docker): {SQLALCHEMY_DATABASE_URI}')
+    # Override DB config to use the docker database, if one is configured
+    DB_CONFIG = {
+        'USER': os.getenv('DATABASE_DOCKER_USERNAME', _Config.DB.get('USER')),
+        'PASSWORD': os.getenv('DATABASE_DOCKER_PASSWORD', _Config.DB.get('PASSWORD')),
+        'NAME': os.getenv('DATABASE_DOCKER_NAME', _Config.DB.get('NAME')),
+        'HOST': os.getenv('DATABASE_DOCKER_HOST', _Config.DB.get('HOST')),
+        'PORT': os.getenv('DATABASE_DOCKER_PORT', _Config.DB.get('PORT')),
+    }
 
 
 class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
     """Production Config."""
-
-    SECRET_KEY = os.getenv('SECRET_KEY', None)
-
-    if not SECRET_KEY:
-        SECRET_KEY = os.urandom(24)
-        print('WARNING: SECRET_KEY being set as a one-shot', file=sys.stderr)
-
-    TESTING = False
-    DEBUG = False

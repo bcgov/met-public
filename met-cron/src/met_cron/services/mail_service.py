@@ -6,7 +6,7 @@ from flask import current_app
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Tenant as TenantModel
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.engagement_metadata import EngagementMetadataModel
+# from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.services.email_verification_service import EmailVerificationService
@@ -53,17 +53,19 @@ class EmailService:  # pylint: disable=too-few-public-methods
     def _render_email_template(engagement, participant, template):
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         tenant_name = EmailService._get_tenant_name(engagement.tenant_id)
-        metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
-        project_name = None
-        if metadata_model and 'project_name' in metadata_model.project_metadata:
-            project_name = metadata_model.project_metadata.get('project_name')
+        # TODO should be re-visited once the engagement metadata functionality of completed
+        # metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
+        # project_name = None
+        # if metadata_model and 'project_name' in metadata_model.project_metadata:
+            # project_name = metadata_model.project_metadata.get('project_name')
         paths = current_app.config['PATH_CONFIG']
         view_path = paths['ENGAGEMENT']['VIEW'].format(engagement_id=engagement.id)
         unsubscribe_url = paths['UNSUBSCRIBE'].format(
             engagement_id=engagement.id, participant_id=participant.id)
         email_environment = current_app.config['EMAIL_TEMPLATES']['ENVIRONMENT']
+        # TODO should be re-visited once the engagement metadata functionality of completed
         args = {
-            'project_name': project_name if project_name else engagement.name,
+            'project_name': engagement.name,
             'survey_url': f'{site_url}{view_path}',
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'tenant_name': tenant_name,
