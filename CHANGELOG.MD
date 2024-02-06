@@ -1,3 +1,9 @@
+## February 06, 2024
+- **Task** Streamline CRON jobs [DESENG-493](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-493)
+  - Aligned the CRON configuration and sample environment files with the structure used in the Met API.
+  - Eliminated the reliance on engagement metadata within CRON jobs.
+  - Implemented necessary code adjustments to seamlessly integrate with the updated CRON configuration.
+
 ## February 05, 2024
 - **Task** Change "Superuser" to "Administrator" [DESENG-476](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-476)
 
