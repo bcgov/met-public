@@ -24,8 +24,9 @@ class StaffUserService:
         user_schema = StaffUserSchema()
         db_user = StaffUserModel.get_by_id(_user_id, include_inactive)
         user = user_schema.dump(db_user)
-        if include_roles:
-            cls.attach_roles([user])
+        # TODO: Replace this method with one that uses composite roles
+        # if include_roles:
+        #     cls.attach_roles([user])
         return user
 
     @classmethod
@@ -134,8 +135,9 @@ class StaffUserService:
         """Return a list of users."""
         users, total = StaffUserModel.get_all_paginated(pagination_options, search_text, include_inactive)
         user_collection = StaffUserSchema(many=True).dump(users)
-        if include_roles:
-            cls.attach_roles(user_collection)
+        # TODO: Replace this method with one that uses composite roles
+        # if include_roles:
+        #     cls.attach_roles(user_collection)
         return {
             'items': user_collection,
             'total': total
