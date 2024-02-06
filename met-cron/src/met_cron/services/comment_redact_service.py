@@ -25,9 +25,10 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
             3. Redact comments in submission_json by submission_ids
 
         """
-        submissions = CommentRedactService._find_submissions_for_n_days_closed_engagements(days=current_app.config.get('N_DAYS', 14))
+        n_days: int = int(current_app.config.get('N_DAYS'))
+        submissions = CommentRedactService._find_submissions_for_n_days_closed_engagements(days=current_app.config.get(n_days, 14))
         if not submissions:
-            current_app.logger.info(f'>>>>>No Submissions for Engagements closed for {current_app.config.get("N_DAYS", 14)} days found.')
+            current_app.logger.info(f'>>>>>No Submissions for Engagements closed for {current_app.config.get(n_days, 14)} days found.')
             return        
         current_app.logger.info('>>>>>Total Submissions to redact found: %s.', len(submissions))
         submissions_ids = [submission.id for submission in submissions]
