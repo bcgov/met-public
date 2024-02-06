@@ -217,7 +217,7 @@ export const AssignRoleModal = () => {
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
-                                                label={'Superuser'}
+                                                label={'Administrator'}
                                             />
                                         </ControlledRadioGroup>
                                         <When condition={Boolean(groupErrors)}>

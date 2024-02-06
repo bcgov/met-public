@@ -1,3 +1,6 @@
+## February 05, 2024
+- **Task** Change "Superuser" to "Administrator" [DESENG-476](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-476)
+
 ## February 02, 2024
 - **Task** Updated Timeline widget icons so that the circles are more consistent. [🎟️DESENG-488](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-488)
 

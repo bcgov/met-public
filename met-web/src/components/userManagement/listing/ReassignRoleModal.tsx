@@ -115,7 +115,7 @@ export const ReassignRoleModal = () => {
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}
-                                                label={'Superuser'}
+                                                label={'Administrator'}
                                             />
                                         </Unless>
                                     </ControlledRadioGroup>

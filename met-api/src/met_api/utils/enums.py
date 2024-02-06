@@ -62,7 +62,7 @@ class LoginSource(Enum):
 class KeycloakGroups(Enum):
     """Login Source."""
 
-    EAO_IT_ADMIN = 'Superuser'
+    EAO_IT_ADMIN = 'Administrator'
     EAO_IT_VIEWER = 'Viewer'
     EAO_TEAM_MEMBER = 'Member'
     EAO_REVIEWER = 'Reviewer'

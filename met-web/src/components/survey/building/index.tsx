@@ -391,7 +391,7 @@ const SurveyFormBuilder = () => {
                         />
                     </FormGroup>
                     <Tooltip
-                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Superusers. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
+                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Administrators. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
                         placement="top"
                         componentsProps={{
                             tooltip: {

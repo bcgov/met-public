@@ -188,5 +188,5 @@ class StaffUserService:
         group_names = [group.get('name') for group in groups]
         if KeycloakGroupName.EAO_IT_ADMIN.value in group_names:
             raise BusinessException(
-                error='This user is already a Superuser.',
+                error='This user is already an Administrator.',
                 status_code=HTTPStatus.CONFLICT.value)

@@ -32,12 +32,16 @@ def require_role(role, skip_tenant_check_for_admin=False):
 
     Args:
         role (str): The role that the user is required to have.
-        skip_tenant_check_for_admin (bool, optional): A flag to indicate whether to skip tenant checks for MET Admins.
-            If set to True, tenant checks are skipped for users with MET administrative privileges.
-            Defaults to False. Set it to True for cross tenant operations like first time adding a super user to tenant.
+        skip_tenant_check_for_admin (bool, optional): A flag to indicate
+        whether to skip tenant checks for MET Admins.
+            If set to True, tenant checks are skipped for users with MET
+            administrative privileges.
+            Defaults to False. Set it to True for cross tenant operations
+            like first time adding a administrator to tenant.
 
     Returns:
-        function: A decorator function that can be used to enforce role-based authorization.
+        function: A decorator function that can be used to enforce
+        role-based authorization.
     """
 
     def decorator(func):

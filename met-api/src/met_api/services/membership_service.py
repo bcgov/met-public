@@ -58,7 +58,7 @@ class MembershipService:
         groups = user_details.get('groups')
         if KeycloakGroups.EAO_IT_ADMIN.value in groups:
             raise BusinessException(
-                error='This user is already a Superuser.',
+                error='This user is already an Administrator.',
                 status_code=HTTPStatus.CONFLICT.value)
 
         existing_membership = MembershipModel.find_by_engagement_and_user_id(
