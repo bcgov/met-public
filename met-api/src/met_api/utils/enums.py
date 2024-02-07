@@ -59,22 +59,22 @@ class LoginSource(Enum):
     IDIR = 'idir'
 
 
-class KeycloakGroups(Enum):
-    """Login Source."""
+class KeycloakPermissionLevels(Enum):
+    """Keycloak permission levels."""
 
-    EAO_IT_ADMIN = 'Administrator'
-    EAO_IT_VIEWER = 'Viewer'
-    EAO_TEAM_MEMBER = 'Member'
-    EAO_REVIEWER = 'Reviewer'
+    IT_ADMIN = 'Administrator'
+    IT_VIEWER = 'Viewer'
+    TEAM_MEMBER = 'Member'
+    REVIEWER = 'Reviewer'
 
 
-class KeycloakGroupName(Enum):
-    """Keycloak group names."""
+class KeycloakCompositeRoleNames(Enum):
+    """Keycloak composite role names."""
 
-    EAO_IT_ADMIN = 'EAO_IT_ADMIN'
-    EAO_IT_VIEWER = 'EAO_IT_VIEWER'
-    EAO_TEAM_MEMBER = 'EAO_TEAM_MEMBER'
-    EAO_REVIEWER = 'EAO_REVIEWER'
+    IT_ADMIN = 'IT_ADMIN'
+    IT_VIEWER = 'IT_VIEWER'
+    TEAM_MEMBER = 'TEAM_MEMBER'
+    REVIEWER = 'REVIEWER'
 
 
 class MembershipType(IntEnum):

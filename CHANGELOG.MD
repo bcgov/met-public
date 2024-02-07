@@ -1,4 +1,10 @@
 ## February 06, 2024
+- **Task**Convert keycloak groups to composite roles for permission levels [DESENG-447](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-447)
+    - Commented out unit test related to Keycloak groups
+    - Changed reference of Keycloak `groups` to `roles`
+    - Commented out code related to Keycloak groups
+
+## February 06, 2024
 - **Task** Streamline CRON jobs [DESENG-493](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-493)
   - Aligned the CRON configuration and sample environment files with the structure used in the Met API.
   - Eliminated the reliance on engagement metadata within CRON jobs.

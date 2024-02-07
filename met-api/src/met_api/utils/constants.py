@@ -13,29 +13,27 @@
 # limitations under the License.
 """Constants definitions."""
 
-from enum import Enum
+# from enum import Enum
 
+# TODO Remove this
+# class Groups(Enum):
+#     """Enumeration representing user groups."""
 
-class Groups(Enum):
-    """Enumeration representing user groups."""
+#     IT_ADMIN = 'Administrator'
+#     TEAM_MEMBER = 'Team Member'
+#     REVIEWER = 'Reviewer'
+#     IT_VIEWER = 'Viewer'
 
-    EAO_IT_ADMIN = 'Administrator'
-    EAO_TEAM_MEMBER = 'Team Member'
-    EAO_REVIEWER = 'Reviewer'
-    EAO_IT_VIEWER = 'Viewer'
-
-    @staticmethod
-    def get_name_by_value(value):
-        """Get the name of a group by its value."""
-        for group in Groups:
-            if group.value == value:
-                return group.name
-        raise ValueError('No matching key found for the given value.')
+#     @staticmethod
+#     def get_name_by_value(value):
+#         """Get the name of a group by its value."""
+#         for group in Groups:
+#             if group.value == value:
+#                 return group.name
+#         raise ValueError('No matching key found for the given value.')
 
 
 TENANT_ID_HEADER = 'tenant-id'
-
-GROUP_NAME_MAPPING = {group.name: group.value for group in Groups}
 
 TENANT_ID_JWT_CLAIM = 'tenant_id'
 

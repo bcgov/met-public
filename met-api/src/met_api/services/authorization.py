@@ -31,14 +31,15 @@ def check_auth(**kwargs):
     has_valid_roles = token_roles & permitted_roles
     if has_valid_roles:
         if not skip_tenant_check:
+
             user_tenant_id = user_from_db.tenant_id
             _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
         return
-
     team_permitted_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name} & permitted_roles
 
     if team_permitted_roles:
         # check if he is a member of particular engagement.
+
         has_valid_team_access = _has_team_membership(kwargs, user_from_context, team_permitted_roles)
         if has_valid_team_access:
             return
@@ -63,16 +64,19 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
     eng_id = kwargs.get('engagement_id')
 
     if not eng_id:
+
         return False
 
     user = StaffUserModel.get_user_by_external_id(user_from_context.sub)
 
     if not user:
+
         return False
 
     membership = MembershipModel.find_by_engagement_and_user_id(eng_id, user.id, status=MembershipStatus.ACTIVE.value)
 
     if not membership:
+
         return False
 
     skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
