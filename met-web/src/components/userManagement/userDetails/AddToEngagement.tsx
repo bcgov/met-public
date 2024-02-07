@@ -36,7 +36,6 @@ import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 export const AddToEngagementModal = () => {
     const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserMemberships, getUserDetails } =
         useContext(UserDetailsContext);
-    console.log('user', savedUser);
     const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
     const schema = yup
         .object({
