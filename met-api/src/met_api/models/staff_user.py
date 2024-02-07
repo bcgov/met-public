@@ -12,7 +12,6 @@ from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
 from met_api.utils.enums import UserStatus
-from ..utils.token_info import TokenInfo
 
 from .base_model import BaseModel
 from .db import db

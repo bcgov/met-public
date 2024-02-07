@@ -13,7 +13,7 @@
 # limitations under the License.
 """Constants definitions."""
 
-from enum import Enum
+# from enum import Enum
 
 # TODO Remove this
 # class Groups(Enum):

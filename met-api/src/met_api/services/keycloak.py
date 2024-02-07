@@ -14,7 +14,6 @@
 """Utils for keycloak administration."""
 
 import json
-from typing import List
 
 import requests
 from flask import current_app

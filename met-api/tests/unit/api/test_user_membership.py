@@ -14,19 +14,19 @@
 
 """Tests to verify the user membership operations.
 
-Test-Suite to ensure that the user membership endpoints are working as expected.
+Test-Suite to ensure that the user membership endpoints are working as expected. # noqa: E501
 """
 from http import HTTPStatus
-from unittest.mock import MagicMock, patch
-#import pytest
+from unittest.mock import MagicMock
+# import pytest
 
 # from met_api.exceptions.business_exception import BusinessException
 # from met_api.models.membership import Membership as MembershipModel
-# from met_api.services.staff_user_membership_service import StaffUserMembershipService
-# from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus, UserStatus
+# from met_api.services.staff_user_membership_service import StaffUserMembershipService # noqa: E501
+# from met_api.utils.enums import ContentType, KeycloakGroupName, MembershipStatus, UserStatus # noqa: E501
 # from tests.utilities.factory_scenarios import TestJwtClaims
 # from tests.utilities.factory_utils import (
-#     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
+#     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model) # noqa: E501
 
 
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
@@ -70,11 +70,11 @@ def mock_keycloak_methods(mocker, mock_group_names):
 #     (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
 #     (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
 # ])
-# def test_reassign_user_reviewer_team_member(mocker, client, jwt, session, side_effect, expected_status):
+# def test_reassign_user_reviewer_team_member(mocker, client, jwt, session, side_effect, expected_status): # noqa: E501
 #     """Assert that returns bad request if bad request body."""
 #     user = factory_staff_user_model()
 #     eng = factory_engagement_model()
-#     current_membership = factory_membership_model(user_id=user.id, engagement_id=eng.id)
+#     current_membership = factory_membership_model(user_id=user.id, engagement_id=eng.id) # noqa: E501
 #     assert current_membership.status == MembershipStatus.ACTIVE.value
 #     mock_response = MagicMock()
 #     mock_response.status_code = HTTPStatus.NO_CONTENT
@@ -91,7 +91,7 @@ def mock_keycloak_methods(mocker, mock_group_names):
 
 #     mock_get_users_groups_keycloak = mocker.patch(
 #         f'{KEYCLOAK_SERVICE_MODULE}.get_users_groups',
-#         return_value={user.external_id: [KeycloakGroupName.EAO_REVIEWER.value]}
+#         return_value={user.external_id: [KeycloakGroupName.EAO_REVIEWER.value]} # noqa: E501
 #     )
 
 #     assert user.status_id == UserStatus.ACTIVE.value

@@ -4,13 +4,10 @@ from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import StaffUser as StaffUserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
-from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services import authorization
-from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
-from met_api.utils.enums import KeycloakCompositeRoleNames, KeycloakPermissionLevels, MembershipStatus
+from met_api.utils.enums import MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
@@ -53,12 +50,12 @@ class MembershipService:
                 status_code=HTTPStatus.FORBIDDEN.value)
 
         user_id = user_details.get('id')
-       
+
         # TODO: Check for permission level once composite role permission levels are added.
         # roles = user_details.get('roles')
         # if KeycloakPermissionLevels.IT_ADMIN.value in roles:
         #     raise BusinessException(
-        #         error='This user is already a Superuser.',
+        #         error='This user is already a Administrator.',
         #         status_code=HTTPStatus.CONFLICT.value)
 
         existing_membership = MembershipModel.find_by_engagement_and_user_id(

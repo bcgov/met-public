@@ -39,7 +39,7 @@ def check_auth(**kwargs):
 
     if team_permitted_roles:
         # check if he is a member of particular engagement.
-        
+
         has_valid_team_access = _has_team_membership(kwargs, user_from_context, team_permitted_roles)
         if has_valid_team_access:
             return

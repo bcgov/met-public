@@ -10,7 +10,6 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
 from met_api.utils.template import Template
-from met_api.utils.token_info import TokenInfo
 
 KEYCLOAK_SERVICE = KeycloakService()
 
@@ -24,9 +23,10 @@ class StaffUserService:
         user_schema = StaffUserSchema()
         db_user = StaffUserModel.get_by_id(_user_id, include_inactive)
         user = user_schema.dump(db_user)
-        # TODO: Replace this method with one that uses composite roles
-        # if include_roles:
-        #     cls.attach_roles([user])
+        if include_roles:
+            # TODO: Replace this method with one that uses composite roles
+            # cls.attach_roles([user])
+            pass
         return user
 
     @classmethod
@@ -135,9 +135,12 @@ class StaffUserService:
         """Return a list of users."""
         users, total = StaffUserModel.get_all_paginated(pagination_options, search_text, include_inactive)
         user_collection = StaffUserSchema(many=True).dump(users)
-        # TODO: Replace this method with one that uses composite roles
-        # if include_roles:
-        #     cls.attach_roles(user_collection)
+
+        if include_roles:
+            # TODO: Replace this method with one that uses composite roles
+            # cls.attach_roles(user_collection)
+            pass
+
         return {
             'items': user_collection,
             'total': total
@@ -163,7 +166,9 @@ class StaffUserService:
 
         cls.validate_user(db_user)
 
-        KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
+        # TODO: Replace this method with one that uses composite roles
+        print(group_name)
+        # KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
         KEYCLOAK_SERVICE.add_attribute_to_user(user_id=external_id, attribute_value=g.tenant_id)
 
         return StaffUserSchema().dump(db_user)
@@ -176,7 +181,9 @@ class StaffUserService:
         if db_user is None:
             raise KeyError('User not found')
 
-        KEYCLOAK_SERVICE.remove_user_from_group(user_id=external_id, group_name=group_name)
+        # TODO: Replace this method with one that uses composite roles
+        print(group_name)
+        # KEYCLOAK_SERVICE.remove_user_from_group(user_id=external_id, group_name=group_name)
 
         return StaffUserSchema().dump(db_user)
 

@@ -120,6 +120,7 @@ class StaffUserStatus(Resource):
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.BAD_REQUEST
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/<user_id>/engagements')
 class EngagementMemberships(Resource):

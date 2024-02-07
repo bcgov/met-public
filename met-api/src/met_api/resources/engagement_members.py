@@ -48,17 +48,18 @@ class EngagementMembership(Resource):
         except BusinessException as err:
             return {'message': err.error}, err.status_code
 
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
-    def post(engagement_id):
-        """Create a new membership."""
-        # TODO validate against a schema.
-        try:
-            member = MembershipService.create_membership(engagement_id, request.get_json())
-            return MembershipSchema().dump(member), HTTPStatus.OK
-        except BusinessException as err:
-            return {'message': err.error}, err.status_code
+    # TODO: Create membership method that uses composite roles
+    # @staticmethod
+    # @cross_origin(origins=allowedorigins())
+    # @_jwt.requires_auth
+    # def post(engagement_id):
+    #     """Create a new membership."""
+    #     # TODO validate against a schema.
+    #     try:
+    #         member = MembershipService.create_membership(engagement_id, request.get_json())
+    #         return MembershipSchema().dump(member), HTTPStatus.OK
+    #     except BusinessException as err:
+    #         return {'message': err.error}, err.status_code
 
 
 @cors_preflight('GET,OPTIONS')

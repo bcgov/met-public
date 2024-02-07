@@ -60,6 +60,7 @@ class LoginSource(Enum):
 
 
 class KeycloakPermissionLevels(Enum):
+    """Keycloak permission levels."""
 
     IT_ADMIN = 'Administrator'
     IT_VIEWER = 'Viewer'
