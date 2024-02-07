@@ -12,7 +12,6 @@ const AuthGate = ({ allowedRoles }: { allowedRoles: string[] }) => {
         scopesMap[scope] = true;
     });
 
-    console.log('user permissions', permissions);
     return permissions.some((permission) => scopesMap[permission]) ||
         permissions?.includes('/' + USER_GROUP.TEAM_MEMBER.value) ? (
         <Outlet />
