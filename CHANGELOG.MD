@@ -3,6 +3,7 @@
     - Change some foreign key field to nullbale false in model files
     - Change `rejected_reason_other` to nullable true in `submission` model
     - Generated new migration file based on the pending model changes which confirmed to be valid
+    - Updated Unit test of email verfication to send type to the api
 
 ## February 06, 2024
 - **Task**Convert keycloak groups to composite roles for permission levels [DESENG-447](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-447)
