@@ -16,9 +16,9 @@ class TimelineEvent(BaseModel):
 
     __tablename__ = 'timeline_event'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
-    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
-    timeline_id = db.Column(db.Integer, ForeignKey('widget_timeline.id', ondelete='CASCADE'), nullable=True)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
+    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=False)
+    timeline_id = db.Column(db.Integer, ForeignKey('widget_timeline.id', ondelete='CASCADE'), nullable=False)
     status = db.Column(db.Enum(TimelineEventStatus), nullable=False)
     position = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text(), nullable=True)
