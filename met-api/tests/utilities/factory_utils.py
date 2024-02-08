@@ -140,8 +140,6 @@ def factory_email_verification(survey_id, type=None):
     return email_verification
 
 
-
-
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
     """Produce a engagement model."""
     engagement = EngagementModel(
