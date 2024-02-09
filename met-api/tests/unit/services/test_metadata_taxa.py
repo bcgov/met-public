@@ -61,8 +61,10 @@ def test_get_by_tenant(session):
     tenant, _ = factory_taxon_requirements()
     taxon_service = MetadataTaxonService()
     # Create multiple taxa for the tenant
-    taxon1 = taxon_service.create(tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
-    taxon2 = taxon_service.create(tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
+    taxon1 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
+    taxon2 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
     # Retrieve taxa for tenant and assert
     tenant_taxa = taxon_service.get_by_tenant(tenant.id)
     assert taxon1 in tenant_taxa and taxon2 in tenant_taxa
@@ -94,6 +96,27 @@ def test_update_taxon(session):
     assert taxon_updated['name'] == 'Updated Taxon'
 
 
+def test_modify_presets(session):
+    """Assert that taxon preset values can be updated."""
+    taxon_service = MetadataTaxonService()
+    tenant, _ = factory_taxon_requirements()
+    taxon = taxon_service.create(tenant.id,
+                                 TestEngagementMetadataTaxonInfo.taxon1)
+    assert taxon.get('id') is not None
+    assert taxon['preset_values'] == []
+    taxon_existing = taxon_service.get_by_id(taxon['id'])
+    assert taxon_existing is not None
+    assert taxon['preset_values'] == taxon_existing['preset_values']
+    taxon['preset_values'] = ['foo', 'bar', 'baz']
+    taxon_updated = taxon_service.update(
+        taxon['id'], {'preset_values': ['foo', 'bar', 'baz']})
+    assert taxon_updated['preset_values'] == ['foo', 'bar', 'baz']
+    taxon['preset_values'] = ['foo', 'baz']
+    taxon_updated = taxon_service.update(
+        taxon['id'], {'preset_values': ['foo', 'baz']})
+    assert taxon_updated['preset_values'] == ['foo', 'baz']
+
+
 def test_delete_taxon(session):
     """Assert that taxa can be deleted."""
     taxon_service = MetadataTaxonService()
@@ -110,8 +133,10 @@ def test_reorder_tenant(session):
     tenant, _ = factory_taxon_requirements()
     taxon_service = MetadataTaxonService()
     # Create multiple taxa
-    taxon1 = taxon_service.create(tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
-    taxon2 = taxon_service.create(tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
+    taxon1 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
+    taxon2 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
     assert taxon1['position'] == 1 and taxon2['position'] == 2
     # Reorder taxa
     new_order = [taxon2['id'], taxon1['id']]
