@@ -9,10 +9,8 @@
 ## February 08, 2024
 
 - **Task**Cache CORS preflight responses with the browser for a given period of time [DESENG-484](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-484)
-
   - Introduces a new configuration variable to specify the maximum age for Cross-Origin Resource Sharing (CORS)
   - Modified the CORS preflight method to utilize this newly introduced variable.
-
 - **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
   - Change some foreign key field to nullbale false in model files
   - Change `rejected_reason_other` to nullable true in `submission` model
