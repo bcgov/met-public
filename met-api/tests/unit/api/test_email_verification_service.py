@@ -41,7 +41,8 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
     survey, eng = factory_survey_and_eng_model()
     to_dict = {
         'email_address': fake.email(),
-        'survey_id': survey.id
+        'survey_id': survey.id,
+        'type': EmailVerificationType.Survey,
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/email_verification/', data=json.dumps(to_dict),
@@ -87,7 +88,7 @@ def test_patch_email_verification_by_token(client, jwt, session):  # pylint:disa
     claims = TestJwtClaims.public_user_role
     set_global_tenant()
     survey, eng = factory_survey_and_eng_model()
-    email_verification = factory_email_verification(survey.id)
+    email_verification = factory_email_verification(survey.id, EmailVerificationType.Subscribe)
 
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put(f'/api/email_verification/{email_verification.verification_token}',

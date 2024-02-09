@@ -1,54 +1,73 @@
 ## Current: feature/DESENG-443: Engagement Metadata Management
+
 - **Task**: Remove "default_values" from metadata taxa.
-Replace with "preset values", metadata entries that are not assigned to an engagement.
+  Replace with "preset values", metadata entries that are not assigned to an engagement.
 - **Task**: Update authorization documentation in the API blueprint. Update
-metadata management to rely on normal authorization check functions.
+  metadata management to rely on normal authorization check functions.
 - **Task**: Clean up metadata management code and tests.
 
-## February 06, 2024
-- **Task**Convert keycloak groups to composite roles for permission levels [DESENG-447](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-447)
-    - Commented out unit test related to Keycloak groups
-    - Changed reference of Keycloak `groups` to `roles`
-    - Commented out code related to Keycloak groups
+## February 08, 2024
+
+- **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
+  - Change some foreign key field to nullbale false in model files
+  - Change `rejected_reason_other` to nullable true in `submission` model
+  - Generated new migration file based on the pending model changes which confirmed to be valid
+  - Updated Unit test of email verfication to send type to the api
 
 ## February 06, 2024
+
+- **Task**Convert keycloak groups to composite roles for permission levels [DESENG-447](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-447)
+  - Commented out unit test related to Keycloak groups
+  - Changed reference of Keycloak `groups` to `roles`
+  - Commented out code related to Keycloak groups
+
+## February 06, 2024
+
 - **Task** Streamline CRON jobs [DESENG-493](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-493)
   - Aligned the CRON configuration and sample environment files with the structure used in the Met API.
   - Eliminated the reliance on engagement metadata within CRON jobs.
   - Implemented necessary code adjustments to seamlessly integrate with the updated CRON configuration.
 
 ## February 05, 2024
+
 - **Task** Change "Superuser" to "Administrator" [DESENG-476](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-476)
 
 ## February 02, 2024
+
 - **Task** Updated Timeline widget icons so that the circles are more consistent. [🎟️DESENG-488](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-488)
 
 ## February 01, 2024
+
 - **Task** Change name from "Engagement Core" to "Engagement Content". [🎟️DESENG-489](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-489)
 
 ## January 29, 2024
+
 - **Task** Updated Babel Traverse library. [🎟️DESENG-474](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-474)
   - Run `npm audit fix` to update the vulnerable Babel traverse library.
 
 ## January 26, 2024
+
 - **Task** Poll Widget: Front-end. [🎟️DESENG-464](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-464)
   - Created UI for Poll Widget.
   - Updated Poll widget API and unit tests.
 
 ## January 25, 2024
+
 - **Task** Resolve issue preventing met-web from deploying on the Dev OpenShift environment. [🎟️DESENG-469](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-469)
   - Remove Epic Engage-related links and update Keycloak link.
   - Remove additional authentication method.
 
 ## January 24, 2024
+
 - **Task** Update default project type to GDX for all deployments by default. [🎟️DESENG-472](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-472)
   - Set the default project type to GDX on all continuous deployment (CD) files.
   - Removed the option to deploy to EAO.
 
 ## January 22, 2024
+
 - **Task** Poll Widget: Back-end [🎟️DESENG-463](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-463)
   - Created Database models for Widget Poll, Poll Answers, Poll Response.
-  - Created API to manage  Widget Poll, Poll Answers, Poll Response.
+  - Created API to manage Widget Poll, Poll Answers, Poll Response.
   - Created Unit tests to test the code.
 - **Task** Add missing unit tests for met api [🎟️DESENG-481](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-481)
   - Added missing unit tests for met api
@@ -88,6 +107,7 @@ metadata management to rely on normal authorization check functions.
 ## January 9, 2024
 
 - **Task** Improvements from Epic [🎟️DESENG-468](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-468)
+
   - Improvements to Survey Result Tracking analytics
   - New Rejection Email Template for Closed Engagements
   - Export Format for Proponent updated to be in excel format
@@ -136,9 +156,10 @@ metadata management to rely on normal authorization check functions.
 ## November 6, 2023
 
 - **Feature**: Switch MET to use Keycloak SSO service [🎟️DESENG-408](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-408)
+
   - Switch all role-based checks on the API to use a single callback function (`current_app.config['JWT_ROLE_CALLBACK']`)
   - Added a configurable path `JWT_ROLE_CLAIM` to indicate where your SSO instance places role information in the JWT token. If your access token looks like:
-  `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
+    `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
   - Explicitly disable single tenant mode by default to ensure correct multi-tenancy behaviour
   - Remove local Keycloak instances and configuration
   - Default to the "standard" realm for Keycloak
@@ -158,7 +179,6 @@ metadata management to rely on normal authorization check functions.
   - The `met_api` module has been updated slightly to consume Pathfinder SSO's API schema.
   - Remove one old production .env file with obsolete settings
 - Changes to DEVELOPMENT.md to reflect the current state of the project
-
 
 ## v1.0.0 - 2023-10-01
 

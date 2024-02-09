@@ -14,8 +14,8 @@ class WidgetTimeline(BaseModel):  # pylint: disable=too-few-public-methods, too-
 
     __tablename__ = 'widget_timeline'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
-    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
+    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=False)
     title = db.Column(db.String(255), nullable=True)
     description = db.Column(db.Text(), nullable=True)
 
