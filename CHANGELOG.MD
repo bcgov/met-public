@@ -12,6 +12,13 @@
   - Introduces a new configuration variable to specify the maximum age for Cross-Origin Resource Sharing (CORS)
   - Modified the CORS preflight method to utilize this newly introduced variable.
 - **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
+
+  - Change some foreign key field to nullbale false in model files
+  - Change `rejected_reason_other` to nullable true in `submission` model
+  - Generated new migration file based on the pending model changes which confirmed to be valid
+  - Updated Unit test of email verfication to send type to the api
+
+- **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
   - Change some foreign key field to nullbale false in model files
   - Change `rejected_reason_other` to nullable true in `submission` model
   - Generated new migration file based on the pending model changes which confirmed to be valid
