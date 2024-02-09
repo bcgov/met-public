@@ -40,5 +40,5 @@ def test_cors_preflight_post(methods):
         pass
 
     rv = TestCors().options()  # pylint: disable=no-member
-    assert rv[2]['Access-Control-Allow-Origin'] == '*'
-    assert rv[2]['Access-Control-Allow-Methods'] == methods
+    assert rv[0]['Access-Control-Allow-Origin'] == '*'
+    assert rv[0]['Access-Control-Allow-Methods'] == methods
