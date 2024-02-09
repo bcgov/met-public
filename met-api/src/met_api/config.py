@@ -167,7 +167,7 @@ class Config:  # pylint: disable=too-few-public-methods
     # This value is used to indicate how long the results of a preflight request (OPTIONS) can be cached
     # by the client, reducing the frequency of preflight requests for the specified HTTP methods.
     # Adjust this value based on security considerations.
-    CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None) # Default: 0 seconds
+    CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None)  # Default: 0 seconds
 
     # If enabled, Emails will be send onlt to the internal email address set in constant INTERNAL_EMAIL_DOMAIN
     # such as `@gov.bc.ca` . Mainly used for dev and test environments.
