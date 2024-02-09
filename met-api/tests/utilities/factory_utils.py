@@ -50,6 +50,7 @@ from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
+from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
     TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo, TestPollAnswerInfo,
@@ -121,12 +122,17 @@ def factory_subscription_model():
     return subscription
 
 
-def factory_email_verification(survey_id):
+def factory_email_verification(survey_id, type=None):
     """Produce a EmailVerification model."""
     email_verification = EmailVerificationModel(
         verification_token=fake.uuid4(),
-        is_active=True
+        is_active=True,
     )
+    if type:
+        email_verification.type = type
+    else:
+        email_verification.type = EmailVerificationType.Survey
+
     if survey_id:
         email_verification.survey_id = survey_id
 

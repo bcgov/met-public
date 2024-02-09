@@ -35,7 +35,7 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     comment_status_id = db.Column(db.Integer, ForeignKey('comment_status.id', ondelete='SET NULL'))
     has_personal_info = db.Column(db.Boolean, nullable=True)
     has_profanity = db.Column(db.Boolean, nullable=True)
-    rejected_reason_other = db.Column(db.String(500), nullable=False)
+    rejected_reason_other = db.Column(db.String(500), nullable=True)
     has_threat = db.Column(db.Boolean, nullable=True)
     notify_email = db.Column(db.Boolean(), default=True)
     comments = db.relationship('Comment', backref='submission', cascade='all, delete')
