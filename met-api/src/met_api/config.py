@@ -167,7 +167,7 @@ class Config:  # pylint: disable=too-few-public-methods
     # This value is used to indicate how long the results of a preflight request (OPTIONS) can be cached
     # by the client, reducing the frequency of preflight requests for the specified HTTP methods.
     # Adjust this value based on security considerations.
-    CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None) # Default: 0 seconds
+    CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None)  # Default: 0 seconds
 
     EPIC_CONFIG = {
         'ENABLED': env_truthy('EPIC_INTEGRATION_ENABLED'),
