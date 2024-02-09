@@ -21,7 +21,6 @@ import base64
 import os
 import urllib
 
-from flask import request
 from humps.main import camelize, decamelize
 
 
