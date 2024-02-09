@@ -31,7 +31,8 @@ from met_api.utils.roles import Role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 EDIT_ENGAGEMENT_ROLES = [Role.EDIT_ENGAGEMENT.value]
-VIEW_ENGAGEMENT_ROLES = [Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
+VIEW_ENGAGEMENT_ROLES = [
+    Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
 
 API = Namespace('engagement_metadata',
                 path='/engagements/<engagement_id>/metadata',
@@ -76,7 +77,8 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
-    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)  # type: ignore
+    # type: ignore
+    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)
     @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
@@ -95,7 +97,7 @@ class EngagementMetadata(Resource):
 
 
 @cors_preflight('GET,PUT,DELETE')
-@API.route('/<metadata_id>')  # /api/engagements/{engagement.id}/metadata/{metadata.id}
+@API.route('/<metadata_id>')  # /metadata/{metadata.id}
 @API.doc(params={'engagement_id': 'The numeric id of the engagement',
                  'metadata_id': 'The numeric id of the metadata entry'})
 @API.doc(security='apikey')

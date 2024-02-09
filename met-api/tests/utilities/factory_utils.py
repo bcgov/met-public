@@ -216,7 +216,6 @@ def factory_metadata_taxon_model(tenant_id: int = 1,
         description=taxon_info.get('description'),
         freeform=taxon_info.get('freeform'),
         data_type=taxon_info.get('data_type'),
-        default_value=taxon_info.get('default_value'),
         one_per_engagement=taxon_info.get('one_per_engagement'),
         position=taxon_info.get('position'),
     )

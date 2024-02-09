@@ -1,3 +1,10 @@
+## Current: feature/DESENG-443: Engagement Metadata Management
+- **Task**: Remove "default_values" from metadata taxa.
+Replace with "preset values", metadata entries that are not assigned to an engagement.
+- **Task**: Update authorization documentation in the API blueprint. Update
+metadata management to rely on normal authorization check functions.
+- **Task**: Clean up metadata management code and tests.
+
 ## February 06, 2024
 - **Task**Convert keycloak groups to composite roles for permission levels [DESENG-447](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-447)
     - Commented out unit test related to Keycloak groups

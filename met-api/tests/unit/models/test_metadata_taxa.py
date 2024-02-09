@@ -51,7 +51,8 @@ def test_delete_taxon(session):
     taxon1.delete()
     assert taxon3.position == 1, 'Taxon 3 should be in the only position'
     taxon3.delete()
-    assert MetadataTaxon.query.get(taxon1.id) is None, 'The taxon should not exist'
+    assert MetadataTaxon.query.get(
+        taxon1.id) is None, 'The taxon should not exist'
 
 
 def check_taxon_order(session, taxa, expected_order):
@@ -70,7 +71,8 @@ def test_move_taxon_to_position(session):
     test_taxa = [taxon1, taxon2, taxon3]
     session.add_all(test_taxa)
     session.commit()
-    assert all([taxon.id is not None for taxon in test_taxa]), 'Taxon ID is missing'
+    assert all([taxon.id is not None for taxon in test_taxa]
+               ), 'Taxon ID is missing'
     # Check initial order
     check_taxon_order(session, test_taxa, [1, 2, 3])
     taxon1.move_to_position(3)
@@ -82,3 +84,18 @@ def test_move_taxon_to_position(session):
     check_taxon_order(session, test_taxa, [1, 3, 2])
     taxon2.move_to_position(2)
     check_taxon_order(session, test_taxa, [1, 2, 3])
+
+
+def test_metadata_taxon_presets(session):
+    """Assert that metadata taxon preset values can be edited."""
+    taxon = factory_metadata_taxon_model()
+    taxon.save()
+    assert taxon.id is not None
+    assert taxon.preset_values == []
+    taxon.preset_values = ['foo', 'bar', 'baz']
+    taxon_existing = MetadataTaxon.find_by_id(taxon.id)
+    assert taxon_existing.preset_values[0] == 'foo'
+    assert taxon_existing.preset_values == ['foo', 'bar', 'baz']
+    taxon.preset_values = ['foo', 'baz']
+    taxon_existing = MetadataTaxon.find_by_id(taxon.id)
+    assert taxon_existing.preset_values == ['foo', 'baz']

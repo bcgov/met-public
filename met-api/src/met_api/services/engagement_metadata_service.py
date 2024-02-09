@@ -26,7 +26,8 @@ class EngagementMetadataService:
         """
         engagement_metadata = EngagementMetadata.query.get(metadata_id)
         if not engagement_metadata:
-            raise KeyError(f'Engagement metadata with id {metadata_id} does not exist.')
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
         return dict(EngagementMetadataSchema().dump(engagement_metadata))
 
     @staticmethod
@@ -43,7 +44,8 @@ class EngagementMetadataService:
         """
         engagement_model = EngagementModel.query.get(engagement_id)
         if not engagement_model:
-            raise KeyError(f'Engagement with id {engagement_id} does not exist.')
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
         return EngagementMetadataSchema(many=True).dump(engagement_model.metadata)
 
     @staticmethod
@@ -61,7 +63,8 @@ class EngagementMetadataService:
         """
         engagement_metadata = EngagementMetadata.query.get(metadata_id)
         if not engagement_metadata:
-            raise KeyError(f'Engagement metadata with id {metadata_id} does not exist.')
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
         return engagement_metadata.engagement_id == engagement_id
 
     @staticmethod
@@ -80,12 +83,14 @@ class EngagementMetadataService:
         # Ensure that the engagement exists, or else raise the appropriate error
         engagement = EngagementModel.query.get(engagement_id)
         if not engagement:
-            raise KeyError(f'Engagement with id {engagement_id} does not exist.')
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
         taxon = MetadataTaxon.query.get(taxon_id)
         if not taxon:
             raise ValueError(f'Taxon with id {taxon_id} does not exist.')
         if engagement.tenant.id != taxon.tenant.id:
-            raise ValueError(f'Taxon {taxon} does not belong to tenant {engagement.tenant}')
+            raise ValueError(
+                f'Taxon {taxon} does not belong to tenant {engagement.tenant}')
         metadata = {
             'engagement_id': engagement_id,
             'taxon_id': taxon_id,
@@ -110,21 +115,6 @@ class EngagementMetadataService:
         """
         metadata = metadata or {}
         metadata = self.create(metadata, engagement_id, **kwargs)
-
-    @staticmethod
-    def create_defaults(engagement_id: int, tenant_id: int) -> List[dict]:
-        """Create default metadata for an engagement."""
-        # Get metadata taxa for the tenant
-        taxa = MetadataTaxon.query.filter_by(tenant_id=tenant_id).all()
-        # Create a list of metadata to create
-        metadata = []
-        for taxon in taxa:
-            if taxon.default_value:
-                metadata.append(EngagementMetadataService.create(
-                    engagement_id,
-                    taxon.id,
-                    taxon.default_value))
-        return metadata
 
     @staticmethod
     @transactional()
