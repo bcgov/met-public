@@ -619,7 +619,7 @@ class TestCommentInfo(dict, Enum):
 
     comment1 = {
         'text': fake.paragraph(nb_sentences=3),
-        'component_id': 'simpletextarea',
+        'component_id': 'simpletext',
         'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }
 
