@@ -29,12 +29,18 @@ def cors_preflight(methods):
 
     def wrapper(f):
         def options(self, *args, **kwargs):  # pylint: disable=unused-argument
-            return {'Allow': 'GET, DELETE, PUT, POST'}, 200, {
+            headers = {
+                'Allow': 'GET, DELETE, PUT, POST',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': methods,
                 'Access-Control-Allow-Headers': 'Authorization, Content-Type, '
                                                 'registries-trace-id, invitation_token'
             }
+            max_age = os.getenv('CORS_MAX_AGE')
+            if max_age is not None:
+                headers['Access-Control-Max-Age'] = str(max_age)
+
+            return headers, 200, {}
 
         setattr(f, 'options', options)
         return f
