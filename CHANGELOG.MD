@@ -1,3 +1,9 @@
+## February 09, 2024
+- **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
+    - Deleted old migration files
+    - Created [ec0128056a33_table_until_feb_09_2024.py](met-api/migrations/versions/ec0128056a33_table_until_feb_09_2024.py) with all tables until feb 09 2024
+    - Created [37176ea4708d_data_until_feb_09_2024.py](met-api/migrations/versions/37176ea4708d_data_until_feb_09_2024.py) with all initial data until feb 09 2024
+
 ## February 08, 2024
 - **Task**Cache CORS preflight responses with the browser for a given period of time [DESENG-484](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-484)
     - Introduces a new configuration variable to specify the maximum age for Cross-Origin Resource Sharing (CORS)
