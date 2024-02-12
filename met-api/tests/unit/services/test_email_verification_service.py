@@ -23,6 +23,7 @@ from faker import Faker
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.email_verification_service import EmailVerificationService
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.utils import notification
 from tests.utilities.factory_scenarios import TestEngagementSlugInfo
 from tests.utilities.factory_utils import factory_engagement_slug_model, factory_survey_and_eng_model, set_global_tenant
@@ -43,7 +44,8 @@ def test_create_email_verification(client, jwt, session, ):  # pylint:disable=un
     email = fake.email()
     to_dict = {
         'email_address': email,
-        'survey_id': survey.id
+        'survey_id': survey.id,
+        'type': EmailVerificationType.Survey
     }
     with patch.object(notification, 'send_email', return_value=False) as mock_mail:
         EmailVerificationService().create(to_dict)
@@ -66,7 +68,8 @@ def test_create_email_verification_exception(client, jwt, session, ):  # pylint:
     email = fake.email()
     to_dict = {
         'email_address': email,
-        'survey_id': survey.id
+        'survey_id': survey.id,
+        'type': EmailVerificationType.Survey
     }
     with pytest.raises(BusinessException) as exception:
         with patch.object(notification, 'send_email', side_effect=Exception('mocked error')):
