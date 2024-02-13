@@ -100,4 +100,6 @@ class MetadataTaxonService:
         taxon: MetadataTaxon = MetadataTaxon.query.get(taxon_id)
         if not taxon:
             raise KeyError(f'Taxon with id {taxon_id} does not exist.')
+        for entry in taxon.entries:
+            entry.delete()
         taxon.delete()
