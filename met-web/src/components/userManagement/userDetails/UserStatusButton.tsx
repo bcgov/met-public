@@ -17,7 +17,7 @@ const UserStatusButton = () => {
 
     const isActive = savedUser?.status_id === 1;
 
-    const disabled = savedUser?.main_group === USER_GROUP.ADMIN.label || savedUser?.id === userDetail?.user?.id;
+    const disabled = savedUser?.main_role === USER_GROUP.ADMIN.label || savedUser?.id === userDetail?.user?.id;
 
     useEffect(() => {
         setUserStatus(isActive);

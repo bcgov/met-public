@@ -22,7 +22,7 @@ import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-for
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { addUserToGroup } from 'services/userService/api';
+import { addUserToRole } from 'services/userService/api';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -34,7 +34,7 @@ import { Engagement } from 'models/engagement';
 
 const schema = yup
     .object({
-        group: yup.string().required('A role must be specified'),
+        role: yup.string().required('A role must be specified'),
         engagement: yup
             .object()
             .nullable()
@@ -69,7 +69,7 @@ export const AssignRoleModal = () => {
         watch,
     } = methods;
 
-    const userTypeSelected = watch('group');
+    const userTypeSelected = watch('role');
 
     const formValues = watch();
     useEffect(() => {
@@ -78,7 +78,7 @@ export const AssignRoleModal = () => {
         }
     }, [JSON.stringify(formValues)]);
 
-    const { group: groupErrors, engagement: engagementErrors } = errors;
+    const { role: groupErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setassignRoleModalOpen(false);
@@ -123,7 +123,7 @@ export const AssignRoleModal = () => {
 
     const assignRoleToUser = async (data: AssignRoleForm) => {
         if (userTypeSelected === USER_GROUP.ADMIN.value) {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             dispatch(
                 openNotification({
                     severity: 'success',
@@ -131,7 +131,7 @@ export const AssignRoleModal = () => {
                 }),
             );
         } else if (userTypeSelected === USER_GROUP.VIEWER.value) {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             dispatch(
                 openNotification({
                     severity: 'success',
@@ -139,7 +139,7 @@ export const AssignRoleModal = () => {
                 }),
             );
         } else {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             await addTeamMemberToEngagement({
                 user_id: user?.external_id,
                 engagement_id: data.engagement?.id,
@@ -147,7 +147,7 @@ export const AssignRoleModal = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${user?.first_name} ${user?.last_name} as a ${data.group} on ${data.engagement?.name}.`,
+                    text: `You have successfully added ${user?.first_name} ${user?.last_name} as a ${data.role} on ${data.engagement?.name}.`,
                 }),
             );
         }
@@ -191,14 +191,14 @@ export const AssignRoleModal = () => {
                                 rowSpacing={4}
                             >
                                 <Grid item xs={12}>
-                                    <FormControl error={Boolean(errors['group'])}>
+                                    <FormControl error={Boolean(errors['role'])}>
                                         <FormLabel
                                             id="controlled-radio-buttons-group"
                                             sx={{ fontWeight: 'bold', color: Palette.text.primary, paddingBottom: 1 }}
                                         >
                                             What role would you like to assign to this user?
                                         </FormLabel>
-                                        <ControlledRadioGroup name="group">
+                                        <ControlledRadioGroup name="role">
                                             <FormControlLabel
                                                 value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}

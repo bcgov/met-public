@@ -21,7 +21,7 @@ import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-for
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { getEngagements } from 'services/engagementService';
-import { addUserToGroup } from 'services/userService/api';
+import { addUserToRole } from 'services/userService/api';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -36,12 +36,12 @@ import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 export const AddToEngagementModal = () => {
     const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserMemberships, getUserDetails } =
         useContext(UserDetailsContext);
-    const userHasGroup = savedUser?.groups && savedUser?.groups.length > 0;
+    const userHasGroup = savedUser?.composite_roles && savedUser?.composite_roles.length > 0;
     const schema = yup
         .object({
             engagement: yup.object().nullable(),
-            group: yup.string().when([], {
-                is: () => savedUser?.groups.length === 0,
+            role: yup.string().when([], {
+                is: () => savedUser?.composite_roles.length === 0,
                 then: yup.string().required('A role must be specified'),
                 otherwise: yup.string(),
             }),
@@ -70,7 +70,7 @@ export const AddToEngagementModal = () => {
         watch,
     } = methods;
 
-    const userTypeSelected = watch('group');
+    const userTypeSelected = watch('role');
 
     const formValues = watch();
     useEffect(() => {
@@ -79,7 +79,7 @@ export const AddToEngagementModal = () => {
         }
     }, [JSON.stringify(formValues)]);
 
-    const { group: groupErrors, engagement: engagementErrors } = errors;
+    const { role: groupErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setAddUserModalOpen(false);
@@ -127,12 +127,12 @@ export const AddToEngagementModal = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} as a ${savedUser?.main_group} on ${data.engagement?.name}.`,
+                    text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} as a ${savedUser?.main_role} on ${data.engagement?.name}.`,
                 }),
             );
         } else {
             if (userTypeSelected === USER_GROUP.ADMIN.value) {
-                await addUserToGroup({ user_id: savedUser?.external_id, group: data.group ?? '' });
+                await addUserToRole({ user_id: savedUser?.external_id, role: data.role ?? '' });
                 dispatch(
                     openNotification({
                         severity: 'success',
@@ -140,7 +140,7 @@ export const AddToEngagementModal = () => {
                     }),
                 );
             } else {
-                await addUserToGroup({ user_id: savedUser?.external_id, group: data.group ?? '' });
+                await addUserToRole({ user_id: savedUser?.external_id, role: data.role ?? '' });
                 await addTeamMemberToEngagement({
                     user_id: savedUser?.external_id,
                     engagement_id: data.engagement?.id,
@@ -148,7 +148,7 @@ export const AddToEngagementModal = () => {
                 dispatch(
                     openNotification({
                         severity: 'success',
-                        text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} as a ${data.group} on ${data.engagement?.name}.`,
+                        text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} as a ${data.role} on ${data.engagement?.name}.`,
                     }),
                 );
             }
@@ -209,7 +209,7 @@ export const AddToEngagementModal = () => {
                             >
                                 <When condition={!userHasGroup}>
                                     <Grid item xs={12}>
-                                        <FormControl error={Boolean(errors['group'])}>
+                                        <FormControl error={Boolean(errors['role'])}>
                                             <FormLabel
                                                 id="controlled-radio-buttons-group"
                                                 sx={{
@@ -220,7 +220,7 @@ export const AddToEngagementModal = () => {
                                             >
                                                 What role would you like to assign to this user?
                                             </FormLabel>
-                                            <ControlledRadioGroup name="group">
+                                            <ControlledRadioGroup name="role">
                                                 <FormControlLabel
                                                     value={USER_GROUP.REVIEWER.value}
                                                     control={<Radio />}

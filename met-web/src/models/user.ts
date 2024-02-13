@@ -26,12 +26,12 @@ export interface User {
     email_address: string;
     external_id: string;
     first_name: string;
-    groups: string[];
+    composite_roles: string[];
     id: number;
     last_name: string;
     updated_date: string;
     roles: string[];
-    main_group: string;
+    main_role: string;
     username: string;
     status_id: number;
 }
@@ -53,13 +53,13 @@ export const createDefaultUser: User = {
     description: '',
     email_address: '',
     external_id: '',
-    groups: [''],
+    composite_roles: [''],
     first_name: '',
     last_name: '',
     updated_date: Date(),
     created_date: Date(),
     roles: [],
     username: '',
-    main_group: '',
+    main_role: '',
     status_id: 0,
 };

@@ -54,7 +54,7 @@ const Submissions = () => {
                 if (
                     roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
                     (assignedEngagements.includes(Number(survey.engagement_id)) &&
-                        userDetail.groups?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
+                        userDetail.composite_roles?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
                 ) {
                     return (
                         <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>

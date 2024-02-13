@@ -24,7 +24,7 @@ const mockTeamMember1: EngagementTeamMember = {
         id: 1,
         first_name: 'Jane',
         last_name: 'Doe',
-        groups: [USER_GROUP.VIEWER.label],
+        composite_roles: [USER_GROUP.VIEWER.label],
     },
 };
 

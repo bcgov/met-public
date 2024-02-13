@@ -10,13 +10,13 @@ import ControlledRadioGroup from 'components/common/ControlledInputComponents/Co
 import { USER_GROUP } from 'models/user';
 import { Unless } from 'react-if';
 import { Palette } from 'styles/Theme';
-import { changeUserGroup } from 'services/userService/api';
+import { changeUserRole } from 'services/userService/api';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 const schema = yup
     .object({
-        group: yup.string().required('Please select a role to assign to this user').required(),
+        role: yup.string().required('Please select a role to assign to this user').required(),
     })
     .required();
 
@@ -41,15 +41,15 @@ export const ReassignRoleModal = () => {
 
     const onSubmit = async (data: AssignRoleForm) => {
         try {
-            const { group } = await schema.validate(data);
+            const { role } = await schema.validate(data);
             setIsSaving(true);
-            await changeUserGroup({ user_id: user.id, group });
+            await changeUserRole({ user_id: user.id, role });
             handleClose();
             loadUserListing();
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have reassigned ${user.first_name} ${user.last_name} as ${group}.`,
+                    text: `You have reassigned ${user.first_name} ${user.last_name} as ${role}.`,
                 }),
             );
             setIsSaving(false);
@@ -89,29 +89,29 @@ export const ReassignRoleModal = () => {
                                     >
                                         What role would you like to reassign to this user?
                                     </FormLabel>
-                                    <ControlledRadioGroup name="group">
-                                        <Unless condition={user.main_group === USER_GROUP.VIEWER.label}>
+                                    <ControlledRadioGroup name="role">
+                                        <Unless condition={user.main_role === USER_GROUP.VIEWER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.VIEWER.value}
                                                 control={<Radio />}
                                                 label={'Viewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group === USER_GROUP.REVIEWER.label}>
+                                        <Unless condition={user.main_role === USER_GROUP.REVIEWER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.REVIEWER.value}
                                                 control={<Radio />}
                                                 label={'Reviewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group === USER_GROUP.TEAM_MEMBER.label}>
+                                        <Unless condition={user.main_role === USER_GROUP.TEAM_MEMBER.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.TEAM_MEMBER.value}
                                                 control={<Radio />}
                                                 label={'Team Member'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_group === USER_GROUP.ADMIN.label}>
+                                        <Unless condition={user.main_role === USER_GROUP.ADMIN.label}>
                                             <FormControlLabel
                                                 value={USER_GROUP.ADMIN.value}
                                                 control={<Radio />}

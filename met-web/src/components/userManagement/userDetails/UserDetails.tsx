@@ -64,7 +64,7 @@ export const UserDetails = () => {
 
                     <Grid container>
                         <Grid item xs={12}>
-                            <UserDetail label="Role" value={<MetParagraph>{savedUser?.main_group}</MetParagraph>} />
+                            <UserDetail label="Role" value={<MetParagraph>{savedUser?.main_role}</MetParagraph>} />
                         </Grid>
                         <Grid item xs={12}>
                             <UserDetail
@@ -92,7 +92,7 @@ export const UserDetails = () => {
                     <PrimaryButton
                         onClick={() => setAddUserModalOpen(true)}
                         disabled={
-                            savedUser?.main_group === USER_GROUP.VIEWER.label ||
+                            savedUser?.main_role === USER_GROUP.VIEWER.label ||
                             savedUser?.status_id === USER_STATUS.INACTIVE.value ||
                             savedUser?.id === userDetail?.user?.id
                         }
