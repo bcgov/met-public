@@ -53,8 +53,8 @@ def mock_keycloak_methods(mocker, mock_group_names):
         return_value=mock_response
     )
 
-    mock_remove_user_from_group_keycloak = mocker.patch(
-        f'{KEYCLOAK_SERVICE_MODULE}.remove_user_from_group',
+    mock_remove_composite_role_from_user_keycloak = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.remove_composite_role_from_user',
         return_value=mock_response
     )
 
@@ -62,7 +62,7 @@ def mock_keycloak_methods(mocker, mock_group_names):
         mock_add_user_to_group_keycloak,
         # mock_get_user_groups_keycloak,
         mock_add_attribute_to_user,
-        mock_remove_user_from_group_keycloak
+        mock_remove_composite_role_from_user_keycloak
     )
 
 # TODO: Restore this test to support composite roles instead of groups

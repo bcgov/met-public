@@ -1,7 +1,7 @@
 """Service for user management."""
 from http import HTTPStatus
 
-from flask import current_app, g
+from flask import current_app
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
@@ -9,6 +9,8 @@ from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.keycloak import KeycloakService
 from met_api.utils import notification
+from met_api.utils.constants import COMPOSITE_ROLE_MAPPING, CompositeRoles
+from met_api.utils.enums import KeycloakCompositeRoleNames
 from met_api.utils.template import Template
 
 KEYCLOAK_SERVICE = KeycloakService()
@@ -24,9 +26,7 @@ class StaffUserService:
         db_user = StaffUserModel.get_by_id(_user_id, include_inactive)
         user = user_schema.dump(db_user)
         if include_roles:
-            # TODO: Replace this method with one that uses composite roles
-            # cls.attach_roles([user])
-            pass
+            cls.attach_roles([user])
         return user
 
     @classmethod
@@ -100,29 +100,26 @@ class StaffUserService:
         )
         return subject, body, args
 
-    # TODO: Replace this method with one that uses composite roles, if necessary
-    # @staticmethod
-    # def attach_roles(user_collection):
-        # """Attach keycloak groups to user object."""
-        # group_user_details = KEYCLOAK_SERVICE.get_users_groups(
-        #     [user.get('external_id') for user in user_collection])
-
-        # for user in user_collection:
-        #     # Transform group name from ADMINISTRATOR to Administrator
-        #     # TODO etc;Arrive at a better implementation than keeping a static list
-        #     # TODO Probably add a custom attribute in the keycloak as title against a group?
-        #     groups = group_user_details.get(user.get('external_id'))
-        #     user['groups'] = ''
-        #     if groups:
-        #         user['groups'] = [GROUP_NAME_MAPPING.get(group, '') for group in groups]
-        #         if Groups.IT_ADMIN.value in user['groups']:
-        #             user['main_group'] = Groups.IT_ADMIN.value
-        #         elif Groups.TEAM_MEMBER.value in user['groups']:
-        #             user['main_group'] = Groups.TEAM_MEMBER.value
-        #         elif Groups.REVIEWER.value in user['groups']:
-        #             user['main_group'] = Groups.REVIEWER.value
-        #         else:
-        #             user['main_group'] = user['groups'][0]
+    @staticmethod
+    def attach_roles(user_collection):
+        """Attach keycloak composite roles to user object."""
+        user_roles = KEYCLOAK_SERVICE.get_users_roles(
+            [user.get('external_id') for user in user_collection])
+        for user in user_collection:
+            # TODO etc;Arrive at a better implementation than keeping a static list
+            # TODO Probably add a custom attribute in the keycloak as title against a group?
+            composite_roles = user_roles.get(user.get('external_id'))
+            user['composite_roles'] = ''
+            if composite_roles:
+                user['composite_roles'] = [COMPOSITE_ROLE_MAPPING.get(role, '') for role in composite_roles]
+                if CompositeRoles.IT_ADMIN.value in user['composite_roles']:
+                    user['main_role'] = CompositeRoles.IT_ADMIN.value
+                elif CompositeRoles.TEAM_MEMBER.value in user['composite_roles']:
+                    user['main_role'] = CompositeRoles.TEAM_MEMBER.value
+                elif CompositeRoles.REVIEWER.value in user['composite_roles']:
+                    user['main_role'] = CompositeRoles.REVIEWER.value
+                else:
+                    user['main_role'] = user['composite_roles'][0]
 
     @classmethod
     def find_users(
@@ -137,9 +134,7 @@ class StaffUserService:
         user_collection = StaffUserSchema(many=True).dump(users)
 
         if include_roles:
-            # TODO: Replace this method with one that uses composite roles
-            # cls.attach_roles(user_collection)
-            pass
+            cls.attach_roles(user_collection)
 
         return {
             'items': user_collection,
@@ -160,30 +155,25 @@ class StaffUserService:
             raise ValueError('Some required fields are empty')
 
     @classmethod
-    def add_user_to_group(cls, external_id: str, group_name: str):
+    def assign_composite_role_to_user(cls, external_id: str, composite_role: str):
         """Create or update a user."""
         db_user = StaffUserModel.get_user_by_external_id(external_id)
 
         cls.validate_user(db_user)
 
-        # TODO: Replace this method with one that uses composite roles
-        print(group_name)
-        # KEYCLOAK_SERVICE.add_user_to_group(user_id=external_id, group_name=group_name)
-        KEYCLOAK_SERVICE.add_attribute_to_user(user_id=external_id, attribute_value=g.tenant_id)
+        KEYCLOAK_SERVICE.assign_composite_role_to_user(user_id=external_id, composite_role=composite_role)
 
         return StaffUserSchema().dump(db_user)
 
     @classmethod
-    def remove_user_from_group(cls, external_id: str, group_name: str):
+    def remove_composite_role_from_user(cls, external_id: str, role: str):
         """Create or update a user."""
         db_user = StaffUserModel.get_user_by_external_id(external_id)
 
         if db_user is None:
             raise KeyError('User not found')
 
-        # TODO: Replace this method with one that uses composite roles
-        print(group_name)
-        # KEYCLOAK_SERVICE.remove_user_from_group(user_id=external_id, group_name=group_name)
+        KEYCLOAK_SERVICE.remove_composite_role_from_user(user_id=external_id, role=role)
 
         return StaffUserSchema().dump(db_user)
 
@@ -193,10 +183,11 @@ class StaffUserService:
         if db_user is None:
             raise KeyError('User not found')
 
-        # TODO: Restore permission level functionality to replace "groups" later
-        # groups = KEYCLOAK_SERVICE.get_user_groups(user_id=db_user.external_id)
-        # group_names = [group.get('name') for group in groups]
-        # if KeycloakGroupName.IT_ADMIN.value in group_names:
-        #     raise BusinessException(
-        #         error='This user is already an Administrator.',
-        #         status_code=HTTPStatus.CONFLICT.value)
+        composite_roles = KEYCLOAK_SERVICE.get_user_roles(user_id=db_user.external_id)
+
+        if 'data' in composite_roles and len(composite_roles['data']) > 0:
+            role_names = [role.get('name') for role in composite_roles]
+            if KeycloakCompositeRoleNames.IT_ADMIN.value in role_names:
+                raise BusinessException(
+                    error='This user is already an Administrator.',
+                    status_code=HTTPStatus.CONFLICT.value)
