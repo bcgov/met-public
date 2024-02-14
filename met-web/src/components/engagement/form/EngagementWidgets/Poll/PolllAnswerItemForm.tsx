@@ -18,6 +18,7 @@ const PollAnswerItemForm: React.FC<PollAnswerItemProps> = React.memo(
                 <Grid item xs={12}>
                     <MetLabel>{'Answer Text ' + (index + 1)}</MetLabel>
                     <TextField
+                        data-testid={'answerText' + (index + 1)}
                         name={'answerText' + (index + 1)}
                         id={'answerText' + (index + 1)}
                         variant="outlined"

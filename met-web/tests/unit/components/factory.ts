@@ -12,6 +12,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
 import { WidgetMap } from 'models/widgetMap';
+import { PollWidget, PollAnswer } from 'models/pollWidget';
 import { Tenant } from 'models/tenant';
 
 const tenant: Tenant = {
@@ -162,6 +163,41 @@ const mockMap: WidgetMap = {
     file_name: 'test.zip',
 };
 
+const pollWidgetItem: WidgetItem = {
+    id: 1,
+    widget_id: 1,
+    widget_data_id: 1,
+    sort_index: 1,
+};
+
+const pollWidget: Widget = {
+    id: 1,
+    title: 'Poll',
+    widget_type_id: WidgetType.Poll,
+    engagement_id: 1,
+    items: [],
+};
+
+const mockPollAnswer1: PollAnswer = {
+    id: 0,
+    answer_text: 'answer 1',
+};
+
+const mockPollAnswer2: PollAnswer = {
+    id: 1,
+    answer_text: 'answer 2',
+};
+
+const mockPoll: PollWidget = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    title: 'Poll',
+    description: 'Test description',
+    status: 'active',
+    answers: [mockPollAnswer1, mockPollAnswer2],
+};
+
 const engagementMetadata: EngagementMetadata = {
     ...createDefaultEngagementMetadata(),
     engagement_id: 1,
@@ -191,4 +227,6 @@ export {
     engagementMetadata,
     engagementSlugData,
     engagementSetting,
+    mockPoll,
+    pollWidget
 };
