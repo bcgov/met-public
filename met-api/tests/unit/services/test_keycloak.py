@@ -36,18 +36,18 @@ def test_keycloak_get_user_by_username(session):
     user = KEYCLOAK_SERVICE.get_user_by_username(request.get('username'))
     assert user.get('username') == request.get('username')
 
-# TODO: Replace this test with one that gets user composite roles
-# def test_keycloak_get_user_groups(session):
-#     """Get user by username. Assert get a user with the same username as the username in request."""
-#     request = KeycloakScenario.create_user_request()
-#     group_name = 'admins'
-#     KEYCLOAK_SERVICE.add_user(request)
-#     user = KEYCLOAK_SERVICE.get_user_by_username(request.get('username'))
-#     user_id = user.get('id')
-#     user_group = KEYCLOAK_SERVICE.get_users_groups([user_id])
 
-#     assert group_name not in user_group.get(user_id)
-#     # add the group
-#     KEYCLOAK_SERVICE.add_user_to_group(user_id, '%s' % group_name)
-#     user_group = KEYCLOAK_SERVICE.get_users_groups([user_id])
-#     assert group_name in user_group.get(user_id)
+def test_keycloak_get_user_roles(session):
+    """Get user by username. Assert get a user with the same username as the username in request."""
+    request = KeycloakScenario.create_user_request()
+    composite_role = 'IT_ADMINS'
+    KEYCLOAK_SERVICE.add_user(request)
+    user = KEYCLOAK_SERVICE.get_user_by_username(request.get('username'))
+    user_id = user.get('id')
+    user_group = KEYCLOAK_SERVICE.get_users_roles([user_id])
+
+    assert composite_role not in user_group.get(user_id)
+    # add the group
+    KEYCLOAK_SERVICE.assign_composite_role_to_user(user_id, '%s' % composite_role)
+    user_group = KEYCLOAK_SERVICE.get_users_groups([user_id])
+    assert composite_role in user_group.get(user_id)

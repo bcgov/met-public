@@ -17,46 +17,40 @@ Tests to verify the Engagement API end-point.
 
 Test-Suite to ensure that the /user endpoint is working as expected.
 """
+import copy
 from http import HTTPStatus
 from unittest.mock import MagicMock, patch
 
 import pytest
 from flask import current_app
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Tenant as TenantModel
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
-from met_api.utils.enums import ContentType, UserStatus
+from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model, set_global_tenant
 
 
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
 
-# TODO: Replace this test with one that adds composite roles to user
-# def mock_add_user_to_group(mocker, mock_group_names):
-#     """Mock the KeycloakService.add_user_to_group method."""
-#     mock_response = MagicMock()
-#     mock_response.status_code = HTTPStatus.NO_CONTENT
 
-#     mock_add_user_to_group_keycloak = mocker.patch(
-#         f'{KEYCLOAK_SERVICE_MODULE}.add_user_to_group',
-#         return_value=mock_response
-#     )
-#     mock_get_user_groups_keycloak = mocker.patch(
-#         f'{KEYCLOAK_SERVICE_MODULE}.get_user_groups',
-#         return_value=[{'name': group_name} for group_name in mock_group_names]
-#     )
-#     mock_get_user_groups_keycloak = mocker.patch(
-#         f'{KEYCLOAK_SERVICE_MODULE}.get_user_groups',
-#         return_value=[{'name': group_name} for group_name in mock_group_names]
-#     )
+def mock_assign_composite_role_to_user(mocker, mock_group_names):
+    """Mock the KeycloakService.assign_composite_role_to_user method."""
+    mock_response = MagicMock()
+    mock_response.status_code = HTTPStatus.NO_CONTENT
 
-#     mock_add_attribute_to_user = mocker.patch(
-#         f'{KEYCLOAK_SERVICE_MODULE}.add_attribute_to_user',
-#         return_value=mock_response
-#     )
-#     return mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user
+    mock_assign_composite_role_to_user_keycloak = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.assign_composite_role_to_user',
+        return_value=mock_response
+    )
+    mock_get_user_roles_keycloak = mocker.patch(
+        f'{KEYCLOAK_SERVICE_MODULE}.get_user_roles',
+        return_value=[{'name': group_name} for group_name in mock_group_names]
+    )
+
+    return mock_assign_composite_role_to_user_keycloak, mock_get_user_roles_keycloak
 
 
 @pytest.mark.parametrize(
@@ -106,134 +100,129 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims):
     assert len(rv.json.get('items')) == 4
 
 
-# TODO: Replace/modify the next series of tests so they support composite roles instead of groups
-# @pytest.mark.parametrize('side_effect, expected_status', [
-#     (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
-#     (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
-# ])
-# def test_add_user_to_admin_group(mocker, client, jwt, session, side_effect, expected_status,
-#                                  setup_admin_user_and_claims):
-#     """Assert that a user can be added to the admin group."""
-#     user = factory_staff_user_model()
+@pytest.mark.parametrize('side_effect, expected_status', [
+    (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+    (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+])
+def test_add_user_to_admin_role(mocker, client, jwt, session, side_effect, expected_status,
+                                setup_admin_user_and_claims):
+    """Assert that a user can be added to the admin role."""
+    user = factory_staff_user_model()
 
-#     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group( # noqa: E501
-#         mocker,
-#         [KeycloakGroupName.EAO_IT_VIEWER.value]
-#     )
+    mock_assign_composite_role_to_user_keycloak, mock_get_user_roles_keycloak = mock_assign_composite_role_to_user(
+        mocker,
+        [KeycloakCompositeRoleNames.IT_VIEWER.value]
+    )
 
-#     user, claims = setup_admin_user_and_claims
-#     headers = factory_auth_header(jwt=jwt, claims=claims)
-#     rv = client.post(
-#         f'/api/user/{user.external_id}/groups?group=Administrator',
-#         headers=headers,
-#         content_type=ContentType.JSON.value
-#     )
-#     assert rv.status_code == HTTPStatus.OK
-#     mock_add_user_to_group_keycloak.assert_called()
-#     mock_get_user_groups_keycloak.assert_called()
-#     mock_add_attribute_to_user.assert_called()
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/roles?role=IT_ADMIN',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    mock_assign_composite_role_to_user_keycloak.assert_called()
+    mock_get_user_roles_keycloak.assert_called()
 
-#     with patch.object(StaffUserService, 'add_user_to_group', side_effect=side_effect):
-#         rv = client.post(
-#             f'/api/user/{user.external_id}/groups?group=Administrator',
-#             headers=headers,
-#             content_type=ContentType.JSON.value
-#         )
-#     assert rv.status_code == expected_status
+    with patch.object(StaffUserService, 'assign_composite_role_to_user', side_effect=side_effect):
+        rv = client.post(
+            f'/api/user/{user.external_id}/roles?role=IT_ADMIN',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == expected_status
 
-#     with patch.object(StaffUserService, 'add_user_to_group',
-#                       side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
-#         rv = client.post(
-#             f'/api/user/{user.external_id}/groups?group=Administrator',
-#             headers=headers,
-#             content_type=ContentType.JSON.value
-#         )
-#     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    with patch.object(StaffUserService, 'assign_composite_role_to_user',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.post(
+            f'/api/user/{user.external_id}/roles?role=IT_ADMIN',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
-# TODO: Replace/modify the next series of tests so they support composite roles instead of groups
-# def test_add_user_to_reviewer_group(mocker, client, jwt, session,
-#                                     setup_admin_user_and_claims):
-#     """Assert that a user can be added to the reviewer group."""
-#     user = factory_staff_user_model()
 
-#     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group( # noqa: E501
-#         mocker,
-#         [KeycloakGroupName.EAO_IT_VIEWER.value]
-#     )
+def test_add_user_to_reviewer_group(mocker, client, jwt, session,
+                                    setup_admin_user_and_claims):
+    """Assert that a user can be added to the reviewer role."""
+    user = factory_staff_user_model()
 
-#     user, claims = setup_admin_user_and_claims
-#     headers = factory_auth_header(jwt=jwt, claims=claims)
-#     rv = client.post(
-#         f'/api/user/{user.external_id}/groups?group=Reviewer',
-#         headers=headers,
-#         content_type=ContentType.JSON.value
-#     )
-#     assert rv.status_code == HTTPStatus.OK
-#     mock_add_user_to_group_keycloak.assert_called()
-#     mock_get_user_groups_keycloak.assert_called()
+    mock_assign_composite_role_to_user_keycloak, mock_get_user_roles_keycloak = mock_assign_composite_role_to_user(
+        mocker,
+        [KeycloakCompositeRoleNames.IT_VIEWER.value]
+    )
 
-# TODO: Replace/modify the next series of tests so they support composite
-#       roles instead of groups
-# def test_add_user_to_team_member_group(mocker, client, jwt, session,
-#                                        setup_admin_user_and_claims):
-#     """Assert that a user can be added to the team member group."""
-#     user = factory_staff_user_model()
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/roles?role=IT_VIEWER',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    mock_assign_composite_role_to_user_keycloak.assert_called()
+    mock_get_user_roles_keycloak.assert_called()
 
-#     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak,
-#     mock_add_attribute_to_user = mock_add_user_to_group(
-#         mocker,
-#         [KeycloakGroupName.EAO_IT_VIEWER.value]
-#     )
 
-#     user, claims = setup_admin_user_and_claims
-#     headers = factory_auth_header(jwt=jwt, claims=claims)
-#     rv = client.post(
-#         f'/api/user/{user.external_id}/groups?group=TeamMember',
-#         headers=headers,
-#         content_type=ContentType.JSON.value
-#     )
-#     assert rv.status_code == HTTPStatus.OK
-#     mock_add_user_to_group_keycloak.assert_called()
-#     mock_get_user_groups_keycloak.assert_called()
+def test_add_user_to_team_member_group(mocker, client, jwt, session,
+                                       setup_admin_user_and_claims):
+    """Assert that a user can be added to the team member role."""
+    user = factory_staff_user_model()
 
-# TODO: Replace/modify the next series of tests so they support composite
-#       roles instead of groups
-# def test_add_user_to_team_member_group_across_tenants(mocker, client, jwt, session):
-#     """Assert that a user can be added to the team member group."""
-#     set_global_tenant(tenant_id=1)
-#     user = factory_staff_user_model()
+    mock_assign_composite_role_to_user_keycloak, mock_get_user_roles_keycloak = mock_assign_composite_role_to_user(
+        mocker,
+        [KeycloakCompositeRoleNames.TEAM_MEMBER.value]
+    )
 
-#     mock_add_user_to_group_keycloak, mock_get_user_groups_keycloak, mock_add_attribute_to_user = mock_add_user_to_group( # noqa: E501
-#         mocker,
-#         [KeycloakGroupName.EAO_IT_VIEWER.value]
-#     )
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/roles?role=TEAM_MEMBER',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    mock_assign_composite_role_to_user_keycloak.assert_called()
+    mock_get_user_roles_keycloak.assert_called()
 
-#     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
-#     # sets a different tenant id in the request
-#     claims['tenant_id'] = 2
-#     headers = factory_auth_header(jwt=jwt, claims=claims)
-#     rv = client.post(
-#         f'/api/user/{user.external_id}/groups?group=TeamMember',
-#         headers=headers,
-#         content_type=ContentType.JSON.value
-#     )
-#     # assert staff admin cant do cross tenant operation
-#     assert rv.status_code == HTTPStatus.FORBIDDEN
 
-#     claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
-#     # sets a different tenant id in the request
-#     claims['tenant_id'] = 2
-#     headers = factory_auth_header(jwt=jwt, claims=claims)
-#     rv = client.post(
-#         f'/api/user/{user.external_id}/groups?group=TeamMember',
-#         headers=headers,
-#         content_type=ContentType.JSON.value
-#     )
-#     # assert MET admin can do cross tenant operation
-#     assert rv.status_code == HTTPStatus.OK
+def test_add_user_to_team_member_group_across_tenants(mocker, client, jwt, session):
+    """Assert that a user can be added to the team member group."""
+    set_global_tenant(tenant_id=1)
+    user = factory_staff_user_model()
 
-#     mock_add_user_to_group_keycloak.assert_called()
-#     mock_get_user_groups_keycloak.assert_called()
+    mock_assign_composite_role_to_user_keycloak, mock_get_user_roles_keycloak = mock_assign_composite_role_to_user(
+        mocker,
+        [KeycloakCompositeRoleNames.IT_VIEWER.value]
+    )
+
+    claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
+    # sets a different tenant id in the request
+    claims['tenant_id'] = 2
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/roles?role=TEAM_MEMBER',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    # assert staff admin cant do cross tenant operation
+    assert rv.status_code == HTTPStatus.FORBIDDEN
+
+    claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
+    # sets a different tenant id in the request
+    claims['tenant_id'] = 2
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(
+        f'/api/user/{user.external_id}/roles?role=TEAM_MEMBER',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    # assert MET admin can do cross tenant operation
+    assert rv.status_code == HTTPStatus.OK
+
+    mock_assign_composite_role_to_user_keycloak.assert_called()
+    mock_get_user_roles_keycloak.assert_called()
 
 
 def mock_toggle_user_status(mocker):
