@@ -105,7 +105,7 @@ describe('Poll Widget tests', () => {
         });
     }
 
-    async function inputmockpolldata() {
+    async function inputMockPollData() {
         const titleInput = within(screen.getByTestId('title')).getByRole('textbox') as HTMLInputElement;
         const descInput = within(screen.getByTestId('description')).getByRole('textbox') as HTMLInputElement;
         const answerText1 = within(screen.getByTestId('answerText1')).getByRole('textbox') as HTMLInputElement;
@@ -169,14 +169,14 @@ describe('Poll Widget tests', () => {
     test('Poll widget handles input correctly', async () => {
         render(<EngagementForm />);
         await addPollWidget();
-        await inputmockpolldata();
+        await inputMockPollData();
     });
 
     test('Poll can be submitted after inputting mock data', async () => {
         render(<EngagementForm />);
 
         await addPollWidget();
-        await inputmockpolldata();
+        await inputMockPollData();
 
         const submitButton = screen.getByTestId('save-button');
         fireEvent.click(submitButton);
