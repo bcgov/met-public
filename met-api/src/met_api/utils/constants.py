@@ -26,7 +26,7 @@ class CompositeRoles(Enum):
 
     @staticmethod
     def get_name_by_value(value):
-        """Get the name of a group by its value."""
+        """Get the name of a role by its value."""
         for role in CompositeRoles:
             if role.value == value:
                 return role.name

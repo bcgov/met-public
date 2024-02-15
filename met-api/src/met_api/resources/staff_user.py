@@ -144,7 +144,7 @@ class UserRoles(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.UPDATE_USER_GROUP.value])
+    @require_role([Role.UPDATE_USER_GROUP.value])
     def put(user_id):
         """Update user composite roles."""
         try:

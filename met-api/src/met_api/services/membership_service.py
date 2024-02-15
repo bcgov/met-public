@@ -88,15 +88,15 @@ class MembershipService:
         is_team_member = CompositeRoles.TEAM_MEMBER.value in user_details.get('composite_roles')
 
         if is_reviewer:
-            # If the user is assigned to the REVIEWER group, set the group name and membership type accordingly
+            # If the user is assigned to the REVIEWER role, set the role name and membership type accordingly
             composite_roles = CompositeRoles.REVIEWER.name
             membership_type = MembershipType.REVIEWER
         elif is_team_member:
-            # If the user is assigned to the TEAM_MEMBER group, set the group name and membership type accordingly
+            # If the user is assigned to the TEAM_MEMBER role, set the role name and membership type accordingly
             composite_roles = CompositeRoles.TEAM_MEMBER.name
             membership_type = MembershipType.TEAM_MEMBER
         else:
-            # If the user is not assigned to either group, return default values for group name and membership type
+            # If the user is not assigned to either role, return default values for role name and membership type
             composite_roles = default_role
             membership_type = default_membership_type
 
@@ -107,7 +107,7 @@ class MembershipService:
         valid_member_teams = [CompositeRoles.TEAM_MEMBER.name, CompositeRoles.REVIEWER.name]
         if composite_role not in valid_member_teams:
             raise BusinessException(
-                error='Invalid Group name.',
+                error='Invalid composite role name.',
                 status_code=HTTPStatus.BAD_REQUEST
             )
 

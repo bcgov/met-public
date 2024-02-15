@@ -17,46 +17,47 @@ import json
 from typing import List
 
 import requests
-from flask import current_app
 
+from met_api.config import Config
 from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames
 
 
 class KeycloakService:  # pylint: disable=too-few-public-methods
     """Keycloak services."""
 
-    @staticmethod
-    def get_user_roles(user_id):
+    # pylint: disable=too-many-instance-attributes
+    # Eight is reasonable in this case.
+    def __init__(self):
+        """Initialize Keycloak configuration."""
+        keycloak = Config().KEYCLOAK_CONFIG
+        self.base_url = keycloak['CSS_API_URL']
+        self.realm = keycloak['REALMNAME']
+        self.integration_id = keycloak['CSS_API_INTEGRATION_ID']
+        self.environment = keycloak['CSS_API_ENVIRONMENT']
+        self.timeout = keycloak['CONNECT_TIMEOUT']
+        self.admin_base_url = keycloak['ADMIN_BASE_URL']
+        self.admin_client_id = keycloak['ADMIN_USERNAME']
+        self.admin_secret = keycloak['ADMIN_SECRET']
+
+    def get_user_roles(self, user_id):
         """Get user composite roles from Keycloak by userid."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['CSS_API_URL']
-        environment = keycloak['CSS_API_ENVIRONMENT']
-        integration_id = keycloak['CSS_API_INTEGRATION_ID']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        admin_token = KeycloakService._get_admin_token()
+        admin_token = self._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
 
         # Get the user and return
-        query_user_url = f'{base_url}/{integration_id}/{environment}/users/{user_id}/roles'
-        response = requests.get(query_user_url, headers=headers, timeout=timeout)
+        query_user_url = (f'{self.base_url}/{self.integration_id}/'
+                          f'{self.environment}/users/{user_id}/roles')
+        response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
         response.raise_for_status()
         return response.json()
 
-    @staticmethod
-    def get_users_roles(user_ids: List):
+    def get_users_roles(self, user_ids: List):
         """Get user composite roles from Keycloak by user ids."""
         # TODO if List is bigger than a number ; if so reject.
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['CSS_API_URL']
-        environment = keycloak['CSS_API_ENVIRONMENT']
-        integration_id = keycloak['CSS_API_INTEGRATION_ID']
-        if not base_url:
-            return {}
-        timeout = keycloak['CONNECT_TIMEOUT']
-        admin_token = KeycloakService._get_admin_token()
+        admin_token = self._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
@@ -64,8 +65,9 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         user_role_mapping = {}
         # Get the user and return
         for user_id in user_ids:
-            query_user_url = f'{base_url}/{integration_id}/{environment}/users/{user_id}/roles'
-            response = requests.get(query_user_url, headers=headers, timeout=timeout)
+            query_user_url = (f'{self.base_url}/{self.integration_id}/'
+                              f'{self.environment}/users/{user_id}/roles')
+            response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
             if response.status_code == 200:
                 if (roles := response.json().get('data')) is not None:
                     user_role_mapping[user_id] = [role.get('name') for role in roles]
@@ -99,25 +101,18 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     #             return group_id
     #     return None
 
-    @staticmethod
-    def _get_admin_token():
+    def _get_admin_token(self):
         """Create an admin token."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['ADMIN_BASE_URL']
-        realm = keycloak['REALMNAME']
-        admin_client_id = keycloak['ADMIN_USERNAME']
-        admin_secret = keycloak['ADMIN_SECRET']
-        timeout = keycloak['CONNECT_TIMEOUT']
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        token_url = f'{base_url}/realms/{realm}/protocol/openid-connect/token'
+        token_url = f'{self.admin_base_url}/realms/{self.realm}/protocol/openid-connect/token'
         response = requests.post(
             token_url,
             headers=headers,
-            timeout=timeout,
-            data=f'client_id={admin_client_id}&grant_type=client_credentials'
-                 f'&client_secret={admin_secret}'
+            timeout=self.timeout,
+            data=f'client_id={self.admin_client_id}&grant_type=client_credentials'
+                 f'&client_secret={self.admin_secret}'
         )
         return response.json().get('access_token')
 
@@ -129,7 +124,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     #     realm = keycloak['REALMNAME']
     #     timeout = keycloak['CONNECT_TIMEOUT']
     #     # Create an admin token
-    #     admin_token = KeycloakService._get_admin_token()
+    #     admin_token = self._get_admin_token()
     #     # Get the '$group_name' group
     #     group_id = KeycloakService._get_group_id(admin_token, group_name)
 
@@ -143,134 +138,86 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
     #                                timeout=timeout)
     #     response.raise_for_status()
 
-    @staticmethod
-    def assign_composite_role_to_user(user_id: str, composite_role: str):
+    def assign_composite_role_to_user(self, user_id: str, composite_role: str):
         """Add user to the keycloak composite roles."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['CSS_API_URL']
-        environment = keycloak['CSS_API_ENVIRONMENT']
-        integration_id = keycloak['CSS_API_INTEGRATION_ID']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        admin_token = KeycloakService._get_admin_token()
+        admin_token = self._get_admin_token()
         # Add user to the keycloak composite roles '$composite_role'
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-        add_to_role_url = f'{base_url}/{integration_id}/{environment}/users/{user_id}/roles'
+        add_to_role_url = f'{self.base_url}/{self.integration_id}/{self.environment}/users/{user_id}/roles'
 
         # Creating data payload
         data = [{'name': composite_role}]
         response = requests.post(add_to_role_url, headers=headers, json=data,
-                                 timeout=timeout)
+                                 timeout=self.timeout)
         response.raise_for_status()
 
-    @staticmethod
-    def add_attribute_to_user(user_id: str, attribute_value: str, attribute_id: str = 'tenant_id'):
-        """Add attribute to a keyclaok user.Default is set as tenant Id."""
-        config = current_app.config['KEYCLOAK_CONFIG']
-        base_url = config.get('BASE_URL')
-        realm = config.get('REALMNAME')
-        admin_token = KeycloakService._get_admin_token()
-
-        tenant_attributes = {
-            attribute_id: attribute_value
-        }
-
-        user_url = f'{base_url}/admin/realms/{realm}/users/{user_id}'
-        headers = {'Authorization': f'Bearer {admin_token}'}
-        response = requests.get(user_url, headers=headers)
-        user_data = response.json()
-        user_data.setdefault('attributes', {}).update(tenant_attributes)
-        requests.put(user_url, json=user_data, headers=headers)
-        response.raise_for_status()
-
-    @staticmethod
-    def remove_composite_role_from_user(user_id: str, role: str):
+    def remove_composite_role_from_user(self, user_id: str, role: str):
         """Remove user from the keycloak composite role."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['CSS_API_URL']
-        environment = keycloak['CSS_API_ENVIRONMENT']
-        integration_id = keycloak['CSS_API_INTEGRATION_ID']
-        timeout = keycloak['CONNECT_TIMEOUT']
         # Create an admin token
-        admin_token = KeycloakService._get_admin_token()
+        admin_token = self._get_admin_token()
 
-        # Remove user from the keycloak group '$role'
+        # Remove user from the keycloak composite role '$role'
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
-        remove_from_role_url = f'{base_url}/{integration_id}/{environment}/users/{user_id}/roles/{role}'
-        response = requests.delete(remove_from_role_url, headers=headers, timeout=timeout)
+        remove_from_role_url = f'{self.base_url}/{self.integration_id}/{self.environment}/users/{user_id}/roles/{role}'
+        response = requests.delete(remove_from_role_url, headers=headers, timeout=self.timeout)
         response.raise_for_status()
 
-    @staticmethod
-    def add_user(user: dict):
+    def add_user(self, user: dict):
         """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
         # Add user and set password
-        admin_token = KeycloakService._get_admin_token()
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
+        admin_token = self._get_admin_token()
 
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
 
-        add_user_url = f'{base_url}/admin/realms/{realm}/users'
+        add_user_url = f'{self.base_url}/admin/realms/{self.realm}/users'
         response = requests.post(add_user_url, data=json.dumps(user), headers=headers,
-                                 timeout=timeout)
+                                 timeout=self.timeout)
         response.raise_for_status()
 
-        return KeycloakService.get_user_by_username(user.get('username'), admin_token)
+        return self.get_user_by_username(user.get('username'), admin_token)
 
-    @staticmethod
-    def get_user_by_username(username, admin_token=None):
+    def get_user_by_username(self, username, admin_token=None):
         """Get user from Keycloak by username."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['BASE_URL']
-        realm = keycloak['REALMNAME']
-        timeout = keycloak['CONNECT_TIMEOUT']
         if not admin_token:
-            admin_token = KeycloakService._get_admin_token()
+            admin_token = self._get_admin_token()
 
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
         # Get the user and return
-        query_user_url = f'{base_url}/admin/realms/{realm}/users?username={username}'
-        response = requests.get(query_user_url, headers=headers, timeout=timeout)
+        query_user_url = f'{self.base_url}/admin/realms/{self.realm}/users?username={username}'
+        response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
         return response.json()[0]
 
-    @staticmethod
-    def toggle_user_enabled_status(user_id, enabled):
+    def toggle_user_enabled_status(self, user_id, enabled):
         """Toggle the enabled status of a user in Keycloak."""
-        keycloak = current_app.config['KEYCLOAK_CONFIG']
-        base_url = keycloak['CSS_API_URL']
-        environment = keycloak['CSS_API_ENVIRONMENT']
-        integration_id = keycloak['CSS_API_INTEGRATION_ID']
-        timeout = keycloak['CONNECT_TIMEOUT']
-        admin_token = KeycloakService._get_admin_token()
+        admin_token = self._get_admin_token()
         headers = {
             'Content-Type': ContentType.JSON.value,
             'Authorization': f'Bearer {admin_token}'
         }
 
-        query_user_url = f'{base_url}/{integration_id}/{environment}/users/{user_id}/roles'
-        response = requests.get(query_user_url, headers=headers, timeout=timeout)
+        query_user_url = f'{self.base_url}/{self.integration_id}/{self.environment}/users/{user_id}/roles'
+        response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
 
         if response.status_code == 200 and enabled:
             role_name = KeycloakCompositeRoleNames.IT_VIEWER.value
-            KeycloakService.assign_composite_role_to_user(user_id=user_id, composite_role=role_name)
+            self.assign_composite_role_to_user(user_id=user_id, composite_role=role_name)
 
         if response.status_code == 200 and not enabled:
             roles_data = response.json().get('data', [])
             for role in roles_data:
                 role_name = role.get('name')
-                KeycloakService.remove_composite_role_from_user(user_id=user_id, role=role_name)
+                self.remove_composite_role_from_user(user_id=user_id, role=role_name)
 
         response.raise_for_status()

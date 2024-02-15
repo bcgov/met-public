@@ -106,8 +106,6 @@ class StaffUserService:
         user_roles = KEYCLOAK_SERVICE.get_users_roles(
             [user.get('external_id') for user in user_collection])
         for user in user_collection:
-            # TODO etc;Arrive at a better implementation than keeping a static list
-            # TODO Probably add a custom attribute in the keycloak as title against a group?
             composite_roles = user_roles.get(user.get('external_id'))
             user['composite_roles'] = ''
             if composite_roles:
