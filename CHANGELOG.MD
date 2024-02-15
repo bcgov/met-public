@@ -1,3 +1,7 @@
+## February 15, 2024
+- **Task**Restore role assignment functionality to MET with the CSS API [DESENG-473](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-473)
+    - Utilize the CSS API for efficient management of composite roles. This involves the assignment, reassignment, or removal of users from the composite roles of TEAM_MEMBER, REVIEWER, IT_ADMIN, or IT_VIEWER.
+
 ## February 09, 2024
 - **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
     - Deleted old migration files
