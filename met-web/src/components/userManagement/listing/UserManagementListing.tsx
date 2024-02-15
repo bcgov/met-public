@@ -37,13 +37,13 @@ const UserManagementListing = () => {
             ),
         },
         {
-            key: 'main_group',
+            key: 'main_role',
             numeric: false,
             disablePadding: true,
             label: 'Role',
             allowSort: false,
             renderCell: (row: User) => {
-                return row.main_group;
+                return row.main_role;
             },
         },
         {

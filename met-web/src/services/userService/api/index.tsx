@@ -11,7 +11,7 @@ interface GetUserListParams {
     sort_key?: string;
     sort_order?: 'asc' | 'desc';
     search_text?: string;
-    // If yes, user groups will be fetched as well from keycloak
+    // If yes, user roles will be fetched as well from keycloak
     include_roles?: boolean;
     include_inactive?: boolean;
 }
@@ -27,7 +27,7 @@ export const getUserList = async (params: GetUserListParams = {}): Promise<Page<
 
 interface GetUserParams {
     user_id: number;
-    // If yes, user groups will be fetched as well from keycloak
+    // If yes, user roles will be fetched as well from keycloak
     include_roles?: boolean;
 }
 export const getUser = async (params: GetUserParams): Promise<User> => {
@@ -39,23 +39,23 @@ export const getUser = async (params: GetUserParams): Promise<User> => {
     return Promise.reject('Failed to fetch user details');
 };
 
-interface AddUserToGroupProps {
+interface AddUserToRoleProps {
     user_id?: string;
-    group?: string;
+    role?: string;
 }
-export const addUserToGroup = async ({ user_id, group }: AddUserToGroupProps): Promise<User> => {
-    const url = replaceUrl(Endpoints.User.ADD_TO_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PostRequest<User>(url, {}, { group });
+export const addUserToRole = async ({ user_id, role }: AddUserToRoleProps): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.ADD_TO_COMPOSITE_ROLE, 'user_id', String(user_id));
+    const responseData = await http.PostRequest<User>(url, {}, { role });
     return responseData.data;
 };
 
-interface ChangeUserGroupProps {
+interface ChangeUserRoleProps {
     user_id: number;
-    group: string;
+    role: string;
 }
-export const changeUserGroup = async ({ user_id, group }: ChangeUserGroupProps): Promise<User> => {
-    const url = replaceUrl(Endpoints.User.CHANGE_GROUP, 'user_id', String(user_id));
-    const responseData = await http.PutRequest<User>(url, {}, { group });
+export const changeUserRole = async ({ user_id, role }: ChangeUserRoleProps): Promise<User> => {
+    const url = replaceUrl(Endpoints.User.CHANGE_COMPOSITE_ROLE, 'user_id', String(user_id));
+    const responseData = await http.PutRequest<User>(url, {}, { role });
     return responseData.data;
 };
 

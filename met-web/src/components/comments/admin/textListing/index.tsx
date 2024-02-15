@@ -21,7 +21,7 @@ import { getSubmissionPage } from 'services/submissionService';
 import { SurveySubmission } from 'models/surveySubmission';
 import { formatDate, formatToUTC } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 import CommentIcon from '@mui/icons-material/Comment';
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
@@ -184,7 +184,7 @@ const CommentTextListing = () => {
                 if (
                     roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
                     (assignedEngagements.includes(Number(row.engagement_id)) &&
-                        userDetail.groups?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
+                        userDetail.composite_roles?.includes('/' + USER_COMPOSITE_ROLE.TEAM_MEMBER.value))
                 ) {
                     return (
                         <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>
