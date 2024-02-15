@@ -6,7 +6,7 @@ import { openNotificationModal } from 'services/notificationModalService/notific
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { toggleUserStatus } from 'services/userService/api';
 import { USER_ROLES } from 'services/userService/constants';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 
 const UserStatusButton = () => {
     const { roles, userDetail } = useAppSelector((state) => state.user);
@@ -17,7 +17,7 @@ const UserStatusButton = () => {
 
     const isActive = savedUser?.status_id === 1;
 
-    const disabled = savedUser?.main_group === USER_GROUP.ADMIN.label || savedUser?.id === userDetail?.user?.id;
+    const disabled = savedUser?.main_role === USER_COMPOSITE_ROLE.ADMIN.label || savedUser?.id === userDetail?.user?.id;
 
     useEffect(() => {
         setUserStatus(isActive);
