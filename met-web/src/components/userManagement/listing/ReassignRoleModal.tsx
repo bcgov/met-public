@@ -7,7 +7,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 import { Unless } from 'react-if';
 import { Palette } from 'styles/Theme';
 import { changeUserRole } from 'services/userService/api';
@@ -90,30 +90,30 @@ export const ReassignRoleModal = () => {
                                         What role would you like to reassign to this user?
                                     </FormLabel>
                                     <ControlledRadioGroup name="role">
-                                        <Unless condition={user.main_role === USER_GROUP.VIEWER.label}>
+                                        <Unless condition={user.main_role === USER_COMPOSITE_ROLE.VIEWER.label}>
                                             <FormControlLabel
-                                                value={USER_GROUP.VIEWER.value}
+                                                value={USER_COMPOSITE_ROLE.VIEWER.value}
                                                 control={<Radio />}
                                                 label={'Viewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_role === USER_GROUP.REVIEWER.label}>
+                                        <Unless condition={user.main_role === USER_COMPOSITE_ROLE.REVIEWER.label}>
                                             <FormControlLabel
-                                                value={USER_GROUP.REVIEWER.value}
+                                                value={USER_COMPOSITE_ROLE.REVIEWER.value}
                                                 control={<Radio />}
                                                 label={'Reviewer'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_role === USER_GROUP.TEAM_MEMBER.label}>
+                                        <Unless condition={user.main_role === USER_COMPOSITE_ROLE.TEAM_MEMBER.label}>
                                             <FormControlLabel
-                                                value={USER_GROUP.TEAM_MEMBER.value}
+                                                value={USER_COMPOSITE_ROLE.TEAM_MEMBER.value}
                                                 control={<Radio />}
                                                 label={'Team Member'}
                                             />
                                         </Unless>
-                                        <Unless condition={user.main_role === USER_GROUP.ADMIN.label}>
+                                        <Unless condition={user.main_role === USER_COMPOSITE_ROLE.ADMIN.label}>
                                             <FormControlLabel
-                                                value={USER_GROUP.ADMIN.value}
+                                                value={USER_COMPOSITE_ROLE.ADMIN.value}
                                                 control={<Radio />}
                                                 label={'Administrator'}
                                             />

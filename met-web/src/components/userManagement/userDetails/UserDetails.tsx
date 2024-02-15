@@ -7,7 +7,7 @@ import { formatDate } from 'components/common/dateHelper';
 import AssignedEngagementsListing from './AssignedEngagementsListing';
 import UserStatusButton from './UserStatusButton';
 import UserDetailsSkeleton from './UserDetailsSkeleton';
-import { USER_GROUP, USER_STATUS } from 'models/user';
+import { USER_COMPOSITE_ROLE, USER_STATUS } from 'models/user';
 
 export const UserDetail = ({ label, value }: { label: string; value: JSX.Element }) => {
     return (
@@ -92,7 +92,7 @@ export const UserDetails = () => {
                     <PrimaryButton
                         onClick={() => setAddUserModalOpen(true)}
                         disabled={
-                            savedUser?.main_role === USER_GROUP.VIEWER.label ||
+                            savedUser?.main_role === USER_COMPOSITE_ROLE.VIEWER.label ||
                             savedUser?.status_id === USER_STATUS.INACTIVE.value ||
                             savedUser?.id === userDetail?.user?.id
                         }

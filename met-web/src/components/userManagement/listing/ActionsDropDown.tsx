@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
-import { User, USER_GROUP, USER_STATUS } from 'models/user';
+import { User, USER_COMPOSITE_ROLE, USER_STATUS } from 'models/user';
 import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
 import { useAppSelector } from 'hooks';
@@ -25,14 +25,14 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
     };
 
     const isAdmin = (): boolean => {
-        if (selectedUser?.main_role == USER_GROUP.ADMIN.label) {
+        if (selectedUser?.main_role == USER_COMPOSITE_ROLE.ADMIN.label) {
             return true;
         }
         return false;
     };
 
     const isViewer = (): boolean => {
-        if (selectedUser?.main_role == USER_GROUP.VIEWER.label) {
+        if (selectedUser?.main_role == USER_COMPOSITE_ROLE.VIEWER.label) {
             return true;
         }
         return false;

@@ -15,7 +15,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserDetailsContext } from './UserDetailsContext';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -36,7 +36,7 @@ import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
 export const AddToEngagementModal = () => {
     const { savedUser, addUserModalOpen, setAddUserModalOpen, getUserMemberships, getUserDetails } =
         useContext(UserDetailsContext);
-    const userHasGroup = savedUser?.composite_roles && savedUser?.composite_roles.length > 0;
+    const userHasRole = savedUser?.composite_roles && savedUser?.composite_roles.length > 0;
     const schema = yup
         .object({
             engagement: yup.object().nullable(),
@@ -79,7 +79,7 @@ export const AddToEngagementModal = () => {
         }
     }, [JSON.stringify(formValues)]);
 
-    const { role: groupErrors, engagement: engagementErrors } = errors;
+    const { role: roleErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setAddUserModalOpen(false);
@@ -119,7 +119,7 @@ export const AddToEngagementModal = () => {
     ).current;
 
     const addUserToEngagement = async (data: AddUserForm) => {
-        if (userHasGroup) {
+        if (userHasRole) {
             await addTeamMemberToEngagement({
                 user_id: savedUser?.external_id,
                 engagement_id: data.engagement?.id,
@@ -131,12 +131,12 @@ export const AddToEngagementModal = () => {
                 }),
             );
         } else {
-            if (userTypeSelected === USER_GROUP.ADMIN.value) {
+            if (userTypeSelected === USER_COMPOSITE_ROLE.ADMIN.value) {
                 await addUserToRole({ user_id: savedUser?.external_id, role: data.role ?? '' });
                 dispatch(
                     openNotification({
                         severity: 'success',
-                        text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} to the group ${USER_GROUP.ADMIN.label}`,
+                        text: `You have successfully added ${savedUser?.first_name} ${savedUser?.last_name} to the role ${USER_COMPOSITE_ROLE.ADMIN.label}`,
                     }),
                 );
             } else {
@@ -186,12 +186,12 @@ export const AddToEngagementModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid item xs={12}>
-                                <When condition={!userHasGroup}>
+                                <When condition={!userHasRole}>
                                     <MetHeader3 bold>
                                         Assign Role to {savedUser?.first_name + ' ' + savedUser?.last_name}
                                     </MetHeader3>
                                 </When>
-                                <When condition={userHasGroup}>
+                                <When condition={userHasRole}>
                                     <MetHeader3 bold>
                                         Add {savedUser?.first_name + ' ' + savedUser?.last_name} to Engagement
                                     </MetHeader3>
@@ -207,7 +207,7 @@ export const AddToEngagementModal = () => {
                                 justifyContent="flex-start"
                                 rowSpacing={4}
                             >
-                                <When condition={!userHasGroup}>
+                                <When condition={!userHasRole}>
                                     <Grid item xs={12}>
                                         <FormControl error={Boolean(errors['role'])}>
                                             <FormLabel
@@ -222,27 +222,27 @@ export const AddToEngagementModal = () => {
                                             </FormLabel>
                                             <ControlledRadioGroup name="role">
                                                 <FormControlLabel
-                                                    value={USER_GROUP.REVIEWER.value}
+                                                    value={USER_COMPOSITE_ROLE.REVIEWER.value}
                                                     control={<Radio />}
                                                     label={'Reviewer'}
                                                 />
                                                 <FormControlLabel
-                                                    value={USER_GROUP.TEAM_MEMBER.value}
+                                                    value={USER_COMPOSITE_ROLE.TEAM_MEMBER.value}
                                                     control={<Radio />}
                                                     label={'Team Member'}
                                                 />
                                             </ControlledRadioGroup>
-                                            <When condition={Boolean(groupErrors)}>
-                                                <FormHelperText>{String(groupErrors?.message)}</FormHelperText>
+                                            <When condition={Boolean(roleErrors)}>
+                                                <FormHelperText>{String(roleErrors?.message)}</FormHelperText>
                                             </When>
                                         </FormControl>
                                     </Grid>
                                 </When>
                                 <When
                                     condition={
-                                        userTypeSelected === USER_GROUP.TEAM_MEMBER.value ||
-                                        userTypeSelected === USER_GROUP.REVIEWER.value ||
-                                        userHasGroup
+                                        userTypeSelected === USER_COMPOSITE_ROLE.TEAM_MEMBER.value ||
+                                        userTypeSelected === USER_COMPOSITE_ROLE.REVIEWER.value ||
+                                        userHasRole
                                     }
                                 >
                                     <Grid item xs={12}>
