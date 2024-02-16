@@ -188,6 +188,14 @@ const videoWidget: Widget = {
     items: [],
 };
 
+const subscribeWidget: Widget = {
+    id: 1,
+    title: 'Subscribe',
+    widget_type_id: WidgetType.Subscribe,
+    engagement_id: 1,
+    items: [],
+};
+
 const timeLineWidget: Widget = {
     id: 1,
     title: 'Timeline',
@@ -220,7 +228,7 @@ const mockVideo: VideoWidget = {
     id: 1,
     widget_id: 1,
     engagement_id: 1,
-    video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    video_url: 'https://youtube.url',
     description: 'Video description',
 };
 
@@ -278,4 +286,5 @@ export {
     mockVideo,
     timeLineWidget,
     mockTimeLine,
+    subscribeWidget,
 };
