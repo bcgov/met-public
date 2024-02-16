@@ -2,27 +2,15 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
-import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
-import * as reactRouter from 'react-router';
-import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
-import * as engagementMetadataService from 'services/engagementMetadataService';
-import * as membershipService from 'services/membershipService';
-import * as engagementSettingService from 'services/engagementSettingService';
 import * as TimeLineService from 'services/widgetService/TimelineService';
-import { Box } from '@mui/material';
 import { WidgetType } from 'models/widget';
-import { draftEngagement, mockTimeLine, timeLineWidget, engagementMetadata } from '../factory';
+import { draftEngagement, mockTimeLine, timeLineWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
-import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+
+import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
 
 jest.mock('components/map', () => () => <div></div>);
-
-const mockEngagementSettings: EngagementSettings = {
-    ...createDefaultEngagementSettings(),
-};
-
 jest.mock('axios');
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -32,28 +20,6 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
-}));
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: jest.fn(() => ({ search: '' })),
-    useParams: jest.fn(() => {
-        return { projectId: '' };
-    }),
-    useNavigate: () => jest.fn(),
-}));
-jest.mock('@reduxjs/toolkit/query/react', () => ({
-    ...jest.requireActual('@reduxjs/toolkit/query/react'),
-    fetchBaseQuery: jest.fn(),
-}));
-
-jest.mock('components/common/Dragdrop', () => ({
-    ...jest.requireActual('components/common/Dragdrop'),
-    MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-    MetDraggable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-}));
-jest.mock('@hello-pangea/dnd', () => ({
-    ...jest.requireActual('@hello-pangea/dnd'),
-    DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
 const mockCreateWidget = jest.fn(() => Promise.resolve(timeLineWidget));
@@ -66,7 +32,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
-jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
 
 // Mock the necessary services and contexts
 jest.mock('services/widgetService/TimeLineService', () => ({
@@ -76,23 +41,9 @@ jest.mock('services/widgetService/TimeLineService', () => ({
 
 describe('TimeLine Widget tests', () => {
     beforeAll(() => {
-        jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => ({
-            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
-            assignedEngagements: [draftEngagement.id],
-        }));
-        jest.spyOn(reactRouter, 'useParams').mockReturnValue({ projectId: '' });
-        jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(jest.fn());
-        jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
+        setupWidgetTestEnvMock();
+        setupWidgetTestEnvSpy();
         jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([timeLineWidget]));
-        jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
-            Promise.resolve(engagementMetadata),
-        );
-        jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
-        jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
-            Promise.resolve(mockEngagementSettings),
-        );
-        jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(jest.fn());
-        setupEnv();
     });
 
     async function addTimeLineWidget() {
