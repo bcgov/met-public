@@ -98,7 +98,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByTestId('create-engagement-button')).toBeVisible();
+        expect(screen.getByTestId('save-engagement-button')).toBeVisible();
         expect(getEngagementMock).not.toHaveBeenCalled();
         expect(getEngagementMetadataMock).not.toHaveBeenCalled();
 
@@ -125,7 +125,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         const { container, getByTestId } = render(<EngagementForm />);
 
-        const createButton = getByTestId('create-engagement-button');
+        const createButton = getByTestId('save-engagement-button');
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);

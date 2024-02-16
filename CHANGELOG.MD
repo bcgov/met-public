@@ -1,3 +1,7 @@
+## February 16, 2024
+- **Task**Make a floating save/preview bar when editing engagements [DESENG-498](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-498)
+    - Implemented a floating behavior for the save/preview buttons during engagement editing. This feature persists across all tabs but exclusively saves data for the Engagement Content tab.
+
 ## February 15, 2024
 - **Task**Restore role assignment functionality to MET with the CSS API [DESENG-473](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-473)
     - Utilize the CSS API for efficient management of composite roles. This involves the assignment, reassignment, or removal of users from the composite roles of TEAM_MEMBER, REVIEWER, IT_ADMIN, or IT_VIEWER.
