@@ -13,6 +13,8 @@ import { WidgetType, Widget, WidgetItem } from 'models/widget';
 import { Event, EventItem } from 'models/event';
 import { WidgetMap } from 'models/widgetMap';
 import { PollWidget, PollAnswer } from 'models/pollWidget';
+import { VideoWidget } from 'models/videoWidget';
+import { TimelineWidget, TimelineEvent, EventStatus } from 'models/timelineWidget';
 import { Tenant } from 'models/tenant';
 
 const tenant: Tenant = {
@@ -178,6 +180,30 @@ const pollWidget: Widget = {
     items: [],
 };
 
+const videoWidget: Widget = {
+    id: 1,
+    title: 'Video',
+    widget_type_id: WidgetType.Video,
+    engagement_id: 1,
+    items: [],
+};
+
+const subscribeWidget: Widget = {
+    id: 1,
+    title: 'Subscribe',
+    widget_type_id: WidgetType.Subscribe,
+    engagement_id: 1,
+    items: [],
+};
+
+const timeLineWidget: Widget = {
+    id: 1,
+    title: 'Timeline',
+    widget_type_id: WidgetType.Timeline,
+    engagement_id: 1,
+    items: [],
+};
+
 const mockPollAnswer1: PollAnswer = {
     id: 0,
     answer_text: 'answer 1',
@@ -198,6 +224,33 @@ const mockPoll: PollWidget = {
     answers: [mockPollAnswer1, mockPollAnswer2],
 };
 
+const mockVideo: VideoWidget = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    video_url: 'https://youtube.url',
+    description: 'Video description',
+};
+
+const mockTimeLineEvent1: TimelineEvent = {
+    id: 1,
+    engagement_id: 1,
+    widget_id: 1,
+    timeline_id: 1,
+    description: 'Time Line Event One Description',
+    time: '2022-09-14 20:16:29.846877',
+    status: EventStatus.Pending,
+    position: 1,
+};
+
+const mockTimeLine: TimelineWidget = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    title: 'Time Line Title',
+    description: 'Time Line Description',
+    events: [mockTimeLineEvent1],
+};
 const engagementMetadata: EngagementMetadata = {
     ...createDefaultEngagementMetadata(),
     engagement_id: 1,
@@ -228,5 +281,10 @@ export {
     engagementSlugData,
     engagementSetting,
     mockPoll,
-    pollWidget
+    pollWidget,
+    videoWidget,
+    mockVideo,
+    timeLineWidget,
+    mockTimeLine,
+    subscribeWidget,
 };
