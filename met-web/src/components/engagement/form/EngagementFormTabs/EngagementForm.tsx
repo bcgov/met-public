@@ -3,11 +3,9 @@ import { Typography, Grid, TextField, Stack, Box } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetDescription } from '../../../common';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
-import { useNavigate } from 'react-router-dom';
 import { SurveyBlock } from './SurveyBlock';
-import { If, Then, Else } from 'react-if';
 import { EngagementTabsContext } from './EngagementTabsContext';
-import { EngagementStatus, SUBMISSION_STATUS } from 'constants/engagementStatus';
+import { EngagementStatus } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './constants';
 import RichTextEditor from 'components/common/RichTextEditor';
@@ -15,25 +13,20 @@ import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor
 
 const CREATE = 'create';
 const EngagementForm = () => {
-    const {
-        handleCreateEngagementRequest,
-        handleUpdateEngagementRequest,
-        isSaving,
-        savedEngagement,
-        handleAddBannerImage,
-        fetchEngagement,
-    } = useContext(ActionContext);
+    const { isSaving, savedEngagement, handleAddBannerImage } = useContext(ActionContext);
 
     const {
         engagementFormData,
         setEngagementFormData,
+        setIsNewEngagement,
+        handleSaveEngagement,
+        handlePreviewEngagement,
         richDescription,
         setRichDescription,
         richContent,
         setRichContent,
         engagementFormError,
         setEngagementFormError,
-        surveyBlockText,
     } = useContext(EngagementTabsContext);
 
     const [initialRichDescription, setInitialRichDescription] = useState('');
@@ -42,32 +35,16 @@ const EngagementForm = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const navigate = useNavigate();
+    const isCreateEngagement = window.location.pathname.includes(CREATE);
 
-    const isNewEngagement = window.location.pathname.includes(CREATE);
-
-    const { name, start_date, end_date, description } = engagementFormData;
-
-    const surveyBlockList = [
-        {
-            survey_status: SUBMISSION_STATUS.UPCOMING,
-            block_text: surveyBlockText.Upcoming,
-        },
-        {
-            survey_status: SUBMISSION_STATUS.OPEN,
-            block_text: surveyBlockText.Open,
-        },
-        {
-            survey_status: SUBMISSION_STATUS.CLOSED,
-            block_text: surveyBlockText.Closed,
-        },
-    ];
+    const { name, start_date, end_date } = engagementFormData;
 
     useEffect(() => {
         const initialDescription = getTextFromDraftJsContentState(richDescription || savedEngagement.rich_description);
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
         setInitialRichContent(richContent || savedEngagement.rich_content);
         setDescriptionCharCount(initialDescription.length);
+        setIsNewEngagement(isCreateEngagement);
     }, []);
 
     const getErrorMessage = () => {
@@ -117,72 +94,6 @@ const EngagementForm = () => {
 
     const handleRichContentChange = (newState: string) => {
         setRichContent(newState);
-    };
-
-    const validateForm = () => {
-        const errors = {
-            name: !(name && name.length < 50),
-            start_date: !start_date,
-            end_date: !end_date,
-            description: description.length > 550,
-        };
-        setEngagementFormError(errors);
-
-        return Object.values(errors).some((isError: unknown) => isError);
-    };
-
-    const handleCreateEngagement = async () => {
-        const hasErrors = validateForm();
-
-        if (hasErrors) {
-            return;
-        }
-
-        const engagement = await handleCreateEngagementRequest({
-            ...engagementFormData,
-            rich_description: richDescription,
-            rich_content: richContent,
-            status_block: surveyBlockList,
-        });
-
-        navigate(`/engagements/${engagement.id}/form`);
-
-        return engagement;
-    };
-
-    const handleUpdateEngagement = async () => {
-        const hasErrors = validateForm();
-
-        if (hasErrors) {
-            return;
-        }
-
-        await handleUpdateEngagementRequest({
-            ...engagementFormData,
-            rich_description: richDescription,
-            rich_content: richContent,
-            status_block: surveyBlockList,
-        });
-
-        fetchEngagement();
-        return savedEngagement;
-    };
-
-    const handleSaveEngagement = () => {
-        if (isNewEngagement) {
-            return handleCreateEngagement();
-        }
-
-        return handleUpdateEngagement();
-    };
-
-    const handlePreviewEngagement = async () => {
-        const engagement = await handleSaveEngagement();
-        if (!engagement) {
-            return;
-        }
-
-        navigate(`/engagements/${engagement.id}/view`);
     };
 
     const isDateFieldDisabled = [EngagementStatus.Closed, EngagementStatus.Unpublished].includes(
@@ -333,38 +244,35 @@ const EngagementForm = () => {
                     <SurveyBlock />
                 </Grid>
 
-                <Grid item xs={12}>
-                    <If condition={isNewEngagement}>
-                        <Then>
-                            <PrimaryButton
-                                sx={{ marginRight: 1 }}
-                                data-testid="create-engagement-button"
-                                onClick={() => handleCreateEngagement()}
-                                loading={isSaving}
-                            >
-                                Save
-                            </PrimaryButton>
-                        </Then>
-                        <Else>
-                            <PrimaryButton
-                                data-testid="update-engagement-button"
-                                sx={{ marginRight: 1 }}
-                                onClick={() => handleUpdateEngagement()}
-                                disabled={isSaving}
-                                loading={isSaving}
-                            >
-                                Save
-                            </PrimaryButton>
-                        </Else>
-                    </If>
-                    <SecondaryButton
-                        data-testid="preview-engagement-button"
-                        onClick={() => handlePreviewEngagement()}
-                        disabled={isSaving}
-                    >
-                        {'Preview'}
-                    </SecondaryButton>
-                </Grid>
+                <Box
+                    position="sticky"
+                    bottom={0}
+                    width="100%"
+                    borderTop="1px solid #ddd"
+                    padding={2}
+                    marginTop={2}
+                    zIndex={1000}
+                    boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                    sx={{ backgroundColor: 'white' }}
+                >
+                    <Grid item xs={12}>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="save-engagement-button"
+                            onClick={() => handleSaveEngagement()}
+                            loading={isSaving}
+                        >
+                            Save
+                        </PrimaryButton>
+                        <SecondaryButton
+                            data-testid="preview-engagement-button"
+                            onClick={() => handlePreviewEngagement()}
+                            disabled={isSaving}
+                        >
+                            {'Preview'}
+                        </SecondaryButton>
+                    </Grid>
+                </Box>
             </Grid>
         </MetPaper>
     );

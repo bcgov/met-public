@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
 import { ActionContext } from '../ActionContext';
@@ -14,6 +15,7 @@ import {
     getEngagementSettings,
     patchEngagementSettings,
 } from 'services/engagementSettingService';
+import { EngagementForm } from '../types';
 
 interface EngagementFormData {
     name: string;
@@ -56,6 +58,10 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
+    isNewEngagement: boolean;
+    setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
+    handleSaveEngagement: () => Promise<void | EngagementForm>;
+    handlePreviewEngagement: () => Promise<void>;
     richDescription: string;
     setRichDescription: React.Dispatch<React.SetStateAction<string>>;
     richContent: string;
@@ -83,6 +89,16 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     engagementFormData: initialEngagementFormData,
     setEngagementFormData: () => {
         throw new Error('setEngagementFormData is unimplemented');
+    },
+    isNewEngagement: false,
+    setIsNewEngagement: () => {
+        throw new Error('setIsNewEngagement is unimplemented');
+    },
+    handleSaveEngagement: async () => {
+        console.warn('handleSaveEngagement is unimplemented');
+    },
+    handlePreviewEngagement: async () => {
+        console.warn('handlePreviewEngagement is unimplemented');
     },
     richDescription: '',
     setRichDescription: () => {
@@ -132,7 +148,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { savedEngagement } = useContext(ActionContext);
+    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement.name || '',
@@ -143,6 +159,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
     });
+    const [isNewEngagement, setIsNewEngagement] = useState(false);
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
@@ -261,6 +278,67 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
+    const { name, start_date, end_date, description } = engagementFormData;
+    const surveyBlockList = [
+        {
+            survey_status: SUBMISSION_STATUS.UPCOMING,
+            block_text: surveyBlockText.Upcoming,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.OPEN,
+            block_text: surveyBlockText.Open,
+        },
+        {
+            survey_status: SUBMISSION_STATUS.CLOSED,
+            block_text: surveyBlockText.Closed,
+        },
+    ];
+    const validateForm = () => {
+        const errors = {
+            name: !(name && name.length < 50),
+            start_date: !start_date,
+            end_date: !end_date,
+            description: description.length > 550,
+        };
+        setEngagementFormError(errors);
+
+        return Object.values(errors).some((isError: unknown) => isError);
+    };
+
+    const handleSaveEngagement = async () => {
+        const hasErrors = validateForm();
+
+        if (hasErrors) {
+            return;
+        }
+
+        const engagement = isNewEngagement
+            ? await handleCreateEngagementRequest({
+                  ...engagementFormData,
+                  rich_description: richDescription,
+                  rich_content: richContent,
+                  status_block: surveyBlockList,
+              })
+            : await handleUpdateEngagementRequest({
+                  ...engagementFormData,
+                  rich_description: richDescription,
+                  rich_content: richContent,
+                  status_block: surveyBlockList,
+              });
+
+        return engagement;
+    };
+
+    const navigate = useNavigate();
+    const handlePreviewEngagement = async () => {
+        const engagement = await handleSaveEngagement();
+        if (!engagement) {
+            return;
+        }
+
+        navigate(`/engagements/${engagement.id}/view`);
+    };
+
     useEffect(() => {
         handleGetSlug();
     }, [savedEngagement.id]);
@@ -270,6 +348,10 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             value={{
                 engagementFormData,
                 setEngagementFormData,
+                isNewEngagement,
+                setIsNewEngagement,
+                handleSaveEngagement,
+                handlePreviewEngagement,
                 richDescription,
                 setRichDescription,
                 richContent,
