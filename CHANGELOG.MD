@@ -1,3 +1,7 @@
+## February 20, 2024
+- **Task**Upgrade the version of flask [DESENG-502](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-502)
+    - Performed a Flask version upgrade to version 2.2.5.
+
 ## February 16, 2024
 - **Task**Make a floating save/preview bar when editing engagements [DESENG-498](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-498)
     - Implemented a floating behavior for the save/preview buttons during engagement editing. This feature persists across all tabs but exclusively saves data for the Engagement Content tab.
