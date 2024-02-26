@@ -1,3 +1,7 @@
+## February 26, 2024
+- **Task**Adding missing unit test [DESENG-483](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-483)
+    - Added missing unit test for components.
+
 ## February 20, 2024
 - **Task**Upgrade the version of flask [DESENG-502](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-502)
     - Performed a Flask version upgrade to version 2.2.5.
