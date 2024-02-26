@@ -100,7 +100,7 @@ export const AddUserModal = () => {
             openNotification({
                 severity: 'success',
                 text: `You have successfully added ${user?.first_name + ' ' + user?.last_name} as a ${
-                    user?.main_group
+                    user?.main_role
                 } on ${data.engagement?.name}.`,
             }),
         );

@@ -15,14 +15,14 @@ import {
     useTheme,
 } from '@mui/material';
 import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
-import { addUserToGroup } from 'services/userService/api';
+import { addUserToRole } from 'services/userService/api';
 import { addTeamMemberToEngagement } from 'services/membershipService';
 import { When } from 'react-if';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -34,12 +34,12 @@ import { Engagement } from 'models/engagement';
 
 const schema = yup
     .object({
-        group: yup.string().required('A role must be specified'),
+        role: yup.string().required('A role must be specified'),
         engagement: yup
             .object()
             .nullable()
-            .when('group', {
-                is: USER_GROUP.REVIEWER.value,
+            .when('role', {
+                is: USER_COMPOSITE_ROLE.REVIEWER.value,
                 then: yup.object().nullable().required('An engagement must be selected'),
             }),
     })
@@ -69,7 +69,7 @@ export const AssignRoleModal = () => {
         watch,
     } = methods;
 
-    const userTypeSelected = watch('group');
+    const userTypeSelected = watch('role');
 
     const formValues = watch();
     useEffect(() => {
@@ -78,7 +78,7 @@ export const AssignRoleModal = () => {
         }
     }, [JSON.stringify(formValues)]);
 
-    const { group: groupErrors, engagement: engagementErrors } = errors;
+    const { role: roleErrors, engagement: engagementErrors } = errors;
 
     const handleClose = () => {
         setassignRoleModalOpen(false);
@@ -122,24 +122,24 @@ export const AssignRoleModal = () => {
     ).current;
 
     const assignRoleToUser = async (data: AssignRoleForm) => {
-        if (userTypeSelected === USER_GROUP.ADMIN.value) {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+        if (userTypeSelected === USER_COMPOSITE_ROLE.ADMIN.value) {
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${user?.first_name} ${user?.last_name} to the group ${USER_GROUP.ADMIN.label}`,
+                    text: `You have successfully added ${user?.first_name} ${user?.last_name} to the role ${USER_COMPOSITE_ROLE.ADMIN.label}`,
                 }),
             );
-        } else if (userTypeSelected === USER_GROUP.VIEWER.value) {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+        } else if (userTypeSelected === USER_COMPOSITE_ROLE.VIEWER.value) {
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${user?.first_name} ${user?.last_name} to the group ${USER_GROUP.VIEWER.label}`,
+                    text: `You have successfully added ${user?.first_name} ${user?.last_name} to the role ${USER_COMPOSITE_ROLE.VIEWER.label}`,
                 }),
             );
         } else {
-            await addUserToGroup({ user_id: user?.external_id, group: data.group });
+            await addUserToRole({ user_id: user?.external_id, role: data.role });
             await addTeamMemberToEngagement({
                 user_id: user?.external_id,
                 engagement_id: data.engagement?.id,
@@ -147,7 +147,7 @@ export const AssignRoleModal = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have successfully added ${user?.first_name} ${user?.last_name} as a ${data.group} on ${data.engagement?.name}.`,
+                    text: `You have successfully added ${user?.first_name} ${user?.last_name} as a ${data.role} on ${data.engagement?.name}.`,
                 }),
             );
         }
@@ -191,44 +191,44 @@ export const AssignRoleModal = () => {
                                 rowSpacing={4}
                             >
                                 <Grid item xs={12}>
-                                    <FormControl error={Boolean(errors['group'])}>
+                                    <FormControl error={Boolean(errors['role'])}>
                                         <FormLabel
                                             id="controlled-radio-buttons-group"
                                             sx={{ fontWeight: 'bold', color: Palette.text.primary, paddingBottom: 1 }}
                                         >
                                             What role would you like to assign to this user?
                                         </FormLabel>
-                                        <ControlledRadioGroup name="group">
+                                        <ControlledRadioGroup name="role">
                                             <FormControlLabel
-                                                value={USER_GROUP.VIEWER.value}
+                                                value={USER_COMPOSITE_ROLE.VIEWER.value}
                                                 control={<Radio />}
                                                 label={'Viewer'}
                                             />
                                             <FormControlLabel
-                                                value={USER_GROUP.REVIEWER.value}
+                                                value={USER_COMPOSITE_ROLE.REVIEWER.value}
                                                 control={<Radio />}
                                                 label={'Reviewer'}
                                             />
                                             <FormControlLabel
-                                                value={USER_GROUP.TEAM_MEMBER.value}
+                                                value={USER_COMPOSITE_ROLE.TEAM_MEMBER.value}
                                                 control={<Radio />}
                                                 label={'Team Member'}
                                             />
                                             <FormControlLabel
-                                                value={USER_GROUP.ADMIN.value}
+                                                value={USER_COMPOSITE_ROLE.ADMIN.value}
                                                 control={<Radio />}
                                                 label={'Administrator'}
                                             />
                                         </ControlledRadioGroup>
-                                        <When condition={Boolean(groupErrors)}>
-                                            <FormHelperText>{String(groupErrors?.message)}</FormHelperText>
+                                        <When condition={Boolean(roleErrors)}>
+                                            <FormHelperText>{String(roleErrors?.message)}</FormHelperText>
                                         </When>
                                     </FormControl>
                                 </Grid>
                                 <When
                                     condition={
-                                        userTypeSelected === USER_GROUP.TEAM_MEMBER.value ||
-                                        userTypeSelected === USER_GROUP.REVIEWER.value
+                                        userTypeSelected === USER_COMPOSITE_ROLE.TEAM_MEMBER.value ||
+                                        userTypeSelected === USER_COMPOSITE_ROLE.REVIEWER.value
                                     }
                                 >
                                     <Grid item xs={12}>

@@ -16,7 +16,7 @@ import { CommentListingContext } from './CommentListingContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
-import { USER_GROUP } from 'models/user';
+import { USER_COMPOSITE_ROLE } from 'models/user';
 
 const Submissions = () => {
     const {
@@ -54,7 +54,7 @@ const Submissions = () => {
                 if (
                     roles.includes(USER_ROLES.REVIEW_COMMENTS) ||
                     (assignedEngagements.includes(Number(survey.engagement_id)) &&
-                        userDetail.groups?.includes('/' + USER_GROUP.TEAM_MEMBER.value))
+                        userDetail.composite_roles?.includes('/' + USER_COMPOSITE_ROLE.TEAM_MEMBER.value))
                 ) {
                     return (
                         <MuiLink component={Link} to={`/surveys/${Number(row.survey_id)}/submissions/${row.id}/review`}>

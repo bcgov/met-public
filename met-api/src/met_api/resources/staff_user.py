@@ -121,6 +121,44 @@ class StaffUserStatus(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
 
 
+@cors_preflight('POST, PUT')
+@API.route('/<user_id>/roles')
+class UserRoles(Resource):
+    """Add user to composite roles."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @require_role([Role.CREATE_ADMIN_USER.value], skip_tenant_check_for_admin=True)
+    def post(user_id):
+        """Add user to composite roles."""
+        try:
+            args = request.args
+            user_schema = StaffUserService().assign_composite_role_to_user(user_id, args.get('role'))
+            return user_schema, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @require_role([Role.UPDATE_USER_GROUP.value])
+    def put(user_id):
+        """Update user composite roles."""
+        try:
+            args = request.args
+            user_schema = StaffUserMembershipService().reassign_user(user_id, args.get('role'))
+            return user_schema, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/<user_id>/engagements')
 class EngagementMemberships(Resource):

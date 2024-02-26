@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import { Grid } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, MetParagraph } from 'components/common';
+import { Grid, Box } from '@mui/material';
+import { MetLabel, MetPaper, PrimaryButton, SecondaryButton, MetParagraph } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { formatDate } from 'components/common/dateHelper';
 import TeamMemberListing from './TeamMemberListing';
 
 const EngagementUserManagement = () => {
-    const { savedEngagement } = useContext(ActionContext);
-    const { setAddTeamMemberOpen } = useContext(EngagementTabsContext);
+    const { isSaving, savedEngagement } = useContext(ActionContext);
+    const { handleSaveEngagement, handlePreviewEngagement, setAddTeamMemberOpen } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -46,6 +46,35 @@ const EngagementUserManagement = () => {
                     <Grid item xs={12}>
                         <TeamMemberListing />
                     </Grid>
+                    <Box
+                        position="sticky"
+                        bottom={0}
+                        width="100%"
+                        borderTop="1px solid #ddd"
+                        padding={2}
+                        marginTop={2}
+                        zIndex={1000}
+                        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                        sx={{ backgroundColor: 'white' }}
+                    >
+                        <Grid item xs={12}>
+                            <PrimaryButton
+                                sx={{ marginRight: 1 }}
+                                data-testid="create-engagement-button"
+                                onClick={() => handleSaveEngagement()}
+                                loading={isSaving}
+                            >
+                                Save
+                            </PrimaryButton>
+                            <SecondaryButton
+                                data-testid="preview-engagement-button"
+                                onClick={() => handlePreviewEngagement()}
+                                disabled={isSaving}
+                            >
+                                {'Preview'}
+                            </SecondaryButton>
+                        </Grid>
+                    </Box>
                 </Grid>
             </Grid>
         </MetPaper>
