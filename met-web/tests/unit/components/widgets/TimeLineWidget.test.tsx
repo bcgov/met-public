@@ -34,7 +34,7 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 }));
 
 // Mock the necessary services and contexts
-jest.mock('services/widgetService/TimeLineService', () => ({
+jest.mock('services/widgetService/TimelineService', () => ({
     postTimeline: jest.fn(),
     patchTimeline: jest.fn(),
 }));
