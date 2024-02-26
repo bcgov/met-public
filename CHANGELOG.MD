@@ -1,3 +1,7 @@
+## February 26, 2024
+- **Task**Add font awesome libraries [DESENG-490](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-490)
+    - Added related libraries to the frontend package.json.
+
 ## February 20, 2024
 - **Task**Upgrade the version of flask [DESENG-502](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-502)
     - Performed a Flask version upgrade to version 2.2.5.
