@@ -4,10 +4,14 @@ from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
+from met_api.models import StaffUser as StaffUserModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
+from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services import authorization
-from met_api.utils.enums import MembershipStatus
+from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
+from met_api.utils.constants import CompositeRoles
+from met_api.utils.enums import KeycloakCompositeRoleNames, MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
@@ -15,30 +19,30 @@ from met_api.utils.token_info import TokenInfo
 class MembershipService:
     """Membership management service."""
 
-    # TODO: Create membership method that uses composite roles
-    # @staticmethod
-    # def create_membership(engagement_id, request_json: dict):
-    #     """Create membership."""
-    #     user_id = request_json.get('user_id')
-    #     user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
-    #     if not user:
-    #         raise BusinessException(
-    #             error='Invalid User.',
-    #             status_code=HTTPStatus.BAD_REQUEST)
+    @staticmethod
+    def create_membership(engagement_id, request_json: dict):
+        """Create membership."""
+        user_id = request_json.get('user_id')
+        user: StaffUserModel = StaffUserModel.get_user_by_external_id(user_id)
+        if not user:
+            raise BusinessException(
+                error='Invalid User.',
+                status_code=HTTPStatus.BAD_REQUEST)
 
-    #     one_of_roles = (
-    #         MembershipType.TEAM_MEMBER.name,
-    #         Role.EDIT_MEMBERS.value
-    #     )
-    #     authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+        one_of_roles = (
+            MembershipType.TEAM_MEMBER.name,
+            Role.EDIT_MEMBERS.value
+        )
+        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
-    #     user_details = StaffUserSchema().dump(user)
-
-    #     MembershipService._validate_create_membership(engagement_id, user_details)
-    #     group_name, membership_type = MembershipService._get_membership_details(user_details)
-    #     MembershipService._add_user_group(user_details, group_name)
-    #     membership = MembershipService._create_membership_model(engagement_id, user.id, membership_type)
-    #     return membership
+        user_details = StaffUserSchema().dump(user)
+        # attach and map roles
+        StaffUserService.attach_roles([user_details])
+        MembershipService._validate_create_membership(engagement_id, user_details)
+        composite_roles, membership_type = MembershipService._get_membership_details(user_details)
+        MembershipService._assign_composite_role_to_user(user_details, composite_roles)
+        membership = MembershipService._create_membership_model(engagement_id, user.id, membership_type)
+        return membership
 
     @staticmethod
     def _validate_create_membership(engagement_id, user_details):
@@ -51,12 +55,11 @@ class MembershipService:
 
         user_id = user_details.get('id')
 
-        # TODO: Check for permission level once composite role permission levels are added.
-        # roles = user_details.get('roles')
-        # if KeycloakPermissionLevels.IT_ADMIN.value in roles:
-        #     raise BusinessException(
-        #         error='This user is already a Administrator.',
-        #         status_code=HTTPStatus.CONFLICT.value)
+        roles = user_details.get('composite_roles')
+        if KeycloakCompositeRoleNames.IT_ADMIN.value in roles:
+            raise BusinessException(
+                error='This user is already a Administrator.',
+                status_code=HTTPStatus.CONFLICT.value)
 
         existing_membership = MembershipModel.find_by_engagement_and_user_id(
             engagement_id,
@@ -66,7 +69,7 @@ class MembershipService:
 
         if existing_membership:
             raise BusinessException(
-                error=f'This {user_details.get("main_group", "user")} is already assigned to this engagement.',
+                error=f'This {user_details.get("main_role", "user")} is already assigned to this engagement.',
                 status_code=HTTPStatus.CONFLICT.value)
 
         request_user = TokenInfo.get_user_data()
@@ -75,45 +78,43 @@ class MembershipService:
                 error='You cannot add yourself to an engagement.',
                 status_code=HTTPStatus.FORBIDDEN.value)
 
-    # TODO: Replace this method with one that checks membership type with composite roles
-    # @staticmethod
-    # def _get_membership_details(user_details):
-    #     """Get the group name and membership type for the user based on their assigned groups."""
-        # default_group_name = Groups.TEAM_MEMBER.name
-        # default_membership_type = MembershipType.TEAM_MEMBER
+    @staticmethod
+    def _get_membership_details(user_details):
+        """Get the composite role and membership type for the user based on their assigned composite roles."""
+        default_role = CompositeRoles.TEAM_MEMBER.name
+        default_membership_type = MembershipType.TEAM_MEMBER
 
-        # is_reviewer = Groups.REVIEWER.value in user_details.get('groups')
-        # is_team_member = Groups.TEAM_MEMBER.value in user_details.get('groups')
+        is_reviewer = CompositeRoles.REVIEWER.value in user_details.get('composite_roles')
+        is_team_member = CompositeRoles.TEAM_MEMBER.value in user_details.get('composite_roles')
 
-        # if is_reviewer:
-        #     # If the user is assigned to the REVIEWER group, set the group name and membership type accordingly
-        #     group_name = Groups.REVIEWER.name
-        #     membership_type = MembershipType.REVIEWER
-        # elif is_team_member:
-        #     # If the user is assigned to the TEAM_MEMBER group, set the group name and membership type accordingly
-        #     group_name = Groups.TEAM_MEMBER.name
-        #     membership_type = MembershipType.TEAM_MEMBER
-        # else:
-        #     # If the user is not assigned to either group, return default values for group name and membership type
-        #     group_name = default_group_name
-        #     membership_type = default_membership_type
+        if is_reviewer:
+            # If the user is assigned to the REVIEWER role, set the role name and membership type accordingly
+            composite_roles = CompositeRoles.REVIEWER.name
+            membership_type = MembershipType.REVIEWER
+        elif is_team_member:
+            # If the user is assigned to the TEAM_MEMBER role, set the role name and membership type accordingly
+            composite_roles = CompositeRoles.TEAM_MEMBER.name
+            membership_type = MembershipType.TEAM_MEMBER
+        else:
+            # If the user is not assigned to either role, return default values for role name and membership type
+            composite_roles = default_role
+            membership_type = default_membership_type
 
-        # return group_name, membership_type
+        return composite_roles, membership_type
 
-    # TODO: Replace this method with a method to add composite roles
-    # @staticmethod
-    # def _add_user_group(user: StaffUserModel, group_name=Groups.TEAM_MEMBER.name):
-    #     valid_member_teams = [Groups.TEAM_MEMBER.name, Groups.REVIEWER.name]
-    #     if group_name not in valid_member_teams:
-    #         raise BusinessException(
-    #             error='Invalid Group name.',
-    #             status_code=HTTPStatus.BAD_REQUEST
-    #         )
+    @staticmethod
+    def _assign_composite_role_to_user(user: StaffUserModel, composite_role=CompositeRoles.TEAM_MEMBER.name):
+        valid_member_teams = [CompositeRoles.TEAM_MEMBER.name, CompositeRoles.REVIEWER.name]
+        if composite_role not in valid_member_teams:
+            raise BusinessException(
+                error='Invalid composite role name.',
+                status_code=HTTPStatus.BAD_REQUEST
+            )
 
-    #     KEYCLOAK_SERVICE.add_user_to_group(
-    #         user_id=user.get('external_id'),
-    #         group_name=group_name
-    #     )
+        KEYCLOAK_SERVICE.assign_composite_role_to_user(
+            user_id=user.get('external_id'),
+            composite_role=composite_role
+        )
 
     @staticmethod
     def _create_membership_model(engagement_id, user_id, membership_type=MembershipType.TEAM_MEMBER):

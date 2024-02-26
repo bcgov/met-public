@@ -1,13 +1,17 @@
 import React, { useContext } from 'react';
-import { Divider, Grid } from '@mui/material';
-import { MetPaper, PrimaryButton } from 'components/common';
+import { Divider, Grid, Box } from '@mui/material';
+import { MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import InternalEngagement from './InternalEngagement';
 import SendReport from './SendReport';
 import { EngagementSettingsContext } from './EngagementSettingsContext';
 import { PublicUrls } from './PublicUrls';
+import { EngagementTabsContext } from '../EngagementTabsContext';
+import { ActionContext } from '../../ActionContext';
 
 const EngagementSettingsForm = () => {
     const { handleSaveSettings, updatingSettings } = useContext(EngagementSettingsContext);
+    const { isSaving } = useContext(ActionContext);
+    const { handleSaveEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -39,6 +43,36 @@ const EngagementSettingsForm = () => {
                 <Grid item xs={12}>
                     <PublicUrls />
                 </Grid>
+                <Box
+                    position="sticky"
+                    bottom={0}
+                    width="100%"
+                    borderTop="1px solid #ddd"
+                    padding={2}
+                    marginTop={2}
+                    marginLeft={2}
+                    zIndex={1000}
+                    boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                    sx={{ backgroundColor: 'white' }}
+                >
+                    <Grid item xs={12}>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="create-engagement-button"
+                            onClick={() => handleSaveEngagement()}
+                            loading={isSaving}
+                        >
+                            Save
+                        </PrimaryButton>
+                        <SecondaryButton
+                            data-testid="preview-engagement-button"
+                            onClick={() => handlePreviewEngagement()}
+                            disabled={isSaving}
+                        >
+                            {'Preview'}
+                        </SecondaryButton>
+                    </Grid>
+                </Box>
             </Grid>
         </MetPaper>
     );

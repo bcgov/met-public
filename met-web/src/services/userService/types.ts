@@ -5,7 +5,7 @@ export interface UserDetail {
     email_verified?: boolean;
     preferred_username?: string;
     user?: User;
-    groups?: string[];
+    composite_roles?: string[];
 }
 
 export interface UserAuthentication {

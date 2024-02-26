@@ -135,7 +135,7 @@ describe('Engagement form page tests', () => {
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
         expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
-        expect(screen.getByTestId('update-engagement-button')).toBeVisible();
+        expect(screen.getByTestId('save-engagement-button')).toBeVisible();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
         expect(screen.getByText('Survey 1')).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
-        const updateButton = screen.getByTestId('update-engagement-button');
+        const updateButton = screen.getByTestId('save-engagement-button');
 
         const nameInput = container.querySelector('input[name="name"]');
         assert(nameInput, 'Unable to find engagement name input');
