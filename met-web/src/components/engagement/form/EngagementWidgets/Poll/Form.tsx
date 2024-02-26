@@ -163,6 +163,7 @@ const Form = () => {
             <MetDescription>The title must be less than 255 characters.</MetDescription>
             <TextField
                 id="title"
+                data-testid="title"
                 name="title"
                 variant="outlined"
                 label=" "
@@ -183,6 +184,7 @@ const Form = () => {
             <MetLabel>Description</MetLabel>
             <TextField
                 id="description"
+                data-testid="description"
                 name="description"
                 variant="outlined"
                 label=" "
@@ -215,6 +217,7 @@ const Form = () => {
             <MetLabel>Status</MetLabel>
             <Select
                 name="status"
+                data-testid="status"
                 value={pollWidgetState?.status}
                 fullWidth
                 size="small"
@@ -253,7 +256,7 @@ const Form = () => {
             mt={'1em'}
         >
             <Grid item>
-                <PrimaryButton type="submit" disabled={isCreating}>
+                <PrimaryButton type="submit" disabled={isCreating} data-testid="save-button">
                     Save & Close
                 </PrimaryButton>
             </Grid>
