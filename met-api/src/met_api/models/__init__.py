@@ -20,9 +20,12 @@ from .contact import Contact
 from .db import db, ma, migrate
 from .email_verification import EmailVerification
 from .engagement import Engagement
+from .engagement_content import EngagementContent
 from .engagement_status import EngagementStatus
 from .engagement_status_block import EngagementStatusBlock
 from .engagement_settings import EngagementSettingsModel
+from .engagement_custom_content import EngagementCustom
+from .engagement_summary_content import EngagementSummary
 from .event_item import EventItem
 from .subscribe_item import SubscribeItem
 from .feedback import Feedback
