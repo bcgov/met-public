@@ -3,6 +3,8 @@
     - Implemented endpoints for dynamic engagement pages, including summary and custom sections.
     - Default behavior ensures that each engagement has a dynamic summary page.
     - Introduced logic to migrate existing content and rich content for engagements to the summary table.
+- **Task**Adding missing unit test [DESENG-483](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-483)
+    - Added missing unit test for components.
 
 ## February 20, 2024
 - **Task**Upgrade the version of flask [DESENG-502](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-502)
