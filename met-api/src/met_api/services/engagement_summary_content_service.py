@@ -10,7 +10,7 @@ class EngagementSummaryContentService:
 
     @staticmethod
     def get_summary_content(content_id):
-        """Get map by engagement summary content id."""
+        """Get content by engagement summary content id."""
         summary_content = EngagementSummaryModel.get_summary_content(content_id)
         return summary_content
 

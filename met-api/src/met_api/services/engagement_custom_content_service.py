@@ -10,7 +10,7 @@ class EngagementCustomContentService:
 
     @staticmethod
     def get_custom_content(content_id):
-        """Get map by engagement custom content id."""
+        """Get content by engagement custom content id."""
         custom_content = EngagementCustomModel.get_custom_content(content_id)
         return custom_content
 

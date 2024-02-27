@@ -75,11 +75,8 @@ def upgrade():
     """)
     engagements = result.fetchall()
 
-    # Initialize a counter variable
-    counter = 1
-
     # Iterate through each engagement record and insert into new tables
-    for engagement in engagements:
+    for index, engagement in enumerate(engagements):
         eng_id = engagement['id']
 
         # Insert into 'engagement_content'
@@ -100,7 +97,7 @@ def upgrade():
             },
         )
 
-        engagement_content_id = counter
+        engagement_content_id = index + 1  # Adjust the index to start from 1
         rich_content = engagement['rich_content']
 
         # Insert into 'engagement_summary'
@@ -120,9 +117,6 @@ def upgrade():
                 'engagement_id': eng_id,
             },
         )
-
-        # Increment the counter
-        counter += 1
 
     # ### end Alembic commands ###
 
