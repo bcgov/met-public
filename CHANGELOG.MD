@@ -1,3 +1,7 @@
+## February 27, 2024
+- **Bug Fix**Comments cannot be approved while reviewing [DESENG-496](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-496)
+    - Fixed by adding a missing decorator for transactional methods.
+
 ## February 26, 2024
 - **Task**Models for dynamic engagement pages [DESENG-500](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-500)
     - Implemented endpoints for dynamic engagement pages, including summary and custom sections.
