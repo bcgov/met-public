@@ -1,4 +1,6 @@
 ## February 27, 2024
+- **Bug Fix**Comments cannot be approved while reviewing [DESENG-496](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-496)
+    - Fixed by adding a missing decorator for transactional methods.
 - **Task**Enhance analytics api for Improved Readability and Maintainability [DESENG-492](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-492)
     - Refactor analytics-api config to harmonize its structure and conventions with met-api.
     - Ensure the sample.env file maintains consistent formatting.
