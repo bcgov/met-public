@@ -1,8 +1,8 @@
-"""Multi language table migration
+"""multi langauge table migration
 
-Revision ID: 78220edc192a
+Revision ID: e6c320c178fc
 Revises: cec8d0371f42
-Create Date: 2024-02-28 11:42:26.063901
+Create Date: 2024-02-29 09:18:13.949848
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '78220edc192a'
+revision = 'e6c320c178fc'
 down_revision = 'cec8d0371f42'
 branch_labels = None
 depends_on = None
@@ -27,7 +27,8 @@ def upgrade():
     sa.Column('right_to_left', sa.Boolean(), nullable=False),
     sa.Column('created_by', sa.String(length=50), nullable=True),
     sa.Column('updated_by', sa.String(length=50), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('code')
     )
     # ### end Alembic commands ###
 
