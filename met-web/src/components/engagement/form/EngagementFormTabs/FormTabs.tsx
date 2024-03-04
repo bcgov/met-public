@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import TabContext from '@mui/lab/TabContext';
 import EngagementForm from './EngagementForm';
@@ -7,9 +7,31 @@ import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
 import EngagementUserManagement from './UserManagement/EngagementUserManagement';
 import EngagementAdditionalDetails from './AdditionalDetails';
 import EngagementSettings from './Settings';
+import { ActionContext } from '../ActionContext';
+import { MetTooltip } from 'components/common';
 
 const FormTabs = () => {
     const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.CONTENT);
+    const { savedEngagement } = useContext(ActionContext);
+
+    const generateTab = (label: string, value: string, icon = null) => {
+        return (
+            <MetTab
+                style={{ pointerEvents: 'auto' }}
+                disabled={!savedEngagement.id}
+                value={value}
+                icon={
+                    !savedEngagement.id ? (
+                        <MetTooltip title={'Engagement needs to be saved first'}>
+                            {icon ? icon : <span>{label}</span>}
+                        </MetTooltip>
+                    ) : (
+                        <span>{icon ? icon : label}</span>
+                    )
+                }
+            />
+        );
+    };
 
     return (
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -25,9 +47,9 @@ const FormTabs = () => {
                         variant="scrollable"
                     >
                         <MetTab label="Engagement Content" value={ENGAGEMENT_FORM_TABS.CONTENT} />
-                        <MetTab label="Additional Details" value={ENGAGEMENT_FORM_TABS.ADDITIONAL} />
-                        <MetTab label="User Management" value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT} />
-                        <MetTab label="Settings" value={ENGAGEMENT_FORM_TABS.SETTINGS} />
+                        {generateTab('Additional Details', ENGAGEMENT_FORM_TABS.ADDITIONAL)}
+                        {generateTab('User Management', ENGAGEMENT_FORM_TABS.USER_MANAGEMENT)}
+                        {generateTab('Settings', ENGAGEMENT_FORM_TABS.SETTINGS)}
                     </MetTabList>
                 </Box>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.CONTENT}>
