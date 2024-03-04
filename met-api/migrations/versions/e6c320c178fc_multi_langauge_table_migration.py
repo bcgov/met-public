@@ -1,4 +1,4 @@
-"""multi langauge table migration
+"""multi language table migration
 
 Revision ID: e6c320c178fc
 Revises: cec8d0371f42
