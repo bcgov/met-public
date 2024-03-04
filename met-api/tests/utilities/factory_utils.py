@@ -507,7 +507,7 @@ def factory_widget_map_model(widget_map: dict = TestWidgetMap.map1):
 
 
 def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
-    """Produce a Poll  model."""
+    """Produce a Language  model."""
     langauge = LanguageModel(
         name=lang_info.get('name'),
         code=lang_info.get('code'),

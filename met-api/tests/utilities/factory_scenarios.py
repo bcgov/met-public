@@ -908,7 +908,7 @@ class TestEngagementContentInfo(dict, Enum):
 
 
 class TestLanguageInfo(dict, Enum):
-    """Test scenarios of language polls."""
+    """Test scenarios of language."""
 
     language1 = {
         'name': 'Spanish',
