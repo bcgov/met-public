@@ -1,3 +1,9 @@
+## March 04, 2024
+- **Task**Multi-language - Create language table & API [DESENG-509](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-509)
+    - Added Language model.
+    - Added Language API.
+    - Added Unit tests.
+
 ## February 27, 2024
 - **Bug Fix**Comments cannot be approved while reviewing [DESENG-496](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-496)
     - Fixed by adding a missing decorator for transactional methods.
