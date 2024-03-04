@@ -905,3 +905,13 @@ class TestEngagementContentInfo(dict, Enum):
         'content_type': EngagementContentType.Custom.name,
         'is_internal': False,
     }
+
+
+class TestLanguageInfo(dict, Enum):
+    """Test scenarios of language."""
+
+    language1 = {
+        'name': 'Spanish',
+        'code': 'en',
+        'right_to_left': False,
+    }
