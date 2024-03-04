@@ -18,10 +18,10 @@ const FormTabs = () => {
         return (
             <MetTab
                 style={{ pointerEvents: 'auto' }}
-                disabled={!savedEngagement.id || savedEngagement.id === 0}
+                disabled={!savedEngagement.id}
                 value={value}
                 icon={
-                    !savedEngagement.id || savedEngagement.id === 0 ? (
+                    !savedEngagement.id ? (
                         <MetTooltip title={'Engagement needs to be saved first'}>
                             {icon ? icon : <span>{label}</span>}
                         </MetTooltip>

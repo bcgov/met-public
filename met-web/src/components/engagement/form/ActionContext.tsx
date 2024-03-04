@@ -66,7 +66,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [isNewEngagement, setIsNewEngagement] = useState(!savedEngagement.id || savedEngagement.id === 0);
+    const [isNewEngagement, setIsNewEngagement] = useState(!savedEngagement.id);
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>({
         ...createDefaultEngagementMetadata(),
     });
@@ -118,7 +118,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     };
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
-        setIsNewEngagement(!savedEngagement.id || savedEngagement.id === 0);
+        setIsNewEngagement(!savedEngagement.id);
         setSavedBannerImageFileName(engagement.banner_filename);
 
         if (bannerImage) setBannerImage(null);

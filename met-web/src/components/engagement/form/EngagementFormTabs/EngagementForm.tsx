@@ -44,7 +44,7 @@ const EngagementForm = () => {
     }, []);
 
     useEffect(() => {
-        setIsNewEngagement(!savedEngagement.id || savedEngagement.id === 0);
+        setIsNewEngagement(!savedEngagement.id);
     }, [savedEngagement]);
 
     const getErrorMessage = () => {
