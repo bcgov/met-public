@@ -15,6 +15,8 @@ export interface EngagementContext {
     fetchEngagement: () => void;
     fetchEngagementMetadata: () => void;
     loadingAuthorization: boolean;
+    isNewEngagement: boolean;
+    setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Widget {

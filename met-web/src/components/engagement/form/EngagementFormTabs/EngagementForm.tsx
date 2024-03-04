@@ -11,16 +11,15 @@ import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './c
 import RichTextEditor from 'components/common/RichTextEditor';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 
-const CREATE = 'create';
 const EngagementForm = () => {
-    const { isSaving, savedEngagement, handleAddBannerImage } = useContext(ActionContext);
+    const { isSaving, savedEngagement, handleAddBannerImage, setIsNewEngagement } = useContext(ActionContext);
 
     const {
         engagementFormData,
         setEngagementFormData,
-        setIsNewEngagement,
-        handleSaveEngagement,
+        handleSaveAndContinueEngagement,
         handlePreviewEngagement,
+        handleSaveAndExitEngagement,
         richDescription,
         setRichDescription,
         richContent,
@@ -35,8 +34,6 @@ const EngagementForm = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const isCreateEngagement = window.location.pathname.includes(CREATE);
-
     const { name, start_date, end_date } = engagementFormData;
 
     useEffect(() => {
@@ -44,8 +41,11 @@ const EngagementForm = () => {
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
         setInitialRichContent(richContent || savedEngagement.rich_content);
         setDescriptionCharCount(initialDescription.length);
-        setIsNewEngagement(isCreateEngagement);
     }, []);
+
+    useEffect(() => {
+        setIsNewEngagement(!savedEngagement.id || savedEngagement.id === 0);
+    }, [savedEngagement]);
 
     const getErrorMessage = () => {
         if (name.length > 50) {
@@ -259,10 +259,18 @@ const EngagementForm = () => {
                         <PrimaryButton
                             sx={{ marginRight: 1 }}
                             data-testid="save-engagement-button"
-                            onClick={() => handleSaveEngagement()}
+                            onClick={() => handleSaveAndContinueEngagement()}
                             loading={isSaving}
                         >
-                            Save
+                            Save and Continue
+                        </PrimaryButton>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="save-and-exit-engagement-button"
+                            onClick={() => handleSaveAndExitEngagement()}
+                            loading={isSaving}
+                        >
+                            Save and Exit
                         </PrimaryButton>
                         <SecondaryButton
                             data-testid="preview-engagement-button"

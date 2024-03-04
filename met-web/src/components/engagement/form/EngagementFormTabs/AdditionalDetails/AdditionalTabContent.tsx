@@ -10,7 +10,7 @@ import { AdditionalDetailsContext } from './AdditionalDetailsContext';
 const AdditionalTabContent = () => {
     const { handleSaveAdditional, updatingAdditional } = useContext(AdditionalDetailsContext);
     const { isSaving } = useContext(ActionContext);
-    const { handleSaveEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
+    const { handleSaveAndContinueEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -52,7 +52,7 @@ const AdditionalTabContent = () => {
                         <PrimaryButton
                             sx={{ marginRight: 1 }}
                             data-testid="create-engagement-button"
-                            onClick={() => handleSaveEngagement()}
+                            onClick={() => handleSaveAndContinueEngagement()}
                             loading={isSaving}
                         >
                             Save

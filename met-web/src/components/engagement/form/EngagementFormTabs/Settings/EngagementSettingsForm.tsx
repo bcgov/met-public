@@ -11,7 +11,7 @@ import { ActionContext } from '../../ActionContext';
 const EngagementSettingsForm = () => {
     const { handleSaveSettings, updatingSettings } = useContext(EngagementSettingsContext);
     const { isSaving } = useContext(ActionContext);
-    const { handleSaveEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
+    const { handleSaveAndContinueEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -59,7 +59,7 @@ const EngagementSettingsForm = () => {
                         <PrimaryButton
                             sx={{ marginRight: 1 }}
                             data-testid="create-engagement-button"
-                            onClick={() => handleSaveEngagement()}
+                            onClick={() => handleSaveAndContinueEngagement()}
                             loading={isSaving}
                         >
                             Save

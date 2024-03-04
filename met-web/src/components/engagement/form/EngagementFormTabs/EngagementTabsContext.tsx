@@ -58,10 +58,9 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
-    isNewEngagement: boolean;
-    setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
-    handleSaveEngagement: () => Promise<void | EngagementForm>;
+    handleSaveAndContinueEngagement: () => Promise<void | EngagementForm>;
     handlePreviewEngagement: () => Promise<void>;
+    handleSaveAndExitEngagement: () => Promise<void>;
     richDescription: string;
     setRichDescription: React.Dispatch<React.SetStateAction<string>>;
     richContent: string;
@@ -90,15 +89,14 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setEngagementFormData: () => {
         throw new Error('setEngagementFormData is unimplemented');
     },
-    isNewEngagement: false,
-    setIsNewEngagement: () => {
-        throw new Error('setIsNewEngagement is unimplemented');
-    },
-    handleSaveEngagement: async () => {
-        console.warn('handleSaveEngagement is unimplemented');
+    handleSaveAndContinueEngagement: async () => {
+        console.warn('handleSaveAndContinueEngagement is unimplemented');
     },
     handlePreviewEngagement: async () => {
         console.warn('handlePreviewEngagement is unimplemented');
+    },
+    handleSaveAndExitEngagement: async () => {
+        console.warn('handleSaveAndExitEngagement is unimplemented');
     },
     richDescription: '',
     setRichDescription: () => {
@@ -148,7 +146,8 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, savedEngagement } = useContext(ActionContext);
+    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, savedEngagement, isNewEngagement } =
+        useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement.name || '',
@@ -159,7 +158,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
     });
-    const [isNewEngagement, setIsNewEngagement] = useState(false);
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
@@ -305,7 +303,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
-    const handleSaveEngagement = async () => {
+    const handleSaveAndContinueEngagement = async () => {
         const hasErrors = validateForm();
 
         if (hasErrors) {
@@ -331,12 +329,21 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
     const navigate = useNavigate();
     const handlePreviewEngagement = async () => {
-        const engagement = await handleSaveEngagement();
+        const engagement = await handleSaveAndContinueEngagement();
         if (!engagement) {
             return;
         }
 
         navigate(`/engagements/${engagement.id}/view`);
+    };
+
+    const handleSaveAndExitEngagement = async () => {
+        const engagement = await handleSaveAndContinueEngagement();
+        if (!engagement) {
+            return;
+        }
+
+        navigate(`/engagements`);
     };
 
     useEffect(() => {
@@ -348,10 +355,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             value={{
                 engagementFormData,
                 setEngagementFormData,
-                isNewEngagement,
-                setIsNewEngagement,
-                handleSaveEngagement,
+                handleSaveAndContinueEngagement,
                 handlePreviewEngagement,
+                handleSaveAndExitEngagement,
                 richDescription,
                 setRichDescription,
                 richContent,

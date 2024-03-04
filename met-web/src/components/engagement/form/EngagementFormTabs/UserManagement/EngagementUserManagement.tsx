@@ -8,7 +8,8 @@ import TeamMemberListing from './TeamMemberListing';
 
 const EngagementUserManagement = () => {
     const { isSaving, savedEngagement } = useContext(ActionContext);
-    const { handleSaveEngagement, handlePreviewEngagement, setAddTeamMemberOpen } = useContext(EngagementTabsContext);
+    const { handleSaveAndContinueEngagement, handlePreviewEngagement, setAddTeamMemberOpen } =
+        useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -61,7 +62,7 @@ const EngagementUserManagement = () => {
                             <PrimaryButton
                                 sx={{ marginRight: 1 }}
                                 data-testid="create-engagement-button"
-                                onClick={() => handleSaveEngagement()}
+                                onClick={() => handleSaveAndContinueEngagement()}
                                 loading={isSaving}
                             >
                                 Save
