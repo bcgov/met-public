@@ -138,11 +138,13 @@ describe('Engagement form page tests', () => {
 
         const addSurveyButton = screen.getByText('Add Survey');
 
+        // Check that the button is initially disabled
+        expect(addSurveyButton).toBeDisabled();
+
+        // Attempt to click the button (which should not trigger any action)
         fireEvent.click(addSurveyButton);
 
-        expect(openNotificationMock).toHaveBeenNthCalledWith(1, {
-            severity: 'error',
-            text: 'Please save the engagement before adding a survey',
-        });
+        // Verify that the button is still disabled
+        expect(addSurveyButton).toBeDisabled();
     });
 });
