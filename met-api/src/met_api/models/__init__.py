@@ -58,3 +58,4 @@ from .timeline_event import TimelineEvent
 from .widget_poll import Poll
 from .poll_answers import PollAnswer
 from .poll_responses import PollResponse
+from .language import Language
