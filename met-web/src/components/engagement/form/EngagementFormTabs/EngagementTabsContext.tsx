@@ -117,6 +117,9 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     handleSaveAndExitEngagement: async () => {
         /* empty default method for engagement save and continue  */
     },
+    handleSaveAndExitEngagement: async () => {
+        console.warn('handleSaveAndExitEngagement is unimplemented');
+    },
     richDescription: '',
     setRichDescription: () => {
         throw new Error('setRichDescription is unimplemented');
