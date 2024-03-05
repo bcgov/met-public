@@ -53,7 +53,7 @@ export const ActionContext = createContext<EngagementContext>({
     loadingAuthorization: true,
     isNewEngagement: true,
     setIsNewEngagement: () => {
-        throw new Error('setIsNewEngagement is unimplemented');
+        /* empty default method  */
     },
 });
 
