@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/survey_translation",
+    "type": "object",
+    "title": "The SurveyTranslation Schema",
+    "description": "Schema for SurveyTranslation POST request validation.",
+    "default": {},
+    "examples": [
+        {
+            "survey_id": 1,
+            "language_id": 2,
+            "name": "Survey Name in Spanish",
+            "form_json": {},
+            "pre_populate" : false
+        }
+    ],
+    "required": ["survey_id", "language_id"],
+    "properties": {
+        "survey_id": {
+            "$id": "#/properties/survey_id",
+            "type": "integer",
+            "title": "Survey ID",
+            "description": "The ID of the survey."
+        },
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "integer",
+            "title": "Language ID",
+            "description": "The ID of the language in which the survey is translated."
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "Survey Name",
+            "description": "The name of the survey in the translated language.",
+            "maxLength": 50,
+            "examples": ["Survey Name in Spanish"]
+        },
+        "form_json": {
+            "$id": "#/properties/form_json",
+            "type": "object",
+            "title": "Form JSON",
+            "description": "The JSON representation of the survey form.",
+            "default": {}
+        },
+        "pre_populate": {
+            "$id": "#/properties/pre_populate",
+            "type": "boolean",
+            "title": "Prepopulate",
+            "description": "Indicates whether the survey translation should be prepopulated with survey data. Default true.",
+            "examples": [false]
+          }
+    }
+}

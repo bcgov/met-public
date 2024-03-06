@@ -21,6 +21,7 @@ All services have 2 defaults sets of endpoints:
 That are used to expose operational health information about the service, and meta information.
 """
 
+from re import A
 from flask import Blueprint
 
 from .apihelper import Api
@@ -56,6 +57,7 @@ from .cac_form import API as CAC_FORM_API
 from .widget_timeline import API as WIDGET_TIMELINE_API
 from .widget_poll import API as WIDGET_POLL_API
 from .language import API as LANGUAGE_API
+from .survey_translation import API as SURVEY_TRANSLATION_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -103,3 +105,4 @@ API.add_namespace(CAC_FORM_API, path='/engagements/<int:engagement_id>/cacform')
 API.add_namespace(WIDGET_TIMELINE_API, path='/widgets/<int:widget_id>/timelines')
 API.add_namespace(WIDGET_POLL_API, path='/widgets/<int:widget_id>/polls')
 API.add_namespace(LANGUAGE_API, path='/languages')
+API.add_namespace(SURVEY_TRANSLATION_API, path='/surveys/<int:survey_id>/translations')
