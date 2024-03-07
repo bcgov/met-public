@@ -37,7 +37,7 @@ interface EngagementSlugPatchResponse {
     engagement_id: number;
     slug: string;
 }
-interface EngagementSlugPatchRequest {
+export interface EngagementSlugPatchRequest {
     engagement_id: number;
     slug: string;
 }

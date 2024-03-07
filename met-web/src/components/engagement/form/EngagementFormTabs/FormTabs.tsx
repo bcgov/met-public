@@ -5,10 +5,10 @@ import EngagementForm from './EngagementForm';
 import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
 import EngagementUserManagement from './UserManagement/EngagementUserManagement';
-import EngagementAdditionalDetails from './AdditionalDetails';
-import EngagementSettings from './Settings';
+import EngagementSettingsForm from './Settings/EngagementSettingsForm';
 import { ActionContext } from '../ActionContext';
 import { MetTooltip } from 'components/common';
+import AdditionalTabContent from './AdditionalDetails/AdditionalTabContent';
 
 const FormTabs = () => {
     const [value, setValue] = React.useState<EngagementFormTabValues>(ENGAGEMENT_FORM_TABS.CONTENT);
@@ -56,13 +56,13 @@ const FormTabs = () => {
                     <EngagementForm />
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.ADDITIONAL}>
-                    <EngagementAdditionalDetails />
+                    <AdditionalTabContent />
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.USER_MANAGEMENT}>
                     <EngagementUserManagement />
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.SETTINGS}>
-                    <EngagementSettings />
+                    <EngagementSettingsForm />
                 </MetTabPanel>
             </TabContext>
         </Box>

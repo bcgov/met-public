@@ -1,15 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, FormControlLabel, Switch } from '@mui/material';
 import { MetLabel, MetHeader4, MetDescription } from '../../../../common';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
-import { EngagementSettingsContext } from './EngagementSettingsContext';
+import { EngagementTabsContext } from '../EngagementTabsContext';
+import { ActionContext } from '../../ActionContext';
 
 const InternalEngagement = () => {
-    const { isInternal, setIsInternal } = useContext(EngagementSettingsContext);
-    const { hasBeenOpened } = useContext(EngagementSettingsContext);
+    const { savedEngagement } = useContext(ActionContext);
+    const { hasBeenOpened, engagementFormData, setEngagementFormData } = useContext(EngagementTabsContext);
+    const [initialInternalFlag, setInitialInternalFlag] = useState(savedEngagement.is_internal);
 
-    const handleChangeIsInternal = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIsInternal(e.target.checked);
+    useEffect(() => {
+        setInitialInternalFlag(engagementFormData.is_internal);
+    }, []);
+
+    const handleChangeIsInternal = () => {
+        setInitialInternalFlag(!initialInternalFlag);
+        setEngagementFormData({
+            ...engagementFormData,
+            is_internal: !initialInternalFlag,
+        });
     };
 
     return (
@@ -25,7 +35,9 @@ const InternalEngagement = () => {
             </Grid>
             <Grid item xs={12}>
                 <FormControlLabel
-                    control={<Switch name="is_internal" checked={isInternal} onChange={handleChangeIsInternal} />}
+                    control={
+                        <Switch name="is_internal" checked={initialInternalFlag} onChange={handleChangeIsInternal} />
+                    }
                     label={<MetLabel>Set-up as Internal Engagement</MetLabel>}
                     disabled={hasBeenOpened}
                 />

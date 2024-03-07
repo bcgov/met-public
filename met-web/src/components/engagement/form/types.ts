@@ -7,6 +7,7 @@ export interface EngagementContext {
     handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
     handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
     isSaving: boolean;
+    setSaving: React.Dispatch<React.SetStateAction<boolean>>;
     savedEngagement: Engagement;
     engagementMetadata: EngagementMetadata;
     engagementId: string | undefined;

@@ -1,4 +1,10 @@
 ## March 04, 2024
+- **Task**Engagement "save" enhancements [DESENG-507](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-507)
+    - The existing "Save" button in the floating bar has been split into two distinct actions: "Save and Continue" and "Save and Exit".
+    - Tabs are greyed out, and widgets are disabled until the engagement is successfully saved. A helpful tool-tip has been added to inform users that the engagement needs to be saved before accessing certain features.
+    - Independent save buttons previously present in tabs, such as "Additional Details", "Settings" have been removed. Now, the floating save bar is universally employed when editing an engagement.
+
+## March 04, 2024
 - **Task**Multi-language - Create language table & API [DESENG-509](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-509)
     - Added Language model.
     - Added Language API.

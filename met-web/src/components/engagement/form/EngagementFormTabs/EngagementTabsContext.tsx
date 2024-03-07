@@ -15,7 +15,9 @@ import {
     getEngagementSettings,
     patchEngagementSettings,
 } from 'services/engagementSettingService';
+import { EngagementSlugPatchRequest, patchEngagementSlug } from 'services/engagementSlugService';
 import { EngagementForm } from '../types';
+import { SubmissionStatus } from 'constants/engagementStatus';
 
 interface EngagementFormData {
     name: string;
@@ -31,6 +33,10 @@ interface EngagementSettingsFormData {
     send_report: boolean;
 }
 
+interface EngagementSettingsSlugData {
+    slug: string;
+}
+
 const initialEngagementFormData = {
     name: '',
     start_date: '',
@@ -39,6 +45,14 @@ const initialEngagementFormData = {
     content: '',
     is_internal: false,
     consent_message: '',
+};
+
+const initialEngagementSettingsFormData = {
+    send_report: false,
+};
+
+const initialEngagementSettingsSlugData = {
+    slug: '',
 };
 
 interface EngagementFormError {
@@ -65,6 +79,8 @@ export interface EngagementTabsContextState {
     setRichDescription: React.Dispatch<React.SetStateAction<string>>;
     richContent: string;
     setRichContent: React.Dispatch<React.SetStateAction<string>>;
+    richConsentMessage: string;
+    setRichConsentMessage: React.Dispatch<React.SetStateAction<string>>;
     engagementFormError: EngagementFormError;
     setEngagementFormError: React.Dispatch<React.SetStateAction<EngagementFormError>>;
     users: User[];
@@ -78,10 +94,13 @@ export interface EngagementTabsContextState {
     teamMembersLoading: boolean;
     loadTeamMembers: () => void;
     settings: EngagementSettings;
+    sendReport: EngagementSettingsFormData;
+    setSendReport: React.Dispatch<React.SetStateAction<EngagementSettingsFormData>>;
     settingsLoading: boolean;
-    updateEngagementSettings: (settingsForm: EngagementSettingsFormData) => Promise<void>;
     savedSlug: string;
-    setSavedSlug: React.Dispatch<React.SetStateAction<string>>;
+    hasBeenOpened: boolean;
+    slug: EngagementSettingsSlugData;
+    setSlug: React.Dispatch<React.SetStateAction<EngagementSettingsSlugData>>;
 }
 
 export const EngagementTabsContext = createContext<EngagementTabsContextState>({
@@ -90,10 +109,13 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
         throw new Error('setEngagementFormData is unimplemented');
     },
     handleSaveAndContinueEngagement: async () => {
-        console.warn('handleSaveAndContinueEngagement is unimplemented');
+        /* empty default method for engagement save and continue */
     },
     handlePreviewEngagement: async () => {
-        console.warn('handlePreviewEngagement is unimplemented');
+        /* empty default method for engagement preview  */
+    },
+    handleSaveAndExitEngagement: async () => {
+        /* empty default method for engagement save and continue  */
     },
     handleSaveAndExitEngagement: async () => {
         console.warn('handleSaveAndExitEngagement is unimplemented');
@@ -101,6 +123,10 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     richDescription: '',
     setRichDescription: () => {
         throw new Error('setRichDescription is unimplemented');
+    },
+    richConsentMessage: '',
+    setRichConsentMessage: () => {
+        /* empty default method  */
     },
     richContent: '',
     setRichContent: () => {
@@ -135,19 +161,27 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
         throw new Error('Load team members not implemented');
     },
     settings: createDefaultEngagementSettings(),
-    settingsLoading: false,
-    updateEngagementSettings: () => {
-        throw new Error('updateEngagementSettings not implemented');
+    sendReport: initialEngagementSettingsFormData,
+    setSendReport: () => {
+        /* empty default method  */
     },
+    settingsLoading: false,
     savedSlug: '',
-    setSavedSlug: () => {
-        throw new Error('setSavedSlug not implemented');
+    hasBeenOpened: false,
+    slug: initialEngagementSettingsSlugData,
+    setSlug: () => {
+        /* empty default method  */
     },
 });
 
 export const EngagementTabsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { handleCreateEngagementRequest, handleUpdateEngagementRequest, savedEngagement, isNewEngagement } =
-        useContext(ActionContext);
+    const {
+        setSaving,
+        handleCreateEngagementRequest,
+        handleUpdateEngagementRequest,
+        savedEngagement,
+        isNewEngagement,
+    } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [engagementFormData, setEngagementFormData] = useState<EngagementFormData>({
         name: savedEngagement.name || '',
@@ -160,6 +194,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
+    const [richConsentMessage, setRichConsentMessage] = useState(savedEngagement?.consent_message || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
 
     // Survey block
@@ -205,6 +240,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     }, [savedEngagement]);
 
     const [settings, setSettings] = useState<EngagementSettings>(createDefaultEngagementSettings());
+    const [sendReport, setSendReport] = useState<EngagementSettingsFormData>({
+        send_report: false,
+    });
     const [settingsLoading, setSettingsLoading] = useState(true);
 
     const loadSettings = async () => {
@@ -212,6 +250,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             setSettingsLoading(true);
             const response = await getEngagementSettings(savedEngagement.id);
             setSettings(response);
+            setSendReport({ send_report: response.send_report });
             setSettingsLoading(false);
         } catch (error) {
             dispatch(
@@ -231,6 +270,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     }, [savedEngagement]);
 
     const updateEngagementSettings = async (settingsForm: EngagementSettingsFormData) => {
+        setSaving(true);
         try {
             const updatedSettings = updatedDiff(
                 {
@@ -240,13 +280,15 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             ) as PatchEngagementSettingsRequest;
 
             if (Object.keys(updatedSettings).length === 0) {
-                return Promise.resolve();
+                setSaving(false);
+                return;
             }
             await patchEngagementSettings({
                 ...updatedSettings,
                 engagement_id: savedEngagement.id,
             });
             await loadSettings();
+            setSaving(false);
             return Promise.resolve();
         } catch (error) {
             dispatch(
@@ -255,10 +297,12 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                     text: 'Error occurred while trying to update settings, please refresh the page or try again at a later time',
                 }),
             );
+            setSaving(false);
         }
     };
 
     const [savedSlug, setSavedSlug] = useState('');
+    const [slug, setSlug] = useState<EngagementSettingsSlugData>(initialEngagementSettingsSlugData);
 
     const handleGetSlug = async () => {
         if (!savedEngagement.id) return;
@@ -266,6 +310,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         try {
             const response = await getSlugByEngagementId(savedEngagement.id);
             setSavedSlug(response.slug);
+            setSlug({ slug: response.slug });
         } catch (error) {
             dispatch(
                 openNotification({
@@ -273,6 +318,39 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                     text: 'Failed to get slug',
                 }),
             );
+        }
+    };
+
+    const handleSaveSlug = async (slug: EngagementSettingsSlugData) => {
+        setSaving(true);
+        try {
+            const updatedSlug = updatedDiff(
+                {
+                    slug: savedSlug,
+                },
+                slug,
+            ) as EngagementSlugPatchRequest;
+
+            if (Object.keys(updatedSlug).length === 0) {
+                setSaving(false);
+                return;
+            }
+
+            const response = await patchEngagementSlug({
+                ...updatedSlug,
+                engagement_id: savedEngagement.id,
+            });
+            setSavedSlug(response.slug);
+            setSaving(false);
+            return;
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Failed to update engagement link',
+                }),
+            );
+            setSaving(false);
         }
     };
 
@@ -324,6 +402,11 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                   status_block: surveyBlockList,
               });
 
+        if (!isNewEngagement) {
+            await updateEngagementSettings(sendReport);
+            await handleSaveSlug(slug);
+        }
+
         return engagement;
     };
 
@@ -350,6 +433,10 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         handleGetSlug();
     }, [savedEngagement.id]);
 
+    const hasBeenOpened = [SubmissionStatus.Closed, SubmissionStatus.Open].includes(
+        savedEngagement.engagement_status.id,
+    );
+
     return (
         <EngagementTabsContext.Provider
             value={{
@@ -362,6 +449,8 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 setRichDescription,
                 richContent,
                 setRichContent,
+                richConsentMessage,
+                setRichConsentMessage,
                 engagementFormError,
                 setEngagementFormError,
                 setSurveyBlockText,
@@ -375,10 +464,13 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 teamMembersLoading,
                 loadTeamMembers,
                 settings,
+                sendReport,
+                setSendReport,
                 settingsLoading,
-                updateEngagementSettings,
                 savedSlug,
-                setSavedSlug,
+                hasBeenOpened,
+                slug,
+                setSlug,
             }}
         >
             {children}

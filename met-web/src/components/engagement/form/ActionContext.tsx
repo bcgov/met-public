@@ -34,6 +34,9 @@ export const ActionContext = createContext<EngagementContext>({
         return Promise.reject();
     },
     isSaving: false,
+    setSaving: () => {
+        /* empty default method  */
+    },
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: createDefaultEngagementMetadata(),
     engagementId: CREATE,
@@ -50,7 +53,7 @@ export const ActionContext = createContext<EngagementContext>({
     loadingAuthorization: true,
     isNewEngagement: true,
     setIsNewEngagement: () => {
-        throw new Error('setIsNewEngagement is unimplemented');
+        /* empty default method  */
     },
 });
 
@@ -250,6 +253,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleCreateEngagementMetadataRequest,
                 handleUpdateEngagementMetadataRequest,
                 isSaving,
+                setSaving,
                 savedEngagement,
                 engagementMetadata,
                 engagementId,

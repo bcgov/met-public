@@ -5,12 +5,12 @@ import ConsentMessage from './ConsentMessage';
 import EngagementInformation from './EngagementInformation';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
-import { AdditionalDetailsContext } from './AdditionalDetailsContext';
 
 const AdditionalTabContent = () => {
-    const { handleSaveAdditional, updatingAdditional } = useContext(AdditionalDetailsContext);
     const { isSaving } = useContext(ActionContext);
-    const { handleSaveAndContinueEngagement, handlePreviewEngagement } = useContext(EngagementTabsContext);
+
+    const { handleSaveAndContinueEngagement, handleSaveAndExitEngagement, handlePreviewEngagement } =
+        useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -31,19 +31,14 @@ const AdditionalTabContent = () => {
                 <Grid item xs={12}>
                     <ConsentMessage />
                 </Grid>
-                <Grid item xs={12}>
-                    <PrimaryButton loading={updatingAdditional} onClick={handleSaveAdditional}>
-                        Save
-                    </PrimaryButton>
-                </Grid>
                 <Box
                     position="sticky"
                     bottom={0}
                     width="100%"
+                    marginLeft={2}
                     borderTop="1px solid #ddd"
                     padding={2}
                     marginTop={2}
-                    marginLeft={2}
                     zIndex={1000}
                     boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
                     sx={{ backgroundColor: 'white' }}
@@ -51,11 +46,19 @@ const AdditionalTabContent = () => {
                     <Grid item xs={12}>
                         <PrimaryButton
                             sx={{ marginRight: 1 }}
-                            data-testid="create-engagement-button"
+                            data-testid="save-engagement-button"
                             onClick={() => handleSaveAndContinueEngagement()}
                             loading={isSaving}
                         >
-                            Save
+                            Save and Continue
+                        </PrimaryButton>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="save-and-exit-engagement-button"
+                            onClick={() => handleSaveAndExitEngagement()}
+                            loading={isSaving}
+                        >
+                            Save and Exit
                         </PrimaryButton>
                         <SecondaryButton
                             data-testid="preview-engagement-button"
