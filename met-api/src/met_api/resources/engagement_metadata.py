@@ -18,6 +18,7 @@ This API is located at /api/engagements/<engagement_id>/metadata
 """
 
 from http import HTTPStatus
+import re
 
 from flask import request
 from flask_cors import cross_origin
@@ -43,6 +44,12 @@ metadata_update_model = API.model('EngagementMetadataUpdate', model_dict := {
     'value': fields.String(required=True, description='The value of the metadata entry'),
 })
 
+metadata_bulk_update_model = API.model('EngagementMetadataBulkUpdate', {
+    'taxon_id': fields.Integer(required=True, description='The id of the taxon'),
+    'values': fields.List(fields.String, required=True,
+                          description='The values to save to the taxon'),
+})
+
 metadata_create_model = API.model('EngagementMetadataCreate', model_dict := {
     'taxon_id': fields.Integer(required=True, description='The id of the taxon'),
     **model_dict
@@ -58,7 +65,7 @@ engagement_service = EngagementService()
 metadata_service = EngagementMetadataService()
 
 
-@cors_preflight('GET,POST')
+@cors_preflight('GET,POST,PATCH')
 @API.route('')  # /api/engagements/{engagement.id}/metadata
 @API.doc(params={'engagement_id': 'The numeric id of the engagement'})
 class EngagementMetadata(Resource):
@@ -95,6 +102,24 @@ class EngagementMetadata(Resource):
         except (ValueError, ValidationError) as err:
             return str(err), HTTPStatus.BAD_REQUEST
 
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @API.doc(security='apikey')
+    @API.expect(metadata_bulk_update_model, validate=True)
+    @API.marshal_list_with(metadata_return_model)
+    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    def patch(engagement_id):
+        """Update the values of existing metadata entries for an engagement."""
+        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
+                                 engagement_id=engagement_id)
+        data = request.get_json(force=True)
+        taxon_id = data['taxon_id']
+        updated_values = data['values']
+        result = metadata_service.update_by_taxon(
+            engagement_id, taxon_id, updated_values
+        )
+        return result, HTTPStatus.OK
+
 
 @cors_preflight('GET,PUT,DELETE')
 @API.route('/<metadata_id>')  # /metadata/{metadata.id}
@@ -126,6 +151,7 @@ class EngagementMetadataById(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    @API.expect(metadata_update_model)
     def patch(engagement_id, metadata_id):
         """Update the values of an existing metadata entry for an engagement."""
         authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,

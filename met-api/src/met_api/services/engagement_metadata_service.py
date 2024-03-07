@@ -31,7 +31,7 @@ class EngagementMetadataService:
         return dict(EngagementMetadataSchema().dump(engagement_metadata))
 
     @staticmethod
-    def get_by_engagement(engagement_id) -> List[dict]:
+    def get_by_engagement(engagement_id, taxon_id=None) -> List[dict]:
         """
         Get metadata by engagement id.
 
@@ -46,7 +46,10 @@ class EngagementMetadataService:
         if not engagement_model:
             raise KeyError(
                 f'Engagement with id {engagement_id} does not exist.')
-        return EngagementMetadataSchema(many=True).dump(engagement_model.metadata)
+        results = engagement_model.metadata
+        if (taxon_id):
+            results = [item for item in results if item.taxon_id == taxon_id]
+        return EngagementMetadataSchema(many=True).dump(results)
 
     @staticmethod
     def check_association(engagement_id, metadata_id) -> bool:
@@ -134,6 +137,37 @@ class EngagementMetadataService:
                            ' does not exist.')
         metadata.value = value
         return dict(EngagementMetadataSchema().dump(metadata, many=False))
+
+    @staticmethod
+    @transactional()
+    def update_by_taxon(engagement_id: int, taxon_id: int, values: List[str]) -> List[dict]:
+        """
+        Update engagement metadata by taxon.
+
+        Args:
+            engagement_id: The ID of the engagement.
+            taxon_id: The ID of the metadata taxon.
+            values: The values to store for the taxon.
+        Returns:
+            The updated metadata as a list.
+        """
+        query = EngagementMetadata.query.filter_by(
+            engagement_id=engagement_id, taxon_id=taxon_id)
+        metadata = query.all()
+        if len(metadata) > len(values):
+            for i in range(len(values), len(metadata)):
+                metadata[i].delete()
+        metadata = query.all()  # remove deleted entries from the list
+        for i, value in enumerate(values):
+            if i < len(metadata):
+                metadata[i].value = value
+        if len(values) > len(metadata):
+            for i in range(len(metadata), len(values)):
+                metadata.append(EngagementMetadata(
+                    engagement_id=engagement_id, taxon_id=taxon_id, value=values[i]
+                ))
+        db.session.add_all(metadata)
+        return EngagementMetadataSchema(many=True).dump(metadata)
 
     @staticmethod
     @transactional()
