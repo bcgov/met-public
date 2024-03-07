@@ -1,10 +1,14 @@
-## Current: feature/DESENG-443: Engagement Metadata Management
+## March 07, 2024
 
 - **Task**: Remove "default_values" from metadata taxa.
   Replace with "preset values", metadata entries that are not assigned to an engagement.
 - **Task**: Update authorization documentation in the API blueprint. Update
   metadata management to rely on normal authorization check functions.
 - **Task**: Clean up metadata management code and tests.
+- **Task**: Add endpoint for updating metadata by taxon in bulk
+- **Feature**: Add editor for metadata taxa (admin only).
+- **Feature**: Add editor for metadata entries (available to anyone who can
+  edit an engagement).
 
 ## February 08, 2024
 
