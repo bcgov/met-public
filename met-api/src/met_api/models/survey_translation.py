@@ -68,8 +68,7 @@ class SurveyTranslation(BaseModel):
                 'form_json'
             ),  # Returns `None` if 'form_json' is not in `data` as its optional
         )
-        db.session.add(survey_translation)
-        db.session.commit()
+        survey_translation.save()
         return survey_translation
 
     @staticmethod
