@@ -48,6 +48,7 @@ from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
+from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
@@ -58,7 +59,7 @@ from tests.utilities.factory_scenarios import (
     TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo,
     TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo,
     TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
-    TestWidgetVideo)
+    TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()
@@ -515,3 +516,15 @@ def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
     )
     language.save()
     return language
+
+
+def factory_widget_translation_model(widget_translation: dict = TestWidgetTranslationInfo.widgettranslation1):
+    """Produce a widget translation model."""
+    widget_translation = WidgetTranslationModel(
+        widget_id=widget_translation.get('widget_id'),
+        language_id=widget_translation.get('language_id'),
+        title=widget_translation.get('title'),
+        map_marker_label=widget_translation.get('map_marker_label'),
+    )
+    widget_translation.save()
+    return widget_translation

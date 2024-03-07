@@ -1,3 +1,9 @@
+## March 06, 2024
+- **Task**Multi-language - Create simple widget translation tables & API routes [DESENG-514](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-514)
+    - Added Widget translation model.
+    - Added Widget translation API.
+    - Added Unit tests.
+
 ## March 04, 2024
 - **Task**Multi-language - Create language table & API [DESENG-509](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-509)
     - Added Language model.
