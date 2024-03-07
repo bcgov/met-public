@@ -915,3 +915,12 @@ class TestLanguageInfo(dict, Enum):
         'code': 'en',
         'right_to_left': False,
     }
+
+
+class TestWidgetTranslationInfo(dict, Enum):
+    """Test scenarios of widget translation content."""
+
+    widgettranslation1 = {
+        'title': fake.text(max_nb_chars=20),
+        'map_marker_label': fake.text(max_nb_chars=20),
+    }
