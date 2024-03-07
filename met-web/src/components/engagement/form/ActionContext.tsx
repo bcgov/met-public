@@ -1,9 +1,9 @@
-import React, { createContext, useState, useEffect, useRef, useMemo } from 'react';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { getEngagementMetadata, bulkPatchEngagementMetadata } from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
-import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
+import { createDefaultEngagement, Engagement, EngagementMetadata } from '../../../models/engagement';
 import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -15,7 +15,6 @@ import { EngagementStatus } from 'constants/engagementStatus';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
-    // TODO: Reimplement handle*MetadataRequest methods using the new engagement metadata API
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
     },
@@ -94,7 +93,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         if (isCreate) {
             return;
         }
-
         try {
             const engagementMetaData = await getEngagementMetadata(Number(engagementId));
             setEngagementMetadata(engagementMetaData);

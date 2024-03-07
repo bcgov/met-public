@@ -1,8 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementMetadata } from '../../../services/engagementMetadataService';
-import { createDefaultEngagement, Engagement, EngagementMetadata } from '../../../models/engagement';
+import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
