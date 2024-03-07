@@ -88,7 +88,6 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
     jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
 
     beforeEach(() => {
