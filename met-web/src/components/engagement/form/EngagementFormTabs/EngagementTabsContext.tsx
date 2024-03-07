@@ -281,7 +281,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
             if (Object.keys(updatedSettings).length === 0) {
                 setSaving(false);
-                return Promise.resolve();
+                return;
             }
             await patchEngagementSettings({
                 ...updatedSettings,
