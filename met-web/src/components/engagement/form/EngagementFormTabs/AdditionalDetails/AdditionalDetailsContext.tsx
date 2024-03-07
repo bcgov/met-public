@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useRef } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { useAppDispatch } from 'hooks';
@@ -13,6 +13,7 @@ export interface AdditionalDetailsContextState {
     handleSaveAdditional: () => void;
     updatingAdditional: boolean;
     hasBeenOpened: boolean;
+    metadataFormRef: React.RefObject<HTMLFormElement> | null;
 }
 
 export const AdditionalDetailsContext = createContext<AdditionalDetailsContextState>({
@@ -29,12 +30,15 @@ export const AdditionalDetailsContext = createContext<AdditionalDetailsContextSt
     },
     updatingAdditional: false,
     hasBeenOpened: false,
+    metadataFormRef: null,
 });
 
 export const AdditionalDetailsContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { handleUpdateEngagementRequest, savedEngagement } = useContext(ActionContext);
     const { engagementFormData } = useContext(EngagementTabsContext);
     const dispatch = useAppDispatch();
+
+    const metadataFormRef = useRef<HTMLFormElement>(null);
 
     const [updatingAdditional, setUpdatingAdditional] = useState(false);
     const [consentMessage, setConsentMessage] = useState(savedEngagement?.consent_message || '');
@@ -50,16 +54,30 @@ export const AdditionalDetailsContextProvider = ({ children }: { children: React
     const handleSaveAdditional = async () => {
         try {
             if (!savedEngagement.id) {
-                dispatch(openNotification({ text: 'Must create engagement first', severity: 'error' }));
+                dispatch(openNotification({ text: 'Engagement Content must be saved first', severity: 'error' }));
                 return;
             }
             setUpdatingAdditional(true);
+            if (!metadataFormRef) dispatch(openNotification({ text: 'Metadata Form not found', severity: 'error' }));
+            const metadataResult = await metadataFormRef?.current?.submitForm();
+
+            if (metadataResult === false) {
+                dispatch(
+                    openNotification({
+                        text: 'Please correct the highlighted errors before saving',
+                        severity: 'error',
+                    }),
+                );
+                setUpdatingAdditional(false);
+                return;
+            }
             await handleUpdateEngagementAdditional();
             setUpdatingAdditional(false);
-            dispatch(openNotification({ text: 'Engagement additional details saved', severity: 'success' }));
+            dispatch(openNotification({ text: 'Additional Details saved', severity: 'success' }));
         } catch (error) {
             setUpdatingAdditional(false);
-            dispatch(openNotification({ text: 'Error saving engagement additional details', severity: 'error' }));
+            console.log('Error saving Additional Details', error);
+            dispatch(openNotification({ text: 'Error saving Additional Details', severity: 'error' }));
         }
     };
 
@@ -76,6 +94,7 @@ export const AdditionalDetailsContextProvider = ({ children }: { children: React
             handleSaveAdditional,
             updatingAdditional,
             hasBeenOpened,
+            metadataFormRef,
         }),
         [initialConsentMessage, consentMessage, updatingAdditional, hasBeenOpened],
     );

@@ -1,14 +1,9 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useRef, useMemo } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementMetadata } from '../../../services/engagementMetadataService';
+import { getEngagementMetadata, bulkPatchEngagementMetadata } from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
-import {
-    createDefaultEngagement,
-    createDefaultEngagementMetadata,
-    Engagement,
-    EngagementMetadata,
-} from '../../../models/engagement';
+import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -27,15 +22,13 @@ export const ActionContext = createContext<EngagementContext>({
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
     },
-    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
+    setTaxonMetadata(_taxonId, _values) {
         return Promise.reject();
     },
-    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata): Promise<EngagementMetadata> => {
-        return Promise.reject();
-    },
+    taxonMetadata: new Map(),
     isSaving: false,
     savedEngagement: createDefaultEngagement(),
-    engagementMetadata: createDefaultEngagementMetadata(),
+    engagementMetadata: [],
     engagementId: CREATE,
     loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
@@ -62,11 +55,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>({
-        ...createDefaultEngagementMetadata(),
-    });
+    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+
     const isCreate = window.location.pathname.includes(CREATE);
 
     const handleAddBannerImage = (files: File[]) => {
@@ -111,6 +103,33 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Metadata' }));
         }
     };
+
+    const taxonMetadata = useMemo(() => {
+        const taxonMetadataMap = new Map<number, string[]>();
+        engagementMetadata.forEach((metadata) => {
+            if (!taxonMetadataMap.has(metadata.taxon_id)) {
+                taxonMetadataMap.set(metadata.taxon_id, []);
+            }
+            taxonMetadataMap.get(metadata.taxon_id)?.push(metadata.value);
+        });
+        return taxonMetadataMap;
+    }, [engagementMetadata]);
+
+    const setTaxonMetadata = async (taxonId: number, values: Array<string>): Promise<EngagementMetadata[]> => {
+        try {
+            const updatedMetadata = await bulkPatchEngagementMetadata(taxonId, Number(engagementId), values);
+            const result = engagementMetadata
+                .filter((metadata) => metadata.taxon_id !== taxonId)
+                .concat(updatedMetadata);
+            setEngagementMetadata(result);
+            return Promise.resolve(result);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error Updating Taxon Metadata' }));
+            return Promise.reject(err);
+        }
+    };
+
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
         setSavedBannerImageFileName(engagement.banner_filename);
@@ -226,22 +245,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
-    // TODO: replace these stubs with new handlers
-    const handleCreateEngagementMetadataRequest = async (): Promise<EngagementMetadata> => {
-        return Promise.reject();
-    };
-
-    const handleUpdateEngagementMetadataRequest = async (): Promise<EngagementMetadata> => {
-        return Promise.reject();
-    };
-
     return (
         <ActionContext.Provider
             value={{
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
-                handleCreateEngagementMetadataRequest,
-                handleUpdateEngagementMetadataRequest,
                 isSaving,
                 savedEngagement,
                 engagementMetadata,
@@ -250,6 +258,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleAddBannerImage,
                 fetchEngagement,
                 fetchEngagementMetadata,
+                setTaxonMetadata,
+                taxonMetadata,
                 loadingAuthorization,
             }}
         >

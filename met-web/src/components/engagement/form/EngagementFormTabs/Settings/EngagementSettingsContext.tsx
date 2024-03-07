@@ -32,8 +32,7 @@ export const EngagementSettingsContext = createContext<EngagementSettingsContext
 });
 
 export const EngagementSettingsContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const { handleUpdateEngagementMetadataRequest, engagementId, handleUpdateEngagementRequest, savedEngagement } =
-        useContext(ActionContext);
+    const { engagementId, handleUpdateEngagementRequest, savedEngagement } = useContext(ActionContext);
     const { engagementFormData, updateEngagementSettings, settings } = useContext(EngagementTabsContext);
     const dispatch = useAppDispatch();
 
@@ -41,13 +40,6 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
     const [isInternal, setIsInternal] = useState(savedIsInternal);
     const [sendReport, setSendReport] = useState(Boolean(settings.send_report));
     const [updatingSettings, setUpdatingSettings] = useState(false);
-
-    const handleUpdateEngagementMetadata = () => {
-        return handleUpdateEngagementMetadataRequest({
-            ...engagementFormData,
-            engagement_id: Number(engagementId),
-        });
-    };
 
     const handleUpdateEngagementSettings = () => {
         return handleUpdateEngagementRequest({
@@ -69,7 +61,6 @@ export const EngagementSettingsContextProvider = ({ children }: { children: Reac
                 return;
             }
             setUpdatingSettings(true);
-            await handleUpdateEngagementMetadata();
             await handleUpdateEngagementSettings();
             await handleUpdateSettings();
             setUpdatingSettings(false);

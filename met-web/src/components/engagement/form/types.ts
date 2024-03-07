@@ -1,14 +1,14 @@
-import { Engagement, EngagementMetadata } from '../../../models/engagement';
+import { Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
-    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
-    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
+    setTaxonMetadata: (_taxonId: number, _values: Array<string>) => Promise<EngagementMetadata[]>;
+    taxonMetadata: Map<number, string[]>;
     isSaving: boolean;
     savedEngagement: Engagement;
-    engagementMetadata: EngagementMetadata;
+    engagementMetadata: EngagementMetadata[];
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;

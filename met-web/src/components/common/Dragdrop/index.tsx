@@ -25,9 +25,9 @@ interface MetDraggableProps {
     index: number;
     children: React.ReactNode;
     draggableId: string;
-    marginBottom?: string | number;
+    sx?: object;
 }
-export const MetDraggable = ({ children, draggableId, index, marginBottom }: MetDraggableProps) => {
+export const MetDraggable = ({ children, draggableId, index, sx }: MetDraggableProps) => {
     return (
         <Draggable key={draggableId} draggableId={draggableId} index={index}>
             {(provided: DraggableProvided) => (
@@ -36,8 +36,9 @@ export const MetDraggable = ({ children, draggableId, index, marginBottom }: Met
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     sx={{
+                        marginBottom: '1em',
                         ...provided.draggableProps.style,
-                        marginBottom: marginBottom || '1em',
+                        ...sx,
                     }}
                 >
                     {children}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
 import { ActionContext } from '../ActionContext';
@@ -6,7 +6,12 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+import {
+    EngagementMetadata,
+    EngagementSettings,
+    MetadataTaxon,
+    createDefaultEngagementSettings,
+} from 'models/engagement';
 import { updatedDiff } from 'deep-object-diff';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import {
@@ -14,6 +19,7 @@ import {
     getEngagementSettings,
     patchEngagementSettings,
 } from 'services/engagementSettingService';
+import { getEngagementMetadata, getMetadataTaxa } from 'services/engagementMetadataService';
 
 interface EngagementFormData {
     name: string;
@@ -56,6 +62,10 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
+    tenantTaxa: MetadataTaxon[];
+    setTenantTaxa: React.Dispatch<React.SetStateAction<MetadataTaxon[]>>;
+    // engagementMetadata: EngagementMetadata[];
+    metadataFormRef: React.RefObject<HTMLFormElement> | null;
     richDescription: string;
     setRichDescription: React.Dispatch<React.SetStateAction<string>>;
     richContent: string;
@@ -83,6 +93,12 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     engagementFormData: initialEngagementFormData,
     setEngagementFormData: () => {
         throw new Error('setEngagementFormData is unimplemented');
+    },
+    // engagementMetadata: [],
+    metadataFormRef: null,
+    tenantTaxa: [],
+    setTenantTaxa: () => {
+        throw new Error('setTenantTaxa is unimplemented');
     },
     richDescription: '',
     setRichDescription: () => {
@@ -143,9 +159,11 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
     });
+    const [tenantTaxa, setTenantTaxa] = useState<MetadataTaxon[]>([]);
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
+    const metadataFormRef = useRef<HTMLFormElement>(null);
 
     // Survey block
     const [surveyBlockText, setSurveyBlockText] = useState<{ [key in SubmissionStatusTypes]: string }>({
@@ -243,6 +261,41 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
+    const fetchMetadata = async () => {
+        try {
+            const taxaData = await getMetadataTaxa();
+            const engagementMetadata = await getEngagementMetadata(savedEngagement.id);
+            engagementMetadata.forEach((metadata) => {
+                const taxon = taxaData[metadata.taxon_id];
+                if (taxon) {
+                    if (taxon.entries === undefined) {
+                        taxon.entries = [];
+                    }
+                    taxon.entries.push(metadata);
+                }
+            });
+            setTenantTaxa(Object.values(taxaData));
+        } catch (error) {
+            console.error('Error fetching taxa:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchMetadata();
+    }, []);
+
+    const updateMetadata = (taxonId: number, value: MetadataTaxon) => {
+        setTenantTaxa((prev) => {
+            const index = prev.findIndex((taxon) => taxon.id === taxonId);
+            if (index === -1) {
+                return prev;
+            }
+            const newTaxa = [...prev];
+            newTaxa[index] = value;
+            return newTaxa;
+        });
+    };
+
     const [savedSlug, setSavedSlug] = useState('');
 
     const handleGetSlug = async () => {
@@ -270,6 +323,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             value={{
                 engagementFormData,
                 setEngagementFormData,
+                tenantTaxa,
+                setTenantTaxa,
+                metadataFormRef,
                 richDescription,
                 setRichDescription,
                 richContent,

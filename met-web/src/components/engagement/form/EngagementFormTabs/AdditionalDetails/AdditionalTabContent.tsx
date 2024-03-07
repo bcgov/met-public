@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
 import { MetPaper, PrimaryButton } from 'components/common';
 import ConsentMessage from './ConsentMessage';
-import EngagementInformation from './EngagementInformation';
+import EngagementMetadata from './Metadata/EngagementMetadata';
 
 import { AdditionalDetailsContext } from './AdditionalDetailsContext';
 
 const AdditionalTabContent = () => {
-    const { handleSaveAdditional, updatingAdditional } = useContext(AdditionalDetailsContext);
+    const { handleSaveAdditional, updatingAdditional, metadataFormRef } = useContext(AdditionalDetailsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -20,7 +20,7 @@ const AdditionalTabContent = () => {
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12}>
-                    <EngagementInformation />
+                    <EngagementMetadata ref={metadataFormRef} />
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
