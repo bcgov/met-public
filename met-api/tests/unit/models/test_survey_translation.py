@@ -4,12 +4,9 @@ Test suite to ensure that the SurveyTranslation model routines are working as ex
 """
 
 from met_api.models.survey_translation import SurveyTranslation
-from tests.utilities.factory_utils import factory_language_model
-from tests.utilities.factory_utils import factory_survey_translation_model
 from tests.utilities.factory_utils import (
-    factory_survey_and_eng_model,
-    factory_survey_translation_and_engagement_model,
-)
+    factory_language_model, factory_survey_and_eng_model, factory_survey_translation_and_engagement_model,
+    factory_survey_translation_model)
 
 
 def test_create_survey_translation(session):

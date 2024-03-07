@@ -8,12 +8,8 @@ from http import HTTPStatus
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_utils import (
-    factory_auth_header,
-    factory_survey_translation_and_engagement_model,
-    factory_survey_and_eng_model,
-    factory_language_model,
-)
-from tests.utilities.factory_scenarios import TestJwtClaims
+    factory_auth_header, factory_language_model, factory_survey_and_eng_model,
+    factory_survey_translation_and_engagement_model)
 
 
 def test_get_survey_translation(client, jwt, session):

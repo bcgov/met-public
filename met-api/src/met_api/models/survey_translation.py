@@ -4,10 +4,12 @@ Manages the Survey Translations.
 """
 
 from __future__ import annotations
-from .base_model import BaseModel
-from sqlalchemy.dialects import postgresql
-from .db import db
+
 from sqlalchemy import UniqueConstraint
+from sqlalchemy.dialects import postgresql
+
+from .base_model import BaseModel
+from .db import db
 
 
 class SurveyTranslation(BaseModel):

@@ -3,20 +3,11 @@
 Test suite to ensure that the SurveyTranslationService routines are working as expected.
 """
 
-from met_api.services.survey_translation_service import (
-    SurveyTranslationService,
-)
-from tests.utilities.factory_utils import factory_language_model
-from tests.utilities.factory_utils import factory_survey_and_eng_model
-from tests.utilities.factory_utils import (
-    factory_survey_translation_and_engagement_model,
-)
-from met_api.exceptions.business_exception import BusinessException
+from met_api.services.survey_translation_service import SurveyTranslationService
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_staff_user_model,
-    patch_token_info,
-)
+    factory_language_model, factory_staff_user_model, factory_survey_and_eng_model,
+    factory_survey_translation_and_engagement_model, patch_token_info)
 
 
 def test_get_survey_translation_by_id(session):
@@ -75,7 +66,7 @@ def test_update_survey_translation(session, monkeypatch):
     """Assert that a survey translation can be updated."""
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
-    
+
     translation, _, _ = factory_survey_translation_and_engagement_model()
 
     updated_data = {'name': 'Updated Survey Translation'}

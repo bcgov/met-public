@@ -5,19 +5,18 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import jwt as _jwt
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.survey_translation_schema import SurveyTranslationSchema
-from met_api.services.survey_translation_service import (
-    SurveyTranslationService,
-)
+from met_api.services.survey_translation_service import SurveyTranslationService
 from met_api.utils.util import allowedorigins, cors_preflight
-from met_api.exceptions.business_exception import BusinessException
+
 
 API = Namespace(
     'survey_translations',
@@ -32,6 +31,7 @@ class SurveyTranslationResource(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    # pylint: disable=unused-argument
     def get(survey_id, survey_translation_id):
         """Fetch a survey translation by id."""
         try:

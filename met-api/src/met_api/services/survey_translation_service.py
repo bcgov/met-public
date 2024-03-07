@@ -1,16 +1,15 @@
 """Service for SurveyTranslation management."""
 
 from http import HTTPStatus
-from met_api.models import language
+
 from sqlalchemy.exc import IntegrityError
-from met_api.services import authorization
 from met_api.constants.membership_type import MembershipType
-from met_api.utils.roles import Role
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.survey_translation import SurveyTranslation
-from met_api.schemas.survey_translation_schema import SurveyTranslationSchema
-from met_api.services.survey_service import SurveyService
+from met_api.services import authorization
 from met_api.services.language_service import LanguageService
+from met_api.services.survey_service import SurveyService
+from met_api.utils.roles import Role
 
 
 class SurveyTranslationService:
@@ -81,7 +80,6 @@ class SurveyTranslationService:
         survey_id, survey_translation_id, data: dict
     ):
         """Update survey translation partially."""
-
         survey = SurveyService.get(survey_id)
 
         one_of_roles = (
@@ -105,7 +103,6 @@ class SurveyTranslationService:
     @staticmethod
     def delete_survey_translation(survey_id, survey_translation_id):
         """Delete survey translation."""
-
         survey = SurveyService.get(survey_id)
 
         one_of_roles = (
