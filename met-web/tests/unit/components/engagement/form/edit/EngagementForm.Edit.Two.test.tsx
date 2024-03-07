@@ -89,6 +89,9 @@ describe('Engagement form page tests', () => {
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')

@@ -89,6 +89,9 @@ describe('Engagement form page tests', () => {
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
+    const getEngagementMetadataMock = jest
+        .spyOn(engagementMetadataService, 'getEngagementMetadata')
+        .mockReturnValue(Promise.resolve([engagementMetadata]));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
@@ -131,6 +134,7 @@ describe('Engagement form page tests', () => {
         });
 
         expect(getEngagementMock).toHaveBeenCalledOnce();
+        expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
         expect(screen.getByTestId('update-engagement-button')).toBeVisible();
         expect(screen.getByDisplayValue('2022-09-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('2022-09-30')).toBeInTheDocument();
@@ -185,7 +189,11 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
-
+        getEngagementMetadataMock.mockReturnValueOnce(
+            Promise.resolve({
+                ...[engagementMetadata],
+            }),
+        );
         expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 
