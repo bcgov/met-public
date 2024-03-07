@@ -333,7 +333,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
             if (Object.keys(updatedSlug).length === 0) {
                 setSaving(false);
-                return Promise.resolve();
+                return;
             }
 
             const response = await patchEngagementSlug({
