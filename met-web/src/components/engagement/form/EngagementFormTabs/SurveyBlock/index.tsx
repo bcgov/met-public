@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetPaper, MetSurvey, SecondaryButton } from 'components/common';
+import { MetHeader4, MetPaper, MetSurvey, MetTooltip, SecondaryButton } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -18,12 +18,6 @@ export const SurveyBlock = () => {
     const [isDeletingSurvey, setIsDeletingSurvey] = useState(false);
 
     const handleAddSurvey = () => {
-        if (!savedEngagement.id) {
-            dispatch(
-                openNotification({ severity: 'error', text: 'Please save the engagement before adding a survey' }),
-            );
-            return;
-        }
         navigate({
             pathname: '/surveys/create',
             search: `?engagementId=${savedEngagement.id}`,
@@ -104,9 +98,18 @@ export const SurveyBlock = () => {
                         <SurveyTextTabs />
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                        <SecondaryButton onClick={handleAddSurvey} disabled={savedEngagement.surveys.length > 0}>
-                            Add Survey
-                        </SecondaryButton>
+                        <MetTooltip
+                            title={!savedEngagement.id ? 'Please save the engagement before adding a survey.' : ''}
+                        >
+                            <span>
+                                <SecondaryButton
+                                    onClick={handleAddSurvey}
+                                    disabled={!savedEngagement.id || savedEngagement.surveys.length > 0}
+                                >
+                                    Add Survey
+                                </SecondaryButton>
+                            </span>
+                        </MetTooltip>
                     </Grid>
 
                     <Grid item xs={12}>
