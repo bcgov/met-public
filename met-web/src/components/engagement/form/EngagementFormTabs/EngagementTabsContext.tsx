@@ -342,7 +342,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             });
             setSavedSlug(response.slug);
             setSaving(false);
-            return Promise.resolve();
+            return;
         } catch (error) {
             dispatch(
                 openNotification({
