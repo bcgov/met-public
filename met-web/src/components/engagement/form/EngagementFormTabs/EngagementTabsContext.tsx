@@ -117,9 +117,6 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     handleSaveAndExitEngagement: async () => {
         /* empty default method for engagement save and continue  */
     },
-    handleSaveAndExitEngagement: async () => {
-        console.warn('handleSaveAndExitEngagement is unimplemented');
-    },
     richDescription: '',
     setRichDescription: () => {
         throw new Error('setRichDescription is unimplemented');
@@ -289,7 +286,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             });
             await loadSettings();
             setSaving(false);
-            return Promise.resolve();
+            return;
         } catch (error) {
             dispatch(
                 openNotification({
