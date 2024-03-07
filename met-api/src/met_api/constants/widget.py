@@ -26,3 +26,4 @@ class WidgetType(IntEnum):
     Map = 6
     Video = 7
     Timeline = 9
+    Poll = 10

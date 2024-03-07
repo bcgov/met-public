@@ -27,20 +27,18 @@ from met_api.services.widget_translation_service import WidgetTranslationService
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
-API = Namespace('widgettranslation', description='Endpoints for Widget translation Management')
-"""Custom exception messages
-"""
+API = Namespace('widget_translation', description='Endpoints for Widget translation Management')
 
 
 @cors_preflight('GET, OPTIONS')
-@API.route('/widget/<widget_id>/language/<language_id>')
-class WidgetTranslation(Resource):
+@API.route('/language/<language_id>')
+class WidgetTranslationResourceByLanguage(Resource):
     """Resource for managing a widget translation."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get(widget_id, language_id):
-        """Fetch a list of widgets by language_id."""
+        """Fetch a list of widgets by widget_id and language_id."""
         try:
             widgets = WidgetTranslationService().get_translation_by_widget_id_and_language_id(
                 widget_id, language_id)
@@ -50,69 +48,64 @@ class WidgetTranslation(Resource):
 
 
 @cors_preflight('POST, OPTIONS')
-@API.route('/engagement/<engagement_id>')
-class CreateWidgetTranslation(Resource):
+@API.route('/')
+class WidgetTranslations(Resource):
     """Resource for creating a widget translation."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def post(engagement_id):
+    def post(widget_id):
         """Add new widget translation."""
         try:
             request_json = request.get_json()
+            request_json['widget_id'] = widget_id
             valid_format, errors = schema_utils.validate(request_json, 'widget_translation')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
-            args = request.args
-            is_default_language = args.get(
-                'is_default_language',
-                default=True,
-                type=lambda v: v.lower() == 'true'
-            )
+            pre_populate = request_json.get('pre_populate', True)
 
             translation = WidgetTranslationSchema().load(request_json)
             created_widget_translation = WidgetTranslationService().create_widget_translation(translation,
-                                                                                              engagement_id,
-                                                                                              is_default_language)
+                                                                                              pre_populate)
             return created_widget_translation, HTTPStatus.OK
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err.messages), HTTPStatus.BAD_REQUEST
 
 
 @cors_preflight('GET, DELETE, PATCH')
-@API.route('/<widget_translation_id>/engagement/<engagement_id>')
+@API.route('/<int:widget_translation_id>')
 class EditWidgetTranslation(Resource):
     """Resource for updating or deleting a widget translation."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def delete(engagement_id, widget_translation_id):
+    def delete(widget_id, widget_translation_id):
         """Remove widget translation for a widget."""
         try:
-            WidgetTranslationService().delete_widget_translation(engagement_id, widget_translation_id)
+            WidgetTranslationService().delete_widget_translation(widget_id, widget_translation_id)
             return 'Widget translation successfully removed', HTTPStatus.OK
         except KeyError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err), HTTPStatus.NOT_FOUND
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def patch(engagement_id, widget_translation_id):
+    def patch(widget_id, widget_translation_id):
         """Update widget translation."""
         try:
             translation_data = request.get_json()
-            updated_widget = WidgetTranslationService().update_widget_translation(engagement_id,
+            updated_widget = WidgetTranslationService().update_widget_translation(widget_id,
                                                                                   widget_translation_id,
                                                                                   translation_data)
             return updated_widget, HTTPStatus.OK
-        except (KeyError, ValueError) as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.NOT_FOUND
         except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err.messages), HTTPStatus.BAD_REQUEST

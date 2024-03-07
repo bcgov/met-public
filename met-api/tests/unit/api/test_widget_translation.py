@@ -47,27 +47,34 @@ def test_create_widget_translation(client, jwt, session, widget_translation_info
     widget_translation_info['language_id'] = language.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/widgettranslation/engagement/' + str(engagement.id),
+
+    rv = client.post(f'/api/widget/{widget.id}/translations/',
                      data=json.dumps(widget_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get('/api/widgettranslation/widget/' + str(widget.id) + '/language/' + str(language.id),
+    rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('widget_id') == widget.id
 
     with patch.object(WidgetTranslationService, 'create_widget_translation', side_effect=ValueError('Test error')):
-        rv = client.post('/api/widgettranslation/engagement/' + str(engagement.id),
+        rv = client.post(f'/api/widget/{widget.id}/translations/',
+                         data=json.dumps(widget_translation_info),
+                         headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(WidgetTranslationService, 'create_widget_translation', side_effect=KeyError('Test error')):
+        rv = client.post(f'/api/widget/{widget.id}/translations/',
                          data=json.dumps(widget_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(WidgetTranslationService, 'create_widget_translation', side_effect=ValidationError('Test error')):
-        rv = client.post('/api/widgettranslation/engagement/' + str(engagement.id),
+        rv = client.post(f'/api/widget/{widget.id}/translations/',
                          data=json.dumps(widget_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
 @pytest.mark.parametrize('widget_translation_info', [TestWidgetTranslationInfo.widgettranslation1])
@@ -82,19 +89,19 @@ def test_get_widget_translation(client, jwt, session, widget_translation_info,
     widget_translation_info['language_id'] = language.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/widgettranslation/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/widget/{widget.id}/translations/',
                      data=json.dumps(widget_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get('/api/widgettranslation/widget/' + str(widget.id) + '/language/' + str(language.id),
+    rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('widget_id') == widget.id
 
     with patch.object(WidgetTranslationService, 'get_translation_by_widget_id_and_language_id',
                       side_effect=ValueError('Test error')):
-        rv = client.get('/api/widgettranslation/widget/' + str(widget.id) + '/language/' + str(language.id),
+        rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -113,7 +120,7 @@ def test_delete_widget_translation(client, jwt, session, widget_translation_info
     headers = factory_auth_header(jwt=jwt, claims=claims)
     widget_translation = factory_widget_translation_model(widget_translation_info)
 
-    rv = client.delete(f'/api/widgettranslation/{widget_translation.id}/engagement/' + str(engagement.id),
+    rv = client.delete(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
                        headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == HTTPStatus.OK
@@ -121,9 +128,15 @@ def test_delete_widget_translation(client, jwt, session, widget_translation_info
     widget_translation = factory_widget_translation_model(widget_translation_info)
     with patch.object(WidgetTranslationService, 'delete_widget_translation',
                       side_effect=ValueError('Test error')):
-        rv = client.delete(f'/api/widgettranslation/{widget_translation.id}/engagement/' + str(engagement.id),
+        rv = client.delete(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
                            headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert rv.status_code == HTTPStatus.NOT_FOUND
+
+    with patch.object(WidgetTranslationService, 'delete_widget_translation',
+                      side_effect=KeyError('Test error')):
+        rv = client.delete(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
+                           headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
 @pytest.mark.parametrize('widget_translation_info', [TestWidgetTranslationInfo.widgettranslation1])
@@ -143,7 +156,7 @@ def test_patch_widget_translation(client, jwt, session, widget_translation_info,
     data = {
         'title': fake.text(max_nb_chars=10),
     }
-    rv = client.patch(f'/api/widgettranslation/{widget_translation.id}/engagement/' + str(engagement.id),
+    rv = client.patch(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
                       data=json.dumps(data),
                       headers=headers, content_type=ContentType.JSON.value)
 
@@ -152,14 +165,14 @@ def test_patch_widget_translation(client, jwt, session, widget_translation_info,
 
     with patch.object(WidgetTranslationService, 'update_widget_translation',
                       side_effect=ValueError('Test error')):
-        rv = client.patch(f'/api/widgettranslation/{widget_translation.id}/engagement/' + str(engagement.id),
+        rv = client.patch(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
                           data=json.dumps(data),
                           headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert rv.status_code == HTTPStatus.NOT_FOUND
 
     with patch.object(WidgetTranslationService, 'update_widget_translation',
                       side_effect=ValidationError('Test error')):
-        rv = client.patch(f'/api/widgettranslation/{widget_translation.id}/engagement/' + str(engagement.id),
+        rv = client.patch(f'/api/widget/{widget.id}/translations/{widget_translation.id}',
                           data=json.dumps(data),
                           headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
