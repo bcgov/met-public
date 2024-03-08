@@ -58,12 +58,9 @@ from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
     TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo,
-    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestTenantInfo, TestTimelineInfo,
-    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
-    TestWidgetTranslationInfo, TestWidgetVideo)
     TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestSurveyTranslationInfo,
     TestTenantInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo,
-    TestWidgetMap, TestWidgetPollInfo, TestWidgetVideo)
+    TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()
@@ -572,8 +569,8 @@ def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
         code=lang_info.get('code'),
         right_to_left=lang_info.get('right_to_left'),
     )
-    language.save()
-    return language
+    language_model.save()
+    return language_model
 
 
 def factory_widget_translation_model(widget_translation: dict = TestWidgetTranslationInfo.widgettranslation1):
@@ -586,8 +583,6 @@ def factory_widget_translation_model(widget_translation: dict = TestWidgetTransl
     )
     widget_translation.save()
     return widget_translation
-    language_model.save()
-    return language_model
 
 
 def factory_survey_translation_model(
