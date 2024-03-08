@@ -1,7 +1,7 @@
 """create_widget_translation_table
 
 Revision ID: 35124d2e41cb
-Revises: e6c320c178fc
+Revises: 274a2774607b
 Create Date: 2024-03-05 16:43:50.911576
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '35124d2e41cb'
-down_revision = 'e6c320c178fc'
+down_revision = '274a2774607b'
 branch_labels = None
 depends_on = None
 
