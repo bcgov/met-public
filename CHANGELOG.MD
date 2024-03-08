@@ -6,9 +6,9 @@
   metadata management to rely on normal authorization check functions.
 - **Task**: Clean up metadata management code and tests.
 - **Task**: Add endpoint for updating metadata by taxon in bulk
-- **Feature**: Add editor for metadata taxa (admin only).
+- **Feature**: Add editor for metadata taxa (admin only). [🎟️DESENG-443](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-443)
 - **Feature**: Add editor for metadata entries (available to anyone who can
-  edit an engagement).
+  edit an engagement). [🎟️DESENG-443](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-443)
 
 ## February 08, 2024
 
