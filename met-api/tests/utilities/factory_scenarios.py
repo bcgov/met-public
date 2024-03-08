@@ -923,6 +923,7 @@ class TestWidgetTranslationInfo(dict, Enum):
     widgettranslation1 = {
         'title': fake.text(max_nb_chars=20),
         'map_marker_label': fake.text(max_nb_chars=20),
+    }
 
 
 class TestSurveyTranslationInfo(dict, Enum):
