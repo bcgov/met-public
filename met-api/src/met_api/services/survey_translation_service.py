@@ -39,7 +39,6 @@ class SurveyTranslationService:
     def create_survey_translation(translation_data, pre_populate=True):
         """Create survey translation."""
         try:
-            # TODO: only team memebers can create survey translations
             survey = SurveyService.get(translation_data['survey_id'])
 
             one_of_roles = (

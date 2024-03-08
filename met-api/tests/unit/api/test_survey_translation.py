@@ -1,7 +1,4 @@
-"""Tests to verify the SurveyTranslation API endpoints.
-
-Test-Suite to ensure that the SurveyTranslation API endpoints are working as expected.
-"""
+"""Tests to verify the SurveyTranslation API endpoints."""
 
 import json
 from http import HTTPStatus
