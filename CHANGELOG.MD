@@ -1,3 +1,9 @@
+## March 06, 2024
+- **Task**Multi-language - Create survey translation table & API routes [DESENG-511](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-511)
+    - Added Survey Translation model.
+    - Added Survey Translation API.
+    - Added Survey Translation tests.
+
 ## March 04, 2024
 - **Task**Engagement "save" enhancements [DESENG-507](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-507)
     - The existing "Save" button in the floating bar has been split into two distinct actions: "Save and Continue" and "Save and Exit".

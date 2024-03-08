@@ -915,3 +915,14 @@ class TestLanguageInfo(dict, Enum):
         'code': 'en',
         'right_to_left': False,
     }
+
+
+class TestSurveyTranslationInfo(dict, Enum):
+    """Test scenarios of Survey Translation."""
+
+    survey_translation1 = {
+        'survey_id': 1,
+        'language_id': 2,
+        'name': 'Survey Name',
+        'form_json': '{"question": "What is your name?"}'
+    }
