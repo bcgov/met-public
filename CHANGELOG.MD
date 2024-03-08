@@ -1,3 +1,9 @@
+## March 06, 2024
+- **Task**Multi-language - Create survey translation table & API routes [DESENG-511](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-511)
+    - Added Survey Translation model.
+    - Added Survey Translation API.
+    - Added Survey Translation tests.
+
 ## March 04, 2024
 - **Task**Multi-language - Create language table & API [DESENG-509](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-509)
     - Added Language model.
