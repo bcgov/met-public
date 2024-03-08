@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Divider, Grid, Skeleton } from '@mui/material';
-import { MetHeader2, MetPaper, SecondaryButton } from 'components/common';
+import { MetHeader2, MetPaper, MetTooltip, SecondaryButton } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else, When } from 'react-if';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget, WidgetType } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
@@ -32,12 +31,6 @@ const WidgetsBlock = () => {
     }, [widgets]);
 
     const handleAddWidgetClick = () => {
-        if (!savedEngagement.id) {
-            dispatch(
-                openNotification({ severity: 'error', text: 'Please create the engagement before adding a widget' }),
-            );
-            return;
-        }
         handleWidgetDrawerOpen(true);
     };
 
@@ -95,7 +88,15 @@ const WidgetsBlock = () => {
                         rowSpacing={2}
                     >
                         <Grid item container alignItems={'flex-end'} justifyContent="flex-end">
-                            <SecondaryButton onClick={handleAddWidgetClick}>Add Widget</SecondaryButton>
+                            <MetTooltip
+                                title={!savedEngagement.id ? 'Please save the engagement before adding a widget.' : ''}
+                            >
+                                <span>
+                                    <SecondaryButton onClick={handleAddWidgetClick} disabled={!savedEngagement.id}>
+                                        Add Widget
+                                    </SecondaryButton>
+                                </span>
+                            </MetTooltip>
                         </Grid>
                         <If condition={isWidgetsLoading}>
                             <Then>

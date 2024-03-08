@@ -1,27 +1,22 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { InputAdornment, TextField, Tooltip, Grid, useTheme } from '@mui/material';
-import { SecondaryButton, MetDescription, PrimaryButton, MetHeader4, MetSmallText, MetLabel } from 'components/common';
+import { SecondaryButton, MetDescription, MetHeader4, MetSmallText, MetLabel } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { patchEngagementSlug } from 'services/engagementSlugService';
-import axios, { AxiosError } from 'axios';
 import { When } from 'react-if';
 import { getBaseUrl } from 'helper';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 
-const HttpStatusBadRequest = 400;
 export const PublicUrls = () => {
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
     const { savedEngagement } = useContext(ActionContext);
-    const { savedSlug, setSavedSlug } = useContext(EngagementTabsContext);
+    const { savedSlug, slug, setSlug } = useContext(EngagementTabsContext);
 
-    const [slug, setSlug] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
     const [copyTooltipEngagementLink, setCopyTooltipEngagementLink] = useState(false);
     const [copyTooltipDashboardLink, setCopyTooltipDashboardLink] = useState(false);
     const [backendError, setBackendError] = useState('');
@@ -33,10 +28,11 @@ export const PublicUrls = () => {
     const dashboardUrl = !savedSlug
         ? 'Link will appear when the engagement is saved'
         : `${engagementUrl}/dashboard/public`;
+    const [initialSlug, setInitialSlug] = useState('');
 
     useEffect(() => {
-        setSlug(savedSlug);
-    }, [savedSlug]);
+        setInitialSlug(slug.slug || savedSlug);
+    }, [slug, savedSlug]);
 
     const handleCopyUrl = (url: string) => {
         if (newEngagement) {
@@ -49,50 +45,6 @@ export const PublicUrls = () => {
             return;
         }
         navigator.clipboard.writeText(url);
-    };
-
-    const handleBackendError = (error: AxiosError) => {
-        if (error.response?.status !== HttpStatusBadRequest) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Failed to update engagement link',
-                }),
-            );
-            return;
-        }
-        setBackendError(error.response?.data.message || '');
-    };
-
-    const handleSaveSlug = async () => {
-        if (!savedEngagement.id || savedSlug === slug) return;
-        setIsSaving(true);
-        try {
-            const response = await patchEngagementSlug({
-                engagement_id: savedEngagement.id,
-                slug: slug,
-            });
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: 'Engagement link was successfully saved',
-                }),
-            );
-            setSavedSlug(response.slug);
-            setIsSaving(false);
-        } catch (error) {
-            setIsSaving(false);
-            if (axios.isAxiosError(error)) {
-                handleBackendError(error);
-            } else {
-                dispatch(
-                    openNotification({
-                        severity: 'error',
-                        text: 'Failed to update engagement link',
-                    }),
-                );
-            }
-        }
     };
 
     return (
@@ -131,7 +83,7 @@ export const PublicUrls = () => {
                             }}
                             fullWidth
                             disabled={!savedSlug}
-                            value={slug}
+                            value={initialSlug}
                             sx={{
                                 '.MuiInputBase-input': {
                                     marginRight: 0,
@@ -188,7 +140,7 @@ export const PublicUrls = () => {
                                 ),
                             }}
                             onChange={(e) => {
-                                setSlug(e.target.value);
+                                setSlug({ slug: e.target.value });
                                 if (backendError) {
                                     setBackendError('');
                                 }
@@ -201,16 +153,6 @@ export const PublicUrls = () => {
                         <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
                     </Grid>
                 </When>
-            </Grid>
-            <Grid item xs={12}>
-                <PrimaryButton
-                    sx={{ marginRight: 1 }}
-                    onClick={() => handleSaveSlug()}
-                    disabled={isSaving}
-                    loading={isSaving}
-                >
-                    Save URL
-                </PrimaryButton>
             </Grid>
             <Grid item xs={12}>
                 <MetLabel>Link to Public Dashboard Report</MetLabel>

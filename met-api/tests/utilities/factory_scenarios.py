@@ -923,4 +923,14 @@ class TestWidgetTranslationInfo(dict, Enum):
     widgettranslation1 = {
         'title': fake.text(max_nb_chars=20),
         'map_marker_label': fake.text(max_nb_chars=20),
+
+
+class TestSurveyTranslationInfo(dict, Enum):
+    """Test scenarios of Survey Translation."""
+
+    survey_translation1 = {
+        'survey_id': 1,
+        'language_id': 2,
+        'name': 'Survey Name',
+        'form_json': '{"question": "What is your name?"}'
     }

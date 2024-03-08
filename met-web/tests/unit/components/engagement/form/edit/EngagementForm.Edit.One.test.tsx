@@ -157,7 +157,7 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(patchEngagementMock).toHaveBeenCalledOnce();
-            expect(screen.getByText('Save')).toBeInTheDocument();
+            expect(screen.getByText('Save and Continue')).toBeInTheDocument();
         });
     });
 

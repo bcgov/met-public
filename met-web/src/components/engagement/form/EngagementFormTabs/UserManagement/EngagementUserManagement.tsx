@@ -8,7 +8,12 @@ import TeamMemberListing from './TeamMemberListing';
 
 const EngagementUserManagement = () => {
     const { isSaving, savedEngagement } = useContext(ActionContext);
-    const { handleSaveEngagement, handlePreviewEngagement, setAddTeamMemberOpen } = useContext(EngagementTabsContext);
+    const {
+        handleSaveAndContinueEngagement,
+        handleSaveAndExitEngagement,
+        handlePreviewEngagement,
+        setAddTeamMemberOpen,
+    } = useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -60,11 +65,19 @@ const EngagementUserManagement = () => {
                         <Grid item xs={12}>
                             <PrimaryButton
                                 sx={{ marginRight: 1 }}
-                                data-testid="create-engagement-button"
-                                onClick={() => handleSaveEngagement()}
+                                data-testid="save-engagement-button"
+                                onClick={() => handleSaveAndContinueEngagement()}
                                 loading={isSaving}
                             >
-                                Save
+                                Save and Continue
+                            </PrimaryButton>
+                            <PrimaryButton
+                                sx={{ marginRight: 1 }}
+                                data-testid="save-and-exit-engagement-button"
+                                onClick={() => handleSaveAndExitEngagement()}
+                                loading={isSaving}
+                            >
+                                Save and Exit
                             </PrimaryButton>
                             <SecondaryButton
                                 data-testid="preview-engagement-button"
