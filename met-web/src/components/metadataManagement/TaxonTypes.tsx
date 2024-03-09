@@ -14,7 +14,10 @@ import { TaxonType, GenericInputProps as TaxonInputProps } from './types';
 import * as yup from 'yup';
 import React from 'react';
 import { FormControlLabel, Switch, TextField, Typography } from '@mui/material';
-import { TaxonPicker } from 'components/engagement/form/EngagementFormTabs/AdditionalDetails/Metadata/TaxonInputComponents';
+import {
+    TaxonPicker,
+    taxonSwitch,
+} from 'components/engagement/form/EngagementFormTabs/AdditionalDetails/Metadata/TaxonInputComponents';
 
 export const TaxonTypes: { [key: string]: TaxonType } = {
     text: {
@@ -64,31 +67,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsFreeform: false,
         supportsMulti: false,
         yupValidator: yup.boolean(),
-        customInput: ({ taxon, field, setValue, errors }: TaxonInputProps) => (
-            <FormControlLabel
-                control={
-                    <Switch
-                        {...field}
-                        checked={field?.value ?? false}
-                        onChange={(e) => {
-                            setValue(taxon.id.toString(), e.target.checked);
-                        }}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                }
-                label={
-                    <>
-                        {taxon.name}
-                        {errors[taxon.id.toString()] && (
-                            <Typography variant="caption" color="error">
-                                {errors[taxon.id.toString()]?.message?.toString() ?? ''}
-                            </Typography>
-                        )}
-                    </>
-                }
-                color={errors[taxon.id.toString()] ? 'error' : 'primary'}
-            />
-        ),
+        customInput: taxonSwitch,
     },
     date: {
         name: 'Date',

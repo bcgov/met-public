@@ -112,7 +112,7 @@ export const taxonSwitch = ({ taxon, field, setValue, errors }: TaxonInputProps)
         control={
             <Switch
                 {...field}
-                checked={field?.value ?? false}
+                checked={field?.value?.toString() === 'true'}
                 onChange={(e) => {
                     setValue(taxon.id.toString(), e.target.checked);
                 }}

@@ -1,9 +1,13 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementMetadata, bulkPatchEngagementMetadata } from '../../../services/engagementMetadataService';
+import {
+    getEngagementMetadata,
+    bulkPatchEngagementMetadata,
+    getMetadataTaxa,
+} from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
-import { createDefaultEngagement, Engagement, EngagementMetadata } from '../../../models/engagement';
+import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -20,6 +24,10 @@ export const ActionContext = createContext<EngagementContext>({
     },
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate): Promise<Engagement> => {
         return Promise.reject();
+    },
+    tenantTaxa: [],
+    setTenantTaxa: () => {
+        throw new Error('setTenantTaxa is unimplemented');
     },
     setTaxonMetadata(_taxonId, _values) {
         return Promise.reject();
@@ -60,6 +68,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
+    const [tenantTaxa, setTenantTaxa] = useState<MetadataTaxon[]>([]);
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [isNewEngagement, setIsNewEngagement] = useState(!savedEngagement.id);
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
@@ -104,6 +113,17 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const engagementMetaData = await getEngagementMetadata(Number(engagementId));
             setEngagementMetadata(engagementMetaData);
+            const taxaData = await getMetadataTaxa();
+            engagementMetadata.forEach((metadata) => {
+                const taxon = taxaData[metadata.taxon_id];
+                if (taxon) {
+                    if (taxon.entries === undefined) {
+                        taxon.entries = [];
+                    }
+                    taxon.entries.push(metadata);
+                }
+            });
+            setTenantTaxa(Object.values(taxaData));
         } catch (err) {
             console.log(err);
             dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Metadata' }));
@@ -258,6 +278,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             value={{
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
+                tenantTaxa,
+                setTenantTaxa,
                 isSaving,
                 setSaving,
                 savedEngagement,

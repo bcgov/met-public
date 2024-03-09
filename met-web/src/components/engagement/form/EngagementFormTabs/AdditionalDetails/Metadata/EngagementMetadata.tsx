@@ -7,16 +7,14 @@ import { MetadataTaxon } from 'models/engagement';
 import { TaxonTypes } from 'components/metadataManagement/TaxonTypes';
 import { TaxonFormValues } from 'components/metadataManagement/types';
 import { useTheme } from '@mui/material/styles';
-import { AdditionalDetailsContext } from '../AdditionalDetailsContext';
 import { ActionContext } from '../../../ActionContext';
 import * as yup from 'yup';
 import { defaultAutocomplete } from './TaxonInputComponents';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const EngagementMetadata = forwardRef((_props, ref) => {
-    const { tenantTaxa } = useContext(EngagementTabsContext);
-    const { metadataFormRef } = useContext(AdditionalDetailsContext);
-    const { setTaxonMetadata, taxonMetadata } = useContext(ActionContext);
+    const { metadataFormRef } = useContext(EngagementTabsContext);
+    const { tenantTaxa, setTaxonMetadata, taxonMetadata } = useContext(ActionContext);
 
     const validationSchema = useMemo(() => {
         const schemaShape: { [key: string]: yup.SchemaOf<any> } = tenantTaxa.reduce((acc, taxon) => {
@@ -65,22 +63,24 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         resolver: yupResolver(validationSchema),
     });
 
-    const onSubmit: SubmitHandler<TaxonFormValues> = () => {
+    const cleanArray = (arr: string[]) => arr.map((v) => v.trim()).filter(Boolean);
+
+    const onSubmit: SubmitHandler<TaxonFormValues> = async () => {
         const data = getValues();
-        Object.entries(data).forEach(([id, value]) => {
+        console.log('Submitting form', data);
+        Object.entries(data).forEach(async ([id, value]) => {
             const taxonId = Number(id);
             const taxonMeta = taxonMetadata.get(taxonId) ?? [];
             value = value ?? [];
             // Normalize and clean the arrays
-            value = Array.isArray(value)
-                ? value.map((v) => v.toString().trim()).filter(Boolean)
-                : value.toString().trim();
-            const normalizedTaxonMeta = taxonMeta.map((v) => v.toString().trim()).filter(Boolean);
+            value = Array.isArray(value) ? cleanArray(value) : value.toString().trim();
+            const normalizedTaxonMeta = cleanArray(taxonMeta);
             value = Array.isArray(value) ? value : [value];
+            console.log('Comparing taxon metadata', normalizedTaxonMeta, taxonId, value);
             if (JSON.stringify(value.sort()) === JSON.stringify(taxonMeta.sort())) return;
             // If we reach here, arrays are not equal, proceed with update
             console.log('Updating taxon metadata', normalizedTaxonMeta, taxonId, value);
-            setTaxonMetadata(taxonId, value);
+            await setTaxonMetadata(taxonId, value);
         });
     };
 
@@ -88,8 +88,8 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         submitForm: async () => {
             // validate the form
             await handleSubmit(onSubmit)(); // manually trigger form submission
-            const isValid = await trigger([...tenantTaxa.map((taxon) => taxon.id.toString())]); // && (await validationSchema.isValid(getValues()));
-            console.log('Form is valid:', isValid);
+            const isValid = await trigger([...tenantTaxa.map((taxon) => taxon.id.toString())]);
+
             // After submission, check if there are any errors
             return isValid;
         },

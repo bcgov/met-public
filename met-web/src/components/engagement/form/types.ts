@@ -6,6 +6,8 @@ export interface EngagementContext {
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
     setTaxonMetadata: (_taxonId: number, _values: Array<string>) => Promise<EngagementMetadata[]>;
     taxonMetadata: Map<number, string[]>;
+    tenantTaxa: MetadataTaxon[];
+    setTenantTaxa: React.Dispatch<React.SetStateAction<MetadataTaxon[]>>;
     isSaving: boolean;
     setSaving: React.Dispatch<React.SetStateAction<boolean>>;
     savedEngagement: Engagement;

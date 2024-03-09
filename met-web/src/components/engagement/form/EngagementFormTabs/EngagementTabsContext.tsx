@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
@@ -7,12 +7,7 @@ import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { getTeamMembers } from 'services/membershipService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import {
-    EngagementMetadata,
-    EngagementSettings,
-    MetadataTaxon,
-    createDefaultEngagementSettings,
-} from 'models/engagement';
+import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
 import { updatedDiff } from 'deep-object-diff';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import {
@@ -20,7 +15,6 @@ import {
     getEngagementSettings,
     patchEngagementSettings,
 } from 'services/engagementSettingService';
-import { getEngagementMetadata, getMetadataTaxa } from 'services/engagementMetadataService';
 import { EngagementSlugPatchRequest, patchEngagementSlug } from 'services/engagementSlugService';
 import { EngagementForm } from '../types';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -78,9 +72,6 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
-    tenantTaxa: MetadataTaxon[];
-    setTenantTaxa: React.Dispatch<React.SetStateAction<MetadataTaxon[]>>;
-    // engagementMetadata: EngagementMetadata[];
     metadataFormRef: React.RefObject<HTMLFormElement> | null;
     handleSaveAndContinueEngagement: () => Promise<void | EngagementForm>;
     handlePreviewEngagement: () => Promise<void>;
@@ -118,12 +109,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setEngagementFormData: () => {
         throw new Error('setEngagementFormData is unimplemented');
     },
-    // engagementMetadata: [],
     metadataFormRef: null,
-    tenantTaxa: [],
-    setTenantTaxa: () => {
-        throw new Error('setTenantTaxa is unimplemented');
-    },
     handleSaveAndContinueEngagement: async () => {
         /* empty default method for engagement save and continue */
     },
@@ -205,7 +191,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
     });
-    const [tenantTaxa, setTenantTaxa] = useState<MetadataTaxon[]>([]);
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [richConsentMessage, setRichConsentMessage] = useState(savedEngagement?.consent_message || '');
@@ -316,76 +301,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         }
     };
 
-    const fetchMetadata = async () => {
-        try {
-            const taxaData = await getMetadataTaxa();
-            const engagementMetadata = await getEngagementMetadata(savedEngagement.id);
-            engagementMetadata.forEach((metadata) => {
-                const taxon = taxaData[metadata.taxon_id];
-                if (taxon) {
-                    if (taxon.entries === undefined) {
-                        taxon.entries = [];
-                    }
-                    taxon.entries.push(metadata);
-                }
-            });
-            setTenantTaxa(Object.values(taxaData));
-        } catch (error) {
-            console.error('Error fetching taxa:', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchMetadata();
-    }, []);
-
-    const updateMetadata = (taxonId: number, value: MetadataTaxon) => {
-        setTenantTaxa((prev) => {
-            const index = prev.findIndex((taxon) => taxon.id === taxonId);
-            if (index === -1) {
-                return prev;
-            }
-            const newTaxa = [...prev];
-            newTaxa[index] = value;
-            return newTaxa;
-        });
-    };
-
-    const fetchMetadata = async () => {
-        try {
-            const taxaData = await getMetadataTaxa();
-            const engagementMetadata = await getEngagementMetadata(savedEngagement.id);
-            engagementMetadata.forEach((metadata) => {
-                const taxon = taxaData[metadata.taxon_id];
-                if (taxon) {
-                    if (taxon.entries === undefined) {
-                        taxon.entries = [];
-                    }
-                    taxon.entries.push(metadata);
-                }
-            });
-            setTenantTaxa(Object.values(taxaData));
-        } catch (error) {
-            console.error('Error fetching taxa:', error);
-        }
-    };
-
-    useEffect(() => {
-        fetchMetadata();
-    }, []);
-
-    const updateMetadata = (taxonId: number, value: MetadataTaxon) => {
-        setTenantTaxa((prev) => {
-            const index = prev.findIndex((taxon) => taxon.id === taxonId);
-            if (index === -1) {
-                return prev;
-            }
-            const newTaxa = [...prev];
-            newTaxa[index] = value;
-            return newTaxa;
-        });
-    };
-
     const [savedSlug, setSavedSlug] = useState('');
     const [slug, setSlug] = useState<EngagementSettingsSlugData>(initialEngagementSettingsSlugData);
 
@@ -466,6 +381,19 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
+    const handleSaveEngagementMetadata = async () => {
+        const result = await metadataFormRef.current?.submitForm();
+        if (!result) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error saving metadata: Please correct the highlighted fields and try again.',
+                }),
+            );
+        }
+        return result;
+    };
+
     const handleSaveAndContinueEngagement = async () => {
         const hasErrors = validateForm();
 
@@ -490,6 +418,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         if (!isNewEngagement) {
             await updateEngagementSettings(sendReport);
             await handleSaveSlug(slug);
+            await handleSaveEngagementMetadata();
         }
 
         return engagement;
@@ -527,8 +456,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             value={{
                 engagementFormData,
                 setEngagementFormData,
-                tenantTaxa,
-                setTenantTaxa,
                 metadataFormRef,
                 handleSaveAndContinueEngagement,
                 handlePreviewEngagement,
