@@ -144,6 +144,7 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
+    @transactional()
     def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = StaffUserService.get_user_by_external_id(external_user_id)

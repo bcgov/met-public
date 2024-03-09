@@ -11,25 +11,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""All of the configuration for the service is captured here.
+"""
+All the configuration for MET's Analytics API.
 
-All items are loaded,
-or have Constants defined here that are loaded into the Flask configuration.
-All modules and lookups get their configuration from the Flask config,
-rather than reading environment variables directly or by accessing this configuration directly.
+Wherever possible, the configuration is loaded from the environment. The aim is
+to have this be the "single source of truth" for configuration in the API,
+wherever feasible. If you are adding a setting or config option that cannot be
+configured in a user-facing GUI, please make sure it loads its value from here,
+and create an entry for it in the sample .env file.
 """
 
 import os
-import sys
 
 from typing import Union
 from dotenv import find_dotenv, load_dotenv
 
-# this will load all the envars from a .env file located in the project root (api)
+from analytics_api.utils.util import is_truthy
+
+# Search in increasingly higher folders for a .env file, then load it,
+# appending any variables we find to the current environment.
 load_dotenv(find_dotenv())
+# remove all env variables with no text (allows for entries to be unset easily)
+os.environ = {k: v for k, v in os.environ.items() if v}
 
 
-def get_named_config(environment: Union[str, None]) -> '_Config':
+def get_named_config(environment: Union[str, None]) -> 'Config':
     """
     Retrieve a configuration object by name. Used by the Flask app factory.
 
@@ -46,77 +52,141 @@ def get_named_config(environment: Union[str, None]) -> '_Config':
     }
     try:
         print(f'Loading configuration: {environment}...')
-        return config_mapping[environment]()
+        return config_mapping.get(environment or 'production', ProdConfig)()
     except KeyError as e:
         raise KeyError(f'Configuration "{environment}" not found.') from e
 
 
-class _Config():  # pylint: disable=too-few-public-methods
+def env_truthy(env_var, default: Union[bool, str] = False):
+    """
+    Return True if the environment variable is set to a truthy value.
+
+    Accepts a default value, which is returned if the environment variable is
+    not set.
+    """
+    return is_truthy(os.getenv(env_var, str(default)))
+
+
+class Config():  # pylint: disable=too-few-public-methods
     """Base class configuration that should set reasonable defaults for all the other configurations."""
 
-    PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+    def __init__(self) -> None:
+        """
+        Initialize the configuration object.
 
-    SECRET_KEY = 'a secret'
+        Performs more advanced configuration logic that is not possible
+        in the normal class definition.
+        """
+        # If extending this class, call super().__init__() in your constructor.
+        print(f'SQLAlchemy URL: {self.SQLALCHEMY_DATABASE_URI}')
 
-    TESTING = False
-    DEBUG = False
+        # apply configs to _Config in the format that flask_jwt_oidc expects
+        # this flattens the JWT_CONFIG dict into individual attributes
+        for key, value in self.JWT_CONFIG.items():
+            setattr(self, f'JWT_OIDC_{key}', value)
 
-    # POSTGRESQL
-    DB_USER = os.getenv('DATABASE_USERNAME', '')
-    DB_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
-    DB_NAME = os.getenv('DATABASE_NAME', '')
-    DB_HOST = os.getenv('DATABASE_HOST', '')
-    DB_PORT = os.getenv('DATABASE_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}'
-    SQLALCHEMY_ECHO = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+        # Enable live reload and interactive API debugger for developers
+        os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
-    # JWT_OIDC Settings
-    JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv('JWT_OIDC_WELL_KNOWN_CONFIG')
-    JWT_OIDC_ALGORITHMS = os.getenv('JWT_OIDC_ALGORITHMS', 'RS256')
-    JWT_OIDC_JWKS_URI = os.getenv('JWT_OIDC_JWKS_URI')
-    JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_ISSUER')
-    JWT_OIDC_AUDIENCE = os.getenv('JWT_OIDC_AUDIENCE', 'account')
-    JWT_OIDC_CACHING_ENABLED = os.getenv('JWT_OIDC_CACHING_ENABLED', 'True')
-    JWT_OIDC_JWKS_CACHE_TIMEOUT = 300
+    @property
+    # pylint: disable=invalid-name
+    def SQLALCHEMY_DATABASE_URI(self) -> str:  # noqa
+        """
+        Dynamically fetch the SQLAlchemy Database URI based on the DB config.
 
-    # default tenant configs ; Set to EAO for now.Overwrite using openshift variables
-    DEFAULT_TENANT_SHORT_NAME = os.getenv('DEFAULT_TENANT_SHORT_NAME', 'GDX')
-    DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Environment Assessment Office')
-    DEFAULT_TENANT_DESCRIPTION = os.getenv('DEFAULT_TENANT_DESCRIPTION', 'Environment Assessment Office')
+        This avoids having to redefine the URI after setting the DB access
+        credentials in subclasses. Can be overridden by env variables.
+        """
+        return os.environ.get(
+            'SQLALCHEMY_DATABASE_URI',
+            f'postgresql://'
+            f'{self.DB_CONFIG.get("USER")}:{self.DB_CONFIG.get("PASSWORD")}@'
+            f'{self.DB_CONFIG.get("HOST")}:{self.DB_CONFIG.get("PORT")}/'
+            f'{self.DB_CONFIG.get("NAME")}'
+        )
+
+    # If enabled, Exceptions are propagated up, instead of being handled
+    # by the the app’s error handlers. Enable this for tests.
+    TESTING = env_truthy('FLASK_TESTING', default=False)
+
+    # If enabled, the interactive debugger will be shown for any
+    # unhandled Exceptions, and the server will be reloaded when code changes.
+    USE_DEBUG = env_truthy('FLASK_DEBUG', default=False)
+
+    # SQLAlchemy settings
+    # Echoes the SQL queries generated - useful for debugging
+    SQLALCHEMY_ECHO = env_truthy('SQLALCHEMY_ECHO')
+    # Disable modification tracking for performance
+    SQLALCHEMY_TRACK_MODIFICATIONS = env_truthy('SQLALCHEMY_TRACK_MODIFICATIONS')
+
+    # Used for session management. Randomized by default for security, but
+    # should be set to a fixed value in production to avoid invalidating sessions.
+    SECRET_KEY = os.getenv('SECRET_KEY', os.urandom(24))
+
+    # PostgreSQL configuration
+    DB_CONFIG = DB = {
+        'USER': os.getenv('DATABASE_USERNAME', ''),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+        'NAME': os.getenv('DATABASE_NAME', ''),
+        'HOST': os.getenv('DATABASE_HOST', ''),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
+    }
+
+    # Keycloak configuration
+    KEYCLOAK_CONFIG = KC = {
+        'BASE_URL': os.getenv('KEYCLOAK_BASE_URL', ''),
+        'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
+    }
+
+    # JWT OIDC Settings (for Keycloak)
+    JWT_CONFIG = JWT = {
+        'ISSUER': (
+            _issuer := os.getenv(
+                'JWT_OIDC_ISSUER',
+                f'{KC["BASE_URL"]}/realms/{KC["REALMNAME"]}'
+            )),
+        'WELL_KNOWN_CONFIG': os.getenv(
+            'JWT_OIDC_WELL_KNOWN_CONFIG',
+            f'{_issuer}/.well-known/openid-configuration',
+        ),
+        'JWKS_URI': os.getenv('JWT_OIDC_JWKS_URI', f'{_issuer}/protocol/openid-connect/certs'),
+        'ALGORITHMS': os.getenv('JWT_OIDC_ALGORITHMS', 'RS256'),
+        'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
+        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', True)),
+        'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
+        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
+    }
+
+    # CORS settings
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', '').split(',')
 
 
-class DevConfig(_Config):  # pylint: disable=too-few-public-methods
+class DevConfig(Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
 
-    TESTING = False
-    DEBUG = True
-    print(f'SQLAlchemy URL (DevConfig): {_Config.SQLALCHEMY_DATABASE_URI}')
+    # Default to using the debugger for development
+    USE_DEBUG = env_truthy('USE_DEBUG', True)
 
 
-class TestConfig(_Config):  # pylint: disable=too-few-public-methods
+class TestConfig(Config):  # pylint: disable=too-few-public-methods
     """In support of testing only.used by the py.test suite."""
 
-    DEBUG = True
-    TESTING = True
-    # POSTGRESQL
-    DB_USER = os.getenv('DATABASE_TEST_USERNAME', 'postgres')
-    DB_PASSWORD = os.getenv('DATABASE_TEST_PASSWORD', 'postgres')
-    DB_NAME = os.getenv('DATABASE_TEST_NAME', 'postgres')
-    DB_HOST = os.getenv('DATABASE_TEST_HOST', 'localhost')
-    DB_PORT = os.getenv('DATABASE_TEST_PORT', '5432')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_TEST_URL',
-                                        f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{int(DB_PORT)}/{DB_NAME}')
+    # Propagate exceptions up to the test runner
+    TESTING = env_truthy('TESTING', default=True)
+
+    # explicitly disable the debugger; we want the tests to fail if an
+    # unhandled exception occurs
+    USE_DEBUG = False
+
+    # Override the DB config to use the test database, if one is configured
+    DB_CONFIG = {
+        'USER': os.getenv('DATABASE_TEST_USERNAME', Config.DB.get('USER')),
+        'PASSWORD': os.getenv('DATABASE_TEST_PASSWORD', Config.DB.get('PASSWORD')),
+        'NAME': os.getenv('DATABASE_TEST_NAME', Config.DB.get('NAME')),
+        'HOST': os.getenv('DATABASE_TEST_HOST', Config.DB.get('HOST')),
+        'PORT': os.getenv('DATABASE_TEST_PORT', Config.DB.get('PORT')),
+    }
 
 
-class ProdConfig(_Config):  # pylint: disable=too-few-public-methods
+class ProdConfig(Config):  # pylint: disable=too-few-public-methods
     """Production Config."""
-
-    SECRET_KEY = os.getenv('SECRET_KEY', None)
-
-    if not SECRET_KEY:
-        SECRET_KEY = os.urandom(24)
-        print('WARNING: SECRET_KEY being set as a one-shot', file=sys.stderr)
-
-    TESTING = False
-    DEBUG = False

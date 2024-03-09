@@ -87,8 +87,7 @@ class RequestTypeOption(BaseModel, RequestMixin):  # pylint: disable=too-few-pub
                              .outerjoin(available_response, survey_question.c.key == available_response.c.request_key)
                              .outerjoin(survey_response,
                                         (available_response.c.value == survey_response.c.value) &
-                                        (available_response.c.request_key == survey_response.c.request_key),
-                                        full=True)
+                                        (available_response.c.request_key == survey_response.c.request_key))
                              .group_by(survey_question.c.position, survey_question.c.label))
 
             return survey_result.all()

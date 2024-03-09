@@ -185,8 +185,12 @@ class Config:  # pylint: disable=too-few-public-methods
         'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
         'SERVICE_ACCOUNT_ID': os.getenv('MET_ADMIN_CLIENT_ID'),
         'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
-        'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'ADMIN_BASE_URL': os.getenv('KEYCLOAK_ADMIN_TOKEN_URL', ''),
+        'ADMIN_USERNAME': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'ADMIN_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
+        'CSS_API_URL': os.getenv('CSS_API_URL', ''),
+        'CSS_API_ENVIRONMENT': os.getenv('CSS_API_ENVIRONMENT', ''),
+        'CSS_API_INTEGRATION_ID': os.getenv('CSS_API_INTEGRATION_ID'),
         'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
     }
 

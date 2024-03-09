@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/engagement_content",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+      {
+        "title": "Summary",
+        "icon_name": "SummarizeIcon",
+        "content_type": "Summary",
+        "sort_index": 1,
+        "is_internal": "False",
+        "engagement_id": 1
+      }
+    ],
+    "required": ["title", "content_type", "engagement_id"],
+    "properties": {
+      "title": {
+        "$id": "#/properties/title",
+        "type": "string",
+        "title": "Summary",
+        "description": "The title of this content.",
+        "examples": [1]
+      },
+      "content_type": {
+        "$id": "#/properties/content_type",
+        "type": "string",
+        "title": "Summary",
+        "description": "The content type enum.",
+        "examples": [1]
+      },
+      "engagement_id": {
+        "$id": "#/properties/engagement_id",
+        "type": "number",
+        "title": "Engagement id",
+        "description": "The engagement to which this content belongs.",
+        "examples": [1]
+      }
+    }
+  }
+  

@@ -26,6 +26,9 @@ export const ActionContext = createContext<EngagementContext>({
     },
     taxonMetadata: new Map(),
     isSaving: false,
+    setSaving: () => {
+        /* empty default method  */
+    },
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: [],
     engagementId: CREATE,
@@ -40,6 +43,10 @@ export const ActionContext = createContext<EngagementContext>({
         /* empty default method  */
     },
     loadingAuthorization: true,
+    isNewEngagement: true,
+    setIsNewEngagement: () => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -54,6 +61,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [isNewEngagement, setIsNewEngagement] = useState(!savedEngagement.id);
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
@@ -130,6 +138,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
+        setIsNewEngagement(!savedEngagement.id);
         setSavedBannerImageFileName(engagement.banner_filename);
 
         if (bannerImage) setBannerImage(null);
@@ -183,6 +192,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             });
 
+            setEngagement(result);
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been created' }));
             setSaving(false);
             return Promise.resolve(result);
@@ -226,7 +236,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
             const updatedEngagement = await patchEngagement({
                 ...engagementEditsToPatch,
-                id: Number(engagementId),
+                id: Number(savedEngagement.id),
                 status_block: engagement.status_block?.filter((_, index) => {
                     return engagementEditsToPatch.status_block?.[index];
                 }),
@@ -249,6 +259,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleCreateEngagementRequest,
                 handleUpdateEngagementRequest,
                 isSaving,
+                setSaving,
                 savedEngagement,
                 engagementMetadata,
                 engagementId,
@@ -259,6 +270,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 setTaxonMetadata,
                 taxonMetadata,
                 loadingAuthorization,
+                isNewEngagement,
+                setIsNewEngagement,
             }}
         >
             {children}

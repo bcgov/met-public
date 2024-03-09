@@ -7,6 +7,7 @@ export interface EngagementContext {
     setTaxonMetadata: (_taxonId: number, _values: Array<string>) => Promise<EngagementMetadata[]>;
     taxonMetadata: Map<number, string[]>;
     isSaving: boolean;
+    setSaving: React.Dispatch<React.SetStateAction<boolean>>;
     savedEngagement: Engagement;
     engagementMetadata: EngagementMetadata[];
     engagementId: string | undefined;
@@ -15,6 +16,8 @@ export interface EngagementContext {
     fetchEngagement: () => void;
     fetchEngagementMetadata: () => void;
     loadingAuthorization: boolean;
+    isNewEngagement: boolean;
+    setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface Widget {

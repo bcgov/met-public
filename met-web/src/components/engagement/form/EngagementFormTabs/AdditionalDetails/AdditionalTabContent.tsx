@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
-import { Divider, Grid } from '@mui/material';
-import { MetPaper, PrimaryButton } from 'components/common';
+import { Divider, Grid, Box } from '@mui/material';
+import { MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import ConsentMessage from './ConsentMessage';
 import EngagementMetadata from './Metadata/EngagementMetadata';
-
-import { AdditionalDetailsContext } from './AdditionalDetailsContext';
+import { EngagementTabsContext } from '../EngagementTabsContext';
+import { ActionContext } from '../../ActionContext';
 
 const AdditionalTabContent = () => {
-    const { handleSaveAdditional, updatingAdditional, metadataFormRef } = useContext(AdditionalDetailsContext);
+    const { isSaving } = useContext(ActionContext);
+
+    const { handleSaveAndContinueEngagement, handleSaveAndExitEngagement, handlePreviewEngagement, metadataFormRef } =
+        useContext(EngagementTabsContext);
 
     return (
         <MetPaper elevation={1}>
@@ -28,11 +31,44 @@ const AdditionalTabContent = () => {
                 <Grid item xs={12}>
                     <ConsentMessage />
                 </Grid>
-                <Grid item xs={12}>
-                    <PrimaryButton loading={updatingAdditional} onClick={handleSaveAdditional}>
-                        Save
-                    </PrimaryButton>
-                </Grid>
+                <Box
+                    position="sticky"
+                    bottom={0}
+                    width="100%"
+                    marginLeft={2}
+                    borderTop="1px solid #ddd"
+                    padding={2}
+                    marginTop={2}
+                    zIndex={1000}
+                    boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+                    sx={{ backgroundColor: 'white' }}
+                >
+                    <Grid item xs={12}>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="save-engagement-button"
+                            onClick={() => handleSaveAndContinueEngagement()}
+                            loading={isSaving}
+                        >
+                            Save and Continue
+                        </PrimaryButton>
+                        <PrimaryButton
+                            sx={{ marginRight: 1 }}
+                            data-testid="save-and-exit-engagement-button"
+                            onClick={() => handleSaveAndExitEngagement()}
+                            loading={isSaving}
+                        >
+                            Save and Exit
+                        </PrimaryButton>
+                        <SecondaryButton
+                            data-testid="preview-engagement-button"
+                            onClick={() => handlePreviewEngagement()}
+                            disabled={isSaving}
+                        >
+                            {'Preview'}
+                        </SecondaryButton>
+                    </Grid>
+                </Box>
             </Grid>
         </MetPaper>
     );

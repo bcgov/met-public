@@ -10,6 +10,62 @@
 - **Feature**: Add editor for metadata entries (available to anyone who can
   edit an engagement). [🎟️DESENG-443](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-443)
 
+## March 04, 2024
+
+- **Task**Engagement "save" enhancements [DESENG-507](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-507)
+  - The existing "Save" button in the floating bar has been split into two distinct actions: "Save and Continue" and "Save and Exit".
+  - Tabs are greyed out, and widgets are disabled until the engagement is successfully saved. A helpful tool-tip has been added to inform users that the engagement needs to be saved before accessing certain features.
+  - Independent save buttons previously present in tabs, such as "Additional Details", "Settings" have been removed. Now, the floating save bar is universally employed when editing an engagement.
+
+## March 04, 2024
+
+- **Task**Multi-language - Create language table & API [DESENG-509](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-509)
+  - Added Language model.
+  - Added Language API.
+  - Added Unit tests.
+
+## February 27, 2024
+
+- **Bug Fix**Comments cannot be approved while reviewing [DESENG-496](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-496)
+  - Fixed by adding a missing decorator for transactional methods.
+- **Task**Enhance analytics api for Improved Readability and Maintainability [DESENG-492](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-492)
+  - Refactor analytics-api config to harmonize its structure and conventions with met-api.
+  - Ensure the sample.env file maintains consistent formatting.
+  - Adjusted the component_id column size in the comment table of the met-api to resolve an error encountered during user submissions.
+
+## February 26, 2024
+
+- **Task**Models for dynamic engagement pages [DESENG-500](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-500)
+  - Implemented endpoints for dynamic engagement pages, including summary and custom sections.
+  - Default behavior ensures that each engagement has a dynamic summary page.
+  - Introduced logic to migrate existing content and rich content for engagements to the summary table.
+- **Task**Add font awesome libraries [DESENG-490](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-490)
+  - Added related libraries to the frontend package.json.
+- **Task**Adding missing unit test [DESENG-483](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-483)
+  - Added missing unit test for components.
+
+## February 20, 2024
+
+- **Task**Upgrade the version of flask [DESENG-502](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-502)
+  - Performed a Flask version upgrade to version 2.2.5.
+
+## February 16, 2024
+
+- **Task**Make a floating save/preview bar when editing engagements [DESENG-498](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-498)
+  - Implemented a floating behavior for the save/preview buttons during engagement editing. This feature persists across all tabs but exclusively saves data for the Engagement Content tab.
+
+## February 15, 2024
+
+- **Task**Restore role assignment functionality to MET with the CSS API [DESENG-473](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-473)
+  - Utilize the CSS API for efficient management of composite roles. This involves the assignment, reassignment, or removal of users from the composite roles of TEAM_MEMBER, REVIEWER, IT_ADMIN, or IT_VIEWER.
+
+## February 09, 2024
+
+- **Task**Consolidate and re-write old migration files [DESENG-452](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-452)
+  - Deleted old migration files
+  - Created [ec0128056a33_table_until_feb_09_2024.py](met-api/migrations/versions/ec0128056a33_table_until_feb_09_2024.py) with all tables until feb 09 2024
+  - Created [37176ea4708d_data_until_feb_09_2024.py](met-api/migrations/versions/37176ea4708d_data_until_feb_09_2024.py) with all initial data until feb 09 2024
+
 ## February 08, 2024
 
 - **Task**Cache CORS preflight responses with the browser for a given period of time [DESENG-484](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-484)
