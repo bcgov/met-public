@@ -189,11 +189,7 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
-        getEngagementMetadataMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...[engagementMetadata],
-            }),
-        );
+        getEngagementMetadataMock.mockReturnValueOnce(Promise.resolve([engagementMetadata]));
         expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 
