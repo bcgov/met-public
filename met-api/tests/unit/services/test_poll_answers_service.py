@@ -35,6 +35,24 @@ def test_get_poll_answer(session):
     session.commit()
     poll_answers = PollAnswerService.get_poll_answer(poll.id)
     assert len(poll_answers) > 0
+    
+
+def test_get_poll_answer_by_id(session):
+    """Test getting a poll answer by id."""
+    
+    # Create a poll answer
+    widget = _create_widget()
+    poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
+    answer = factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
+    session.commit()
+
+    # Call function under test
+    result = PollAnswerService.get_poll_answer_by_id(answer.id)
+
+    # Assert
+    assert result.id == answer.id
+
+          
 
 
 def test_delete_poll_answers(session):

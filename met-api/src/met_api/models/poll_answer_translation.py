@@ -63,7 +63,15 @@ class PollAnswerTranslation(BaseModel):
         :param data: Dictionary containing the fields for PollAnswerTranslation
         :return: PollAnswerTranslation instance
         """
-        poll_answer_translation = cls(**data)
+        
+        poll_answer_translation = PollAnswerTranslation(
+            poll_answer_id=data['poll_answer_id'],
+            language_id=data['language_id'],
+            answer_text=data.get(
+                'answer_text'
+            ),  # Returns `None` if 'answer_text' is not in `data` as its optional
+        )
+        
         poll_answer_translation.save()
         return poll_answer_translation
 
@@ -94,3 +102,5 @@ class PollAnswerTranslation(BaseModel):
         poll_answer_translation = cls.find_by_id(id)
         if poll_answer_translation:
             poll_answer_translation.delete()
+            return True
+        return False
