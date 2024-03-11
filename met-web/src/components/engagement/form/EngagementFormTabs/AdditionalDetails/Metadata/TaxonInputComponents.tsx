@@ -134,13 +134,13 @@ export const taxonSwitch = ({ taxon, field, setValue, errors }: TaxonInputProps)
 );
 
 // Unified component for different types of pickers
-const PickerTypes = {
+export const PickerTypes = {
     DATE: 'DATE',
     TIME: 'TIME',
     DATETIME: 'DATETIME',
 };
 
-const inputFormats = {
+export const inputFormats = {
     [PickerTypes.DATE]: 'yyyy-MM-dd',
     [PickerTypes.TIME]: 'hh:mm a',
     [PickerTypes.DATETIME]: 'yyyy-MM-dd hh:mm a',

@@ -13,9 +13,10 @@ import {
 import { TaxonType, GenericInputProps as TaxonInputProps } from './types';
 import * as yup from 'yup';
 import React from 'react';
-import { FormControlLabel, Switch, TextField, Typography } from '@mui/material';
+import { TextField } from '@mui/material';
 import {
     TaxonPicker,
+    PickerTypes,
     taxonSwitch,
 } from 'components/engagement/form/EngagementFormTabs/AdditionalDetails/Metadata/TaxonInputComponents';
 
@@ -76,7 +77,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsFreeform: false,
         supportsMulti: false,
         yupValidator: yup.date().typeError('This value must be a valid date.'),
-        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: 'DATE' }),
+        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: PickerTypes.DATE }),
     },
     time: {
         name: 'Time',
@@ -84,11 +85,8 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: false,
-        yupValidator: yup
-            .string()
-            // .uppercase()
-            .matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]( ?[AaPp][Mm])?$/, 'This field must be a valid time.'),
-        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: 'TIME' }),
+        yupValidator: yup.date().typeError('This value must be a valid time.'),
+        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: PickerTypes.TIME }),
     },
     datetime: {
         name: 'Date and Time',
@@ -96,8 +94,8 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: false,
-        yupValidator: yup.date().typeError('This field must be a valid date and time.'),
-        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: 'DATETIME' }),
+        yupValidator: yup.date().typeError('This value must consist of a valid date and time.'),
+        customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: PickerTypes.DATETIME }),
     },
     url: {
         name: 'Web Link',
@@ -105,7 +103,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
-        yupValidator: yup.string().url('This field must be a valid web URL.'),
+        yupValidator: yup.string().url('This value must be a valid web URL.'),
         externalResource: (value: string) => value,
         externalResourceLabel: 'Open',
     },
@@ -115,7 +113,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
-        yupValidator: yup.string().email('This field must be a valid email address.'),
+        yupValidator: yup.string().email('This value must be a valid email address.'),
         externalResource: (value: string) => `mailto:${value}`,
         externalResourceLabel: 'Email',
     },
@@ -129,7 +127,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
             .string()
             .matches(
                 /^(\+?\d{1,3}[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/,
-                'This field must be a valid phone number.',
+                'This value must be a valid phone number.',
             ),
         externalResource: (value: string) => `tel:${value}`,
         externalResourceLabel: 'Call',
