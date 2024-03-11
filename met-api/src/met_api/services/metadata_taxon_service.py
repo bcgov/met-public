@@ -4,9 +4,9 @@ from typing import List, Optional
 
 from met_api.models import db
 from met_api.models.db import transactional
-from met_api.models.engagement_metadata import MetadataTaxon, EngagementMetadata
+from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.models.tenant import Tenant
-from met_api.schemas.engagement_metadata import EngagementMetadataSchema, MetadataTaxonSchema
+from met_api.schemas.engagement_metadata import MetadataTaxonSchema
 
 
 class MetadataTaxonService:

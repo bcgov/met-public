@@ -47,7 +47,7 @@ class EngagementMetadataService:
             raise KeyError(
                 f'Engagement with id {engagement_id} does not exist.')
         results = engagement_model.metadata
-        if (taxon_id):
+        if taxon_id:
             results = [item for item in results if item.taxon_id == taxon_id]
         return EngagementMetadataSchema(many=True).dump(results)
 

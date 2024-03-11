@@ -18,7 +18,6 @@ This API is located at /api/engagements/<engagement_id>/metadata
 """
 
 from http import HTTPStatus
-import re
 
 from flask import request
 from flask_cors import cross_origin
