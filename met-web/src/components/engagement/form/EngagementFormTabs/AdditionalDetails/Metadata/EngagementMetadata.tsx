@@ -9,7 +9,7 @@ import { TaxonFormValues } from 'components/metadataManagement/types';
 import { useTheme } from '@mui/material/styles';
 import { ActionContext } from '../../../ActionContext';
 import * as yup from 'yup';
-import { defaultAutocomplete } from './TaxonInputComponents';
+import { DefaultAutocomplete } from './TaxonInputComponents';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { bulkPatchEngagementMetadata } from 'services/engagementMetadataService';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -110,11 +110,11 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         },
     }));
 
-    const renderTaxonTile = (taxon: MetadataTaxon, index: number) => {
+    const TaxonTile = (taxon: MetadataTaxon, index: number) => {
         const taxonType = TaxonTypes[taxon.data_type as keyof typeof TaxonTypes];
         const theme = useTheme();
         const taxonValue = watch(taxon.id.toString());
-        const TaxonInput = taxonType.customInput ?? defaultAutocomplete;
+        const TaxonInput = taxonType.customInput ?? DefaultAutocomplete;
         return (
             <Grid
                 item
@@ -192,7 +192,7 @@ const EngagementMetadata = forwardRef((_props, ref) => {
                     spacing={3}
                     padding={2}
                 >
-                    {tenantTaxa.map(renderTaxonTile)}
+                    {tenantTaxa.map(TaxonTile)}
                 </Grid>
             </form>
         </Grid>

@@ -208,6 +208,7 @@ export const TaxonEditor = () => {
                                         orderedMetadataTaxa.map((taxon: MetadataTaxon, index) => {
                                             return (
                                                 <TaxonCard
+                                                    key={taxon.id}
                                                     taxon={taxon}
                                                     index={index}
                                                     onExpand={handleExpandTaxon}

@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { FieldError } from 'react-hook-form';
 
-export const defaultAutocomplete = ({ taxon, taxonType, field, setValue, errors, trigger }: TaxonInputProps) => {
+export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors, trigger }: TaxonInputProps) => {
     const [inputValue, setInputValue] = useState('');
 
     const valueErrors = (errors[taxon.id.toString()] as unknown as Array<FieldError> | FieldError) ?? [];
@@ -30,7 +30,7 @@ export const defaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
         errorMessage = (valueErrors as Array<FieldError>)?.map((error: FieldError, index: number) => {
             errorIndices.add(index);
             return (
-                <span>
+                <span key={index.toString() + error.message ?? ''}>
                     Entry #{index + 1}: {error.message}
                     <br />
                 </span>
