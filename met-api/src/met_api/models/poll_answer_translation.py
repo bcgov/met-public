@@ -35,7 +35,7 @@ class PollAnswerTranslation(BaseModel):
     )
 
     @staticmethod
-    def get_poll_answer_translation_by_answer_and_language(
+    def get_by_answer_and_language(
         poll_answer_id=None, language_id=None
     ):
         """

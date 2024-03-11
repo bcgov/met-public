@@ -19,7 +19,7 @@ def test_get_poll_answer_translation_by_answer_and_language(session):
     )
     session.commit()
 
-    translations = PollAnswerTranslation.get_poll_answer_translation_by_answer_and_language(
+    translations = PollAnswerTranslation.get_by_answer_and_language(
         answer.id, language.id
     )
     assert len(translations) == 1

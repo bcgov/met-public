@@ -37,7 +37,7 @@ class SubscribeItemTranslation(BaseModel):
     )
 
     @staticmethod
-    def get_subsctibe_item_translation_by_item_and_language(
+    def get_by_item_and_language(
         subscribe_item_id=None, language_id=None
     ):
         """

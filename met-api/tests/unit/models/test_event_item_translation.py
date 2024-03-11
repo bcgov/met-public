@@ -22,7 +22,7 @@ def test_get_event_item_translation_by_item_and_language(session):
     session.commit()
 
     translations = (
-        EventItemTranslation.get_event_item_translation_by_item_and_language(
+        EventItemTranslation.get_by_item_and_language(
             event_item.id, language.id
         )
     )

@@ -43,7 +43,7 @@ class EventItemTranslation(BaseModel):
     )
     
     @staticmethod
-    def get_event_item_translation_by_item_and_language(event_item_id=None, language_id=None):
+    def get_by_item_and_language(event_item_id=None, language_id=None):
         """
         Get event item translation by item ID and language ID.
 

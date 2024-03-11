@@ -33,7 +33,7 @@ def test_get_subscribe_item_translation_by_item_and_language(session):
     )
     session.commit()
 
-    translations = SubscribeItemTranslation.get_subsctibe_item_translation_by_item_and_language(
+    translations = SubscribeItemTranslation.get_by_item_and_language(
         item.id, language.id
     )
     assert len(translations) == 1
