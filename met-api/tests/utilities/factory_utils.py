@@ -28,48 +28,100 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
-from met_api.models.email_verification import EmailVerification as EmailVerificationModel
+from met_api.models.email_verification import (
+    EmailVerification as EmailVerificationModel,
+)
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
+from met_api.models.engagement_metadata import (
+    EngagementMetadata,
+    MetadataTaxon,
+)
 from met_api.models.engagement_settings import EngagementSettingsModel
-from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
+from met_api.models.engagement_slug import (
+    EngagementSlug as EngagementSlugModel,
+)
 from met_api.models.event_item import EventItem as EventItemModel
-from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
+from met_api.models.event_item_translation import (
+    EventItemTranslation as EventItemTranslationModel,
+)
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.language import Language as LanguageModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.participant import Participant as ParticipantModel
-from met_api.models.poll_answer_translation import PollAnswerTranslation as PollAnswerTranslationModel
+from met_api.models.poll_answer_translation import (
+    PollAnswerTranslation as PollAnswerTranslationModel,
+)
 from met_api.models.poll_answers import PollAnswer as PollAnswerModel
 from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.models.subscribe_item import SubscribeItem as SubscribeItemModel
-from met_api.models.subscribe_item_translation import SubscribeItemTranslation as SubscribeItemTranslationModel
+from met_api.models.subscribe_item_translation import (
+    SubscribeItemTranslation as SubscribeItemTranslationModel,
+)
 from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.survey import Survey as SurveyModel
-from met_api.models.survey_translation import SurveyTranslation as SurveyTranslationModel
+from met_api.models.survey_translation import (
+    SurveyTranslation as SurveyTranslationModel,
+)
 from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
-from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
+from met_api.models.timeline_event_translation import (
+    TimelineEventTranslation as TimelineEventTranslationModel,
+)
 from met_api.models.widget import Widget as WidgetModal
-from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
+from met_api.models.widget_documents import (
+    WidgetDocuments as WidgetDocumentModel,
+)
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 from met_api.models.widget_poll import Poll as WidgetPollModel
-from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
+from met_api.models.widget_timeline import (
+    WidgetTimeline as WidgetTimelineModel,
+)
+from met_api.models.widget_translation import (
+    WidgetTranslation as WidgetTranslationModel,
+)
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
-from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
+from met_api.models.widgets_subscribe import (
+    WidgetSubscribe as WidgetSubscribeModel,
+)
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims,
-    TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo,
-    TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo,
-    TestSurveyTranslationInfo, TestTenantInfo, TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetVideo)
+    TestCommentInfo,
+    TestEngagementInfo,
+    TestEngagementMetadataInfo,
+    TestEngagementMetadataTaxonInfo,
+    TestEngagementSlugInfo,
+    TestEventItemTranslationInfo,
+    TestEventnfo,
+    TestFeedbackInfo,
+    TestJwtClaims,
+    TestLanguageInfo,
+    TestParticipantInfo,
+    TestPollAnswerInfo,
+    TestPollAnswerTranslationInfo,
+    TestPollResponseInfo,
+    TestReportSettingInfo,
+    TestSubmissionInfo,
+    TestSubscribeInfo,
+    TestSubscribeItemTranslationInfo,
+    TestSurveyInfo,
+    TestSurveyTranslationInfo,
+    TestTenantInfo,
+    TestTimelineEventTranslationInfo,
+    TestTimelineInfo,
+    TestUserInfo,
+    TestWidgetDocumentInfo,
+    TestWidgetInfo,
+    TestWidgetItemInfo,
+    TestWidgetMap,
+    TestWidgetPollInfo,
+    TestWidgetTranslationInfo,
+    TestWidgetVideo,
+)
 
 
 fake = Faker()
@@ -581,6 +633,20 @@ def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
     )
     language_model.save()
     return language_model
+
+
+def factory_widget_translation_model(
+    widget_translation: dict = TestWidgetTranslationInfo.widgettranslation1,
+):
+    """Produce a widget translation model."""
+    widget_translation = WidgetTranslationModel(
+        widget_id=widget_translation.get('widget_id'),
+        language_id=widget_translation.get('language_id'),
+        title=widget_translation.get('title'),
+        map_marker_label=widget_translation.get('map_marker_label'),
+    )
+    widget_translation.save()
+    return widget_translation
 
 
 def factory_survey_translation_model(
