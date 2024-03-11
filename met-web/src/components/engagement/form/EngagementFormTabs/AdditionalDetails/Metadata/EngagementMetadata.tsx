@@ -69,7 +69,7 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         resolver: yupResolver(validationSchema),
     });
 
-    const cleanArray = (arr: string[]) => arr.map((v) => v.trim()).filter(Boolean);
+    const cleanArray = (arr: string[]) => arr.map((v) => v.toString().trim()).filter(Boolean);
 
     const onSubmit: SubmitHandler<TaxonFormValues> = async () => {
         const data = getValues();
