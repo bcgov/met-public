@@ -54,6 +54,7 @@ from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
+from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
     TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo,

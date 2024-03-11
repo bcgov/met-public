@@ -60,12 +60,12 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
         'get_preset_values', deserialize='set_preset_values')
 
     def get_preset_values(self, obj):
-        """This method is used by Marshmallow to serialize the preset_values property
-        """
+        """Serialize the preset_values property for Marshmallow."""
         return obj.preset_values
 
     def set_preset_values(self, values):
         """Deserialize the preset_values into a list of strings.
+
         The rest is handled in the preset_values property setter.
         """
         return [str(value) for value in values]
