@@ -125,7 +125,7 @@ def test_bulk_update_engagement_metadata(session):
     assert len(metadata_updated_2) == 5
     # and the values should be updated again
     for i, meta in enumerate(metadata_updated_2):
-        assert meta['value'] == new_values_2[i], f"{meta}, {new_values_2[i]}"
+        assert meta['value'] == new_values_2[i], f'{meta}, {new_values_2[i]}'
 
 
 def test_delete_engagement_metadata(session):

@@ -1,9 +1,5 @@
-"""
-Schemas for serializing and deserializing classes related to engagement metadata.
-"""
+"""Schemas for serializing and deserializing classes related to engagement metadata."""
 
-from met_api.models.engagement_metadata import (EngagementMetadata,
-                                                MetadataTaxon, MetadataTaxonDataType)
 from marshmallow import ValidationError, fields, pre_load, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow_sqlalchemy.fields import Nested
@@ -64,12 +60,14 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
         'get_preset_values', deserialize='set_preset_values')
 
     def get_preset_values(self, obj):
-        # This method is used by Marshmallow to serialize the preset_values property
+        """This method is used by Marshmallow to serialize the preset_values property
+        """
         return obj.preset_values
 
     def set_preset_values(self, values):
-        # Deserialize the preset_values into a list of strings.
-        # The rest is handled in the preset_values property setter.
+        """Deserialize the preset_values into a list of strings.
+        The rest is handled in the preset_values property setter.
+        """
         return [str(value) for value in values]
 
     @pre_load

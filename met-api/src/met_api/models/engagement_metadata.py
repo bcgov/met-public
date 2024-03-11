@@ -144,7 +144,8 @@ class MetadataTaxon(BaseModel):
 
     @property
     def preset_values(self) -> list[str]:
-        # Get preset values - any metadata entries with no specific engagement
+        """Get preset values - any metadata entries with no specific engagement
+        """
         return [entry.value for entry in self.entries if entry.engagement_id is None]
 
     @preset_values.setter

@@ -79,6 +79,7 @@ responses = {
 def ensure_tenant_access():
     """
     Provide access to the tenant as a DB model for the decorated function.
+
     This does not provide security; that is handled by @require_role.
     """
     def wrapper(f: Callable):
