@@ -34,7 +34,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
     const methods = useForm<MetadataTaxon>({
         defaultValues: {
             name: taxon.name,
-            description: taxon.description || '',
+            description: taxon.description ?? '',
             freeform: taxon.freeform,
             one_per_engagement: taxon.one_per_engagement,
             data_type: taxon.data_type,
@@ -115,7 +115,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
             });
         }
 
-        if (!!Object.keys(formErrors).length) {
+        if (Object.keys(formErrors).length) {
             console.log('Form errors:', formErrors);
             dispatch(
                 openNotification({ text: 'Please correct the highlighted errors before saving.', severity: 'error' }),

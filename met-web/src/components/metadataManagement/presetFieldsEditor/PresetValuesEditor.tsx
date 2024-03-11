@@ -24,7 +24,7 @@ const PresetValuesEditor = ({
                 const errorMessage = valueErrors?.map((error: FieldError, index: number) => {
                     errorIndices.add(index);
                     return (
-                        <span key={index.toString() + error.message ?? ''}>
+                        <span key={index.toString() + (error.message ?? '')}>
                             Entry #{index + 1}: {error.message}
                             <br />
                         </span>

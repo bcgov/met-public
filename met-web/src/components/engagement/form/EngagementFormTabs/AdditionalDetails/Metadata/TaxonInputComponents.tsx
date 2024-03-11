@@ -30,7 +30,7 @@ export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
         errorMessage = (valueErrors as Array<FieldError>)?.map((error: FieldError, index: number) => {
             errorIndices.add(index);
             return (
-                <span key={index.toString() + error.message ?? ''}>
+                <span key={index.toString() + (error.message ?? '')}>
                     Entry #{index + 1}: {error.message}
                     <br />
                 </span>

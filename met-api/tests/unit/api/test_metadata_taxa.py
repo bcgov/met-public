@@ -59,7 +59,7 @@ def test_get_taxon_by_id(client, jwt, session):
 
 def test_add_metadata_taxon(client, jwt, session):
     """Test that metadata taxon can be added to a tenant."""
-    tenant, headers = factory_taxon_requirements(jwt)
+    _, headers = factory_taxon_requirements(jwt)
     response = client.post(TENANT_TAXA_ENDPOINT,
                            headers=headers,
                            data=json.dumps(
