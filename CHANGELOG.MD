@@ -1,3 +1,9 @@
+## March 08, 2024
+- **Task**Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
+    - Added Engagement translation model.
+    - Added Engagement translation API.
+    - Added Unit tests.
+
 ## March 06, 2024
 - **Task**Multi-language - Create simple widget translation tables & API routes [DESENG-514](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-514)
     - Added Widget translation model.

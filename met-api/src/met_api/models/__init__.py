@@ -61,3 +61,4 @@ from .poll_responses import PollResponse
 from .language import Language
 from .widget_translation import WidgetTranslation
 from .survey_translation import SurveyTranslation
+from .engagement_translation import EngagementTranslation
