@@ -59,3 +59,5 @@ from .widget_poll import Poll
 from .poll_answers import PollAnswer
 from .poll_responses import PollResponse
 from .language import Language
+from .widget_translation import WidgetTranslation
+from .survey_translation import SurveyTranslation
