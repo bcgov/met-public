@@ -105,7 +105,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
             }, {});
             // Set errors for each field in formState
             Object.keys(formErrors).forEach((fieldName) => {
-                console.log('Setting error for', fieldName);
                 setError(fieldName as keyof MetadataTaxon, {
                     type: 'validate',
                     message: formErrors[fieldName],

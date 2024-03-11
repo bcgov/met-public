@@ -1,10 +1,11 @@
+import React from 'react';
 import { Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
-    setTaxonMetadata: (_taxonId: number, _values: Array<string>) => Promise<EngagementMetadata[]>;
+    setEngagementMetadata: React.Dispatch<React.SetStateAction<EngagementMetadata[]>>;
     taxonMetadata: Map<number, string[]>;
     tenantTaxa: MetadataTaxon[];
     setTenantTaxa: React.Dispatch<React.SetStateAction<MetadataTaxon[]>>;

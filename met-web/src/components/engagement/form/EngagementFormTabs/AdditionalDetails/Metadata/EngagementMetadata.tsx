@@ -3,7 +3,7 @@ import { Grid, Divider, Typography, Avatar, Chip } from '@mui/material';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../../EngagementTabsContext';
-import { MetadataTaxon } from 'models/engagement';
+import { EngagementMetadata as EngagementMetadataModel, MetadataTaxon } from 'models/engagement';
 import { TaxonTypes } from 'components/metadataManagement/TaxonTypes';
 import { TaxonFormValues } from 'components/metadataManagement/types';
 import { useTheme } from '@mui/material/styles';
@@ -11,10 +11,15 @@ import { ActionContext } from '../../../ActionContext';
 import * as yup from 'yup';
 import { defaultAutocomplete } from './TaxonInputComponents';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { bulkPatchEngagementMetadata } from 'services/engagementMetadataService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAppDispatch } from 'hooks';
 
 const EngagementMetadata = forwardRef((_props, ref) => {
     const { metadataFormRef } = useContext(EngagementTabsContext);
-    const { tenantTaxa, setTaxonMetadata, taxonMetadata } = useContext(ActionContext);
+    const { tenantTaxa, engagementMetadata, setEngagementMetadata, engagementId, taxonMetadata } =
+        useContext(ActionContext);
+    const dispatch = useAppDispatch();
 
     const validationSchema = useMemo(() => {
         const schemaShape: { [key: string]: yup.SchemaOf<any> } = tenantTaxa.reduce((acc, taxon) => {
@@ -67,21 +72,31 @@ const EngagementMetadata = forwardRef((_props, ref) => {
 
     const onSubmit: SubmitHandler<TaxonFormValues> = async () => {
         const data = getValues();
-        console.log('Submitting form', data);
-        Object.entries(data).forEach(async ([id, value]) => {
+        const updatedEntries = new Map<number, EngagementMetadataModel[]>();
+        for (const [id, value] of Object.entries(data)) {
             const taxonId = Number(id);
             const taxonMeta = taxonMetadata.get(taxonId) ?? [];
-            value = value ?? [];
+            let taxonValue = value ?? [];
             // Normalize and clean the arrays
-            value = Array.isArray(value) ? cleanArray(value) : value.toString().trim();
+            taxonValue = cleanArray(Array.isArray(taxonValue) ? taxonValue : [taxonValue]);
             const normalizedTaxonMeta = cleanArray(taxonMeta);
-            value = Array.isArray(value) ? value : [value];
-            console.log('Comparing taxon metadata', normalizedTaxonMeta, taxonId, value);
-            if (JSON.stringify(value.sort()) === JSON.stringify(taxonMeta.sort())) return;
+            if (JSON.stringify(taxonValue.sort()) === JSON.stringify(taxonMeta.sort())) continue;
             // If we reach here, arrays are not equal, proceed with update
-            console.log('Updating taxon metadata', normalizedTaxonMeta, taxonId, value);
-            await setTaxonMetadata(taxonId, value);
-        });
+            console.log('Updating taxon metadata', normalizedTaxonMeta, taxonId, taxonValue);
+            try {
+                const updatedMetadata = await bulkPatchEngagementMetadata(taxonId, Number(engagementId), taxonValue);
+                updatedEntries.set(taxonId, updatedMetadata);
+            } catch (err) {
+                console.log(err);
+                dispatch(openNotification({ severity: 'error', text: 'Error Updating Taxon Metadata' }));
+            }
+        }
+        // filter out all old data with taxon IDs that were updated
+        const result: EngagementMetadataModel[] = engagementMetadata
+            .filter((metadata) => !updatedEntries.has(metadata.taxon_id))
+            // and add the new updated entries back in
+            .concat(...updatedEntries.values());
+        setEngagementMetadata(result);
     };
 
     useImperativeHandle(ref, () => ({
@@ -89,7 +104,6 @@ const EngagementMetadata = forwardRef((_props, ref) => {
             // validate the form
             await handleSubmit(onSubmit)(); // manually trigger form submission
             const isValid = await trigger([...tenantTaxa.map((taxon) => taxon.id.toString())]);
-
             // After submission, check if there are any errors
             return isValid;
         },

@@ -29,7 +29,7 @@ export const ActionContext = createContext<EngagementContext>({
     setTenantTaxa: () => {
         throw new Error('setTenantTaxa is unimplemented');
     },
-    setTaxonMetadata(_taxonId, _values) {
+    setEngagementMetadata() {
         return Promise.reject();
     },
     taxonMetadata: new Map(),
@@ -140,21 +140,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         });
         return taxonMetadataMap;
     }, [engagementMetadata]);
-
-    const setTaxonMetadata = async (taxonId: number, values: Array<string>): Promise<EngagementMetadata[]> => {
-        try {
-            const updatedMetadata = await bulkPatchEngagementMetadata(taxonId, Number(engagementId), values);
-            const result = engagementMetadata
-                .filter((metadata) => metadata.taxon_id !== taxonId)
-                .concat(updatedMetadata);
-            setEngagementMetadata(result);
-            return Promise.resolve(result);
-        } catch (err) {
-            console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'Error Updating Taxon Metadata' }));
-            return Promise.reject(err);
-        }
-    };
 
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
@@ -289,7 +274,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 handleAddBannerImage,
                 fetchEngagement,
                 fetchEngagementMetadata,
-                setTaxonMetadata,
+                setEngagementMetadata,
                 taxonMetadata,
                 loadingAuthorization,
                 isNewEngagement,
