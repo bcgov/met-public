@@ -1,7 +1,7 @@
 """Remove default_value from engagement_metadata_taxa and add unique constraint
 
 Revision ID: dbe023373f4f
-Revises: e6c320c178fc
+Revises: 35124d2e41cb
 Create Date: 2024-01-30 17:05:25.313222
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = 'dbe023373f4f'
-down_revision = 'e6c320c178fc'
+down_revision = '35124d2e41cb'
 branch_labels = None
 depends_on = None
 

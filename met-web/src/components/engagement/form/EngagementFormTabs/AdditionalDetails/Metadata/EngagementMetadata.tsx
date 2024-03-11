@@ -22,7 +22,8 @@ const EngagementMetadata = forwardRef((_props, ref) => {
     const dispatch = useAppDispatch();
 
     const validationSchema = useMemo(() => {
-        const schemaShape: { [key: string]: yup.SchemaOf<any> } = tenantTaxa.reduce((acc, taxon) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const schemaShape: { [key: string]: yup.AnySchema } = tenantTaxa.reduce((acc, taxon) => {
             const taxonType = TaxonTypes[taxon.data_type as keyof typeof TaxonTypes];
             if (taxonType.yupValidator) {
                 if (taxon.one_per_engagement) {
@@ -32,7 +33,7 @@ const EngagementMetadata = forwardRef((_props, ref) => {
                 }
             }
             return acc;
-        }, {} as { [key: string]: yup.SchemaOf<any> }); // Add index signature to the initial value of acc
+        }, {} as { [key: string]: yup.AnySchema }); // Add index signature to the initial value of acc
         return yup.object().shape(schemaShape);
     }, [tenantTaxa]);
 
@@ -122,7 +123,7 @@ const EngagementMetadata = forwardRef((_props, ref) => {
                 justifyContent="flex-start"
                 alignItems="center"
                 flexBasis="auto"
-                key={index}
+                key={taxon.id}
                 spacing={1}
                 padding={2}
                 xs={12}

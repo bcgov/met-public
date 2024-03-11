@@ -1,10 +1,6 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
-import {
-    getEngagementMetadata,
-    bulkPatchEngagementMetadata,
-    getMetadataTaxa,
-} from '../../../services/engagementMetadataService';
+import { getEngagementMetadata, getMetadataTaxa } from '../../../services/engagementMetadataService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';

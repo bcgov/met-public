@@ -52,12 +52,12 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
 
     useEffect(() => {
         reset({
-            name: taxon.name || '',
-            description: taxon.description || '',
-            freeform: taxon.freeform || false,
-            one_per_engagement: taxon.one_per_engagement || false,
-            data_type: taxon.data_type || 'text',
-            preset_values: taxon.preset_values || [],
+            name: taxon.name ?? '',
+            description: taxon.description ?? '',
+            freeform: taxon.freeform ?? false,
+            one_per_engagement: taxon.one_per_engagement ?? false,
+            data_type: taxon.data_type ?? 'text',
+            preset_values: taxon.preset_values ?? [],
         });
     }, [taxon, reset]);
 
@@ -98,7 +98,10 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
         if (!taxonType.supportsPresetValues) data.preset_values = [];
         try {
             await schema.validate(data, { abortEarly: false });
-        } catch (error: any) {
+            // Catch clause variable type annotation must be 'any' or 'unknown' if specified
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: yup.ValidationError | any) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formErrors = error.inner.reduce((errors: { [key: string]: string }, innerError: any) => {
                 errors[innerError.path] = innerError.message;
                 return errors;
@@ -130,7 +133,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
             preset_values: TaxonTypes[data.data_type ?? 'text'].supportsPresetValues ? data.preset_values : [],
         };
 
-        const result = updateMetadataTaxon(updatedTaxon);
+        updateMetadataTaxon(updatedTaxon);
     };
 
     const handleKeys = (event: React.KeyboardEvent) => {
@@ -148,7 +151,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
     const modifierKey = !isMac() ? 'Ctrl' : '⌘';
 
     // Whether the options can be limited to preset values
-    const allowLimiting = taxonType.supportsFreeform && Boolean(presetValues?.length ?? 0 > 0);
+    const allowLimiting = taxonType.supportsFreeform && (presetValues?.length ?? 0) > 0;
 
     return (
         <FormProvider {...methods}>

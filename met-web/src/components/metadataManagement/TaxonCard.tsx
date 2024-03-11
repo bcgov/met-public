@@ -13,19 +13,40 @@ import {
     Divider,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { ExpandMore, DragIndicator, FormatQuote, EditAttributes, InsertDriveFile, FileCopy } from '@mui/icons-material';
-import React, { useContext } from 'react';
+import React from 'react';
 import { MetHeader4 } from 'components/common';
-import { ActionContext } from './ActionContext';
 import { TaxonTypes } from './TaxonTypes';
 import { TaxonCardProps } from './types';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
 
+const DetailsRow = ({ name, icon, children }: { name: string; icon: React.ReactNode; children: React.ReactNode }) => {
+    const theme = useTheme();
+    return (
+        <>
+            <Grid item flexBasis="100%">
+                <Divider />
+            </Grid>
+            <Grid item flexBasis="2em">
+                <Tooltip title={name} placement="top">
+                    <Avatar
+                        sx={{
+                            backgroundColor: theme.palette.grey[600],
+                        }}
+                    >
+                        {icon}
+                    </Avatar>
+                </Tooltip>
+            </Grid>
+            <Grid item flexBasis="calc(100% - 3em)" flexGrow={1}>
+                {children}
+            </Grid>
+        </>
+    );
+};
+
 export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpand, isSelected, onSelect, index }) => {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    const { removeMetadataTaxon } = useContext(ActionContext);
     const cardStyle = isSelected
         ? {
               backgroundColor: theme.palette.primary.light,
@@ -62,38 +83,6 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                     </Avatar>
                 </Badge>
             </Tooltip>
-        );
-    };
-
-    const DetailsRow = ({
-        name,
-        icon,
-        children,
-    }: {
-        name: string;
-        icon: React.ReactNode;
-        children: React.ReactNode;
-    }) => {
-        return (
-            <>
-                <Grid item flexBasis="100%">
-                    <Divider />
-                </Grid>
-                <Grid item flexBasis="2em">
-                    <Tooltip title={name} placement="top">
-                        <Avatar
-                            sx={{
-                                backgroundColor: theme.palette.grey[600],
-                            }}
-                        >
-                            {icon}
-                        </Avatar>
-                    </Tooltip>
-                </Grid>
-                <Grid item flexBasis="calc(100% - 3em)" flexGrow={1}>
-                    {children}
-                </Grid>
-            </>
         );
     };
 
@@ -154,7 +143,7 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                         <Grid item>
                             <IconButton
                                 sx={{
-                                    transition: (theme: any) =>
+                                    transition: (theme) =>
                                         theme.transitions.create('transform', {
                                             duration: theme.transitions.duration.shortest,
                                         }),
@@ -198,9 +187,9 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                     )}
                                     {(taxon.preset_values?.length ?? 0) > 0 && (
                                         <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
-                                            {taxon.preset_values?.map((chip, index) => (
+                                            {taxon.preset_values?.map((chip) => (
                                                 <Chip
-                                                    key={index}
+                                                    key={chip}
                                                     label={chip}
                                                     color={isSelected ? 'primary' : 'default'}
                                                     size="small"

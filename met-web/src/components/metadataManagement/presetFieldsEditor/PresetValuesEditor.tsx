@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Autocomplete, TextField, Chip, IconButton, Stack } from '@mui/material';
-import { Controller, FieldError } from 'react-hook-form';
+import { Control, Controller, FieldError } from 'react-hook-form';
 import { ArrowCircleUp, HighlightOff } from '@mui/icons-material';
 
 const PresetValuesEditor = ({
     control, // The control object (from react-hook-form)
     name, // The name of the field in the form
 }: {
-    control: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    control: Control<any>;
     name: string;
 }) => {
     // State to manage the input value of the Autocomplete component
@@ -30,7 +31,7 @@ const PresetValuesEditor = ({
                     );
                 });
 
-                const onArrayChange = (_event: any, newValue: string[] | null) => {
+                const onArrayChange = (_event: SyntheticEvent<Element, Event> | null, newValue: string[] | null) => {
                     newValue = newValue ?? [...value, inputValue];
                     newValue = newValue.map((v: string) => v.trim()).filter(Boolean);
                     onChange(newValue);

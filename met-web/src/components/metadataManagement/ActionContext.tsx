@@ -97,10 +97,8 @@ const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const reorderMetadataTaxa = async (taxonIds: number[]) => {
         try {
             // Client side reorder to prevent flicker
-            setMetadataTaxa((prev) => {
-                const orderedTaxa = taxonIds.map((id) => prev.find((taxon) => taxon.id === id));
-                return orderedTaxa.filter((taxon) => taxon !== undefined) as MetadataTaxon[];
-            });
+            const orderedTaxa = taxonIds.map((id) => metadataTaxa.find((taxon) => taxon.id === id));
+            setMetadataTaxa(orderedTaxa.filter((taxon) => taxon !== undefined) as MetadataTaxon[]);
             // Send to API
             setMetadataTaxa(await patchMetadataTaxaOrder(taxonIds));
         } catch (err) {

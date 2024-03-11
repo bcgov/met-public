@@ -6,13 +6,13 @@ import { replaceUrl } from 'helper';
 export const getEngagementMetadata = async (engagementId: number): Promise<EngagementMetadata[]> => {
     const url = replaceUrl(Endpoints.EngagementMetadata.GET_BY_ENG, 'engagement_id', String(engagementId));
     if (!engagementId || isNaN(Number(engagementId))) {
-        return Promise.reject('Invalid Engagement Id ' + engagementId);
+        return Promise.reject(new Error('Invalid Engagement Id ' + engagementId));
     }
     const response = await http.GetRequest<EngagementMetadata[]>(url);
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to fetch engagement');
+    return Promise.reject(new Error('Failed to fetch engagement'));
 };
 
 export const postEngagementMetadata = async (data: EngagementMetadata): Promise<EngagementMetadata> => {
@@ -20,7 +20,7 @@ export const postEngagementMetadata = async (data: EngagementMetadata): Promise<
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to create engagement metadata');
+    return Promise.reject(new Error('Failed to create engagement metadata'));
 };
 
 export const patchEngagementMetadata = async (data: EngagementMetadata): Promise<EngagementMetadata> => {
@@ -28,7 +28,7 @@ export const patchEngagementMetadata = async (data: EngagementMetadata): Promise
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to update engagement metadata');
+    return Promise.reject(new Error('Failed to update engagement metadata'));
 };
 
 export const bulkPatchEngagementMetadata = async (
@@ -41,7 +41,7 @@ export const bulkPatchEngagementMetadata = async (
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to update engagement metadata');
+    return Promise.reject(new Error('Failed to update engagement metadata'));
 };
 
 export const getMetadataTaxa = async (): Promise<Array<MetadataTaxon>> => {
@@ -49,19 +49,19 @@ export const getMetadataTaxa = async (): Promise<Array<MetadataTaxon>> => {
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to fetch metadata taxa');
+    return Promise.reject(new Error('Failed to fetch metadata taxa'));
 };
 
 export const getMetadataTaxon = async (taxonId: number): Promise<MetadataTaxon> => {
     const url = replaceUrl(Endpoints.MetadataTaxa.GET, 'taxon_id', String(taxonId));
     if (!taxonId || isNaN(Number(taxonId))) {
-        return Promise.reject('Invalid Taxon Id ' + taxonId);
+        return Promise.reject(new Error('Invalid Taxon Id ' + taxonId));
     }
     const response = await http.GetRequest<MetadataTaxon>(url);
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to fetch metadata taxon');
+    return Promise.reject(new Error('Failed to fetch metadata taxon'));
 };
 
 export const postMetadataTaxon = async (data: MetadataTaxonModify): Promise<MetadataTaxon> => {
@@ -69,7 +69,7 @@ export const postMetadataTaxon = async (data: MetadataTaxonModify): Promise<Meta
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to create metadata taxon');
+    return Promise.reject(new Error('Failed to create metadata taxon'));
 };
 
 export const patchMetadataTaxon = async (id: number, data: MetadataTaxonModify): Promise<MetadataTaxon> => {
@@ -78,7 +78,7 @@ export const patchMetadataTaxon = async (id: number, data: MetadataTaxonModify):
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to update metadata taxon');
+    return Promise.reject(new Error('Failed to update metadata taxon'));
 };
 
 export const deleteMetadataTaxon = async (taxonId: number): Promise<void> => {
@@ -87,7 +87,7 @@ export const deleteMetadataTaxon = async (taxonId: number): Promise<void> => {
     if (response.status === 204) {
         return Promise.resolve();
     }
-    return Promise.reject('Failed to delete metadata taxon');
+    return Promise.reject(new Error('Failed to delete metadata taxon'));
 };
 
 export const patchMetadataTaxaOrder = async (taxonIds: Array<number>): Promise<Array<MetadataTaxon>> => {
@@ -98,5 +98,5 @@ export const patchMetadataTaxaOrder = async (taxonIds: Array<number>): Promise<A
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to reorder metadata taxa');
+    return Promise.reject(new Error('Failed to reorder metadata taxa'));
 };

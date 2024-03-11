@@ -1,7 +1,7 @@
 import { GenericInputProps as TaxonInputProps } from '../../../../../metadataManagement/types';
 import { DatePicker, TimePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
     FormControlLabel,
     Switch,
@@ -19,19 +19,24 @@ export const defaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
 
     const valueErrors = (errors[taxon.id.toString()] as unknown as Array<FieldError> | FieldError) ?? [];
     const errorIndices = new Set<number>();
-    const errorMessage = taxon.one_per_engagement
-        ? Array.isArray(valueErrors)
-            ? valueErrors[0]?.message
-            : (valueErrors as FieldError)?.message
-        : (valueErrors as Array<FieldError>)?.map((error: FieldError, index: number) => {
-              errorIndices.add(index);
-              return (
-                  <span key={index}>
-                      Entry #{index + 1}: {error.message}
-                      <br />
-                  </span>
-              );
-          });
+    let errorMessage: string | ReactElement[] | undefined;
+    if (taxon.one_per_engagement) {
+        if (Array.isArray(valueErrors)) {
+            errorMessage = valueErrors[0]?.message;
+        } else {
+            errorMessage = (valueErrors as FieldError)?.message;
+        }
+    } else {
+        errorMessage = (valueErrors as Array<FieldError>)?.map((error: FieldError, index: number) => {
+            errorIndices.add(index);
+            return (
+                <span>
+                    Entry #{index + 1}: {error.message}
+                    <br />
+                </span>
+            );
+        });
+    }
 
     const handleChipClick = (option: string) => () => {
         if (taxonType.externalResource) {
@@ -47,7 +52,7 @@ export const defaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
                         variant="outlined"
                         label={option}
                         {...getTagProps({ index })}
-                        key={index}
+                        key={option}
                         color={errorIndices.has(index) ? 'error' : 'default'}
                         disabled={errorIndices.has(index) && !!taxonType.externalResource}
                         onClick={taxonType.externalResource ? handleChipClick(option) : undefined}
