@@ -9,6 +9,11 @@ from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
 
 class WidgetEventsService:
     """Widget Event management service."""
+    
+    @staticmethod
+    def get_by_id(id: int):
+        """Get widget event by id."""
+        return WidgetEventsModel.find_by_id(id)
 
     @staticmethod
     def get_event_by_widget_id(widget_id):
@@ -25,6 +30,11 @@ class WidgetEventsService:
             WidgetEventsService._create_event_item_models(event_items, event.id)
         event.commit()
         return event
+    
+    @staticmethod
+    def get_event_item_by_id(id: int):
+        """Get event item by id."""
+        return EventItemsModel.find_by_id(id)
 
     @staticmethod
     def create_event_items(widget_id, event_id, event_item_details):

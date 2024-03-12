@@ -1,0 +1,75 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/event_item_translation",
+    "type": "object",
+    "title": "The EventItemTranslation Schema",
+    "description": "Schema for EventItemTranslation POST request validation.",
+    "default": {},
+    "examples": [
+        {
+            "language_id": 2,
+            "event_item_id": 1,
+            "description": "Description in Spanish",
+            "location_name": "Location Name in Spanish",
+            "location_address": "Location Address in Spanish",
+            "url": "https://example.com/event",
+            "url_label": "Event Details",
+            "pre_populate": false
+        },
+        {
+            "language_id": 2,
+            "event_item_id": 1,
+            "pre_populate": true
+        }
+    ],
+    "required": ["language_id", "event_item_id"],
+    "properties": {
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "integer",
+            "title": "Language ID",
+            "description": "The ID of the language in which the event item is translated."
+        },
+        "event_item_id": {
+            "$id": "#/properties/event_item_id",
+            "type": "integer",
+            "title": "Event Item ID",
+            "description": "The ID of the event item being translated."
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Description",
+            "description": "The translated description of the event item.",
+            "maxLength": 500
+        },
+        "location_name": {
+            "$id": "#/properties/location_name",
+            "type": "string",
+            "title": "Location Name",
+            "description": "The name of the event location.",
+            "maxLength": 50
+        },
+        "location_address": {
+            "$id": "#/properties/location_address",
+            "type": "string",
+            "title": "Location Address",
+            "description": "The address of the event location.",
+            "maxLength": 100
+        },
+        "url": {
+            "$id": "#/properties/url",
+            "type": "string",
+            "title": "URL",
+            "description": "The URL related to the event item.",
+            "maxLength": 500
+        },
+        "url_label": {
+            "$id": "#/properties/url_label",
+            "type": "string",
+            "title": "URL Label",
+            "description": "Label to display for URL links.",
+            "maxLength": 100
+        }
+    }
+}

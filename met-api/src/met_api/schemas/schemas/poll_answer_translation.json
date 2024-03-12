@@ -10,6 +10,11 @@
             "poll_answer_id": 1,
             "language_id": 2,
             "answer_text": "Answer in Spanish",
+            "pre_populate": false
+        },
+        {
+            "poll_answer_id": 1,
+            "language_id": 2,
             "pre_populate": true
         }
     ],

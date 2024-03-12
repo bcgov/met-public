@@ -60,6 +60,7 @@ from .language import API as LANGUAGE_API
 from .widget_translation import API as WIDGET_TRANSLATION_API
 from .survey_translation import API as SURVEY_TRANSLATION_API
 from .poll_answer_translation import API as POLL_ANSWER_TRANSLATION_API
+from .event_item_translation import API as EVENT_ITEM_TRANSLATION_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -110,3 +111,4 @@ API.add_namespace(LANGUAGE_API, path='/languages')
 API.add_namespace(WIDGET_TRANSLATION_API, path='/widget/<int:widget_id>/translations')
 API.add_namespace(SURVEY_TRANSLATION_API, path='/surveys/<int:survey_id>/translations')
 API.add_namespace(POLL_ANSWER_TRANSLATION_API, path='/polls/<int:poll_id>/translations')
+API.add_namespace(EVENT_ITEM_TRANSLATION_API, path='/events/<int:event_id>/translations')

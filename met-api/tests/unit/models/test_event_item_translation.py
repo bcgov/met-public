@@ -11,7 +11,7 @@ from tests.utilities.factory_utils import event_item_model_with_language, factor
 
 def test_get_event_item_translation_by_item_and_language(session):
     """Translations for an event item can be fetched by item and language."""
-    event_item, language = event_item_model_with_language()
+    event_item, _, language = event_item_model_with_language()
     event_item_translation = {
         **TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
@@ -35,7 +35,7 @@ def test_get_event_item_translation_by_item_and_language(session):
 
 def test_create_event_item_translation(session):
     """Assert that an event item translation can be created."""
-    event_item, language = event_item_model_with_language()
+    event_item, _, language = event_item_model_with_language()
     event_item_translation = {
         **TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
@@ -54,7 +54,7 @@ def test_create_event_item_translation(session):
 
 def test_update_event_item_translation(session):
     """Assert that an event item translation can be updated."""
-    event_item, language = event_item_model_with_language()
+    event_item, _, language = event_item_model_with_language()
     event_item_translation = {
         **TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
@@ -74,7 +74,7 @@ def test_update_event_item_translation(session):
 
 def test_delete_event_item_translation(session):
     """Assert that an event item translation can be deleted."""
-    event_item, language = event_item_model_with_language()
+    event_item, _, language = event_item_model_with_language()
     event_item_translation = {
         **TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
