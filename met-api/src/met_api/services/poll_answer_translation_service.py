@@ -19,7 +19,7 @@ class PollAnswerTranslationService:
 
     @staticmethod
     def get_by_id(id: int):
-        """Get poll answer translations by answer ID and language ID."""
+        """Get poll answer translations by id."""
         return PollAnswerTranslationModel.find_by_id(id)
 
     @staticmethod

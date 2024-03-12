@@ -13,8 +13,12 @@ from marshmallow import ValidationError
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
-from met_api.schemas.poll_answer_translation_schema import PollAnswerTranslationSchema
-from met_api.services.poll_answer_translation_service import PollAnswerTranslationService
+from met_api.schemas.poll_answer_translation_schema import (
+    PollAnswerTranslationSchema,
+)
+from met_api.services.poll_answer_translation_service import (
+    PollAnswerTranslationService,
+)
 from met_api.utils.util import allowedorigins, cors_preflight
 
 API = Namespace(
@@ -33,10 +37,8 @@ class PollAnswerTranslationResource(Resource):
     def get(poll_id, poll_answer_translation_id):
         """Fetch a poll answer translation by id."""
         try:
-            poll_answer_translation = (
-                PollAnswerTranslationService.get_by_id(
-                    poll_answer_translation_id
-                )
+            poll_answer_translation = PollAnswerTranslationService.get_by_id(
+                poll_answer_translation_id
             )
             return (
                 PollAnswerTranslationSchema().dump(poll_answer_translation),
@@ -72,8 +74,10 @@ class PollAnswerTranslationResource(Resource):
     def delete(poll_id, poll_answer_translation_id):
         """Delete a poll answer translation."""
         try:
-            success = PollAnswerTranslationService.delete_poll_answer_translation(
-                poll_id, poll_answer_translation_id
+            success = (
+                PollAnswerTranslationService.delete_poll_answer_translation(
+                    poll_id, poll_answer_translation_id
+                )
             )
             if success:
                 return (
@@ -85,6 +89,31 @@ class PollAnswerTranslationResource(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
             return str(err), HTTPStatus.NOT_FOUND
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/answer/<int:poll_answer_id>/language/<int:language_id>')
+class PollAnswerTranslationResourceByLanguage(Resource):
+    """Resource for managing poll answer using language_id."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(poll_id, poll_answer_id, language_id):
+        """Fetch a poll answer translation by language_id."""
+        try:
+            poll_answer_translations = (
+                PollAnswerTranslationService.get_poll_answer_translation(
+                    poll_answer_id, language_id
+                )
+            )
+            return (
+                PollAnswerTranslationSchema().dump(
+                    poll_answer_translations, many=True
+                ),
+                HTTPStatus.OK,
+            )
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @cors_preflight('POST, OPTIONS')
