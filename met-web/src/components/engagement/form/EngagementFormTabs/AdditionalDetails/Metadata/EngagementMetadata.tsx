@@ -78,9 +78,10 @@ const EngagementMetadata = forwardRef((_props, ref) => {
             const taxonMeta = taxonMetadata.get(taxonId) ?? [];
             let taxonValue = value ?? [];
             // Normalize and clean the arrays
-            taxonValue = cleanArray(Array.isArray(taxonValue) ? taxonValue : [taxonValue]);
-            const normalizedTaxonMeta = cleanArray(taxonMeta);
-            if (JSON.stringify(taxonValue.sort()) === JSON.stringify(normalizedTaxonMeta.sort())) continue;
+            const comparator = (a: string, b: string) => a.localeCompare(b);
+            taxonValue = cleanArray(Array.isArray(taxonValue) ? taxonValue : [taxonValue]).sort(comparator);
+            const normalizedTaxonMeta = cleanArray(taxonMeta).sort(comparator);
+            if (JSON.stringify(taxonValue) === JSON.stringify(normalizedTaxonMeta)) continue;
             // If we reach here, arrays are not equal, proceed with update
             try {
                 const updatedMetadata = await bulkPatchEngagementMetadata(taxonId, Number(engagementId), taxonValue);

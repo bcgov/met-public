@@ -111,9 +111,9 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
-                    aria-expanded={isExpanded}
                     aria-label="A card representing a taxon in the engagement metadata."
-                    role="group"
+                    role="gridcell"
+                    id={`taxon-${taxon.id}`}
                 >
                     <Grid item container xs alignItems="center" spacing={1}>
                         <Grid item>
@@ -157,13 +157,23 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 size="small"
                                 aria-label="expand"
                                 onClick={handleExpand}
+                                aria-expanded={isExpanded}
+                                aria-controls={`taxon-${taxon.id}-content`}
                             >
                                 <ExpandMore />
                             </IconButton>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                        <Collapse in={isExpanded} timeout="auto" unmountOnExit sx={{ pt: 1 }}>
+                        <Collapse
+                            in={isExpanded}
+                            timeout="auto"
+                            unmountOnExit
+                            sx={{ pt: 1 }}
+                            id={`taxon-${taxon.id}-content`}
+                            aria-labelledby={`taxon-${taxon.id}`}
+                            aria-hidden={!isExpanded}
+                        >
                             <Grid container alignItems="center" spacing={1} flexWrap="wrap">
                                 {/* Description */}
                                 <DetailsRow name="Description" icon={<FormatQuote />}>
