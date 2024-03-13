@@ -101,7 +101,6 @@ export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
                 <TextField
                     {...params}
                     label={taxon.name}
-                    // label={field.value.toString()}
                     variant="outlined"
                     fullWidth
                     error={!!errors[taxon.id.toString()]}

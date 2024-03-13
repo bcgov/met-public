@@ -98,7 +98,6 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                     component={Paper}
                     style={{
                         display: 'flex',
-                        // boxSizing: 'border-box',
                         alignItems: 'center', // Center items vertically
                         padding: '10px',
                         width: '100%',
@@ -112,15 +111,19 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                     direction="row"
                     justifyContent="space-between"
                     alignItems="center"
+                    aria-expanded={isExpanded}
+                    aria-label="A card representing a taxon in the engagement metadata."
+                    role="group"
                 >
                     <Grid item container xs alignItems="center" spacing={1}>
                         <Grid item>
-                            <Tooltip color="error" title="Drag to reorganize" placement="top">
+                            <Tooltip color="error" title="Drag to reorganize" placement="top" id="drag-handle-tooltip">
                                 <IconButton
                                     sx={{ cursor: 'grab', color: 'inherit' }}
                                     {...provided.dragHandleProps}
                                     size="small"
-                                    aria-label="drag-indicator"
+                                    aria-label="Drag to reorganize; press to select and edit this taxon."
+                                    // this button doubles as a keyboard focus target for the card
                                 >
                                     <DragIndicator />
                                 </IconButton>

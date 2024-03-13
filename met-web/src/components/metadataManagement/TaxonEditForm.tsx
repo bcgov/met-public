@@ -70,8 +70,8 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
     const presetValues = watch('preset_values');
 
     const schema = yup.object().shape({
-        name: yup.string().required('Name is required').max(64, 'Name is too long!'),
-        description: yup.string().max(255, 'Description is too long!').strip(),
+        name: yup.string().required('Name is required').max(64, 'Name is too long! Limit: 64 characters.'),
+        description: yup.string().max(255, 'Description is too long! Limit: 255 characters.'),
         freeform: yup.boolean().oneOf([taxonType.supportsFreeform, false]),
         one_per_engagement: taxonType.supportsMulti ? yup.boolean() : yup.boolean().oneOf([true]),
         data_type: yup.string().required('Type is required'),
@@ -116,7 +116,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
         }
 
         if (Object.keys(formErrors).length) {
-            console.log('Form errors:', formErrors);
             dispatch(
                 openNotification({ text: 'Please correct the highlighted errors before saving.', severity: 'error' }),
             );
@@ -285,16 +284,23 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                         </Collapse>
                     </Grid>
                     <Grid item container alignItems="center" justifyContent="flex-start">
-                        <Button variant="outlined" onClick={() => setSelectedTaxonId(-1)}>
-                            <Close /> Cancel
-                        </Button>
+                        <Tooltip title="Discard changes to taxon" id="cancel-button-tooltip">
+                            <Button
+                                variant="outlined"
+                                aria-label="Discard changes to taxon"
+                                onClick={() => setSelectedTaxonId(-1)}
+                            >
+                                <Close /> Cancel
+                            </Button>
+                        </Tooltip>
                         <If condition={Object.keys(methods.formState.errors).length === 0}>
                             <Then>
                                 <If condition={isDirty}>
                                     <Then>
-                                        <Tooltip title={`Save (${modifierKey} + Enter)`}>
+                                        <Tooltip title={`Save changes to taxon (${modifierKey} + Enter)`}>
                                             <Button
                                                 variant="contained"
+                                                aria-label="Save changes to taxon"
                                                 onClick={handleSubmit(onSubmit)}
                                                 sx={{ marginLeft: '0.5em' }}
                                             >
@@ -303,16 +309,31 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                         </Tooltip>
                                     </Then>
                                     <Else>
-                                        <Button variant="contained" disabled sx={{ marginLeft: '0.5em' }}>
+                                        <Button
+                                            variant="contained"
+                                            aria-label="No changes to save"
+                                            aria-disabled
+                                            disabled
+                                            sx={{ marginLeft: '0.5em' }}
+                                        >
                                             <Check /> Saved
                                         </Button>
                                     </Else>
                                 </If>
                             </Then>
                             <Else>
-                                <Button variant="contained" disabled sx={{ marginLeft: '0.5em' }}>
-                                    <Error /> Save
-                                </Button>
+                                <Tooltip title="Unable to save due to form errors" id="save-button-tooltip">
+                                    <Button
+                                        variant="contained"
+                                        aria-disabled
+                                        aria-labelledby="save-button-tooltip"
+                                        aria-details="Please correct the errors before saving."
+                                        disabled
+                                        sx={{ marginLeft: '0.5em' }}
+                                    >
+                                        <Error /> Save
+                                    </Button>
+                                </Tooltip>
                             </Else>
                         </If>
                     </Grid>

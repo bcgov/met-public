@@ -22,7 +22,6 @@ const EngagementMetadata = forwardRef((_props, ref) => {
     const dispatch = useAppDispatch();
 
     const validationSchema = useMemo(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const schemaShape: { [key: string]: yup.AnySchema } = tenantTaxa.reduce((acc, taxon) => {
             const taxonType = TaxonTypes[taxon.data_type as keyof typeof TaxonTypes];
             if (taxonType.yupValidator) {
@@ -81,14 +80,13 @@ const EngagementMetadata = forwardRef((_props, ref) => {
             // Normalize and clean the arrays
             taxonValue = cleanArray(Array.isArray(taxonValue) ? taxonValue : [taxonValue]);
             const normalizedTaxonMeta = cleanArray(taxonMeta);
-            if (JSON.stringify(taxonValue.sort()) === JSON.stringify(taxonMeta.sort())) continue;
+            if (JSON.stringify(taxonValue.sort()) === JSON.stringify(normalizedTaxonMeta.sort())) continue;
             // If we reach here, arrays are not equal, proceed with update
-            console.log('Updating taxon metadata', normalizedTaxonMeta, taxonId, taxonValue);
             try {
                 const updatedMetadata = await bulkPatchEngagementMetadata(taxonId, Number(engagementId), taxonValue);
                 updatedEntries.set(taxonId, updatedMetadata);
             } catch (err) {
-                console.log(err);
+                console.error(err);
                 dispatch(openNotification({ severity: 'error', text: 'Error Updating Taxon Metadata' }));
             }
         }
@@ -104,8 +102,8 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         submitForm: async () => {
             // validate the form
             await handleSubmit(onSubmit)(); // manually trigger form submission
-            const isValid = await trigger([...tenantTaxa.map((taxon) => taxon.id.toString())]);
             // After submission, check if there are any errors
+            const isValid = await trigger([...tenantTaxa.map((taxon) => taxon.id.toString())]);
             return isValid;
         },
     }));

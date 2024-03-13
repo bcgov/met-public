@@ -125,15 +125,35 @@ export const TaxonEditor = () => {
             }}
         >
             <Box sx={{ padding: '2.1em', width: '100%' }}>
-                {/* <MetHeader2>Metadata Management</MetHeader2> */}
                 <Typography variant="subtitle1" color="textSecondary">
                     Manage the ways metadata is collected and organized for your engagements.
                 </Typography>
-                <Button variant="outlined" onClick={expandAll} sx={{ margin: '0.5em' }}>
+                <Button
+                    variant="outlined"
+                    onClick={expandAll}
+                    sx={{
+                        margin: '0.5em',
+                        // visually lift the button when focused by keyboard
+                        ':focus-visible': {
+                            boxShadow: 3,
+                        },
+                    }}
+                    aria-label="Expand All Taxon Cards"
+                >
                     <UnfoldMore />
                     Expand All
                 </Button>
-                <Button variant="outlined" onClick={collapseAll} sx={{ margin: '0.5em' }}>
+                <Button
+                    variant="outlined"
+                    onClick={collapseAll}
+                    aria-label="Collapse All Taxon Cards"
+                    sx={{
+                        margin: '0.5em',
+                        ':focus-visible': {
+                            boxShadow: 3,
+                        },
+                    }}
+                >
                     <UnfoldLess />
                     Collapse All
                 </Button>

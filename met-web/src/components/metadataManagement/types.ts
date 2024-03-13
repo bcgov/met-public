@@ -30,11 +30,13 @@ export interface GenericInputProps {
     trigger: (name?: string | string[] | undefined) => Promise<boolean>;
     errors: Partial<
         FieldErrorsImpl<{
-            [x: string]: any;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            [x: string]: any; // This is the type specified by react-hook-form for formState.errors
         }>
     >;
     setValue: (
         name: string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         value: any,
         options?:
             | Partial<{
