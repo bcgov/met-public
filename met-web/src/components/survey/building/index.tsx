@@ -263,12 +263,7 @@ const SurveyFormBuilder = () => {
                         </>
                     ) : (
                         <>
-                            <TextField
-                                autoFocus
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                                onBlur={(event) => setIsNamedFocused(false)}
-                            />
+                            <TextField autoFocus value={name} onChange={(event) => setName(event.target.value)} />
                             <IconButton
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);

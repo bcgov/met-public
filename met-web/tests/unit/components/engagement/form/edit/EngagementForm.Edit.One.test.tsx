@@ -91,7 +91,7 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
+        .mockReturnValue(Promise.resolve([engagementMetadata]));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
@@ -184,17 +184,12 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        getEngagementMetadataMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...engagementMetadata,
-            }),
-        );
         render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
-
+        getEngagementMetadataMock.mockReturnValueOnce(Promise.resolve([engagementMetadata]));
         expect(screen.getByText('Add Survey')).toBeDisabled();
     });
 

@@ -35,7 +35,8 @@ def test_get_engagement_metadata(session):
         taxon_id=taxon.id, engagement_id=engagement.id,
         value=TestEngagementMetadataInfo.metadata1['value']
     )
-    existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
+    existing_metadata = engagement_metadata_service.get_by_engagement(
+        engagement.id)
     assert any(meta['id'] == eng_meta['id'] for meta in existing_metadata)
 
 
@@ -49,8 +50,10 @@ def test_get_engagement_metadata_by_id(session):
         value=TestEngagementMetadataInfo.metadata1['value']
     )
     existing_metadata = engagement_metadata_service.get(eng_meta['id'])
-    assert existing_metadata.get('id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
-    assert existing_metadata.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
+    assert existing_metadata.get(
+        'id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
+    assert existing_metadata.get(
+        'taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
 
 
 def test_create_engagement_metadata(session):
@@ -65,22 +68,10 @@ def test_create_engagement_metadata(session):
     assert eng_meta.get('id') is not None, ENGAGEMENT_ID_INCORRECT_MSG
     assert eng_meta.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
     existing_metadata = engagement_metadata_service.get(eng_meta['id'])
-    assert existing_metadata.get('id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
-    assert existing_metadata.get('taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
-
-
-def test_default_engagement_metadata(session):
-    """Assert that engagement metadata can be created with default value."""
-    taxon, engagement, tenant, _ = factory_metadata_requirements()
-    assert taxon.id is not None, 'Taxon ID is missing'
-    assert engagement.id is not None, 'Engagement ID is missing'
-    taxon.default_value = 'default value'
-    eng_meta: list = engagement_metadata_service.create_defaults(
-        engagement_id=engagement.id, tenant_id=tenant.id
-    )
-    assert len(eng_meta) == 1, 'Default engagement metadata not created'
-    assert eng_meta[0].get('id') is not None, ENGAGEMENT_ID_INCORRECT_MSG
-    assert eng_meta[0].get('value') == 'default value', 'Default value is incorrect'
+    assert existing_metadata.get(
+        'id') == eng_meta['id'], ENGAGEMENT_ID_INCORRECT_MSG
+    assert existing_metadata.get(
+        'taxon_id') == taxon.id, TAXON_ID_INCORRECT_MSG
 
 
 def test_update_engagement_metadata(session):
@@ -95,12 +86,46 @@ def test_update_engagement_metadata(session):
         'taxon_id': taxon.id,
         'value': old_value
     })
-    existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
+    existing_metadata = engagement_metadata_service.get_by_engagement(
+        engagement.id)
     assert existing_metadata
-    metadata_updated = engagement_metadata_service.update(eng_meta.id, new_value)
+    metadata_updated = engagement_metadata_service.update(
+        eng_meta.id, new_value)
     assert metadata_updated['value'] == new_value
-    existing_metadata2 = engagement_metadata_service.get_by_engagement(engagement.id)
+    existing_metadata2 = engagement_metadata_service.get_by_engagement(
+        engagement.id)
     assert any(meta['value'] == new_value for meta in existing_metadata2)
+
+
+def test_bulk_update_engagement_metadata(session):
+    """Assert that engagement metadata can be updated in bulk."""
+    taxon, engagement, _, _ = factory_metadata_requirements()
+    for i in range(4):
+        factory_engagement_metadata_model({
+            'engagement_id': engagement.id,
+            'taxon_id': taxon.id,
+            'value': f'old value {i}'
+        })
+    existing_metadata = engagement_metadata_service.get_by_engagement(
+        engagement.id)
+    # The initial data is created with 4 metadata entries
+    assert len(existing_metadata) == 4
+    new_values = [f'new value {i}' for i in range(3)]
+    metadata_updated = engagement_metadata_service.update_by_taxon(
+        engagement.id, taxon.id, new_values)
+    # Check that the extra metadata entry was removed
+    assert len(metadata_updated) == 3
+    # and that the values were updated
+    for i, meta in enumerate(metadata_updated):
+        assert meta['value'] == new_values[i]
+    new_values_2 = [f'newer value {i}' for i in range(5)]
+    metadata_updated_2 = engagement_metadata_service.update_by_taxon(
+        engagement.id, taxon.id, new_values_2)
+    # now the array should be longer
+    assert len(metadata_updated_2) == 5
+    # and the values should be updated again
+    for i, meta in enumerate(metadata_updated_2):
+        assert meta['value'] == new_values_2[i], f'{meta}, {new_values_2[i]}'
 
 
 def test_delete_engagement_metadata(session):
@@ -110,8 +135,10 @@ def test_delete_engagement_metadata(session):
         'engagement_id': engagement.id,
         'taxon_id': taxon.id,
     })
-    existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
+    existing_metadata = engagement_metadata_service.get_by_engagement(
+        engagement.id)
     assert any(em['id'] == eng_meta.id for em in existing_metadata)
     engagement_metadata_service.delete(eng_meta.id)
-    existing_metadata = engagement_metadata_service.get_by_engagement(engagement.id)
+    existing_metadata = engagement_metadata_service.get_by_engagement(
+        engagement.id)
     assert not any(em['id'] == eng_meta.id for em in existing_metadata)

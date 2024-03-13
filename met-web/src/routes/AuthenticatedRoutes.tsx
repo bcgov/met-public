@@ -8,6 +8,7 @@ import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
 import SurveySubmit from 'components/survey/submit';
+import MetadataManagement from 'components/metadataManagement';
 import CommentReview from 'components/comments/admin/review/CommentReview';
 import CommentReviewListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
@@ -59,6 +60,7 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/dashboard/:dashboardType" element={<PublicDashboard />} />
                 <Route path="/engagements/:engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
+                <Route path="/metadatamanagement" element={<MetadataManagement />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />
                 </Route>

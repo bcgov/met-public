@@ -17,7 +17,8 @@ class EngagementMetadata(BaseModel):
     """A unit of metadata for an Engagement. Can be used to store arbitrary data."""
 
     __tablename__ = 'engagement_metadata'
-    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True,
+                   nullable=False, autoincrement=True)
     engagement_id = db.Column(db.Integer,
                               db.ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True, index=True)
     engagement = db.relationship('Engagement', backref='metadata')
@@ -69,21 +70,16 @@ class EngagementMetadata(BaseModel):
 class MetadataTaxonDataType(str, enum.Enum):
     """The data types that can be stored in a metadata property."""
 
-    TEXT = 'string'
-    LONG_TEXT = 'long-text'
+    TEXT = 'text'
+    LONG_TEXT = 'long_text'
     NUMBER = 'number'
     DATE = 'date'
+    TIME = 'time'
     DATETIME = 'datetime'
     BOOLEAN = 'boolean'
-    SELECT = 'select'
-    IMAGE = 'image'
-    VIDEO = 'video'
-    AUDIO = 'audio'
-    FILE = 'other_file'
     URL = 'url'
     EMAIL = 'email'
     PHONE = 'phone'
-    ADDRESS = 'address'
     OTHER = 'other'
 
     @classmethod
@@ -102,7 +98,8 @@ class MetadataTaxon(BaseModel):
 
     __tablename__ = 'engagement_metadata_taxa'
 
-    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True,
+                   unique=True, autoincrement=True)
     tenant_id = db.Column(db.Integer,
                           db.ForeignKey('tenant.id', ondelete='CASCADE'),
                           nullable=False, index=True)
@@ -111,7 +108,6 @@ class MetadataTaxon(BaseModel):
     description = db.Column(db.String(256), nullable=True)
     freeform = db.Column(db.Boolean, nullable=False, default=False)
     data_type = db.Column(db.String(64), nullable=True, default='text')
-    default_value = db.Column(db.Text, nullable=True)
     one_per_engagement = db.Column(db.Boolean)
     position = db.Column(db.Integer, nullable=False, index=True)
 
@@ -122,7 +118,8 @@ class MetadataTaxon(BaseModel):
             self.data_type = 'text'
         if not self.position:
             # find other taxa in this tenant and set position to the next highest
-            max_position = MetadataTaxon.query.filter_by(tenant_id=self.tenant_id).count()
+            max_position = MetadataTaxon.query.filter_by(
+                tenant_id=self.tenant_id).count()
             self.position = max_position + 1
 
     @validates('id')
@@ -144,6 +141,23 @@ class MetadataTaxon(BaseModel):
         if not self:
             return '<MetadataTaxon: None>'
         return f'<MetadataTaxon #{self.id}: {self.name}>'
+
+    @property
+    def preset_values(self) -> list[str]:
+        """Get preset values - any metadata entries with no specific engagement."""
+        return [entry.value for entry in self.entries if entry.engagement_id is None]
+
+    @preset_values.setter
+    @transactional()
+    def preset_values(self, values: list[str]) -> None:
+        # Update preset values to match the provided list
+        for entry in self.entries:
+            if entry.engagement_id is None and entry.value not in values:
+                entry.delete()
+        for value in values:
+            if value not in self.preset_values:
+                entry = EngagementMetadata(taxon_id=self.id, value=value)
+                entry.save()
 
     @transactional()
     def move_to_position(self, new_position: int) -> None:
@@ -194,6 +208,7 @@ class MetadataTaxon(BaseModel):
         Setting their positions accordingly.
         """
         for index, taxon_id in enumerate(taxon_order):
-            taxon = cls.query.filter_by(tenant_id=tenant_id, taxon_id=taxon_id).first()
+            taxon = cls.query.filter_by(
+                tenant_id=tenant_id, taxon_id=taxon_id).first()
             if taxon:
                 taxon.position = index

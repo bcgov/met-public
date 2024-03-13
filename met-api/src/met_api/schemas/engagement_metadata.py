@@ -1,7 +1,4 @@
-"""Engagement Metadata schema class.
-
-Manages the Engagement Metadata
-"""
+"""Schemas for serializing and deserializing classes related to engagement metadata."""
 
 from marshmallow import ValidationError, fields, pre_load, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
@@ -35,7 +32,8 @@ class EngagementMetadataSchema(SQLAlchemyAutoSchema):
         return data
 
     # Nested fields
-    taxon = Nested('MetadataTaxonSchema', many=False)
+    taxon = Nested('MetadataTaxonSchema', many=False,
+                   exclude=['entries'])
 
 
 class MetadataTaxonSchema(SQLAlchemyAutoSchema):
@@ -49,12 +47,28 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     name = fields.String(required=True, validate=validate.Length(max=64))
-    description = fields.String(validate=validate.Length(max=512), allow_none=True)
+    description = fields.String(
+        validate=validate.Length(max=512), allow_none=True)
     freeform = fields.Boolean()
-    default_value = fields.String(validate=validate.Length(max=512), allow_none=True)
-    data_type = fields.String(validate=validate.OneOf([e.value for e in MetadataTaxonDataType]))
+    default_value = fields.String(
+        validate=validate.Length(max=512), allow_none=True)
+    data_type = fields.String(validate=validate.OneOf(
+        [e.value for e in MetadataTaxonDataType]))
     one_per_engagement = fields.Boolean()
     position = fields.Integer(required=False)
+    preset_values = fields.Method(
+        'get_preset_values', deserialize='set_preset_values')
+
+    def get_preset_values(self, obj):
+        """Serialize the preset_values property for Marshmallow."""
+        return obj.preset_values
+
+    def set_preset_values(self, values):
+        """Deserialize the preset_values into a list of strings.
+
+        The rest is handled in the preset_values property setter.
+        """
+        return [str(value) for value in values]
 
     @pre_load
     def check_immutable_fields(self, data, **kwargs):

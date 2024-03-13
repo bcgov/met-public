@@ -43,7 +43,9 @@ export const setupWidgetTestEnvMock = (): void => {
 export const setupWidgetTestEnvSpy = (): void => {
     setupEnv();
 
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
 
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => ({
         roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
@@ -52,7 +54,9 @@ export const setupWidgetTestEnvSpy = (): void => {
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ projectId: '' });
     jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
     jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),

@@ -22,7 +22,6 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
-from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
@@ -56,6 +55,7 @@ from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
+from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
     TestEngagementSlugInfo, TestEngagementTranslationInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo,
@@ -244,7 +244,6 @@ def factory_metadata_taxon_model(
         description=taxon_info.get('description'),
         freeform=taxon_info.get('freeform'),
         data_type=taxon_info.get('data_type'),
-        default_value=taxon_info.get('default_value'),
         one_per_engagement=taxon_info.get('one_per_engagement'),
         position=taxon_info.get('position'),
     )
@@ -609,7 +608,8 @@ def factory_survey_translation_and_engagement_model():
         survey_id=survey.id,
         language_id=lang.id,
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
-        form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
+        form_json=TestSurveyTranslationInfo.survey_translation1.get(
+            'form_json'),
     )
     translation.save()
     return translation, survey, lang

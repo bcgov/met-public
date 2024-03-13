@@ -32,7 +32,7 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
-jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve([engagementMetadata]));
 
 // Mock the necessary services and contexts
 jest.mock('services/widgetService/VideoService', () => ({

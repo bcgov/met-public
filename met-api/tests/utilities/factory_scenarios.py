@@ -287,44 +287,33 @@ class TestEngagementMetadataTaxonInfo(dict, Enum):
     taxon1 = {
         'name': fake.name(),
         'description': fake.text(max_nb_chars=256),
-        'data_type': 'string',
+        'data_type': 'text',
         'freeform': True,
         'one_per_engagement': False,
-        'default_value': None,
-        'position': 1
     }
 
     taxon2 = {
         'name': fake.name(),
         'description': fake.text(max_nb_chars=256),
-        'tenant_id': 1,
-        'data_type': 'url',
+        'data_type': 'long_text',
         'freeform': True,
         'one_per_engagement': False,
-        'default_value': None,
-        'position': 2
     }
 
     taxon3 = {
         'name': fake.name(),
         'description': fake.text(max_nb_chars=256),
-        'tenant_id': 1,
-        'data_type': 'string',
+        'data_type': 'text',
         'freeform': False,
         'one_per_engagement': True,
-        'default_value': None,
-        'position': 3
     }
 
     taxon4 = {
         'name': fake.name(),
         'description': fake.text(max_nb_chars=256),
-        'tenant_id': 1,
-        'data_type': 'string',
+        'data_type': 'url',
         'freeform': False,
         'one_per_engagement': False,
-        'default_value': fake.name(),
-        'position': 4
     }
 
 
