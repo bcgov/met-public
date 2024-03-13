@@ -31,6 +31,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
+from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.language import Language as LanguageModel
 from met_api.models.membership import Membership as MembershipModel
@@ -57,10 +58,10 @@ from met_api.utils.enums import MembershipStatus
 from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo,
-    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSurveyInfo, TestSurveyTranslationInfo,
-    TestTenantInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo,
-    TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
+    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo,
+    TestParticipantInfo, TestPollAnswerInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
+    TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo,
+    TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()
@@ -612,3 +613,19 @@ def factory_survey_translation_and_engagement_model():
     )
     translation.save()
     return translation, survey, lang
+
+
+def factory_engagement_translation_model(
+        engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
+):
+    """Produce a engagement translation model."""
+    engagement_translation = EngagementTranslationModel(
+        engagement_id=engagement_translation.get('engagement_id'),
+        language_id=engagement_translation.get('language_id'),
+        name=engagement_translation.get('name'),
+        description=engagement_translation.get('description'),
+        content=engagement_translation.get('content'),
+        rich_content=engagement_translation.get('rich_content'),
+    )
+    engagement_translation.save()
+    return engagement_translation

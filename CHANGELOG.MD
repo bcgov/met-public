@@ -1,3 +1,10 @@
+## March 08, 2024
+
+- **Task**Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
+  - Added Engagement translation model.
+  - Added Engagement translation API.
+  - Added Unit tests.
+
 ## March 07, 2024
 
 - **Task**: Remove "default_values" from metadata taxa.

@@ -924,3 +924,17 @@ class TestSurveyTranslationInfo(dict, Enum):
         'name': 'Survey Name',
         'form_json': '{"question": "What is your name?"}'
     }
+
+
+class TestEngagementTranslationInfo(dict, Enum):
+    """Test scenarios of engagement translation content."""
+
+    engagementtranslation1 = {
+        'name': fake.text(max_nb_chars=20),
+        'description': fake.text(max_nb_chars=20),
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+            \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'content': 'Content Sample',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+    }
