@@ -1,6 +1,6 @@
 """Schema for EventItemTranslation serialization and deserialization."""
 
-from marshmallow import fields
+from marshmallow import fields, EXCLUDE
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from met_api.models.event_item_translation import EventItemTranslation
 
@@ -12,7 +12,7 @@ class EventItemTranslationSchema(SQLAlchemyAutoSchema):
         """EventItemTranslationSchema metadata."""
 
         model = EventItemTranslation
-        load_instance = True  # Optional: deserialize to model instances
+        unknown = EXCLUDE
 
     id = fields.Int(dump_only=True)
     language_id = fields.Int(required=True)

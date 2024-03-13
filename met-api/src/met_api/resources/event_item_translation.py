@@ -96,7 +96,7 @@ class EventItemTranslationResourceByLanguage(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get(event_id, event_item_id, language_id):
-        """Fetch a poll answer translation by language_id."""
+        """Fetch an event item translation by language_id."""
         try:
             event_item_translation = (
                 EventItemTranslationService.get_event_item_translation(

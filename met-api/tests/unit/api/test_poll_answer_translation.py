@@ -37,7 +37,7 @@ def test_get_poll_answer_translation(client, jwt, session):
 
 
 def test_get_poll_answer_translation_by_langauge_id(client, jwt, session):
-    """Assert that a poll answer translation can be fetched by its ID."""
+    """Assert that a poll answer translation can be fetched by its ID and Language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
     answer, poll, language = poll_answer_model_with_poll_enagement()
     poll_answer_translation = factory_poll_answer_translation_model(
