@@ -50,7 +50,6 @@ class SubscribeItemTranslation(BaseModel):
         :return:
             list: List of SubscribeItemTranslation objects
         """
-
         query = SubscribeItemTranslation.query
         if subscribe_item_id is not None:
             query = query.filter_by(subscribe_item_id=subscribe_item_id)
@@ -85,15 +84,15 @@ class SubscribeItemTranslation(BaseModel):
         return subscribe_item_translation
 
     @classmethod
-    def update_sub_item_translation(cls, id, data):
+    def update_sub_item_translation(cls, translation_id, data):
         """
         Update an existing SubscribeItemTranslation record.
 
-        :param id: ID of the SubscribeItemTranslation to update
+        :param translation_id: ID of the SubscribeItemTranslation to update
         :param data: Dictionary of fields to update
         :return: Updated SubscribeItemTranslation instance
         """
-        subscribe_item_translation = cls.find_by_id(id)
+        subscribe_item_translation = cls.find_by_id(translation_id)
         if subscribe_item_translation:
             for key, value in data.items():
                 setattr(subscribe_item_translation, key, value)
@@ -101,14 +100,14 @@ class SubscribeItemTranslation(BaseModel):
         return subscribe_item_translation
 
     @classmethod
-    def delete_sub_item_translation(cls, id):
+    def delete_sub_item_translation(cls, translation_id):
         """
         Delete a SubscribeItemTranslation record.
 
-        :param id: ID of the SubscribeItemTranslation to delete
+        :param translation_id: ID of the SubscribeItemTranslation to delete
         :return: None
         """
-        subscribe_item_translation = cls.find_by_id(id)
+        subscribe_item_translation = cls.find_by_id(translation_id)
         if subscribe_item_translation:
             subscribe_item_translation.delete()
             return True

@@ -3,24 +3,23 @@
 from http import HTTPStatus
 
 from sqlalchemy.exc import SQLAlchemyError
+
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models.poll_answer_translation import (
-    PollAnswerTranslation as PollAnswerTranslationModel,
-)
+from met_api.models.poll_answer_translation import PollAnswerTranslation as PollAnswerTranslationModel
 from met_api.services import authorization
 from met_api.services.poll_answers_service import PollAnswerService
-from met_api.utils.roles import Role
 from met_api.services.widget_poll_service import WidgetPollService
+from met_api.utils.roles import Role
 
 
 class PollAnswerTranslationService:
     """PollAnswerTranslation management service."""
 
     @staticmethod
-    def get_by_id(id: int):
+    def get_by_id(translation_id: int):
         """Get poll answer translations by id."""
-        return PollAnswerTranslationModel.find_by_id(id)
+        return PollAnswerTranslationModel.find_by_id(translation_id)
 
     @staticmethod
     def get_poll_answer_translation(poll_answer_id=None, language_id=None):
@@ -65,10 +64,10 @@ class PollAnswerTranslationService:
             ) from e
 
     @staticmethod
-    def update_poll_answer_translation(poll_id: int, id: int, data: dict):
+    def update_poll_answer_translation(poll_id: int, translation_id: int, data: dict):
         """Update an existing PollAnswerTranslation with authorization check."""
         try:
-            poll_answer_translation = PollAnswerTranslationModel.find_by_id(id)
+            poll_answer_translation = PollAnswerTranslationModel.find_by_id(translation_id)
             if not poll_answer_translation:
                 raise BusinessException(
                     'PollAnswerTranslation not found', HTTPStatus.NOT_FOUND
@@ -86,7 +85,7 @@ class PollAnswerTranslationService:
 
             updated_translation = (
                 PollAnswerTranslationModel.update_poll_answer_translation(
-                    id, data
+                    translation_id, data
                 )
             )
             return updated_translation
@@ -96,10 +95,10 @@ class PollAnswerTranslationService:
             ) from e
 
     @staticmethod
-    def delete_poll_answer_translation(poll_id: int, id: int):
+    def delete_poll_answer_translation(poll_id: int, translation_id: int):
         """Delete a PollAnswerTranslation with authorization check."""
         try:
-            poll_answer_translation = PollAnswerTranslationModel.find_by_id(id)
+            poll_answer_translation = PollAnswerTranslationModel.find_by_id(translation_id)
             if not poll_answer_translation:
                 raise ValueError(
                     'PollAnswerTranslation not found', HTTPStatus.NOT_FOUND
@@ -116,7 +115,7 @@ class PollAnswerTranslationService:
             )
 
             return PollAnswerTranslationModel.delete_poll_answer_translation(
-                id
+                translation_id
             )
         except SQLAlchemyError as e:
             raise BusinessException(

@@ -45,7 +45,6 @@ class PollAnswerTranslation(BaseModel):
         :param language_id (int): ID of the language
         :return: list: List of PollAnswerTranslation objects
         """
-
         query = PollAnswerTranslation.query
         if poll_answer_id is not None:
             query = query.filter_by(poll_answer_id=poll_answer_id)
@@ -63,7 +62,6 @@ class PollAnswerTranslation(BaseModel):
         :param data: Dictionary containing the fields for PollAnswerTranslation
         :return: PollAnswerTranslation instance
         """
-        
         poll_answer_translation = PollAnswerTranslation(
             poll_answer_id=data['poll_answer_id'],
             language_id=data['language_id'],
@@ -71,20 +69,20 @@ class PollAnswerTranslation(BaseModel):
                 'answer_text'
             ),  # Returns `None` if 'answer_text' is not in `data` as its optional
         )
-        
+
         poll_answer_translation.save()
         return poll_answer_translation
 
     @classmethod
-    def update_poll_answer_translation(cls, id, data):
+    def update_poll_answer_translation(cls, translation_id, data):
         """
         Update an existing PollAnswerTranslation record.
 
-        :param id: ID of the PollAnswerTranslation to update
+        :param translation_id: ID of the PollAnswerTranslation to update
         :param data: Dictionary of fields to update
         :return: Updated PollAnswerTranslation instance
         """
-        poll_answer_translation = cls.find_by_id(id)
+        poll_answer_translation = cls.find_by_id(translation_id)
         if poll_answer_translation:
             for key, value in data.items():
                 setattr(poll_answer_translation, key, value)
@@ -92,14 +90,14 @@ class PollAnswerTranslation(BaseModel):
         return poll_answer_translation
 
     @classmethod
-    def delete_poll_answer_translation(cls, id):
+    def delete_poll_answer_translation(cls, translation_id):
         """
         Delete a PollAnswerTranslation record.
 
-        :param id: ID of the PollAnswerTranslation to delete
+        :param translation_id: ID of the PollAnswerTranslation to delete
         :return: None
         """
-        poll_answer_translation = cls.find_by_id(id)
+        poll_answer_translation = cls.find_by_id(translation_id)
         if poll_answer_translation:
             poll_answer_translation.delete()
             return True

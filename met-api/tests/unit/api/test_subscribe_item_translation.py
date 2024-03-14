@@ -1,13 +1,10 @@
+"""Tests to verify the SubscribeItemTranslation API endpoints."""
 import json
 from http import HTTPStatus
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_utils import (
-    factory_auth_header,
-    subscribe_item_model_with_language,
-    factory_subscribe_item_translation_model,
-)
-from tests.utilities.factory_scenarios import TestSubscribeItemTranslationInfo
+    factory_auth_header, factory_subscribe_item_translation_model, subscribe_item_model_with_language)
 
 
 def test_get_subscribe_item_translation(client, jwt, session):

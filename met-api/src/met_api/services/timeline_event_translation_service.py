@@ -1,13 +1,12 @@
 """Service for TimelineEventTranslation management with authorization checks."""
 
 from http import HTTPStatus
+
 from sqlalchemy.exc import SQLAlchemyError
+
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import engagement
-from met_api.models.timeline_event_translation import (
-    TimelineEventTranslation as TimelineEventTranslationModel,
-)
+from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
 from met_api.services import authorization
 from met_api.services.timeline_event_service import TimelineEventService
 from met_api.services.widget_timeline_service import WidgetTimelineService
@@ -18,9 +17,9 @@ class TimelineEventTranslationService:
     """TimelineEventTranslation management service."""
 
     @staticmethod
-    def get_by_id(id: int):
+    def get_by_id(translation_id: int):
         """Get timeline event translation by ID."""
-        return TimelineEventTranslationModel.find_by_id(id)
+        return TimelineEventTranslationModel.find_by_id(translation_id)
 
     @staticmethod
     def get_engagement_id(timeline_id):
@@ -28,8 +27,8 @@ class TimelineEventTranslationService:
         timeline = WidgetTimelineService.get_timeline_by_id(timeline_id)
         if not timeline:
             raise BusinessException(
-                status=HTTPStatus.NOT_FOUND,
-                message='Timeline not found',
+                status_code=HTTPStatus.NOT_FOUND,
+                error='Timeline not found',
             )
         return timeline.engagement_id
 
@@ -73,10 +72,10 @@ class TimelineEventTranslationService:
             ) from e
 
     @staticmethod
-    def update_timeline_event_translation(timeline_id: int, id: int, data: dict):
+    def update_timeline_event_translation(timeline_id: int, translation_id: int, data: dict):
         """Update an existing TimelineEventTranslation with authorization check."""
         try:
-            timeline_event_translation = TimelineEventTranslationModel.find_by_id(id)
+            timeline_event_translation = TimelineEventTranslationModel.find_by_id(translation_id)
             if not timeline_event_translation:
                 raise BusinessException(
                     'TimelineEventTranslation not found', HTTPStatus.NOT_FOUND
@@ -95,7 +94,7 @@ class TimelineEventTranslationService:
 
             updated_translation = (
                 TimelineEventTranslationModel.update_timeline_event_translation(
-                    id, data
+                    translation_id, data
                 )
             )
             return updated_translation
@@ -105,10 +104,10 @@ class TimelineEventTranslationService:
             ) from e
 
     @staticmethod
-    def delete_timeline_event_translation(timeline_id: int, id: int):
+    def delete_timeline_event_translation(timeline_id: int, translation_id: int):
         """Delete a TimelineEventTranslation with authorization check."""
         try:
-            timeline_event_translation = TimelineEventTranslationModel.find_by_id(id)
+            timeline_event_translation = TimelineEventTranslationModel.find_by_id(translation_id)
             if not timeline_event_translation:
                 raise BusinessException(
                     'TimelineEventTranslation not found', HTTPStatus.NOT_FOUND
@@ -126,8 +125,8 @@ class TimelineEventTranslationService:
                 engagement_id=engagement_id,
             )
 
-            return TimelineEventTranslationModel.delete_timeline_event_translation(id)
+            return TimelineEventTranslationModel.delete_timeline_event_translation(translation_id)
         except SQLAlchemyError as e:
             raise BusinessException(
-                str(e), HTTPStatus.INTERNAL_SERVER
-            )
+                str(e), HTTPStatus.INTERNAL_SERVER_ERROR
+            ) from e

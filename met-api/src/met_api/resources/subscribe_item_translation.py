@@ -4,10 +4,12 @@
 """API endpoints for managing a SubscribeItemTranslation resource."""
 
 from http import HTTPStatus
+
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
+
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
@@ -15,10 +17,12 @@ from met_api.schemas.subscribe_item_translation_schema import SubscribeItemTrans
 from met_api.services.subscribe_item_translation_service import SubscribeItemTranslationService
 from met_api.utils.util import allowedorigins, cors_preflight
 
+
 API = Namespace(
     'subscribe_item_translations',
     description='Endpoints for SubscribeItemTranslation Management',
 )
+
 
 @cors_preflight('GET, POST, PATCH, DELETE, OPTIONS')
 @API.route('/<int:subscribe_item_translation_id>')
@@ -27,7 +31,7 @@ class SubscribeItemTranslationResource(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(widget_subscribe_id, subscribe_item_translation_id):
+    def get(subscribe_item_translation_id, **_):
         """Fetch a subscribe item translation by id."""
         try:
             subscribe_item_translation = (
@@ -91,7 +95,7 @@ class SubscribeItemTranslationResourceByLanguage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(widget_subscribe_id, subscribe_item_id, language_id):
+    def get(subscribe_item_id, language_id, **_):
         """Fetch a subscribe item translation by language_id."""
         try:
             subscribe_item_translation = (

@@ -1,25 +1,25 @@
 """Service for SubscribeItemTranslation management with authorization checks."""
 
 from http import HTTPStatus
+
 from sqlalchemy.exc import SQLAlchemyError
-from met_api.exceptions.business_exception import BusinessException
-from met_api.models.subscribe_item_translation import (
-    SubscribeItemTranslation as SubscribeItemTranslationModel,
-)
-from met_api.services import authorization
+
 from met_api.constants.membership_type import MembershipType
-from met_api.utils.roles import Role
-from met_api.services.widget_subscribe_service import WidgetSubscribeService
+from met_api.exceptions.business_exception import BusinessException
+from met_api.models.subscribe_item_translation import SubscribeItemTranslation as SubscribeItemTranslationModel
+from met_api.services import authorization
 from met_api.services.widget_service import WidgetService
+from met_api.services.widget_subscribe_service import WidgetSubscribeService
+from met_api.utils.roles import Role
 
 
 class SubscribeItemTranslationService:
     """SubscribeItemTranslation management service."""
 
     @staticmethod
-    def get_by_id(id: int):
+    def get_by_id(translation_id: int):
         """Get subscribe item translation by ID."""
-        return SubscribeItemTranslationModel.find_by_id(id)
+        return SubscribeItemTranslationModel.find_by_id(translation_id)
 
     @staticmethod
     def get_subscribe_item_translation(subscribe_item_id=None, language_id=None):
@@ -32,14 +32,14 @@ class SubscribeItemTranslationService:
         widget_subscribe = WidgetSubscribeService.get_by_id(widget_subscribe_id)
         if not widget_subscribe_id:
             raise BusinessException(
-                status=HTTPStatus.NOT_FOUND,
-                message='Subscribe widget not found',
+                status_code=HTTPStatus.NOT_FOUND,
+                error='Subscribe widget not found',
             )
         widget = WidgetService.get_widget_by_id(widget_subscribe.widget_id)
         if not widget:
             raise BusinessException(
-                status=HTTPStatus.NOT_FOUND,
-                message='Widget not found',
+                status_code=HTTPStatus.NOT_FOUND,
+                error='Widget not found',
             )
         return widget.engagement_id
 
@@ -68,10 +68,10 @@ class SubscribeItemTranslationService:
             raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR) from e
 
     @staticmethod
-    def update_subscribe_item_translation(widget_subscribe_id: int, id: int, data: dict):
+    def update_subscribe_item_translation(widget_subscribe_id: int, translation_id: int, data: dict):
         """Update an existing SubscribeItemTranslation with authorization check."""
         try:
-            subscribe_item_translation = SubscribeItemTranslationModel.find_by_id(id)
+            subscribe_item_translation = SubscribeItemTranslationModel.find_by_id(translation_id)
             if not subscribe_item_translation:
                 raise BusinessException('SubscribeItemTranslation not found', HTTPStatus.NOT_FOUND)
 
@@ -82,16 +82,16 @@ class SubscribeItemTranslationService:
             engagement_id = SubscribeItemTranslationService.get_engagement_id(widget_subscribe_id)
             authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
 
-            updated_translation = SubscribeItemTranslationModel.update_sub_item_translation(id, data)
+            updated_translation = SubscribeItemTranslationModel.update_sub_item_translation(translation_id, data)
             return updated_translation
         except SQLAlchemyError as e:
             raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR) from e
 
     @staticmethod
-    def delete_subscribe_item_translation(widget_subscribe_id: int, id: int):
+    def delete_subscribe_item_translation(widget_subscribe_id: int, translation_id: int):
         """Delete a SubscribeItemTranslation with authorization check."""
         try:
-            subscribe_item_translation = SubscribeItemTranslationModel.find_by_id(id)
+            subscribe_item_translation = SubscribeItemTranslationModel.find_by_id(translation_id)
             if not subscribe_item_translation:
                 raise BusinessException('SubscribeItemTranslation not found', HTTPStatus.NOT_FOUND)
 
@@ -105,6 +105,6 @@ class SubscribeItemTranslationService:
                 engagement_id=engagement_id,
             )
 
-            return SubscribeItemTranslationModel.delete_sub_item_translation(id)
+            return SubscribeItemTranslationModel.delete_sub_item_translation(translation_id)
         except SQLAlchemyError as e:
             raise BusinessException(str(e), HTTPStatus.INTERNAL_SERVER_ERROR) from e

@@ -1,14 +1,10 @@
+"""Tests to verify the TimelineEventTranslation API endpoints."""
 import json
 from http import HTTPStatus
-from turtle import update
 
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_utils import factory_auth_header
-from tests.utilities.factory_scenarios import TestTimelineEventTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_timeline_event_translation_model,
-    timeline_event_model_with_language,
-)
+    factory_auth_header, factory_timeline_event_translation_model, timeline_event_model_with_language)
 
 
 def test_get_timeline_event_translation(client, jwt, session):

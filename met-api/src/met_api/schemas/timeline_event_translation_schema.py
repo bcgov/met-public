@@ -1,7 +1,8 @@
 """Schema for TimelineEventTranslation serialization and deserialization."""
 
-from marshmallow import fields, EXCLUDE
+from marshmallow import EXCLUDE, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 from met_api.models.timeline_event_translation import TimelineEventTranslation
 
 

@@ -5,10 +5,7 @@ from http import HTTPStatus
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_utils import (
-    factory_auth_header,
-    poll_answer_model_with_poll_enagement,
-    factory_poll_answer_translation_model,
-)
+    factory_auth_header, factory_poll_answer_translation_model, poll_answer_model_with_poll_enagement)
 
 
 def test_get_poll_answer_translation(client, jwt, session):

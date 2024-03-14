@@ -1,15 +1,10 @@
-# Unit tests for TimelineEventTranslationService
+"""Unit tests for TimelineEventTranslationService."""
 
 from met_api.services.timeline_event_translation_service import TimelineEventTranslationService
+from tests.utilities.factory_scenarios import TestJwtClaims, TestTimelineEventTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_timeline_event_translation_model,
-    timeline_event_model_with_language,
-    patch_token_info,
-    factory_staff_user_model,
-)
-from met_api.exceptions.business_exception import BusinessException
-from tests.utilities.factory_scenarios import TestTimelineEventTranslationInfo
-from tests.utilities.factory_scenarios import TestJwtClaims
+    factory_staff_user_model, factory_timeline_event_translation_model, patch_token_info,
+    timeline_event_model_with_language)
 
 
 def test_get_timeline_event_translation_by_id(session):

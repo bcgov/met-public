@@ -1,15 +1,10 @@
-# Unit tests for SubscribeItemTranslationService
+"""Unit tests for SubscribeItemTranslationService."""
 
 from met_api.services.subscribe_item_translation_service import SubscribeItemTranslationService
+from tests.utilities.factory_scenarios import TestJwtClaims, TestSubscribeItemTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_subscribe_item_translation_model,
-    subscribe_item_model_with_language,
-    patch_token_info,
-    factory_staff_user_model,
-)
-from met_api.exceptions.business_exception import BusinessException
-from tests.utilities.factory_scenarios import TestSubscribeItemTranslationInfo
-from tests.utilities.factory_scenarios import TestJwtClaims
+    factory_staff_user_model, factory_subscribe_item_translation_model, patch_token_info,
+    subscribe_item_model_with_language)
 
 
 def test_get_subscribe_item_translation_by_id(session):

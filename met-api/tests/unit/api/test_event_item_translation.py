@@ -1,13 +1,11 @@
+"""Tests to verify the EventItemTranslation API endpoints."""
 import json
 from http import HTTPStatus
 
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_utils import (
-    factory_auth_header,
-    event_item_model_with_language,
-    factory_event_item_translation_model,
-)
 from tests.utilities.factory_scenarios import TestEventItemTranslationInfo
+from tests.utilities.factory_utils import (
+    event_item_model_with_language, factory_auth_header, factory_event_item_translation_model)
 
 
 def test_get_event_item_translation(client, jwt, session):

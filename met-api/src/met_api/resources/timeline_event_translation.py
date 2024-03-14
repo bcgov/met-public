@@ -3,7 +3,6 @@
 # Licensed under the Apache License, Version 2.0 (the 'License');
 """API endpoints for managing a TimelineEventTranslation resource."""
 
-import cgi
 from http import HTTPStatus
 
 from flask import request
@@ -18,10 +17,12 @@ from met_api.schemas.timeline_event_translation_schema import TimelineEventTrans
 from met_api.services.timeline_event_translation_service import TimelineEventTranslationService
 from met_api.utils.util import allowedorigins, cors_preflight
 
+
 API = Namespace(
     'timeline_event_translations',
     description='Endpoints for TimelineEventTranslation Management',
 )
+
 
 @cors_preflight('GET, POST, PATCH, DELETE, OPTIONS')
 @API.route('/<int:timeline_event_translation_id>')
@@ -30,7 +31,7 @@ class TimelineEventTranslationResource(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(timeline_id, timeline_event_translation_id):
+    def get(timeline_event_translation_id, **_):
         """Fetch a timeline event translation by id."""
         try:
             timeline_event_translation = (
@@ -86,6 +87,7 @@ class TimelineEventTranslationResource(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.NOT_FOUND
 
+
 @cors_preflight('GET, OPTIONS')
 @API.route('/event/<int:timeline_event_id>/language/<int:language_id>')
 class TimelineEventTranslationResourceByLanguage(Resource):
@@ -93,7 +95,7 @@ class TimelineEventTranslationResourceByLanguage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(timeline_id, timeline_event_id, language_id):
+    def get(timeline_event_id, language_id, **_):
         """Fetch a timeline event translation by language_id."""
         try:
             timeline_event_translation = (
