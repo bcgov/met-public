@@ -11,14 +11,18 @@ import { When } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
+import LanguageSelector from 'components/common/LanguageSelector';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const language = sessionStorage.getItem('languageId');
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
 
     const logoUrl = translate('common.logoUrl');
+    const headerTitle = translate('header.title');
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar
@@ -48,7 +52,7 @@ const PublicHeader = () => {
                                     cursor: 'pointer',
                                 }}
                                 onClick={() => {
-                                    navigate('/');
+                                    navigate(`/${language}`);
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -66,7 +70,7 @@ const PublicHeader = () => {
                                 cursor: 'pointer',
                             }}
                             onClick={() => {
-                                navigate('/');
+                                navigate(`/${language}`);
                             }}
                             alt="British Columbia Logo"
                         />
@@ -74,16 +78,19 @@ const PublicHeader = () => {
                     <HeaderTitle
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
-                            navigate('/');
+                            navigate(`/${language}`);
                         }}
                     >
-                        {translate('header.title')}
+                        {headerTitle}
                     </HeaderTitle>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout()}>
                             Logout
                         </Button>
                     </When>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <LanguageSelector />
+                    </Box>
                 </Toolbar>
                 <EnvironmentBanner />
             </AppBar>

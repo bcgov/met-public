@@ -8,8 +8,8 @@
     },
     "landing": {
         "banner": {
-            "header": "The Title of The Office",
-            "description": "Description about the office and public engagement."
+            "header": "Government Digital Experience Division",
+            "description": "The GDX Division helps inform digital standards for web content, accessibility, forms, and design.."
         }
     },
     "comment": {
@@ -49,12 +49,5 @@
         "login": "Admin Login",
         "privacy": "Privacy",
         "copyrightNotice": "© 2023 Government of British Columbia"
-    },
-    "dashboard": {
-        "header": "What We Heard",
-        "buttonText": {
-            "readComments": "Read Comments",
-            "exportToPDF": "Export to PDF"
-        }
     }
 }

@@ -106,10 +106,12 @@ const doLogout = async () => {
     sessionStorage.removeItem('idToken');
     sessionStorage.removeItem('refreshToken');
     clearInterval(refreshInterval);
+    const baseURL = getBaseUrl();
+    const language = sessionStorage.getItem('languageId');
 
     // Check if the ID token is available and pass it as id_token_hint
     const logoutOptions = {
-        redirectUri: getBaseUrl(),
+        redirectUri: `${baseURL}/${language}`,
         id_token_hint: idToken,
     };
 

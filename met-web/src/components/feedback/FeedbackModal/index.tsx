@@ -26,7 +26,10 @@ import { ZIndex } from 'styles/Theme';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import { useAppTranslation } from 'hooks';
+
 export const FeedbackModal = () => {
+    const { t: translate } = useAppTranslation();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
@@ -100,7 +103,7 @@ export const FeedbackModal = () => {
                 <SentimentVeryDissatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
                 <SentimentSatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
                 <SentimentSatisfiedAltIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
-                Website Feedback
+                {translate('feedback.websiteFeedback')}
             </PrimaryButton>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
                 <Grid

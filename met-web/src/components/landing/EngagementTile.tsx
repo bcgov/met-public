@@ -14,18 +14,21 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { getBaseUrl } from 'helper';
+import { useAppTranslation } from 'hooks';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
     engagementId: number;
 }
 const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps) => {
+    const { t: translate } = useAppTranslation();
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
     const [slug, setSlug] = useState('');
     const dateFormat = 'MMM DD, YYYY';
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const engagementPath = `/${slug}`;
-    const engagementUrl = `${getBaseUrl()}${engagementPath}`;
+    const engagementUrl = `${getBaseUrl()}${languagePath}${engagementPath}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
@@ -127,7 +130,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                 window.location.href = engagementUrl;
                             }}
                         >
-                            Share Your Thoughts
+                            {translate('buttonText.shareYourThoughts')}
                         </PrimaryButton>
                     </Then>
                 </If>
@@ -144,7 +147,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                 window.location.href = engagementUrl;
                             }}
                         >
-                            View Engagement
+                            {translate('buttonText.viewEngagement')}
                         </SecondaryButton>
                     </Then>
                 </If>

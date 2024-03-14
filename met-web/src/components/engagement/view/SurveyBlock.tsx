@@ -10,8 +10,10 @@ import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Case, Switch } from 'react-if';
 import { useNavigate } from 'react-router-dom';
+import { useAppTranslation } from 'hooks';
 
 const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
+    const { t: translate } = useAppTranslation();
     const { savedEngagement, isEngagementLoading, mockStatus } = useContext(ActionContext);
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -48,7 +50,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 disabled={!surveyId}
                                 onClick={startSurvey}
                             >
-                                Share Your Thoughts
+                                {translate('buttonText.shareYourThoughts')}
                             </PrimaryButton>
                         </Grid>
                     </Case>

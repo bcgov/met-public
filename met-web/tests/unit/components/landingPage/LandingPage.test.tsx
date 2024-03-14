@@ -77,9 +77,9 @@ describe('Landing page tests', () => {
 
         await waitFor(() => {
             expect(screen.getByPlaceholderText("Type engagement's name...")).toBeInTheDocument();
-            expect(screen.getByText('Engagement name')).toBeInTheDocument();
-            expect(screen.getByText('Status')).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.header')).toBeInTheDocument();
+            expect(screen.getByText('landingPage.engagementNameLabel')).toBeInTheDocument();
+            expect(screen.getByText('landingPage.statusLabel')).toBeInTheDocument();
+            expect(screen.getByText('landing.banner.header')).toBeInTheDocument(); 
             expect(screen.getByText('landing.banner.description')).toBeInTheDocument();
             expect(screen.getByText(openEngagement.name)).toBeInTheDocument();
             expect(screen.getByText(closedEngagement.name)).toBeInTheDocument();

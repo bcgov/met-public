@@ -105,7 +105,7 @@ const LandingComponent = () => {
                         ref={tileBlockRef}
                     >
                         <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Engagement name</MetLabel>
+                            <MetLabel>{translate('landingPage.engagementNameLabel')}</MetLabel>
                             <TextField
                                 fullWidth
                                 placeholder="Type engagement's name..."
@@ -118,7 +118,7 @@ const LandingComponent = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Status</MetLabel>
+                            <MetLabel>{translate('landingPage.statusLabel')}</MetLabel>
                             <TextField
                                 id="status"
                                 name="status"

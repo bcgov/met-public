@@ -1,0 +1,60 @@
+{
+    "common": {
+        "logoUrl": ""
+    },
+    "header": {
+        "title": "Engagement Moderne",
+        "smallTitle": "EM"
+    },
+    "landing": {
+        "banner": {
+            "header": "Division de l'Expérience Numérique Gouvernementale",
+            "description": "La Division ENG aide à informer les normes numériques pour le contenu Web, l'accessibilité, les formulaires et la conception."
+        }
+    },
+    "comment": {
+        "admin": {
+            "review": {
+                "threatTextOne": "Sélectionnez cette option s'il y a une menace dans le(s) commentaire(s). Aucun e-mail ne sera envoyé. Contactez",
+                "threatContact": "Prénom Nom",
+                "threatTextTwo": "à",
+                "threatContactEmail": "email@gov.bc.ca"
+            }
+        }
+    },
+    "cacForm": {
+        "contactTitle": "le Directeur des Services Numériques",
+        "contactEmail": "email@gov.bc.ca"
+    },
+    "landingPage": {
+        "engagementNameLabel": "Nom de l'engagement",
+        "statusLabel": "Statut"
+    },
+    "buttonText": {
+        "shareYourThoughts": "Partagez Vos Pensées",
+        "viewEngagement": "Voir l'Engagement"
+    },
+    "feedback": {
+        "websiteFeedback": "Commentaires sur le Site Web"
+    },
+    "footer": {
+        "body": "La fonction publique de la Colombie-Britannique reconnaît les territoires des Premières Nations autour de la Colombie-Britannique et est reconnaissante d'effectuer notre travail sur ces terres. Nous reconnaissons les droits, les intérêts, les priorités et les préoccupations de tous les peuples autochtones - Premières Nations, Métis et Inuits - en respectant et en reconnaissant leurs cultures distinctes, leurs histoires, leurs droits, leurs lois et leurs gouvernements.",
+        "connectWithUs": "CONNECTEZ-VOUS AVEC NOUS",
+        "moreInfo": "PLUS D'INFORMATIONS",
+        "home": "Accueil",
+        "accessibility": "Accessibilité",
+        "aboutGov": "À propos de gov.bc.ca",
+        "copyright": "Droits d'auteur",
+        "disclaimer": "Avertissement",
+        "login": "Connexion Administrateur",
+        "privacy": "Confidentialité",
+        "copyrightNotice": "© 2023 Gouvernement de la Colombie-Britannique"
+    },
+    "dashboard": {
+        "header": "Ce que nous avons entendu",
+        "buttonText": {
+            "readComments": "Lire les commentaires",
+            "exportToPDF": "Exporter en PDF"
+        }
+    }
+}

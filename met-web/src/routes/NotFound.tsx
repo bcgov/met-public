@@ -7,13 +7,20 @@ import { Link } from 'react-router-dom';
 const listItemStyle = { marginBottom: 1 };
 const marginStyle = { mr: 2 };
 
+const tenantId = sessionStorage.getItem('tenantId');
+const LanguageId = sessionStorage.getItem('languageId');
+
 const SuggestionsList = () => (
     <Box>
         <p style={{ ...listItemStyle, fontWeight: 'bold' }}>Suggestions to help you find what you're looking for:</p>
         <ul>
             <li style={listItemStyle}>Check that the web URL has been entered correctly</li>
             <li style={listItemStyle}>
-                Go to our <Link to="/">homepage</Link> and browse through our past and current engagements
+                Go to our{' '}
+                <Link target="_blank" to={`/${tenantId}/${LanguageId}`}>
+                    homepage
+                </Link>{' '}
+                and browse through our past and current engagements
             </li>
             <li style={listItemStyle}>Telephone Device for the Deaf (TDD) across B.C.: 711</li>
             <li style={listItemStyle}>If you would like to email us, please contact *********@gov.bc.ca.</li>

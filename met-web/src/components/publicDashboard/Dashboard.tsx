@@ -20,8 +20,10 @@ import SurveyBarPrintable from './SurveyBarPrintable';
 import { generateDashboardPdf } from './util';
 import { Map } from 'models/analytics/map';
 import { When } from 'react-if';
+import { useAppTranslation } from 'hooks';
 
 const Dashboard = () => {
+    const { t: translate } = useAppTranslation();
     const { slug } = useParams();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
@@ -93,7 +95,9 @@ const Dashboard = () => {
                             >
                                 <When condition={!isTablet}>
                                     <Grid item xs={12} sm={6}>
-                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
+                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>
+                                            {translate('dashboard.header')}
+                                        </MetHeader1>
                                     </Grid>
                                     <Grid
                                         item
@@ -108,7 +112,7 @@ const Dashboard = () => {
                                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                                 onClick={handleReadComments}
                                             >
-                                                Read Comments
+                                                {translate('dashboard.buttonText.readComments')}
                                             </PrimaryButton>
                                             <SecondaryButton
                                                 onClick={() => {
@@ -116,7 +120,7 @@ const Dashboard = () => {
                                                 }}
                                                 loading={isPrinting}
                                             >
-                                                Export to PDF
+                                                {translate('dashboard.buttonText.exportToPDF')}
                                             </SecondaryButton>
                                         </Stack>
                                     </Grid>
