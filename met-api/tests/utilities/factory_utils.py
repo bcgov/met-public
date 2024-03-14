@@ -825,7 +825,7 @@ def event_item_model_with_language():
     widget_event = factory_widget_event_model(widget_model)
     event_item_model = factory_event_item_model(widget_event)
     language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return event_item_model, language_model
+    return event_item_model, widget_event, language_model
 
 
 def factory_event_item_translation_model(

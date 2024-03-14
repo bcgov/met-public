@@ -59,6 +59,7 @@ class EventItemTranslation(BaseModel):
             query = query.filter_by(language_id=language_id)
 
         event_item_translation_records = query.all()
+        print(event_item_translation_records)
         return event_item_translation_records
 
     @classmethod
@@ -69,7 +70,25 @@ class EventItemTranslation(BaseModel):
         :param data: Dictionary containing the fields for EventItemTranslation
         :return: EventItemTranslation instance
         """
-        event_item_translation = cls(**data)
+        event_item_translation = EventItemTranslation(
+            event_item_id=data['event_item_id'],
+            language_id=data['language_id'],
+            description=data.get(
+                'description'
+            ),
+            location_name=data.get(
+                'location_name'
+            ),
+            location_address=data.get(
+                'location_address'
+            ),
+            url=data.get(
+                'url'
+            ),
+            url_label=data.get(
+                'url_label'
+            )
+        )
         event_item_translation.save()
         return event_item_translation
 
@@ -100,3 +119,5 @@ class EventItemTranslation(BaseModel):
         event_item_translation = cls.find_by_id(id)
         if event_item_translation:
             event_item_translation.delete()
+            return True
+        return False
