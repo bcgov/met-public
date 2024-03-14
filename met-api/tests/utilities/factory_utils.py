@@ -865,7 +865,7 @@ def timeline_event_model_with_language():
         }
     )
     language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return timeline_event, language_model
+    return timeline_event, widget_timeline, language_model
 
 
 def factory_timeline_event_translation_model(
@@ -880,3 +880,13 @@ def factory_timeline_event_translation_model(
     )
     timeline_translation.save()
     return timeline_translation
+
+
+def subscribe_item_model_with_language():
+    """Produce a subscribe item model instance with language."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    widget_subscribe = factory_widget_subscribe_model(widget_model)
+    subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return subscribe_item_model, widget_subscribe, language_model

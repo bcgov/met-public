@@ -68,7 +68,19 @@ class SubscribeItemTranslation(BaseModel):
         :param data: Dictionary containing the fields for SubscribeItemTranslation
         :return: SubscribeItemTranslation instance
         """
-        subscribe_item_translation = cls(**data)
+        subscribe_item_translation = SubscribeItemTranslation(
+            subscribe_item_id=data['subscribe_item_id'],
+            language_id=data['language_id'],
+            description=data.get(
+                'description'
+            ),
+            rich_description=data.get(
+                'rich_description'
+            ),
+            call_to_action_text=data.get(
+                'call_to_action_text'
+            )
+        )
         subscribe_item_translation.save()
         return subscribe_item_translation
 
@@ -99,3 +111,5 @@ class SubscribeItemTranslation(BaseModel):
         subscribe_item_translation = cls.find_by_id(id)
         if subscribe_item_translation:
             subscribe_item_translation.delete()
+            return True
+        return False

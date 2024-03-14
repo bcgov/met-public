@@ -61,6 +61,8 @@ from .widget_translation import API as WIDGET_TRANSLATION_API
 from .survey_translation import API as SURVEY_TRANSLATION_API
 from .poll_answer_translation import API as POLL_ANSWER_TRANSLATION_API
 from .event_item_translation import API as EVENT_ITEM_TRANSLATION_API
+from .subscribe_item_translation import API as SUBSCRIBE_ITEM_TRANSLATION_API
+from .timeline_event_translation import API as TIMELINE_EVENT_TRANSLATION_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -112,3 +114,5 @@ API.add_namespace(WIDGET_TRANSLATION_API, path='/widget/<int:widget_id>/translat
 API.add_namespace(SURVEY_TRANSLATION_API, path='/surveys/<int:survey_id>/translations')
 API.add_namespace(POLL_ANSWER_TRANSLATION_API, path='/polls/<int:poll_id>/translations')
 API.add_namespace(EVENT_ITEM_TRANSLATION_API, path='/events/<int:event_id>/translations')
+API.add_namespace(SUBSCRIBE_ITEM_TRANSLATION_API, path='/subscribe/<int:widget_subscribe_id>/translations')
+API.add_namespace(TIMELINE_EVENT_TRANSLATION_API, path='/timelines/<int:timeline_id>/translations')

@@ -63,7 +63,16 @@ class TimelineEventTranslation(BaseModel):
         :param data: Dictionary containing the fields for TimelineEventTranslation
         :return: TimelineEventTranslation instance
         """
-        timeline_event_translation = cls(**data)
+        timeline_event_translation = TimelineEventTranslation(
+            timeline_event_id=data['timeline_event_id'],
+            language_id=data['language_id'],
+            description=data.get(
+                'description'
+            ),
+            time=data.get(
+                'time'
+            )
+        )
         timeline_event_translation.save()
         return timeline_event_translation
 
@@ -94,3 +103,5 @@ class TimelineEventTranslation(BaseModel):
         timeline_event_translation = cls.find_by_id(id)
         if timeline_event_translation:
             timeline_event_translation.delete()
+            return True
+        return False

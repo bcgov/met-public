@@ -9,6 +9,11 @@ from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeM
 
 class WidgetSubscribeService:
     """Widget Subscribe management service."""
+    
+    @staticmethod
+    def get_by_id(id: int):
+        """Get subscribe by ID."""
+        return WidgetSubscribeModel.find_by_id(id)
 
     @staticmethod
     def get_subscribe_by_widget_id(widget_id):
@@ -40,6 +45,11 @@ class WidgetSubscribeService:
             subscribe.subscribe_items = created_subscribe_items
         subscribe.commit()
         return subscribe
+    
+    @staticmethod
+    def get_subscribe_item_by_id(id: int):
+        """Get subscribe item by id."""
+        return SubscribeItemsModel.find_by_id(id)
 
     @staticmethod
     def create_subscribe_items(widget_id, subscribe_id, subscribe_item_details):
