@@ -60,7 +60,6 @@ class EventItemTranslation(BaseModel):
             query = query.filter_by(language_id=language_id)
 
         event_item_translation_records = query.all()
-        print(event_item_translation_records)
         return event_item_translation_records
 
     @classmethod

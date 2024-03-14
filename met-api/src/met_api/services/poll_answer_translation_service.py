@@ -22,7 +22,7 @@ class PollAnswerTranslationService:
         return PollAnswerTranslationModel.find_by_id(translation_id)
 
     @staticmethod
-    def get_poll_answer_translation(poll_answer_id=None, language_id=None):
+    def get_poll_answer_translation(poll_answer_id: int = None, language_id: int = None):
         """Get poll answer translations by answer ID and language ID."""
         return PollAnswerTranslationModel.get_by_answer_and_language(
             poll_answer_id, language_id
