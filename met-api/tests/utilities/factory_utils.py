@@ -23,6 +23,7 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
@@ -32,9 +33,9 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
+from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
 from met_api.models.event_item import EventItem as EventItemModel
 from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
-from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.language import Language as LanguageModel
 from met_api.models.membership import Membership as MembershipModel
@@ -64,15 +65,14 @@ from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
-from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo,
-    TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo,
-    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo, TestSubscribeItemTranslationInfo,
-    TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo, TestTimelineEventTranslationInfo, TestTimelineInfo,
-    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
-    TestWidgetTranslationInfo, TestWidgetVideo)
+    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo,
+    TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo,
+    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo,
+    TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
+    TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
+    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()
@@ -156,9 +156,7 @@ def factory_email_verification(survey_id, type=None):
     return email_verification
 
 
-def factory_engagement_model(
-    eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None
-):
+def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
     """Produce a engagement model."""
     engagement = EngagementModel(
         name=name if name else fake.name(),
@@ -209,9 +207,7 @@ def factory_metadata_requirements(auth: Optional[Auth] = None):
     """Create a tenant, an associated staff user, and engagement, for tests."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
-    (engagement_info := TestEngagementInfo.engagement1.copy())[
-        'tenant_id'
-    ] = tenant.id
+    (engagement_info := TestEngagementInfo.engagement1.copy())['tenant_id'] = tenant.id
     engagement = factory_engagement_model(engagement_info)
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
@@ -231,9 +227,7 @@ def factory_taxon_requirements(auth: Optional[Auth] = None):
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
-    factory_staff_user_model(
-        TestJwtClaims.staff_admin_role.get('sub'), staff_info
-    )
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
     if auth:
         headers = factory_auth_header(
             auth,
@@ -262,9 +256,7 @@ def factory_metadata_taxon_model(
     return taxon
 
 
-def factory_staff_user_model(
-    external_id=None, user_info: dict = TestUserInfo.user_staff_1
-):
+def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
     """Produce a staff user model."""
     # Generate a external id if not passed
     external_id = external_id or fake.uuid4()
@@ -286,9 +278,7 @@ def factory_participant_model(
 ):
     """Produce a participant model."""
     participant = ParticipantModel(
-        email_address=ParticipantModel.encode_email(
-            participant['email_address']
-        ),
+        email_address=ParticipantModel.encode_email(participant['email_address']),
     )
     participant.save()
     return participant
@@ -315,9 +305,7 @@ def factory_membership_model(
     return membership
 
 
-def factory_feedback_model(
-    feedback_info: dict = TestFeedbackInfo.feedback1, status=None
-):
+def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
     """Produce a feedback model."""
     feedback = FeedbackModel(
         status=feedback_info.get('status'),
@@ -333,11 +321,8 @@ def factory_feedback_model(
 def factory_auth_header(jwt, claims, tenant_id=None):
     """Produce JWT tokens for use in tests."""
     return {
-        'Authorization': 'Bearer ' +
-        jwt.create_jwt(claims=claims, header=JWT_HEADER),
-        TENANT_ID_HEADER: (
-            tenant_id or current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
-        ),
+        'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
+        TENANT_ID_HEADER: (tenant_id or current_app.config.get('DEFAULT_TENANT_SHORT_NAME')),
     }
 
 
@@ -395,9 +380,7 @@ def factory_submission_model(
     return submission
 
 
-def factory_comment_model(
-    survey_id, submission_id, comment_info: dict = TestCommentInfo.comment1
-):
+def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCommentInfo.comment1):
     """Produce a comment model."""
     comment = CommentModel(
         survey_id=survey_id,
@@ -433,9 +416,7 @@ def patch_token_info(claims, monkeypatch):
         """Return token info."""
         return claims
 
-    monkeypatch.setattr(
-        'met_api.utils.user_context._get_token_info', token_info
-    )
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
 
     # Add a database user that matches the token
     # factory_staff_user_model(external_id=claims.get('sub'))
@@ -493,20 +474,14 @@ def factory_poll_model(widget, poll_info: dict = TestWidgetPollInfo.poll1):
     return poll
 
 
-def factory_poll_answer_model(
-    poll, answer_info: dict = TestPollAnswerInfo.answer1
-):
+def factory_poll_answer_model(poll, answer_info: dict = TestPollAnswerInfo.answer1):
     """Produce a Poll  model."""
-    answer = PollAnswerModel(
-        answer_text=answer_info.get('answer_text'), poll_id=poll.id
-    )
+    answer = PollAnswerModel(answer_text=answer_info.get('answer_text'), poll_id=poll.id)
     answer.save()
     return answer
 
 
-def factory_poll_response_model(
-    poll, answer, response_info: dict = TestPollResponseInfo.response1
-):
+def factory_poll_response_model(poll, answer, response_info: dict = TestPollResponseInfo.response1):
     """Produce a Poll  model."""
     response = PollResponseModel(
         participant_id=response_info.get('participant_id'),
@@ -622,9 +597,7 @@ def factory_survey_translation_and_engagement_model():
         survey_id=survey.id,
         language_id=lang.id,
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
-        form_json=TestSurveyTranslationInfo.survey_translation1.get(
-            'form_json'
-        ),
+        form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
     )
     translation.save()
     return translation, survey, lang
@@ -675,14 +648,10 @@ def factory_widget_subscribe_model(widget_model=None):
     return widget_subcribe_model
 
 
-def factory_subscribe_item_model(
-    widget_subscribe=None, subscribe_item_info: dict = None
-):
+def factory_subscribe_item_model(widget_subscribe=None, subscribe_item_info: dict = None):
     """Produce a SubscribeItem model instance."""
     if subscribe_item_info is None:
-        subscribe_item_info = TestSubscribeInfo.subscribe_info_1.value[
-            'items'
-        ][0]
+        subscribe_item_info = TestSubscribeInfo.subscribe_info_1.value['items'][0]
 
     if widget_subscribe is None:
         widget_subscribe = factory_widget_subscribe_model()
@@ -843,7 +812,7 @@ def subscribe_item_model_with_language():
 
 
 def factory_engagement_translation_model(
-        engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
+    engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
 ):
     """Produce a engagement translation model."""
     engagement_translation = EngagementTranslationModel(
