@@ -6,6 +6,7 @@ import { MetTab, MetTabList, MetTabPanel } from '../StyledTabComponents';
 import { EngagementFormTabValues, ENGAGEMENT_FORM_TABS } from './constants';
 import EngagementUserManagement from './UserManagement/EngagementUserManagement';
 import EngagementSettingsForm from './Settings/EngagementSettingsForm';
+import EngagementResults from './Results/EngagementResults';
 import { ActionContext } from '../ActionContext';
 import { MetTooltip } from 'components/common';
 import AdditionalTabContent from './AdditionalDetails/AdditionalTabContent';
@@ -50,6 +51,7 @@ const FormTabs = () => {
                         {generateTab('Additional Details', ENGAGEMENT_FORM_TABS.ADDITIONAL)}
                         {generateTab('User Management', ENGAGEMENT_FORM_TABS.USER_MANAGEMENT)}
                         {generateTab('Settings', ENGAGEMENT_FORM_TABS.SETTINGS)}
+                        {generateTab('Results', ENGAGEMENT_FORM_TABS.RESULTS)}
                     </MetTabList>
                 </Box>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.CONTENT}>
@@ -63,6 +65,9 @@ const FormTabs = () => {
                 </MetTabPanel>
                 <MetTabPanel value={ENGAGEMENT_FORM_TABS.SETTINGS}>
                     <EngagementSettingsForm />
+                </MetTabPanel>
+                <MetTabPanel value={ENGAGEMENT_FORM_TABS.RESULTS}>
+                    <EngagementResults />
                 </MetTabPanel>
             </TabContext>
         </Box>
