@@ -26,14 +26,17 @@ from tests.utilities.factory_utils import factory_metadata_taxon_model, factory_
 engagement_metadata_service = EngagementMetadataService()
 metatada_taxon_service = MetadataTaxonService()
 
+TENANT_TAXA_ENDPOINT = '/api/engagement_metadata/taxa'
+TAXON_ENDPOINT = '/api/engagement_metadata/taxon'
+
 
 def test_get_tenant_metadata_taxa(client, jwt, session):
-    """Test that metadata taxon can be retrieved by tenant id."""
+    """Test that metadata taxa can be retrieved by tenant id."""
     tenant, headers = factory_taxon_requirements(jwt)
     metadata_taxon = factory_metadata_taxon_model(tenant.id)
     assert metatada_taxon_service.get_by_tenant(tenant.id) is not None
-    response = client.get(f'/api/tenants/{tenant.short_name}/metadata/taxa',
-                          headers=headers, content_type=ContentType.JSON.value)
+    response = client.get(TENANT_TAXA_ENDPOINT, headers=headers,
+                          content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
     metadata_taxon_list = response.json
     assert len(metadata_taxon_list) == 1, metadata_taxon_list
@@ -46,7 +49,7 @@ def test_get_taxon_by_id(client, jwt, session):
     tenant, headers = factory_taxon_requirements(jwt)
     metadata_taxon = factory_metadata_taxon_model(tenant.id)
     assert metatada_taxon_service.get_by_id(metadata_taxon.id) is not None
-    response = client.get(f'/api/tenants/{tenant.short_name}/metadata/taxon/{metadata_taxon.id}',
+    response = client.get(f'{TAXON_ENDPOINT}/{metadata_taxon.id}',
                           headers=headers, content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
     metadata_taxon = response.json
@@ -56,14 +59,16 @@ def test_get_taxon_by_id(client, jwt, session):
 
 def test_add_metadata_taxon(client, jwt, session):
     """Test that metadata taxon can be added to a tenant."""
-    tenant, headers = factory_taxon_requirements(jwt)
-    response = client.post(f'/api/tenants/{tenant.short_name}/metadata/taxa',
+    _, headers = factory_taxon_requirements(jwt)
+    response = client.post(TENANT_TAXA_ENDPOINT,
                            headers=headers,
-                           data=json.dumps(TestEngagementMetadataTaxonInfo.taxon1),
+                           data=json.dumps(
+                               TestEngagementMetadataTaxonInfo.taxon1),
                            content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.CREATED
     assert response.json.get('id') is not None
-    assert response.json.get('name') == TestEngagementMetadataTaxonInfo.taxon1['name']
+    assert response.json.get(
+        'name') == TestEngagementMetadataTaxonInfo.taxon1['name']
     assert MetadataTaxonService.get_by_id(response.json.get('id')) is not None
 
 
@@ -72,26 +77,45 @@ def test_update_metadata_taxon(client, jwt, session):
     tenant, headers = factory_taxon_requirements(jwt)
     taxon = factory_metadata_taxon_model(tenant.id)
     data = TestEngagementMetadataTaxonInfo.taxon2
-    del data['tenant_id']
-    del data['position']
-    response = client.patch(f'/api/tenants/{tenant.short_name}/metadata/taxon/{taxon.id}',
+    response = client.patch(f'{TAXON_ENDPOINT}/{taxon.id}',
                             headers=headers,
                             data=json.dumps(data),
                             content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
     assert response.json.get('id') is not None, response.json
-    assert response.json.get('name') == TestEngagementMetadataTaxonInfo.taxon2['name']
+    assert response.json.get(
+        'name') == TestEngagementMetadataTaxonInfo.taxon2['name']
     assert MetadataTaxonService.get_by_id(response.json.get('id')) is not None
+
+
+def test_update_taxon_preset_values(client, jwt, session):
+    """Test that taxon preset values can be updated."""
+    tenant, headers = factory_taxon_requirements(jwt)
+    taxon = factory_metadata_taxon_model(tenant.id)
+    assert taxon.preset_values == []
+    response = client.patch(f'{TAXON_ENDPOINT}/{taxon.id}',
+                            headers=headers,
+                            data=json.dumps(
+                                {'preset_values': ['value1', 'value2']}),
+                            content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.OK, response.text
+    assert response.json.get('id') is not None, response.json
+    assert response.json.get('preset_values') == ['value1', 'value2']
+    assert MetadataTaxon.query.get(response.json.get(
+        'id')).preset_values == ['value1', 'value2']
 
 
 def test_reorder_tenant_metadata_taxa(client, jwt, session):
     """Test that metadata taxa can be reordered."""
     tenant, headers = factory_taxon_requirements(jwt)
-    taxon1 = factory_metadata_taxon_model(tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
-    taxon2 = factory_metadata_taxon_model(tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
-    taxon3 = factory_metadata_taxon_model(tenant.id, TestEngagementMetadataTaxonInfo.taxon3)
+    taxon1 = factory_metadata_taxon_model(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
+    taxon2 = factory_metadata_taxon_model(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon2)
+    taxon3 = factory_metadata_taxon_model(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon3)
     assert all([taxon1 is not None, taxon2 is not None, taxon3 is not None])
-    response = client.patch(f'/api/tenants/{tenant.short_name}/metadata/taxa',
+    response = client.patch(f'{TENANT_TAXA_ENDPOINT}',
                             headers=headers,
                             data=json.dumps({'taxon_ids': [
                                 taxon3.id, taxon1.id, taxon2.id
@@ -112,7 +136,7 @@ def test_delete_taxon(client, jwt, session):
     tenant, headers = factory_taxon_requirements(jwt)
     taxon = factory_metadata_taxon_model(tenant.id)
     assert metatada_taxon_service.get_by_id(taxon.id) is not None
-    response = client.delete(f'/api/tenants/{tenant.short_name}/metadata/taxon/{taxon.id}',
+    response = client.delete(f'{TAXON_ENDPOINT}/{taxon.id}',
                              headers=headers,
                              content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.NO_CONTENT

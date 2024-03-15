@@ -11,10 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Tests for the Org model.
-
-Test suite to ensure that the Engagement model routines are working as expected.
-"""
+"""Tests for the EngagementMetadata model."""
 
 from faker import Faker
 
@@ -36,7 +33,8 @@ def test_create_basic_engagement_metadata(session):
     })
     assert engagement_metadata.id is not None, (
         'Engagement Metadata ID is missing')
-    engagement_metadata_existing = EngagementMetadata.find_by_id(engagement_metadata.id)
+    engagement_metadata_existing = EngagementMetadata.find_by_id(
+        engagement_metadata.id)
     assert engagement_metadata.value == engagement_metadata_existing.value, (
         'Engagement Metadata value is missing or incorrect')
 
@@ -76,10 +74,11 @@ def test_create_engagement_metadata(session):
         'value': fake.text(max_nb_chars=256)
     })
     assert engagement_metadata.id is not None, 'Engagement Metadata ID is missing'
-    engagement_metadata_existing = EngagementMetadata.find_by_id(engagement_metadata.id)
+    engagement_metadata_existing = EngagementMetadata.find_by_id(
+        engagement_metadata.id)
     assert engagement_metadata.value == engagement_metadata_existing.value, (
-            'Engagement Metadata value is missing or incorrect')
+        'Engagement Metadata value is missing or incorrect')
     assert engagement_metadata.taxon_id == engagement_metadata_existing.taxon_id, (
-            'Engagement Metadata taxon ID is missing or incorrect')
+        'Engagement Metadata taxon ID is missing or incorrect')
     assert engagement_metadata.engagement_id == engagement_metadata_existing.engagement_id, (
-            'Engagement Metadata engagement ID is missing or incorrect')
+        'Engagement Metadata engagement ID is missing or incorrect')

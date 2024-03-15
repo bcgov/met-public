@@ -23,7 +23,6 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
-from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
@@ -35,6 +34,7 @@ from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.event_item import EventItem as EventItemModel
 from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
+from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.language import Language as LanguageModel
 from met_api.models.membership import Membership as MembershipModel
@@ -64,13 +64,14 @@ from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
+from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims,
-    TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo,
-    TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo,
-    TestSurveyTranslationInfo, TestTenantInfo, TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo,
-    TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
+    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo,
+    TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo,
+    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo, TestSubscribeItemTranslationInfo,
+    TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo, TestTimelineEventTranslationInfo, TestTimelineInfo,
+    TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo,
     TestWidgetTranslationInfo, TestWidgetVideo)
 
 
@@ -254,7 +255,6 @@ def factory_metadata_taxon_model(
         description=taxon_info.get('description'),
         freeform=taxon_info.get('freeform'),
         data_type=taxon_info.get('data_type'),
-        default_value=taxon_info.get('default_value'),
         one_per_engagement=taxon_info.get('one_per_engagement'),
         position=taxon_info.get('position'),
     )
@@ -840,3 +840,19 @@ def subscribe_item_model_with_language():
     subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
     language_model = factory_language_model({'code': 'en', 'name': 'English'})
     return subscribe_item_model, widget_subscribe, language_model
+
+
+def factory_engagement_translation_model(
+        engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
+):
+    """Produce a engagement translation model."""
+    engagement_translation = EngagementTranslationModel(
+        engagement_id=engagement_translation.get('engagement_id'),
+        language_id=engagement_translation.get('language_id'),
+        name=engagement_translation.get('name'),
+        description=engagement_translation.get('description'),
+        content=engagement_translation.get('content'),
+        rich_content=engagement_translation.get('rich_content'),
+    )
+    engagement_translation.save()
+    return engagement_translation

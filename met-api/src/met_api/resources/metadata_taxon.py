@@ -47,10 +47,11 @@ taxon_modify_model = API.model('MetadataTaxon', taxon_model_dict := {
     'name': fields.String(required=False, description='The name of the taxon'),
     'description': fields.String(required=False, description='The taxon description'),
     'freeform': fields.Boolean(required=False, description='Whether the taxon is freeform'),
-    'default_value': fields.String(required=False, description='The default value for the taxon'),
     'data_type': fields.String(required=False, description='The data type for the taxon'),
     'one_per_engagement': fields.Boolean(required=False, description='Whether the taxon is limited'
                                          ' to one entry per engagement'),
+    'preset_values': fields.List(fields.String(), required=False,
+                                 description='The preset values for the taxon'),
 })
 
 taxon_return_model = API.model('MetadataTaxonReturn', {
@@ -61,7 +62,10 @@ taxon_return_model = API.model('MetadataTaxonReturn', {
     **taxon_model_dict
 })
 
-params = {'tenant_id': 'The short name of the tenant'}
+taxon_ids_model = API.model('TaxonIDs', {
+    'taxon_ids': fields.List(fields.Integer, required=True, description='A list of taxon ids')
+})
+
 
 responses = {
     HTTPStatus.UNAUTHORIZED.value: 'No known user logged in',
@@ -74,22 +78,18 @@ responses = {
 
 def ensure_tenant_access():
     """
-    Ensure that the user is authorized to access the tenant specified in the request.
+    Provide access to the tenant as a DB model for the decorated function.
 
-    This decorator should be used on any endpoint that requires
-    access to a tenant's data. Makes the tenant accessible via kwargs.
+    This does not provide security; that is handled by @require_role.
     """
     def wrapper(f: Callable):
         @wraps(f)
         def decorated_function(*args, **func_kwargs):
-            tenant_short_name = func_kwargs.pop('tenant_name')
+            tenant_short_name = g.tenant_name
             tenant = Tenant.find_by_short_name(tenant_short_name)
             if not tenant:
                 abort(HTTPStatus.NOT_FOUND,
-                      f'Tenant with short name {tenant_short_name} not found')
-            if tenant.short_name.upper() != g.tenant_name:
-                abort(HTTPStatus.FORBIDDEN,
-                      f'You are not authorized to access tenant {tenant_short_name}')
+                      f'Tenant with id {tenant_short_name} not found')
             func_kwargs['tenant'] = tenant
             return f(*args, **func_kwargs)
         return decorated_function
@@ -97,8 +97,8 @@ def ensure_tenant_access():
 
 
 @cors_preflight('GET,POST,PATCH,OPTIONS')
-@API.route('/taxa')  # /api/tenants/{tenant.short_name}/metadata/taxa
-@API.doc(params=params, security='apikey', responses=responses)
+@API.route('/taxa')  # /metadata/taxa
+@API.doc(security=['apikey', 'tenant'], responses=responses)
 class MetadataTaxa(Resource):
     """Resource for managing engagement metadata taxa."""
 
@@ -108,14 +108,15 @@ class MetadataTaxa(Resource):
     @ensure_tenant_access()
     @require_role(VIEW_TAXA_ROLES)
     def get(tenant: Tenant):
-        """Fetch a list of metadata taxa by tenant id."""
+        """Fetch a list of metadata taxa for the current tenant."""
         tenant_taxa = taxon_service.get_by_tenant(tenant.id)
         return tenant_taxa, HTTPStatus.OK
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.expect(taxon_modify_model)
-    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED)  # type: ignore
+    # type: ignore
+    @API.marshal_with(taxon_return_model, code=HTTPStatus.CREATED)
     @ensure_tenant_access()
     @require_role(MODIFY_TAXA_ROLES)
     def post(tenant: Tenant):
@@ -131,7 +132,7 @@ class MetadataTaxa(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @API.expect({'taxon_ids': fields.List(fields.Integer(required=True))})
+    @API.expect(taxon_ids_model)
     @API.marshal_list_with(taxon_return_model)
     @ensure_tenant_access()
     @require_role(MODIFY_TAXA_ROLES)
@@ -148,13 +149,13 @@ class MetadataTaxa(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-params['taxon_id'] = 'The numeric id of the taxon'
 responses[HTTPStatus.NOT_FOUND.value] = 'Metadata taxon or tenant not found'
 
 
 @cors_preflight('GET,PATCH,DELETE,OPTIONS')
-@API.route('/taxon/<taxon_id>')  # /tenants/<tenant_id>/metadata/taxon/<taxon_id>
-@API.doc(security='apikey', params=params, responses=responses)
+# /metadata/taxon/<taxon_id>
+@API.route('/taxon/<taxon_id>')
+@API.doc(security=['apikey', 'tenant'], responses=responses)
 class MetadataTaxon(Resource):
     """Resource for managing a single metadata taxon."""
 
