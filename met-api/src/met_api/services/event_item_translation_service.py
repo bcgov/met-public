@@ -1,13 +1,12 @@
 """Service for EventItemTranslation management with authorization checks."""
 
 from http import HTTPStatus
+
 from sqlalchemy.exc import SQLAlchemyError
+
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
-from met_api.models import engagement
-from met_api.models.event_item_translation import (
-    EventItemTranslation as EventItemTranslationModel,
-)
+from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
 from met_api.services import authorization
 from met_api.services.widget_events_service import WidgetEventsService
 from met_api.services.widget_service import WidgetService
@@ -18,9 +17,9 @@ class EventItemTranslationService:
     """EventItemTranslation management service."""
 
     @staticmethod
-    def get_by_id(id: int):
+    def get_by_id(translation_id: int):
         """Get event item translation by ID."""
-        return EventItemTranslationModel.find_by_id(id)
+        return EventItemTranslationModel.find_by_id(translation_id)
 
     @staticmethod
     def get_engagement_id(event_id):
@@ -28,14 +27,14 @@ class EventItemTranslationService:
         widget_event = WidgetEventsService.get_by_id(event_id)
         if not widget_event:
             raise BusinessException(
-                status=HTTPStatus.NOT_FOUND,
-                message='Event not found',
+                status_code=HTTPStatus.NOT_FOUND,
+                error='Event not found',
             )
         widget = WidgetService.get_widget_by_id(widget_event.widget_id)
         if not widget:
             raise BusinessException(
-                status=HTTPStatus.NOT_FOUND,
-                message='Widget not found',
+                status_code=HTTPStatus.NOT_FOUND,
+                error='Widget not found',
             )
         return widget.engagement_id
 
@@ -72,7 +71,7 @@ class EventItemTranslationService:
                 data['location_address'] = event_item.location_address
                 data['url'] = event_item.url
                 data['url_label'] = event_item.url_label
-            
+
             return EventItemTranslationModel.create_event_item_translation(
                 data
             )
@@ -82,10 +81,10 @@ class EventItemTranslationService:
             ) from e
 
     @staticmethod
-    def update_event_item_translation(event_id: int, id: int, data: dict):
+    def update_event_item_translation(event_id: int, translation_id: int, data: dict):
         """Update an existing EventItemTranslation with authorization check."""
         try:
-            event_item_translation = EventItemTranslationModel.find_by_id(id)
+            event_item_translation = EventItemTranslationModel.find_by_id(translation_id)
             if not event_item_translation:
                 raise BusinessException(
                     'EventItemTranslation not found', HTTPStatus.NOT_FOUND
@@ -104,7 +103,7 @@ class EventItemTranslationService:
 
             updated_translation = (
                 EventItemTranslationModel.update_event_item_translation(
-                    id, data
+                    translation_id, data
                 )
             )
             return updated_translation
@@ -114,10 +113,10 @@ class EventItemTranslationService:
             ) from e
 
     @staticmethod
-    def delete_event_item_translation(event_id: int, id: int):
+    def delete_event_item_translation(event_id: int, translation_id: int):
         """Delete an EventItemTranslation with authorization check."""
         try:
-            event_item_translation = EventItemTranslationModel.find_by_id(id)
+            event_item_translation = EventItemTranslationModel.find_by_id(translation_id)
             if not event_item_translation:
                 raise BusinessException(
                     'EventItemTranslation not found', HTTPStatus.NOT_FOUND
@@ -135,7 +134,7 @@ class EventItemTranslationService:
                 engagement_id=engagement_id,
             )
 
-            return EventItemTranslationModel.delete_event_item_translation(id)
+            return EventItemTranslationModel.delete_event_item_translation(translation_id)
         except SQLAlchemyError as e:
             raise BusinessException(
                 str(e), HTTPStatus.INTERNAL_SERVER_ERROR

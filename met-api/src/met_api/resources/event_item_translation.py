@@ -31,7 +31,7 @@ class EventItemTranslationResource(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(event_id, event_item_translation_id):
+    def get(event_item_translation_id, **_):
         """Fetch an event item translation by id."""
         try:
             event_item_translation = (
@@ -95,7 +95,7 @@ class EventItemTranslationResourceByLanguage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(event_id, event_item_id, language_id):
+    def get(event_item_id, language_id, **_):
         """Fetch an event item translation by language_id."""
         try:
             event_item_translation = (

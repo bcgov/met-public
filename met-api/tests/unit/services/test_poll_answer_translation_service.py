@@ -3,17 +3,11 @@
 Test suite to ensure that the PollAnswerTranslationService routines are working as expected.
 """
 
-from met_api.services.poll_answer_translation_service import (
-    PollAnswerTranslationService,
-)
+from met_api.services.poll_answer_translation_service import PollAnswerTranslationService
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_poll_answer_translation_model,
-    poll_answer_model_with_poll_enagement,
-    patch_token_info,
-    factory_staff_user_model,
-)
-from met_api.exceptions.business_exception import BusinessException
+    factory_poll_answer_translation_model, factory_staff_user_model, patch_token_info,
+    poll_answer_model_with_poll_enagement)
 
 
 def test_get_poll_answer_translation_by_id(session):
@@ -58,7 +52,6 @@ def test_create_poll_answer_translation_with_authorization(
     session, monkeypatch
 ):
     """Assert that a poll answer translation can be created with proper authorization."""
-
     # Mock the authorization check or provide necessary setup
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])

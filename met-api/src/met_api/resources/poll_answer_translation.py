@@ -13,13 +13,10 @@ from marshmallow import ValidationError
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
-from met_api.schemas.poll_answer_translation_schema import (
-    PollAnswerTranslationSchema,
-)
-from met_api.services.poll_answer_translation_service import (
-    PollAnswerTranslationService,
-)
+from met_api.schemas.poll_answer_translation_schema import PollAnswerTranslationSchema
+from met_api.services.poll_answer_translation_service import PollAnswerTranslationService
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace(
     'poll_answer_translations',
@@ -34,7 +31,7 @@ class PollAnswerTranslationResource(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(poll_id, poll_answer_translation_id):
+    def get(poll_answer_translation_id, **_):
         """Fetch a poll answer translation by id."""
         try:
             poll_answer_translation = PollAnswerTranslationService.get_by_id(
@@ -98,7 +95,7 @@ class PollAnswerTranslationResourceByLanguage(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    def get(poll_id, poll_answer_id, language_id):
+    def get(poll_answer_id, language_id, **_):
         """Fetch a poll answer translation by language_id."""
         try:
             poll_answer_translations = (

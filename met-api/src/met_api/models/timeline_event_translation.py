@@ -45,7 +45,6 @@ class TimelineEventTranslation(BaseModel):
         :param language_id (int): ID of the language
         :return: list: List of TimelineEventTranslation objects
         """
-
         query = TimelineEventTranslation.query
         if timeline_event_id is not None:
             query = query.filter_by(timeline_event_id=timeline_event_id)
@@ -63,20 +62,29 @@ class TimelineEventTranslation(BaseModel):
         :param data: Dictionary containing the fields for TimelineEventTranslation
         :return: TimelineEventTranslation instance
         """
-        timeline_event_translation = cls(**data)
+        timeline_event_translation = TimelineEventTranslation(
+            timeline_event_id=data['timeline_event_id'],
+            language_id=data['language_id'],
+            description=data.get(
+                'description'
+            ),
+            time=data.get(
+                'time'
+            )
+        )
         timeline_event_translation.save()
         return timeline_event_translation
 
     @classmethod
-    def update_timeline_event_translation(cls, id, data):
+    def update_timeline_event_translation(cls, translation_id, data):
         """
         Update an existing TimelineEventTranslation record.
 
-        :param id: ID of the TimelineEventTranslation to update
+        :param translation_id: ID of the TimelineEventTranslation to update
         :param data: Dictionary of fields to update
         :return: Updated TimelineEventTranslation instance
         """
-        timeline_event_translation = cls.find_by_id(id)
+        timeline_event_translation = cls.find_by_id(translation_id)
         if timeline_event_translation:
             for key, value in data.items():
                 setattr(timeline_event_translation, key, value)
@@ -84,13 +92,15 @@ class TimelineEventTranslation(BaseModel):
         return timeline_event_translation
 
     @classmethod
-    def delete_timeline_event_translation(cls, id):
+    def delete_timeline_event_translation(cls, translation_id):
         """
         Delete a TimelineEventTranslation record.
 
-        :param id: ID of the TimelineEventTranslation to delete
+        :param translation_id: ID of the TimelineEventTranslation to delete
         :return: None
         """
-        timeline_event_translation = cls.find_by_id(id)
+        timeline_event_translation = cls.find_by_id(translation_id)
         if timeline_event_translation:
             timeline_event_translation.delete()
+            return True
+        return False

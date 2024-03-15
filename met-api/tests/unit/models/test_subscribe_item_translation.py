@@ -1,8 +1,8 @@
+"""Tests to verify the SubscribeItemTranslation Model."""
+
 from met_api.models.subscribe_item_translation import SubscribeItemTranslation
 from tests.utilities.factory_utils import (
-    factory_subscribe_item_translation_model,
-    factory_subscribe_item_model_with_enagement
-)
+    factory_subscribe_item_model_with_enagement, factory_subscribe_item_translation_model)
 
 
 def test_create_subscribe_item_translation(session):

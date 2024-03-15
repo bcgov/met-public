@@ -2,14 +2,14 @@ import React, { useContext } from 'react';
 import { Divider, Grid, Box } from '@mui/material';
 import { MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import ConsentMessage from './ConsentMessage';
-import EngagementInformation from './EngagementInformation';
+import EngagementMetadata from './Metadata/EngagementMetadata';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
 
 const AdditionalTabContent = () => {
     const { isSaving } = useContext(ActionContext);
 
-    const { handleSaveAndContinueEngagement, handleSaveAndExitEngagement, handlePreviewEngagement } =
+    const { handleSaveAndContinueEngagement, handleSaveAndExitEngagement, handlePreviewEngagement, metadataFormRef } =
         useContext(EngagementTabsContext);
 
     return (
@@ -23,7 +23,7 @@ const AdditionalTabContent = () => {
                 sx={{ padding: '2em' }}
             >
                 <Grid item xs={12}>
-                    <EngagementInformation />
+                    <EngagementMetadata ref={metadataFormRef} />
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />

@@ -1,13 +1,8 @@
+"""Test to verify the SubscribeItemTranslation Service."""
 from met_api.services.event_item_translation_service import EventItemTranslationService
+from tests.utilities.factory_scenarios import TestEventItemTranslationInfo, TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_event_item_translation_model,
-    event_item_model_with_language,
-    patch_token_info,
-    factory_staff_user_model,
-)
-from met_api.exceptions.business_exception import BusinessException
-from tests.utilities.factory_scenarios import TestEventItemTranslationInfo
-from tests.utilities.factory_scenarios import TestJwtClaims
+    event_item_model_with_language, factory_event_item_translation_model, factory_staff_user_model, patch_token_info)
 
 
 def test_get_event_item_translation_by_id(session):

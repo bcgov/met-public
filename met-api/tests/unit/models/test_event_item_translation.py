@@ -28,8 +28,8 @@ def test_get_event_item_translation_by_item_and_language(session):
     )
     assert len(translations) == 1
     assert (
-        translations[0].description
-        == TestEventItemTranslationInfo.event_item_info1.value['description']
+        translations[0].description ==
+        TestEventItemTranslationInfo.event_item_info1.value['description']
     )
 
 
@@ -47,8 +47,8 @@ def test_create_event_item_translation(session):
     )
     assert translation.id is not None
     assert (
-        translation.description
-        == TestEventItemTranslationInfo.event_item_info1.value['description']
+        translation.description ==
+        TestEventItemTranslationInfo.event_item_info1.value['description']
     )
 
 

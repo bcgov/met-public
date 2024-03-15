@@ -1,15 +1,18 @@
-import { Engagement, EngagementMetadata } from '../../../models/engagement';
+import React from 'react';
+import { Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
     handleUpdateEngagementRequest: (_engagement: EngagementFormUpdate) => Promise<Engagement>;
-    handleCreateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
-    handleUpdateEngagementMetadataRequest: (_engagement: EngagementMetadata) => Promise<EngagementMetadata>;
+    setEngagementMetadata: React.Dispatch<React.SetStateAction<EngagementMetadata[]>>;
+    taxonMetadata: Map<number, string[]>;
+    tenantTaxa: MetadataTaxon[];
+    setTenantTaxa: React.Dispatch<React.SetStateAction<MetadataTaxon[]>>;
     isSaving: boolean;
     setSaving: React.Dispatch<React.SetStateAction<boolean>>;
     savedEngagement: Engagement;
-    engagementMetadata: EngagementMetadata;
+    engagementMetadata: EngagementMetadata[];
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;

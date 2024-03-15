@@ -1,8 +1,10 @@
 """Schema for PollAnswerTranslation serialization and deserialization."""
 
-from marshmallow import fields, EXCLUDE
+from marshmallow import EXCLUDE, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 from met_api.models.poll_answer_translation import PollAnswerTranslation
+
 
 class PollAnswerTranslationSchema(SQLAlchemyAutoSchema):
     """Schema for PollAnswerTranslation."""

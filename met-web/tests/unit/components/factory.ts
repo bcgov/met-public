@@ -2,11 +2,11 @@ import '@testing-library/jest-dom';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import {
     createDefaultEngagement,
-    createDefaultEngagementMetadata,
     createDefaultEngagementSettings,
     Engagement,
     EngagementMetadata,
     EngagementSettings,
+    MetadataTaxon,
 } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { WidgetType, Widget, WidgetItem } from 'models/widget';
@@ -252,8 +252,20 @@ const mockTimeLine: TimelineWidget = {
     events: [mockTimeLineEvent1],
 };
 const engagementMetadata: EngagementMetadata = {
-    ...createDefaultEngagementMetadata(),
     engagement_id: 1,
+    taxon_id: 1,
+    value: 'test',
+};
+
+const engagementMetadataTaxon: MetadataTaxon = {
+    tenant_id: 1,
+    id: 1,
+    name: 'test',
+    data_type: 'text',
+    one_per_engagement: false,
+    freeform: true,
+    preset_values: ['test'],
+    position: 1,
 };
 
 const engagementSetting: EngagementSettings = {
@@ -278,6 +290,7 @@ export {
     eventWidgetItem,
     eventWidget,
     engagementMetadata,
+    engagementMetadataTaxon,
     engagementSlugData,
     engagementSetting,
     mockPoll,

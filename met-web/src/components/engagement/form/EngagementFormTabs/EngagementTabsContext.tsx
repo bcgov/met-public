@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmissionStatusTypes, SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { User } from 'models/user';
@@ -72,6 +72,7 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
+    metadataFormRef: React.RefObject<HTMLFormElement> | null;
     handleSaveAndContinueEngagement: () => Promise<void | EngagementForm>;
     handlePreviewEngagement: () => Promise<void>;
     handleSaveAndExitEngagement: () => Promise<void>;
@@ -108,6 +109,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setEngagementFormData: () => {
         throw new Error('setEngagementFormData is unimplemented');
     },
+    metadataFormRef: null,
     handleSaveAndContinueEngagement: async () => {
         /* empty default method for engagement save and continue */
     },
@@ -193,6 +195,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [richContent, setRichContent] = useState(savedEngagement?.rich_content || '');
     const [richConsentMessage, setRichConsentMessage] = useState(savedEngagement?.consent_message || '');
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
+    const metadataFormRef = useRef<HTMLFormElement>(null);
 
     // Survey block
     const [surveyBlockText, setSurveyBlockText] = useState<{ [key in SubmissionStatusTypes]: string }>({
@@ -378,6 +381,19 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         return Object.values(errors).some((isError: unknown) => isError);
     };
 
+    const handleSaveEngagementMetadata = async () => {
+        const result = await metadataFormRef.current?.submitForm();
+        if (!result) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error saving metadata: Please correct the highlighted fields and try again.',
+                }),
+            );
+        }
+        return result;
+    };
+
     const handleSaveAndContinueEngagement = async () => {
         const hasErrors = validateForm();
 
@@ -402,6 +418,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         if (!isNewEngagement) {
             await updateEngagementSettings(sendReport);
             await handleSaveSlug(slug);
+            await handleSaveEngagementMetadata();
         }
 
         return engagement;
@@ -439,6 +456,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             value={{
                 engagementFormData,
                 setEngagementFormData,
+                metadataFormRef,
                 handleSaveAndContinueEngagement,
                 handlePreviewEngagement,
                 handleSaveAndExitEngagement,

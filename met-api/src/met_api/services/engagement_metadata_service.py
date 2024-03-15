@@ -26,11 +26,12 @@ class EngagementMetadataService:
         """
         engagement_metadata = EngagementMetadata.query.get(metadata_id)
         if not engagement_metadata:
-            raise KeyError(f'Engagement metadata with id {metadata_id} does not exist.')
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
         return dict(EngagementMetadataSchema().dump(engagement_metadata))
 
     @staticmethod
-    def get_by_engagement(engagement_id) -> List[dict]:
+    def get_by_engagement(engagement_id, taxon_id=None) -> List[dict]:
         """
         Get metadata by engagement id.
 
@@ -43,8 +44,12 @@ class EngagementMetadataService:
         """
         engagement_model = EngagementModel.query.get(engagement_id)
         if not engagement_model:
-            raise KeyError(f'Engagement with id {engagement_id} does not exist.')
-        return EngagementMetadataSchema(many=True).dump(engagement_model.metadata)
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
+        results = engagement_model.metadata
+        if taxon_id:
+            results = [item for item in results if item.taxon_id == taxon_id]
+        return EngagementMetadataSchema(many=True).dump(results)
 
     @staticmethod
     def check_association(engagement_id, metadata_id) -> bool:
@@ -61,7 +66,8 @@ class EngagementMetadataService:
         """
         engagement_metadata = EngagementMetadata.query.get(metadata_id)
         if not engagement_metadata:
-            raise KeyError(f'Engagement metadata with id {metadata_id} does not exist.')
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
         return engagement_metadata.engagement_id == engagement_id
 
     @staticmethod
@@ -80,12 +86,14 @@ class EngagementMetadataService:
         # Ensure that the engagement exists, or else raise the appropriate error
         engagement = EngagementModel.query.get(engagement_id)
         if not engagement:
-            raise KeyError(f'Engagement with id {engagement_id} does not exist.')
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
         taxon = MetadataTaxon.query.get(taxon_id)
         if not taxon:
             raise ValueError(f'Taxon with id {taxon_id} does not exist.')
         if engagement.tenant.id != taxon.tenant.id:
-            raise ValueError(f'Taxon {taxon} does not belong to tenant {engagement.tenant}')
+            raise ValueError(
+                f'Taxon {taxon} does not belong to tenant {engagement.tenant}')
         metadata = {
             'engagement_id': engagement_id,
             'taxon_id': taxon_id,
@@ -112,21 +120,6 @@ class EngagementMetadataService:
         metadata = self.create(metadata, engagement_id, **kwargs)
 
     @staticmethod
-    def create_defaults(engagement_id: int, tenant_id: int) -> List[dict]:
-        """Create default metadata for an engagement."""
-        # Get metadata taxa for the tenant
-        taxa = MetadataTaxon.query.filter_by(tenant_id=tenant_id).all()
-        # Create a list of metadata to create
-        metadata = []
-        for taxon in taxa:
-            if taxon.default_value:
-                metadata.append(EngagementMetadataService.create(
-                    engagement_id,
-                    taxon.id,
-                    taxon.default_value))
-        return metadata
-
-    @staticmethod
     @transactional()
     def update(metadata_id: int, value: str) -> dict:
         """
@@ -144,6 +137,37 @@ class EngagementMetadataService:
                            ' does not exist.')
         metadata.value = value
         return dict(EngagementMetadataSchema().dump(metadata, many=False))
+
+    @staticmethod
+    @transactional()
+    def update_by_taxon(engagement_id: int, taxon_id: int, values: List[str]) -> List[dict]:
+        """
+        Update engagement metadata by taxon.
+
+        Args:
+            engagement_id: The ID of the engagement.
+            taxon_id: The ID of the metadata taxon.
+            values: The values to store for the taxon.
+        Returns:
+            The updated metadata as a list.
+        """
+        query = EngagementMetadata.query.filter_by(
+            engagement_id=engagement_id, taxon_id=taxon_id)
+        metadata = query.all()
+        if len(metadata) > len(values):
+            for i in range(len(values), len(metadata)):
+                metadata[i].delete()
+        metadata = query.all()  # remove deleted entries from the list
+        for i, value in enumerate(values):
+            if i < len(metadata):
+                metadata[i].value = value
+        if len(values) > len(metadata):
+            for i in range(len(metadata), len(values)):
+                metadata.append(EngagementMetadata(
+                    engagement_id=engagement_id, taxon_id=taxon_id, value=values[i]
+                ))
+        db.session.add_all(metadata)
+        return EngagementMetadataSchema(many=True).dump(metadata)
 
     @staticmethod
     @transactional()

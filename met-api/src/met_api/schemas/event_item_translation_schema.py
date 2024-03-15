@@ -1,7 +1,8 @@
 """Schema for EventItemTranslation serialization and deserialization."""
 
-from marshmallow import fields, EXCLUDE
+from marshmallow import EXCLUDE, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 from met_api.models.event_item_translation import EventItemTranslation
 
 
