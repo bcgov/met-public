@@ -2,12 +2,21 @@
 from http import HTTPStatus
 
 from sqlalchemy.exc import SQLAlchemyError
+
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.poll_answers import PollAnswer as PollAnswerModel
 
 
 class PollAnswerService:
     """PollAnswer management service."""
+
+    @staticmethod
+    def get_poll_answer_by_id(answer_id: int):
+        """Get poll answer by id."""
+        poll_answer = PollAnswerModel.find_by_id(answer_id)
+        if not poll_answer:
+            raise BusinessException('Poll answer not found', HTTPStatus.NOT_FOUND)
+        return poll_answer
 
     @staticmethod
     def get_poll_answer(poll_id):

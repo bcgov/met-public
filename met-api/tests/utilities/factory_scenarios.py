@@ -926,6 +926,51 @@ class TestSurveyTranslationInfo(dict, Enum):
     }
 
 
+class TestPollAnswerTranslationInfo(dict, Enum):
+    """Test scenarios of Poll Answer Translation."""
+
+    translation1 = {
+        'poll_answer_id': 1,
+        'language_id': 2,
+        'answer_text': 'Answer 1'
+    }
+
+
+class TestSubscribeItemTranslationInfo(dict, Enum):
+    """Test scenarios of Subscribe Item Translation."""
+
+    translate_info1 = {
+        'subscribe_item_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+    }
+
+
+class TestEventItemTranslationInfo(dict, Enum):
+    """Test scenarios of Event Item Translation."""
+
+    event_item_info1 = {
+        'event_item_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+        'location_name': 'Location name',
+        'location_address': 'location address',
+        'url': fake.url(),
+        'url_label': fake.name(),
+    }
+
+
+class TestTimelineEventTranslationInfo(dict, Enum):
+    """Test scenarios of TimeLine Event Translation."""
+
+    timeline_event_info1 = {
+        'timeline_event_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+        'time': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
 class TestEngagementTranslationInfo(dict, Enum):
     """Test scenarios of engagement translation content."""
 

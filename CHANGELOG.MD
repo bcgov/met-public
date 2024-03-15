@@ -1,9 +1,18 @@
-## March 14, 2024
+<<<<<<< HEAD
+## March 15, 2024
+
+- **Task**: Multi-language - Create event, subcribe_item, poll, timeline widget translation tables & API routes [DESENG-515](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-515)
+  - Added Poll answer translation API.
+  - Added Timeline Event translation API.
+  - Added Subscribe Item translation API.
+  - Added Event item translation API
+  - Added Unit tests.
 - **Task** Add "Results" page to engagements [DESENG-512](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-512)
+
 
 ## March 08, 2024
 
-- **Task**Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
+- **Task**: Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
   - Added Engagement translation model.
   - Added Engagement translation API.
   - Added Unit tests.
