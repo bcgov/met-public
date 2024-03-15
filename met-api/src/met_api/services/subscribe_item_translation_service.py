@@ -30,17 +30,12 @@ class SubscribeItemTranslationService:
     def get_engagement_id(widget_subscribe_id):
         """Get engagement id widget_subscribe_id."""
         widget_subscribe = WidgetSubscribeService.get_by_id(widget_subscribe_id)
-        if not widget_subscribe_id:
+        if not widget_subscribe:
             raise BusinessException(
                 status_code=HTTPStatus.NOT_FOUND,
                 error='Subscribe widget not found',
             )
         widget = WidgetService.get_widget_by_id(widget_subscribe.widget_id)
-        if not widget:
-            raise BusinessException(
-                status_code=HTTPStatus.NOT_FOUND,
-                error='Widget not found',
-            )
         return widget.engagement_id
 
     @staticmethod

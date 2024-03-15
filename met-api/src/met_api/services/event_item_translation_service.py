@@ -31,11 +31,6 @@ class EventItemTranslationService:
                 error='Event not found',
             )
         widget = WidgetService.get_widget_by_id(widget_event.widget_id)
-        if not widget:
-            raise BusinessException(
-                status_code=HTTPStatus.NOT_FOUND,
-                error='Widget not found',
-            )
         return widget.engagement_id
 
     @staticmethod
