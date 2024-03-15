@@ -4,6 +4,7 @@ import { HeadCell } from 'components/common/Table/types';
 import { MetLabel, MetParagraph } from 'components/common';
 import { Skeleton } from '@mui/material';
 import { CommentViewContext, TransformedComment } from './CommentViewContext';
+import { useAppTranslation } from 'hooks';
 
 export interface CommentType {
     label: string;
@@ -13,6 +14,7 @@ export interface CommentType {
 }
 
 const CommentTable = () => {
+    const { t: translate } = useAppTranslation();
     const { isCommentsListLoading, comments, paginationOptions, pageInfo, handleChangePagination, tableLoading } =
         useContext(CommentViewContext);
 
@@ -83,7 +85,7 @@ const CommentTable = () => {
                 paginationOptions={paginationOptions}
                 pageInfo={pageInfo}
                 loading={tableLoading}
-                emptyText={'Engagement does not have any published comments'}
+                emptyText={translate('commentDashboard.table.emptyText')}
             />
         </>
     );

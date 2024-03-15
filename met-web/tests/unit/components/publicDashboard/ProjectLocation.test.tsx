@@ -10,6 +10,20 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
+jest.mock('hooks', () => ({
+    useAppTranslation: () => ({
+        t: (key: string) => {
+            if (key === 'dashboard.errorBox.header') {
+                return 'Error';
+            }
+            if (key === 'dashboard.errorBox.body') {
+                return 'An error occurred while fetching data. Click to retry.';
+            }
+            return key; // Return key as translation fallback
+        },
+    }),
+}));
+
 jest.mock('components/map', () => () => <div>Mocked Map Component</div>);
 
 const mockEngagement = closedEngagement;
@@ -83,6 +97,7 @@ describe('ProjectLocation Component Tests', () => {
         );
         await waitFor(() => {
             expect(screen.getByText('Error')).toBeInTheDocument();
+            expect(screen.getByText('An error occurred while fetching data. Click to retry.')).toBeInTheDocument();
         });
     });
 });

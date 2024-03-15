@@ -6,6 +6,8 @@ import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useAppTranslation } from 'hooks';
+
 const schema = yup
     .object({
         firstName: yup.string().required(),
@@ -18,6 +20,7 @@ const schema = yup
 type SecondCACTabForm = yup.TypeOf<typeof schema>;
 
 export const SecondTab = () => {
+    const { t: translate } = useAppTranslation();
     const { formSubmission, setFormSubmission, setSubmitting } = useContext(FormContext);
     const [submittingForm, setSubmittingForm] = useState(false);
 
@@ -52,11 +55,11 @@ export const SecondTab = () => {
                 <FormProvider {...methods}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <MetDescription>Please tell us your</MetDescription>
+                            <MetDescription>{translate('formCAC.tab2.description.0')}</MetDescription>
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} sm={6}>
-                                <MetLabel>First Name</MetLabel>
+                                <MetLabel>{translate('formCAC.tab2.labels.0')}</MetLabel>
                                 <ControlledTextField
                                     variant="outlined"
                                     label=" "
@@ -70,7 +73,7 @@ export const SecondTab = () => {
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} sm={6}>
-                                <MetLabel>Last Name</MetLabel>
+                                <MetLabel>{translate('formCAC.tab2.labels.1')}</MetLabel>
                                 <ControlledTextField
                                     variant="outlined"
                                     label=" "
@@ -84,7 +87,7 @@ export const SecondTab = () => {
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} sm={6}>
-                                <MetLabel>City</MetLabel>
+                                <MetLabel>{translate('formCAC.tab2.labels.2')}</MetLabel>
                                 <ControlledTextField
                                     variant="outlined"
                                     label=" "
@@ -98,7 +101,7 @@ export const SecondTab = () => {
                         </Grid>
                         <Grid container item xs={12}>
                             <Grid item xs={12} sm={6}>
-                                <MetLabel>Email</MetLabel>
+                                <MetLabel>{translate('formCAC.tab2.labels.3')}</MetLabel>
                                 <ControlledTextField
                                     variant="outlined"
                                     label=" "
@@ -115,19 +118,12 @@ export const SecondTab = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <MetDescription>
-                    A select Community Advisory Committee will be formed if there is sufficient community interest and
-                    if it would support the assessment. If formed, this committee would seek to represent the diversity
-                    of the people who may be affected by a proposed project and would participate in additional
-                    engagement and information seeking activities with the EAO. The EAO will ask interested members of
-                    the public to apply for the select Community Advisory Committee at the time it is determined and is
-                    necessary
-                </MetDescription>
+                <MetDescription>{translate('formCAC.tab2.description.1')}</MetDescription>
             </Grid>
 
             <Grid item xs={12}>
                 <PrimaryButton loading={submittingForm} onClick={handleSubmit(onSubmit)}>
-                    Submit
+                    {translate('formCAC.tab2.button.submit')}
                 </PrimaryButton>
             </Grid>
         </Grid>
