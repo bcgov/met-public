@@ -9,9 +9,9 @@ class TimelineEventService:
     """Timeline event management service."""
 
     @staticmethod
-    def get_timeline_event(timeline_id):
-        """Get timeline event by timeline id."""
-        timeline_event = TimelineEventModel.get_event(timeline_id)
+    def get_timeline_event(timeline_event_id):
+        """Get timeline event by timeline event id."""
+        timeline_event = TimelineEventModel.find_by_id(timeline_event_id)
         return timeline_event
 
     @staticmethod

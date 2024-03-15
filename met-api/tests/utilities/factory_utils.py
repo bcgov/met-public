@@ -15,6 +15,7 @@
 
 Test Utility for creating model factory.
 """
+
 from typing import Optional
 
 from faker import Faker
@@ -22,6 +23,7 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
@@ -32,36 +34,45 @@ from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
+from met_api.models.event_item import EventItem as EventItemModel
+from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
 from met_api.models.feedback import Feedback as FeedbackModel
 from met_api.models.language import Language as LanguageModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.participant import Participant as ParticipantModel
+from met_api.models.poll_answer_translation import PollAnswerTranslation as PollAnswerTranslationModel
 from met_api.models.poll_answers import PollAnswer as PollAnswerModel
 from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.models.report_setting import ReportSetting as ReportSettingModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.models.submission import Submission as SubmissionModel
+from met_api.models.subscribe_item import SubscribeItem as SubscribeItemModel
+from met_api.models.subscribe_item_translation import SubscribeItemTranslation as SubscribeItemTranslationModel
 from met_api.models.subscription import Subscription as SubscriptionModel
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.survey_translation import SurveyTranslation as SurveyTranslationModel
 from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
+from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
+from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
-from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
+from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
+from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
-from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo,
-    TestParticipantInfo, TestPollAnswerInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
-    TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo,
-    TestWidgetInfo, TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
+    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo,
+    TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo,
+    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo,
+    TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
+    TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
+    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()
@@ -145,9 +156,7 @@ def factory_email_verification(survey_id, type=None):
     return email_verification
 
 
-def factory_engagement_model(
-    eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None
-):
+def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
     """Produce a engagement model."""
     engagement = EngagementModel(
         name=name if name else fake.name(),
@@ -198,9 +207,7 @@ def factory_metadata_requirements(auth: Optional[Auth] = None):
     """Create a tenant, an associated staff user, and engagement, for tests."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
-    (engagement_info := TestEngagementInfo.engagement1.copy())[
-        'tenant_id'
-    ] = tenant.id
+    (engagement_info := TestEngagementInfo.engagement1.copy())['tenant_id'] = tenant.id
     engagement = factory_engagement_model(engagement_info)
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
@@ -220,9 +227,7 @@ def factory_taxon_requirements(auth: Optional[Auth] = None):
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
-    factory_staff_user_model(
-        TestJwtClaims.staff_admin_role.get('sub'), staff_info
-    )
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
     if auth:
         headers = factory_auth_header(
             auth,
@@ -251,9 +256,7 @@ def factory_metadata_taxon_model(
     return taxon
 
 
-def factory_staff_user_model(
-    external_id=None, user_info: dict = TestUserInfo.user_staff_1
-):
+def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.user_staff_1):
     """Produce a staff user model."""
     # Generate a external id if not passed
     external_id = external_id or fake.uuid4()
@@ -275,9 +278,7 @@ def factory_participant_model(
 ):
     """Produce a participant model."""
     participant = ParticipantModel(
-        email_address=ParticipantModel.encode_email(
-            participant['email_address']
-        ),
+        email_address=ParticipantModel.encode_email(participant['email_address']),
     )
     participant.save()
     return participant
@@ -304,9 +305,7 @@ def factory_membership_model(
     return membership
 
 
-def factory_feedback_model(
-    feedback_info: dict = TestFeedbackInfo.feedback1, status=None
-):
+def factory_feedback_model(feedback_info: dict = TestFeedbackInfo.feedback1, status=None):
     """Produce a feedback model."""
     feedback = FeedbackModel(
         status=feedback_info.get('status'),
@@ -323,9 +322,7 @@ def factory_auth_header(jwt, claims, tenant_id=None):
     """Produce JWT tokens for use in tests."""
     return {
         'Authorization': 'Bearer ' + jwt.create_jwt(claims=claims, header=JWT_HEADER),
-        TENANT_ID_HEADER: (
-            tenant_id or current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
-        ),
+        TENANT_ID_HEADER: (tenant_id or current_app.config.get('DEFAULT_TENANT_SHORT_NAME')),
     }
 
 
@@ -383,9 +380,7 @@ def factory_submission_model(
     return submission
 
 
-def factory_comment_model(
-    survey_id, submission_id, comment_info: dict = TestCommentInfo.comment1
-):
+def factory_comment_model(survey_id, submission_id, comment_info: dict = TestCommentInfo.comment1):
     """Produce a comment model."""
     comment = CommentModel(
         survey_id=survey_id,
@@ -421,9 +416,7 @@ def patch_token_info(claims, monkeypatch):
         """Return token info."""
         return claims
 
-    monkeypatch.setattr(
-        'met_api.utils.user_context._get_token_info', token_info
-    )
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
 
     # Add a database user that matches the token
     # factory_staff_user_model(external_id=claims.get('sub'))
@@ -481,20 +474,14 @@ def factory_poll_model(widget, poll_info: dict = TestWidgetPollInfo.poll1):
     return poll
 
 
-def factory_poll_answer_model(
-    poll, answer_info: dict = TestPollAnswerInfo.answer1
-):
+def factory_poll_answer_model(poll, answer_info: dict = TestPollAnswerInfo.answer1):
     """Produce a Poll  model."""
-    answer = PollAnswerModel(
-        answer_text=answer_info.get('answer_text'), poll_id=poll.id
-    )
+    answer = PollAnswerModel(answer_text=answer_info.get('answer_text'), poll_id=poll.id)
     answer.save()
     return answer
 
 
-def factory_poll_response_model(
-    poll, answer, response_info: dict = TestPollResponseInfo.response1
-):
+def factory_poll_response_model(poll, answer, response_info: dict = TestPollResponseInfo.response1):
     """Produce a Poll  model."""
     response = PollResponseModel(
         participant_id=response_info.get('participant_id'),
@@ -573,7 +560,9 @@ def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
     return language_model
 
 
-def factory_widget_translation_model(widget_translation: dict = TestWidgetTranslationInfo.widgettranslation1):
+def factory_widget_translation_model(
+    widget_translation: dict = TestWidgetTranslationInfo.widgettranslation1,
+):
     """Produce a widget translation model."""
     widget_translation = WidgetTranslationModel(
         widget_id=widget_translation.get('widget_id'),
@@ -608,15 +597,222 @@ def factory_survey_translation_and_engagement_model():
         survey_id=survey.id,
         language_id=lang.id,
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
-        form_json=TestSurveyTranslationInfo.survey_translation1.get(
-            'form_json'),
+        form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
     )
     translation.save()
     return translation, survey, lang
 
 
+def factory_poll_answer_translation_model(
+    translate_info: dict = TestPollAnswerTranslationInfo.translation1,
+):
+    """Produce a translation  model."""
+    translation = PollAnswerTranslationModel(
+        poll_answer_id=translate_info.get('poll_answer_id'),
+        language_id=translate_info.get('language_id'),
+        answer_text=translate_info.get('answer_text'),
+    )
+    translation.save()
+    return translation
+
+
+def poll_answer_model_with_poll_enagement():
+    """Produce a poll answer model along with related engagement and poll models."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    poll_model = factory_poll_model(widget_model)
+    answer = factory_poll_answer_model(poll_model)
+    language = factory_language_model({'code': 'en', 'name': 'English'})
+    return answer, poll_model, language
+
+
+def factory_widget_subscribe_model(widget_model=None):
+    """Produce a SubscribeItemTranslation model instance."""
+    engagement = factory_engagement_model()
+
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    if widget_model is None:
+        widget_model = factory_widget_model(TestWidgetInfo.widget1)
+
+    subscribe_info = {
+        **TestSubscribeInfo.subscribe_info_1.value,
+    }
+
+    widget_subcribe_model = WidgetSubscribeModel(
+        widget_id=widget_model.id,
+        type=subscribe_info.get('type'),
+        sort_index=subscribe_info.get('sort_index'),
+    )
+
+    widget_subcribe_model.save()
+    return widget_subcribe_model
+
+
+def factory_subscribe_item_model(widget_subscribe=None, subscribe_item_info: dict = None):
+    """Produce a SubscribeItem model instance."""
+    if subscribe_item_info is None:
+        subscribe_item_info = TestSubscribeInfo.subscribe_info_1.value['items'][0]
+
+    if widget_subscribe is None:
+        widget_subscribe = factory_widget_subscribe_model()
+
+    subscribe_item = SubscribeItemModel(
+        description=subscribe_item_info.get('description', ''),
+        rich_description=subscribe_item_info.get('rich_description', ''),
+        call_to_action_text=subscribe_item_info.get('call_to_action_text', ''),
+        call_to_action_type=subscribe_item_info.get('call_to_action_type', ''),
+        sort_index=subscribe_item_info.get('sort_index', 1),
+        widget_subscribe_id=widget_subscribe.id,
+    )
+    subscribe_item.save()
+    return subscribe_item
+
+
+def factory_subscribe_item_translation_model(
+    translate_info: dict = TestSubscribeItemTranslationInfo.translate_info1,
+):
+    """Produce a translation model for Subscribe items."""
+    translation = SubscribeItemTranslationModel(
+        subscribe_item_id=translate_info.get('subscribe_item_id'),
+        language_id=translate_info.get('language_id'),
+        description=translate_info.get('description'),
+    )
+    translation.save()
+    return translation
+
+
+def factory_subscribe_item_model_with_enagement():
+    """Produce a SubscribeItem model instance with engagement."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    widget_subscribe = factory_widget_subscribe_model(widget_model)
+    subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return subscribe_item_model, language_model
+
+
+def factory_widget_event_model(widget_model=None):
+    """Produce a Widget Event model instance."""
+    engagement = factory_engagement_model()
+
+    TestWidgetInfo.widget1['engagement_id'] = engagement.id
+    if widget_model is None:
+        widget_model = factory_widget_model(TestWidgetInfo.widget1)
+
+    event_info = {
+        **TestEventnfo.event_meetup.value,
+    }
+
+    widget_event_model = WidgetEventsModel(
+        widget_id=widget_model.id,
+        type=event_info.get('type'),
+        sort_index=event_info.get('sort_index'),
+        title=event_info.get('title'),
+    )
+
+    widget_event_model.save()
+    return widget_event_model
+
+
+def factory_event_item_model(widget_event=None, event_item_info: dict = None):
+    """Produce a EventItem model instance."""
+    if event_item_info is None:
+        event_item_info = TestEventnfo.event_meetup.value['items'][0]
+
+    if widget_event is None:
+        widget_event = factory_widget_event_model()
+
+    event_item = EventItemModel(
+        description=event_item_info.get('description', ''),
+        location_name=event_item_info.get('location_name', ''),
+        location_address=event_item_info.get('location_address', ''),
+        start_date=event_item_info.get('start_date', ''),
+        end_date=event_item_info.get('end_date', ''),
+        url=event_item_info.get('url', ''),
+        url_label=event_item_info.get('url_label', ''),
+        sort_index=event_item_info.get('sort_index', 1),
+        widget_events_id=widget_event.id,
+    )
+    event_item.save()
+    return event_item
+
+
+def event_item_model_with_language():
+    """Produce an event item model instance with language."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    widget_event = factory_widget_event_model(widget_model)
+    event_item_model = factory_event_item_model(widget_event)
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return event_item_model, widget_event, language_model
+
+
+def factory_event_item_translation_model(
+    event_translation_info: dict = TestEventItemTranslationInfo.event_item_info1,
+):
+    """Produce a translation model for Event items."""
+    event_translation = EventItemTranslationModel(
+        event_item_id=event_translation_info.get('event_item_id'),
+        language_id=event_translation_info.get('language_id'),
+        description=event_translation_info.get('description'),
+        location_name=event_translation_info.get('location_name'),
+        location_address=event_translation_info.get('location_address'),
+        url=event_translation_info.get('url'),
+        url_label=event_translation_info.get('url_label'),
+    )
+    event_translation.save()
+    return event_translation
+
+
+def timeline_event_model_with_language():
+    """Produce a timeline event model instance with language."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    widget_timeline = factory_widget_timeline_model(
+        {
+            **TestTimelineInfo.widget_timeline.value,
+            'widget_id': widget_model.id,
+            'engagement_id': engagement.id,
+        }
+    )
+    timeline_event = factory_timeline_event_model(
+        {
+            **TestTimelineInfo.timeline_event.value,
+            'timeline_id': widget_timeline.id,
+            'widget_id': widget_model.id,
+            'engagement_id': engagement.id,
+        }
+    )
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return timeline_event, widget_timeline, language_model
+
+
+def factory_timeline_event_translation_model(
+    timeline_translation_info: dict = TestTimelineEventTranslationInfo.timeline_event_info1,
+):
+    """Produce a translation model for Timeline items."""
+    timeline_translation = TimelineEventTranslationModel(
+        timeline_event_id=timeline_translation_info.get('timeline_event_id'),
+        language_id=timeline_translation_info.get('language_id'),
+        time=timeline_translation_info.get('time'),
+        description=timeline_translation_info.get('description'),
+    )
+    timeline_translation.save()
+    return timeline_translation
+
+
+def subscribe_item_model_with_language():
+    """Produce a subscribe item model instance with language."""
+    engagement = factory_engagement_model()
+    widget_model = factory_widget_model({'engagement_id': engagement.id})
+    widget_subscribe = factory_widget_subscribe_model(widget_model)
+    subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return subscribe_item_model, widget_subscribe, language_model
+
+
 def factory_engagement_translation_model(
-        engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
+    engagement_translation: dict = TestEngagementTranslationInfo.engagementtranslation1,
 ):
     """Produce a engagement translation model."""
     engagement_translation = EngagementTranslationModel(
