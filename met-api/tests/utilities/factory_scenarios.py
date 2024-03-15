@@ -942,7 +942,7 @@ class TestSubscribeItemTranslationInfo(dict, Enum):
     translate_info1 = {
         'subscribe_item_id': 1,
         'language_id': 2,
-        'description': 'Description in another language',
+        'description': fake.text(),
     }
 
 
@@ -952,7 +952,7 @@ class TestEventItemTranslationInfo(dict, Enum):
     event_item_info1 = {
         'event_item_id': 1,
         'language_id': 2,
-        'description': 'Description in another language',
+        'description': fake.text(),
         'location_name': 'Location name',
         'location_address': 'location address',
         'url': fake.url(),
@@ -966,7 +966,7 @@ class TestTimelineEventTranslationInfo(dict, Enum):
     timeline_event_info1 = {
         'timeline_event_id': 1,
         'language_id': 2,
-        'description': 'Description in another language',
+        'description': fake.text(),
         'time': datetime.now().strftime('%Y-%m-%d'),
     }
 
