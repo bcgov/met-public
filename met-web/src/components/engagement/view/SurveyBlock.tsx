@@ -27,6 +27,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
     if (isEngagementLoading) {
         return <Skeleton variant="rectangular" height={'15em'} />;
     }
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
 
     return (
         <MetPaper elevation={1} sx={{ padding: '2em', pt: '0px' }}>
@@ -60,10 +61,14 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
-                                    navigate(`/engagements/${savedEngagement.id}/dashboard/public`);
+                                    isLoggedIn
+                                        ? navigate(`/engagements/${savedEngagement.id}/dashboard/public`)
+                                        : navigate(
+                                              `${languagePath}/engagements/${savedEngagement.id}/dashboard/public`,
+                                          );
                                 }}
                             >
-                                View Feedback
+                                {translate('buttonText.viewFeedback')}
                             </PrimaryButton>
                         </Grid>
                     </Case>
