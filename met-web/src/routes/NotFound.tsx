@@ -11,9 +11,7 @@ const marginStyle = { mr: 2 };
 const tenantId = sessionStorage.getItem('tenantId');
 const LanguageId = sessionStorage.getItem('languageId');
 
-const { t: translate } = useAppTranslation();
-
-const SuggestionsList = () => (
+const SuggestionsList = ({ translate }: { translate: (key: string) => string }) => (
     <Box>
         <p style={{ ...listItemStyle, fontWeight: 'bold' }}>{translate('notFound.paragraph')}</p>
         <ul>
@@ -31,46 +29,50 @@ const SuggestionsList = () => (
     </Box>
 );
 
-const NotFound = () => (
-    <>
-        <Toolbar />
-        <Grid
-            container
-            direction={'column'}
-            justifyContent="center"
-            alignItems="center"
-            spacing={1}
-            padding={'2em 2em 1em 2em'}
-        >
-            <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
-                <MetHeader1 bold sx={{ fontSize: '2em' }}>
-                    {translate('notFound.header.0')}
-                </MetHeader1>
+const NotFound = () => {
+    const { t: translate } = useAppTranslation();
+
+    return (
+        <>
+            <Toolbar />
+            <Grid
+                container
+                direction={'column'}
+                justifyContent="center"
+                alignItems="center"
+                spacing={1}
+                padding={'2em 2em 1em 2em'}
+            >
+                <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
+                    <MetHeader1 bold sx={{ fontSize: '2em' }}>
+                        {translate('notFound.header.0')}
+                    </MetHeader1>
+                </Grid>
+                <Grid item sx={{ marginStyle, marginBottom: 2 }}>
+                    <SvgIcon
+                        fontSize="inherit"
+                        component={ErrorSvg}
+                        viewBox="0 0 404 320"
+                        sx={{
+                            width: '25em', // adjust these values as per your needs
+                            height: '15em',
+                            marginX: 1,
+                            boxSizing: 'border-box',
+                            padding: '0px',
+                        }}
+                    />
+                </Grid>
+                <Grid item xs={6} justifyContent="center" mb={4}>
+                    <MetHeader4 align="flex-start" bold>
+                        {translate('notFound.header.1')}
+                    </MetHeader4>
+                </Grid>
+                <Grid item xs={6} justifyContent={'left'}>
+                    <SuggestionsList translate={translate} />
+                </Grid>
             </Grid>
-            <Grid item sx={{ marginStyle, marginBottom: 2 }}>
-                <SvgIcon
-                    fontSize="inherit"
-                    component={ErrorSvg}
-                    viewBox="0 0 404 320"
-                    sx={{
-                        width: '25em', // adjust these values as per your needs
-                        height: '15em',
-                        marginX: 1,
-                        boxSizing: 'border-box',
-                        padding: '0px',
-                    }}
-                />
-            </Grid>
-            <Grid item xs={6} justifyContent="center" mb={4}>
-                <MetHeader4 align="flex-start" bold>
-                    {translate('notFound.header.1')}
-                </MetHeader4>
-            </Grid>
-            <Grid item xs={6} justifyContent={'left'}>
-                <SuggestionsList />
-            </Grid>
-        </Grid>
-    </>
-);
+        </>
+    );
+};
 
 export default NotFound;
