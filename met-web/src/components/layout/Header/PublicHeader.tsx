@@ -44,7 +44,7 @@ const PublicHeader = () => {
                         >
                             <img
                                 src={logoUrl}
-                                alt="Site Logo"
+                                alt={translate('common.defaultText')}
                                 style={{
                                     objectFit: 'cover',
                                     height: '5em',
@@ -72,7 +72,7 @@ const PublicHeader = () => {
                             onClick={() => {
                                 navigate(`/${language}`);
                             }}
-                            alt="British Columbia Logo"
+                            alt={translate('common.defaultBCText')}
                         />
                     </When>
                     <HeaderTitle
@@ -85,7 +85,7 @@ const PublicHeader = () => {
                     </HeaderTitle>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout()}>
-                            Logout
+                            {translate('common.logout')}
                         </Button>
                     </When>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

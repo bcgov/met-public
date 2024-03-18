@@ -67,10 +67,10 @@ export const FeedbackModal = () => {
         setIsSaving(true);
         try {
             await createFeedback(feedbackFormData);
-            dispatch(openNotification({ severity: 'success', text: 'Your Feedback has been sent.' }));
+            dispatch(openNotification({ severity: 'success', text: translate('feedback.notification.success') }));
             setIsSubmitted(true);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending your feedback.' }));
+            dispatch(openNotification({ severity: 'error', text: translate('feedback.notification.error') }));
         } finally {
             setIsSaving(false);
         }
@@ -129,11 +129,15 @@ export const FeedbackModal = () => {
                                         viewBox="0 0 64 64"
                                         sx={{ marginBottom: 2 }}
                                     />
-                                    <MetHeader3 data-testid="success-title">Thank you for your feedback</MetHeader3>
+                                    <MetHeader3 data-testid="success-title">
+                                        {translate('feedback.submitModal.header')}
+                                    </MetHeader3>
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                                <PrimaryButton onClick={handleClose}>Close</PrimaryButton>
+                                <PrimaryButton onClick={handleClose}>
+                                    {translate('feedback.submitModal.button')}
+                                </PrimaryButton>
                             </Grid>
                         </Then>
                         <Else>
@@ -152,7 +156,7 @@ export const FeedbackModal = () => {
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel>How do you like our feedback platform?</MetLabel>
+                                <MetLabel>{translate('feedback.feedbackModal.label.0')}</MetLabel>
                             </Grid>
                             <Grid item xs={12} textAlign="center">
                                 <StyledRating
@@ -170,7 +174,7 @@ export const FeedbackModal = () => {
                                 {customRatings[rating].label}
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel>What else would you like to share with us?</MetLabel>
+                                <MetLabel>{translate('feedback.feedbackModal.label.1')}</MetLabel>
                             </Grid>
                             <Grid item container xs={12} alignItems="space-evenly" justifyContent="space-evenly">
                                 <CommentTypeButton
@@ -236,8 +240,7 @@ export const FeedbackModal = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <MetDisclaimer marginTop={0}>
-                                    Please do not include any personal information in your feedback. Feedback that
-                                    includes personal information will be deleted.
+                                    {translate('feedback.feedbackModal.disclaimer')}
                                 </MetDisclaimer>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
@@ -247,7 +250,7 @@ export const FeedbackModal = () => {
                                     disabled={isFeedbackTypeNotSelected || isCommentNotProvided}
                                     onClick={handleSubmit}
                                 >
-                                    Submit
+                                    {translate('feedback.feedbackModal.button')}
                                 </PrimaryButton>
                             </Grid>
                         </Else>

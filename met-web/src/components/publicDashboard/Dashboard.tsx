@@ -60,7 +60,7 @@ const Dashboard = () => {
             })
             .catch((error) => {
                 // Error handling
-                console.error('Error generating dashboard PDF:', error);
+                console.error(translate('dashboard.consoleError.pdfError'), error);
             });
     };
 
@@ -173,11 +173,15 @@ const Dashboard = () => {
                                                 >
                                                     <Grid item>
                                                         <MetDescription sx={{ mr: 1 }}>
-                                                            From: {engagement.start_date}{' '}
+                                                            {translate('dashboard.submissionTrend.filter.from')}
+                                                            {engagement.start_date}{' '}
                                                         </MetDescription>
                                                     </Grid>
                                                     <Grid item>
-                                                        <MetDescription>To: {engagement.end_date}</MetDescription>
+                                                        <MetDescription>
+                                                            {translate('dashboard.submissionTrend.filter.to')}
+                                                            {engagement.end_date}
+                                                        </MetDescription>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

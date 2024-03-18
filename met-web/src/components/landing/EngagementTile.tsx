@@ -75,7 +75,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     }
 
     if (!loadedEngagement) {
-        return <MetLabel>error Loading</MetLabel>;
+        return <MetLabel>{translate('landingPage.tile.error')}</MetLabel>;
     }
 
     const { name, end_date, start_date, description, banner_url, submission_status } = loadedEngagement;
@@ -116,7 +116,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     {EngagementDate}
                 </MetBody>
                 <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
-                    <MetBody bold>Status:</MetBody>
+                    <MetBody bold>{translate('landingPage.tile.status')}</MetBody>
                     <EngagementStatusChip submissionStatus={submission_status} />
                 </Stack>
             </CardContent>

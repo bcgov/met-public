@@ -3,6 +3,7 @@ import { MetHeader1, MetHeader4 } from 'components/common';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
 import { Link } from 'react-router-dom';
+import { useAppTranslation } from 'hooks';
 
 const listItemStyle = { marginBottom: 1 };
 const marginStyle = { mr: 2 };
@@ -10,20 +11,22 @@ const marginStyle = { mr: 2 };
 const tenantId = sessionStorage.getItem('tenantId');
 const LanguageId = sessionStorage.getItem('languageId');
 
+const { t: translate } = useAppTranslation();
+
 const SuggestionsList = () => (
     <Box>
-        <p style={{ ...listItemStyle, fontWeight: 'bold' }}>Suggestions to help you find what you're looking for:</p>
+        <p style={{ ...listItemStyle, fontWeight: 'bold' }}>{translate('notFound.paragraph')}</p>
         <ul>
-            <li style={listItemStyle}>Check that the web URL has been entered correctly</li>
+            <li style={listItemStyle}>{translate('notFound.list.0')}</li>
             <li style={listItemStyle}>
-                Go to our{' '}
+                {translate('notFound.list.1')}{' '}
                 <Link target="_blank" to={`/${tenantId}/${LanguageId}`}>
-                    homepage
+                    {translate('notFound.list.2')}
                 </Link>{' '}
-                and browse through our past and current engagements
+                {translate('notFound.list.3')}
             </li>
-            <li style={listItemStyle}>Telephone Device for the Deaf (TDD) across B.C.: 711</li>
-            <li style={listItemStyle}>If you would like to email us, please contact *********@gov.bc.ca.</li>
+            <li style={listItemStyle}>{translate('notFound.list.4')}</li>
+            <li style={listItemStyle}>{translate('notFound.list.5')}</li>
         </ul>
     </Box>
 );
@@ -41,7 +44,7 @@ const NotFound = () => (
         >
             <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
                 <MetHeader1 bold sx={{ fontSize: '2em' }}>
-                    The page you're looking for cannot be found.
+                    {translate('notFound.header.0')}
                 </MetHeader1>
             </Grid>
             <Grid item sx={{ marginStyle, marginBottom: 2 }}>
@@ -60,7 +63,7 @@ const NotFound = () => (
             </Grid>
             <Grid item xs={6} justifyContent="center" mb={4}>
                 <MetHeader4 align="flex-start" bold>
-                    The page you're looking for might have been removed, moved or is temporarily unavailable.
+                    {translate('notFound.header.1')}
                 </MetHeader4>
             </Grid>
             <Grid item xs={6} justifyContent={'left'}>
