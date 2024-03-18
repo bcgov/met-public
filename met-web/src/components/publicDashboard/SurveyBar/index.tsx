@@ -159,7 +159,9 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         </Grid>
                         <When condition={isTablet}>
                             <Grid item xs={12}>
-                                <MetParagraph sx={{ fontWeight: 'bold' }}>Survey Results</MetParagraph>
+                                <MetParagraph sx={{ fontWeight: 'bold' }}>
+                                    {translate('dashboard.barBlock.label')}
+                                </MetParagraph>
                             </Grid>
                         </When>
                         <Grid item xs={12} md={8}>

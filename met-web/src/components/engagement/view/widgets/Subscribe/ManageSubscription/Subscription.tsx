@@ -105,7 +105,7 @@ export const Subscription = () => {
                                 <MetHeader1>{tenant?.name}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{'Description'}</MetParagraph>
+                                <MetParagraph>{translate('subscription.paragraph')}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>
