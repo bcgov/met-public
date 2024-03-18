@@ -11,21 +11,20 @@ import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { useAppTranslation } from 'hooks';
 
-const { t: translate } = useAppTranslation();
-
-// Define the Yup schema for validation
-const schema = yup.object({
-    understand: yup.boolean().oneOf([true], translate('formCAC.schema.understand')),
-    termsOfReference: yup.boolean().oneOf([true], translate('formCAC.schema.termsOfReference')),
-});
-
 interface FormData {
     understand: boolean;
     termsOfReference: boolean;
 }
 
 export const FirstTab: React.FC = () => {
+    const { t: translate } = useAppTranslation();
     const { consentMessage, setTabValue, setFormSubmission } = useContext(FormContext);
+
+    // Define the Yup schema for validation
+    const schema = yup.object({
+        understand: yup.boolean().oneOf([true], translate('formCAC.schema.understand')),
+        termsOfReference: yup.boolean().oneOf([true], translate('formCAC.schema.termsOfReference')),
+    });
 
     // Initialize form state and validation using react-hook-form
     const {
