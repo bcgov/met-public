@@ -88,7 +88,8 @@
             "You will no longer receive any communications from us.",
             "Thank you."
         ],
-        "notification": "Error Subscribing to Engagement"
+        "notification": "Error Subscribing to Engagement",
+        "paragraph": "Description"
     },
     "dashboard": {
         "header": "What We Heard",
@@ -149,7 +150,11 @@
             }
         },
         "table": {
-            "emptyText": "Engagement does not have any published comments"
+            "emptyText": "Engagement does not have any published comments",
+            "label": [
+                "Comment",
+                "Comment Date"
+            ]
         }
     },
     "surveyEdit": {
@@ -197,6 +202,10 @@
         }
     },
     "formCAC": {
+        "schema": {
+            "understand": "You must acknowledge this.",
+            "termsOfReference": "You must acknowledge this."
+        },
         "tab1": {
             "labels": [
                 "What is a Community Advisory Committee (CAC)?",
