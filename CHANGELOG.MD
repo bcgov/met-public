@@ -1,4 +1,10 @@
-<<<<<<< HEAD
+## March 19, 2024
+
+- **Task**: Add poll results to results tab [DESENG-513](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-513)
+  - Added poll results to results tab.
+  - Added poll results API.
+  - Added Unit tests.
+
 ## March 15, 2024
 
 - **Task**: Multi-language - Create event, subcribe_item, poll, timeline widget translation tables & API routes [DESENG-515](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-515)
