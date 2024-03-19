@@ -10,7 +10,21 @@ export interface PollWidget {
 export interface PollAnswer {
     id: number;
     answer_text: string;
+    percentage?: number;
 }
 export interface PollResponse {
     selected_answer_id: string;
+}
+
+export interface PollResultResponse {
+    answers: Array<{
+        answer_id: number;
+        answer_text: string;
+        percentage: number;
+        total_response: number;
+    }>;
+    description: string;
+    poll_id: number;
+    title: string;
+    total_response: number;
 }
