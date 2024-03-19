@@ -78,7 +78,8 @@
         "disclaimer": "Disclaimer",
         "login": "Admin Login",
         "privacy": "Privacy",
-        "copyrightNotice": "© 2023 Government of British Columbia"
+        "copyrightNotice": "© 2023 Government of British Columbia",
+        "defaultLogo": "British Columbia Logo"
     },
     "subscription": {
         "subscribe": "You have successfully confirmed your subscription. Thank you.",
@@ -104,9 +105,6 @@
         "errorBox": {
             "header": "Error",
             "body": "Click to reload"
-        },
-        "consoleError": {
-            "pdfError": "Error generating dashboard PDF:"
         },
         "noData": "No Data Available",
         "projectLocation": "Project Location",

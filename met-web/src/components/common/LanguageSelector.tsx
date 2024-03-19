@@ -41,7 +41,6 @@ const LanguageSelector = () => {
                 // Language code not found in path, insert it at the appropriate position
                 pathSegments.splice(1, 0, selectedLanguage);
             }
-            // navigate(pathSegments.join('/'));
             dispatch(loadingLanguage(false));
 
             navigate(pathSegments.join('/'));

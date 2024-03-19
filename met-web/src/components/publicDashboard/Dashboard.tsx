@@ -60,7 +60,7 @@ const Dashboard = () => {
             })
             .catch((error) => {
                 // Error handling
-                console.error(translate('dashboard.consoleError.pdfError'), error);
+                console.error('Error generating dashboard PDF:', error);
             });
     };
 

@@ -59,7 +59,7 @@ const Footer = () => {
                                 height: '5em',
                                 width: '15em',
                             }}
-                            alt="British Columbia Logo"
+                            alt={translate('footer.defaultLogo')}
                         />
                     </Grid>
                     <Grid item xs={12}>
