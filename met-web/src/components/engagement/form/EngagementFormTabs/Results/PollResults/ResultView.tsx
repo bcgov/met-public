@@ -26,7 +26,7 @@ function PollOption({ label, votes, percentage }: PollOptionProps) {
                 <Typography variant="subtitle1">{`${percentage}%`}</Typography>
             </Box>
             <Typography variant="caption" sx={{ display: 'block', mt: 1 }}>
-                {votes} votes
+                {votes > 1 ? `${votes} votes` : `${votes} vote`}
             </Typography>
             <Divider />
         </Box>
