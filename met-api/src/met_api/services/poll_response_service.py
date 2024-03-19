@@ -11,6 +11,7 @@ from met_api.services import authorization
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.roles import Role
 
+
 class PollResponseService:
     """Service for managing PollResponses."""
 

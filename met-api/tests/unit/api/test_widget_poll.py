@@ -26,7 +26,8 @@ from met_api.constants.engagement_status import Status
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestPollAnswerInfo, TestWidgetPollInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model, factory_poll_response_model)
+    factory_auth_header, factory_engagement_model, factory_poll_answer_model, factory_poll_model,
+    factory_poll_response_model, factory_widget_model)
 
 
 fake = Faker()
