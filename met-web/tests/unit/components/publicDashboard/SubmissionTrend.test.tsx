@@ -11,6 +11,22 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => false),
 }));
 
+jest.mock('hooks', () => {
+    const translations: Record<string, string> = {
+        'dashboard.noData': 'No Data Available',
+        'dashboard.submissionTrend.filter.label': 'Select Date Range',
+        'dashboard.submissionTrend.filter.toggleBy.0': 'Weekly',
+        'dashboard.submissionTrend.filter.toggleBy.1': 'Monthly',
+        'dashboard.submissionTrend.filter.reset': 'Reset All Filters',
+    };
+
+    return {
+        useAppTranslation: () => ({
+            t: (key: string) => translations[key] || key,
+        }),
+    };
+});
+
 // Setting the mock ResizeObserver on the global window object
 window.ResizeObserver = jest.fn().mockImplementation(() => {
     return {

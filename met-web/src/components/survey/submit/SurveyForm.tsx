@@ -7,8 +7,10 @@ import { useAppSelector } from 'hooks';
 import { PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
 import { When } from 'react-if';
+import { useAppTranslation } from 'hooks';
 
 export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
+    const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { isSurveyLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
     const [submissionData, setSubmissionData] = useState<unknown>(null);
@@ -47,13 +49,15 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
+                        <SecondaryButton onClick={() => handleClose()}>
+                            {translate('surveySubmit.surveyForm.button.cancel')}
+                        </SecondaryButton>
                         <PrimaryButton
                             disabled={!isValid || isLoggedIn || isSubmitting}
                             onClick={() => handleSubmit(submissionData)}
                             loading={isSubmitting}
                         >
-                            Submit
+                            {translate('surveySubmit.surveyForm.button.submit')}
                         </PrimaryButton>
                     </Stack>
                 </Grid>

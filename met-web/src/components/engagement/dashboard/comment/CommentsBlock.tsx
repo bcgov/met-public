@@ -7,17 +7,21 @@ import CommentTable from './CommentTable';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { useAppTranslation } from 'hooks';
 
 interface CommentsBlockProps {
     dashboardType: string;
 }
 
 export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) => {
+    const { t: translate } = useAppTranslation();
     const { slug } = useParams();
     const { engagement, isEngagementLoading } = useContext(CommentViewContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const canAccessDashboard = useAppSelector((state) => state.user.roles.includes('access_dashboard'));
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
 
     const handleViewDashboard = () => {
@@ -33,10 +37,10 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                 openNotificationModal({
                     open: true,
                     data: {
-                        header: 'View Report',
+                        header: translate('commentDashboard.block.notification.header'),
                         subText: [
                             {
-                                text: 'The report will only be available to view after the engagement period is over and the engagement is closed.',
+                                text: translate('commentDashboard.block.notification.text'),
                             },
                         ],
                     },
@@ -46,7 +50,11 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
             return;
         }
 
-        navigate(`${basePath}/dashboard/public`);
+        if (isLoggedIn) {
+            navigate(`${basePath}/dashboard/public`);
+        } else {
+            navigate(`${languagePath}${basePath}/dashboard/public`);
+        }
     };
 
     if (isEngagementLoading || !engagement) {
@@ -56,15 +64,20 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
     return (
         <>
             <Grid item xs={12} container direction="row" justifyContent="flex-end">
-                <Link to={slug ? basePath : `/engagements/${engagement.id}/view`} style={{ color: '#1A5A96' }}>
-                    {'<<Return to ' + engagement.name + ' Engagement'}
+                <Link
+                    to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
+                    style={{ color: '#1A5A96' }}
+                >
+                    {translate('commentDashboard.block.link.0') +
+                        engagement.name +
+                        translate('commentDashboard.block.link.1')}
                 </Link>
             </Grid>
             <Grid item xs={12}>
                 <MetPaper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
                         <Grid item xs={12} sm={6}>
-                            <MetHeader4>Comments</MetHeader4>
+                            <MetHeader4>{translate('commentDashboard.block.header')}</MetHeader4>
                         </Grid>
                         <Grid
                             item
@@ -78,7 +91,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 onClick={handleViewDashboard}
                             >
-                                View Report
+                                {translate('commentDashboard.block.buttonText')}
                             </PrimaryButton>
                         </Grid>
                         <Grid item xs={12}>
