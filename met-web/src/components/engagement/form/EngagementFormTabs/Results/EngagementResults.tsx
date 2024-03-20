@@ -3,6 +3,7 @@ import { Grid, Box } from '@mui/material';
 import { MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
+import PollResultsView from './PollResults/PollResultsView';
 
 const EngagementResults = () => {
     const { isSaving } = useContext(ActionContext);
@@ -19,6 +20,9 @@ const EngagementResults = () => {
                 spacing={2}
                 sx={{ padding: '2em' }}
             >
+                <Grid item xs={12}>
+                    <PollResultsView />
+                </Grid>
                 <Box
                     position="sticky"
                     bottom={0}

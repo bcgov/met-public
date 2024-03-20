@@ -26,7 +26,8 @@ from met_api.constants.engagement_status import Status
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestPollAnswerInfo, TestWidgetPollInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_poll_answer_model, factory_poll_model, factory_widget_model)
+    factory_auth_header, factory_engagement_model, factory_poll_answer_model, factory_poll_model,
+    factory_poll_response_model, factory_widget_model)
 
 
 fake = Faker()
@@ -211,3 +212,49 @@ def test_record_poll_response(client, session, jwt):
     )
 
     assert rv.status_code == HTTPStatus.BAD_REQUEST
+
+
+def test_get_poll_response(client, jwt, session, setup_admin_user_and_claims):
+    """Assert that a response for a poll widget can be retrieved."""
+    # Test setup: create a poll widget and a response model
+    _, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    engagement = factory_engagement_model()
+    widget = factory_widget_model({'engagement_id': engagement.id})
+    poll = factory_poll_model(widget, TestWidgetPollInfo.poll1)
+    answer1 = factory_poll_answer_model(poll, TestPollAnswerInfo.answer1)
+    answer2 = factory_poll_answer_model(poll, TestPollAnswerInfo.answer2)
+    answer3 = factory_poll_answer_model(poll, TestPollAnswerInfo.answer3)
+
+    # Recording 2 votes for answer1
+    factory_poll_response_model(poll, answer1)
+    factory_poll_response_model(poll, answer1)
+
+    # Recording 2 votes for answer2
+    factory_poll_response_model(poll, answer2)
+    factory_poll_response_model(poll, answer2)
+
+    # Sending GET request
+    rv = client.get(
+        f'/api/widgets/{widget.id}/polls/{poll.id}/responses',
+        headers=headers,
+        content_type=ContentType.JSON.value,
+    )
+
+    # Checking response
+    assert rv.status_code == HTTPStatus.OK
+    # Testing Poll title and total_response
+    assert rv.json.get('title') == poll.title
+    assert rv.json.get('total_response') == 4
+    # Testing First answer
+    assert rv.json.get('answers')[0].get('answer_id') == answer1.id
+    assert rv.json.get('answers')[0].get('total_response') == 2
+    assert rv.json.get('answers')[0].get('percentage') == 50
+    # Testing Second answer
+    assert rv.json.get('answers')[1].get('answer_id') == answer2.id
+    assert rv.json.get('answers')[1].get('total_response') == 2
+    assert rv.json.get('answers')[1].get('percentage') == 50
+    # Testing Third answer
+    assert rv.json.get('answers')[2].get('answer_id') == answer3.id
+    assert rv.json.get('answers')[2].get('total_response') == 0
+    assert rv.json.get('answers')[2].get('percentage') == 0

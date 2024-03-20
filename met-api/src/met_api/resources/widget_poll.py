@@ -10,6 +10,7 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.widget_poll import WidgetPollSchema
 from met_api.services.widget_poll_service import WidgetPollService
+from met_api.services.poll_response_service import PollResponseService
 from met_api.utils.util import allowedorigins, cors_preflight
 from met_api.utils.ip_util import hash_ip
 
@@ -163,5 +164,16 @@ class PollResponseRecord(Resource):
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             )
 
+        except BusinessException as err:
+            return err.error, err.status_code
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def get(poll_widget_id, **_):
+        """Get poll responses for a given widget."""
+        try:
+            poll_results = PollResponseService().get_poll_details_with_response_counts(poll_widget_id)
+            return jsonify(poll_results), HTTPStatus.OK
         except BusinessException as err:
             return err.error, err.status_code

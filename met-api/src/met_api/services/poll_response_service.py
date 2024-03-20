@@ -1,9 +1,15 @@
 """Service for Poll Response management."""
+
 from http import HTTPStatus
+from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.poll_responses import PollResponse as PollResponseModel
 from met_api.services.poll_answers_service import PollAnswerService
+from met_api.models import Poll, PollAnswer, db
+from met_api.services import authorization
+from met_api.constants.membership_type import MembershipType
+from met_api.utils.roles import Role
 
 
 class PollResponseService:
@@ -31,8 +37,7 @@ class PollResponseService:
             return poll_response
         except SQLAlchemyError as e:
             # Log the exception or handle it as needed
-            raise BusinessException(f'Error creating poll response: {e}',
-                                    HTTPStatus.INTERNAL_SERVER_ERROR) from e
+            raise BusinessException(f'Error creating poll response: {e}', HTTPStatus.INTERNAL_SERVER_ERROR) from e
 
     @staticmethod
     def get_poll_count(poll_id: int, ip_addr: str = None) -> int:
@@ -46,5 +51,64 @@ class PollResponseService:
             return len(responses)
         except SQLAlchemyError as e:
             # Log the exception or handle it as needed
-            raise BusinessException(f'Error creating poll response: {e}',
-                                    HTTPStatus.INTERNAL_SERVER_ERROR) from e
+            raise BusinessException(f'Error creating poll response: {e}', HTTPStatus.INTERNAL_SERVER_ERROR) from e
+
+    @staticmethod
+    def _check_authorization(engagement_id):
+        """Check user authorization."""
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value,
+            ),
+            engagement_id=engagement_id,
+        )
+
+    @staticmethod
+    def get_poll_details_with_response_counts(poll_id):
+        """
+        Get poll details along with response counts for each answer for a specific poll.
+
+        :param poll_id: The ID of the poll.
+        :return: Poll details and response counts for each answer in a structured format.
+        """
+        poll = Poll.query.get(poll_id)
+        if not poll:
+            raise BusinessException('Poll not found', HTTPStatus.NOT_FOUND)
+        # Check authorization
+        PollResponseService._check_authorization(poll.engagement_id)
+
+        # Query to join PollAnswer and PollResponse and count responses for each answer
+        poll_data = (
+            db.session.query(
+                PollAnswer.id.label('answer_id'),
+                PollAnswer.answer_text,
+                func.count(PollResponseModel.selected_answer_id).label('response_count')
+            )
+            .select_from(PollAnswer)
+            .outerjoin(PollResponseModel, PollAnswer.id == PollResponseModel.selected_answer_id)
+            .filter(PollAnswer.poll_id == poll_id)
+            .group_by(PollAnswer.id, PollAnswer.answer_text)
+            .all()
+        )
+
+        # Calculate total responses
+        total_responses = sum(response_count for _, _, response_count in poll_data)
+
+        # Construct response dictionary
+        response = {
+            'poll_id': poll_id,
+            'title': poll.title,
+            'description': poll.description,
+            'total_response': total_responses,
+            'answers': [
+                {
+                    'answer_id': answer_id,
+                    'answer_text': answer_text,
+                    'total_response': response_count,
+                    'percentage': (response_count / total_responses * 100) if total_responses > 0 else 0
+                } for answer_id, answer_text, response_count in poll_data
+            ]
+        }
+
+        return response
