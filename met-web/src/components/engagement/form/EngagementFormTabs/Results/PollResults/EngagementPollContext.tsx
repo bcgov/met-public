@@ -10,7 +10,7 @@ import { useAppDispatch } from 'hooks';
 export interface EngagementPollContextProps {
     widget: Widget | null;
     isWidgetsLoading: boolean;
-    pollWidget: PollWidget | null;
+    pollWidget: PollWidget | null | undefined;
     isLoadingPollWidget: boolean;
     pollResults: PollResultResponse | null;
     isPollResultsLoading: boolean;
@@ -30,7 +30,7 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
     const [widgets, setWidgets] = useState<Widget[] | null>(null);
     const [widget, setWidget] = useState<Widget | null>(null);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [pollWidget, setPollWidget] = useState<PollWidget | null>(null);
+    const [pollWidget, setPollWidget] = useState<PollWidget | null | undefined>(null);
     const [isLoadingPollWidget, setIsLoadingPollWidget] = useState(true);
     const [pollResults, setPollResults] = useState<PollResultResponse | null>(null);
     const [isPollResultsLoading, setIsPollResultsLoading] = useState(true);
@@ -49,6 +49,8 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
         } catch (err) {
             setIsWidgetsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
+        } finally {
+            setIsWidgetsLoading(false);
         }
     };
 
@@ -61,10 +63,12 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
         }
         try {
             const result = await fetchPollWidgets(widget.id);
-            setPollWidget(result[result.length - 1]);
+            setPollWidget(result.at(-1));
             setIsLoadingPollWidget(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load Poll data' }));
+            setIsLoadingPollWidget(false);
+        } finally {
             setIsLoadingPollWidget(false);
         }
     };
@@ -79,6 +83,8 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
             setIsPollResultsLoading(false);
         } catch (error) {
             dispatch(openNotification({ severity: 'error', text: 'Error fetching poll results' }));
+            setIsPollResultsLoading(false);
+        } finally {
             setIsPollResultsLoading(false);
         }
     };

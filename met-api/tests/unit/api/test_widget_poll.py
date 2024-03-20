@@ -215,7 +215,7 @@ def test_record_poll_response(client, session, jwt):
 
 
 def test_get_poll_response(client, jwt, session, setup_admin_user_and_claims):
-    """Assert that a response for a poll widget can be retrived."""
+    """Assert that a response for a poll widget can be retrieved."""
     # Test setup: create a poll widget and a response model
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
