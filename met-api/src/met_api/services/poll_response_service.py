@@ -87,7 +87,7 @@ class PollResponseService:
             )
             .select_from(PollAnswer)
             .outerjoin(PollResponseModel, PollAnswer.id == PollResponseModel.selected_answer_id)
-            .filter(PollAnswer.poll_id == poll_id)  # Make sure this is the correct filter condition
+            .filter(PollAnswer.poll_id == poll_id)
             .group_by(PollAnswer.id, PollAnswer.answer_text)
             .all()
         )
