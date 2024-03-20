@@ -76,10 +76,10 @@ describe('Landing page tests', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByPlaceholderText("Type engagement's name...")).toBeInTheDocument();
-            expect(screen.getByText('Engagement name')).toBeInTheDocument();
-            expect(screen.getByText('Status')).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.header')).toBeInTheDocument();
+            expect(screen.getByPlaceholderText('landingPage.placeholder')).toBeInTheDocument();
+            expect(screen.getByText('landingPage.engagementNameLabel')).toBeInTheDocument();
+            expect(screen.getByText('landingPage.statusLabel')).toBeInTheDocument();
+            expect(screen.getByText('landing.banner.header')).toBeInTheDocument(); 
             expect(screen.getByText('landing.banner.description')).toBeInTheDocument();
             expect(screen.getByText(openEngagement.name)).toBeInTheDocument();
             expect(screen.getByText(closedEngagement.name)).toBeInTheDocument();
@@ -108,7 +108,7 @@ describe('Landing page tests', () => {
             </LandingContext.Provider>,
         );
 
-        const searchInput = screen.getByPlaceholderText("Type engagement's name...");
+        const searchInput = screen.getByPlaceholderText('landingPage.placeholder');
         fireEvent.change(searchInput, { target: { value: 'New Search' } });
 
         await waitFor(() => {
@@ -144,7 +144,7 @@ describe('Landing page tests', () => {
         // Find the specific button with id "status"
         const statusDropdown = allButtons.find((button) => button.id === 'status') as HTMLElement;
         userEvent.click(statusDropdown);
-        const openItem = await screen.findByText('Open');
+        const openItem = await screen.findByText('landingPage.status.open');
         userEvent.click(openItem);
 
         await waitFor(() => {

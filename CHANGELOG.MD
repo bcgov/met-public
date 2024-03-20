@@ -4,6 +4,11 @@
   - Added poll results to results tab.
   - Added poll results API.
   - Added Unit tests.
+  
+- **Task**: Change static english text to be able to support string translations [DESENG-467](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-467)
+  - Implemented a language selector in the public header.
+  - Incorporated logic to dynamically adjust the unauthenticated route based on the selected language and load the appropriate translation file.
+  - Enhanced all public pages to fetch static text from the translation file.
 
 ## March 15, 2024
 
@@ -14,7 +19,6 @@
   - Added Event item translation API
   - Added Unit tests.
 - **Task** Add "Results" page to engagements [DESENG-512](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-512)
-
 
 ## March 08, 2024
 

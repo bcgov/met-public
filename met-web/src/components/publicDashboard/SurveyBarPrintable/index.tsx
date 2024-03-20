@@ -7,6 +7,7 @@ import { Engagement } from 'models/engagement';
 import { SurveyResultData, createSurveyResultData } from '../../../models/analytics/surveyResult';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { DASHBOARD } from '../constants';
+import { useAppTranslation } from 'hooks';
 
 const HEIGHT = 400;
 
@@ -17,6 +18,7 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
+    const { t: translate } = useAppTranslation();
     const [data, setData] = useState<SurveyResultData>(createSurveyResultData());
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -48,7 +50,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
             <>
                 <Grid item xs={12}>
                     <MetLabel mb={2} color="primary">
-                        Survey Results
+                        {translate('dashboard.barBlock.label')}
                     </MetLabel>
                 </Grid>
             </>
@@ -58,7 +60,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
     return (
         <>
             <Grid item xs={12} mb={2}>
-                <MetHeader1>Survey Results</MetHeader1>
+                <MetHeader1>{translate('dashboard.barBlock.label')}</MetHeader1>
             </Grid>
             {Object.values(data).map((value) => {
                 {

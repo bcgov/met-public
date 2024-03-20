@@ -9,12 +9,14 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { contactsApi } from 'apiManager/apiSlices/contacts';
 import { documentsApi } from 'apiManager/apiSlices/documents';
 import tenantSlice from 'reduxSlices/tenantSlice';
+import languageSlice from 'reduxSlices/languageSlice';
 
 export const store = configureStore({
     reducer: {
         auth: loginReducer,
         user: userSlice,
         tenant: tenantSlice,
+        language: languageSlice,
         engagement: engagementSlice,
         notification: notificationSlice,
         notificationModal: notificationModalSlice,

@@ -18,6 +18,7 @@ import { Then, If, Else, Unless } from 'react-if';
 import { formatToUTC } from 'components/common/dateHelper';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import { useAppTranslation } from 'hooks';
 
 interface SubmissionTrendProps {
     engagement: Engagement;
@@ -36,6 +37,7 @@ export const dashboardCustomStyles = {
 };
 
 const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendProps) => {
+    const { t: translate } = useAppTranslation();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const isExtraSmall = useMediaQuery('(max-width:299px)');
     const isBetweenMdAndLg = useMediaQuery((theme: Theme) => theme.breakpoints.between('lg', 'xl'));
@@ -109,7 +111,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={0.5}>Live Activity - Engagement</MetLabel>
+                <MetLabel mb={0.5}>{translate('dashboard.submissionTrend.label')}</MetLabel>
                 <MetPaper sx={{ p: 2 }}>
                     <Stack direction="column" alignItems="center" gap={1}>
                         <Grid
@@ -139,7 +141,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     return (
         <>
             <MetLabel mb={0.5} mt={1}>
-                Live Activity - Engagement
+                {translate('dashboard.submissionTrend.label')}
             </MetLabel>
             <MetPaper sx={{ p: { md: 1, lg: 2 } }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -168,7 +170,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 xs={12}
                                 sx={{ ...marginXStyling, mb: 1 }}
                             >
-                                <MetLabel>Select Date Range </MetLabel>
+                                <MetLabel>{translate('dashboard.submissionTrend.filter.label')}</MetLabel>
                             </Grid>
                             <Grid
                                 container
@@ -178,7 +180,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 alignItems="center"
                             >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
-                                    <MetLabel>From: </MetLabel>
+                                    <MetLabel>{translate('dashboard.submissionTrend.filter.from')}</MetLabel>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
@@ -196,7 +198,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 alignItems="center"
                             >
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
-                                    <MetLabel>To: </MetLabel>
+                                    <MetLabel>{translate('dashboard.submissionTrend.filter.to')}</MetLabel>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
@@ -215,7 +217,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     }}
                                     onClick={clearDates}
                                 >
-                                    Reset All Filters
+                                    {translate('dashboard.submissionTrend.filter.reset')}
                                 </SecondaryButton>
                             </Grid>
                         </Grid>
@@ -244,10 +246,10 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     }}
                                 >
                                     <MetToggleButton value="weekly" sx={extraSmallStyling}>
-                                        Weekly
+                                        {translate('dashboard.submissionTrend.filter.toggleBy.0')}
                                     </MetToggleButton>
                                     <MetToggleButton value="monthly" sx={extraSmallStyling}>
-                                        Monthly
+                                        {translate('dashboard.submissionTrend.filter.toggleBy.1')}
                                     </MetToggleButton>
                                 </ToggleButtonGroup>
                             </Stack>

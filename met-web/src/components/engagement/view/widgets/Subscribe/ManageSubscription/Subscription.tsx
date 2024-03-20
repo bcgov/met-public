@@ -10,6 +10,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { SubscriptionType } from './subscribe';
 import { verifyEmailVerification } from 'services/emailVerificationService';
 import { confirmSubscription, unSubscribe } from 'services/subscriptionService';
+import { useAppTranslation } from 'hooks';
 
 export type SubscriptionParams = {
     engagementId: string;
@@ -18,6 +19,7 @@ export type SubscriptionParams = {
 };
 
 export const Subscription = () => {
+    const { t: translate } = useAppTranslation();
     const { engagementId, subscriptionStatus, scriptionKey } = useParams<SubscriptionParams>();
     const [subscriptionText, setSubscriptionText] = useState(['']);
 
@@ -43,7 +45,7 @@ export const Subscription = () => {
                     participant_id: JSON.parse(subscribed).participant_id,
                     is_subscribed: true,
                 });
-                setSubscriptionText(['You have successfully confirmed your subscription. Thank you.']);
+                setSubscriptionText([translate('subscription.subscribe')]);
             }
             if (subscriptionStatus == SubscriptionType.UNSUBSCRIBE) {
                 const participant_id = scriptionKey;
@@ -52,16 +54,16 @@ export const Subscription = () => {
                     is_subscribed: false,
                 });
                 setSubscriptionText([
-                    'We are sorry to see you go.',
+                    translate('subscription.unSubscribe.0'),
                     '',
-                    'We wanted to confirm that you have been successfully unsubscribed from all of our emails.',
-                    'You will no longer receive any communications from us.',
+                    translate('subscription.unSubscribe.1'),
+                    translate('subscription.unSubscribe.2'),
                     '',
-                    'Thank you.',
+                    translate('subscription.unSubscribe.3'),
                 ]);
             }
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'Error Subscribing to Engagement' }));
+            dispatch(openNotification({ severity: 'error', text: translate('subscription.notification') }));
             return Promise.reject(error);
         }
     };
@@ -103,7 +105,7 @@ export const Subscription = () => {
                                 <MetHeader1>{tenant?.name}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{'Description'}</MetParagraph>
+                                <MetParagraph>{translate('subscription.paragraph')}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>

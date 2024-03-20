@@ -3,6 +3,7 @@ import { MetParagraph } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
+import { useAppTranslation } from 'hooks';
 
 interface QuestionBlockProps {
     data: SurveyBarData[];
@@ -11,6 +12,7 @@ interface QuestionBlockProps {
 }
 
 export const QuestionBlock = ({ data, selectedQuestionIndex, handleSelected }: QuestionBlockProps) => {
+    const { t: translate } = useAppTranslation();
     return (
         <Box
             sx={{
@@ -36,7 +38,9 @@ export const QuestionBlock = ({ data, selectedQuestionIndex, handleSelected }: Q
                             }}
                         >
                             <Stack direction="column">
-                                <MetParagraph color={'gray'}>Question {index + 1}</MetParagraph>
+                                <MetParagraph color={'gray'}>
+                                    {translate('dashboard.barBlock.questionBarBlock')} {index + 1}
+                                </MetParagraph>
                                 <MetParagraph
                                     sx={{ fontWeight: 'bold' }}
                                     color={DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR}
