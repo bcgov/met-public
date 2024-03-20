@@ -11,6 +11,7 @@ import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import { useAppTranslation } from 'hooks';
 
 interface SurveyEmailsSentProps {
     engagement: Engagement;
@@ -18,6 +19,7 @@ interface SurveyEmailsSentProps {
 }
 
 const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentProps) => {
+    const { t: translate } = useAppTranslation();
     const [data, setData] = useState<AggregatorData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -59,7 +61,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>Survey Emails Sent</MetLabel>
+                <MetLabel mb={2}>{translate('dashboard.surveyEmailsSent')}</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Box
                         sx={{
@@ -99,7 +101,7 @@ const SurveyEmailsSent = ({ engagement, engagementIsLoading }: SurveyEmailsSentP
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>Survey Emails Sent</MetLabel>
+            <MetLabel mb={{ md: 0.5, lg: 2 }}>{translate('dashboard.surveyEmailsSent')}</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart

@@ -8,6 +8,7 @@ import { getSubmissionByToken, updateSubmission } from 'services/submissionServi
 import { Engagement } from 'models/engagement';
 import { PublicSubmission } from 'models/surveySubmission';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
+import { useAppTranslation } from 'hooks';
 
 type EditSurveyParams = {
     token: string;
@@ -43,6 +44,7 @@ export const ActionContext = createContext<EditSurveyContext>({
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
+    const { t: translate } = useAppTranslation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { engagementId: engagementIdParam, token, slug } = useParams<EditSurveyParams>();
@@ -95,13 +97,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const verification = await getEmailVerification(token);
             if (!verification) {
-                throw new Error('Invalid token');
+                throw new Error(translate('surveyEdit.surveyEditNotification.invalidToken'));
             }
         } catch (error) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Verification token is invalid.',
+                    text: translate('surveyEdit.surveyEditNotification.verificationError'),
                 }),
             );
             setTokenValid(false);
@@ -117,7 +119,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             const loadedSubmission = await getSubmissionByToken(token);
             if (loadedSubmission) {
                 if (loadedSubmission.engagement_id !== Number(engagementId)) {
-                    throw 'Invalid engagementId';
+                    throw translate('surveyEdit.surveyEditNotification.engagementError');
                 }
                 setSubmission(loadedSubmission);
             }
@@ -125,7 +127,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while loading your answers',
+                    text: translate('surveyEdit.surveyEditNotification.loadedSubmissionError'),
                 }),
             );
         }
@@ -144,7 +146,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while loading engagement',
+                    text: translate('surveyEdit.surveyEditNotification.loadedEngagementError'),
                 }),
             );
         }
@@ -164,7 +166,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Survey was successfully updated',
+                    text: translate('surveyEdit.surveyEditNotification.success'),
                 }),
             );
             navigate(`/engagements/${savedEngagement?.id}/view`, {
@@ -176,7 +178,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred during survey update',
+                    text: translate('surveyEdit.surveyEditNotification.updateSurveyError'),
                 }),
             );
             verifyToken();

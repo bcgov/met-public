@@ -9,9 +9,10 @@ import { Widget } from 'models/widget';
 import { getBaseUrl } from 'helper';
 
 const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: SubscribeForm; widget: Widget }) => {
+    const languagePath = `${sessionStorage.getItem('languageId')}`;
     const handleNavigate = () => {
         const baseUrl = getBaseUrl();
-        window.open(`${baseUrl}/engagements/${widget.engagement_id}/cacform/${widget.id}`, '_blank');
+        window.open(`${baseUrl}/${languagePath}/engagements/${widget.engagement_id}/cacform/${widget.id}`, '_blank');
     };
     return (
         <Grid spacing={2} container item xs={12}>

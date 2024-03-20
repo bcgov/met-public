@@ -11,6 +11,7 @@ import { getSurvey } from 'services/surveyService';
 import { submitSurvey } from 'services/submissionService';
 import { Engagement, createDefaultEngagement } from 'models/engagement';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
+import { useAppTranslation } from 'hooks';
 
 interface SubmitSurveyContext {
     savedSurvey: Survey;
@@ -40,6 +41,8 @@ export const ActionContext = createContext<SubmitSurveyContext>({
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
+    const { t: translate } = useAppTranslation();
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -66,13 +69,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const verification = await getEmailVerification(token);
             if (!verification || verification.survey_id !== Number(surveyId)) {
-                throw new Error('verification not found or does not match survey');
+                throw new Error(translate('surveySubmit.surveySubmitNotification.verificationError'));
             }
         } catch (error) {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Verification token is invalid.',
+                    text: translate('surveySubmit.surveySubmitNotification.invalidToken'),
                 }),
             );
             setTokenValid(false);
@@ -90,7 +93,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'The survey id passed was erroneous',
+                    text: translate('surveySubmit.surveySubmitNotification.invalidSurvey'),
                 }),
             );
             return;
@@ -107,7 +110,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 dispatch(
                     openNotification({
                         severity: 'error',
-                        text: 'Error occurred while loading saved survey',
+                        text: translate('surveySubmit.surveySubmitNotification.surveyError'),
                     }),
                 );
                 navigate(`/not-available`);
@@ -139,7 +142,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while loading saved engagement data',
+                    text: translate('surveySubmit.surveySubmitNotification.engagementError'),
                 }),
             );
             setIsEngagementLoading(false);
@@ -178,10 +181,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: 'Survey was successfully submitted',
+                    text: translate('surveySubmit.surveySubmitNotification.success'),
                 }),
             );
-            navigate(`/${slug}`, {
+            navigate(`${languagePath}/${slug}`, {
                 state: {
                     open: true,
                 },
@@ -190,7 +193,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred during survey submission',
+                    text: translate('surveySubmit.surveySubmitNotification.submissionError'),
                 }),
             );
             setIsSubmitting(false);

@@ -11,9 +11,15 @@ import { useAppSelector } from 'hooks';
 import { Unless } from 'react-if';
 import { NavLink } from 'react-router-dom';
 import { FOOTER_COLORS } from './constants';
+import { useAppTranslation } from 'hooks';
+import { getBaseUrl } from 'helper';
 
 const Footer = () => {
+    const baseURL = getBaseUrl();
+    const LanguageId = sessionStorage.getItem('languageId');
+    const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+
     return (
         <Grid container justifyContent="center" alignItems="center" spacing={0} mt="2em">
             <Grid
@@ -26,12 +32,7 @@ const Footer = () => {
                 }}
                 padding={{ xs: '2em 1em', md: '2em 6em' }}
             >
-                <MetBody color="white">
-                    The B.C. Public Service acknowledges the territories of First Nations around B.C. and is grateful to
-                    carry out our work on these lands. We acknowledge the rights, interests, priorities, and concerns of
-                    all Indigenous Peoples - First Nations, Métis and Inuit - respecting and acknowledging their
-                    distinct cultures, histories, rights, laws, and governments.
-                </MetBody>
+                <MetBody color="white">{translate('footer.body')}</MetBody>
             </Grid>
             <Grid
                 item
@@ -58,11 +59,11 @@ const Footer = () => {
                                 height: '5em',
                                 width: '15em',
                             }}
-                            alt="British Columbia Logo"
+                            alt={translate('footer.defaultLogo')}
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <MetBody>CONNECT WITH US</MetBody>
+                        <MetBody>{translate('footer.connectWithUs')}</MetBody>
                     </Grid>
                 </Grid>
                 <Grid
@@ -75,11 +76,11 @@ const Footer = () => {
                     rowSpacing={3}
                 >
                     <Grid item xs={12}>
-                        <MetLabel>MORE INFO</MetLabel>
+                        <MetLabel>{translate('footer.moreInfo')}</MetLabel>
                     </Grid>
                     <Grid item xs={6}>
-                        <Link to="/" color={Palette.text.primary} component={NavLink}>
-                            Home
+                        <Link to={`/${LanguageId}`} color={Palette.text.primary} component={NavLink}>
+                            {translate('footer.home')}
                         </Link>
                     </Grid>
                     <Grid item xs={6}>
@@ -87,22 +88,22 @@ const Footer = () => {
                             href="https://www2.gov.bc.ca/gov/content/home/accessible-government"
                             color={Palette.text.primary}
                         >
-                            Accessibility
+                            {translate('footer.accessibility')}
                         </Link>
                     </Grid>
                     <Grid item xs={6}>
                         <Link href="https://www2.gov.bc.ca/gov/content/about-gov-bc-ca" color={Palette.text.primary}>
-                            About gov.bc.ca
+                            {translate('footer.aboutGov')}
                         </Link>
                     </Grid>
                     <Grid item xs={6}>
                         <Link href="https://www2.gov.bc.ca/gov/content/home/copyright" color={Palette.text.primary}>
-                            Copyright
+                            {translate('footer.copyright')}
                         </Link>
                     </Grid>
                     <Grid item xs={6}>
                         <Link href="https://www2.gov.bc.ca/gov/content/home/disclaimer" color={Palette.text.primary}>
-                            Disclaimer
+                            {translate('footer.disclaimer')}
                         </Link>
                     </Grid>
                     <Unless condition={isLoggedIn}>
@@ -112,16 +113,16 @@ const Footer = () => {
                                 color={Palette.text.primary}
                                 onClick={(event) => {
                                     event.preventDefault();
-                                    UserService.doLogin();
+                                    UserService.doLogin(baseURL);
                                 }}
                             >
-                                Admin Login
+                                {translate('footer.login')}
                             </Link>
                         </Grid>
                     </Unless>
                     <Grid item xs={6}>
                         <Link href="https://www2.gov.bc.ca/gov/content/home/privacy" color={Palette.text.primary}>
-                            Privacy
+                            {translate('footer.privacy')}
                         </Link>
                     </Grid>
                 </Grid>
@@ -142,7 +143,7 @@ const Footer = () => {
                     </Stack>
                 </Grid>
                 <Grid item xs={12} sm={6} container justifyContent={'flex-end'} alignItems="flex-end">
-                    <MetBody>© 2023 Government of British Columbia</MetBody>
+                    <MetBody>{translate('footer.copyrightNotice')}</MetBody>
                 </Grid>
             </Grid>
         </Grid>

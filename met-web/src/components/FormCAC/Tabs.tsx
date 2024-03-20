@@ -6,8 +6,10 @@ import { FirstTab } from './FirstTab';
 import { TAB_ONE, TAB_TWO } from './constants';
 import { Grid, Skeleton, Step, StepLabel, Stepper } from '@mui/material';
 import { SecondTab } from './SecondTab';
+import { useAppTranslation } from 'hooks';
 
 export const Tabs = () => {
+    const { t: translate } = useAppTranslation();
     const { tabValue, loading } = useContext(FormContext);
 
     if (loading) {
@@ -19,10 +21,10 @@ export const Tabs = () => {
                 <Grid item xs={12}>
                     <Stepper alternativeLabel>
                         <Step active={tabValue === TAB_ONE}>
-                            <StepLabel>Information</StepLabel>
+                            <StepLabel>{translate('formCAC.tabs.0')}</StepLabel>
                         </Step>
                         <Step active={tabValue === TAB_TWO}>
-                            <StepLabel>You and Your Community</StepLabel>
+                            <StepLabel>{translate('formCAC.tabs.1')}</StepLabel>
                         </Step>
                     </Stepper>
                 </Grid>

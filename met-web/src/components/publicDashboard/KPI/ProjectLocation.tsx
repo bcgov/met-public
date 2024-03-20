@@ -10,6 +10,7 @@ import MetMap from 'components/map';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import { useAppTranslation } from 'hooks';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -18,6 +19,7 @@ interface SurveysCompletedProps {
 }
 
 const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData }: SurveysCompletedProps) => {
+    const { t: translate } = useAppTranslation();
     const [data, setData] = useState<Map | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -66,7 +68,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
         return (
             <>
                 <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                    <MetLabel mb={2}>Project Location</MetLabel>
+                    <MetLabel mb={2}>{translate('dashboard.projectLocation')}</MetLabel>
                     <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                         <Stack alignItems="center" gap={1}>
                             <Grid
@@ -104,7 +106,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     if (mapExists && data) {
         return (
             <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                <MetLabel mb={{ md: 0.5, lg: 2 }}>Project Location</MetLabel>
+                <MetLabel mb={{ md: 0.5, lg: 2 }}>{translate('dashboard.projectLocation')}</MetLabel>
                 <MetPaper sx={{ textAlign: 'center' }}>
                     <Box
                         sx={{
