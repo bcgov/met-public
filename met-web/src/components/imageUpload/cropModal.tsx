@@ -80,7 +80,7 @@ export const CropModal = () => {
                             }}
                             style={{
                                 containerStyle: {
-                                    backgroundColor: '#fff',
+                                    backgroundColor: 'var(--bcds-surface-background-white)',
                                 },
                             }}
                         />

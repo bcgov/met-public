@@ -12,7 +12,7 @@ export const Palette = {
         light: '#FFE082',
     },
     hover: {
-        light: '#4C81AF',
+        light: 'var(--bcds-surface-primary-hover)',
     },
     text: {
         primary: '#494949',
@@ -24,11 +24,11 @@ export const Palette = {
         main: '#707070',
     },
     internalHeader: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--bcds-surface-background-white)',
         color: '#292929',
     },
     publicHeader: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--bcds-surface-background-white)',
         color: '#292929',
     },
     dashboard: {

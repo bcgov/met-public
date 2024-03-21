@@ -85,7 +85,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             sx={{
                 maxWidth: 345,
                 '&:hover': {
-                    backgroundColor: '#F2F2F2',
+                    backgroundColor: 'var(--bcds-surface-secondary-hover)',
                     cursor: 'pointer',
                 },
             }}
