@@ -3,13 +3,13 @@ import { Typography, Grid, TextField, Stack, Box } from '@mui/material';
 import { MetPaper, MetLabel, PrimaryButton, SecondaryButton, MetDescription } from '../../../common';
 import { ActionContext } from '../ActionContext';
 import ImageUpload from 'components/imageUpload';
-import { SurveyBlock } from './SurveyBlock';
 import { EngagementTabsContext } from './EngagementTabsContext';
 import { EngagementStatus } from 'constants/engagementStatus';
 import DayCalculatorModal from '../DayCalculator';
 import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './constants';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
+import EngagementContentTabs from './EngagementContent/';
 
 const EngagementForm = () => {
     const { isSaving, savedEngagement, handleAddBannerImage, setIsNewEngagement } = useContext(ActionContext);
@@ -22,14 +22,11 @@ const EngagementForm = () => {
         handleSaveAndExitEngagement,
         richDescription,
         setRichDescription,
-        richContent,
-        setRichContent,
         engagementFormError,
         setEngagementFormError,
     } = useContext(EngagementTabsContext);
 
     const [initialRichDescription, setInitialRichDescription] = useState('');
-    const [initialRichContent, setInitialRichContent] = useState('');
     const [descriptionCharCount, setDescriptionCharCount] = useState(0);
 
     const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +36,6 @@ const EngagementForm = () => {
     useEffect(() => {
         const initialDescription = getTextFromDraftJsContentState(richDescription || savedEngagement.rich_description);
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
-        setInitialRichContent(richContent || savedEngagement.rich_content);
         setDescriptionCharCount(initialDescription.length);
     }, []);
 
@@ -81,19 +77,8 @@ const EngagementForm = () => {
         });
     };
 
-    const handleContentChange = (rawText: string) => {
-        setEngagementFormData({
-            ...engagementFormData,
-            content: rawText,
-        });
-    };
-
     const handleRichDescriptionChange = (newState: string) => {
         setRichDescription(newState);
-    };
-
-    const handleRichContentChange = (newState: string) => {
-        setRichContent(newState);
     };
 
     const isDateFieldDisabled = [EngagementStatus.Closed, EngagementStatus.Unpublished].includes(
@@ -228,20 +213,9 @@ const EngagementForm = () => {
                         <Typography alignSelf="flex-end">Character Count: {descriptionCharCount}</Typography>
                     </Box>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetLabel>Engagement - Page Content</MetLabel>
-
-                    <MetDescription>This is the main content of the engagement page.</MetDescription>
-
-                    <RichTextEditor
-                        setRawText={handleContentChange}
-                        handleEditorStateChange={handleRichContentChange}
-                        initialRawEditorState={initialRichContent || ''}
-                    />
-                </Grid>
 
                 <Grid item xs={12}>
-                    <SurveyBlock />
+                    <EngagementContentTabs />
                 </Grid>
 
                 <Box
