@@ -1,5 +1,5 @@
 @charset "UTF-8";
-
+@import '@bcgov/design-tokens/css-prefixed/variables';
   
 #main {
   margin-top: 10px;
@@ -22,4 +22,23 @@ code {
     padding-left: 0;
     padding-right: 0;
   }  
+}
+
+/** Overriding Select Menu Dropdown color **/
+// Background white and on hover light grey
+.MuiMenuItem-root {
+  background-color: var(--bcds-surface-background-white) !important;
+  &:hover {
+    background-color: var(--bcds-surface-secondary-hover) !important;
+  }
+}
+
+/** Overriding Met table styles **/
+// set background color of tr to white
+.MuiTable-root tbody > tr {
+  background-color: var(--bcds-surface-background-white) !important;
+}
+// set background color of tr on hover to light gray
+tbody.MuiTableBody-root > tr:hover {
+  background-color: var(--bcds-surface-secondary-hover) !important;
 }

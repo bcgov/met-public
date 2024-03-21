@@ -22,8 +22,8 @@ export const DASHBOARD = {
         FILL_COLOR: '#4C81AF',
     },
     SURVEY_RESULT: {
-        BACKGROUND_COLOR: '#FFFFFF',
-        HOVER_COLOR: '#F2F2F2',
+        BACKGROUND_COLOR: 'var(--bcds-surface-background-white)',
+        HOVER_COLOR: 'var(--bcds-surface-secondary-hover)',
         SELECTED_TEXT_COLOR: '#494949',
     },
 };

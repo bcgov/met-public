@@ -12,7 +12,7 @@ export const Palette = {
         light: '#FFE082',
     },
     hover: {
-        light: '#4C81AF',
+        light: 'var(--bcds-surface-primary-hover)',
     },
     text: {
         primary: '#494949',

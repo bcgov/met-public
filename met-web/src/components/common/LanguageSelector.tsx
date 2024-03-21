@@ -91,7 +91,16 @@ const LanguageSelector = () => {
                     onChange={(event) => handleChangeLanguage(event.target.value as string)}
                 >
                     {ITEMS.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
+                        <MenuItem
+                            sx={{
+                                backgroundColor: 'var(--bcds-surface-background-white) !important',
+                                '&:hover': {
+                                    backgroundColor: 'var(--bcds-surface-secondary-hover) !important',
+                                },
+                            }}
+                            key={item.value}
+                            value={item.value}
+                        >
                             {item.label}
                         </MenuItem>
                     ))}
