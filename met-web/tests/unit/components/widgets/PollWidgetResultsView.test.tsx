@@ -88,7 +88,7 @@ describe('Poll Widget tests', () => {
         expect(twoVotes.length).toBe(2);
         expect(twoVotes[0]).toBeVisible();
         expect(twoVotes[1]).toBeVisible();
-        expect(screen.getByText('0 votes')).toBeVisible();
+        expect(screen.getByText('0 vote')).toBeVisible();
         expect(screen.getByText('0%')).toBeVisible();
         const fiftyPercent = screen.getAllByText('50%');
         expect(fiftyPercent.length).toBe(2);
