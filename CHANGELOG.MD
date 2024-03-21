@@ -2,7 +2,7 @@
 
 - **Task**: MET Web - Replace hover & background colours [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-520)
   - Update Table and Menu Dropdown hover colors
-  - Update engagemen tiles hover color.
+  - Update engagement tiles hover color.
   - Updated all white backgrounds to use css variable.
 
 ## March 19, 2024
