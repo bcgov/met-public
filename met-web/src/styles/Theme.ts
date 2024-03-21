@@ -24,11 +24,11 @@ export const Palette = {
         main: '#707070',
     },
     internalHeader: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--bcds-surface-background-white)',
         color: '#292929',
     },
     publicHeader: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'var(--bcds-surface-background-white)',
         color: '#292929',
     },
     dashboard: {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
@@ -245,7 +246,7 @@ const App = () => {
             </Box>
             <Box
                 sx={{
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--bcds-surface-background-white)',
                     zIndex: ZIndex.footer,
                     position: 'relative',
                 }}

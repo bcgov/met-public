@@ -69,7 +69,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
     const commonWhiteAvatarStyles = {
         height: 23,
         width: 23,
-        backgroundColor: '#FFF',
+        backgroundColor: 'var(--bcds-surface-background-white)',
     };
 
     const renderIcon = (status: EventStatus) => {

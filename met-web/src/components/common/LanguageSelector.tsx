@@ -84,7 +84,7 @@ const LanguageSelector = () => {
                     value={language.id}
                     size="small"
                     sx={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bcds-surface-background-white)',
                         color: Palette.info.main,
                         minWidth: '8ch',
                     }}
