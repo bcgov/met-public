@@ -33,7 +33,7 @@ API = Namespace('summary_content', description='Endpoints for Engagement Summary
 
 @cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('')
-class Map(Resource):
+class SummaryContent(Resource):
     """Resource for managing engagement summary content."""
 
     @staticmethod

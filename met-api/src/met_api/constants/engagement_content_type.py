@@ -15,7 +15,7 @@
 
 Each value in this corresponds to a specific section or content element.
 """
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class EngagementContentType(IntEnum):
@@ -23,3 +23,11 @@ class EngagementContentType(IntEnum):
 
     Summary = 1
     Custom = 2
+
+
+class EngagementContentDefaultValues(Enum):
+    """Default enum of engagement content type."""
+
+    Title = 'Summary'
+    Icon = 'faRectangleList'
+    Type = 'Summary'

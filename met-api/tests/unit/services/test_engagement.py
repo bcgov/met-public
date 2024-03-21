@@ -30,11 +30,11 @@ date_format = '%Y-%m-%d'
 
 def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
+    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
+    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     engagement_data = TestEngagementInfo.engagement1
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
-    patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id
     assert fetched_engagement.get('name') == engagement_data.get('name')
@@ -45,10 +45,10 @@ def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argum
 
 def test_create_engagement_with_survey_block(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
-    engagement_data = TestEngagementInfo.engagement2
-    saved_engagament = EngagementService().create_engagement(engagement_data)
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    engagement_data = TestEngagementInfo.engagement2
+    saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
     fetched_engagement = EngagementService().get_engagement(saved_engagament.id)
     assert fetched_engagement.get('id') == saved_engagament.id
@@ -68,7 +68,6 @@ def test_patch_engagement(session, monkeypatch):  # pylint:disable=unused-argume
             'start_date': saved_engagament_record.start_date,
             'end_date': saved_engagament_record.end_date,
             'description': saved_engagament_record.description,
-            'content': saved_engagament_record.content,
             'created_date': saved_engagament_record.created_date,
             'status_id': saved_engagament_record.status_id,
         }
@@ -79,7 +78,6 @@ def test_patch_engagement(session, monkeypatch):  # pylint:disable=unused-argume
             'start_date': fake.date(),
             'end_date': fake.date(),
             'description': fake.text(),
-            'content': fake.text(),
             'created_date': fake.date(),
         }
 
@@ -91,5 +89,4 @@ def test_patch_engagement(session, monkeypatch):  # pylint:disable=unused-argume
         assert updated_engagement_record.start_date.strftime(date_format) == engagement_edits.get('start_date')
         assert updated_engagement_record.end_date.strftime(date_format) == engagement_edits.get('end_date')
         assert updated_engagement_record.description == engagement_edits.get('description')
-        assert updated_engagement_record.content == engagement_edits.get('content')
         assert updated_engagement_record.created_date.strftime(date_format) == engagement_edits.get('created_date')
