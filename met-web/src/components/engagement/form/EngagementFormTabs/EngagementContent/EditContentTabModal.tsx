@@ -4,6 +4,7 @@ import { modalStyle, MetHeader1, MetLabel, PrimaryButton } from 'components/comm
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
+import { EngagementContentContext } from './EngagementContentContext';
 import { EngagementContent } from 'models/engagementContent';
 import { patchEngagementContent } from 'services/engagementContentService'; // Import a function to fetch tab details by ID
 
@@ -17,7 +18,7 @@ interface EditContentTabModalProps {
 
 const EditContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabIndex }: EditContentTabModalProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const [isUpdatingContent, setIsUpdatingContent] = useState(false);
+    const { setIsCustomContentsLoading } = useContext(EngagementContentContext);
     const [tabTitle, setTabTitle] = useState('');
     const [tabIcon, setTabIcon] = useState('');
     const dispatch = useAppDispatch();
@@ -55,7 +56,7 @@ const EditContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabInde
         }
 
         try {
-            setIsUpdatingContent(true);
+            setIsCustomContentsLoading(true);
             // Update the tab details
             const updatedTab = await patchEngagementContent(savedEngagement.id, tabs[selectedTabIndex].id, {
                 title: tabTitle,
@@ -74,10 +75,10 @@ const EditContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabInde
                     text: 'Content tab successfully updated.',
                 }),
             );
-            setIsUpdatingContent(false);
+            setIsCustomContentsLoading(false);
             handleModalClose();
         } catch (error) {
-            setIsUpdatingContent(false);
+            setIsCustomContentsLoading(false);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -105,7 +106,7 @@ const EditContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabInde
             >
                 <Grid item xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader1 bold sx={{ mb: 2 }} data-testid="daycalculator-title">
+                        <MetHeader1 bold sx={{ mb: 2 }} data-testid="edit-tab">
                             Edit the engagement content tab
                         </MetHeader1>
                     </Stack>
@@ -173,7 +174,7 @@ const EditContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabInde
                     alignItems="center"
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton variant="contained" onClick={handleEditTab}>
+                    <PrimaryButton variant="contained" onClick={handleEditTab} data-testid="update-tab-button">
                         Update Tab
                     </PrimaryButton>
                 </Grid>

@@ -17,7 +17,7 @@ interface AddContentModalProps {
 
 const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: AddContentModalProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const { setIsContentsLoading } = useContext(EngagementContentContext);
+    const { setIsSummaryContentsLoading } = useContext(EngagementContentContext);
     const dispatch = useAppDispatch();
     const [tabTitle, setTabTitle] = useState('');
     const [tabIcon, setTabIcon] = useState('');
@@ -47,7 +47,7 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
         }
 
         try {
-            setIsContentsLoading(true);
+            setIsSummaryContentsLoading(true);
             const newtab = await postEngagementContent(savedEngagement.id, {
                 title: tabTitle,
                 icon_name: tabIcon,
@@ -66,10 +66,10 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                     text: 'Content tab successfully created. Proceed to add details',
                 }),
             );
-            setIsContentsLoading(false);
+            setIsSummaryContentsLoading(false);
             handleModalClose();
         } catch (error) {
-            setIsContentsLoading(false);
+            setIsSummaryContentsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating engagement content' }));
         }
     };
@@ -92,7 +92,7 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
             >
                 <Grid item xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader1 bold sx={{ mb: 2 }} data-testid="daycalculator-title">
+                        <MetHeader1 bold sx={{ mb: 2 }} data-testid="add-tab">
                             Add a new engagement content tab
                         </MetHeader1>
                     </Stack>
@@ -136,6 +136,7 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                             <Select
                                 name="content-tab-icon"
                                 id="content-tab-icon"
+                                data-testid="content-tab/icon"
                                 variant="outlined"
                                 value={tabIcon}
                                 defaultValue="Select an tab icon"
@@ -160,7 +161,7 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                     alignItems="center"
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton variant="contained" onClick={handleCreateTab}>
+                    <PrimaryButton variant="contained" onClick={handleCreateTab} data-testid="add-tab-button">
                         Add Tab
                     </PrimaryButton>
                 </Grid>

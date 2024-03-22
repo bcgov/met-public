@@ -16,7 +16,7 @@ import { If, Then, Else } from 'react-if';
 
 export const ContentTabs: React.FC = () => {
     const { fetchEngagementContents, contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
-    const { isContentsLoading } = useContext(EngagementContentContext);
+    const { isSummaryContentsLoading } = useContext(EngagementContentContext);
     const [tabIndex, setTabIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -79,7 +79,7 @@ export const ContentTabs: React.FC = () => {
     };
 
     return (
-        <If condition={isContentsLoading}>
+        <If condition={isSummaryContentsLoading}>
             <Then>
                 <Grid item xs={12}>
                     <Skeleton width="100%" height="6em" />
@@ -99,7 +99,11 @@ export const ContentTabs: React.FC = () => {
                                                 <span>{tab.title}</span>
                                                 <Tooltip title="Edit Tab">
                                                     <IconButton onClick={() => handleEditTab(index)} aria-label="edit">
-                                                        <FontAwesomeIcon icon={faPenToSquare} fontSize="small" />
+                                                        <FontAwesomeIcon
+                                                            icon={faPenToSquare}
+                                                            fontSize="small"
+                                                            data-testid="edit-tab-details"
+                                                        />
                                                     </IconButton>
                                                 </Tooltip>
                                                 {index !== 0 && (
@@ -121,6 +125,7 @@ export const ContentTabs: React.FC = () => {
                                     aria-haspopup={!customTabAdded} // Only allow the dropdown if customTabAdded is false
                                     onClick={handleMenuOpen}
                                     disabled={customTabAdded} // Disable the button if customTabAdded is true
+                                    data-testid="add-tab-menu"
                                 >
                                     <FontAwesomeIcon icon={faPlus} fontSize="small" />
                                 </Button>
@@ -128,7 +133,12 @@ export const ContentTabs: React.FC = () => {
                         </Box>
                         <Divider /> {/* Add a Divider */}
                         <Menu id="add-tab-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            <MenuItem onClick={() => handleMenuClick(CONTENT_TYPE.CUSTOM)}>Add new custom tab</MenuItem>
+                            <MenuItem
+                                onClick={() => handleMenuClick(CONTENT_TYPE.CUSTOM)}
+                                data-testid="add-new-custom-tab"
+                            >
+                                Add new custom tab
+                            </MenuItem>
                         </Menu>
                         <AddContentTabModal
                             open={isModalOpen}

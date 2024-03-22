@@ -8,13 +8,19 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
 export interface EngagementContentProps {
-    isContentsLoading: boolean;
-    setIsContentsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    isSummaryContentsLoading: boolean;
+    setIsSummaryContentsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    isCustomContentsLoading: boolean;
+    setIsCustomContentsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EngagementContentContext = createContext<EngagementContentProps>({
-    isContentsLoading: false,
-    setIsContentsLoading: async () => {
+    isSummaryContentsLoading: false,
+    setIsSummaryContentsLoading: async () => {
+        /* empty default method  */
+    },
+    isCustomContentsLoading: false,
+    setIsCustomContentsLoading: async () => {
         /* empty default method  */
     },
 });
@@ -31,13 +37,14 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
         setCustomTextContent,
         setCustomJsonContent,
     } = useContext(EngagementTabsContext);
-    const [isContentsLoading, setIsContentsLoading] = useState(true);
+    const [isSummaryContentsLoading, setIsSummaryContentsLoading] = useState(true);
+    const [isCustomContentsLoading, setIsCustomContentsLoading] = useState(true);
     const summaryItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
     const customItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.CUSTOM);
 
     const fetchEngagementSummaryContent = async () => {
         if (!savedEngagement.id || !summaryItem) {
-            setIsContentsLoading(false);
+            setIsSummaryContentsLoading(false);
             return;
         }
         try {
@@ -48,9 +55,9 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
                 ...engagementFormData,
                 content: result[0].content,
             });
-            setIsContentsLoading(false);
+            setIsSummaryContentsLoading(false);
         } catch (error) {
-            setIsContentsLoading(false);
+            setIsSummaryContentsLoading(false);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -62,7 +69,7 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
 
     const fetchEngagementCustomContent = async () => {
         if (!savedEngagement.id || !customItem) {
-            setIsContentsLoading(false);
+            setIsCustomContentsLoading(false);
             return;
         }
         try {
@@ -70,9 +77,9 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
             setEngagementCustomContent(result[0]);
             setCustomTextContent(result[0].custom_text_content);
             setCustomJsonContent(result[0].custom_json_content);
-            setIsContentsLoading(false);
+            setIsCustomContentsLoading(false);
         } catch (error) {
-            setIsContentsLoading(false);
+            setIsCustomContentsLoading(false);
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -101,8 +108,10 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
     return (
         <EngagementContentContext.Provider
             value={{
-                isContentsLoading,
-                setIsContentsLoading,
+                isSummaryContentsLoading,
+                setIsSummaryContentsLoading,
+                isCustomContentsLoading,
+                setIsCustomContentsLoading,
             }}
         >
             {children}
