@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement, patchEngagement } from '../../../services/engagementService';
+import { getEngagementContent } from 'services/engagementContentService';
+import { getSummaryContent } from 'services/engagementSummaryService';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
+import { EngagementContent, CONTENT_TYPE } from 'models/engagementContent';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
@@ -31,6 +34,8 @@ export interface EngagementViewContext {
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
+    content: string;
+    richContent: string;
 }
 
 export type EngagementParams = {
@@ -54,6 +59,8 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
+    content: '',
+    richContent: '',
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -68,6 +75,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
+    const [content, setContent] = useState('');
+    const [richContent, setRichContent] = useState('');
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
@@ -150,7 +159,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         try {
             const result = await getEngagement(Number(engagementId));
             setSavedEngagement({ ...result });
-            setEngagementLoading(false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -180,6 +188,34 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
     };
 
+    const fetchContents = async () => {
+        if (!savedEngagement.id) {
+            return;
+        }
+        try {
+            //TODO needs to changed along with the changes for tabs for public page
+            const engagementContents = await getEngagementContent(Number(engagementId));
+            const summaryItemId = await getSummaryItemId(engagementContents);
+            const summaryContent = await getSummaryContent(summaryItemId);
+            setContent(summaryContent[0].content);
+            setRichContent(summaryContent[0].rich_content);
+            setEngagementLoading(false);
+        } catch (error) {
+            setEngagementLoading(false);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Error occurred while fetching Engagement contents',
+                }),
+            );
+        }
+    };
+
+    const getSummaryItemId = async (tabs: EngagementContent[]) => {
+        const summaryItem = tabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
+        return summaryItem?.id || 0; // Return null if summary item is not found
+    };
+
     const handleFetchEngagementIdBySlug = async () => {
         if (!slug) {
             return;
@@ -202,6 +238,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         fetchWidgets();
+        fetchContents();
     }, [savedEngagement]);
 
     return (
@@ -215,6 +252,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 updateMockStatus,
                 mockStatus,
                 unpublishEngagement,
+                content,
+                richContent,
             }}
         >
             {children}
