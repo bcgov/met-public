@@ -41,7 +41,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     engagement_content_info['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -56,7 +56,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     }
 
     rv = client.post(
-        f'/api/engagement_content/{created_content_id}/summary',
+        f'/api/content/{created_content_id}/summary',
         data=json.dumps(data),
         headers=headers,
         content_type=ContentType.JSON.value
@@ -66,7 +66,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     with patch.object(EngagementSummaryContentService, 'create_summary_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.post(
-            f'/api/engagement_content/{created_content_id}/summary',
+            f'/api/content/{created_content_id}/summary',
             data=json.dumps(data),
             headers=headers,
             content_type=ContentType.JSON.value
@@ -74,7 +74,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
     rv = client.get(
-        f'/api/engagement_content/{created_content_id}/summary',
+        f'/api/content/{created_content_id}/summary',
         headers=headers,
         content_type=ContentType.JSON.value
     )
@@ -84,7 +84,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     with patch.object(EngagementSummaryContentService, 'get_summary_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.get(
-            f'/api/engagement_content/{created_content_id}/summary',
+            f'/api/content/{created_content_id}/summary',
             headers=headers,
             content_type=ContentType.JSON.value
         )
@@ -95,7 +95,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     }
 
     rv = client.patch(
-        f'/api/engagement_content/{created_content_id}/summary',
+        f'/api/content/{created_content_id}/summary',
         data=json.dumps(data_edits),
         headers=headers,
         content_type=ContentType.JSON.value
@@ -103,7 +103,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     assert rv.status_code == HTTPStatus.OK
 
     rv = client.get(
-        f'/api/engagement_content/{created_content_id}/summary',
+        f'/api/content/{created_content_id}/summary',
         headers=headers,
         content_type=ContentType.JSON.value
     )
@@ -113,7 +113,7 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
     with patch.object(EngagementSummaryContentService, 'update_summary_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.patch(
-            f'/api/engagement_content/{created_content_id}/summary',
+            f'/api/content/{created_content_id}/summary',
             data=json.dumps(data_edits),
             headers=headers,
             content_type=ContentType.JSON.value
