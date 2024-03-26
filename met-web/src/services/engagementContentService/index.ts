@@ -8,7 +8,7 @@ export const getEngagementContent = async (engagementId: number): Promise<Engage
     if (!engagementId || isNaN(Number(engagementId))) {
         return Promise.reject('Invalid Engagement Id ' + engagementId);
     }
-    const response = await http.GetRequest<EngagementContent[]>(url); // Notice the change here
+    const response = await http.GetRequest<EngagementContent[]>(url);
     if (response.data) {
         return response.data;
     }

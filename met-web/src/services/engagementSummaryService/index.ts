@@ -8,7 +8,7 @@ export const getSummaryContent = async (contentId: number): Promise<EngagementSu
     if (!contentId || isNaN(Number(contentId))) {
         return Promise.reject('Invalid content Id ' + contentId);
     }
-    const response = await http.GetRequest<EngagementSummaryContent[]>(url); // Notice the change here
+    const response = await http.GetRequest<EngagementSummaryContent[]>(url);
     if (response.data) {
         return response.data;
     }

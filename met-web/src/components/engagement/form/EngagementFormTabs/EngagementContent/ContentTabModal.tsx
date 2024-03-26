@@ -1,77 +1,83 @@
-import React, { useContext, useState } from 'react';
-import { MenuItem, Modal, Grid, Stack, TextField, Select, SelectChangeEvent } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { MenuItem, Modal, Grid, Stack, TextField, Select } from '@mui/material';
 import { modalStyle, MetHeader1, MetLabel, PrimaryButton } from 'components/common';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
 import { EngagementContentContext } from './EngagementContentContext';
 import { EngagementContent } from 'models/engagementContent';
-import { postEngagementContent } from 'services/engagementContentService';
+import { postEngagementContent, patchEngagementContent } from 'services/engagementContentService';
 
-interface AddContentModalProps {
+interface ContentTabModalProps {
     open: boolean;
     updateModal: (open: boolean) => void;
+    tabs: EngagementContent[];
     setTabs: React.Dispatch<React.SetStateAction<EngagementContent[]>>;
-    selectedTabType: string;
+    selectedTabType?: string;
+    tabIndex?: number;
 }
 
-const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: AddContentModalProps) => {
+const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, tabIndex }: ContentTabModalProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const { setIsSummaryContentsLoading } = useContext(EngagementContentContext);
+    const { isEditMode, setIsSummaryContentsLoading, setIsCustomContentsLoading } =
+        useContext(EngagementContentContext);
     const dispatch = useAppDispatch();
     const [tabTitle, setTabTitle] = useState('');
     const [tabIcon, setTabIcon] = useState('');
 
-    const getErrorMessage = () => {
-        if (tabTitle.length > 50) {
-            return 'Title must not exceed 50 characters';
-        } else if (!(tabTitle && tabTitle.length < 50)) {
-            return 'Title must be specified';
+    useEffect(() => {
+        // Fetch tab details when modal is opened and selectedTabIndex changes
+        if (open && isEditMode && typeof tabIndex === 'number' && tabs[tabIndex]) {
+            setTabTitle(tabs[tabIndex].title);
+            setTabIcon(tabs[tabIndex].icon_name);
+        } else {
+            // If not in edit mode, initialize tabTitle and tabIcon with empty values
+            setTabTitle('');
+            setTabIcon('');
         }
-        return '';
-    };
+    }, [open, isEditMode, tabIndex, tabs]);
 
-    const handleIconChange = (event: SelectChangeEvent<string>) => {
-        setTabIcon(event.target.value);
-    };
+    const fetchData = async () => {
+        setIsSummaryContentsLoading(true);
+        setIsCustomContentsLoading(true);
+        const newtab = isEditMode
+            ? await patchEngagementContent(savedEngagement.id, tabs[tabIndex || 0].id, {
+                  title: tabTitle,
+                  icon_name: tabIcon,
+              })
+            : await postEngagementContent(savedEngagement.id, {
+                  title: tabTitle,
+                  icon_name: tabIcon,
+                  content_type: selectedTabType,
+                  engagement_id: savedEngagement.id,
+              });
 
-    const handleCreateTab = async () => {
-        if (tabTitle.trim() === '' && tabIcon === '') {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Title and Icon cannot be blank',
-                }),
-            );
-            return;
-        }
-
-        try {
-            setIsSummaryContentsLoading(true);
-            const newtab = await postEngagementContent(savedEngagement.id, {
-                title: tabTitle,
-                icon_name: tabIcon,
-                content_type: selectedTabType,
-                engagement_id: savedEngagement.id,
-            });
-
+        if (isEditMode) {
+            if (newtab && Object.keys(newtab).length !== 0) {
+                setTabs((prevTabs) => {
+                    const newTabs = [...prevTabs];
+                    newTabs[tabIndex || 0] = newtab;
+                    return newTabs;
+                });
+            }
+        } else {
             if (newtab && Object.keys(newtab).length !== 0) {
                 // Update the state by adding the new tab to the existing tabs
                 setTabs((prevTabs) => [...prevTabs, newtab]);
             }
-
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: 'Content tab successfully created. Proceed to add details',
-                }),
-            );
-            setIsSummaryContentsLoading(false);
-            handleModalClose();
-        } catch (error) {
-            setIsSummaryContentsLoading(false);
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating engagement content' }));
         }
+
+        dispatch(
+            openNotification({
+                severity: 'success',
+                text: `Content tab successfully ${isEditMode ? 'updated' : 'created'}. Proceed to ${
+                    isEditMode ? 'edit' : 'add'
+                } details.`,
+            }),
+        );
+        setIsSummaryContentsLoading(false);
+        setIsCustomContentsLoading(false);
+        handleModalClose();
     };
 
     const handleModalClose = () => {
@@ -92,8 +98,8 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
             >
                 <Grid item xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader1 bold sx={{ mb: 2 }} data-testid="add-tab">
-                            Add a new engagement content tab
+                        <MetHeader1 bold sx={{ mb: 2 }} data-testid={isEditMode ? 'edit-tab' : 'add-tab'}>
+                            {isEditMode ? 'Edit the engagement content tab' : 'Add a new engagement content tab'}
                         </MetHeader1>
                     </Stack>
                 </Grid>
@@ -119,8 +125,12 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                                 value={tabTitle}
                                 onChange={(e) => setTabTitle(e.target.value)}
                                 error={tabTitle.length > 50}
-                                helperText={getErrorMessage()}
-                                size="small" // Adjust the size to small
+                                helperText={
+                                    tabTitle.length > 50
+                                        ? 'Title must not exceed 50 characters'
+                                        : 'Title must be specified'
+                                }
+                                size="small"
                             />
                         </Stack>
                     </Grid>
@@ -142,8 +152,8 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                                 defaultValue="Select an tab icon"
                                 fullWidth
                                 sx={{ width: '100%' }}
-                                onChange={handleIconChange}
-                                size="small" // Adjust the size to small
+                                onChange={(e) => setTabIcon(e.target.value)}
+                                size="small"
                             >
                                 <MenuItem value="">None</MenuItem>
                                 <MenuItem value="faRectangleList">Rectangle-list</MenuItem>
@@ -161,8 +171,12 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
                     alignItems="center"
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton variant="contained" onClick={handleCreateTab} data-testid="add-tab-button">
-                        Add Tab
+                    <PrimaryButton
+                        variant="contained"
+                        onClick={fetchData}
+                        data-testid={isEditMode ? 'update-tab-button' : 'add-tab-button'}
+                    >
+                        {isEditMode ? 'Update Tab' : 'Add Tab'}
                     </PrimaryButton>
                 </Grid>
             </Grid>
@@ -170,4 +184,4 @@ const AddContentTabModal = ({ open, updateModal, setTabs, selectedTabType }: Add
     );
 };
 
-export default AddContentTabModal;
+export default ContentTabModal;

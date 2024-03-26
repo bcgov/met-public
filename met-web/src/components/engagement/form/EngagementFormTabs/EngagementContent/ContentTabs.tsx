@@ -2,28 +2,36 @@ import React, { useContext, useState } from 'react';
 import { Box, Button, IconButton, MenuItem, Tooltip, Menu, Skeleton, Grid, Divider } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
-import AddContentTabModal from './AddContentTabModal';
-import EditContentTabModal from './EditContentTabModal';
 import CustomTabContent from './CustomTabContent';
 import SummaryTabContent from './SummaryTabContent';
 import { MetTab, MetTabList, MetTabPanel } from '../../StyledTabComponents';
-import TabContext from '@mui/lab/TabContext'; // Import TabContext from MUI
+import TabContext from '@mui/lab/TabContext';
 import { CONTENT_TYPE } from 'models/engagementContent';
 import { deleteEngagementContent } from 'services/engagementContentService';
 import { ActionContext } from '../../ActionContext';
 import { EngagementContentContext } from './EngagementContentContext';
 import { If, Then, Else } from 'react-if';
+import ContentTabModal from './ContentTabModal';
 
 export const ContentTabs: React.FC = () => {
     const { fetchEngagementContents, contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
-    const { isSummaryContentsLoading } = useContext(EngagementContentContext);
+    const { setIsEditMode, isSummaryContentsLoading } = useContext(EngagementContentContext);
     const [tabIndex, setTabIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedTabType, setSelectedTabType] = useState('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [customTabAdded, setCustomTabAdded] = useState(false); // Define state to track whether a custom tab has been added
-    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    const [customTabAdded, setCustomTabAdded] = useState(false);
+    const isAllTabTypesPresent = () => {
+        const tabTypes = Object.values(CONTENT_TYPE);
+        for (const tabType of tabTypes) {
+            if (!contentTabs.some((tab) => tab.content_type === tabType)) {
+                return false; // At least one tab type is missing
+            }
+        }
+        return true; // All tab types are present
+    };
+
+    const handleSetTabIndex = (_event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
 
@@ -59,6 +67,7 @@ export const ContentTabs: React.FC = () => {
     };
 
     const handleMenuClick = (type: string) => {
+        setIsEditMode(false);
         setSelectedTabType(type);
         handleModalOpen();
         handleMenuClose();
@@ -70,12 +79,9 @@ export const ContentTabs: React.FC = () => {
     };
 
     const handleEditTab = (index: number) => {
+        setIsEditMode(true);
         setTabIndex(index);
-        setIsEditModalOpen(true);
-    };
-
-    const handleEditModalClose = () => {
-        setIsEditModalOpen(false);
+        setIsModalOpen(true);
     };
 
     return (
@@ -89,7 +95,7 @@ export const ContentTabs: React.FC = () => {
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={tabIndex.toString()}>
                         <Box>
-                            <MetTabList onChange={handleChange}>
+                            <MetTabList onChange={handleSetTabIndex}>
                                 {contentTabs?.map((tab, index) => (
                                     <MetTab
                                         key={index}
@@ -124,14 +130,14 @@ export const ContentTabs: React.FC = () => {
                                     aria-controls="add-tab-menu"
                                     aria-haspopup={!customTabAdded} // Only allow the dropdown if customTabAdded is false
                                     onClick={handleMenuOpen}
-                                    disabled={customTabAdded} // Disable the button if customTabAdded is true
+                                    disabled={isAllTabTypesPresent()} // Disable the button if customTabAdded is true
                                     data-testid="add-tab-menu"
                                 >
                                     <FontAwesomeIcon icon={faPlus} fontSize="small" />
                                 </Button>
                             </MetTabList>
                         </Box>
-                        <Divider /> {/* Add a Divider */}
+                        <Divider />
                         <Menu id="add-tab-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                             <MenuItem
                                 onClick={() => handleMenuClick(CONTENT_TYPE.CUSTOM)}
@@ -140,22 +146,16 @@ export const ContentTabs: React.FC = () => {
                                 Add new custom tab
                             </MenuItem>
                         </Menu>
-                        <AddContentTabModal
+                        <ContentTabModal // Use ContentTabModal instead of AddContentTabModal and EditContentTabModal
                             open={isModalOpen}
                             updateModal={handleModalClose}
-                            setTabs={setContentTabs}
-                            selectedTabType={selectedTabType}
-                        />
-                        <EditContentTabModal
-                            open={isEditModalOpen}
-                            updateModal={handleEditModalClose}
                             tabs={contentTabs}
                             setTabs={setContentTabs}
-                            selectedTabIndex={tabIndex}
+                            selectedTabType={selectedTabType}
+                            tabIndex={tabIndex} // Pass the tabIndex prop if needed
                         />
                         <Box mt={3}>
                             <MetTabPanel value={tabIndex.toString()}>
-                                {/* Conditional rendering */}
                                 {contentTabs && contentTabs.length > 0 ? (
                                     (() => {
                                         if (contentTabs[tabIndex]) {

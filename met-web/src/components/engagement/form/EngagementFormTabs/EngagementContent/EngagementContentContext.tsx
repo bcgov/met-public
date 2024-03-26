@@ -12,6 +12,8 @@ export interface EngagementContentProps {
     setIsSummaryContentsLoading: React.Dispatch<React.SetStateAction<boolean>>;
     isCustomContentsLoading: boolean;
     setIsCustomContentsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    isEditMode: boolean;
+    setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EngagementContentContext = createContext<EngagementContentProps>({
@@ -21,6 +23,10 @@ export const EngagementContentContext = createContext<EngagementContentProps>({
     },
     isCustomContentsLoading: false,
     setIsCustomContentsLoading: async () => {
+        /* empty default method  */
+    },
+    isEditMode: false,
+    setIsEditMode: async () => {
         /* empty default method  */
     },
 });
@@ -39,6 +45,7 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
     } = useContext(EngagementTabsContext);
     const [isSummaryContentsLoading, setIsSummaryContentsLoading] = useState(true);
     const [isCustomContentsLoading, setIsCustomContentsLoading] = useState(true);
+    const [isEditMode, setIsEditMode] = useState(false);
     const summaryItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
     const customItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.CUSTOM);
 
@@ -112,6 +119,8 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
                 setIsSummaryContentsLoading,
                 isCustomContentsLoading,
                 setIsCustomContentsLoading,
+                isEditMode,
+                setIsEditMode,
             }}
         >
             {children}
