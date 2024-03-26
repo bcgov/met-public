@@ -1,3 +1,9 @@
+## March 26, 2024
+
+- **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)
+  - Update survey components and services to fix the bugs.
+    -  Removed is_template and is_hidden values from autosaving to avoid the debouce function consuming it older values
+
 ## March 21, 2024
 
 - **Task**: MET Web - Replace hover & background colours [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-520)
