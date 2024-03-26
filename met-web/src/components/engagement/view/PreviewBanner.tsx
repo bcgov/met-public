@@ -22,7 +22,7 @@ export const PreviewBanner = () => {
     const navigate = useNavigate();
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [isUnpublishModalOpen, setIsUnpublishModalOpen] = useState(false);
-    const { isEngagementLoading, savedEngagement, updateMockStatus, mockStatus } = useContext(ActionContext);
+    const { content, isEngagementLoading, savedEngagement, updateMockStatus, mockStatus } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
@@ -122,7 +122,7 @@ export const PreviewBanner = () => {
                                         </Grid>
                                     </Grid>
                                 </When>
-                                <When condition={!savedEngagement.content}>
+                                <When condition={!content}>
                                     <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
                                         <Grid item>
                                             <IconButton

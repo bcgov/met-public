@@ -118,15 +118,17 @@ describe('Engagement form page tests', () => {
             }),
         );
 
-        render(<EngagementForm />);
+        const { getByTestId, getByText } = render(<EngagementForm />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('Survey 1')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(getByText('Survey 1')).toBeInTheDocument();
+        });
 
-        const removeSurveyButton = screen.getByTestId(`survey-widget/remove-${survey.id}`);
+        const removeSurveyButton = getByTestId(`survey-widget/remove-${survey.id}`);
 
         fireEvent.click(removeSurveyButton);
 
@@ -283,5 +285,94 @@ describe('Engagement form page tests', () => {
             const endDate = screen.getByPlaceholderText('endDate') as HTMLInputElement;
             expect(endDate.value).toBe('2022-12-25');
         });
+    });
+
+    test('Engagement summary tab appears', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { getByTestId, container, getByText } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        await waitFor(() => {
+            expect(getByText('Summary')).toBeInTheDocument();
+            expect(getByTestId('add-tab-menu')).toBeVisible();
+            expect(getByText('Test content')).toBeInTheDocument();
+        });
+    });
+
+    test('Add new custom tab Modal appears', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { getByTestId, container, getByText } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const addNewTabButton = getByTestId('add-tab-menu');
+        fireEvent.click(addNewTabButton);
+
+        await waitFor(() => {
+            expect(getByTestId('add-new-custom-tab')).toBeVisible();
+        });
+
+        const addNewCustomTab = getByTestId('add-new-custom-tab');
+        fireEvent.click(addNewCustomTab);
+
+        await waitFor(() => {
+            expect(getByTestId('add-tab-button')).toBeVisible();
+            expect(getByText('Tab Title:')).toBeInTheDocument();
+            expect(getByText('Tab Icon:')).toBeInTheDocument();
+        });
+    });
+
+    test('Edit tab Modal appears', async () => {
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { getByTestId, container, getByText } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const addNewTabButton = getByTestId('edit-tab-details');
+        fireEvent.click(addNewTabButton);
+
+        await waitFor(() => {
+            expect(getByTestId('update-tab-button')).toBeVisible();
+            expect(getByText('Edit the engagement content tab')).toBeInTheDocument();
+        });
+    });
+
+    test('Test cannot create tab with empty fields', async () => {
+        const handleCreateTab = jest.fn();
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        const { getByTestId, container } = render(<EngagementForm />);
+
+        await waitFor(() => {
+            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+        });
+
+        const addNewTabButton = getByTestId('add-tab-menu');
+        fireEvent.click(addNewTabButton);
+
+        await waitFor(() => {
+            expect(getByTestId('add-new-custom-tab')).toBeVisible();
+        });
+
+        const addNewCustomTab = getByTestId('add-new-custom-tab');
+        fireEvent.click(addNewCustomTab);
+
+        await waitFor(() => {
+            expect(getByTestId('add-tab-button')).toBeVisible();
+        });
+
+        const addButton = getByTestId('add-tab-button');
+        fireEvent.click(addButton);
+        expect(handleCreateTab).not.toHaveBeenCalled();
     });
 });
