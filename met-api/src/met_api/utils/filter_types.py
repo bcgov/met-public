@@ -2,7 +2,6 @@
 Filters used to filter by metadata contents in various ways.
 """
 
-# from met_api.models.engagement import Engagement
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxonFilterType
 from sqlalchemy import select, func, distinct, exists
 

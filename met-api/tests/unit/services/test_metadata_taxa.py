@@ -194,16 +194,11 @@ def test_get_filters(session):
     # en.wikipedia.org/wiki/Metasyntactic_variable
     # Create metadata for engagements - these should only appear in the filters
     # if include_freeform is set on the taxon
-    taxon1_metadata = engagement_metadata_service.create(
-        engagement.id, taxon1['id'], 'foo')
-    taxon2_metadata = engagement_metadata_service.create(
-        engagement.id, taxon2['id'], 'bar')
-    taxon3_metadata = engagement_metadata_service.create(
-        engagement.id, taxon3['id'], 'baz')
-    taxon4_metadata = engagement_metadata_service.create(
-        engagement.id, taxon4['id'], 'qux')
-    taxon5_metadata = engagement_metadata_service.create(
-        engagement.id, taxon5['id'], 'quux')
+    engagement_metadata_service.create(engagement.id, taxon1['id'], 'foo')
+    engagement_metadata_service.create(engagement.id, taxon2['id'], 'bar')
+    engagement_metadata_service.create(engagement.id, taxon3['id'], 'baz')
+    engagement_metadata_service.create(engagement.id, taxon4['id'], 'qux')
+    engagement_metadata_service.create(engagement.id, taxon5['id'], 'quux')
     # Preset values - these should appear on filterable taxa no matter what
     MetadataTaxon.query.get(taxon2['id']).preset_values = ['grault']
     MetadataTaxon.query.get(taxon3['id']).preset_values = ['garply']

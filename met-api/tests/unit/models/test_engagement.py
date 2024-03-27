@@ -203,23 +203,23 @@ def test_get_engagements_metadata_match_all(session):
             search_options
         )
     # search for metadata
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     assert count == 5
 
     engagements[1].metadata.append(EngagementMetadata(
         taxon_id=taxon.id, value='test'))
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     assert count == 6
 
     search_options['metadata'][0]['values'] = ['test', 'test2']
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     # This should find *all* matching values, so the inclusion of a non-matching
     # value "test2" should reduce the result to 0
     assert count == 0
 
     engagements[0].metadata.append(EngagementMetadata(
         taxon_id=taxon.id, value='test2'))
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
 
     # There should now be a single engagement with both "test" and "test2"
     assert count == 1
@@ -278,16 +278,16 @@ def test_get_engagements_metadata_match_any(session):
             search_options
         )
     # search for metadata
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     assert count == 5
 
     engagements[1].metadata.append(EngagementMetadata(
         taxon_id=taxon.id, value='test'))
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     assert count == 6
 
     search_options['metadata'][0]['values'] = ['test', 'test2']
-    result, count = refresh_engagements()
+    _, count = refresh_engagements()
     # This should find *any* matching value, so the inclusion of a non-matching
     # value "test2" should not change the result
     assert count == 6

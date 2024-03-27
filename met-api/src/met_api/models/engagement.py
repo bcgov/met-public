@@ -292,8 +292,8 @@ class Engagement(BaseModel):
             taxon_id = criterion.get('taxon_id')
             values = criterion.get('values')
             # pick the type of filtering to apply
-            filter = filter_map.get(criterion.get('filter_type'))
-            if any([taxon_id is None, values is None, filter is None]):
+            filter_type = filter_map.get(criterion.get('filter_type'))
+            if any([taxon_id is None, values is None, filter_type is None]):
                 continue  # skip criterion if any of the required fields are missing
 
             taxon_query = query.session.query(
@@ -303,7 +303,7 @@ class Engagement(BaseModel):
                 EngagementMetadataModel.taxon_id == taxon_id
             )
             # Use the filter function to create a subquery that filters the engagements
-            filter_subquery = filter(taxon_query, values)
+            filter_subquery = filter_type(taxon_query, values)
             # Filter the main query to include only engagements found in the subquery
             query = query.filter(Engagement.id.in_(filter_subquery))
 
