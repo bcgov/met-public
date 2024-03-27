@@ -19,9 +19,12 @@ from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
+from .engagement_metadata import (
+    EngagementMetadata as EngagementMetadataModel)
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from met_api.utils.enums import MembershipStatus
+from met_api.utils.filter_types import filter_map
 from .base_model import BaseModel
 from .db import db
 from .engagement_status import EngagementStatus
@@ -37,16 +40,20 @@ class Engagement(BaseModel):
     rich_description = db.Column(JSON, unique=False, nullable=False)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
-    status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
+    status_id = db.Column(db.Integer, ForeignKey(
+        'engagement_status.id', ondelete='CASCADE'))
     status = db.relationship('EngagementStatus', backref='engagement')
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
     content = db.Column(db.Text, unique=False, nullable=False)
     rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
-    surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
-    status_block = db.relationship('EngagementStatusBlock', backref='engagement')
-    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    surveys = db.relationship(
+        'Survey', backref='engagement', cascade='all, delete')
+    status_block = db.relationship(
+        'EngagementStatusBlock', backref='engagement')
+    tenant_id = db.Column(
+        db.Integer, db.ForeignKey('tenant.id'), nullable=True)
     tenant = db.relationship('Tenant', backref='engagements')
     is_internal = db.Column(db.Boolean, nullable=False)
     consent_message = db.Column(JSON, unique=False, nullable=True)
@@ -73,8 +80,7 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_engagement_status(query, search_options)
 
-            # TODO: Uncomment for metadata changes coming soon.
-            # query = cls._filter_by_project_metadata(query, search_options)
+            query = cls._filter_by_metadata(query, search_options)
 
         query = cls._filter_by_internal(query, search_options)
 
@@ -82,7 +88,8 @@ class Engagement(BaseModel):
             if scope_options.include_assigned:
                 # the engagement status ids that should not be filtered out
                 exception_status_ids = scope_options.engagement_status_ids
-                query = cls._filter_by_assigned_engagements(query, external_user_id, exception_status_ids)
+                query = cls._filter_by_assigned_engagements(
+                    query, external_user_id, exception_status_ids)
             else:
                 # the engagement status ids of the engagements that should fetched
                 statuses = scope_options.engagement_status_ids
@@ -97,7 +104,8 @@ class Engagement(BaseModel):
             items = query.all()
             return items, len(items)
 
-        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+        page = query.paginate(page=pagination_options.page,
+                              per_page=pagination_options.size)
         return page.items, page.total
 
     @classmethod
@@ -118,15 +126,18 @@ class Engagement(BaseModel):
             status_id=engagement.get('status_id', None),
             # to fix the bug with UI not passing published date always.
             # Defaulting to existing
-            published_date=engagement.get('published_date', record.published_date),
-            scheduled_date=engagement.get('scheduled_date', record.scheduled_date),
+            published_date=engagement.get(
+                'published_date', record.published_date),
+            scheduled_date=engagement.get(
+                'scheduled_date', record.scheduled_date),
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
             content=engagement.get('content', None),
             rich_content=engagement.get('rich_content', None),
             is_internal=engagement.get('is_internal', record.is_internal),
-            consent_message=engagement.get('consent_message', record.consent_message),
+            consent_message=engagement.get(
+                'consent_message', record.consent_message),
         )
         query.update(update_fields)
         db.session.commit()
@@ -202,19 +213,20 @@ class Engagement(BaseModel):
 
     @staticmethod
     def _filter_by_engagement_status(query, search_options):
-        statuses = [int(status) for status in search_options.get('engagement_status', [])]
+        statuses = [int(status)
+                    for status in search_options.get('engagement_status', [])]
         if not statuses:
             return query
 
-        status_filter = []
-        if EngagementDisplayStatus.Draft.value in statuses:
-            status_filter.append(Engagement.status_id == Status.Draft.value)
-        if EngagementDisplayStatus.Published.value in statuses:
-            status_filter.append(Engagement.status_id == Status.Published.value)
-        if EngagementDisplayStatus.Closed.value in statuses:
-            status_filter.append(Engagement.status_id == Status.Closed.value)
-        if EngagementDisplayStatus.Scheduled.value in statuses:
-            status_filter.append(Engagement.status_id == Status.Scheduled.value)
+        allowed_statuses = [
+            Status.Draft.value,
+            Status.Published.value,
+            Status.Closed.value,
+            Status.Scheduled.value
+        ]
+        status_filter = [Engagement.status_id.in_(
+            [status for status in statuses if status in allowed_statuses])]
+
         if EngagementDisplayStatus.Upcoming.value in statuses:
             status_filter.append(
                 and_(
@@ -230,16 +242,19 @@ class Engagement(BaseModel):
                 )
             )
         if EngagementDisplayStatus.Unpublished.value in statuses:
-            status_filter.append(Engagement.status_id == Status.Unpublished.value)
+            status_filter.append(Engagement.status_id ==
+                                 Status.Unpublished.value)
         query = query.filter(or_(*status_filter))
         return query
 
     @classmethod
     def _filter_by_published_date(cls, query, search_options):
         if published_from_date := search_options.get('published_from_date'):
-            query = query.filter(Engagement.published_date >= published_from_date)
+            query = query.filter(
+                Engagement.published_date >= published_from_date)
         if published_to_date := search_options.get('published_to_date'):
-            query = query.filter(Engagement.published_date <= published_to_date)
+            query = query.filter(
+                Engagement.published_date <= published_to_date)
         return query
 
     @staticmethod
@@ -253,7 +268,8 @@ class Engagement(BaseModel):
     @staticmethod
     def _filter_by_search_text(query, search_options):
         if search_text := search_options.get('search_text'):
-            query = query.filter(Engagement.name.ilike('%' + search_text + '%'))
+            query = query.filter(
+                Engagement.name.ilike('%' + search_text + '%'))
         return query
 
     @staticmethod
@@ -263,11 +279,35 @@ class Engagement(BaseModel):
                 query = query.filter(Engagement.is_internal.is_(False))
         return query
 
-    # TODO: Populate or remove this method dependent on changes resulting from adding the new Engagement metadata
-    # @staticmethod
-    # def _filter_by_project_metadata(query, search_options):
-    #     query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
-    #     return query
+    @staticmethod
+    def _filter_by_metadata(query, search_options):
+        """
+        Filter the engagements based on metadata criteria, ensuring that each engagement
+        matches all of the provided criteria.
+        """
+        if 'metadata' not in search_options:
+            return query
+
+        for criterion in search_options['metadata']:
+            taxon_id = criterion.get('taxon_id')
+            values = criterion.get('values')
+            # pick the type of filtering to apply
+            filter_type = filter_map.get(criterion.get('filter_type'))
+            if any([taxon_id is None, values is None, filter_type is None]):
+                continue  # skip criterion if any of the required fields are missing
+
+            taxon_query = query.session.query(
+                EngagementMetadataModel.engagement_id
+            ).filter(
+                # Filter the metadata entries to only include those that match the current taxon
+                EngagementMetadataModel.taxon_id == taxon_id
+            )
+            # Use the filter function to create a subquery that filters the engagements
+            filter_subquery = filter_type(taxon_query, values)
+            # Filter the main query to include only engagements found in the subquery
+            query = query.filter(Engagement.id.in_(filter_subquery))
+
+        return query
 
     @staticmethod
     def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: Optional[list[int]] = None):

@@ -17,6 +17,7 @@ const Endpoints = {
     },
     MetadataTaxa: {
         GET_BY_TENANT: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
+        FILTER_BY_TENANT: `${AppConfig.apiUrl}/engagement_metadata/taxa/filters/`,
         REORDER: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
         CREATE: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
         GET: `${AppConfig.apiUrl}/engagement_metadata/taxon/taxon_id`,

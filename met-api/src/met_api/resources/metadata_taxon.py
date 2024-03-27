@@ -24,7 +24,7 @@ from typing import Callable
 from flask import abort, g, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
-from marshmallow import ValidationError
+from marshmallow.exceptions import ValidationError
 from met_api.auth import auth_methods
 from met_api.models.tenant import Tenant
 from met_api.services.metadata_taxon_service import MetadataTaxonService
@@ -43,6 +43,7 @@ API = Namespace('metadata_taxa', description='Endpoints for managing the taxa '
 
 taxon_service = MetadataTaxonService()
 
+
 taxon_modify_model = API.model('MetadataTaxon', taxon_model_dict := {
     'name': fields.String(required=False, description='The name of the taxon'),
     'description': fields.String(required=False, description='The taxon description'),
@@ -52,6 +53,9 @@ taxon_modify_model = API.model('MetadataTaxon', taxon_model_dict := {
                                          ' to one entry per engagement'),
     'preset_values': fields.List(fields.String(), required=False,
                                  description='The preset values for the taxon'),
+    'filter_type': fields.String(required=False, description='The filter type for the taxon (if any)'),
+    'include_freeform': fields.Boolean(required=False, description='Whether to include freeform '
+                                       'values in the user-facing filter options')
 })
 
 taxon_return_model = API.model('MetadataTaxonReturn', {
@@ -60,6 +64,13 @@ taxon_return_model = API.model('MetadataTaxonReturn', {
     'position': fields.Integer(required=False,
                                description="The taxon's position within the tenant"),
     **taxon_model_dict
+})
+
+taxon_filter_model = API.model('MetadataTaxonFilter', {
+    'taxon_id': fields.Integer(required=True, description='The id of the taxon'),
+    'name': fields.String(required=False, description='The name of the taxon'),
+    'values': fields.List(fields.String, required=True, description='The values to filter by'),
+    'filter_type': fields.String(required=True, description='The filter type')
 })
 
 taxon_ids_model = API.model('TaxonIDs', {
@@ -97,7 +108,7 @@ def ensure_tenant_access():
 
 
 @cors_preflight('GET,POST,PATCH,OPTIONS')
-@API.route('/taxa')  # /metadata/taxa
+@API.route('/taxa')  # /engagment_metadata/taxa
 @API.doc(security=['apikey', 'tenant'], responses=responses)
 class MetadataTaxa(Resource):
     """Resource for managing engagement metadata taxa."""
@@ -153,7 +164,7 @@ responses[HTTPStatus.NOT_FOUND.value] = 'Metadata taxon or tenant not found'
 
 
 @cors_preflight('GET,PATCH,DELETE,OPTIONS')
-# /metadata/taxon/<taxon_id>
+# /engagement_metadata/taxon/<taxon_id>
 @API.route('/taxon/<taxon_id>')
 @API.doc(security=['apikey', 'tenant'], responses=responses)
 class MetadataTaxon(Resource):
@@ -200,3 +211,22 @@ class MetadataTaxon(Resource):
             return {}, HTTPStatus.NO_CONTENT
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET,OPTIONS')
+# /engagement_metadata/taxa/filters
+@API.route('/taxa/filters/')
+@API.doc(security=['tenant'], responses=responses)
+class MetadataFilterOptions(Resource):
+    """
+    Resource for getting filter options for a tenant's metadata taxa.
+    This resource is read-only and does not require any specific roles.
+    """
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @ensure_tenant_access()
+    @API.marshal_list_with(taxon_filter_model)
+    def get(tenant: Tenant):
+        """Fetch the filter options for a tenant."""
+        return taxon_service.get_filter_options(tenant.id), HTTPStatus.OK

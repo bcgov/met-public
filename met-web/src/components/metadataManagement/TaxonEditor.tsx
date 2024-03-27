@@ -1,9 +1,9 @@
-import { Grid, Box, Paper, IconButton, Modal, Button, Typography, Chip } from '@mui/material';
+import { Grid, Box, Paper, IconButton, Modal, Button, Typography, Chip, Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Close, UnfoldMore, UnfoldLess, AddCircle, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { reorder } from 'utils';
 import { MetadataTaxon } from 'models/engagement';
 import { MetDroppable } from 'components/common/Dragdrop';
@@ -78,35 +78,40 @@ export const TaxonEditor = () => {
 
     const [showScrollIndicators, setShowScrollIndicators] = useState({
         top: false,
-        bottom: true,
+        bottom: false,
     });
 
     const scrollableRef = useRef<HTMLDivElement>(null);
 
+    const checkScroll = useCallback(() => {
+        if (!scrollableRef.current) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current;
+        const scrollMargin = 20;
+        setShowScrollIndicators({
+            top: scrollTop > scrollMargin,
+            bottom: scrollTop < scrollHeight - clientHeight - scrollMargin,
+        });
+    }, []);
+
     useEffect(() => {
-        if (!scrollableRef.current) {
-            return;
-        }
         const currentRef = scrollableRef.current;
-        const checkScroll = () => {
-            if (!currentRef) {
-                return;
-            }
-            const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current;
-            const scrollMargin = 20;
-            setShowScrollIndicators({
-                top: scrollTop > scrollMargin,
-                bottom: scrollTop < scrollHeight - clientHeight - scrollMargin,
-            });
-        };
-
+        if (!currentRef) return;
         currentRef.addEventListener('scroll', checkScroll);
-
         // Initial check
         checkScroll();
 
         return () => currentRef.removeEventListener('scroll', checkScroll);
-    }, [orderedMetadataTaxa]);
+    }, [checkScroll]);
+
+    useEffect(() => {
+        // Call checkScroll with a delay after any expansion/collapse animation completes
+        const timer = setTimeout(() => {
+            checkScroll();
+        }, 300);
+
+        return () => clearTimeout(timer); // Cleanup the timer if the component unmounts or if expandedCards changes again before the timer fires
+    }, [expandedCards, checkScroll]); // Depend on expandedCards and checkScroll
 
     const scroll = (amount: number) => {
         const scrollableDiv = scrollableRef.current;
@@ -179,28 +184,29 @@ export const TaxonEditor = () => {
                     }}
                     elevation={3}
                 >
-                    <Box
-                        sx={{
-                            visibility: showScrollIndicators.top ? 'visible' : 'hidden',
-                            width: '100%',
-                            textAlign: 'center',
-                            background: 'linear-gradient(#f5f5f5ff, #f5f5f500 100%)',
-                            height: '3em',
-                            marginBottom: '-3em',
-                            position: 'relative',
-                            zIndex: 10,
-                        }}
-                    >
-                        <Chip
-                            variant="filled"
-                            color="secondary"
-                            label="Scroll for more"
-                            icon={<KeyboardArrowUp />}
-                            onClick={() => {
-                                scroll(-400);
+                    <Fade in={showScrollIndicators.top} timeout={300}>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                textAlign: 'center',
+                                background: 'linear-gradient(#f5f5f5ff, #f5f5f500 100%)',
+                                height: '3em',
+                                marginBottom: '-3em',
+                                position: 'relative',
+                                zIndex: 10,
                             }}
-                        />
-                    </Box>
+                        >
+                            <Chip
+                                variant="filled"
+                                color="secondary"
+                                label="Scroll for more"
+                                icon={<KeyboardArrowUp />}
+                                onClick={() => {
+                                    scroll(-400);
+                                }}
+                            />
+                        </Box>
+                    </Fade>
                     <Box
                         sx={{
                             height: '100%',
@@ -238,7 +244,7 @@ export const TaxonEditor = () => {
                                                 />
                                             );
                                         })}
-                                    {isLoading && [...Array(9)].map(() => <TaxonCardSkeleton />)}
+                                    {isLoading && [...Array(8)].map(() => <TaxonCardSkeleton />)}
                                     {!isLoading && orderedMetadataTaxa.length === 0 && (
                                         <>
                                             <Typography variant="h6" color="textSecondary" align="center">
@@ -253,29 +259,30 @@ export const TaxonEditor = () => {
                             </MetDroppable>
                         </DragDropContext>
                     </Box>
-                    <Box
-                        sx={{
-                            visibility: showScrollIndicators.bottom ? 'visible' : 'hidden',
-                            width: '100%',
-                            textAlign: 'center',
-                            background: 'linear-gradient(#f5f5f500, #f5f5f5ff 100%)',
-                            height: '3em',
-                            marginTop: '-3em',
-                            paddingTop: '1em',
-                            position: 'relative',
-                            zIndex: 10,
-                        }}
-                    >
-                        <Chip
-                            variant="filled"
-                            color="secondary"
-                            label="Scroll for more"
-                            icon={<KeyboardArrowDown />}
-                            onClick={() => {
-                                scroll(400);
+                    <Fade in={showScrollIndicators.bottom} timeout={300}>
+                        <Box
+                            sx={{
+                                width: '100%',
+                                textAlign: 'center',
+                                background: 'linear-gradient(#f5f5f500, #f5f5f5ff 100%)',
+                                height: '3em',
+                                marginTop: '-3em',
+                                paddingTop: '1em',
+                                position: 'relative',
+                                zIndex: 10,
                             }}
-                        />
-                    </Box>
+                        >
+                            <Chip
+                                variant="filled"
+                                color="secondary"
+                                label="Scroll for more"
+                                icon={<KeyboardArrowDown />}
+                                onClick={() => {
+                                    scroll(400);
+                                }}
+                            />
+                        </Box>
+                    </Fade>
                 </Paper>
                 <If condition={isSmallScreen}>
                     <Then>
@@ -294,6 +301,8 @@ export const TaxonEditor = () => {
                                         width: '80%',
                                         maxWidth: '40em',
                                         minWidth: '320px',
+                                        maxHeight: '90vh',
+                                        overflowY: 'scroll',
                                     }}
                                 >
                                     <IconButton

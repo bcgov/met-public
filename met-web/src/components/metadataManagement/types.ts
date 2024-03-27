@@ -48,12 +48,29 @@ export interface GenericInputProps {
     ) => void;
 }
 
+export interface MetadataFilterType {
+    name: string;
+    code: string;
+    details: string;
+    icon: SvgIconComponent;
+    // TODO: allow for custom input components based on the passed taxon type
+}
+
+export interface MetadataFilter {
+    taxon_id: number;
+    name?: string;
+    filter_type: string;
+    values: string[];
+}
+
 export interface TaxonType {
     name: string;
     icon: SvgIconComponent;
     supportsPresetValues: boolean;
     supportsFreeform: boolean;
     supportsMulti: boolean;
+    supportedFilters?: MetadataFilterType[];
+    allowFreeformInFilter?: boolean;
     yupValidator: yup.AnySchema;
     customInput?: (props: GenericInputProps) => JSX.Element;
     externalResource?: (value: string) => string;

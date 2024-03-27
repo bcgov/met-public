@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import { EngagementMetadata, MetadataTaxonModify, MetadataTaxon } from 'models/engagement';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
+import { MetadataFilter } from 'components/metadataManagement/types';
 
 export const getEngagementMetadata = async (engagementId: number): Promise<EngagementMetadata[]> => {
     const url = replaceUrl(Endpoints.EngagementMetadata.GET_BY_ENG, 'engagement_id', String(engagementId));
@@ -50,6 +51,14 @@ export const getMetadataTaxa = async (): Promise<Array<MetadataTaxon>> => {
         return response.data;
     }
     throw new Error('Failed to fetch metadata taxa');
+};
+
+export const getMetadataFilters = async (): Promise<Array<MetadataFilter>> => {
+    const response = await http.GetRequest<Array<MetadataFilter>>(Endpoints.MetadataTaxa.FILTER_BY_TENANT);
+    if (response.data) {
+        return response.data;
+    }
+    throw new Error('Failed to fetch available filters');
 };
 
 export const getMetadataTaxon = async (taxonId: number): Promise<MetadataTaxon> => {

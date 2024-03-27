@@ -1,11 +1,11 @@
 import {
+    Abc,
     AlternateEmail,
     Event,
     EventNote,
     Flaky,
     Link,
     Article,
-    ChatBubbleOutline,
     PinOutlined,
     Phone,
     Schedule,
@@ -19,15 +19,18 @@ import {
     PickerTypes,
     taxonSwitch,
 } from 'components/engagement/form/EngagementFormTabs/AdditionalDetails/Metadata/TaxonInputComponents';
+import { MetadataFilterTypes } from './MetadataFilterTypes';
 
 export const TaxonTypes: { [key: string]: TaxonType } = {
     text: {
         name: 'Text',
-        icon: ChatBubbleOutline,
+        icon: Abc,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
         yupValidator: yup.string(),
+        supportedFilters: [MetadataFilterTypes.chips_all, MetadataFilterTypes.chips_any],
+        allowFreeformInFilter: true,
     },
     long_text: {
         name: 'Multiline Text',
@@ -75,7 +78,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
         icon: Event,
         supportsPresetValues: false,
         supportsFreeform: false,
-        supportsMulti: false,
+        supportsMulti: true,
         yupValidator: yup.date().typeError('This value must be a valid date.'),
         customInput: ({ ...props }: TaxonInputProps) => TaxonPicker({ ...props, pickerType: PickerTypes.DATE }),
     },
