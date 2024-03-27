@@ -3,6 +3,10 @@
 - **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)
   - Update survey components and services to fix the bugs.
     -  Removed is_template and is_hidden values from autosaving to avoid the debounce function consuming it older values
+- **Task**: Add a custom dynamic page to engagement [DESENG-501](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-501)
+  - Integrated new summary and custom content tabs into the engagement form, providing users with structured sections for managing different types of content, enhancing overall organization and user experience.
+  - Implemented functionality to allow users to add custom tabs with a variety of provided icons, along with options to edit or delete tabs as needed, granting users greater flexibility and control over their engagement content layout.
+  - Streamlined data management by transitioning content and rich content from engagement tables to dedicated content tables, while also implementing logic to automatically generate default summary and custom content upon engagement creation or tab addition, ensuring consistent content structure and user experience.
 
 ## March 21, 2024
 

@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
 import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
 import { getEngagementMetadata, getMetadataTaxa } from '../../../services/engagementMetadataService';
+import { getEngagementContent } from 'services/engagementContentService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
+import { createDefaultEngagementContent, EngagementContent } from 'models/engagementContent';
 import { saveObject } from 'services/objectStorageService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -51,6 +53,13 @@ export const ActionContext = createContext<EngagementContext>({
     setIsNewEngagement: () => {
         /* empty default method  */
     },
+    contentTabs: [createDefaultEngagementContent()],
+    setContentTabs: () => {
+        return;
+    },
+    fetchEngagementContents: async () => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -70,6 +79,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
+    const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
 
     const isCreate = window.location.pathname.includes(CREATE);
 
@@ -126,6 +136,20 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         }
     };
 
+    const fetchEngagementContents = async () => {
+        if (isCreate) {
+            return;
+        }
+
+        try {
+            const engagementContents = await getEngagementContent(Number(engagementId));
+            setContentTabs(engagementContents);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Contents' }));
+        }
+    };
+
     const taxonMetadata = useMemo(() => {
         const taxonMetadataMap = new Map<number, string[]>();
         engagementMetadata.forEach((metadata) => {
@@ -173,6 +197,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const loadData = async () => {
         await fetchEngagement();
         await fetchEngagementMetadata();
+        await fetchEngagementContents();
         setLoadingSavedEngagement(false);
     };
 
@@ -275,6 +300,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingAuthorization,
                 isNewEngagement,
                 setIsNewEngagement,
+                contentTabs,
+                setContentTabs,
+                fetchEngagementContents,
             }}
         >
             {children}

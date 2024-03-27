@@ -31,6 +31,14 @@ class EngagementSummary(BaseModel):
         return summary_content
 
     @classmethod
+    def get_summary_content_by_engagement_id(cls, engagement_id) -> list[EngagementSummary]:
+        """Get engagement summary content by engagement id."""
+        summary_content = db.session.query(EngagementSummary) \
+            .filter(EngagementSummary.engagement_id == engagement_id) \
+            .first()
+        return summary_content
+
+    @classmethod
     def update_summary_content(cls, content_id, summary_content_data: dict) -> EngagementSummary:
         """Update engagement summary content."""
         query = EngagementSummary.query.filter_by(engagement_content_id=content_id)

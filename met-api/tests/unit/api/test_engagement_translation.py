@@ -27,7 +27,7 @@ from faker import Faker
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.engagement_translation_service import EngagementTranslationService
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestEngagementTranslationInfo
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestEngagementTranslationInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_engagement_translation_model, factory_language_model)
 
@@ -36,84 +36,93 @@ fake = Faker()
 
 
 @pytest.mark.parametrize('engagement_translation_info', [TestEngagementTranslationInfo.engagementtranslation1])
-def test_create_engagement_translation(client, jwt, session, engagement_translation_info,
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_create_engagement_translation(client, jwt, session, engagement_translation_info, engagement_info,
                                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement translation can be POSTed."""
-    engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
-    engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    engagement_id = rv.json.get('id')
+    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
+    engagement_translation_info['engagement_id'] = engagement_id
+    engagement_translation_info['language_id'] = language.id
 
-    rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+    rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                      data=json.dumps(engagement_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
-    rv = client.get(f'/api/engagement/{engagement.id}/translations/language/{language.id}',
+    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json[0].get('engagement_id') == engagement.id
+    assert rv.json[0].get('engagement_id') == engagement_id
 
     with patch.object(EngagementTranslationService, 'create_engagement_translation',
                       side_effect=ValueError('Test error')):
-        rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+        rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                          data=json.dumps(engagement_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementTranslationService, 'create_engagement_translation',
                       side_effect=KeyError('Test error')):
-        rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+        rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                          data=json.dumps(engagement_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementTranslationService, 'create_engagement_translation',
                       side_effect=ValidationError('Test error')):
-        rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+        rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                          data=json.dumps(engagement_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
     with patch.object(EngagementTranslationService, 'create_engagement_translation',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.CONFLICT)):
-        rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+        rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                          data=json.dumps(engagement_translation_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.CONFLICT
 
 
 @pytest.mark.parametrize('engagement_translation_info', [TestEngagementTranslationInfo.engagementtranslation1])
-def test_get_engagement_translation(client, jwt, session, engagement_translation_info,
+@pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
+def test_get_engagement_translation(client, jwt, session, engagement_translation_info, engagement_info,
                                     setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement translation can be fetched."""
-    engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
-    engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post(f'/api/engagement/{engagement.id}/translations/',
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    engagement_id = rv.json.get('id')
+    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
+    engagement_translation_info['engagement_id'] = engagement_id
+    engagement_translation_info['language_id'] = language.id
+
+    rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                      data=json.dumps(engagement_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
-    rv = client.get(f'/api/engagement/{engagement.id}/translations/language/{language.id}',
+    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json[0].get('engagement_id') == engagement.id
+    assert rv.json[0].get('engagement_id') == engagement_id
 
     with patch.object(EngagementTranslationService, 'get_translation_by_engagement_and_language',
                       side_effect=ValueError('Test error')):
-        rv = client.get(f'/api/engagement/{engagement.id}/translations/language/{language.id}',
+        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementTranslationService, 'get_translation_by_engagement_and_language',
                       side_effect=KeyError('Test error')):
-        rv = client.get(f'/api/engagement/{engagement.id}/translations/language/{language.id}',
+        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 

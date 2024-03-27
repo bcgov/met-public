@@ -1,11 +1,13 @@
 """Service for engagement content management."""
 from http import HTTPStatus
+from flask import current_app
 
 from met_api.constants.engagement_content_type import EngagementContentType
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement_content import EngagementContent as EngagementContentModel
 from met_api.schemas.engagement_content import EngagementContentSchema
+from met_api.services.engagement_custom_content_service import EngagementCustomContentService
 from met_api.services import authorization
 from met_api.utils.roles import Role
 
@@ -36,9 +38,28 @@ class EngagementContentService:
         sort_index = EngagementContentService._find_higest_sort_index(engagement_id)
 
         engagement_content_data['sort_index'] = sort_index + 1
+
         created_content = EngagementContentService._create_content(engagement_id, engagement_content_data)
         created_content.commit()
+
+        if engagement_content_data.get('content_type') == EngagementContentType.Custom.name:
+            EngagementContentService.create_default_custom_content(engagement_id, created_content.id)
+
         return EngagementContentSchema().dump(created_content)
+
+    @staticmethod
+    def create_default_custom_content(eng_id: int, eng_content_id: int):
+        """Create default engagement custom content."""
+        default_summary_content = {
+            'engagement_id': eng_id
+        }
+        try:
+            EngagementCustomContentService.create_custom_content(eng_content_id, default_summary_content)
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error('Failed to create default engagement summary content', exc)
+            raise BusinessException(
+                error='Failed to create default engagement summary content.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
     def _find_higest_sort_index(engagement_id):
@@ -58,7 +79,7 @@ class EngagementContentService:
         engagement_content_model.icon_name = engagement_content_data.get('icon_name')
         engagement_content_model.content_type = EngagementContentType[engagement_content_data.get('content_type')]
         engagement_content_model.sort_index = engagement_content_data.get('sort_index')
-        engagement_content_model.is_internal = engagement_content_data.get('is_internal')
+        engagement_content_model.is_internal = engagement_content_data.get('is_internal', False)
         engagement_content_model.flush()
         return engagement_content_model
 

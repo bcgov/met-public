@@ -33,7 +33,7 @@ API = Namespace('custom_content', description='Endpoints for Engagement Custom C
 
 @cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('')
-class Map(Resource):
+class CustomContent(Resource):
     """Resource for managing engagement custom content."""
 
     @staticmethod
