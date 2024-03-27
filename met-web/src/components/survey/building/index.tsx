@@ -38,8 +38,8 @@ interface SurveyForm {
     id: string;
     form_json: unknown;
     name: string;
-    is_hidden: boolean;
-    is_template: boolean;
+    is_hidden?: boolean;
+    is_template?: boolean;
 }
 
 const SurveyFormBuilder = () => {
@@ -149,8 +149,6 @@ const SurveyFormBuilder = () => {
             id: String(surveyId),
             form_json: form,
             name: name,
-            is_hidden: isHiddenSurvey,
-            is_template: isTemplateSurvey,
         });
     };
 
