@@ -1,3 +1,8 @@
+## March 27, 2024
+
+- **Task**: Add missing unit tests for analytics api [DESENG-482](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-482)
+  - Added unit tests for analytics API models and API end points
+
 ## March 26, 2024
 
 - **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)

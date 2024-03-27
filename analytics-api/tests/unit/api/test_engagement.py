@@ -16,6 +16,10 @@
 
 Test-Suite to ensure that the engagement endpoint is working as expected.
 """
+from http import HTTPStatus
+from unittest.mock import patch
+
+from analytics_api.services.engagement_service import EngagementService
 from analytics_api.utils.util import ContentType
 from tests.utilities.factory_utils import factory_engagement_model
 
@@ -24,4 +28,34 @@ def test_get_engagement(client, session):  # pylint:disable=unused-argument
     """Assert that engagement can be fetched."""
     engagement = factory_engagement_model()
     rv = client.get(f'/api/engagements/{engagement.id}', content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
+
+    with patch.object(EngagementService, 'get_engagement',
+                      side_effect=KeyError('Test error')):
+        rv = client.get(f'/api/engagements/{engagement.id}', content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(EngagementService, 'get_engagement',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/engagements/{engagement.id}', content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+def test_get_engagement_map(client, session):  # pylint:disable=unused-argument
+    """Assert that engagement can be fetched."""
+    engagement = factory_engagement_model()
+    rv = client.get(f'/api/engagements/map/{engagement.source_engagement_id}',
+                    content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+
+    with patch.object(EngagementService, 'get_engagement_map_data',
+                      side_effect=KeyError('Test error')):
+        rv = client.get(f'/api/engagements/map/{engagement.source_engagement_id}',
+                        content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(EngagementService, 'get_engagement_map_data',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/engagements/map/{engagement.source_engagement_id}',
+                        content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

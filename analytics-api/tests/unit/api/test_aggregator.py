@@ -16,13 +16,27 @@
 
 Test-Suite to ensure that the aggregator endpoint is working as expected.
 """
+from http import HTTPStatus
+from unittest.mock import patch
+
+from analytics_api.services.aggregator_service import AggregatorService
 from analytics_api.utils.util import ContentType
 from tests.utilities.factory_utils import factory_engagement_model, factory_email_verification_model
 
 
 def test_get_aggregator_data(client, session):  # pylint:disable=unused-argument
     """Assert that aggregator data for an engagement can be fetched."""
-    engagement = factory_engagement_model()
-    emailverification = factory_email_verification_model()
+    factory_engagement_model()
+    factory_email_verification_model()
     rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
+
+    with patch.object(AggregatorService, 'get_count',
+                      side_effect=KeyError('Test error')):
+        rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    with patch.object(AggregatorService, 'get_count',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
