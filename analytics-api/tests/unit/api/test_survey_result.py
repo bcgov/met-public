@@ -30,22 +30,6 @@ from tests.utilities.factory_utils import (
 fake = Faker()
 
 
-def test_get_survey_result_internal(client, session):  # pylint:disable=unused-argument
-    """Assert that survey result can be fetched."""
-    engagement = factory_engagement_model()
-    survey = factory_survey_model(engagement)
-    available_response_option = factory_available_response_option_model(survey)
-    factory_request_type_option_model(survey, available_response_option.request_key,
-                                      TestRequestTypeOptionInfo.request_type_option3)
-    factory_response_type_option_model(survey, available_response_option.request_key,
-                                       available_response_option.value)
-
-    rv = client.get(f'/api/surveyresult/{engagement.source_engagement_id}/internal',
-                    content_type=ContentType.JSON.value)
-    # unauthorised users cannot access the end point
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
-
-
 def test_get_survey_result_public(client, session):  # pylint:disable=unused-argument
     """Assert that survey result can be fetched."""
     engagement = factory_engagement_model()

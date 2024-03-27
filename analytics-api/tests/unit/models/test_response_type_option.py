@@ -23,7 +23,7 @@ from tests.utilities.factory_utils import (
 
 
 def test_response_type_option_data(session):
-    """Assert that an response type option data can be created and fetched."""
+    """Assert that a response type option data can be created and fetched."""
     eng = factory_engagement_model()
     survey = factory_survey_model(eng)
     available_response_option = factory_available_response_option_model(survey)
@@ -31,6 +31,8 @@ def test_response_type_option_data(session):
                                                               available_response_option.value)
     assert response_type_option.id is not None
 
-    primary_key = (response_type_option.id, response_type_option.request_key)
-    retrieved_options = ResponseTypeOptionModel.find_by_id(primary_key)
+    # Assuming that the primary key for ResponseTypeOptionModel is a tuple
+    # containing the ID and the request key
+    primary_key = (response_type_option.id, available_response_option.request_key)
+    retrieved_options = ResponseTypeOptionModel.find_by_id(primary_key)  # NOSONAR # for this table the primary key is a tuple
     assert available_response_option.request_key == retrieved_options.request_key

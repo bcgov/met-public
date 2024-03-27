@@ -28,15 +28,15 @@ def test_get_aggregator_data(client, session):  # pylint:disable=unused-argument
     """Assert that aggregator data for an engagement can be fetched."""
     factory_engagement_model()
     factory_email_verification_model()
-    rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
+    rv = client.get('/api/counts/', content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
     with patch.object(AggregatorService, 'get_count',
                       side_effect=KeyError('Test error')):
-        rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
+        rv = client.get('/api/counts/', content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(AggregatorService, 'get_count',
                       side_effect=ValueError('Test error')):
-        rv = client.get(f'/api/counts/', content_type=ContentType.JSON.value)
+        rv = client.get('/api/counts/', content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

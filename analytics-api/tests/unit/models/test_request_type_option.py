@@ -34,7 +34,7 @@ def test_request_type_option_data(session):
     request_type_option = factory_request_type_option_model(survey, available_response_option.request_key)
     assert request_type_option.id is not None
     retrieved_options = RequestTypeOptionModel.find_by_id(request_type_option.id)
-    assert retrieved_options.request_id == retrieved_options.request_id
+    assert retrieved_options.request_id == request_type_option.request_id
 
 
 def test_request_type_option_data_by_engagement_id_admin(session):
