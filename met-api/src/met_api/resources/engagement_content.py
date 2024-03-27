@@ -34,7 +34,7 @@ API = Namespace('engagement_content', description='Endpoints for Engagement Cont
 
 
 @cors_preflight('GET, POST, OPTIONS')
-@API.route('/engagement/<engagement_id>')
+@API.route('')
 class EngagementContent(Resource):
     """Resource for managing a engagement content."""
 
@@ -69,7 +69,7 @@ class EngagementContent(Resource):
 
 
 @cors_preflight('PATCH')
-@API.route('/engagement/<engagement_id>/sort_index')
+@API.route('/sort_index')
 class EngagementContentSort(Resource):
     """Resource for managing engagement contents sort order with engagements."""
 
@@ -88,7 +88,7 @@ class EngagementContentSort(Resource):
 
 
 @cors_preflight('GET, DELETE, PATCH')
-@API.route('/<engagement_content_id>/engagements/<engagement_id>')
+@API.route('/<engagement_content_id>')
 class EngagementContentEdit(Resource):
     """Resource for managing engagement contents with engagements."""
 

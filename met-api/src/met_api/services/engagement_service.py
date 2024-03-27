@@ -4,6 +4,7 @@ from http import HTTPStatus
 
 from flask import current_app
 
+from met_api.constants.engagement_content_type import EngagementContentDefaultValues
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
@@ -17,8 +18,9 @@ from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
+from met_api.services.engagement_content_service import EngagementContentService
+from met_api.services.engagement_summary_content_service import EngagementSummaryContentService
 from met_api.services.object_storage_service import ObjectStorageService
-
 from met_api.services.project_service import ProjectService
 from met_api.utils import email_util, notification
 from met_api.utils.enums import SourceAction, SourceType
@@ -157,6 +159,9 @@ class EngagementService:
         EngagementService.validate_fields(request_json)
         eng_model = EngagementService._create_engagement_model(request_json)
 
+        eng_content = EngagementService.create_default_engagement_content(eng_model.id)
+        EngagementService.create_default_summary_content(eng_model.id, eng_content['id'], request_json)
+
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
@@ -182,13 +187,46 @@ class EngagementService:
             published_date=None,
             scheduled_date=None,
             banner_filename=engagement_data.get('banner_filename', None),
-            content=engagement_data.get('content', None),
-            rich_content=engagement_data.get('rich_content', None),
             is_internal=engagement_data.get('is_internal', False),
             consent_message=engagement_data.get('consent_message', None)
         )
         new_engagement.save()
         return new_engagement
+
+    @staticmethod
+    def create_default_engagement_content(eng_id):
+        """Create default engagement content for the given engagement ID."""
+        default_engagement_content = {
+            'title': EngagementContentDefaultValues.Title.value,
+            'icon_name': EngagementContentDefaultValues.Icon.value,
+            'content_type': EngagementContentDefaultValues.Type.value,
+            'engagement_id': eng_id
+        }
+        try:
+            eng_content = EngagementContentService.create_engagement_content(default_engagement_content, eng_id)
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error('Failed to create default engagement content', exc)
+            raise BusinessException(
+                error='Failed to create default engagement content.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+
+        return eng_content
+
+    @staticmethod
+    def create_default_summary_content(eng_id: int, eng_content_id: int, content_data: dict):
+        """Create default summary content for the engagement ID, mandatory for each engagement."""
+        default_summary_content = {
+            'engagement_id': eng_id,
+            'content': content_data.get('content', None),
+            'rich_content': content_data.get('rich_content', None)
+        }
+        try:
+            EngagementSummaryContentService.create_summary_content(eng_content_id, default_summary_content)
+        except Exception as exc:  # noqa: B902
+            current_app.logger.error('Failed to create default engagement summary content', exc)
+            raise BusinessException(
+                error='Failed to create default engagement summary content.',
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
     def _create_eng_status_block(eng_id, engagement_data: dict):

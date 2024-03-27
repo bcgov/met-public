@@ -34,6 +34,30 @@ fake = Faker()
 
 
 @pytest.mark.parametrize('engagement_content_info', [TestEngagementContentInfo.content2])
+def test_default_engagement_custom_content_is_created(client, jwt, session, engagement_content_info,
+                                                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that a engagement custom content can be POSTed."""
+    engagement = factory_engagement_model()
+    engagement_content_info['engagement_id'] = engagement.id
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
+                     data=json.dumps(engagement_content_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    response_json = rv.json
+    created_content_id = response_json.get('id')
+
+    rv = client.get(
+        f'/api/content/{created_content_id}/custom',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK.value
+    assert rv.json[0].get('custom_text_content') is None
+
+
+@pytest.mark.parametrize('engagement_content_info', [TestEngagementContentInfo.content2])
 def test_engagement_custom_content(client, jwt, session, engagement_content_info,
                                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement custom content can be POSTed."""
@@ -41,7 +65,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     engagement_content_info['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -56,7 +80,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     }
 
     rv = client.post(
-        f'/api/engagement_content/{created_content_id}/custom',
+        f'/api/content/{created_content_id}/custom',
         data=json.dumps(data),
         headers=headers,
         content_type=ContentType.JSON.value
@@ -66,7 +90,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     with patch.object(EngagementCustomContentService, 'create_custom_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.post(
-            f'/api/engagement_content/{created_content_id}/custom',
+            f'/api/content/{created_content_id}/custom',
             data=json.dumps(data),
             headers=headers,
             content_type=ContentType.JSON.value
@@ -74,17 +98,17 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     assert rv.status_code == HTTPStatus.BAD_REQUEST
 
     rv = client.get(
-        f'/api/engagement_content/{created_content_id}/custom',
+        f'/api/content/{created_content_id}/custom',
         headers=headers,
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.OK.value
-    assert rv.json[0].get('custom_text_content') == data.get('custom_text_content')
+    assert rv.json[1].get('custom_text_content') == data.get('custom_text_content')
 
     with patch.object(EngagementCustomContentService, 'get_custom_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.get(
-            f'/api/engagement_content/{created_content_id}/custom',
+            f'/api/content/{created_content_id}/custom',
             headers=headers,
             content_type=ContentType.JSON.value
         )
@@ -95,7 +119,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     }
 
     rv = client.patch(
-        f'/api/engagement_content/{created_content_id}/custom',
+        f'/api/content/{created_content_id}/custom',
         data=json.dumps(data_edits),
         headers=headers,
         content_type=ContentType.JSON.value
@@ -103,7 +127,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     assert rv.status_code == HTTPStatus.OK
 
     rv = client.get(
-        f'/api/engagement_content/{created_content_id}/custom',
+        f'/api/content/{created_content_id}/custom',
         headers=headers,
         content_type=ContentType.JSON.value
     )
@@ -113,7 +137,7 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
     with patch.object(EngagementCustomContentService, 'update_custom_content',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.patch(
-            f'/api/engagement_content/{created_content_id}/custom',
+            f'/api/content/{created_content_id}/custom',
             data=json.dumps(data_edits),
             headers=headers,
             content_type=ContentType.JSON.value

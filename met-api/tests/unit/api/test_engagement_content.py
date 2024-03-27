@@ -42,26 +42,26 @@ def test_create_engagement_content(client, jwt, session, engagement_content_info
     engagement_content_info['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.get(f'/api/engagement/{engagement.id}/content',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('sort_index') == 1
 
     with patch.object(EngagementContentService, 'create_engagement_content',
                       side_effect=ValueError('Test error')):
-        rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+        rv = client.post(f'/api/engagement/{engagement.id}/content',
                          data=json.dumps(engagement_content_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementContentService, 'create_engagement_content',
                       side_effect=ValidationError('Test error')):
-        rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+        rv = client.post(f'/api/engagement/{engagement.id}/content',
                          data=json.dumps(engagement_content_info),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
@@ -75,18 +75,18 @@ def test_get_engagement_content(client, jwt, session, engagement_content_info,
     engagement_content_info['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.get(f'/api/engagement/{engagement.id}/content',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('sort_index') == 1
 
     with patch.object(EngagementContentService, 'get_contents_by_engagement_id', side_effect=ValueError('Test error')):
-        rv = client.get('/api/engagement_content/engagement/' + str(engagement.id),
+        rv = client.get(f'/api/engagement/{engagement.id}/content',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -99,7 +99,7 @@ def test_create_engagement_content_sort(client, jwt, session,
     engagement_content_info_1['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -107,12 +107,12 @@ def test_create_engagement_content_sort(client, jwt, session,
     engagement_content_info_2 = TestEngagementContentInfo.content2
     engagement_content_info_2['engagement_id'] = engagement.id
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_2),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.get(f'/api/engagement/{engagement.id}/content',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert len(rv.json) == 2, 'Two Contents Should exist.'
@@ -134,12 +134,12 @@ def test_create_engagement_content_sort(client, jwt, session,
         }
     ]
 
-    rv = client.patch(f'/api/engagement_content/engagement/{engagement.id}/sort_index',
+    rv = client.patch(f'/api/engagement/{engagement.id}/content/sort_index',
                       data=json.dumps(reorder_dict),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 204
 
-    rv = client.get('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.get(f'/api/engagement/{engagement.id}/content',
                     headers=headers, content_type=ContentType.JSON.value)
     engagement_contents = rv.json
     summary_content = _find_engagement_content(engagement_contents, EngagementContentType.Summary.name)
@@ -162,7 +162,7 @@ def test_create_engagement_content_sort_invalid(client, jwt, session,
     engagement_content_info_1['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -176,7 +176,7 @@ def test_create_engagement_content_sort_invalid(client, jwt, session,
         'sort_index': 1
     }
     ]
-    rv = client.patch(f'/api/engagement_content/engagement/{engagement.id}/sort_index',
+    rv = client.patch(f'/api/engagement/{engagement.id}/content/sort_index',
                       data=json.dumps(reorder_dict),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.BAD_REQUEST
@@ -190,19 +190,19 @@ def test_delete_engagement_content(client, jwt, session,
     engagement_content_info_1['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     response_json = rv.json
     created_content_id = response_json.get('id')
 
-    rv = client.delete(f'/api/engagement_content/{created_content_id}/engagements/' + str(engagement.id),
+    rv = client.delete(f'/api/engagement/{engagement.id}/content/{created_content_id}',
                        headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == HTTPStatus.OK
 
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -211,7 +211,7 @@ def test_delete_engagement_content(client, jwt, session,
 
     with patch.object(EngagementContentService, 'delete_engagement_content',
                       side_effect=ValueError('Test error')):
-        rv = client.delete(f'/api/engagement_content/{created_content_id}/engagements/' + str(engagement.id),
+        rv = client.delete(f'/api/engagement/{engagement.id}/content/{created_content_id}',
                            headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -224,7 +224,7 @@ def test_patch_engagement_content(client, jwt, session,
     engagement_content_info_1['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post('/api/engagement_content/engagement/' + str(engagement.id),
+    rv = client.post(f'/api/engagement/{engagement.id}/content',
                      data=json.dumps(engagement_content_info_1),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
@@ -234,7 +234,7 @@ def test_patch_engagement_content(client, jwt, session,
     data = {
         'title': fake.text(max_nb_chars=10),
     }
-    rv = client.patch(f'/api/engagement_content/{created_content_id}/engagements/' + str(engagement.id),
+    rv = client.patch(f'/api/engagement/{engagement.id}/content/{created_content_id}',
                       data=json.dumps(data),
                       headers=headers, content_type=ContentType.JSON.value)
 
@@ -243,14 +243,14 @@ def test_patch_engagement_content(client, jwt, session,
 
     with patch.object(EngagementContentService, 'update_engagement_content',
                       side_effect=ValueError('Test error')):
-        rv = client.patch(f'/api/engagement_content/{created_content_id}/engagements/' + str(engagement.id),
+        rv = client.patch(f'/api/engagement/{engagement.id}/content/{created_content_id}',
                           data=json.dumps(data),
                           headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementContentService, 'update_engagement_content',
                       side_effect=ValidationError('Test error')):
-        rv = client.patch(f'/api/engagement_content/{created_content_id}/engagements/' + str(engagement.id),
+        rv = client.patch(f'/api/engagement/{engagement.id}/content/{created_content_id}',
                           data=json.dumps(data),
                           headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR

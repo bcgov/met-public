@@ -351,7 +351,6 @@ def test_patch_engagement(client, jwt, session, engagement_info, side_effect, ex
         'start_date': fake.date(),
         'end_date': fake.date(),
         'description': fake.text(),
-        'content': fake.text(),
         'created_date': fake.date(),
     }
 
@@ -367,7 +366,6 @@ def test_patch_engagement(client, jwt, session, engagement_info, side_effect, ex
     assert engagement_edits.get('start_date') in rv.json.get('start_date')
     assert engagement_edits.get('end_date') in rv.json.get('end_date')
     assert rv.json.get('description') == engagement_edits.get('description')
-    assert rv.json.get('content') == engagement_edits.get('content')
     assert engagement_edits.get('created_date') in rv.json.get('created_date')
 
     with patch.object(EngagementService, 'edit_engagement', side_effect=side_effect):
@@ -392,7 +390,6 @@ def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unu
         'start_date': fake.date(),
         'end_date': fake.date(),
         'description': fake.text(),
-        'content': fake.text(),
         'created_date': fake.date(),
     }
 
