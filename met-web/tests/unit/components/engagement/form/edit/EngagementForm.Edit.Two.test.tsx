@@ -7,13 +7,14 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
+import * as engagementContentService from 'services/engagementContentService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import * as teamMemberService from 'services/membershipService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementContentData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 
 const survey: Survey = {
@@ -91,6 +92,10 @@ describe('Engagement form page tests', () => {
     );
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
         Promise.resolve([engagementMetadata]),
+    );
+    jest.spyOn(engagementMetadataService, 'getMetadataTaxa').mockReturnValue(Promise.resolve([]));
+    jest.spyOn(engagementContentService, 'postEngagementContent').mockReturnValue(
+        Promise.resolve(engagementContentData),
     );
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     const getEngagementMock = jest
