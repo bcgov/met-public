@@ -1,47 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Grid, MenuItem, TextField } from '@mui/material';
+import React from 'react';
+import { Grid } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
-import { MetHeader1, MetLabel, MetParagraph } from 'components/common';
+import { MetHeader1, MetParagraph } from 'components/common';
 import TileBlock from './TileBlock';
-import { debounce } from 'lodash';
-import { EngagementDisplayStatus } from 'constants/engagementStatus';
-import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation } from 'hooks';
-
+import FilterBlock from './FilterBlock';
+import FilterDrawer from './FilterDrawer';
 const LandingComponent = () => {
-    const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
-    const [didMount, setDidMount] = useState(false);
     const { t: translate } = useAppTranslation();
 
-    const debounceSetSearchFilters = useRef(
-        debounce((searchText: string) => {
-            setSearchFilters({
-                ...searchFilters,
-                name: searchText,
-            });
-        }, 300),
-    ).current;
-
-    const tileBlockRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        setDidMount(true);
-        return () => setDidMount(false);
-    }, []);
-
-    useEffect(() => {
-        if (didMount) {
-            const yOffset = tileBlockRef?.current?.offsetTop;
-            window.scrollTo({ top: yOffset || 0, behavior: 'smooth' });
-        }
-    }, [page]);
-
     return (
-        <Grid container direction="row" justifyContent={'center'} alignItems="center">
+        <Grid container direction="row" justifyContent="center" alignItems="center">
+            <FilterDrawer />
             <Grid item xs={12}>
-                <Banner height={'330px'} imageUrl={LandingPageBanner}>
+                <Banner height="330px" imageUrl={LandingPageBanner}>
                     <Grid
                         container
                         direction="row"
@@ -84,74 +58,9 @@ const LandingComponent = () => {
             </Grid>
 
             <Container maxWidth={false} sx={{ maxWidth: '1700px' }}>
-                <Grid
-                    container
-                    item
-                    xs={12}
-                    direction="row"
-                    justifyContent={'center'}
-                    alignItems="center"
-                    rowSpacing={3}
-                >
-                    <Grid
-                        container
-                        item
-                        xs={10}
-                        justifyContent={'flex-start'}
-                        alignItems="flex-start"
-                        columnSpacing={2}
-                        rowSpacing={4}
-                        marginTop={'2em'}
-                        ref={tileBlockRef}
-                    >
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Engagement name</MetLabel>
-                            <TextField
-                                fullWidth
-                                placeholder="Type engagement's name..."
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                onChange={(event) => {
-                                    debounceSetSearchFilters(event.target.value);
-                                }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Status</MetLabel>
-                            <TextField
-                                id="status"
-                                name="status"
-                                variant="outlined"
-                                label=" "
-                                defaultValue=""
-                                value={searchFilters.status}
-                                fullWidth
-                                size="small"
-                                onChange={(event) => {
-                                    setSearchFilters({
-                                        ...searchFilters,
-                                        status: event.target.value ? [Number(event.target.value)] : [],
-                                    });
-                                    setPage(1);
-                                }}
-                                select
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                            >
-                                <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                    {''}
-                                </MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Open}>Open</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Upcoming}>Upcoming</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Closed}>Closed</MenuItem>
-                            </TextField>
-                        </Grid>
-                    </Grid>
-                    <Grid item xs={10} container justifyContent={'center'} alignItems="center">
-                        <TileBlock />
-                    </Grid>
+                <Grid container item xs={12} direction="row" justifyContent="center" alignItems="center" rowSpacing={3}>
+                    <FilterBlock />
+                    <TileBlock />
                 </Grid>
             </Container>
         </Grid>

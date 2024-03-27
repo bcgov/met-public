@@ -13,12 +13,22 @@ import {
     Divider,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { ExpandMore, DragIndicator, FormatQuote, EditAttributes, InsertDriveFile, FileCopy } from '@mui/icons-material';
+import {
+    ExpandMore,
+    DragIndicator,
+    FormatQuote,
+    EditAttributes,
+    InsertDriveFile,
+    FileCopy,
+    FilterAlt,
+    FilterAltOff,
+} from '@mui/icons-material';
 import React from 'react';
 import { MetHeader4 } from 'components/common';
 import { TaxonTypes } from './TaxonTypes';
 import { TaxonCardProps } from './types';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
+import { MetadataFilterTypes } from './MetadataFilterTypes';
 
 const DetailsRow = ({ name, icon, children }: { name: string; icon: React.ReactNode; children: React.ReactNode }) => {
     const theme = useTheme();
@@ -224,6 +234,25 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                             : 'Unlimited values per engagement.'}
                                     </Typography>
                                 </DetailsRow>
+
+                                {/* Filter Type */}
+                                {Boolean(taxonType.supportedFilters) && (
+                                    <DetailsRow
+                                        name="Filter Type"
+                                        icon={taxon.filter_type ? <FilterAlt /> : <FilterAltOff />}
+                                    >
+                                        <Typography variant="body1" pl={1}>
+                                            {taxon.filter_type
+                                                ? MetadataFilterTypes[taxon.filter_type].name
+                                                : 'Engagements are not filtered by this field.'}
+                                        </Typography>
+                                        {taxon.filter_type && (
+                                            <Typography variant="body1" pl={1}>
+                                                {MetadataFilterTypes[taxon.filter_type].details}
+                                            </Typography>
+                                        )}
+                                    </DetailsRow>
+                                )}
                             </Grid>
                         </Collapse>
                     </Grid>
