@@ -15,6 +15,7 @@
 
 from http import HTTPStatus
 
+import json
 from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
@@ -30,7 +31,8 @@ from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 
-API = Namespace('engagements', description='Endpoints for Engagements Management')
+API = Namespace(
+    'engagements', description='Endpoints for Engagements Management')
 """Custom exception messages
 """
 
@@ -83,6 +85,10 @@ class Engagements(Resource):
             if external_user_id is None:
                 exclude_internal = True
 
+            metadata = args.getlist('metadata[]')
+            if metadata:
+                metadata = [json.loads(m) for m in metadata]
+
             search_options = {
                 'search_text': args.get('search_text', '', type=str),
                 'engagement_status': args.getlist('engagement_status[]'),
@@ -90,9 +96,10 @@ class Engagements(Resource):
                 'created_to_date': args.get('created_to_date', None, type=str),
                 'published_from_date': args.get('published_from_date', None, type=str),
                 'published_to_date': args.get('published_to_date', None, type=str),
+                'metadata': metadata,
                 'exclude_internal': exclude_internal,
-                # the membership changing pages sometimes needs only engagement where user can add a member.
-                # pass this has_team_access to restrict searches only within engagements he has access on.
+                # the membership changing pages sometimes need only engagements where users can add a member.
+                # pass this has_team_access to restrict searches only within engagements they have access on.
                 'has_team_access': args.get(
                     'has_team_access',
                     default=False,

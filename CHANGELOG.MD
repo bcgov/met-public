@@ -1,3 +1,12 @@
+## CURRENT
+
+- **Feature** Engagement filtering - Add filtering by taxon [🎟️DESENG-445](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-445)
+  - Added properties to metadata taxa to allow them to be marked as filterable.
+  - Added a new file `filter_types.py` where additional filters can be added as subquery factory functions.
+  - Added a new endpoint to the API to retrieve filterable taxa.
+  - Modified the search endpoint to allow filtering by metadata.
+  - Added schemas, data validation and unit tests for the new functionality.
+
 ## March 08, 2024
 
 - **Task**Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)

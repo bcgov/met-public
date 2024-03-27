@@ -1,9 +1,9 @@
 """Schemas for serializing and deserializing classes related to engagement metadata."""
 
-from marshmallow import ValidationError, fields, pre_load, validate
+from marshmallow import ValidationError, fields, pre_load, validate, Schema
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow_sqlalchemy.fields import Nested
-from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon, MetadataTaxonDataType
+from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon, MetadataTaxonDataType, MetadataTaxonFilterType
 
 
 class EngagementMetadataSchema(SQLAlchemyAutoSchema):
@@ -58,6 +58,9 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
     position = fields.Integer(required=False)
     preset_values = fields.Method(
         'get_preset_values', deserialize='set_preset_values')
+    filter_type = fields.String(
+        validate=validate.OneOf([e.value for e in MetadataTaxonFilterType]), allow_none=True)
+    include_freeform = fields.Boolean()
 
     def get_preset_values(self, obj):
         """Serialize the preset_values property for Marshmallow."""
@@ -85,3 +88,13 @@ class MetadataTaxonSchema(SQLAlchemyAutoSchema):
 
     # Nested field
     entries = Nested(EngagementMetadataSchema, many=True, exclude=['taxon'])
+
+
+class MetadataTaxonFilterSchema(Schema):
+    """Schema for metadata taxon filters."""
+
+    taxon_id = fields.Integer(required=True)
+    name = fields.String(required=False)
+    values = fields.List(fields.String(), required=True)
+    filter_type = fields.String(required=True, validate=validate.OneOf(
+        [e.value for e in MetadataTaxonFilterType]))
