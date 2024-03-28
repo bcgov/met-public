@@ -1,3 +1,8 @@
+## March 27, 2024
+
+- **Bug Fix**: MET - Engagement tab does not revert the filtered out data [DESENG-525](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-525)
+  - Resetting search filter values invoke the list to reload
+
 ## March 26, 2024
 
 - **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)
