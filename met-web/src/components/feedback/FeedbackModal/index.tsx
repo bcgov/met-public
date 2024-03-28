@@ -66,7 +66,8 @@ export const FeedbackModal = () => {
     const handleSubmit = async () => {
         setIsSaving(true);
         try {
-            await createFeedback(feedbackFormData);
+            const formData = { ...feedbackFormData, submission_path: window.location.pathname };
+            await createFeedback(formData);
             dispatch(openNotification({ severity: 'success', text: translate('feedback.notification.success') }));
             setIsSubmitted(true);
         } catch (error) {
