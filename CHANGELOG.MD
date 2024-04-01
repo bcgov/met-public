@@ -1,3 +1,9 @@
+## March 28, 2024
+
+- **Bug Fix**: Feedback fixes [DESENG-524](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-524)
+  - Fixed feedback path not updating issue.
+  - Fixed feedback table grid styles.
+
 ## March 27, 2024
 
 - **Bug Fix**: MET - Engagement tab does not revert the filtered out data [DESENG-525](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-525)
