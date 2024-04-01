@@ -234,3 +234,21 @@ class TestUserResponseDetailInfo(dict, Enum):
         'engagement_id': 2,
         'participant_id': 2
     }
+
+
+class TestJwtClaims(dict, Enum):
+    """Test scenarios of jwt claims."""
+	
+    staff_admin_role = {
+    'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
+    'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
+    'preferred_username': f'{fake.user_name()}@idir',
+    'given_name': fake.first_name(),
+    'family_name': fake.last_name(),
+    'tenant_id': 1,
+    'email': 'staff@gov.bc.ca',
+    'identity_provider': 'idir',
+    'client_roles': [
+        'view_all_survey_results'
+    ]
+}
