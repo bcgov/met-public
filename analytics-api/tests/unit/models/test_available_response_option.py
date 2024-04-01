@@ -16,6 +16,7 @@
 
 Test-Suite to ensure that the user response detail endpoint is working as expected.
 """
+from http import HTTPStatus
 from analytics_api.utils.util import ContentType
 from datetime import datetime, timedelta
 from tests.utilities.factory_utils import (
@@ -32,4 +33,4 @@ def test_get_user_responses_by_month(client, session):  # pylint:disable=unused-
     rv = client.get(f'/api/responses/month/{user_response_detail.engagement_id}\
                     ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.json[0].get('responses') == 1
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK

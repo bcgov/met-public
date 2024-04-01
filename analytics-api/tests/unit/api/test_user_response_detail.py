@@ -16,6 +16,7 @@
 
 Test-Suite to ensure that the user response detail endpoint is working as expected.
 """
+import pytest
 from unittest.mock import patch
 from http import HTTPStatus
 
@@ -26,7 +27,8 @@ from tests.utilities.factory_utils import (
     factory_engagement_model, factory_user_response_detail_model, factory_survey_model)
 
 
-def test_get_user_responses_by_month(client, session):  # pylint:disable=unused-argument
+@pytest.mark.parametrize("exception_type", [KeyError, ValueError])
+def test_get_user_responses_by_month(client, exception_type, session):  # pylint:disable=unused-argument
     """Assert that user response detail by month can be fetched."""
     eng = factory_engagement_model()
     survey_data = factory_survey_model(eng)
@@ -39,19 +41,14 @@ def test_get_user_responses_by_month(client, session):  # pylint:disable=unused-
     assert rv.status_code == HTTPStatus.OK
 
     with patch.object(UserResponseDetailService, 'get_response_count_by_created_month',
-                      side_effect=KeyError('Test error')):
-        rv = client.get(f'/api/responses/month/{user_response_detail.engagement_id}\
-                        ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
-
-    with patch.object(UserResponseDetailService, 'get_response_count_by_created_month',
-                      side_effect=ValueError('Test error')):
+                      side_effect=exception_type('Test error')):
         rv = client.get(f'/api/responses/month/{user_response_detail.engagement_id}\
                         ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def test_get_user_responses_by_week(client, session):  # pylint:disable=unused-argument
+@pytest.mark.parametrize("exception_type", [KeyError, ValueError])
+def test_get_user_responses_by_week(client, exception_type, session):  # pylint:disable=unused-argument
     """Assert that user response detail by week can be fetched."""
     eng = factory_engagement_model()
     survey_data = factory_survey_model(eng)
@@ -61,16 +58,10 @@ def test_get_user_responses_by_week(client, session):  # pylint:disable=unused-a
     rv = client.get(f'/api/responses/week/{user_response_detail.engagement_id}\
                     ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.json[0].get('responses') == 1
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     with patch.object(UserResponseDetailService, 'get_response_count_by_created_week',
-                      side_effect=KeyError('Test error')):
-        rv = client.get(f'/api/responses/week/{user_response_detail.engagement_id}\
-                        ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
-
-    with patch.object(UserResponseDetailService, 'get_response_count_by_created_week',
-                      side_effect=ValueError('Test error')):
+                      side_effect=exception_type('Test error')):
         rv = client.get(f'/api/responses/week/{user_response_detail.engagement_id}\
                         ?&from_date={from_date}&to_date={to_date}', content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
