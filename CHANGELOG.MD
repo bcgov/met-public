@@ -8,6 +8,8 @@
 
 - **Bug Fix**: MET - Engagement tab does not revert the filtered out data [DESENG-525](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-525)
   - Resetting search filter values invoke the list to reload
+- **Task**: Add missing unit tests for analytics api [DESENG-482](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-482)
+  - Added unit tests for analytics API models and API end points
 
 ## March 26, 2024
 

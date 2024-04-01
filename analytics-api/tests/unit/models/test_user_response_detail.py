@@ -17,13 +17,15 @@ Test suite to ensure that the User response detail model routines are working as
 """
 
 from analytics_api.models.user_response_detail import UserResponseDetail as UserResponseDetailModel
-from tests.utilities.factory_utils import factory_user_response_detail_model, factory_survey_model
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_survey_model, factory_user_response_detail_model)
 
 
 def test_user_response_detail_by_month(session):
     """Assert that an user response detail data related to an engagement can be fetched by month."""
-    survey_data = factory_survey_model()
-    user_response_detail = factory_user_response_detail_model(survey_data.id)
+    eng = factory_engagement_model()
+    survey = factory_survey_model(eng)
+    user_response_detail = factory_user_response_detail_model(survey.id)
     assert user_response_detail.id is not None
     user_response_detail_by_month = UserResponseDetailModel.get_response_count_by_created_month(
         user_response_detail.engagement_id)
@@ -32,8 +34,9 @@ def test_user_response_detail_by_month(session):
 
 def test_user_response_detail_by_week(session):
     """Assert that an user response detail data related to an engagement can be fetched by week."""
-    survey_data = factory_survey_model()
-    user_response_detail = factory_user_response_detail_model(survey_data.id)
+    eng = factory_engagement_model()
+    survey = factory_survey_model(eng)
+    user_response_detail = factory_user_response_detail_model(survey.id)
     assert user_response_detail.id is not None
     user_response_detail_by_week = UserResponseDetailModel.get_response_count_by_created_week(
         user_response_detail.engagement_id)
