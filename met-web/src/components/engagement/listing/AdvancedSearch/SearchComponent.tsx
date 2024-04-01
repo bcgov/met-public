@@ -94,6 +94,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             publishedFromDate: '',
             publishedToDate: '',
         });
+        // reset the search params to empty also invoke the list to reload
+        setFilterParams({
+            status_list: [],
+            created_from_date: '',
+            created_to_date: '',
+            published_from_date: '',
+            published_to_date: '',
+        });
     };
 
     return (
