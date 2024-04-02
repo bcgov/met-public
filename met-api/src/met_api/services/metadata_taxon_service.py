@@ -46,12 +46,15 @@ class MetadataTaxonService:
                 else:
                     # Just use the preset values
                     values = taxon.preset_values
-                filters.append({
-                    'taxon_id': taxon.id,
-                    'name': taxon.name,
-                    'filter_type': taxon.filter_type,
-                    'values': values
-                })
+                # Don't return the filter if the user has no options; this prevents
+                # the frontend from displaying a useless filter
+                if values:
+                    filters.append({
+                        'taxon_id': taxon.id,
+                        'name': taxon.name,
+                        'filter_type': taxon.filter_type,
+                        'values': values
+                    })
         return MetadataTaxonFilterSchema(many=True).dump(filters)
 
     @staticmethod
