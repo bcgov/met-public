@@ -349,7 +349,7 @@ parameters:
   - name: CSS_API_URL
     description: "CSS API URL"
     required: true
-    value: 'http://example.com'
+    value: ''
   - name: EMAIL_ENVIRONMENT
     description: "Environment from which email is sent"
     value: 'You are using a DEV environment'
@@ -395,7 +395,7 @@ parameters:
   - name: KEYCLOAK_BASE_URL
     description: "Keycloak base url"
     required: true
-    value: 'http://example.com/auth'
+    value: ''
   - name: KEYCLOAK_REALMNAME
     description: "Realm name for the project"
     required: true
@@ -403,11 +403,11 @@ parameters:
   - name: KEYCLOAK_ADMIN_TOKEN_URL
     description: "Keycloak url to get admin token"
     required: true
-    value: 'http://example.com'
+    value: ''
   - name: CDOGS_BASE_URL
     description: "Base url to access CDOGS"
     required: true
-    value: 'http://example.com'
+    value: ''
   - name: CDOGS_SERVICE_CLIENT
     description: "Client for CDOGS Service"
     required: true
@@ -419,7 +419,7 @@ parameters:
   - name: CDOGS_TOKEN_URL
     description: "Token url for CDOGS"
     required: true
-    value: 'http://example.com'
+    value: ''
   - name: EMAIL_SECRET_KEY
     description: "Secret key for email"
     required: true

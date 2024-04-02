@@ -257,7 +257,7 @@ parameters:
   value: 'met-example@gov.bc.ca'
 - name: KEYCLOAK_BASE_URL
   description: "Keycloak base url"
-  value: 'http://example.com/auth'
+  value: ''
 - name: KEYCLOAK_REALMNAME
   description: "Realm name for the project"
   value: 'standard'
