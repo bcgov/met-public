@@ -6,6 +6,14 @@
   - Added a new endpoint to the API to retrieve filterable taxa.
   - Modified the search endpoint to allow filtering by metadata.
   - Added schemas, data validation and unit tests for the new functionality.
+  - Updated the Metadata Management UI to allow taxa to be marked as filterable.
+    - Currently, the only two filter types are `chips_any` and `chips_all`.
+    - `chips_any`: Displays as a series of toggleable buttons ("chips"), uses the `list_match_any` subquery returning engagements with any of the selected values.
+    - `chips_all`: Similar to chips_any; uses the `list_match_all` subquery to get only engagements with ALL of the selected values.
+  - If multiple filterable taxa are selected, all the taxon filters must be met for an engagement to be returned.
+  - Updated the public-facing engagement list to allow filtering by metadata taxa. This makes use of the new API endpoint to retrieve filterable taxa.
+  - Added a new filter "drawer" to the listing page to hold these and any future filter types.
+  - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
 
 ## March 08, 2024
 
