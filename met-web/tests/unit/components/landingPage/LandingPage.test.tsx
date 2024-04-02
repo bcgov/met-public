@@ -189,4 +189,48 @@ describe('Landing page tests', () => {
             });
         });
     });
+
+    test('Filter drawer is opened and closed', async () => {
+        const setDrawerOpenedMock = jest.fn();
+
+        render(
+            <LandingContext.Provider
+                value={{
+                    searchFilters: {
+                        name: '',
+                        status: [],
+                        metadata: [],
+                    },
+                    metadataFilters: [],
+                    clearFilters: jest.fn(),
+                    drawerOpened: false,
+                    setDrawerOpened: setDrawerOpenedMock,
+                    setSearchFilters: jest.fn(),
+                    setPage: jest.fn(),
+                    page: 1,
+                    engagements: [],
+                    loadingEngagements: false,
+                    totalEngagements: 0,
+                }}
+            >
+                <LandingComponent />
+            </LandingContext.Provider>,
+        );
+
+        const filterButton = screen.getByText('Filter');
+        // Open the drawer...
+        fireEvent.click(filterButton);
+
+        await waitFor(() => {
+            expect(setDrawerOpenedMock).toHaveBeenCalledWith(true);
+        });
+
+        const closeButton = screen.getByText('Apply Filters');
+        // Close it again >:)
+        fireEvent.click(closeButton);
+
+        await waitFor(() => {
+            expect(setDrawerOpenedMock).toHaveBeenCalledWith(false);
+        });
+    });
 });
