@@ -93,6 +93,7 @@ const FilterDrawer = () => {
                     EngagementDisplayStatus.Closed,
                 ].map((status) => (
                     <MetadataFilterChip
+                        key={status}
                         name={(EngagementDisplayStatus[status] || 'All') + ' Engagements'}
                         selected={selectedValue == status}
                         onClick={() => {

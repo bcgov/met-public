@@ -29,6 +29,15 @@ import { useForm, SubmitHandler, Controller, FormProvider } from 'react-hook-for
 import { MetHeader3, MetLabel } from 'components/common';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+const HelpTooltip = ({ children }: { children: string | string[] }) => {
+    if (Array.isArray(children)) children = children.join(' ');
+    return (
+        <Tooltip title={children}>
+            <HelpOutline tabIndex={0} color="primary" aria-label={children} />
+        </Tooltip>
+    );
+};
+
 const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
     const { setSelectedTaxonId, updateMetadataTaxon, removeMetadataTaxon } = useContext(ActionContext);
     const dispatch = useAppDispatch();
@@ -74,15 +83,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
     const isFreeform = watch('freeform');
     const isValidFilter = watch('filter_type') !== 'none';
     const presetValues = watch('preset_values');
-
-    const HelpTooltip = ({ children }: { children: string | string[] }) => {
-        if (Array.isArray(children)) children = children.join(' ');
-        return (
-            <Tooltip title={children}>
-                <HelpOutline tabIndex={0} color="primary" aria-label={children} />
-            </Tooltip>
-        );
-    };
 
     const schema = yup.object().shape({
         name: yup.string().required('Name is required').max(64, 'Name is too long! Limit: 64 characters.'),
@@ -354,7 +354,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             <HelpTooltip>
                                 Selecting a filter style allows the public to use this taxon to narrow down which
                                 engagements they want to see. "No filtering" means it will not be publicly shown. For
-                                details on the selected filter, expand and read the blue highlighted {taxon.name || ''}{' '}
+                                details on the selected filter, expand and read the blue highlighted {taxon.name ?? ''}{' '}
                                 card.`
                             </HelpTooltip>
                         </Grid>
@@ -466,7 +466,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             </Then>
                             <Else>
                                 <Tooltip title="Unable to save due to form errors" id="save-button-tooltip">
-                                    <span tabIndex={0}>
+                                    <span>
                                         {/* Span is used to allow disabled elements in a tooltip */}
                                         <Button
                                             variant="contained"

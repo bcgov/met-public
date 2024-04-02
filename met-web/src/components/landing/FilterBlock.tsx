@@ -1,6 +1,4 @@
-// FilterBlock.js
-import React, { useEffect, useRef, useState } from 'react';
-import { useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { LandingContext } from './LandingContext';
 import {
     Button,
@@ -15,11 +13,10 @@ import {
     useTheme,
 } from '@mui/material';
 import { DeletableFilterChip } from './DeletableFilterChip';
-import { Close, Check, HighlightOff, Tune } from '@mui/icons-material';
+import { Close, Check, HighlightOff, Tune, Search } from '@mui/icons-material';
 import { MetadataFilter } from 'components/metadataManagement/types';
 import { MetLabel } from 'components/common';
 import { debounce } from 'lodash';
-import { Search } from '@mui/icons-material';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 
 const FilterBlock = () => {
