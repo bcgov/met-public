@@ -1,3 +1,6 @@
+## April 2, 2024
+- Add contributing guidelines for repository [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
+
 ## March 28, 2024
 
 - **Bug Fix**: Feedback fixes [DESENG-524](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-524)
