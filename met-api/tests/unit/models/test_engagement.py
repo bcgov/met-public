@@ -19,10 +19,12 @@ Test suite to ensure that the Engagement model routines are working as expected.
 from faker import Faker
 
 from met_api.constants.engagement_status import Status
+from met_api.models.engagement_metadata import EngagementMetadata
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.pagination_options import PaginationOptions
-from tests.utilities.factory_utils import factory_engagement_model
+from tests.utilities.factory_utils import factory_engagement_model, factory_metadata_taxon_model
+from tests.utilities.factory_scenarios import TestEngagementInfo
 
 
 fake = Faker()
@@ -155,3 +157,137 @@ def test_get_engagements_paginated_status_search(session):
     )
     assert count == 13
     assert len(result) == 2
+
+
+def test_get_engagements_metadata_match_all(session):
+    """Assert that engagements can be looked up by metadata (match all)."""
+    engagements = [factory_engagement_model({
+        **TestEngagementInfo.engagement1,
+        'tenant_id': 1
+    }) for _ in range(0, 10)]
+    taxon = factory_metadata_taxon_model(1, {
+        'name': 'Category',
+        'description': 'Category description',
+        'data_type': 'text',
+        'position': 1,
+        'freeform': False,
+        'filter_type': 'chips_all',
+    })
+    # give every engagement some random metadata
+    for eng in engagements:
+        eng.metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value=fake.word()))
+
+    # give alternating engagements a value we will search for
+    for eng in range(0, len(engagements), 2):
+        engagements[eng].metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value='test'))
+
+    external_user_id = 123
+    pagination_options = PaginationOptions(
+        page=None, size=None, sort_key='name', sort_order='')
+    scope_options = EngagementScopeOptions(restricted=False)
+    search_options = {
+        'metadata': [{
+            'taxon_id': taxon.id,
+            'filter_type': 'chips_all',
+            'values': ['test']
+        }]
+    }
+
+    def refresh_engagements():
+        return EngagementModel.get_engagements_paginated(
+            external_user_id,
+            pagination_options,
+            scope_options,
+            search_options
+        )
+    # search for metadata
+    _, count = refresh_engagements()
+    assert count == 5
+
+    engagements[1].metadata.append(EngagementMetadata(
+        taxon_id=taxon.id, value='test'))
+    _, count = refresh_engagements()
+    assert count == 6
+
+    search_options['metadata'][0]['values'] = ['test', 'test2']
+    _, count = refresh_engagements()
+    # This should find *all* matching values, so the inclusion of a non-matching
+    # value "test2" should reduce the result to 0
+    assert count == 0
+
+    engagements[0].metadata.append(EngagementMetadata(
+        taxon_id=taxon.id, value='test2'))
+    _, count = refresh_engagements()
+
+    # There should now be a single engagement with both "test" and "test2"
+    assert count == 1
+
+
+def test_get_engagements_metadata_match_any(session):
+    """Assert that engagements can be looked up by metadata (match any)."""
+    engagements = [factory_engagement_model({
+        **TestEngagementInfo.engagement1,
+        'tenant_id': 1
+    }) for _ in range(0, 10)]
+    taxon = factory_metadata_taxon_model(1, {
+        'name': 'Category',
+        'description': 'Category description',
+        'data_type': 'text',
+        'position': 1,
+        'freeform': False,
+        'filter_type': 'chips_any',
+    })
+    # give every engagement some random metadata
+    for eng in engagements:
+        eng.metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value=fake.word()))
+    # give every *other* engagement a value we will search for
+    for eng in range(0, len(engagements), 2):
+        engagements[eng].metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value='test'))
+
+    external_user_id = 123
+    pagination_options = PaginationOptions(
+        page=None,
+        size=None,
+        sort_key='name',
+        sort_order=''
+    )
+    scope_options = EngagementScopeOptions(
+        restricted=False,
+        include_assigned=False,
+        engagement_status_ids=None
+    )
+    search_options = {
+        'metadata': [
+            {
+                'taxon_id': taxon.id,
+                'filter_type': 'chips_any',
+                'values': ['test']
+            }
+        ]
+    }
+
+    def refresh_engagements():
+        return EngagementModel.get_engagements_paginated(
+            external_user_id,
+            pagination_options,
+            scope_options,
+            search_options
+        )
+    # search for metadata
+    _, count = refresh_engagements()
+    assert count == 5
+
+    engagements[1].metadata.append(EngagementMetadata(
+        taxon_id=taxon.id, value='test'))
+    _, count = refresh_engagements()
+    assert count == 6
+
+    search_options['metadata'][0]['values'] = ['test', 'test2']
+    _, count = refresh_engagements()
+    # This should find *any* matching value, so the inclusion of a non-matching
+    # value "test2" should not change the result
+    assert count == 6

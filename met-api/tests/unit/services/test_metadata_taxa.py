@@ -15,10 +15,12 @@
 """Tests for the metadata taxon service."""
 
 from faker import Faker
+from met_api.models import engagement
+from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.services.metadata_taxon_service import MetadataTaxonService
 from met_api.services.engagement_metadata_service import EngagementMetadataService
-from tests.utilities.factory_scenarios import TestEngagementMetadataTaxonInfo
-from tests.utilities.factory_utils import factory_metadata_taxon_model, factory_taxon_requirements
+from tests.utilities.factory_scenarios import TestEngagementInfo, TestEngagementMetadataTaxonInfo
+from tests.utilities.factory_utils import factory_engagement_model, factory_metadata_taxon_model, factory_taxon_requirements
 
 fake = Faker()
 engagement_metadata_service = EngagementMetadataService()
@@ -165,3 +167,66 @@ def test_auto_order_tenant(session):
     for i in range(10):
         # Every number appears once
         assert tenant_taxa[i]['position'] == i + 1
+
+
+def test_get_filters(session):
+    """Assert that taxon filters are correctly retrieved."""
+    tenant, _ = factory_taxon_requirements()
+    taxon_service = MetadataTaxonService()
+    engagement = factory_engagement_model({**TestEngagementInfo.engagement1,
+                                           'tenant_id': tenant.id})
+    # Create multiple taxa...
+    # Unfilterable taxon - this should not appear in the filters
+    taxon1 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.taxon1)
+    # Includes freeform values, filter type is 'chips_all'
+    taxon2 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.filterable_taxon1)
+    # Does not include freeform values, filter type is 'chips_all'
+    taxon3 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.filterable_taxon2)
+    # Does not include freeform values, filter type is 'chips_any'
+    taxon4 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.filterable_taxon3)
+    # Includes freeform values, filter type is 'chips_any'
+    taxon5 = taxon_service.create(
+        tenant.id, TestEngagementMetadataTaxonInfo.filterable_taxon4)
+    # en.wikipedia.org/wiki/Metasyntactic_variable
+    # Create metadata for engagements - these should only appear in the filters
+    # if include_freeform is set on the taxon
+    engagement_metadata_service.create(engagement.id, taxon1['id'], 'foo')
+    engagement_metadata_service.create(engagement.id, taxon2['id'], 'bar')
+    engagement_metadata_service.create(engagement.id, taxon3['id'], 'baz')
+    engagement_metadata_service.create(engagement.id, taxon4['id'], 'qux')
+    engagement_metadata_service.create(engagement.id, taxon5['id'], 'quux')
+    # Preset values - these should appear on filterable taxa no matter what
+    MetadataTaxon.query.get(taxon2['id']).preset_values = ['grault']
+    MetadataTaxon.query.get(taxon3['id']).preset_values = ['garply']
+    MetadataTaxon.query.get(taxon4['id']).preset_values = ['waldo']
+    MetadataTaxon.query.get(taxon5['id']).preset_values = ['fred']
+    # Get filters
+    filters = taxon_service.get_filter_options(tenant.id)
+    assert len(filters) == 4  # out of 5, only 4 should be filterable
+    assert filters[0]['taxon_id'] == taxon2['id']
+    assert filters[0]['name'] == taxon2['name']
+    assert filters[0]['filter_type'] == taxon2['filter_type']
+    assert len(filters[0]['values']) == 2
+    assert 'grault' in filters[0]['values']
+    assert 'bar' in filters[0]['values']
+
+    assert filters[1]['taxon_id'] == taxon3['id']
+    assert filters[1]['name'] == taxon3['name']
+    assert filters[1]['filter_type'] == taxon3['filter_type']
+    assert filters[1]['values'] == ['garply']
+
+    assert filters[2]['taxon_id'] == taxon4['id']
+    assert filters[2]['name'] == taxon4['name']
+    assert filters[2]['filter_type'] == taxon4['filter_type']
+    assert filters[2]['values'] == ['waldo']
+
+    assert filters[3]['taxon_id'] == taxon5['id']
+    assert filters[3]['name'] == taxon5['name']
+    assert filters[3]['filter_type'] == taxon5['filter_type']
+    assert len(filters[3]['values']) == 2
+    assert 'fred' in filters[3]['values']
+    assert 'quux' in filters[3]['values']
