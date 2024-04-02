@@ -1,3 +1,8 @@
+## April 02, 2024
+
+- **Task**: DEV clean up [DESENG-503](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-503)
+  - Updated deployment configurations to add new configs.
+
 ## March 28, 2024
 
 - **Bug Fix**: Feedback fixes [DESENG-524](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-524)

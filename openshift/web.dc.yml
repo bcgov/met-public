@@ -25,13 +25,23 @@ objects:
         "NODE_ENV": "production",
         "REACT_APP_API_URL": "https://${APP}-${ENV}.apps.gold.devops.gov.bc.ca/api/",
         "REACT_APP_ANALYTICS_API_URL": "https://analytics-api-${ENV}.apps.gold.devops.gov.bc.ca/api/",
+        // Formio
+        "REACT_APP_API_PROJECT_URL": "https://formio-${PROJECT}-${ENV}.apps.gold.devops.gov.bc.ca",
+        "REACT_APP_FORM_ID": "",
+        "REACT_APP_FORMIO_JWT_SECRET": "",
+        "REACT_APP_USER_RESOURCE_FORM_ID": "",
+        "REACT_APP_ANONYMOUS_ID": "",
         // Keycloak
-        "REACT_APP_KEYCLOAK_URL": "https://met-oidc.apps.gold.devops.gov.bc.ca/auth",
+        "REACT_APP_KEYCLOAK_URL": "http://example.com/auth",
         "REACT_APP_KEYCLOAK_CLIENT": "${KC_CLIENT}",
         "REACT_APP_KEYCLOAK_REALM": "${KC_REALM}",
-        // Redash
-        "REACT_APP_REDASH_PUBLIC_URL": "https://met-analytics.apps.gold.devops.gov.bc.ca/public/dashboards/<PUBLIC_DASHBOARD_ID>?p_Engagement%20Name=",
-        "REACT_APP_REDASH_COMMENTS_PUBLIC_URL": "https://met-analytics.apps.gold.devops.gov.bc.ca/public/dashboards/<COMMENTS_ASHBOARD_ID>?p_Engagement%20Name=",
+        // App constans
+        "REACT_APP_ENGAGEMENT_PROJECT_TYPES": "",
+
+        // Tenant
+        "REACT_APP_DEFAULT_TENANT": "DEFAULT",
+        "REACT_APP_DEFAULT_LANGUAGE": "en",
+        "REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT": "false",
       }
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -184,12 +194,15 @@ parameters:
   - name: ENV
     description: "The selected environment (dev, test, prod)"
     value: dev
+  - name: PROJECT
+    description: "The selected project"
+    value: 'e903c2'
   - name: KC_CLIENT
     description: "The keycloak client id"
-    value: met-web
+    value: KC_CLIENT
   - name: KC_REALM
     description: "The keycloak realm"
-    value: met
+    value: standard
   - name: IMAGE_TAG
     description: "The image tag to deploy"
     value: latest
