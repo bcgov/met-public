@@ -25,6 +25,7 @@ export interface Engagement {
     submissions_meta_data: SurveySubmissionData;
     status_block: EngagementStatusBlock[];
     is_internal: boolean;
+    consent_message: string;
 }
 
 export interface Status {
@@ -32,22 +33,31 @@ export interface Status {
     status_name: string;
 }
 
+export interface MetadataTaxonModify {
+    name?: string; // The name of the taxon, optional
+    description?: string; // The description of the taxon, optional
+    freeform?: boolean; // Whether the taxon is freeform, optional
+    data_type?: string; // The data type for the taxon, optional
+    one_per_engagement?: boolean; // Whether the taxon is limited to one entry per engagement, optional
+    preset_values?: string[]; // The preset values for the taxon
+}
+
+export interface MetadataTaxon extends MetadataTaxonModify {
+    id: number; // The id of the taxon
+    tenant_id: number; // The tenant id
+    position: number; // The taxon's position within the tenant
+    entries?: EngagementMetadata[]; // The content of the taxon
+}
+
 export interface EngagementMetadata {
-    engagement_id: number;
-    project_id: string;
-    project_metadata: ProjectMetadata;
+    value: string; // The content of the metadata
+    taxon_id: number; // ID of the taxon this metadata is for
+    engagement_id?: number; // The ID of the relevant engagement
 }
 
 export interface EngagementSettings {
     engagement_id: number;
     send_report: boolean;
-}
-
-export interface ProjectMetadata {
-    project_name: string;
-    type: string;
-    client_name: string;
-    application_number: string;
 }
 
 export const createDefaultEngagement = (): Engagement => {
@@ -80,19 +90,7 @@ export const createDefaultEngagement = (): Engagement => {
         },
         status_block: [],
         is_internal: false,
-    };
-};
-
-export const createDefaultEngagementMetadata = (): EngagementMetadata => {
-    return {
-        engagement_id: 0,
-        project_id: '',
-        project_metadata: {
-            client_name: '',
-            type: '',
-            project_name: '',
-            application_number: '',
-        },
+        consent_message: '',
     };
 };
 

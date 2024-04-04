@@ -76,7 +76,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
 
     const getUserDetails = async () => {
         setUserLoading(true);
-        const fetchedUser = await getUser({ user_id: Number(userId), include_groups: true });
+        const fetchedUser = await getUser({ user_id: Number(userId), include_roles: true });
         setSavedUser(fetchedUser);
         setUserLoading(false);
     };

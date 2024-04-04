@@ -9,13 +9,7 @@ The below docker compose command will setup the initial database structure and r
 docker compose -f ./tools/postgres/docker-compose.yml up -d
 ```
 
-## Keycloak 
-
-A local instance of keycloak might be necessary. The following configuration uses the database above, schema "keycloak". Run the following command:
-
-```
-docker compose -f ./tools/keycloak/docker-compose.yml up -d
-```
+⚠️ Note that the following sections assume your working directory is the listed component's root directory (e.g. `met-api`, `met-web`)
 
 ## met-web
 
@@ -51,7 +45,14 @@ Installing the packages:
 make setup
 ```
 
-Starting the app:
+Manually upgrading the database:
+*This wil also create some default data for the app if it does not exist*
+
+```
+make db
+```
+
+Starting the app (automatically upgrades the database):
 
 ```
 make run

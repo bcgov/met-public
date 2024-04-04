@@ -65,13 +65,23 @@ jobs:
       JWT_OIDC_TEST_CLIENT_SECRET: "1111111111"
       JWT_OIDC_TEST_JWKS_CACHE_TIMEOUT: "6000"
 
+
+      KEYCLOAK_ADMIN_CLIENTID: "met-admin"
+      KEYCLOAK_ADMIN_SECRET: "2222222222"
+      KEYCLOAK_AUTH_AUDIENCE: "met-web"
+      KEYCLOAK_AUTH_CLIENT_SECRET: "1111111111"
+      KEYCLOAK_BASE_URL: "http://localhost:8081/auth"
+      KEYCLOAK_REALMNAME: "demo"
+      USE_KEYCLOAK_DOCKER: "YES"
+    
       KEYCLOAK_TEST_ADMIN_CLIENTID: "met-admin"
       KEYCLOAK_TEST_ADMIN_SECRET: "2222222222"
       KEYCLOAK_TEST_AUTH_AUDIENCE: "met-web"
       KEYCLOAK_TEST_AUTH_CLIENT_SECRET: "1111111111"
-      KEYCLOAK_TEST_BASE_URL: "http://localhost:8081"
+      KEYCLOAK_TEST_BASE_URL: "http://localhost:8081/auth"
       KEYCLOAK_TEST_REALMNAME: "demo"
       USE_TEST_KEYCLOAK_DOCKER: "YES"
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
       
     runs-on: ubuntu-20.04
 

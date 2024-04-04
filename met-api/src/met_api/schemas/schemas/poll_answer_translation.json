@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/poll_answer_translation",
+    "type": "object",
+    "title": "The PollAnswerTranslation Schema",
+    "description": "Schema for PollAnswerTranslation POST request validation.",
+    "default": {},
+    "examples": [
+        {
+            "poll_answer_id": 1,
+            "language_id": 2,
+            "answer_text": "Answer in Spanish",
+            "pre_populate": false
+        },
+        {
+            "poll_answer_id": 1,
+            "language_id": 2,
+            "pre_populate": true
+        }
+    ],
+    "required": ["poll_answer_id", "language_id", "answer_text"],
+    "properties": {
+        "poll_answer_id": {
+            "$id": "#/properties/poll_answer_id",
+            "type": "integer",
+            "title": "Poll Answer ID",
+            "description": "The ID of the poll answer being translated."
+        },
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "integer",
+            "title": "Language ID",
+            "description": "The ID of the language in which the poll answer is translated."
+        },
+        "answer_text": {
+            "$id": "#/properties/answer_text",
+            "type": "string",
+            "title": "Answer Text",
+            "description": "The translated text of the poll answer.",
+            "maxLength": 255,
+            "examples": ["Answer in Spanish"]
+        }
+    }
+}

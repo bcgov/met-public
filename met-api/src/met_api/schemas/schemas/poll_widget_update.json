@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/poll_widget_update",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document for a WidgetPoll.",
+  "default": {},
+  "examples": [
+    {
+      "title": "Favorite Programming Language",
+      "description": "A poll to determine the most popular programming language among our users.",
+      "status": "active",
+      "widget_id": 6,
+      "engagement_id": 7,
+      "answers": [
+        {
+          "answer_text": "Python"
+        },
+        {
+          "answer_text": "Java"
+        },
+        {
+          "answer_text": "JavaScript"
+        },
+        {
+          "answer_text": "C#"
+        }
+      ]
+    }
+  ],
+  "required": [],
+  "properties": {
+    "title": {
+      "$id": "#/properties/title",
+      "type": "string",
+      "title": "Poll title",
+      "description": "The title of the poll."
+    },
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "Poll description",
+      "description": "The description of the poll."
+    },
+    "status": {
+      "$id": "#/properties/status",
+      "type": "string",
+      "title": "Poll status",
+      "description": "The status of the poll (e.g., active, closed)."
+    },
+    "widget_id": {
+      "$id": "#/properties/widget_id",
+      "type": "integer",
+      "title": "Widget ID",
+      "description": "The unique identifier for the widget."
+    },
+    "engagement_id": {
+      "$id": "#/properties/engagement_id",
+      "type": "integer",
+      "title": "Engagement ID",
+      "description": "The unique identifier for the engagement."
+    },
+    "answers": {
+      "$id": "#/properties/answers",
+      "type": "array",
+      "title": "Poll answers",
+      "description": "The list of answers for the poll.",
+      "items": {
+        "type": "object",
+        "required": ["answer_text"],
+        "properties": {
+          "answer_text": {
+            "type": "string",
+            "description": "The text of the poll answer."
+          }
+        }
+      }
+    }
+  }
+}

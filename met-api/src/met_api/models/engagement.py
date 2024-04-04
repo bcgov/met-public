@@ -15,7 +15,6 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
-from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
@@ -39,15 +38,16 @@ class Engagement(BaseModel):
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey('engagement_status.id', ondelete='CASCADE'))
+    status = db.relationship('EngagementStatus', backref='engagement')
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
-    content = db.Column(db.Text, unique=False, nullable=False)
-    rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship('Survey', backref='engagement', cascade='all, delete')
     status_block = db.relationship('EngagementStatusBlock', backref='engagement')
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), nullable=True)
+    tenant = db.relationship('Tenant', backref='engagements')
     is_internal = db.Column(db.Boolean, nullable=False)
+    consent_message = db.Column(JSON, unique=False, nullable=True)
 
     @classmethod
     def get_engagements_paginated(
@@ -71,7 +71,8 @@ class Engagement(BaseModel):
 
             query = cls._filter_by_engagement_status(query, search_options)
 
-            query = cls._filter_by_project_metadata(query, search_options)
+            # TODO: Uncomment for metadata changes coming soon.
+            # query = cls._filter_by_project_metadata(query, search_options)
 
         query = cls._filter_by_internal(query, search_options)
 
@@ -120,9 +121,8 @@ class Engagement(BaseModel):
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
-            content=engagement.get('content', None),
-            rich_content=engagement.get('rich_content', None),
             is_internal=engagement.get('is_internal', record.is_internal),
+            consent_message=engagement.get('consent_message', record.consent_message),
         )
         query.update(update_fields)
         db.session.commit()
@@ -171,8 +171,8 @@ class Engagement(BaseModel):
     @classmethod
     def publish_scheduled_engagements_due(cls) -> List[Engagement]:
         """Update scheduled engagements to published."""
-        datetime_due = datetime.now()
-        print('Publish due date ------------------------', datetime_due)
+        datetime_due = datetime.utcnow()
+        print('Publish due date (UTC) ------------------------', datetime_due)
         update_fields = dict(
             status_id=Status.Published.value,
             published_date=datetime.utcnow(),
@@ -259,34 +259,11 @@ class Engagement(BaseModel):
                 query = query.filter(Engagement.is_internal.is_(False))
         return query
 
-    @staticmethod
-    def _filter_by_project_metadata(query, search_options):
-        query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
-
-        if project_type := search_options.get('project_type'):
-            query = query.filter(EngagementMetadataModel.project_metadata['type'].astext.ilike(f'%{project_type}%')) \
-                .params(val=project_type)
-
-        if project_name := search_options.get('project_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['project_name']
-                                 .astext.ilike(f'%{project_name}%')) \
-                .params(val=project_name)
-
-        if project_id := search_options.get('project_id'):
-            query = query.filter(EngagementMetadataModel.project_id == project_id) \
-                .params(val=project_id)
-
-        if application_number := search_options.get('application_number'):
-            query = query.filter(EngagementMetadataModel.project_metadata['application_number']
-                                 .astext.ilike(f'%{application_number}%')) \
-                .params(val=application_number)
-
-        if client_name := search_options.get('client_name'):
-            query = query.filter(EngagementMetadataModel.project_metadata['client_name']
-                                 .astext.ilike(f'%{client_name}%')) \
-                .params(val=client_name)
-
-        return query
+    # TODO: Populate or remove this method dependent on changes resulting from adding the new Engagement metadata
+    # @staticmethod
+    # def _filter_by_project_metadata(query, search_options):
+    #     query = query.outerjoin(EngagementMetadataModel, EngagementMetadataModel.engagement_id == Engagement.id)
+    #     return query
 
     @staticmethod
     def _filter_by_assigned_engagements(query, external_user_id: int, exception_status_ids: Optional[list[int]] = None):

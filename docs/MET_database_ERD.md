@@ -130,6 +130,33 @@ erDiagram
         string updated_by
     }
     widget only one to zero or more widget_video : has 
+    widget_timeline {
+        integer id PK
+        integer widget_id FK "The id from widget"
+        integer engagement_id FK "The id from engagement"
+        string title
+        string description
+        timestamp created_date
+        timestamp updated_date        
+        string created_by
+        string updated_by
+    }
+    widget only one to zero or more widget_timeline : has 
+    timeline_event {
+        integer id PK
+        integer widget_id FK "The id from widget"
+        integer engagement_id FK "The id from engagement"
+        integer timeline_id FK "The id from timeline"
+        string description
+        string time
+        enum status
+        integer position
+        timestamp created_date
+        timestamp updated_date        
+        string created_by
+        string updated_by
+    }
+    widget only one to zero or more timeline_event : has 
     widget_documents {
         integer id PK
         string title
@@ -286,6 +313,7 @@ erDiagram
         type rating
         type comment_type
         string comment
+        string submission_path
         type source
         timestamp created_date
         timestamp updated_date        

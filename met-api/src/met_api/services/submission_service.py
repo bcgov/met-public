@@ -17,7 +17,7 @@ from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.comment import Comment
 from met_api.models.comment_status import CommentStatus
-from met_api.models.db import session_scope
+from met_api.models.db import db, transactional
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.participant import Participant as ParticipantModel
@@ -32,7 +32,6 @@ from met_api.services.survey_service import SurveyService
 from met_api.utils import notification
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
-from met_api.config import get_gc_notify_config
 
 
 class SubmissionService:
@@ -74,6 +73,7 @@ class SubmissionService:
         return PublicSubmissionSchema().dump(submission)
 
     @classmethod
+    @transactional()
     def create(cls, token, submission: SubmissionSchema):
         """Create submission."""
         cls._validate_fields(submission)
@@ -84,26 +84,24 @@ class SubmissionService:
         if SubmissionService.is_unpublished(engagement_id):
             return {}
 
-        # Creates a scoped session that will be committed when diposed or rolledback if a exception occurs
-        with session_scope() as session:
-            email_verification = EmailVerificationService().verify(
-                token, survey_id, None, session)
-            participant_id = email_verification.get('participant_id')
-            submission['participant_id'] = participant_id
-            submission['created_by'] = participant_id
-            submission['engagement_id'] = engagement_id
+        email_verification = EmailVerificationService().verify(
+            token, survey_id, None, db.session)
+        participant_id = email_verification.get('participant_id')
+        submission['participant_id'] = participant_id
+        submission['created_by'] = participant_id
+        submission['engagement_id'] = engagement_id
 
-            submission_result = SubmissionModel.create(submission, session)
-            submission['id'] = submission_result.id
-            comments = CommentService.extract_comments_from_survey(
-                submission, survey)
-            CommentService().create_comments(comments, session)
+        submission_result = SubmissionModel.create(submission, db.session)
+        submission['id'] = submission_result.id
+        comments = CommentService.extract_comments_from_survey(
+            submission, survey)
+        CommentService().create_comments(comments, db.session)
 
-            engagement_settings: EngagementSettingsModel =\
-                EngagementSettingsModel.find_by_id(engagement_id)
-            if engagement_settings:
-                if engagement_settings.send_report:
-                    SubmissionService._send_submission_response_email(participant_id, engagement_id)
+        engagement_settings: EngagementSettingsModel =\
+            EngagementSettingsModel.find_by_id(engagement_id)
+        if engagement_settings:
+            if engagement_settings.send_report:
+                SubmissionService._send_submission_response_email(participant_id, engagement_id)
         return submission_result
 
     @classmethod
@@ -124,14 +122,12 @@ class SubmissionService:
             return {}
 
         submission.comment_status_id = Status.Pending
-
-        with session_scope() as session:
-            EmailVerificationService().verify(
-                token, submission.survey_id, submission.id, session)
-            comments_result = [Comment.update(
-                submission.id, comment, session) for comment in data.get('comments', [])]
-            SubmissionModel.update(SubmissionSchema().dump(submission), session)
-            return comments_result
+        EmailVerificationService().verify(
+            token, submission.survey_id, submission.id, db.session)
+        comments_result = [Comment.update(submission.id, comment, db.session)
+                           for comment in data.get('comments', [])]
+        SubmissionModel.update(SubmissionSchema().dump(submission), db.session)
+        return comments_result
 
     @staticmethod
     def _validate_fields(submission):
@@ -148,6 +144,7 @@ class SubmissionService:
             raise ValueError('Engagement not open to submissions')
 
     @classmethod
+    @transactional()
     def review_comment(cls, submission_id, staff_review_details: dict, external_user_id) -> SubmissionSchema:
         """Review comment."""
         user = StaffUserService.get_user_by_external_id(external_user_id)
@@ -159,22 +156,19 @@ class SubmissionService:
 
         staff_review_details['reviewed_by'] = reviewed_by
         staff_review_details['user_id'] = user.get('id')
+        should_send_email = SubmissionService._should_send_email(
+            submission_id, staff_review_details, submission.engagement_id)
+        submission = SubmissionModel.update_comment_status(
+            submission_id, staff_review_details, db.session)
+        if staff_notes := staff_review_details.get('staff_note', []):
+            cls.add_or_update_staff_note(
+                submission.survey_id, submission_id, staff_notes)
 
-        with session_scope() as session:
-            should_send_email = SubmissionService._should_send_email(
-                submission_id, staff_review_details, submission.engagement_id)
-            submission = SubmissionModel.update_comment_status(
-                submission_id, staff_review_details, session)
-            if staff_notes := staff_review_details.get('staff_note', []):
-                cls.add_or_update_staff_note(
-                    submission.survey_id, submission_id, staff_notes)
-
-            if should_send_email:
-                rejection_review_note = StaffNote.get_staff_note_by_type(
-                    submission_id, StaffNoteType.Review.name)
-                SubmissionService._trigger_email(
-                    rejection_review_note[0].note, session, staff_review_details, submission)
-        session.commit()
+        if should_send_email:
+            rejection_review_note = StaffNote.get_staff_note_by_type(
+                submission_id, StaffNoteType.Review.name)
+            SubmissionService._trigger_email(
+                rejection_review_note[0].note, db.session, staff_review_details, submission)
         return SubmissionSchema().dump(submission)
 
     @staticmethod
@@ -329,8 +323,7 @@ class SubmissionService:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
-        template_id = get_gc_notify_config('REJECTED_EMAIL_TEMPLATE_ID')
-        subject, body, args = SubmissionService._render_email_template(
+        template_id, subject, body, args = SubmissionService._render_email_template(
             staff_review_details, submission, review_note, token)
         try:
             notification.send_email(subject=subject,
@@ -349,22 +342,33 @@ class SubmissionService:
     @staticmethod
     # pylint: disable-msg=too-many-locals
     def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token):
-        template = Template.get_template('email_rejected_comment.html')
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
-        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
+        templates = current_app.config['EMAIL_TEMPLATES']
+        paths = current_app.config['PATH_CONFIG']
         engagement_name = engagement.name
+        templates = current_app.config.get('EMAIL_TEMPLATES')
+        if engagement.status_id == EngagementStatus.Closed.value:
+            template_id = templates['CLOSED_ENGAGEMENT_REJECTED']['ID']
+            template = Template.get_template('email_rejected_comment_closed.html')
+            subject = templates['CLOSED_ENGAGEMENT_REJECTED']['SUBJECT']. \
+                format(engagement_name=engagement_name)
+        else:
+            template_id = templates['REJECTED']['ID']
+            template = Template.get_template('email_rejected_comment.html')
+            subject = templates['REJECTED']['SUBJECT']. \
+                format(engagement_name=engagement_name)
+        survey: SurveyModel = SurveyModel.find_by_id(submission.survey_id)
         survey_name = survey.name
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
-        submission_path = current_app.config.get('SUBMISSION_PATH'). \
-            format(engagement_id=submission.engagement_id,
-                   submission_id=submission.id, token=token)
+        submission_path = paths['SUBMISSION'].format(
+            engagement_id=submission.engagement_id,
+            submission_id=submission.id, token=token
+        )
         submission_url = notification.get_tenant_site_url(
             engagement.tenant_id, submission_path)
-        subject = get_gc_notify_config('REJECTED_EMAIL_SUBJECT'). \
-            format(engagement_name=engagement_name)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        email_environment = templates['ENVIRONMENT']
         args = {
             'engagement_name': engagement_name,
             'survey_name': survey_name,
@@ -389,13 +393,14 @@ class SubmissionService:
             end_date=args.get('end_date'),
             email_environment=args.get('email_environment'),
         )
-        return subject, body, args
+        return template_id, subject, body, args
 
     @staticmethod
     def _send_submission_response_email(participant_id, engagement_id) -> None:
         """Send response to survey submission."""
         participant = ParticipantModel.find_by_id(participant_id)
-        template_id = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        template_id = templates['SUBMISSION_RESPONSE']['ID']
         subject, body, args = SubmissionService._render_submission_response_email_template(engagement_id)
         try:
             notification.send_email(subject=subject,
@@ -414,16 +419,17 @@ class SubmissionService:
     @staticmethod
     def _render_submission_response_email_template(engagement_id):
         engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        templates = current_app.config['EMAIL_TEMPLATES']
         template = Template.get_template('submission_response.html')
-        subject = get_gc_notify_config('SUBMISSION_RESPONSE_EMAIL_SUBJECT')
+        subject = templates['SUBMISSION_RESPONSE']['SUBJECT']
         dashboard_path = SubmissionService._get_dashboard_path(engagement)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        email_environment = templates['ENVIRONMENT']
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
         args = {
             'engagement_url': engagement_url,
-            'engagement_time': get_gc_notify_config('ENGAGEMENT_END_TIME'),
+            'engagement_time': templates['CLOSING_TIME'],
             'engagement_end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'tenant_name': tenant_name,
             'email_environment': email_environment,
@@ -440,11 +446,14 @@ class SubmissionService:
     @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
-            return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH_SLUG'). \
-                format(slug=engagement_slug.slug)
-        return current_app.config.get('ENGAGEMENT_DASHBOARD_PATH'). \
-            format(engagement_id=engagement.id)
+            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(
+                slug=engagement_slug.slug
+            )
+        return paths['ENGAGEMENT']['DASHBOARD'].format(
+            engagement_id=engagement.id
+        )
 
     @staticmethod
     def is_unpublished(engagement_id):

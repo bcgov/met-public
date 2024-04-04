@@ -14,9 +14,9 @@
 """User Context to hold request scoped variables."""
 
 import functools
-from typing import Dict
+from typing import Dict, List
 
-from flask import g, request
+from flask import current_app, g, request
 
 from met_api.utils.constants import TENANT_ID_JWT_CLAIM
 from met_api.utils.roles import Role
@@ -39,7 +39,7 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
         self._last_name: str = token_info.get('lastname', None)
         self._tenant_id: str = token_info.get(TENANT_ID_JWT_CLAIM, None)
         self._bearer_token: str = _get_token()
-        self._roles: list = token_info.get('realm_access', None).get('roles', []) if 'realm_access' in token_info \
+        self._roles: list = current_app.config['JWT_ROLE_CALLBACK'](token_info) if 'client_roles' in token_info \
             else []
         self._sub: str = token_info.get('sub', None)
         self._name: str = f"{token_info.get('firstname', None)} {token_info.get('lastname', None)}"
@@ -82,6 +82,10 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
     def has_role(self, role_name: str) -> bool:
         """Return True if the user has the role."""
         return role_name in self._roles
+
+    def has_roles(self, role_names: List[str]) -> bool:
+        """Return True if the user has some of the roles."""
+        return bool(set(self._roles) & set(role_names))
 
     def is_staff_admin(self) -> bool:
         """Return True if the user is staff user."""

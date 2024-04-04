@@ -92,9 +92,13 @@ export const EngagementView = () => {
                                 <Grid data-testid={'engagement-content'} item xs={12}>
                                     <EngagementContent />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <SurveyBlock startSurvey={handleStartSurvey} />
-                                </Grid>
+                                <If condition={surveyId !== ''}>
+                                    <Then>
+                                        <Grid item xs={12}>
+                                            <SurveyBlock startSurvey={handleStartSurvey} />
+                                        </Grid>
+                                    </Then>
+                                </If>
                             </Grid>
                             <Grid item data-testid={'widget-block'} xs={12} lg={4}>
                                 <WidgetBlock />
@@ -107,9 +111,13 @@ export const EngagementView = () => {
                             <Grid item data-testid={'widget-block'} xs={12}>
                                 <WidgetBlock />
                             </Grid>
-                            <Grid item xs={12}>
-                                <SurveyBlock startSurvey={handleStartSurvey} />
-                            </Grid>
+                            <If condition={surveyId !== ''}>
+                                <Then>
+                                    <Grid item xs={12}>
+                                        <SurveyBlock startSurvey={handleStartSurvey} />
+                                    </Grid>
+                                </Then>
+                            </If>
                         </Else>
                     </If>
                 </Grid>

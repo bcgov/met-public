@@ -13,11 +13,7 @@ on:
       environment:
         description: "Environment (dev/test/prod)"
         required: true
-        default: "dev"
-      project_type:
-        description: "Project Type (EAO/GDX)"
-        required: false
-        default: "EAO" # Default value is EAO    
+        default: "dev"  
 
 defaults:
   run:
@@ -28,14 +24,12 @@ env:
   APP_NAME: "dagster-etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
   TAG_NAME: "dev"
-  
-  PROJECT_TYPE: "${{ github.event.inputs.project_type || 'EAO' }}" # If the project type is manually selected, use the input value; otherwise, use 'EAO' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
-  OPENSHIFT_SA_TOKEN: ${{ github.event.inputs.project_type == 'GDX' && secrets.OPENSHIFT_SA_TOKEN || secrets.OPENSHIFT_SA_TOKEN_EAO }}
-  OPENSHIFT_SA_NAME: ${{ github.event.inputs.project_type == 'GDX' && secrets.OPENSHIFT_SA_NAME || secrets.OPENSHIFT_SA_NAME_EAO }}
-  OPENSHIFT_IMAGE_REGISTRY: ${{ github.event.inputs.project_type == 'GDX' && secrets.OPENSHIFT_IMAGE_REGISTRY || secrets.OPENSHIFT_IMAGE_REGISTRY_EAO }}
-  OPENSHIFT_REPOSITORY: ${{ github.event.inputs.project_type == 'GDX' && secrets.OPENSHIFT_REPOSITORY || secrets.OPENSHIFT_REPOSITORY_EAO }}
+  OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}
+  OPENSHIFT_SA_NAME: ${{ secrets.OPENSHIFT_SA_NAME }}
+  OPENSHIFT_IMAGE_REGISTRY: ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}
+  OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
   met-cron-cd:

@@ -10,7 +10,9 @@ import Phases from './Phases';
 import EventsForm from './Events';
 import MapForm from './Map';
 import VideoForm from './Video';
+import TimelineForm from './Timeline';
 import SubscribeForm from './Subscribe';
+import PollForm from './Poll';
 
 const WidgetDrawerTabs = () => {
     const { widgetDrawerTabValue } = useContext(WidgetDrawerContext);
@@ -40,6 +42,12 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.VIDEO_FORM}>
                     <VideoForm />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.TIMELINE_FORM}>
+                    <TimelineForm />
+                </TabPanel>
+                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.POLL_FORM}>
+                    <PollForm />
                 </TabPanel>
             </TabContext>
         </>

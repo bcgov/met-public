@@ -24,7 +24,7 @@ interface PhaseBoxProps {
 }
 export const PhaseBoxMobile = ({
     title,
-    backgroundColor = 'white',
+    backgroundColor = 'var(--bcds-surface-background-white)',
     learnMoreBox,
     iconBox,
     accordionBackground,

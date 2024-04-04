@@ -7,10 +7,6 @@ on:
         description: "Environment (test/prod)"
         required: true
         default: "test"
-      project_type:
-        description: "Project Type (EAO/GDX)"
-        required: false
-        default: "GDX" # Default value is GDX 
 
 defaults:
   run:
@@ -19,12 +15,10 @@ defaults:
 
 env:
   TAG_NAME: "${{ github.event.inputs.environment || 'test' }}" # If the environment type is manually selected, use the input value; otherwise, use 'test' as default
-  PROJECT_TYPE: "${{ github.event.inputs.project_type || 'GDX' }}" # If the project type is manually selected, use the input value; otherwise, use 'GDX' as default
 
- # Set OpenShift related variables based on PROJECT_TYPE
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
-  OPENSHIFT_SA_TOKEN: ${{ (github.event.inputs.project_type == 'EAO') && secrets.OPENSHIFT_SA_TOKEN_EAO || secrets.OPENSHIFT_SA_TOKEN }}
-  OPENSHIFT_REPOSITORY: ${{ (github.event.inputs.project_type == 'EAO') && secrets.OPENSHIFT_REPOSITORY_EAO || secrets.OPENSHIFT_REPOSITORY }}
+  OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}
+  OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
   met-deployment:

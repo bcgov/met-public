@@ -17,7 +17,7 @@
 A simple decorator to check the subscription for a user.
 """
 from met_api.constants.subscription_type import SubscriptionType
-from met_api.models.engagement_metadata import EngagementMetadataModel
+# from met_api.models.engagement_metadata import EngagementMetadataModel
 
 class CheckSubscription:
     """Template helper class."""
@@ -34,8 +34,11 @@ class CheckSubscription:
         if subscriber.type == SubscriptionType.TENANT.value:
             return True
         elif subscriber.type == SubscriptionType.PROJECT.value:
-            engagement_metadata: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
-            if subscriber.project_id == engagement_metadata.project_id:
+            # TODO should be re-visited once the engagement metadata functionality of completed
+            # engagement_metadata: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
+            # if subscriber.project_id == engagement_metadata.project_id:
+            #     return True
+            if subscriber.engagement_id == engagement_id:
                 return True
         elif subscriber.type == SubscriptionType.ENGAGEMENT.value:
             if subscriber.engagement_id == engagement_id:

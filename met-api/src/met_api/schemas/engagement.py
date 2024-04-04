@@ -38,8 +38,6 @@ class EngagementSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     published_date = fields.Str(data_key='published_date')
     scheduled_date = fields.Str(data_key='scheduled_date')
-    content = fields.Str(data_key='content')
-    rich_content = fields.Str(data_key='rich_content')
     banner_filename = fields.Str(data_key='banner_filename')
     engagement_status = fields.Nested(EngagementStatusSchema)
     surveys = fields.List(fields.Nested(EngagementSurveySchema))
@@ -48,6 +46,7 @@ class EngagementSchema(Schema):
     status_block = fields.List(fields.Nested(EngagementStatusBlockSchema))
     tenant_id = fields.Str(data_key='tenant_id')
     is_internal = fields.Bool(data_key='is_internal')
+    consent_message = fields.Str(data_key='consent_message')
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

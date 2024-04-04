@@ -90,11 +90,6 @@ class Engagements(Resource):
                 'created_to_date': args.get('created_to_date', None, type=str),
                 'published_from_date': args.get('published_from_date', None, type=str),
                 'published_to_date': args.get('published_to_date', None, type=str),
-                'project_type': args.get('project_type', None, type=str),
-                'project_id': args.get('project_id', None, type=str),
-                'project_name': args.get('project_name', None, type=str),
-                'application_number': args.get('application_number', None, type=str),
-                'client_name': args.get('client_name', None, type=str),
                 'exclude_internal': exclude_internal,
                 # the membership changing pages sometimes needs only engagement where user can add a member.
                 # pass this has_team_access to restrict searches only within engagements he has access on.

@@ -97,7 +97,9 @@ describe('Phases widget tests', () => {
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
     const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([phasesWidget]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
     jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),

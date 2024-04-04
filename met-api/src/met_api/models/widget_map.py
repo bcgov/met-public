@@ -34,7 +34,7 @@ class WidgetMap(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     @classmethod
     def update_map(cls, widget_id, map_data: dict) -> WidgetMap:
         """Update map."""
-        query = WidgetMap.query.filter_by(WidgetMap.widget_id == widget_id)
+        query = WidgetMap.query.filter_by(widget_id=widget_id)
         widget_map: WidgetMap = query.first()
         if not widget_map:
             return map_data

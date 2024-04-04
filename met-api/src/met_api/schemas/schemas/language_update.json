@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/language_update",
+    "type": "object",
+    "title": "The Language Schema",
+    "description": "Schema for Language PATCH request validation.",
+    "default": {},
+    "examples": [
+      {
+        "name": "Spanish",
+        "code": "es",
+        "right_to_left": false
+      }
+    ],
+    "required": [],
+    "properties": {
+      "name": {
+        "$id": "#/properties/name",
+        "type": "string",
+        "title": "Language Name",
+        "description": "The name of the language.",
+        "examples": ["Spanish"]
+      },
+      "code": {
+        "$id": "#/properties/code",
+        "type": "string",
+        "title": "Language Code",
+        "description": "The two-letter code of the language.",
+        "examples": ["es"]
+      },
+      "right_to_left": {
+        "$id": "#/properties/right_to_left",
+        "type": "boolean",
+        "title": "Right to Left",
+        "description": "Indicates if the language is written from right to left.",
+        "examples": [false]
+      }
+    }
+  }
+  

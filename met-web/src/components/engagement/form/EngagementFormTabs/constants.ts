@@ -1,10 +1,11 @@
-export type EngagementFormTabValues = 'details' | 'settings' | 'User Management' | 'links';
+export type EngagementFormTabValues = 'content' | 'settings' | 'User Management' | 'additional' | 'results';
 
 export const ENGAGEMENT_FORM_TABS: { [x: string]: EngagementFormTabValues } = {
-    DETAILS: 'details',
-    SETTINGS: 'settings',
+    CONTENT: 'content',
+    ADDITIONAL: 'additional',
     USER_MANAGEMENT: 'User Management',
-    LINKS: 'links',
+    SETTINGS: 'settings',
+    RESULTS: 'results',
 };
 
 export const ENGAGEMENT_UPLOADER_HEIGHT = '360px';

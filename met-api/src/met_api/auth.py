@@ -18,19 +18,30 @@ from flask import g, request
 from flask_jwt_oidc import JwtManager
 from flask_jwt_oidc.exceptions import AuthError
 
-jwt = (
-    JwtManager()
-)  # pylint: disable=invalid-name; lower case name as used by convention in most Flask apps
+from met_api.utils.constants import TENANT_ID_HEADER
+
+auth_methods = {  # for swagger documentation
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    },
+    'tenant': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': TENANT_ID_HEADER
+    }
+}
 
 
-class Auth:  # pylint: disable=too-few-public-methods
-    """Extending JwtManager to include additional functionalities."""
+class Auth(JwtManager):  # pylint: disable=too-few-public-methods
+    """Extends the JwtManager to include additional functionalities."""
 
     @classmethod
     def require(cls, f):
         """Validate the Bearer Token."""
 
-        @jwt.requires_auth
+        @auth.requires_auth
         @wraps(f)
         def decorated(*args, **kwargs):
             g.authorization_header = request.headers.get('Authorization', None)
@@ -49,7 +60,8 @@ class Auth:  # pylint: disable=too-few-public-methods
                 token = jwt.get_token_auth_header()
                 # pylint: disable=protected-access
                 jwt._validate_token(token)
-                g.authorization_header = request.headers.get('Authorization', None)
+                g.authorization_header = request.headers.get(
+                    'Authorization', None)
                 g.token_info = g.jwt_oidc_token_info
             except AuthError:
                 g.authorization_header = None
@@ -59,6 +71,6 @@ class Auth:  # pylint: disable=too-few-public-methods
         return decorated
 
 
-auth = (
+jwt = auth = (
     Auth()
 )

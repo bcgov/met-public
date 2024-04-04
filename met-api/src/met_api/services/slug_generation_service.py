@@ -1,6 +1,6 @@
 """Service for generating slugs."""
 from slugify import UniqueSlugify
-from met_api.config import _Config
+from met_api.config import Config
 
 
 class SlugGenerationService:
@@ -19,6 +19,6 @@ class SlugGenerationService:
         """Create and return a unique slugify."""
         slugify = UniqueSlugify(
             to_lower=True,  # NOSONAR # to_lower is a valid paramter for awesome-slugify
-            max_length=_Config.SLUG_MAX_CHARACTERS
+            max_length=Config.SLUG_MAX_CHARACTERS,
         )
         return slugify

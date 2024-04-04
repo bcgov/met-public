@@ -113,7 +113,9 @@ describe('Document widget in engagement page tests', () => {
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
     jest.spyOn(documentService, 'fetchDocuments').mockReturnValue(Promise.resolve([mockFolder]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
     jest.spyOn(membershipService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),

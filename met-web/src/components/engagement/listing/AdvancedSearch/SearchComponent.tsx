@@ -6,9 +6,6 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Select,
-    SelectChangeEvent,
-    MenuItem,
     FormControl,
     useMediaQuery,
     Theme,
@@ -19,14 +16,12 @@ import { PrimaryButton, SecondaryButton } from '../../../common';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
-import { AppConfig } from 'config';
 
 interface filterParams {
     setFilterParams: (newsearchOptions: SearchOptions) => void;
 }
 
 const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
-    const { engagementProjectTypes } = AppConfig.constants;
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const initialStatusFilters = {
@@ -39,32 +34,12 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
     const [statusFilters, setStatusFilters] = useState(initialStatusFilters);
 
-    const initialFilterParams = {
-        status_list: [],
-        project_name: '',
-        project_id: '',
-        application_number: '',
-        client_name: '',
-        project_type: '',
-        created_from_date: '',
-        created_to_date: '',
-        published_from_date: '',
-        published_to_date: '',
-    };
     const handleStatusFilterChange = (event: React.SyntheticEvent) => {
         setStatusFilters({
             ...statusFilters,
             [(event.target as HTMLInputElement).name]: (event.target as HTMLInputElement).checked,
         });
     };
-
-    const [projectFilter, setProjectFilter] = useState({
-        projectType: '',
-        projectId: '',
-        projectName: '',
-        clientName: '',
-        applicationNumber: '',
-    });
 
     const [dateFilter, setDateFilter] = useState({
         createdFromDate: '',
@@ -74,20 +49,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     });
     const { createdFromDate, createdToDate, publishedFromDate, publishedToDate } = dateFilter;
 
-    const { projectType, projectId, projectName, clientName, applicationNumber } = projectFilter;
-
     const handleDateFilterChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setDateFilter({
             ...dateFilter,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleProjectDataChange = (
-        e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement> | SelectChangeEvent,
-    ) => {
-        setProjectFilter({
-            ...projectFilter,
             [e.target.name]: e.target.value,
         });
     };
@@ -107,11 +71,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         const fPublishedToDate = publishedToDate
             ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
             : publishedToDate;
-        const fProjectType = projectType ? projectType : '';
-        const fprojectId = projectId ? projectId : '';
-        const fProjectName = projectName ? projectName : '';
-        const fClientName = clientName ? clientName : '';
-        const fAppNumber = applicationNumber ? applicationNumber : '';
 
         const selectedStatusList = Object.entries(statusFilters)
             .filter(([, value]) => value)
@@ -123,24 +82,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             created_to_date: fCreatedToDate,
             published_from_date: fPublishedFromDate,
             published_to_date: fPublishedToDate,
-            project_type: fProjectType,
-            project_id: fprojectId,
-            project_name: fProjectName,
-            client_name: fClientName,
-            application_number: fAppNumber,
         });
     };
 
     const handleResetSearchFilters = () => {
         setStatusFilters(initialStatusFilters);
-
-        setProjectFilter({
-            projectType: '',
-            projectId: '',
-            projectName: '',
-            clientName: '',
-            applicationNumber: '',
-        });
 
         setDateFilter({
             createdFromDate: '',
@@ -148,8 +94,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
             publishedFromDate: '',
             publishedToDate: '',
         });
-
-        setFilterParams(initialFilterParams);
+        // reset the search params to empty also invoke the list to reload
+        setFilterParams({
+            status_list: [],
+            created_from_date: '',
+            created_to_date: '',
+            published_from_date: '',
+            published_to_date: '',
+        });
     };
 
     return (
@@ -283,100 +235,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                 spacing={2}
                 rowSpacing={4}
             >
-                <Grid container item xs={12} md={6} xl={3} spacing={2}>
-                    <Grid item xs={12}>
-                        <MetLabel>Project Name</MetLabel>
-                        <TextField
-                            id="project-name"
-                            data-testid="project-name"
-                            type="project_name"
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            name="projectName"
-                            value={projectName}
-                            onChange={handleProjectDataChange}
-                            InputProps={{ inputProps: { max: projectName || null } }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <MetLabel>Project #</MetLabel>
-                        <TextField
-                            id="project_id"
-                            data-testid="project_id"
-                            type="project_id"
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            name="projectId"
-                            value={projectId}
-                            onChange={handleProjectDataChange}
-                            InputProps={{ inputProps: { max: projectId || null } }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <MetLabel>Application #</MetLabel>
-                        <TextField
-                            id="application_number"
-                            data-testid="application_number"
-                            type="application_number"
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            name="applicationNumber"
-                            value={applicationNumber}
-                            onChange={handleProjectDataChange}
-                            InputProps={{ inputProps: { max: applicationNumber || null } }}
-                            fullWidth
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container item xs={12} md={6} xl={3} spacing={2}>
-                    <Grid item xs={12}>
-                        <MetLabel>Proponent</MetLabel>
-                        <TextField
-                            id="client_name"
-                            data-testid="client_name"
-                            type="clientName"
-                            label=" "
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            name="clientName"
-                            value={clientName}
-                            onChange={handleProjectDataChange}
-                            InputProps={{ inputProps: { min: clientName || null } }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <MetLabel>Project Type</MetLabel>
-                        <Select
-                            id="project-type"
-                            name="projectType"
-                            variant="outlined"
-                            label=" "
-                            defaultValue=""
-                            value={projectType}
-                            onChange={handleProjectDataChange}
-                            fullWidth
-                            size="small"
-                        >
-                            <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                none
-                            </MenuItem>
-                            {engagementProjectTypes.map((type: string) => {
-                                return (
-                                    <MenuItem key={type} value={type}>
-                                        {type}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                    </Grid>
-                </Grid>
                 <Grid
                     item
                     xs={12}

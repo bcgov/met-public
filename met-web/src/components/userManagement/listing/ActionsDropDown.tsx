@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
-import { User, USER_GROUP, USER_STATUS } from 'models/user';
+import { User, USER_COMPOSITE_ROLE, USER_STATUS } from 'models/user';
 import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
 import { useAppSelector } from 'hooks';
@@ -18,21 +18,21 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
     const { roles, userDetail } = useAppSelector((state) => state.user);
 
     const hasNoRole = (): boolean => {
-        if (selectedUser.main_group) {
+        if (selectedUser.main_role) {
             return false;
         }
         return true;
     };
 
     const isAdmin = (): boolean => {
-        if (selectedUser?.main_group == USER_GROUP.ADMIN.label) {
+        if (selectedUser?.main_role == USER_COMPOSITE_ROLE.ADMIN.label) {
             return true;
         }
         return false;
     };
 
     const isViewer = (): boolean => {
-        if (selectedUser?.main_group == USER_GROUP.VIEWER.label) {
+        if (selectedUser?.main_role == USER_COMPOSITE_ROLE.VIEWER.label) {
             return true;
         }
         return false;
@@ -81,7 +81,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                     selectedUser.id != userDetail?.user?.id,
             },
         ],
-        [selectedUser.id, selectedUser.main_group],
+        [selectedUser.id, selectedUser.main_role],
     );
 
     return (
@@ -90,7 +90,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
             value={0}
             fullWidth
             size="small"
-            sx={{ backgroundColor: 'white', color: Palette.info.main }}
+            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}

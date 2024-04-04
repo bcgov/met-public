@@ -19,7 +19,6 @@ A simple decorator to add the options method to a Request Class.
 
 import base64
 import os
-import re
 import urllib
 
 from humps.main import camelize, decamelize
@@ -30,17 +29,33 @@ def cors_preflight(methods):
 
     def wrapper(f):
         def options(self, *args, **kwargs):  # pylint: disable=unused-argument
-            return {'Allow': 'GET, DELETE, PUT, POST'}, 200, \
-                   {
-                       'Access-Control-Allow-Origin': '*',
-                       'Access-Control-Allow-Methods': methods,
-                       'Access-Control-Allow-Headers': 'Authorization, Content-Type, registries-trace-id, '
-                                                       'invitation_token'}
+            headers = {
+                'Allow': 'GET, DELETE, PUT, POST',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': methods,
+                'Access-Control-Allow-Headers': 'Authorization, Content-Type, '
+                                                'registries-trace-id, invitation_token'
+            }
+            max_age = os.getenv('CORS_MAX_AGE')
+            if max_age is not None:
+                headers['Access-Control-Max-Age'] = str(max_age)
+
+            return headers, 200, {}
 
         setattr(f, 'options', options)
         return f
 
     return wrapper
+
+
+def is_truthy(value: str) -> bool:
+    """
+    Check if a value is truthy or not.
+
+    :param value: The value to check.
+    :return: True if the value seems affirmative, False otherwise.
+    """
+    return str(value).lower() in ('1', 'true', 'yes', 'y', 'on')
 
 
 def camelback2snake(camel_dict: dict):
@@ -54,13 +69,8 @@ def snake2camelback(snake_dict: dict):
 
 
 def allowedorigins():
-    """Return allowed origin."""
-    _allowedcors = os.getenv('CORS_ORIGIN')
-    allowedcors = []
-    if _allowedcors and ',' in _allowedcors:
-        for entry in re.split(',', _allowedcors):
-            allowedcors.append(entry)
-    return allowedcors
+    """Return the allowed origins for CORS."""
+    return os.getenv('CORS_ORIGINS', '').split(',')
 
 
 class Singleton(type):
@@ -77,7 +87,8 @@ class Singleton(type):
 
 def digitify(payload: str) -> int:
     """Return the digits from the string."""
-    return int(re.sub(r'\D', '', payload))
+    digits = ''.join(filter(str.isdigit, payload))
+    return int(digits)
 
 
 def escape_wam_friendly_url(param):

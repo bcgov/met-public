@@ -13,12 +13,10 @@ from met_api.models import EngagementSlug as EngagementSlugModel
 from met_api.models import Survey as SurveyModel
 from met_api.models import Tenant as TenantModel
 from met_api.models.email_verification import EmailVerification
-from met_api.models.engagement_metadata import EngagementMetadataModel
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.participant_service import ParticipantService
 from met_api.utils import notification
 from met_api.utils.template import Template
-from met_api.config import get_gc_notify_config
 
 
 class EmailVerificationService:
@@ -127,16 +125,18 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(survey: SurveyModel,
-                               token,
-                               email_type: EmailVerificationType,
-                               subscription_type,
-                               participant_id):
+    def _render_email_template(
+        survey: SurveyModel,
+        token,
+        email_type: EmailVerificationType,
+        subscription_type,
+        participant_id,
+    ):
         if email_type == EmailVerificationType.Subscribe:
-            return EmailVerificationService._render_subscribe_email_template(survey, token,
-                                                                             subscription_type, participant_id)
+            return EmailVerificationService._render_subscribe_email_template(
+                survey, token, subscription_type, participant_id)
         # if email_type == EmailVerificationType.RejectedComment:
-            # TODO: move reject comment email verification logic here
+        # TODO: move reject comment email verification logic here
         #    return
         return EmailVerificationService._render_survey_email_template(survey, token)
 
@@ -144,25 +144,26 @@ class EmailVerificationService:
     # pylint: disable-msg=too-many-locals
     def _render_subscribe_email_template(survey: SurveyModel, token, subscription_type, participant_id):
         # url is origin url excluding context path
-        engagement: EngagementModel = EngagementModel.find_by_id(
-            survey.engagement_id)
-        tenant_name = EmailVerificationService._get_tenant_name(
-            engagement.tenant_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
+        tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
         project_name = EmailVerificationService._get_project_name(
             subscription_type, tenant_name, engagement)
         is_subscribing_to_tenant = subscription_type == SubscriptionTypes.TENANT.value
         is_subscribing_to_project = subscription_type != SubscriptionTypes.TENANT.value
-        template_id = get_gc_notify_config('SUBSCRIBE_EMAIL_TEMPLATE_ID')
         template = Template.get_template('subscribe_email.html')
-        confirm_path = current_app.config.get('SUBSCRIBE_PATH'). \
-            format(engagement_id=engagement.id, token=token)
-        unsubscribe_path = current_app.config.get('UNSUBSCRIBE_PATH'). \
-            format(engagement_id=engagement.id, participant_id=participant_id)
-        confirm_url = notification.get_tenant_site_url(
-            engagement.tenant_id, confirm_path)
+        templates = current_app.config['EMAIL_TEMPLATES']
+        paths = current_app.config['PATH_CONFIG']
+        template_id = templates['SUBSCRIBE']['ID']
+        confirm_path = paths.get('SUBSCRIBE').format(
+            engagement_id=engagement.id, token=token
+        )
+        unsubscribe_path = paths.get('UNSUBSCRIBE').format(
+            engagement_id=engagement.id, participant_id=participant_id
+        )
+        confirm_url = notification.get_tenant_site_url(engagement.tenant_id, confirm_path)
         unsubscribe_url = notification.get_tenant_site_url(
             engagement.tenant_id, unsubscribe_path)
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        email_environment = templates['ENVIRONMENT']
         args = {
             'project_name': project_name,
             'confirm_url': confirm_url,
@@ -172,7 +173,7 @@ class EmailVerificationService:
             'is_subscribing_to_tenant': is_subscribing_to_tenant,
             'is_subscribing_to_project': is_subscribing_to_project,
         }
-        subject = get_gc_notify_config('SUBSCRIBE_EMAIL_SUBJECT')
+        subject = templates['SUBSCRIBE']['SUBJECT']
         body = template.render(
             project_name=args.get('project_name'),
             confirm_url=args.get('confirm_url'),
@@ -187,27 +188,23 @@ class EmailVerificationService:
     @staticmethod
     def _render_survey_email_template(survey: SurveyModel, token):
         # url is origin url excluding context path
-        engagement: EngagementModel = EngagementModel.find_by_id(
-            survey.engagement_id)
+        engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
-        template_id = get_gc_notify_config('VERIFICATION_EMAIL_TEMPLATE_ID')
-        email_environment = get_gc_notify_config('EMAIL_ENVIRONMENT')
+        paths = current_app.config['PATH_CONFIG']
+        templates = current_app.config['EMAIL_TEMPLATES']
+        subject_template = templates['VERIFICATION']['SUBJECT']
         template = Template.get_template('email_verification.html')
-        subject_template = get_gc_notify_config('VERIFICATION_EMAIL_SUBJECT')
-        survey_path = current_app.config.get('SURVEY_PATH'). \
-            format(survey_id=survey.id, token=token)
-        engagement_path = EmailVerificationService.get_engagement_path(
-            engagement)
+        survey_path = paths['SURVEY'].format(survey_id=survey.id, token=token)
+        engagement_path = EmailVerificationService.get_engagement_path(engagement)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
-        tenant_name = EmailVerificationService._get_tenant_name(
-            engagement.tenant_id)
+        tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
         args = {
             'engagement_name': engagement_name,
             'survey_url': f'{site_url}{survey_path}',
             'engagement_url': f'{site_url}{engagement_path}',
             'tenant_name': tenant_name,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
-            'email_environment': email_environment,
+            'email_environment': templates['ENVIRONMENT'],
         }
         subject = subject_template.format(engagement_name=engagement_name)
         body = template.render(
@@ -218,19 +215,17 @@ class EmailVerificationService:
             end_date=args.get('end_date'),
             email_environment=args.get('email_environment'),
         )
-        return subject, body, args, template_id
+        return subject, body, args, templates['VERIFICATION']['ID']
 
     @staticmethod
     def get_engagement_path(engagement: EngagementModel, is_public_url=True):
         """Get an engagement path."""
+        paths = current_app.config['PATH_CONFIG']
         if is_public_url:
-            engagement_slug = EngagementSlugModel.find_by_engagement_id(
-                engagement.id)
+            engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
             if engagement_slug:
-                return current_app.config.get('ENGAGEMENT_PATH_SLUG'). \
-                    format(slug=engagement_slug.slug)
-        return current_app.config.get('ENGAGEMENT_PATH'). \
-            format(engagement_id=engagement.id)
+                return paths['ENGAGEMENT']['SLUG'].format(slug=engagement_slug.slug)
+        return paths['ENGAGEMENT']['VIEW'].format(engagement_id=engagement.id)
 
     @staticmethod
     def _get_tenant_name(tenant_id):
@@ -239,14 +234,14 @@ class EmailVerificationService:
 
     @staticmethod
     def _get_project_name(subscription_type, tenant_name, engagement):
-        metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
+        # metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
         if subscription_type == SubscriptionTypes.TENANT.value:
             return tenant_name
 
         if subscription_type == SubscriptionTypes.PROJECT.value:
-            metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
-            project_name = metadata_model.project_metadata.get('project_name', None)
-            return project_name or engagement.name
+            # TODO: Uncomment depending on future metadata work
+            # metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement.id)
+            return engagement.name
 
         if subscription_type == SubscriptionTypes.ENGAGEMENT.value:
             return engagement.name

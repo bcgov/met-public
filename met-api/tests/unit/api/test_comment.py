@@ -24,6 +24,7 @@ from faker import Faker
 
 from met_api.constants.membership_type import MembershipType
 from met_api.constants.staff_note_type import StaffNoteType
+from met_api.services.comment_service import CommentService
 from met_api.utils import notification
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims
@@ -46,6 +47,11 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
+
+    with patch.object(CommentService, 'get_comments_paginated', side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
@@ -175,9 +181,10 @@ def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unu
         mock_mail.assert_called()
 
 
-def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disable=unused-argument
-    """Assert that comments sheet can be fetched."""
-    claims = TestJwtClaims.staff_admin_role
+def test_get_comments_spreadsheet_staff(mocker, client, jwt, session,
+                                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that staff comments sheet can be fetched."""
+    user, claims = setup_admin_user_and_claims
 
     mock_post_generate_document_response = MagicMock()
     mock_post_generate_document_response.content = b'mock data'
@@ -213,3 +220,79 @@ def test_get_comments_spreadsheet(mocker, client, jwt, session):  # pylint:disab
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()
+
+    with patch.object(CommentService, 'export_comments_to_spread_sheet_staff',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}/sheet/staff',
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+def test_get_comments_spreadsheet_proponent(mocker, client, jwt, session,
+                                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that proponent comments sheet can be fetched."""
+    user, claims = setup_admin_user_and_claims
+
+    mock_post_generate_document_response = MagicMock()
+    mock_post_generate_document_response.content = b'mock data'
+    mock_post_generate_document_response.headers = {}
+    mock_post_generate_document_response.status_code = 200
+    mock_post_generate_document = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._post_generate_document',
+        return_value=mock_post_generate_document_response
+    )
+    mock_get_access_token = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._get_access_token',
+        return_value='token'
+    )
+
+    mock_upload_template_response = MagicMock()
+    mock_upload_template_response.headers = {
+        'X-Template-Hash': 'hash_code'
+    }
+    mock_upload_template_response.status_code = 200
+    mock_post_upload_template = mocker.patch(
+        'met_api.services.cdogs_api_service.CdogsApiService._post_upload_template',
+        return_value=mock_upload_template_response
+    )
+
+    participant = factory_participant_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
+    factory_comment_model(survey.id, submission.id)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get(f'/api/comments/survey/{survey.id}/sheet/proponent',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == 200
+    mock_post_generate_document.assert_called()
+    mock_get_access_token.assert_called()
+    mock_post_upload_template.assert_called()
+
+    with patch.object(CommentService, 'export_comments_to_spread_sheet_proponent',
+                      side_effect=ValueError('Test error')):
+        rv = client.get(f'/api/comments/survey/{survey.id}/sheet/proponent',
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+def test_get_comments_spreadsheet_without_role(mocker, client, jwt, session):  # pylint:disable=unused-argument
+    """Assert that proponent comments sheet can be fetched."""
+    mock_post_generate_document_response = MagicMock()
+    mock_post_generate_document_response.content = b'mock data'
+    mock_post_generate_document_response.headers = {}
+    mock_post_generate_document_response.status_code = 200
+
+    mock_upload_template_response = MagicMock()
+    mock_upload_template_response.headers = {
+        'X-Template-Hash': 'hash_code'
+    }
+    mock_upload_template_response.status_code = 200
+
+    participant = factory_participant_model()
+    survey, eng = factory_survey_and_eng_model()
+    submission = factory_submission_model(survey.id, eng.id, participant.id)
+    factory_comment_model(survey.id, submission.id)
+    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.public_user_role)
+    rv = client.get(f'/api/comments/survey/{survey.id}/sheet/staff',
+                    headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED, 'Not a team member.So throws exception.'

@@ -12,7 +12,7 @@ import * as teamMemberService from 'services/membershipService';
 import * as widgetService from 'services/widgetService';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting } from '../factory';
-import { createDefaultUser, USER_GROUP } from 'models/user';
+import { createDefaultUser, USER_COMPOSITE_ROLE } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 import { USER_ROLES } from 'services/userService/constants';
 
@@ -24,7 +24,7 @@ const mockTeamMember1: EngagementTeamMember = {
         id: 1,
         first_name: 'Jane',
         last_name: 'Doe',
-        groups: [USER_GROUP.VIEWER.label],
+        composite_roles: [USER_COMPOSITE_ROLE.VIEWER.label],
     },
 };
 
@@ -88,7 +88,9 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
     jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve(engagementMetadata));
+    jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
+        Promise.resolve([engagementMetadata]),
+    );
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(Promise.resolve(engagementSetting));
 
     beforeEach(() => {

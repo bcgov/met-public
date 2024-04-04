@@ -5,7 +5,7 @@ from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.models import Engagement as EngagementModel
 from met_api.models import Survey as SurveyModel
-from met_api.models.db import session_scope
+from met_api.models.db import db, transactional
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.report_setting import ReportSetting
 from met_api.models.survey_search_options import SurveySearchOptions
@@ -154,14 +154,12 @@ class SurveyService:
         return cloned_survey
 
     @classmethod
+    @transactional()
     def create_report_setting(cls, survey_id, cloned_survey_id):
         """Create report setting."""
         report_settings = ReportSetting.find_by_survey_id(survey_id)
-
-        with session_scope() as session:
-            new_report_setting = ReportSetting.add_all_report_settings(cloned_survey_id,
-                                                                       report_settings, session)
-
+        new_report_setting = ReportSetting.add_all_report_settings(
+            cloned_survey_id, report_settings, db.session)
         return new_report_setting
 
     @classmethod
@@ -180,7 +178,7 @@ class SurveyService:
         is_template = survey.get('is_template', None)
         cls.validate_template_surveys_edit_access(is_template, user_roles)
 
-        if engagement and engagement.get('status_id', None) != Status.Draft.value:
+        if engagement and engagement.get('status_id', None) not in [Status.Draft.value, Status.Published.value]:
             raise ValueError('Engagement already published')
 
         updated_survey = SurveyModel.update_survey(data)

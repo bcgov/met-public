@@ -20,8 +20,10 @@ import SurveyBarPrintable from './SurveyBarPrintable';
 import { generateDashboardPdf } from './util';
 import { Map } from 'models/analytics/map';
 import { When } from 'react-if';
+import { useAppSelector, useAppTranslation } from 'hooks';
 
 const Dashboard = () => {
+    const { t: translate } = useAppTranslation();
     const { slug } = useParams();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
@@ -29,6 +31,8 @@ const Dashboard = () => {
     const [isPrinting, setIsPrinting] = React.useState(false);
     const [projectMapData, setProjectMapData] = React.useState<Map | null>(null);
     const [pdfExportProgress, setPdfExportProgress] = React.useState(0);
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const basePath = slug ? `/${slug}` : `/engagements/${engagement?.id}`;
     const mapExists = projectMapData?.latitude !== null && projectMapData?.longitude !== null;
 
@@ -37,7 +41,11 @@ const Dashboard = () => {
     };
 
     const handleReadComments = () => {
-        navigate(`${basePath}/comments/${dashboardType}`);
+        if (isLoggedIn) {
+            navigate(`${basePath}/comments/${dashboardType}`);
+        } else {
+            navigate(`${languagePath}${basePath}/comments/${dashboardType}`);
+        }
     };
 
     const handlePdfExportProgress = (progress: number) => {
@@ -79,8 +87,12 @@ const Dashboard = () => {
                 >
                     <Grid container item xs={12} flexDirection="column">
                         <Grid item xs={12} container justifyContent="flex-end">
-                            <MuiLink component={Link} to={slug ? basePath : `/engagements/${engagement.id}/view`}>
-                                {`<< Return to ${engagement.name} Engagement`}
+                            <MuiLink
+                                component={Link}
+                                to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
+                                data-testid="link-container"
+                            >
+                                {translate('dashboard.link.0') + engagement.name + translate('dashboard.link.1')}
                             </MuiLink>
                         </Grid>
                         <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
@@ -93,7 +105,9 @@ const Dashboard = () => {
                             >
                                 <When condition={!isTablet}>
                                     <Grid item xs={12} sm={6}>
-                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>What We Heard</MetHeader1>
+                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>
+                                            {translate('dashboard.header')}
+                                        </MetHeader1>
                                     </Grid>
                                     <Grid
                                         item
@@ -108,7 +122,7 @@ const Dashboard = () => {
                                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                                 onClick={handleReadComments}
                                             >
-                                                Read Comments
+                                                {translate('dashboard.buttonText.readComments')}
                                             </PrimaryButton>
                                             <SecondaryButton
                                                 onClick={() => {
@@ -116,7 +130,7 @@ const Dashboard = () => {
                                                 }}
                                                 loading={isPrinting}
                                             >
-                                                Export to PDF
+                                                {translate('dashboard.buttonText.exportToPDF')}
                                             </SecondaryButton>
                                         </Stack>
                                     </Grid>
@@ -159,11 +173,15 @@ const Dashboard = () => {
                                                 >
                                                     <Grid item>
                                                         <MetDescription sx={{ mr: 1 }}>
-                                                            From: {engagement.start_date}{' '}
+                                                            {translate('dashboard.submissionTrend.filter.from')}
+                                                            {engagement.start_date}{' '}
                                                         </MetDescription>
                                                     </Grid>
                                                     <Grid item>
-                                                        <MetDescription>To: {engagement.end_date}</MetDescription>
+                                                        <MetDescription>
+                                                            {translate('dashboard.submissionTrend.filter.to')}
+                                                            {engagement.end_date}
+                                                        </MetDescription>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>

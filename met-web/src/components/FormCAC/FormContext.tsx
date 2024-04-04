@@ -11,6 +11,7 @@ import { getSubscriptionsForms } from 'services/subscriptionService';
 import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
+import { useAppTranslation } from 'hooks';
 
 export interface CACFormSubmssion {
     understand: boolean;
@@ -29,6 +30,7 @@ export interface FormContextProps {
     loading: boolean;
     submitting: boolean;
     setSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+    consentMessage: string;
 }
 
 export const FormContext = createContext<FormContextProps>({
@@ -52,8 +54,10 @@ export const FormContext = createContext<FormContextProps>({
     setSubmitting: () => {
         return;
     },
+    consentMessage: '',
 });
 export const FormContextProvider = ({ children }: { children: JSX.Element }) => {
+    const { t: translate } = useAppTranslation();
     const { widgetId, engagementId } = useParams<{ widgetId: string; engagementId: string }>();
     const [tabValue, setTabValue] = useState(TAB_ONE);
     const [formSubmission, setFormSubmission] = useState<CACFormSubmssion>({
@@ -68,9 +72,9 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
     const [submitting, setSubmitting] = useState(false);
     const [engagement, setEngagement] = useState<Engagement | null>(null);
     const [engagementSlug, setEngagementSlug] = useState<string>('');
+    const [consentMessage, setConsentMessage] = useState<string>('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const loadEngagement = async () => {
         if (isNaN(Number(engagementId))) {
             return;
@@ -81,7 +85,10 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             return engagement;
         } catch (err) {
             dispatch(
-                openNotification({ severity: 'error', text: 'An error occured while trying to load the engagement' }),
+                openNotification({
+                    severity: 'error',
+                    text: translate('formCAC.formContentNotification.engagementError'),
+                }),
             );
             navigate('/');
         }
@@ -97,17 +104,26 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
 
             return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.SIGN_UP);
         } catch (err) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the widget' }));
+            dispatch(
+                openNotification({ severity: 'error', text: translate('formCAC.formContentNotification.widgetError') }),
+            );
             navigate('/');
         }
     };
 
     const verifyData = (_engagement?: Engagement, subscribeWidget?: SubscribeForm) => {
         if (!_engagement || !subscribeWidget) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to load the form' }));
+            dispatch(
+                openNotification({ severity: 'error', text: translate('formCAC.formContentNotification.formError') }),
+            );
             navigate('/');
         } else if (_engagement.engagement_status.id === EngagementStatus.Draft) {
-            dispatch(openNotification({ severity: 'error', text: 'Cannot submit this form at this time' }));
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: translate('formCAC.formContentNotification.unknownError'),
+                }),
+            );
             navigate('/');
         }
         setLoading(false);
@@ -116,6 +132,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
     const loadData = async () => {
         const engagement = await loadEngagement();
         setEngagement(engagement ?? null);
+        setConsentMessage(engagement?.consent_message ?? '');
         const subscribeWidget = await loadWidget();
         verifyData(engagement, subscribeWidget);
         loadEngagementSlug();
@@ -149,12 +166,13 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                 openNotificationModal({
                     open: true,
                     data: {
-                        header: 'Thank you',
+                        header: translate('formCAC.formContentNotification.success.header'),
                         subText: [
                             {
                                 text:
-                                    `We have received your request to join the Community Advisory Committee for ` +
-                                    `${engagement?.name}. You will be notified of future updates to the Community Advisory Committee by email.`,
+                                    translate('formCAC.formContentNotification.success.text.0') +
+                                    `${engagement?.name}` +
+                                    translate('formCAC.formContentNotification.success.text.1'),
                             },
                         ],
                     },
@@ -165,7 +183,9 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
         } catch (err) {
             setSubmitting(false);
             console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'An error occured while trying to submit the form' }));
+            dispatch(
+                openNotification({ severity: 'error', text: translate('formCAC.formContentNotification.submitError') }),
+            );
         }
     };
 
@@ -185,6 +205,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
                 loading,
                 submitting,
                 setSubmitting,
+                consentMessage,
             }}
         >
             {children}

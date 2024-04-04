@@ -11,6 +11,7 @@ import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import { useAppTranslation } from 'hooks';
 
 interface SurveysCompletedProps {
     engagement: Engagement;
@@ -18,7 +19,9 @@ interface SurveysCompletedProps {
 }
 
 const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedProps) => {
+    const { t: translate } = useAppTranslation();
     const [data, setData] = useState<AggregatorData | null>(null);
+    const [emailVerificationData, setEmailVerificationData] = useState<AggregatorData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -40,6 +43,11 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                 count_for: 'survey_completed',
             });
             setData(response);
+            const emailVerification = await getAggregatorData({
+                engagement_id: Number(engagement.id),
+                count_for: 'email_verification',
+            });
+            setEmailVerificationData(emailVerification);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 setErrors(error);
@@ -60,7 +68,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>Surveys Completed</MetLabel>
+                <MetLabel mb={2}>{translate('dashboard.surveysCompleted')}</MetLabel>
                 <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                     <Box
                         sx={{
@@ -100,7 +108,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>Surveys Completed</MetLabel>
+            <MetLabel mb={{ md: 0.5, lg: 2 }}>{translate('dashboard.surveysCompleted')}</MetLabel>
             <MetPaper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart
@@ -113,9 +121,14 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                         barSize={circleSize / 4}
                         data={[data]}
                         startAngle={225}
-                        endAngle={-270}
+                        endAngle={-225}
                     >
-                        <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
+                        <PolarAngleAxis
+                            type="number"
+                            domain={[0, emailVerificationData?.value]}
+                            angleAxisId={0}
+                            tick={false}
+                        />
                         <RadialBar
                             background={{ fill: DASHBOARD.KPI.RADIALBAR.BACKGROUND_COLOR }}
                             dataKey="value"

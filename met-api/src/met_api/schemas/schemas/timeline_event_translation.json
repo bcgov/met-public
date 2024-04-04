@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/timeline_event_translation",
+    "type": "object",
+    "title": "The TimelineEventTranslation Schema",
+    "description": "Schema for TimelineEventTranslation POST request validation.",
+    "default": {},
+    "examples": [
+        {
+            "language_id": 2,
+            "timeline_event_id": 1,
+            "description": "Detailed description of the timeline event in the specified language.",
+            "time": "2024-03-13T15:00:00",
+            "pre_populate": false
+        },
+        {
+            "language_id": 2,
+            "timeline_event_id": 1,
+            "pre_populate": true
+        }
+    ],
+    "required": ["language_id", "timeline_event_id"],
+    "properties": {
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "integer",
+            "title": "Language ID",
+            "description": "The ID of the language in which the timeline event is translated."
+        },
+        "timeline_event_id": {
+            "$id": "#/properties/timeline_event_id",
+            "type": "integer",
+            "title": "Timeline Event ID",
+            "description": "The ID of the timeline event being translated."
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Description",
+            "description": "The translated description of the timeline event."
+        },
+        "time": {
+            "$id": "#/properties/time",
+            "type": "string",
+            "title": "Time",
+            "description": "The time associated with the timeline event.",
+            "pattern": "^(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})$"
+        }
+    }
+}

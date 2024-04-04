@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://met.gov.bc.ca/.well_known/schemas/poll_response",
+  "type": "object",
+  "title": "The Poll Response Schema",
+  "description": "Schema for a poll response.",
+  "default": {},
+  "examples": [
+    {
+      "selected_answer_id": "20"
+    }
+  ],
+  "required": ["selected_answer_id"],
+  "properties": {
+    "selected_answer_id": {
+      "$id": "#/properties/selected_answer_id",
+      "type": "integer",
+      "title": "Selected Answer ID",
+      "description": "The ID of the selected answer in the poll."
+    }
+  }
+}

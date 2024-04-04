@@ -14,6 +14,7 @@ export interface PostFeedbackRequest {
     comment_type: number;
     comment: string;
     status: FeedbackStatusEnum;
+    submission_path: string;
 }
 
 export interface UpdateFeedbackRequest {
@@ -21,4 +22,5 @@ export interface UpdateFeedbackRequest {
     comment_type?: number;
     comment?: string;
     status?: FeedbackStatusEnum;
+    submission_path?: string;
 }

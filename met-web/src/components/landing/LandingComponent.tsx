@@ -7,14 +7,12 @@ import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
-import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation } from 'hooks';
 
 const LandingComponent = () => {
     const { searchFilters, setSearchFilters, setPage, page } = useContext(LandingContext);
     const [didMount, setDidMount] = useState(false);
-    const { engagementProjectTypes } = AppConfig.constants;
     const { t: translate } = useAppTranslation();
 
     const debounceSetSearchFilters = useRef(
@@ -106,11 +104,11 @@ const LandingComponent = () => {
                         marginTop={'2em'}
                         ref={tileBlockRef}
                     >
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel>Engagement name</MetLabel>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                            <MetLabel>{translate('landingPage.engagementNameLabel')}</MetLabel>
                             <TextField
                                 fullWidth
-                                placeholder="Type engagement's name..."
+                                placeholder={translate('landingPage.placeholder')}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -119,8 +117,8 @@ const LandingComponent = () => {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel>Status</MetLabel>
+                        <Grid item xs={12} sm={6} md={6} lg={6}>
+                            <MetLabel>{translate('landingPage.statusLabel')}</MetLabel>
                             <TextField
                                 id="status"
                                 name="status"
@@ -145,44 +143,15 @@ const LandingComponent = () => {
                                 <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
                                     {''}
                                 </MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Open}>Open</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Upcoming}>Upcoming</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Closed}>Closed</MenuItem>
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={4}>
-                            <MetLabel>Project Type</MetLabel>
-                            <TextField
-                                id="project-type"
-                                name="projectType"
-                                variant="outlined"
-                                label=" "
-                                defaultValue=""
-                                value={searchFilters.project_type}
-                                fullWidth
-                                size="small"
-                                onChange={(event) => {
-                                    setSearchFilters({
-                                        ...searchFilters,
-                                        project_type: event.target.value || '',
-                                    });
-                                    setPage(1);
-                                }}
-                                select
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                            >
-                                <MenuItem value={''} sx={{ fontStyle: 'italic', height: '2em' }}>
-                                    {' '}
+                                <MenuItem value={EngagementDisplayStatus.Open}>
+                                    {translate('landingPage.status.open')}
                                 </MenuItem>
-                                {engagementProjectTypes.map((type: string) => {
-                                    return (
-                                        <MenuItem key={type} value={type}>
-                                            {type}
-                                        </MenuItem>
-                                    );
-                                })}
+                                <MenuItem value={EngagementDisplayStatus.Upcoming}>
+                                    {translate('landingPage.status.upcoming')}
+                                </MenuItem>
+                                <MenuItem value={EngagementDisplayStatus.Closed}>
+                                    {translate('landingPage.status.closed')}
+                                </MenuItem>
                             </TextField>
                         </Grid>
                     </Grid>

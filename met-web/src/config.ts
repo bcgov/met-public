@@ -24,12 +24,10 @@ declare global {
             REACT_APP_KEYCLOAK_REALM: string;
             REACT_APP_KEYCLOAK_ADMIN_ROLE: string;
 
-            // Constants
-            REACT_APP_ENGAGEMENT_PROJECT_TYPES: string;
-
             //tenant
             REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT: string;
             REACT_APP_DEFAULT_TENANT: string;
+            REACT_APP_DEFAULT_LANGUAGE_ID: string;
         };
     }
 }
@@ -43,20 +41,18 @@ const getEnv = (key: string, defaultValue = '') => {
 // adding localStorage to access the MET API from external sources(eg: web-components)
 const API_URL = localStorage.getItem('met-api-url') || getEnv('REACT_APP_API_URL');
 const PUBLIC_URL = localStorage.getItem('met-public-url') || getEnv('REACT_APP_PUBLIC_URL');
-const REDASH_DASHBOARD_URL = getEnv('REACT_APP_REDASH_PUBLIC_URL');
-const REDASH_CMNTS_DASHBOARD_URL = getEnv('REACT_APP_REDASH_COMMENTS_PUBLIC_URL');
 
 // adding localStorage to access the MET Analytics API from external sources(eg: web-components)
 const REACT_APP_ANALYTICS_API_URL = localStorage.getItem('analytics-api-url') || getEnv('REACT_APP_ANALYTICS_API_URL');
 
 // Formio Environment Variables
-const FORMIO_PROJECT_URL = getEnv('REACT_APP_API_PROJECT_URL');
-const FORMIO_API_URL = getEnv('REACT_APP_API_PROJECT_URL');
+const FORMIO_PROJECT_URL = getEnv('REACT_APP_FORMIO_PROJECT_URL');
+const FORMIO_API_URL = getEnv('REACT_APP_FORMIO_PROJECT_URL');
 const FORMIO_FORM_ID = getEnv('REACT_APP_FORM_ID');
 const FORMIO_JWT_SECRET = getEnv('REACT_APP_FORMIO_JWT_SECRET');
 const FORMIO_USER_RESOURCE_FORM_ID = getEnv('REACT_APP_USER_RESOURCE_FORM_ID');
 const FORMIO_ANONYMOUS_USER = getEnv('REACT_APP_FORMIO_ANONYMOUS_USER');
-const FORMIO_ANONYMOUS_ID = getEnv('REACT_APP_ANONYMOUS_ID');
+const FORMIO_ANONYMOUS_ID = getEnv('REACT_APP_FORMIO_ANONYMOUS_ID');
 
 // Keycloak Environment Variables
 const KC_URL = getEnv('REACT_APP_KEYCLOAK_URL');
@@ -64,30 +60,15 @@ const KC_CLIENT = getEnv('REACT_APP_KEYCLOAK_CLIENT');
 const KC_REALM = getEnv('REACT_APP_KEYCLOAK_REALM');
 const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 
-// App constants
-const ENGAGEMENT_PROJECT_TYPES: string[] = getEnv(
-    'REACT_APP_ENGAGEMENT_PROJECT_TYPES',
-    'Energy-Electricity,Energy - Petroleum & Natural Gas,' +
-        'Food Processing,' +
-        'Industrial,' +
-        'Mines,' +
-        'Other,' +
-        'Tourist Destination Resorts,' +
-        'Transportation,' +
-        'Waste Disposal,' +
-        'Water Management',
-).split(',');
-
 // tenant conifg
 const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT', 'true') === 'true';
 const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
+const DEFAULT_LANGUAGE_ID = getEnv('REACT_APP_DEFAULT_LANGUAGE_ID');
 
 export const AppConfig = {
     apiUrl: API_URL,
     analyticsApiUrl: REACT_APP_ANALYTICS_API_URL,
     publicUrl: PUBLIC_URL,
-    redashDashboardUrl: REDASH_DASHBOARD_URL,
-    redashCmntsDashboardUrl: REDASH_CMNTS_DASHBOARD_URL,
     formio: {
         projectUrl: FORMIO_PROJECT_URL,
         apiUrl: FORMIO_API_URL,
@@ -104,11 +85,11 @@ export const AppConfig = {
         realm: KC_REALM || '',
         adminRole: KC_ADMIN_ROLE || 'admin',
     },
-    constants: {
-        engagementProjectTypes: ENGAGEMENT_PROJECT_TYPES,
-    },
     tenant: {
         isSingleTenantEnvironment: IS_SINGLE_TENANT_ENVIRONMENT,
         defaultTenant: DEFAULT_TENANT,
+    },
+    language: {
+        defaultLanguageId: DEFAULT_LANGUAGE_ID || 'en',
     },
 };

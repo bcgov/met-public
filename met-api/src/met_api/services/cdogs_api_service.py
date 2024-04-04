@@ -16,14 +16,13 @@
 """Service for receipt generation."""
 import base64
 import json
-import os
 import re
 from http import HTTPStatus
 
 import requests
 from flask import current_app
 
-from met_api.config import _Config
+from met_api.config import Config
 
 
 class CdogsApiService:
@@ -31,9 +30,11 @@ class CdogsApiService:
 
     def __init__(self):
         """Initiate class."""
-        self.access_token = self._get_access_token()
+        # we can't use current_app.config here because it isn't initialized yet
+        config = Config().CDOGS_CONFIG
+        self.base_url = config['BASE_URL']
 
-    file_dir = os.path.dirname(os.path.realpath('__file__'))
+        self.access_token = self._get_access_token()
 
     def generate_document(self, template_hash_code: str, data, options):
         """Generate document based on template and data."""
@@ -48,7 +49,7 @@ class CdogsApiService:
             'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}/render'
+        url = f'{self.base_url}/api/v2/template/{template_hash_code}/render'
         return self._post_generate_document(json_request_body, headers, url)
 
     @staticmethod
@@ -62,7 +63,7 @@ class CdogsApiService:
             'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template'
+        url = f'{self.base_url}/api/v2/template'
 
         with open(template_file_path, 'rb') as file_handle:
             template = {'template': ('template', file_handle, 'multipart/form-data')}
@@ -102,16 +103,16 @@ class CdogsApiService:
             'Authorization': f'Bearer {self.access_token}'
         }
 
-        url = f'{_Config.CDOGS_BASE_URL}/api/v2/template/{template_hash_code}'
+        url = f'{self.base_url}/api/v2/template/{template_hash_code}'
 
         response = requests.get(url, headers=headers)
         return response.status_code == HTTPStatus.OK
 
     @staticmethod
     def _get_access_token():
-        token_url = _Config.CDOGS_TOKEN_URL
-        service_client = _Config.CDOGS_SERVICE_CLIENT
-        service_client_secret = _Config.CDOGS_SERVICE_CLIENT_SECRET
+        token_url = Config().CDOGS_CONFIG['TOKEN_URL']
+        service_client = Config().CDOGS_CONFIG['SERVICE_CLIENT']
+        service_client_secret = Config().CDOGS_CONFIG['SERVICE_CLIENT_SECRET']
 
         basic_auth_encoded = base64.b64encode(
             bytes(f'{service_client}:{service_client_secret}', 'utf-8')).decode('utf-8')

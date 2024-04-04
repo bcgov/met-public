@@ -73,13 +73,13 @@ objects:
             - name: DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: analytics-username
+                  key: met-username
                   name: met-database-users
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: met-database-users
-                  key: analytics-password
+                  key: met-password
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -88,25 +88,6 @@ objects:
             - name: DATABASE_HOST
               value: ${DATABASE_HOST}
             - name: DATABASE_PORT
-              value: ${DATABASE_PORT}
-            - name: MET_DATABASE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: met-username
-                  name: met-database-users
-            - name: MET_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: met-password
-                  name: met-database-users
-            - name: MET_DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  key: app-db-name
-                  name: ${DATABASE_HOST}
-            - name: MET_DATABASE_HOST
-              value: ${DATABASE_HOST}
-            - name: MET_DATABASE_PORT
               value: ${DATABASE_PORT}
           envFrom:
             - configMapRef:
@@ -172,9 +153,15 @@ objects:
       app-group: met-app
     name: ${NAME}
   data:
-    ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID: ${ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID}
+    CLOSEOUT_EMAIL_TEMPLATE_ID: ${CLOSEOUT_EMAIL_TEMPLATE_ID}
+    CLOSING_SOON_EMAIL_TEMPLATE_ID: ${CLOSING_SOON_EMAIL_TEMPLATE_ID}
+    EMAIL_ENVIRONMENT: ${EMAIL_ENVIRONMENT}
+    EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+    KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
+    KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}
-    PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID: ${PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID}
+    OFFSET_DAYS: ${OFFSET_DAYS}
+    PUBLISH_EMAIL_TEMPLATE_ID: ${PUBLISH_EMAIL_TEMPLATE_ID}
     SITE_URL: ${SITE_URL}
 - kind: Secret
   apiVersion: v1
@@ -187,6 +174,16 @@ objects:
   stringData:
     MET_ADMIN_CLIENT_ID: ${MET_ADMIN_CLIENT_ID}
     MET_ADMIN_CLIENT_SECRET: ${MET_ADMIN_CLIENT_SECRET}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: email-secret-key
+    labels:
+      app: email-secret-key
+      app-group: met-app
+  stringData:
+    EMAIL_SECRET_KEY: ${EMAIL_SECRET_KEY}
 parameters:
 - name: NAME
   description: "The name assigned to all of the OpenShift resources associated to the server instance."
@@ -201,11 +198,11 @@ parameters:
   required: true
   value: dev
 - name: DATABASE_HOST
-  description: "The analytics postgresql application name."
+  description: "The met postgresql application name."
   required: true
   value: met-patroni
 - name: DATABASE_PORT
-  description: "The analytics postgresql application port."
+  description: "The met postgresql application port."
   required: true
   value: '5432'
 - name: CPU_REQUEST
@@ -242,10 +239,29 @@ parameters:
   description: "The email notification endpoint"
   required: true
   value: 'https://met-notify-api-dev.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
-- name: ENGAGEMENT_CLOSEOUT_EMAIL_TEMPLATE_ID
+- name: OFFSET_DAYS
+  description: "Days in which the engagement closing soon email is sent"
+  required: true
+  value: '2'
+- name: CLOSEOUT_EMAIL_TEMPLATE_ID
   description: "The engagement closeout email template id"
   value: 'b7ea041b-fc30-4ad3-acb2-82119dd4f95d'
-- name: PUBLISH_ENGAGEMENT_EMAIL_TEMPLATE_ID
+- name: CLOSING_SOON_EMAIL_TEMPLATE_ID
+  description: "The engagement closing soon email template id to send email n days before closing"
+  value: '30344886-ea33-4ca2-83e1-e5ebe9c3457d'
+- name: EMAIL_ENVIRONMENT
+  description: "Environment from which email is sent"
+  value: 'You are using a DEV environment'
+- name: EMAIL_FROM_ADDRESS
+  description: "Email from address"
+  value: 'met-example@gov.bc.ca'
+- name: KEYCLOAK_BASE_URL
+  description: "Keycloak base url"
+  value: ''
+- name: KEYCLOAK_REALMNAME
+  description: "Realm name for the project"
+  value: 'standard'
+- name: PUBLISH_EMAIL_TEMPLATE_ID
   description: "The publish engagement email template id"
   value: '7bf2ffcd-d69e-4c3f-9aa0-e8e89b491e92'
 - name: MET_ADMIN_CLIENT_ID
@@ -255,3 +271,7 @@ parameters:
 - name: MET_ADMIN_CLIENT_SECRET
   description: "The MET admin service account secret"
   required: true
+- name: EMAIL_SECRET_KEY
+  description: "Secret key for email"
+  required: true
+  value: 'notASecureKey'

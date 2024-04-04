@@ -25,6 +25,13 @@ export const Routes: Route[] = [
         allowedRoles: [],
     },
     {
+        name: 'Metadata Management',
+        path: '/metadatamanagement',
+        base: '/metadatamanagement',
+        authenticated: false,
+        allowedRoles: [],
+    },
+    {
         name: 'User Management',
         path: '/usermanagement',
         base: 'usermanagement',

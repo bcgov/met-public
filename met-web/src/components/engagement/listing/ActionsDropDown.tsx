@@ -165,7 +165,7 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
             value={0}
             fullWidth
             size="small"
-            sx={{ backgroundColor: 'white', color: Palette.info.main }}
+            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}

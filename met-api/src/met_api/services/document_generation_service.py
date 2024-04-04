@@ -70,7 +70,7 @@ class DocumentGenerationService:  # pylint:disable=too-few-public-methods
 
         generator_options = {
                 'cachereport': False,
-                'convertTo': options.get('convert_to', 'csv'),
+                'convertTo': options.get('convert_to', 'xlsx'),
                 'overwrite': True,
                 'reportName': options.get('report_name', 'report')
         }

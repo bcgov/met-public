@@ -1,16 +1,29 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import UserService from 'services/userService';
 
-const GetRequest = <T>(url: string, params = {}, headers = {}) => {
-    return axios.get<T>(url, {
+const GetRequest = <T>(url: string, params = {}, headers = {}, responseType?: string) => {
+    const defaultHeaders = {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${UserService.getToken()}`,
+        'tenant-id': `${sessionStorage.getItem('tenantId')}`,
+    };
+
+    const finalHeaders = {
+        ...defaultHeaders,
+        ...headers,
+    };
+
+    const requestOptions: AxiosRequestConfig = {
         params: params,
-        headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${UserService.getToken()}`,
-            'tenant-id': `${sessionStorage.getItem('tenantId')}`,
-            ...headers,
-        },
-    });
+        headers: finalHeaders,
+    };
+
+    // Conditionally add responseType to requestOptions if provided
+    if (responseType) {
+        requestOptions.responseType = responseType as AxiosRequestConfig['responseType'];
+    }
+
+    return axios.get<T>(url, requestOptions);
 };
 
 const PostRequest = <T>(url: string, data = {}, params = {}) => {
