@@ -15,6 +15,7 @@ import { If, Then, Else, When } from 'react-if';
 import { dashboardCustomStyles } from '../SubmissionTrend/SubmissionTrend';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
+import { useAppTranslation } from 'hooks';
 
 const HEIGHT = 400;
 
@@ -26,6 +27,7 @@ interface SurveyQuestionProps {
 }
 
 export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
+    const { t: translate } = useAppTranslation();
     const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData | null>(null);
     const [selectedData, setSelectedData] = useState(defaultData[0]);
@@ -92,10 +94,10 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
             <Grid item xs={12} mb={0.5} mt={1}>
                 <If condition={isTablet}>
                     <Then>
-                        <MetLabel>Survey Results</MetLabel>
+                        <MetLabel>{translate('dashboard.barBlock.label')}</MetLabel>
                     </Then>
                     <Else>
-                        <MetHeader1>Survey Results</MetHeader1>
+                        <MetHeader1>{translate('dashboard.barBlock.label')}</MetHeader1>
                     </Else>
                 </If>
             </Grid>
@@ -105,7 +107,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
                             <Grid item container xs={12} md={8} direction="row" justifyContent="flex-start">
                                 <MetLabel mb={{ xs: 1, m: 2 }} color={Palette.text.primary}>
-                                    Click on a question to view results below
+                                    {translate('dashboard.barBlock.questionLabel')}
                                 </MetLabel>
                             </Grid>
                             <When condition={!isTablet}>
@@ -124,8 +126,12 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                                         onChange={handleToggleChange}
                                         sx={dashboardCustomStyles.toggleGroup}
                                     >
-                                        <MetToggleButton value="bar">Show as Bar Chart</MetToggleButton>
-                                        <MetToggleButton value="treemap">Show as TreeMap Chart</MetToggleButton>
+                                        <MetToggleButton value="bar">
+                                            {translate('dashboard.barBlock.charType.0')}
+                                        </MetToggleButton>
+                                        <MetToggleButton value="treemap">
+                                            {translate('dashboard.barBlock.charType.1')}
+                                        </MetToggleButton>
                                     </ToggleButtonGroup>
                                 </Grid>
                             </When>
@@ -153,7 +159,9 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         </Grid>
                         <When condition={isTablet}>
                             <Grid item xs={12}>
-                                <MetParagraph sx={{ fontWeight: 'bold' }}>Survey Results</MetParagraph>
+                                <MetParagraph sx={{ fontWeight: 'bold' }}>
+                                    {translate('dashboard.barBlock.label')}
+                                </MetParagraph>
                             </Grid>
                         </When>
                         <Grid item xs={12} md={8}>
@@ -172,7 +180,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                                 data-testid="SurveyBlock/take-me-to-survey-button-mobile"
                                 onClick={readComments}
                             >
-                                Read Comments
+                                {translate('dashboard.barBlock.button')}
                             </PrimaryButton>
                         </Grid>
                     </When>

@@ -35,6 +35,23 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/slugs/slug_id`,
         GET_ENG_ID: `${AppConfig.apiUrl}/slugs/engagements/engagement_id`,
     },
+    EngagementContent: {
+        GET: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
+        CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
+        SORT: `${AppConfig.apiUrl}/engagement/engagement_id/content/sort_index`,
+        UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
+        DELETE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
+    },
+    EngagementCustomContent: {
+        GET: `${AppConfig.apiUrl}/content/content_id/custom`,
+        CREATE: `${AppConfig.apiUrl}/content/content_id/custom`,
+        UPDATE: `${AppConfig.apiUrl}/content/content_id/custom`,
+    },
+    EngagementSummaryContent: {
+        GET: `${AppConfig.apiUrl}/content/content_id/summary`,
+        CREATE: `${AppConfig.apiUrl}/content/content_id/summary`,
+        UPDATE: `${AppConfig.apiUrl}/content/content_id/summary`,
+    },
     User: {
         GET: `${AppConfig.apiUrl}/user/user_id`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,

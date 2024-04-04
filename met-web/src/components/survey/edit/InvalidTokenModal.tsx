@@ -2,8 +2,11 @@ import React from 'react';
 import { Grid, Modal } from '@mui/material';
 import { InvalidTokenModalProps } from '../types';
 import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
+import { useAppTranslation } from 'hooks';
 
 export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps) => {
+    const { t: translate } = useAppTranslation();
+
     return (
         <Modal
             open={open}
@@ -21,23 +24,21 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
             >
                 <Grid item xs={12}>
                     <MetHeader1 bold sx={{ mb: 2 }}>
-                        Oops! Something Went Wrong
+                        {translate('surveySubmit.inValidToken.header')}
                     </MetHeader1>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody>
-                        You are trying to access a survey through an invalid link, please check the possible reasons:
-                    </MetBody>
+                    <MetBody>{translate('surveySubmit.inValidToken.bodyLine1')}</MetBody>
                 </Grid>
                 <Grid item xs={12}>
                     <MetBody sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}>
-                        This link has already been previously used. Or
+                        {translate('surveySubmit.inValidToken.reasons.1')}
                         <br />
-                        The engagement period is over.
+                        {translate('surveySubmit.inValidToken.reasons.2')}
                     </MetBody>
                 </Grid>
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                    <PrimaryButton onClick={handleClose}>Back to Engagement</PrimaryButton>
+                    <PrimaryButton onClick={handleClose}>{translate('surveySubmit.inValidToken.button')}</PrimaryButton>
                 </Grid>
             </Grid>
         </Modal>

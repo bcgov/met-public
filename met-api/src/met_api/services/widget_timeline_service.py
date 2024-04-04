@@ -15,6 +15,12 @@ class WidgetTimelineService:
     """Widget Timeline management service."""
 
     @staticmethod
+    def get_timeline_by_id(timeline_id: int):
+        """Get timeline by id."""
+        widget_timeline = WidgetTimelineModel.find_by_id(timeline_id)
+        return widget_timeline
+
+    @staticmethod
     def get_timeline(widget_id: int):
         """Get timeline by widget id."""
         widget_timeline = WidgetTimelineModel.get_timeline(widget_id)

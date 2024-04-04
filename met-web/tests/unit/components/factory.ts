@@ -16,6 +16,7 @@ import { PollWidget, PollAnswer } from 'models/pollWidget';
 import { VideoWidget } from 'models/videoWidget';
 import { TimelineWidget, TimelineEvent, EventStatus } from 'models/timelineWidget';
 import { Tenant } from 'models/tenant';
+import { EngagementContent } from 'models/engagementContent';
 
 const tenant: Tenant = {
     name: 'Tenant 1',
@@ -277,6 +278,16 @@ const engagementSlugData = {
     slug: 'test-engagement-slug',
 };
 
+const engagementContentData: EngagementContent = {
+    id: 1,
+    title: '',
+    icon_name: '',
+    content_type: '',
+    engagement_id: 1,
+    sort_index: 1,
+    is_internal: true,
+};
+
 export {
     tenant,
     draftEngagement,
@@ -300,4 +311,5 @@ export {
     timeLineWidget,
     mockTimeLine,
     subscribeWidget,
+    engagementContentData,
 };

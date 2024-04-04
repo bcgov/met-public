@@ -1,4 +1,4 @@
-## CURRENT
+## April 04, 2024
 
 - **Feature** Engagement filtering - Add filtering by taxon [🎟️DESENG-445](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-445)
   - Added properties to metadata taxa to allow them to be marked as filterable.
@@ -15,9 +15,65 @@
   - Added a new filter "drawer" to the listing page to hold these and any future filter types.
   - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
 
+## April 02, 2024
+
+- **Task**: DEV clean up [DESENG-503](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-503)
+  - Updated deployment configurations to add new configs.
+
+## March 28, 2024
+
+- **Bug Fix**: Feedback fixes [DESENG-524](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-524)
+  - Fixed feedback path not updating issue.
+  - Fixed feedback table grid styles.
+
+## March 27, 2024
+
+- **Bug Fix**: MET - Engagement tab does not revert the filtered out data [DESENG-525](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-525)
+  - Resetting search filter values invoke the list to reload
+- **Task**: Add missing unit tests for analytics api [DESENG-482](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-482)
+  - Added unit tests for analytics API models and API end points
+
+## March 26, 2024
+
+- **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)
+  - Update survey components and services to fix the bugs.
+    - Removed is_template and is_hidden values from autosaving to avoid the debounce function consuming it older values
+- **Task**: Add a custom dynamic page to engagement [DESENG-501](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-501)
+  - Integrated new summary and custom content tabs into the engagement form, providing users with structured sections for managing different types of content, enhancing overall organization and user experience.
+  - Implemented functionality to allow users to add custom tabs with a variety of provided icons, along with options to edit or delete tabs as needed, granting users greater flexibility and control over their engagement content layout.
+  - Streamlined data management by transitioning content and rich content from engagement tables to dedicated content tables, while also implementing logic to automatically generate default summary and custom content upon engagement creation or tab addition, ensuring consistent content structure and user experience.
+
+## March 21, 2024
+
+- **Task**: MET Web - Replace hover & background colours [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-520)
+  - Update Table and Menu Dropdown hover colors
+  - Update engagement tiles hover color.
+  - Updated all white backgrounds to use css variable.
+
+## March 19, 2024
+
+- **Task**: Add poll results to results tab [DESENG-513](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-513)
+  - Added poll results to results tab.
+  - Added poll results API.
+  - Added Unit tests.
+- **Task**: Change static english text to be able to support string translations [DESENG-467](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-467)
+  - Implemented a language selector in the public header.
+  - Incorporated logic to dynamically adjust the unauthenticated route based on the selected language and load the appropriate translation file.
+  - Enhanced all public pages to fetch static text from the translation file.
+
+## March 15, 2024
+
+- **Task**: Multi-language - Create event, subcribe_item, poll, timeline widget translation tables & API routes [DESENG-515](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-515)
+  - Added Poll answer translation API.
+  - Added Timeline Event translation API.
+  - Added Subscribe Item translation API.
+  - Added Event item translation API
+  - Added Unit tests.
+- **Task** Add "Results" page to engagements [DESENG-512](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-512)
+
 ## March 08, 2024
 
-- **Task**Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
+- **Task**: Multi-language - Create engagement translation table & API routes [DESENG-510](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-510)
   - Added Engagement translation model.
   - Added Engagement translation API.
   - Added Unit tests.

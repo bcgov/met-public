@@ -47,7 +47,7 @@ const EngagementSettingsForm = () => {
                     marginTop={2}
                     zIndex={1000}
                     boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
-                    sx={{ backgroundColor: 'white' }}
+                    sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
                 >
                     <Grid item xs={12}>
                         <PrimaryButton

@@ -40,6 +40,8 @@ objects:
         - env:
           - name: FLASK_ENV
             value: production
+          - name: JWT_OIDC_AUDIENCE
+            value: account
           envFrom:
           - configMapRef:
               name: ${APP}
@@ -152,6 +154,7 @@ objects:
   stringData:
     GC_NOTIFY_API_KEY: "${GC_NOTIFY_API_KEY}"
     GC_NOTIFY_API_BASE_URL: "${GC_NOTIFY_API_BASE_URL}"
+    GC_NOTIFY_EMAIL_TEMPLATE_ID: "${GC_NOTIFY_EMAIL_TEMPLATE_ID}"
     CHES_SSO_TOKEN_URL: "${CHES_SSO_TOKEN_URL}"
     CHES_SSO_CLIENT_ID: "${CHES_SSO_CLIENT_ID}"
     CHES_SSO_CLIENT_SECRET: "${CHES_SSO_CLIENT_SECRET}"
@@ -182,7 +185,10 @@ parameters:
     value: 
   - name: GC_NOTIFY_API_BASE_URL
     description: "GC Notify API URL"
-    value: https://api.notification.canada.ca/v2    
+    value: https://api.notification.canada.ca/v2
+  - name: GC_NOTIFY_EMAIL_TEMPLATE_ID
+    description: "GC Notify email template id"
+    value: 'c4cc1633-321a-4400-8a22-272acecd836a'
   - name: CHES_SSO_TOKEN_URL
     description: "CHES Token Url"
     value: https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token        

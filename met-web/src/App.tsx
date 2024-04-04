@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import UserService from './services/userService';
@@ -20,9 +21,15 @@ import NotFound from 'routes/NotFound';
 import Footer from 'components/layout/Footer';
 import { ZIndex } from 'styles/Theme';
 import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
+import { LanguageState } from 'reduxSlices/languageSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import i18n from './i18n';
 import DocumentTitle from 'DocumentTitle';
+import { Language } from 'constants/language';
+
+interface Translations {
+    [languageId: string]: { [key: string]: string };
+}
 
 const App = () => {
     const drawerWidth = 280;
@@ -32,9 +39,10 @@ const App = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
     const pathSegments = window.location.pathname.split('/');
-    const language = 'en'; // Default language is English, change as needed
+    const language: LanguageState = useAppSelector((state) => state.language);
     const basename = pathSegments[1].toLowerCase();
     const tenant: TenantState = useAppSelector((state) => state.tenant);
+    const [translations, setTranslations] = useState<Translations>({});
 
     useEffect(() => {
         UserService.initKeycloak(dispatch);
@@ -82,36 +90,70 @@ const App = () => {
 
         if (basename) {
             fetchTenant(basename);
+            if (pathSegments.length === 2) {
+                const defaultLanguage = AppConfig.language.defaultLanguageId; // Set the default language here
+                const defaultUrl = `/${basename}/${defaultLanguage}`;
+                window.location.replace(defaultUrl);
+            }
             return;
         }
 
         if (!basename && AppConfig.tenant.defaultTenant) {
-            window.location.replace(`/${AppConfig.tenant.defaultTenant}`);
+            const defaultLanguage = AppConfig.language.defaultLanguageId; // Set the default language here
+            const defaultUrl = `/${AppConfig.tenant.defaultTenant}/${defaultLanguage}`;
+            window.location.replace(defaultUrl);
         }
 
         dispatch(loadingTenant(false));
     };
 
-    const getTranslationFile = async () => {
-        try {
-            const translationFile = await import(`./locales/${language}/${tenant.id}.json`);
-            return translationFile;
-        } catch (error) {
-            const defaultTranslationFile = await import(`./locales/${language}/default.json`);
-            return defaultTranslationFile;
-        }
-    };
-
-    const loadTranslation = async () => {
+    const preloadTranslations = async () => {
         if (!tenant.id) {
             return;
         }
 
-        i18n.changeLanguage(language); // Set the language for react-i18next
+        try {
+            const supportedLanguages = Object.values(Language);
+            const translationPromises = supportedLanguages.map((languageId) => getTranslationFile(languageId));
+            const translationFiles = await Promise.all(translationPromises);
+
+            const translationsObj: Translations = {};
+
+            translationFiles.forEach((file, index) => {
+                if (file) {
+                    translationsObj[supportedLanguages[index]] = file.default;
+                }
+            });
+
+            setTranslations(translationsObj);
+        } catch (error) {
+            console.error('Error preloading translations:', error);
+        }
+    };
+
+    const getTranslationFile = async (languageId: string) => {
+        try {
+            const translationFile = await import(`./locales/${languageId}/${tenant.id}.json`);
+            return translationFile;
+        } catch (error) {
+            const defaultTranslationFile = await import(`./locales/${languageId}/default.json`);
+            return defaultTranslationFile;
+        }
+    };
+
+    useEffect(() => {
+        preloadTranslations();
+    }, [tenant.id]); // Preload translations when tenant id changes
+
+    const loadTranslation = async () => {
+        if (!tenant.id || !translations[language.id]) {
+            return;
+        }
+
+        i18n.changeLanguage(language.id); // Set the language for react-i18next
 
         try {
-            const translationFile = await getTranslationFile();
-            i18n.addResourceBundle(language, tenant.id, translationFile);
+            i18n.addResourceBundle(language.id, tenant.id, translations[language.id]);
             dispatch(loadingTenant(false));
         } catch (error) {
             dispatch(loadingTenant(false));
@@ -126,7 +168,7 @@ const App = () => {
 
     useEffect(() => {
         loadTranslation();
-    }, [tenant.id]);
+    }, [language.id, translations]);
 
     if (authenticationLoading || tenant.loading) {
         return <MidScreenLoader />;
@@ -151,7 +193,9 @@ const App = () => {
                 <Notification />
                 <NotificationModal />
                 <PublicHeader />
-                <UnauthenticatedRoutes />
+                <Routes>
+                    <Route path="/:lang/*" element={<UnauthenticatedRoutes />} />
+                </Routes>
                 <FeedbackModal />
                 <Footer />
             </Router>
@@ -202,7 +246,7 @@ const App = () => {
             </Box>
             <Box
                 sx={{
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--bcds-surface-background-white)',
                     zIndex: ZIndex.footer,
                     position: 'relative',
                 }}

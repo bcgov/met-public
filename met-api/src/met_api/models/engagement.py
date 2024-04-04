@@ -45,8 +45,6 @@ class Engagement(BaseModel):
     status = db.relationship('EngagementStatus', backref='engagement')
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
-    content = db.Column(db.Text, unique=False, nullable=False)
-    rich_content = db.Column(JSON, unique=False, nullable=False)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
     surveys = db.relationship(
         'Survey', backref='engagement', cascade='all, delete')
@@ -133,8 +131,6 @@ class Engagement(BaseModel):
             updated_date=datetime.utcnow(),
             updated_by=engagement.get('updated_by', None),
             banner_filename=engagement.get('banner_filename', None),
-            content=engagement.get('content', None),
-            rich_content=engagement.get('rich_content', None),
             is_internal=engagement.get('is_internal', record.is_internal),
             consent_message=engagement.get(
                 'consent_message', record.consent_message),

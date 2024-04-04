@@ -41,6 +41,27 @@ jest.mock('react-redux', () => ({
     useDispatch: () => jest.fn(),
 }));
 
+jest.mock('hooks', () => {
+    const translations: Record<string, string> = {
+        'formCAC.form.header': 'Community Advisory Committee',
+        'formCAC.form.paragraph': 'Learn about and sign up for a Community Advisory Committee',
+        'formCAC.tabs.0': 'Information',
+        'formCAC.tabs.1': 'You and Your Community',
+        'formCAC.tab2.labels.0': 'First Name',
+        'formCAC.tab2.labels.1': 'Last Name',
+        'formCAC.tab2.labels.2': 'City',
+        'formCAC.tab2.labels.3': 'Email',
+        'formCAC.tab2.button.submit': 'Submit',
+        'formCAC.tab1.button.next': 'Next',
+    };
+
+    return {
+        useAppTranslation: () => ({
+            t: (key: string) => translations[key] || key,
+        }),
+    };
+});
+
 const mockFormSubmissionData = {
     understand: true,
     termsOfReference: true,

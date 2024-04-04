@@ -64,11 +64,19 @@ objects:
                 name: ${DB_APP_NAME}
           - name: DATABASE_HOST
             value: ${DB_APP_NAME}
+          - name: DATABASE_PORT
+            value: ${DB_APP_PORT}
           - name: S3_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 key: secret-access-key
                 name: s3
+          - name: CORS_ORIGINS
+            value: ${CORS_ORIGINS}
+          - name: KEYCLOAK_BASE_URL
+            value: ${KEYCLOAK_BASE_URL}
+          - name: DEFAULT_TENANT_SHORT_NAME
+            value: ${DEFAULT_TENANT_SHORT_NAME}
           envFrom:
           - configMapRef:
               name: ${APP}
@@ -202,15 +210,22 @@ objects:
     name: ${APP}
   data:
     ACCESS_REQUEST_EMAIL_ADDRESS: ${ACCESS_REQUEST_EMAIL_ADDRESS}
+    ACCESS_REQUEST_EMAIL_TEMPLATE_ID: ${ACCESS_REQUEST_EMAIL_TEMPLATE_ID}
+    CORS_MAX_AGE: ${CORS_MAX_AGE}
+    CSS_API_ENVIRONMENT: ${CSS_API_ENVIRONMENT}
+    CSS_API_INTEGRATION_ID: ${CSS_API_INTEGRATION_ID}
+    CSS_API_URL: ${CSS_API_URL}
+    EMAIL_ENVIRONMENT: ${EMAIL_ENVIRONMENT}
     NOTIFICATIONS_EMAIL_ENDPOINT: ${NOTIFICATIONS_EMAIL_ENDPOINT}    
     SITE_URL: ${SITE_URL}
     VERIFICATION_EMAIL_TEMPLATE_ID: ${VERIFICATION_EMAIL_TEMPLATE_ID}
     SUBSCRIBE_EMAIL_TEMPLATE_ID: ${SUBSCRIBE_EMAIL_TEMPLATE_ID}
+    SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID: ${SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID}
     REJECTED_EMAIL_TEMPLATE_ID: ${REJECTED_EMAIL_TEMPLATE_ID}
     CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID: ${CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID}    
-    ACCESS_REQUEST_EMAIL_TEMPLATE_ID: ${ACCESS_REQUEST_EMAIL_TEMPLATE_ID}
     KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
     KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
+    KEYCLOAK_ADMIN_TOKEN_URL: ${KEYCLOAK_ADMIN_TOKEN_URL}
 - kind: Secret
   apiVersion: v1
   type: Opaque
@@ -232,6 +247,40 @@ objects:
       app-group: met-app
   stringData:
     secret-access-key: ${S3_ACCESS_KEY}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: met-cdogs-secret
+    labels:
+      app: met-cdogs-secret
+      app-group: met-app
+  stringData:
+    CDOGS_BASE_URL: ${CDOGS_BASE_URL}
+    CDOGS_SERVICE_CLIENT: ${CDOGS_SERVICE_CLIENT}
+    CDOGS_SERVICE_CLIENT_SECRET: ${CDOGS_SERVICE_CLIENT_SECRET}
+    CDOGS_TOKEN_URL: ${CDOGS_TOKEN_URL}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: email-secret-key
+    labels:
+      app: email-secret-key
+      app-group: met-app
+  stringData:
+    EMAIL_SECRET_KEY: ${EMAIL_SECRET_KEY}
+- kind: Secret
+  apiVersion: v1
+  type: Opaque
+  metadata:
+    name: keycloak-admin-credentials
+    labels:
+      app: keycloak-admin-credentials
+      app-group: met-app
+  stringData:
+    KEYCLOAK_ADMIN_CLIENT_ID: ${KEYCLOAK_ADMIN_CLIENT_ID}
+    KEYCLOAK_ADMIN_CLIENT_SECRET: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
 parameters:
   - name: APP
     description: "The application name"
@@ -269,6 +318,10 @@ parameters:
     description: "The subscribe email verification template id"
     required: true
     value: '9cd4942b-8ac9-49ae-a869-c800c57a7472'
+  - name: SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID
+    description: "The response to submission email template id"
+    required: true
+    value: '07f0f037-5ccb-44c5-89c6-9fe86078323e'
   - name: REJECTED_EMAIL_TEMPLATE_ID
     description: "The rejected comment email template id"
     required: true
@@ -281,6 +334,25 @@ parameters:
     description: "The access request email template id"
     required: true
     value: '41afa792-4c75-425a-9ad9-c558561d6669'
+  - name: CORS_MAX_AGE
+    description: "Set CORS pre-flight cache duration"
+    required: true
+    value: '7200'
+  - name: CSS_API_ENVIRONMENT
+    description: "CSS API environment"
+    required: true
+    value: dev
+  - name: CSS_API_INTEGRATION_ID
+    description: "CSS API integration number"
+    required: true
+    value: '0000'
+  - name: CSS_API_URL
+    description: "CSS API URL"
+    required: true
+    value: ''
+  - name: EMAIL_ENVIRONMENT
+    description: "Environment from which email is sent"
+    value: 'You are using a DEV environment'
   - name: S3_BUCKET
     description: "The s3 object store bucket"
     required: true
@@ -297,6 +369,18 @@ parameters:
     description: "The postgresql application name"
     required: true
     value: met-patroni
+  - name: DB_APP_PORT
+    description: "The postgresql application port"
+    required: true
+    value: '5432'
+  - name: CORS_ORIGINS
+    description: "Allowable origins for Cross-Origin Resource Sharing"
+    required: true
+    value: 'http://localhost:3000'
+  - name: DEFAULT_TENANT_SHORT_NAME
+    description: "Short name for default tenant"
+    required: true
+    value: 'DEFAULT'
   - name: IMAGE_TAG
     description: "The image tag to deploy"
     required: true
@@ -311,8 +395,40 @@ parameters:
   - name: KEYCLOAK_BASE_URL
     description: "Keycloak base url"
     required: true
-    value: 'https://met-oidc-dev.apps.gold.devops.gov.bc.ca'
+    value: ''
   - name: KEYCLOAK_REALMNAME
     description: "Realm name for the project"
     required: true
-    value: 'met'
+    value: 'standard'
+  - name: KEYCLOAK_ADMIN_TOKEN_URL
+    description: "Keycloak url to get admin token"
+    required: true
+    value: ''
+  - name: CDOGS_BASE_URL
+    description: "Base url to access CDOGS"
+    required: true
+    value: ''
+  - name: CDOGS_SERVICE_CLIENT
+    description: "Client for CDOGS Service"
+    required: true
+    value: 'CDOGS_SERVICE_CLIENT'
+  - name: CDOGS_SERVICE_CLIENT_SECRET
+    description: "Secret for CDOGS Service"
+    required: true
+    value: 'CDOGS_SERVICE_CLIENT_SECRET'
+  - name: CDOGS_TOKEN_URL
+    description: "Token url for CDOGS"
+    required: true
+    value: ''
+  - name: EMAIL_SECRET_KEY
+    description: "Secret key for email"
+    required: true
+    value: 'notASecureKey'
+  - name: KEYCLOAK_ADMIN_CLIENT_ID
+    description: "Admin Client ID for Keycloak authentication"
+    required: true
+    value: 'CLIENT_ID'
+  - name: KEYCLOAK_ADMIN_CLIENT_SECRET
+    description: "Admin Client Secret for Keycloak authentication"
+    required: true
+    value: 'CLIENT_SECRET'

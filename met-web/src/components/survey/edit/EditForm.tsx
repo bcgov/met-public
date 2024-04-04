@@ -4,8 +4,10 @@ import { Grid, Stack, TextField } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
 import { SurveyFormProps } from '../types';
+import { useAppTranslation } from 'hooks';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
+    const { t: translate } = useAppTranslation();
     const { handleSubmit, isSubmitting, submission, setSubmission } = useContext(ActionContext);
 
     const handleChange = (value: string, commentIndex: number) => {
@@ -51,7 +53,9 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButton onClick={() => handleClose()}>Cancel</SecondaryButton>
+                    <SecondaryButton onClick={() => handleClose()}>
+                        {translate('surveyEdit.editForm.button.cancel')}
+                    </SecondaryButton>
                     <PrimaryButton
                         disabled={isSubmitting}
                         onClick={() => {
@@ -59,7 +63,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                         }}
                         loading={isSubmitting}
                     >
-                        Submit Changes
+                        {translate('surveyEdit.editForm.button.submit')}
                     </PrimaryButton>
                 </Stack>
             </Grid>

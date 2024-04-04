@@ -4,8 +4,11 @@ import { Grid } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { Tabs } from './Tabs';
+import { useAppTranslation } from 'hooks';
 
 export const Form = () => {
+    const { t: translate } = useAppTranslation();
+
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
@@ -40,10 +43,10 @@ export const Form = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>Community Advisory Committee</MetHeader1>
+                                <MetHeader1>{translate('formCAC.form.header')}</MetHeader1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>Learn about and sign up for a Community Advisory Committee</MetParagraph>
+                                <MetParagraph>{translate('formCAC.form.paragraph')}</MetParagraph>
                             </Grid>
                         </Grid>
                     </Grid>

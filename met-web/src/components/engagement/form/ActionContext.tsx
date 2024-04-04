@@ -51,6 +51,13 @@ export const ActionContext = createContext<EngagementContext>({
     setIsNewEngagement: () => {
         /* empty default method  */
     },
+    contentTabs: [createDefaultEngagementContent()],
+    setContentTabs: () => {
+        return;
+    },
+    fetchEngagementContents: async () => {
+        /* empty default method  */
+    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -173,6 +180,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const loadData = async () => {
         await fetchEngagement();
         await fetchEngagementMetadata();
+        await fetchEngagementContents();
         setLoadingSavedEngagement(false);
     };
 
@@ -275,6 +283,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingAuthorization,
                 isNewEngagement,
                 setIsNewEngagement,
+                contentTabs,
+                setContentTabs,
+                fetchEngagementContents,
             }}
         >
             {children}

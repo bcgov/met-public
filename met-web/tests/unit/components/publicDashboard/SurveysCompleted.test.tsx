@@ -9,6 +9,18 @@ jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
     useMediaQuery: jest.fn(() => true),
 }));
+
+jest.mock('hooks', () => ({
+    useAppTranslation: () => ({
+        t: (key: string) => {
+            if (key === 'dashboard.noData') {
+                return 'No Data Available';
+            }
+            return key; // Return key as translation fallback
+        },
+    }),
+}));
+
 const mockEngagement = closedEngagement;
 
 const renderComponent = () => {

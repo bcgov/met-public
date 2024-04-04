@@ -26,12 +26,23 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => jest.fn(),
 }));
 
-jest.mock('hooks', () => ({
-    useAppTranslation: () => ({
-        t: (key: string) => key, // return the key itself
-    }),
-    useAppSelector: jest.fn(() => true),
-}));
+jest.mock('hooks', () => {
+    const translations: Record<string, string> = {
+        'dashboard.surveyEmailsSent': 'Survey Emails Sent',
+        'dashboard.surveysCompleted': 'Surveys Completed',
+        'dashboard.projectLocation': 'Project Location',
+        'dashboard.submissionTrend.label': 'Live Activity - Engagement',
+        'dashboard.link.0': '<<Return to ',
+        'dashboard.link.1': ' Engagement'
+    };
+
+    return {
+        useAppTranslation: () => ({
+            t: (key: string) => translations[key] || key,
+        }),
+        useAppSelector: jest.fn(() => true), // mock useAppSelector here if needed
+    };
+});
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
@@ -69,16 +80,16 @@ describe('Public Dashboard page tests', () => {
     });
 
     test('Navigation links work correctly', async () => {
-        const returnLink = screen.getByText(`<< Return to ${closedEngagement.name} Engagement`);
+        const returnLink = screen.getByText(`<<Return to ${closedEngagement.name} Engagement`);
         expect(returnLink).toBeInTheDocument();
         userEvent.click(returnLink);
         expect(window.location.pathname).toBe(`/engagements/${closedEngagement.id}/view`);
     });
 
     test('Public Dashboard has sub components', async () => {
-        expect(screen.getByText('Survey Emails Sent')).toBeInTheDocument();
-        expect(screen.getByText('Surveys Completed')).toBeInTheDocument();
-        expect(screen.getByText('Project Location')).toBeInTheDocument();
-        expect(screen.getByText('Live Activity - Engagement')).toBeInTheDocument();
+        expect(screen.getByText(/Survey Emails Sent/i)).toBeInTheDocument();
+        expect(screen.getByText(/Surveys Completed/i)).toBeInTheDocument();
+        expect(screen.getByText(/Project Location/i)).toBeInTheDocument();
+        expect(screen.getByText(/Live Activity - Engagement/i)).toBeInTheDocument();
     });
 });

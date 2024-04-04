@@ -1,7 +1,7 @@
 import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
-import { PollWidget, PollAnswer, PollResponse } from 'models/pollWidget';
+import { PollWidget, PollAnswer, PollResponse, PollResultResponse } from 'models/pollWidget';
 
 interface PostPollRequest {
     widget_id: number;
@@ -69,6 +69,17 @@ export const postPollResponse = async (
         url = replaceUrl(url, 'poll_id', String(poll_id));
         const response = await http.PostRequest<PollResponse>(url, data);
         return response.data || Promise.reject('Failed to create Poll Response');
+    } catch (err) {
+        return Promise.reject(err);
+    }
+};
+
+export const fetchPollResults = async (widget_id: number, poll_id: number): Promise<PollResultResponse> => {
+    try {
+        let url = replaceUrl(Endpoints.PollWidgets.RECORD_RESPONSE, 'widget_id', String(widget_id));
+        url = replaceUrl(url, 'poll_id', String(poll_id));
+        const response = await http.GetRequest<PollResultResponse>(url);
+        return response.data || Promise.reject('Failed to fetch Poll Results');
     } catch (err) {
         return Promise.reject(err);
     }
