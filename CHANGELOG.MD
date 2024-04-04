@@ -1,3 +1,8 @@
+## April 04, 2024
+
+- **Task**: Keycloak Unit Tests for New CSS API Integration [DESENG-508](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-508)
+  - Updated Keycloak Unit Tests for New CSS API Integration.
+
 ## April 02, 2024
 
 - **Task**: DEV clean up [DESENG-503](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-503)
