@@ -1,6 +1,5 @@
 import { EditAttributes, EditAttributesOutlined } from '@mui/icons-material';
 import { MetadataFilterType } from './types';
-import React from 'react';
 
 export const MetadataFilterTypes: { [key: string]: MetadataFilterType } = {
     chips_any: {

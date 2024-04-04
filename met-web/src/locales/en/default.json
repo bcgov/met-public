@@ -10,6 +10,35 @@
         "banner": {
             "header": "The Title of The Office",
             "description": "Description about the office and public engagement."
+        },
+        "filters": {
+            "drawer": {
+                "openButton": "Filter",
+                "title": "Filter Engagements",
+                "apply": "Apply Filters",
+                "statusFilter": "Engagement Status",
+                "filterHeader": "Filter by {0}"
+            },
+            "clear": "Clear Filters",
+            "search": "Search Engagements",
+            "searchPlaceholder": "Engagement Title",
+            "status": {
+                "all": "All Engagements",
+                "open": "Open Engagements",
+                "closed": "Closed Engagements",
+                "upcoming": "Upcoming Engagements"
+            },
+            "aria": {
+                "closeDrawer": "Close filter options",
+                "openDrawer": "Open more filter options",
+                "deleteFilterChip": "{0} filter - press to remove",
+                "metadataFilterChip": "{0} filter - {1}",
+                "selected": "Applied",
+                "notSelected": "Not Applied",
+                "applyFilters":"Apply Filters and close filter options",
+                "clearFilters":"Clear all filters",
+                "statusFilter": "Engagement Status Selector - {0} selected" 
+            }
         }
     },
     "comment": {

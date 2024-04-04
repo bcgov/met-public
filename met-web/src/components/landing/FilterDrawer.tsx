@@ -1,16 +1,17 @@
-// FilterDrawer.js
 import React, { useContext, useMemo } from 'react';
 import { LandingContext } from './LandingContext';
 import { SwipeableDrawer, IconButton, Typography, Stack, Button, Grid, useTheme, useMediaQuery } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { MetadataFilterChip } from './MetadataFilterChip';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
+import { useAppTranslation } from 'hooks';
 
 const FilterDrawer = () => {
     const { searchFilters, setSearchFilters, setPage, metadataFilters, clearFilters, drawerOpened, setDrawerOpened } =
         useContext(LandingContext);
 
     const theme = useTheme();
+    const { t: translate } = useAppTranslation();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const selectedValue = useMemo(() => {
@@ -68,7 +69,7 @@ const FilterDrawer = () => {
         >
             <IconButton
                 onClick={() => setDrawerOpened(false)}
-                title="Close filter drawer"
+                title={translate('landing.filters.aria.closeDrawer')}
                 sx={{
                     color: 'white',
                     position: 'absolute',
@@ -79,11 +80,11 @@ const FilterDrawer = () => {
                 <Close />
             </IconButton>
             <Typography mt={3} mb={6} variant="h5">
-                Filter Engagements
+                {translate('landing.filters.drawer.title')}
             </Typography>
 
             <Typography mt={3} variant="subtitle1">
-                Engagement Status
+                {translate('landing.filters.drawer.statusFilter')}
             </Typography>
             <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
                 {[
@@ -110,7 +111,10 @@ const FilterDrawer = () => {
             {metadataFilters.map((metadataFilter) => (
                 <>
                     <Typography mt={3} variant="subtitle1">
-                        Filter by {metadataFilter.name}
+                        {translate('landing.filters.drawer.filterHeader').replace(
+                            '{0}',
+                            metadataFilter.name ?? 'metadata',
+                        )}
                     </Typography>
                     <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
                         {metadataFilter.values.map((value) => (
@@ -131,6 +135,7 @@ const FilterDrawer = () => {
             <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-end">
                 <Button
                     variant="contained"
+                    aria-label={translate('landing.filters.aria.applyFilters')}
                     sx={{
                         height: 48,
                         mt: 4,
@@ -144,7 +149,7 @@ const FilterDrawer = () => {
                     }}
                     onClick={() => setDrawerOpened(false)}
                 >
-                    Apply Filters
+                    {translate('landing.filters.drawer.apply')}
                 </Button>
 
                 <Button
@@ -161,7 +166,7 @@ const FilterDrawer = () => {
                     onClick={clearFilters}
                     endIcon={<Close />}
                 >
-                    Clear Filters
+                    {translate('landing.filters.clear')}
                 </Button>
             </Grid>
         </SwipeableDrawer>

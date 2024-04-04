@@ -18,6 +18,7 @@ import { MetadataFilter } from 'components/metadataManagement/types';
 import { MetLabel } from 'components/common';
 import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
+import { useAppTranslation } from 'hooks';
 
 const FilterBlock = () => {
     const { searchFilters, setSearchFilters, setPage, clearFilters, page, setDrawerOpened } =
@@ -27,13 +28,15 @@ const FilterBlock = () => {
     const tileBlockRef = useRef<HTMLDivElement>(null);
     const [didMount, setDidMount] = useState(false);
 
-    const selectableStatuses: number[] = [
-        EngagementDisplayStatus.Open,
-        EngagementDisplayStatus.Upcoming,
-        EngagementDisplayStatus.Closed,
-    ];
-
     const theme = useTheme();
+    const { t: translate } = useAppTranslation();
+
+    const selectableStatuses: Map<number, string> = new Map([
+        [EngagementDisplayStatus.Open, translate('landing.filters.status.open')],
+        [EngagementDisplayStatus.Upcoming, translate('landing.filters.status.upcoming')],
+        [EngagementDisplayStatus.Closed, translate('landing.filters.status.closed')],
+        [-1, translate('landing.filters.status.all')],
+    ]);
 
     const debounceSetSearchFilters = useRef(
         debounce((searchText: string) => {
@@ -88,10 +91,10 @@ const FilterBlock = () => {
                 ref={tileBlockRef}
             >
                 <Grid item xl={6} lg={8} md={10} sm={8} xs={12}>
-                    <MetLabel>Search Engagements</MetLabel>
+                    <MetLabel>{translate('landing.filters.search')}</MetLabel>
                     <TextField
                         fullWidth
-                        placeholder="Engagement Title"
+                        placeholder={translate('landing.filters.searchPlaceholder')}
                         value={searchText}
                         onChange={(event) => {
                             setSearchText(event.target.value);
@@ -139,13 +142,14 @@ const FilterBlock = () => {
                 >
                     <Button
                         fullWidth
+                        aria-label={translate('landing.filters.aria.openDrawer')}
                         variant="contained"
                         color="primary"
                         startIcon={<Tune />}
                         onClick={() => setDrawerOpened(true)}
                         sx={{ height: 48 }}
                     >
-                        Filter
+                        {translate('landing.filters.drawer.openButton')}
                     </Button>
                 </Grid>
             </Grid>
@@ -179,12 +183,14 @@ const FilterBlock = () => {
                         }}
                         renderValue={(value) => {
                             // for rendering the selected value
-                            if (Number(value) === -1) return 'All Engagements';
-                            return EngagementDisplayStatus[Number(value)] + ' Engagements';
+                            return selectableStatuses.get(value) || '';
                         }}
                         displayEmpty
                         inputProps={{
-                            'aria-label': 'Select engagement status filter',
+                            'aria-label': translate('landing.filters.aria.statusFilter').replace(
+                                '{0}',
+                                selectableStatuses.get(selectedValue) || '',
+                            ),
                             style: { padding: 0 },
                         }}
                         sx={{
@@ -221,7 +227,7 @@ const FilterBlock = () => {
                                     borderRadius: '8px',
                                     boxShadow: 3,
                                     overflow: 'hidden',
-                                    border: '1px solid var(--Border-Light, #D9D9D9);',
+                                    border: '1px solid #D9D9D9;',
                                 },
                                 '& ul': {
                                     p: 0,
@@ -229,44 +235,36 @@ const FilterBlock = () => {
                                         fontSize: '16px',
                                         height: 48,
                                         '&:hover': {
-                                            backgroundColor: 'var(--surface-color-secondary-hover, #ECEAE8)',
+                                            backgroundColor: '#ECEAE8',
                                         },
                                         '&.Mui-selected': {
-                                            backgroundColor: 'var(--surface-color-brand-blue-20, #D8EAFD);',
+                                            backgroundColor: '#D8EAFD;',
                                         },
                                         '& span': {
-                                            color: 'var(--Type-Primary, #292929);',
+                                            color: '#292929;',
                                         },
                                         '&.Mui-selected span': {
                                             fontWeight: 'bold',
                                             color: theme.palette.primary.main,
                                         },
                                         '&:not(:first-of-type)': {
-                                            borderTop: '1px solid var(--Border-Light, #D9D9D9);',
+                                            borderTop: '1px solid #D9D9D9;',
                                         },
                                     },
                                 },
                             },
                         }}
                     >
-                        {selectableStatuses.map((status) => (
+                        {Array.from(selectableStatuses).map(([status, label]) => (
                             <MenuItem key={status} value={status}>
                                 {selectedValue === status && (
                                     <ListItemIcon>
                                         <Check fontSize="small" />
                                     </ListItemIcon>
                                 )}
-                                <ListItemText primary={EngagementDisplayStatus[status] + ' Engagements'} />
+                                <ListItemText primary={label} />
                             </MenuItem>
                         ))}
-                        <MenuItem value={-1}>
-                            {selectedValue === -1 && (
-                                <ListItemIcon>
-                                    <Check fontSize="small" />
-                                </ListItemIcon>
-                            )}
-                            <ListItemText primary="All Engagements" />
-                        </MenuItem>
                     </Select>
                     {searchFilters.metadata.map((filter) =>
                         filter.values.map((value) => (
@@ -274,7 +272,6 @@ const FilterBlock = () => {
                                 key={`${filter.taxon_id}-${value}`}
                                 name={value}
                                 onDelete={() => handleDeleteFilterChip(filter.taxon_id, value)}
-                                value={value}
                             />
                         )),
                     )}
@@ -290,7 +287,7 @@ const FilterBlock = () => {
                         }}
                         endIcon={<Close />}
                     >
-                        Clear Filters
+                        {translate('landing.filters.clear')}
                     </Button>
                 </Stack>
             </Grid>

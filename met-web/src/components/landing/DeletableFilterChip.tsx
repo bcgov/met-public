@@ -1,21 +1,15 @@
 import React from 'react';
 import { Chip } from '@mui/material';
 import { Close } from '@mui/icons-material';
+import { useAppTranslation } from 'hooks';
 
-export const DeletableFilterChip = ({
-    name,
-    value,
-    onDelete,
-}: {
-    name: string;
-    value: string | number;
-    onDelete?: () => void;
-}) => {
+export const DeletableFilterChip = ({ name, onDelete }: { name: string; onDelete?: () => void }) => {
+    const { t: translate } = useAppTranslation();
     return (
         <Chip
             label={name}
             title={name}
-            aria-label={name + ' filter - press to delete'}
+            aria-label={translate('landing.filters.aria.deleteFilterChip').replace('{0}', name)}
             color="primary"
             // replicate the delete icon on the left-hand side
             icon={<Close fontSize="small" sx={{ opacity: 0.8, '&:hover': { opacity: 1 } }} />}
