@@ -100,8 +100,7 @@ def test_reassign_user_reviewer_team_member(mocker, client, jwt, session, setup_
         f'/api/user/{user.id}/roles?role=TEAM_MEMBER', headers=headers, content_type=ContentType.JSON.value
     )
 
-    # assert rv.status_code == HTTPStatus.OK
-    assert rv.status_code == 200, f'Error: {rv.data.decode()}'
+    assert rv.status_code == HTTPStatus.OK
     mock_assign_composite_role_to_user_keycloak.assert_called()
     mock_get_user_roles_keycloak.assert_called()
     mock_remove_user_from_role_keycloak.assert_called()

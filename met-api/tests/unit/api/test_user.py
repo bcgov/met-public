@@ -37,7 +37,6 @@ from tests.utilities.factory_utils import factory_auth_header, factory_staff_use
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
 
 
-# TODO: Replace this test with one that adds composite roles to user
 def mock_add_user_to_role(mocker, mock_role_names):
     """Mock the KeycloakService.assign_composite_role_to_user method."""
     mock_response = MagicMock()
