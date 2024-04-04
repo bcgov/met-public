@@ -2,12 +2,15 @@ import React from 'react';
 import { Grid, SxProps, Theme } from '@mui/material';
 import { MetBody, MetPaper } from 'components/common';
 import { DASHBOARD } from './constants';
+import { useAppTranslation } from 'hooks';
 
 interface NoDataProps {
     height?: number | string;
     sx?: SxProps<Theme>;
 }
 export const NoData = ({ sx }: NoDataProps) => {
+    const { t: translate } = useAppTranslation();
+
     return (
         <MetPaper
             sx={{
@@ -27,7 +30,7 @@ export const NoData = ({ sx }: NoDataProps) => {
                 height="100%"
             >
                 <Grid item>
-                    <MetBody>No Data Available</MetBody>
+                    <MetBody>{translate('dashboard.noData')}</MetBody>
                 </Grid>
             </Grid>
         </MetPaper>

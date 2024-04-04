@@ -5,7 +5,7 @@ from http import HTTPStatus
 from flask import current_app
 
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.engagement_metadata import EngagementMetadataModel
+from met_api.models.engagement_metadata import EngagementMetadata as EngagementMetadataModel
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.services.rest_service import RestService
 from met_api.utils import notification

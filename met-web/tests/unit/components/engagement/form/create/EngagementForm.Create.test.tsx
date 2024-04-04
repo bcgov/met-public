@@ -74,7 +74,7 @@ describe('Engagement form page tests', () => {
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
-        .mockReturnValue(Promise.resolve(engagementMetadata));
+        .mockReturnValue(Promise.resolve([engagementMetadata]));
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
@@ -98,7 +98,7 @@ describe('Engagement form page tests', () => {
             expect(getByText('Engagement Name')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
-        expect(screen.getByTestId('create-engagement-button')).toBeVisible();
+        expect(screen.getByTestId('save-engagement-button')).toBeVisible();
         expect(getEngagementMock).not.toHaveBeenCalled();
         expect(getEngagementMetadataMock).not.toHaveBeenCalled();
 
@@ -125,7 +125,7 @@ describe('Engagement form page tests', () => {
         useParamsMock.mockReturnValue({ engagementId: 'create' });
         const { container, getByTestId } = render(<EngagementForm />);
 
-        const createButton = getByTestId('create-engagement-button');
+        const createButton = getByTestId('save-engagement-button');
         fireEvent.click(createButton);
 
         expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
@@ -138,11 +138,13 @@ describe('Engagement form page tests', () => {
 
         const addSurveyButton = screen.getByText('Add Survey');
 
+        // Check that the button is initially disabled
+        expect(addSurveyButton).toBeDisabled();
+
+        // Attempt to click the button (which should not trigger any action)
         fireEvent.click(addSurveyButton);
 
-        expect(openNotificationMock).toHaveBeenNthCalledWith(1, {
-            severity: 'error',
-            text: 'Please save the engagement before adding a survey',
-        });
+        // Verify that the button is still disabled
+        expect(addSurveyButton).toBeDisabled();
     });
 });

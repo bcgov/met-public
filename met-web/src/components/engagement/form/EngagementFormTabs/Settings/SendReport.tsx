@@ -1,22 +1,26 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { MetHeader4, MetDescription, MetLabel } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { EngagementSettingsContext } from './EngagementSettingsContext';
 
 const SendReport = () => {
-    const { settings, settingsLoading } = useContext(EngagementTabsContext);
+    const { settings, sendReport, setSendReport, settingsLoading } = useContext(EngagementTabsContext);
     const { savedEngagement } = useContext(ActionContext);
-    const { sendReport, setSendReport } = useContext(EngagementSettingsContext);
+    const [initialSendReportFlag, setInitialSendReportFlag] = useState(settings.send_report);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        setSendReport(Boolean(settings.send_report));
-    }, [settings]);
+        setInitialSendReportFlag(sendReport.send_report || settings.send_report);
+    }, []);
+
+    const handleSettingsChange = () => {
+        setInitialSendReportFlag(!initialSendReportFlag);
+        setSendReport({ send_report: !initialSendReportFlag });
+    };
 
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
@@ -34,7 +38,7 @@ const SendReport = () => {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={sendReport}
+                                checked={initialSendReportFlag}
                                 onChange={() => {
                                     if (!savedEngagement.id) {
                                         dispatch(
@@ -42,7 +46,7 @@ const SendReport = () => {
                                         );
                                         return;
                                     }
-                                    setSendReport(!sendReport);
+                                    handleSettingsChange();
                                 }}
                                 disabled={settingsLoading}
                             />

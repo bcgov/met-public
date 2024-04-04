@@ -59,7 +59,7 @@ const DrawerBox = () => {
                         </ListItemButton>
                     </ListItem>
                 ))}
-                <Divider sx={{ backgroundColor: 'white' }} />
+                <Divider sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }} />
                 <UserGuideNav />
             </List>
         </Box>

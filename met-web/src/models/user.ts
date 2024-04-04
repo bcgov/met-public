@@ -1,20 +1,20 @@
-export type UserGroup = 'EAO_IT_ADMIN' | 'EAO_IT_VIEWER' | 'EAO_TEAM_MEMBER' | 'EAO_REVIEWER';
+export type UserCompositeRole = 'IT_ADMIN' | 'IT_VIEWER' | 'TEAM_MEMBER' | 'REVIEWER';
 
-export const USER_GROUP: { [x: string]: { value: UserGroup; label: string } } = {
+export const USER_COMPOSITE_ROLE: { [x: string]: { value: UserCompositeRole; label: string } } = {
     ADMIN: {
-        value: 'EAO_IT_ADMIN',
-        label: 'Superuser',
+        value: 'IT_ADMIN',
+        label: 'Administrator',
     },
     VIEWER: {
-        value: 'EAO_IT_VIEWER',
+        value: 'IT_VIEWER',
         label: 'Viewer',
     },
     TEAM_MEMBER: {
-        value: 'EAO_TEAM_MEMBER',
+        value: 'TEAM_MEMBER',
         label: 'Team Member',
     },
     REVIEWER: {
-        value: 'EAO_REVIEWER',
+        value: 'REVIEWER',
         label: 'Reviewer',
     },
 };
@@ -26,12 +26,12 @@ export interface User {
     email_address: string;
     external_id: string;
     first_name: string;
-    groups: string[];
+    composite_roles: string[];
     id: number;
     last_name: string;
     updated_date: string;
     roles: string[];
-    main_group: string;
+    main_role: string;
     username: string;
     status_id: number;
 }
@@ -53,13 +53,13 @@ export const createDefaultUser: User = {
     description: '',
     email_address: '',
     external_id: '',
-    groups: [''],
+    composite_roles: [''],
     first_name: '',
     last_name: '',
     updated_date: Date(),
     created_date: Date(),
     roles: [],
     username: '',
-    main_group: '',
+    main_role: '',
     status_id: 0,
 };

@@ -8,9 +8,21 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
     EngagementMetadata: {
-        CREATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
-        UPDATE: `${AppConfig.apiUrl}/engagementsmetadata/`,
-        GET: `${AppConfig.apiUrl}/engagementsmetadata/engagement_id`,
+        GET_BY_ENG: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
+        GET_BY_KEY: `${AppConfig.apiUrl}/engagements/engagement_id/tenant/tenant_id/key`,
+        CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
+        BULK_UPDATE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
+        UPDATE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata/key`,
+        DELETE: `${AppConfig.apiUrl}/engagements/engagement_id/metadata/key`,
+    },
+    MetadataTaxa: {
+        GET_BY_TENANT: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
+        REORDER: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
+        CREATE: `${AppConfig.apiUrl}/engagement_metadata/taxa`,
+        GET: `${AppConfig.apiUrl}/engagement_metadata/taxon/taxon_id`,
+        UPDATE: `${AppConfig.apiUrl}/engagement_metadata/taxon/taxon_id`,
+        DELETE: `${AppConfig.apiUrl}/engagement_metadata/taxon/taxon_id`,
+        PRESET_VALUES: `${AppConfig.apiUrl}/engagement_metadata/taxon/taxon_id/preset_values`,
     },
     EngagementSettings: {
         CREATE: `${AppConfig.apiUrl}/engagementsettings/`,
@@ -22,12 +34,29 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/slugs/slug_id`,
         GET_ENG_ID: `${AppConfig.apiUrl}/slugs/engagements/engagement_id`,
     },
+    EngagementContent: {
+        GET: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
+        CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
+        SORT: `${AppConfig.apiUrl}/engagement/engagement_id/content/sort_index`,
+        UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
+        DELETE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
+    },
+    EngagementCustomContent: {
+        GET: `${AppConfig.apiUrl}/content/content_id/custom`,
+        CREATE: `${AppConfig.apiUrl}/content/content_id/custom`,
+        UPDATE: `${AppConfig.apiUrl}/content/content_id/custom`,
+    },
+    EngagementSummaryContent: {
+        GET: `${AppConfig.apiUrl}/content/content_id/summary`,
+        CREATE: `${AppConfig.apiUrl}/content/content_id/summary`,
+        UPDATE: `${AppConfig.apiUrl}/content/content_id/summary`,
+    },
     User: {
         GET: `${AppConfig.apiUrl}/user/user_id`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
         GET_LIST: `${AppConfig.apiUrl}/user/`,
-        ADD_TO_GROUP: `${AppConfig.apiUrl}/user/user_id/groups`,
-        CHANGE_GROUP: `${AppConfig.apiUrl}/user/user_id/groups`,
+        ADD_TO_COMPOSITE_ROLE: `${AppConfig.apiUrl}/user/user_id/roles`,
+        CHANGE_COMPOSITE_ROLE: `${AppConfig.apiUrl}/user/user_id/roles`,
         GET_USER_ENGAGEMENTS: `${AppConfig.apiUrl}/user/user_id/engagements`,
         TOGGLE_USER_STATUS: `${AppConfig.apiUrl}/user/user_id/status`,
     },
@@ -158,6 +187,12 @@ const Endpoints = {
     CACForm: {
         CREATE: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/widget_id`,
         GET_SHEET: `${AppConfig.apiUrl}/engagements/engagement_id/cacform/sheet`,
+    },
+    PollWidgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/polls`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/polls`,
+        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id`,
+        RECORD_RESPONSE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id/responses`,
     },
 };
 

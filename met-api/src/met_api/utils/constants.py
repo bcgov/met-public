@@ -16,26 +16,26 @@
 from enum import Enum
 
 
-class Groups(Enum):
-    """Enumeration representing user groups."""
+class CompositeRoles(Enum):
+    """Enumeration representing user roles."""
 
-    EAO_IT_ADMIN = 'Superuser'
-    EAO_TEAM_MEMBER = 'Team Member'
-    EAO_REVIEWER = 'Reviewer'
-    EAO_IT_VIEWER = 'Viewer'
+    IT_ADMIN = 'Administrator'
+    TEAM_MEMBER = 'Team Member'
+    REVIEWER = 'Reviewer'
+    IT_VIEWER = 'Viewer'
 
     @staticmethod
     def get_name_by_value(value):
-        """Get the name of a group by its value."""
-        for group in Groups:
-            if group.value == value:
-                return group.name
+        """Get the name of a role by its value."""
+        for role in CompositeRoles:
+            if role.value == value:
+                return role.name
         raise ValueError('No matching key found for the given value.')
 
 
 TENANT_ID_HEADER = 'tenant-id'
 
-GROUP_NAME_MAPPING = {group.name: group.value for group in Groups}
+COMPOSITE_ROLE_MAPPING = {role.name: role.value for role in CompositeRoles}
 
 TENANT_ID_JWT_CLAIM = 'tenant_id'
 

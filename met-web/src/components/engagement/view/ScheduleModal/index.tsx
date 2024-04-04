@@ -21,11 +21,11 @@ interface ScheduleModalProps {
 
 const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) => {
     const [scheduledDate, setScheduledDate] = useState<Dayjs | null>(dayjs(Date.now()));
-    const { savedEngagement, scheduleEngagement } = useContext(ActionContext);
+    const { content, savedEngagement, scheduleEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
     const isEngagementReady = () => {
-        return savedEngagement.content && savedEngagement.description && savedEngagement.banner_url;
+        return content && savedEngagement.description && savedEngagement.banner_url;
     };
 
     const handleChange = (newDate: Dayjs | null) => {

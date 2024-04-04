@@ -38,8 +38,8 @@ interface SurveyForm {
     id: string;
     form_json: unknown;
     name: string;
-    is_hidden: boolean;
-    is_template: boolean;
+    is_hidden?: boolean;
+    is_template?: boolean;
 }
 
 const SurveyFormBuilder = () => {
@@ -149,8 +149,6 @@ const SurveyFormBuilder = () => {
             id: String(surveyId),
             form_json: form,
             name: name,
-            is_hidden: isHiddenSurvey,
-            is_template: isTemplateSurvey,
         });
     };
 
@@ -263,12 +261,7 @@ const SurveyFormBuilder = () => {
                         </>
                     ) : (
                         <>
-                            <TextField
-                                autoFocus
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                                onBlur={(event) => setIsNamedFocused(false)}
-                            />
+                            <TextField autoFocus value={name} onChange={(event) => setName(event.target.value)} />
                             <IconButton
                                 onClick={() => {
                                     setIsNamedFocused(!isNameFocused);
@@ -391,7 +384,7 @@ const SurveyFormBuilder = () => {
                         />
                     </FormGroup>
                     <Tooltip
-                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Superusers. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
+                        title="When you toggle ON this option and save your Survey, your Survey will be 'Hidden'. When the toggle is ON and as long as the survey is not attached to an engagement, the Survey will only be visible to Administrators. When you are ready to make it available and able to be cloned or attached to an engagement, change the toggle to OFF and click the Save button."
                         placement="top"
                         componentsProps={{
                             tooltip: {

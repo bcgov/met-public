@@ -20,8 +20,11 @@ import json
 from http import HTTPStatus
 
 from faker import Faker
+from unittest.mock import patch
 import pytest
 
+from met_api.exceptions.business_exception import BusinessException
+from met_api.services.widget_documents_service import WidgetDocumentService
 from met_api.utils.enums import ContentType, WidgetDocumentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetDocumentInfo, TestWidgetInfo
 from tests.utilities.factory_utils import (
@@ -52,6 +55,16 @@ def test_create_documents(client, jwt, session, document_info):  # pylint:disabl
     )
     assert rv.status_code == HTTPStatus.OK
 
+    with patch.object(WidgetDocumentService, 'create_document',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.post(
+            f'/api/widgets/{widget.id}/documents',
+            data=json.dumps(data),
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
 
 def test_get_document(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that widget items can be POSTed."""
@@ -74,6 +87,15 @@ def test_get_document(client, jwt, session):  # pylint:disable=unused-argument
 
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('children')[0].get('id') == document.id
+
+    with patch.object(WidgetDocumentService, 'get_documents_by_widget_id', side_effect=ValueError('Test error')):
+        rv = client.get(
+            f'/api/widgets/{widget.id}/documents',
+            headers=headers,
+            content_type=ContentType.JSON.value
+        )
+
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=unused-argument
@@ -98,7 +120,7 @@ def test_assert_tree_structure_invalid(client, jwt, session):  # pylint:disable=
         content_type=ContentType.JSON.value
     )
     # TODO once we remove action result , this should be HTTP 400
-    assert rv.status_code == 500
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_assert_tree_structure(client, jwt, session):  # pylint:disable=unused-argument
@@ -163,6 +185,13 @@ def test_patch_documents(client, jwt, session):  # pylint:disable=unused-argumen
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('children')[0].get('title') == document_edits.get('title')
 
+    with patch.object(WidgetDocumentService, 'edit_document',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.patch(f'/api/widgets/{widget.id}/documents/{document.id}',
+                          data=json.dumps(document_edits),
+                          headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
 
 def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argument
     """Assert that a document can be PATCHed."""
@@ -177,6 +206,12 @@ def test_delete_documents(client, jwt, session):  # pylint:disable=unused-argume
                        headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == HTTPStatus.OK
+
+    document = factory_document_model(TestWidgetDocumentInfo.document1)
+    with patch.object(WidgetDocumentService, 'delete_document', side_effect=ValueError('Test error')):
+        rv = client.delete(f'/api/widgets/{widget.id}/documents/{document.id}',
+                           headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_sort_folders(client, jwt, session):
@@ -243,6 +278,13 @@ def test_sort_folders(client, jwt, session):
     assert rv.status_code == HTTPStatus.OK
     reset_order = [doc['id'] for doc in rv.json['children'] if doc.get('type') == 'folder']
     assert reset_order == initial_order
+
+    with patch.object(WidgetDocumentService, 'sort_documents',
+                      side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR)):
+        rv = client.patch(f'/api/widgets/{widget.id}/documents/order', data=json.dumps({
+            'documents': reset_reorder_dict}),
+                        headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def test_sort_files(client, jwt, session):

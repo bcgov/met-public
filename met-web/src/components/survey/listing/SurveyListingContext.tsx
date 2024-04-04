@@ -6,6 +6,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { getSurveysPage } from 'services/surveyService';
 import { useLocation } from 'react-router-dom';
 import { updateURLWithPagination } from 'components/common/Table/utils';
+import dayjs from 'dayjs';
+import { formatToUTC } from 'components/common/dateHelper';
 
 interface SurveyFilterStatus {
     linked: boolean;
@@ -119,9 +121,42 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
     const dispatch = useAppDispatch();
     const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
 
+    const formatDates = (advancedSearchFilters: AdvancedSearchFilters) => {
+        /*
+                Database has the values in utc but the value we select from the calender is having only date without a time.
+                So we need to convert:
+                1) start dates to utc format 
+                2) end dates to end of day and then to utc format
+                (Followed the same impementation in Engagement Advanced Search)
+        */
+        const { createdDateFrom, createdDateTo, publishedDateFrom, publishedDateTo } = advancedSearchFilters;
+        const formattedFilters = {
+            ...advancedSearchFilters,
+        };
+        if (createdDateFrom) {
+            formattedFilters.createdDateFrom = formatToUTC(createdDateFrom);
+        }
+        if (createdDateTo) {
+            formattedFilters.createdDateTo = formatToUTC(
+                dayjs(createdDateTo).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+            );
+        }
+        if (publishedDateFrom) {
+            formattedFilters.publishedDateFrom = formatToUTC(publishedDateFrom);
+        }
+        if (publishedDateTo) {
+            formattedFilters.publishedDateTo = formatToUTC(
+                dayjs(publishedDateTo).endOf('day').format('YYYY-MM-DD HH:mm:ss'),
+            );
+        }
+
+        return formattedFilters;
+    };
+
     const loadSurveys = async () => {
         try {
             setTableLoading(true);
+            const dateFilters = formatDates(advancedSearchFilters);
             const response = await getSurveysPage({
                 page,
                 size,
@@ -132,10 +167,10 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
                 is_template: advancedSearchFilters.status.template,
                 is_hidden: advancedSearchFilters.status.hidden,
                 is_linked: advancedSearchFilters.status.linked,
-                created_date_from: advancedSearchFilters.createdDateFrom,
-                created_date_to: advancedSearchFilters.createdDateTo,
-                published_date_from: advancedSearchFilters.publishedDateFrom,
-                published_date_to: advancedSearchFilters.publishedDateTo,
+                created_date_from: dateFilters.createdDateFrom,
+                created_date_to: dateFilters.createdDateTo,
+                published_date_from: dateFilters.publishedDateFrom,
+                published_date_to: dateFilters.publishedDateTo,
             });
             setSurveys(response.items);
             setPageInfo({

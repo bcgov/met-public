@@ -114,8 +114,8 @@ const Surveys = () => {
                                 <>
                                     <strong>Hidden</strong>
                                     <p>
-                                        This survey is only visible to Superusers. Toggle off on the survey edit page to
-                                        make it ready and available.
+                                        This survey is only visible to Administrators. Disable this setting to have it
+                                        visible to team members and viewers.
                                     </p>
                                 </>
                             }

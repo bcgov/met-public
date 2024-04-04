@@ -21,6 +21,7 @@ All services have 2 defaults sets of endpoints:
 That are used to expose operational health information about the service, and meta information.
 """
 
+from re import A
 from flask import Blueprint
 
 from .apihelper import Api
@@ -28,8 +29,12 @@ from .comment import API as COMMENT_API
 from .contact import API as CONTACT_API
 from .document import API as DOCUMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
+from .engagement_content import API as ENGAGEMENT_CONTENT_API
+from .engagement_custom_content import API as ENGAGEMENT_CUSTOM_CONTENT_API
+from .engagement_summary_content import API as ENGAGEMENT_SUMMARY_CONTENT_API
 from .engagement import API as ENGAGEMENT_API
 from .engagement_metadata import API as ENGAGEMENT_METADATA_API
+from .metadata_taxon import API as METADATA_TAXON_API
 from .engagement_members import API as ENGAGEMENT_MEMBERS_API
 from .feedback import API as FEEDBACK_API
 from .submission import API as SUBMISSION_API
@@ -50,6 +55,15 @@ from .widget_video import API as WIDGET_VIDEO_API
 from .engagement_settings import API as ENGAGEMENT_SETTINGS_API
 from .cac_form import API as CAC_FORM_API
 from .widget_timeline import API as WIDGET_TIMELINE_API
+from .widget_poll import API as WIDGET_POLL_API
+from .language import API as LANGUAGE_API
+from .widget_translation import API as WIDGET_TRANSLATION_API
+from .survey_translation import API as SURVEY_TRANSLATION_API
+from .poll_answer_translation import API as POLL_ANSWER_TRANSLATION_API
+from .event_item_translation import API as EVENT_ITEM_TRANSLATION_API
+from .subscribe_item_translation import API as SUBSCRIBE_ITEM_TRANSLATION_API
+from .timeline_event_translation import API as TIMELINE_EVENT_TRANSLATION_API
+from .engagement_translation import API as ENGAGEMENT_TRANSLATION_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -73,13 +87,17 @@ API.add_namespace(SUBMISSION_API)
 API.add_namespace(SUBSCRIPTION_API)
 API.add_namespace(COMMENT_API)
 API.add_namespace(EMAIL_VERIFICATION_API)
+API.add_namespace(ENGAGEMENT_CONTENT_API, path='/engagement/<int:engagement_id>/content')
+API.add_namespace(ENGAGEMENT_CUSTOM_CONTENT_API, path='/content/<int:content_id>/custom')
+API.add_namespace(ENGAGEMENT_SUMMARY_CONTENT_API, path='/content/<int:content_id>/summary')
 API.add_namespace(FEEDBACK_API)
 API.add_namespace(WIDGET_API)
 API.add_namespace(CONTACT_API)
 API.add_namespace(VALUE_COMPONENTS_API)
-API.add_namespace(ENGAGEMENT_METADATA_API)
 API.add_namespace(SHAPEFILE_API)
 API.add_namespace(TENANT_API)
+API.add_namespace(METADATA_TAXON_API, path='/engagement_metadata')
+API.add_namespace(ENGAGEMENT_METADATA_API, path='/engagements/<int:engagement_id>/metadata')
 API.add_namespace(ENGAGEMENT_MEMBERS_API, path='/engagements/<string:engagement_id>/members')
 API.add_namespace(WIDGET_DOCUMENTS_API, path='/widgets/<string:widget_id>/documents')
 API.add_namespace(WIDGET_EVENTS_API, path='/widgets/<int:widget_id>/events')
@@ -91,3 +109,12 @@ API.add_namespace(WIDGET_VIDEO_API, path='/widgets/<int:widget_id>/videos')
 API.add_namespace(ENGAGEMENT_SETTINGS_API)
 API.add_namespace(CAC_FORM_API, path='/engagements/<int:engagement_id>/cacform')
 API.add_namespace(WIDGET_TIMELINE_API, path='/widgets/<int:widget_id>/timelines')
+API.add_namespace(WIDGET_POLL_API, path='/widgets/<int:widget_id>/polls')
+API.add_namespace(LANGUAGE_API, path='/languages')
+API.add_namespace(WIDGET_TRANSLATION_API, path='/widget/<int:widget_id>/translations')
+API.add_namespace(SURVEY_TRANSLATION_API, path='/surveys/<int:survey_id>/translations')
+API.add_namespace(POLL_ANSWER_TRANSLATION_API, path='/polls/<int:poll_id>/translations')
+API.add_namespace(EVENT_ITEM_TRANSLATION_API, path='/events/<int:event_id>/translations')
+API.add_namespace(SUBSCRIBE_ITEM_TRANSLATION_API, path='/subscribe/<int:widget_subscribe_id>/translations')
+API.add_namespace(TIMELINE_EVENT_TRANSLATION_API, path='/timelines/<int:timeline_id>/translations')
+API.add_namespace(ENGAGEMENT_TRANSLATION_API, path='/engagement/<int:engagement_id>/translations')

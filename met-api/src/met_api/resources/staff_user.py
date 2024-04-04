@@ -72,7 +72,7 @@ class StaffUsers(Resource):
         users = StaffUserService.find_users(
             pagination_options=pagination_options,
             search_text=args.get('search_text', '', str),
-            include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
+            include_roles=args.get('include_roles', default=False, type=lambda v: v.lower() == 'true'),
             include_inactive=args.get('include_inactive', default=False, type=lambda v: v.lower() == 'true')
         )
         return jsonify(users), HTTPStatus.OK
@@ -91,7 +91,7 @@ class StaffUser(Resource):
         args = request.args
         user = StaffUserService.get_user_by_id(
             user_id,
-            include_groups=args.get('include_groups', default=False, type=lambda v: v.lower() == 'true'),
+            include_roles=args.get('include_roles', default=False, type=lambda v: v.lower() == 'true'),
             include_inactive=True,
         )
         return user, HTTPStatus.OK
@@ -122,18 +122,18 @@ class StaffUserStatus(Resource):
 
 
 @cors_preflight('POST, PUT')
-@API.route('/<user_id>/groups')
-class UserGroup(Resource):
-    """Add user to group."""
+@API.route('/<user_id>/roles')
+class UserRoles(Resource):
+    """Add user to composite roles."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @require_role([Role.CREATE_ADMIN_USER.value], skip_tenant_check_for_admin=True)
     def post(user_id):
-        """Add user to group."""
+        """Add user to composite roles."""
         try:
             args = request.args
-            user_schema = StaffUserService().add_user_to_group(user_id, args.get('group'))
+            user_schema = StaffUserService().assign_composite_role_to_user(user_id, args.get('role'))
             return user_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -144,12 +144,12 @@ class UserGroup(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.has_one_of_roles([Role.UPDATE_USER_GROUP.value])
+    @require_role([Role.UPDATE_USER_GROUP.value])
     def put(user_id):
-        """Update user group."""
+        """Update user composite roles."""
         try:
             args = request.args
-            user_schema = StaffUserMembershipService().reassign_user(user_id, args.get('group'))
+            user_schema = StaffUserMembershipService().reassign_user(user_id, args.get('role'))
             return user_schema, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

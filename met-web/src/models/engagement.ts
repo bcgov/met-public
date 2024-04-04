@@ -33,8 +33,26 @@ export interface Status {
     status_name: string;
 }
 
+export interface MetadataTaxonModify {
+    name?: string; // The name of the taxon, optional
+    description?: string; // The description of the taxon, optional
+    freeform?: boolean; // Whether the taxon is freeform, optional
+    data_type?: string; // The data type for the taxon, optional
+    one_per_engagement?: boolean; // Whether the taxon is limited to one entry per engagement, optional
+    preset_values?: string[]; // The preset values for the taxon
+}
+
+export interface MetadataTaxon extends MetadataTaxonModify {
+    id: number; // The id of the taxon
+    tenant_id: number; // The tenant id
+    position: number; // The taxon's position within the tenant
+    entries?: EngagementMetadata[]; // The content of the taxon
+}
+
 export interface EngagementMetadata {
-    engagement_id: number;
+    value: string; // The content of the metadata
+    taxon_id: number; // ID of the taxon this metadata is for
+    engagement_id?: number; // The ID of the relevant engagement
 }
 
 export interface EngagementSettings {
@@ -73,12 +91,6 @@ export const createDefaultEngagement = (): Engagement => {
         status_block: [],
         is_internal: false,
         consent_message: '',
-    };
-};
-
-export const createDefaultEngagementMetadata = (): EngagementMetadata => {
-    return {
-        engagement_id: 0,
     };
 };
 

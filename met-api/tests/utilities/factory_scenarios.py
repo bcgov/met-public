@@ -24,10 +24,12 @@ from faker import Faker
 from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
+from met_api.constants.engagement_content_type import EngagementContentType
 from met_api.constants.engagement_status import SubmissionStatus
+from met_api.constants.timeline_event_status import TimelineEventStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import LoginSource, UserStatus
+from met_api.utils.enums import ContentTitle, LoginSource, UserStatus
 
 
 fake = Faker()
@@ -51,6 +53,24 @@ class TestUserInfo(dict, Enum):
         'email_address': fake.email(),
         'status_id': UserStatus.ACTIVE.value,
         'tenant_id': '1'
+    }
+
+    user_staff_2 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '2'
+    }
+
+    user_staff_3 = {
+        'first_name': fake.name(),
+        'middle_name': fake.name(),
+        'last_name': fake.name(),
+        'email_address': fake.email(),
+        'status_id': UserStatus.ACTIVE.value,
+        'tenant_id': '3'
     }
 
 
@@ -137,7 +157,7 @@ class TestTenantInfo(dict, Enum):
     """Test scenarios of tenants."""
 
     tenant1 = {
-        'short_name': 'GDX',
+        'short_name': 'EAO',
         'name': fake.name(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
@@ -225,9 +245,72 @@ class TestEngagementInfo(dict, Enum):
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
-        'content': 'Content Sample',
-        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
-            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+    }
+
+
+class TestEngagementMetadataInfo(dict, Enum):
+    """Test data for engagement metadata."""
+
+    metadata0 = {
+        'engagement_id': None,
+        'taxon_id': None,
+        'value': fake.name()
+    }
+    metadata1 = {
+        'engagement_id': 1,
+        'taxon_id': 1,
+        'value': fake.name()
+    }
+    metadata2 = {
+        'engagement_id': 1,
+        'taxon_id': 2,
+        'value': fake.name()
+    }
+    metadata3 = {
+        'engagement_id': 1,
+        'taxon_id': 2,
+        'value': fake.name()
+    }
+    metadata4 = {
+        'engagement_id': 2,
+        'taxon_id': 1,
+        'value': fake.name()
+    }
+
+
+class TestEngagementMetadataTaxonInfo(dict, Enum):
+    """Test data for engagement metadata taxa."""
+
+    taxon1 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'text',
+        'freeform': True,
+        'one_per_engagement': False,
+    }
+
+    taxon2 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'long_text',
+        'freeform': True,
+        'one_per_engagement': False,
+    }
+
+    taxon3 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'text',
+        'freeform': False,
+        'one_per_engagement': True,
+    }
+
+    taxon4 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'url',
+        'freeform': False,
+        'one_per_engagement': False,
     }
 
 
@@ -252,10 +335,8 @@ class TestJwtClaims(dict, Enum):
         'firstname': fake.first_name(),
         'lastname': fake.last_name(),
         'preferred_username': fake.user_name(),
-        'realm_access': {
-            'roles': [
-            ]
-        }
+        'client_roles': [
+        ]
     }
 
     public_user_role = {
@@ -266,11 +347,9 @@ class TestJwtClaims(dict, Enum):
         'preferred_username': fake.user_name(),
         'email': fake.email(),
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'public_user'
-            ]
-        }
+        'client_roles': [
+            'public_user'
+        ]
     }
 
     met_admin_role = {
@@ -283,20 +362,18 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'create_survey',
-                'view_users',
-                'create_admin_user',
-                'edit_members',
-                'toggle_user_status',
-                'export_to_csv',
-                'update_user_group',
-                'create_tenant'
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'create_survey',
+            'view_users',
+            'create_admin_user',
+            'edit_members',
+            'toggle_user_status',
+            'export_to_csv',
+            'update_user_group',
+            'create_tenant'
+        ]
     }
 
     staff_admin_role = {
@@ -309,33 +386,33 @@ class TestJwtClaims(dict, Enum):
         'tenant_id': 1,
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'create_engagement',
-                'edit_engagement',
-                'create_survey',
-                'view_users',
-                'view_private_engagements',
-                'create_admin_user',
-                'view_all_surveys',
-                'view_surveys',
-                'edit_all_surveys',
-                'edit_survey',
-                'view_unapproved_comments',
-                'clone_survey',
-                'edit_members',
-                'review_comments',
-                'review_all_comments',
-                'view_all_engagements',
-                'toggle_user_status',
-                'export_all_to_csv',
-                'update_user_group',
-                'export_proponent_comment_sheet',
-                'export_internal_comment_sheet'
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'create_engagement',
+            'edit_engagement',
+            'create_survey',
+            'view_users',
+            'view_private_engagements',
+            'create_admin_user',
+            'view_all_surveys',
+            'view_surveys',
+            'edit_all_surveys',
+            'edit_survey',
+            'view_unapproved_comments',
+            'clone_survey',
+            'edit_members',
+            'review_comments',
+            'review_all_comments',
+            'view_all_engagements',
+            'toggle_user_status',
+            'export_all_to_csv',
+            'update_user_group',
+            'export_proponent_comment_sheet',
+            'export_internal_comment_sheet',
+            'export_cac_form_to_sheet',
+            'view_members'
+        ]
     }
     team_member_role = {
         'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
@@ -347,15 +424,13 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_engagement',
-                'view_users',
-                'clone_survey',
-                'export_proponent_comment_sheet'
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_engagement',
+            'view_users',
+            'clone_survey',
+            'export_proponent_comment_sheet'
+        ]
     }
 
     reviewer_role = {
@@ -368,12 +443,10 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'tenant_id': 1,
-        'realm_access': {
-            'roles': [
-                'staff',
-                'view_users',
-            ]
-        }
+        'client_roles': [
+            'staff',
+            'view_users',
+        ]
     }
 
 
@@ -403,6 +476,27 @@ class TestWidgetInfo(dict, Enum):
     }
     widget_subscribe = {
         'widget_type_id': WidgetType.SUBSCRIBE.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_map = {
+        'widget_type_id': WidgetType.Map.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_video = {
+        'widget_type_id': WidgetType.Video.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_timeline = {
+        'widget_type_id': WidgetType.Timeline.value,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -512,7 +606,7 @@ class TestCommentInfo(dict, Enum):
 
     comment1 = {
         'text': fake.paragraph(nb_sentences=3),
-        'component_id': 'simpletextarea',
+        'component_id': 'simpletext',
         'submission_date': datetime.now().strftime('%Y-%m-%d'),
     }
 
@@ -648,4 +742,241 @@ class TestSubscribeInfo(Enum):
                 'form_type': 'EMAIL_LIST'
             }
         ]
+    }
+
+    subscribe_info_2 = {
+        'widget_id': 1,
+        'type': 'SIGN_UP',
+        'items': [
+            {
+                'description': '{\"blocks\":[{\"key\":\"2ku94\",\"text\":\
+                    "Rich Description Sample\",\"type\":\"unstyled\", \
+                    "depth\":0,\"inlineStyleRanges\":[],\
+                    "entityRanges\":[],\"data\":{}}],\"entityMap\":{}}',
+                'call_to_action_type': 'link',
+                'call_to_action_text': 'Click here to sign up',
+                'form_type': 'SIGN_UP'
+            }
+        ]
+    }
+
+
+class TestCACForm(dict, Enum):
+    """Test scenarios of cac form."""
+
+    form_data = {
+        'understand': True,
+        'terms_of_reference': True,
+        'first_name': fake.name(),
+        'last_name': fake.name(),
+        'city': 'City',
+        'email': fake.email(),
+    }
+
+
+class TestWidgetMap(dict, Enum):
+    """Test scenarios of video widget."""
+
+    map1 = {
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
+        'marker_label': fake.name()
+    }
+
+    map2 = {
+        'longitude': fake.longitude(),
+        'latitude': fake.latitude(),
+        'marker_label': fake.name()
+    }
+
+
+class TestWidgetVideo(dict, Enum):
+    """Test scenarios of video widget."""
+
+    video1 = {
+        'id': '1',
+        'video_url': fake.url(),
+        'description': fake.text(max_nb_chars=50),
+    }
+
+
+class TestTimelineInfo(dict, Enum):
+    """Test scenarios of event."""
+
+    widget_timeline = {
+        'title': fake.name(),
+        'description': fake.text(max_nb_chars=50),
+    }
+
+    timeline_event = {
+        'timeline_id': '1',
+        'description': fake.text(max_nb_chars=50),
+        'time': datetime.now().strftime('%Y-%m-%d'),
+        'position': 1,
+        'status': TimelineEventStatus.Pending.value
+    }
+
+
+class TestWidgetPollInfo(dict, Enum):
+    """Test scenarios of widget polls."""
+
+    poll1 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'active',
+        'engagement_id': 1  # Placeholder, should be replaced with actual engagement ID in tests
+    }
+
+    poll2 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'inactive',
+        'engagement_id': 1  # Placeholder, should be replaced with actual engagement ID in tests
+    }
+
+    poll3 = {
+        'title': fake.sentence(),
+        'description': fake.text(),
+        'status': 'active',
+        'engagement_id': 2  # Placeholder, should be replaced with another engagement ID in tests
+    }
+
+
+class TestPollAnswerInfo(dict, Enum):
+    """Test scenarios for poll answers."""
+
+    answer1 = {
+        'answer_text': 'Answer 1'
+    }
+
+    answer2 = {
+        'answer_text': 'Answer 2'
+    }
+
+    answer3 = {
+        'answer_text': 'Answer 3'
+    }
+
+
+class TestPollResponseInfo(dict, Enum):
+    """Test scenarios for poll responses."""
+
+    response1 = {
+        'participant_id': fake.uuid4(),
+        'selected_answer_id': 1,  # should be replaced with an actual answer ID in tests
+        'poll_id': 1,            # should be replaced with an actual poll ID in tests
+        'widget_id': 1,          # Placeholder, should be replaced with an actual widget ID in tests
+    }
+
+    response2 = {
+        'participant_id': fake.uuid4(),
+        'selected_answer_id': 2,  # should be replaced with an actual answer ID in tests
+        'poll_id': 1,            # should be replaced with an actual poll ID in tests
+        'widget_id': 1,          # should be replaced with an actual widget ID in tests
+    }
+
+
+class TestEngagementContentInfo(dict, Enum):
+    """Test scenarios of engagement content."""
+
+    content1 = {
+        'title': ContentTitle.DEFAULT.value,
+        'icon_name': ContentTitle.DEFAULT_ICON.value,
+        'content_type': EngagementContentType.Summary.name,
+        'is_internal': False,
+    }
+    content2 = {
+        'title': 'Custom',
+        'icon_name': ContentTitle.DEFAULT_ICON.value,
+        'content_type': EngagementContentType.Custom.name,
+        'is_internal': False,
+    }
+
+
+class TestLanguageInfo(dict, Enum):
+    """Test scenarios of language."""
+
+    language1 = {
+        'name': 'Spanish',
+        'code': 'en',
+        'right_to_left': False,
+    }
+
+
+class TestWidgetTranslationInfo(dict, Enum):
+    """Test scenarios of widget translation content."""
+
+    widgettranslation1 = {
+        'title': fake.text(max_nb_chars=20),
+        'map_marker_label': fake.text(max_nb_chars=20),
+    }
+
+
+class TestSurveyTranslationInfo(dict, Enum):
+    """Test scenarios of Survey Translation."""
+
+    survey_translation1 = {
+        'survey_id': 1,
+        'language_id': 2,
+        'name': 'Survey Name',
+        'form_json': '{"question": "What is your name?"}'
+    }
+
+
+class TestPollAnswerTranslationInfo(dict, Enum):
+    """Test scenarios of Poll Answer Translation."""
+
+    translation1 = {
+        'poll_answer_id': 1,
+        'language_id': 2,
+        'answer_text': 'Answer 1'
+    }
+
+
+class TestSubscribeItemTranslationInfo(dict, Enum):
+    """Test scenarios of Subscribe Item Translation."""
+
+    translate_info1 = {
+        'subscribe_item_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+    }
+
+
+class TestEventItemTranslationInfo(dict, Enum):
+    """Test scenarios of Event Item Translation."""
+
+    event_item_info1 = {
+        'event_item_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+        'location_name': 'Location name',
+        'location_address': 'location address',
+        'url': fake.url(),
+        'url_label': fake.name(),
+    }
+
+
+class TestTimelineEventTranslationInfo(dict, Enum):
+    """Test scenarios of TimeLine Event Translation."""
+
+    timeline_event_info1 = {
+        'timeline_event_id': 1,
+        'language_id': 2,
+        'description': fake.text(),
+        'time': datetime.now().strftime('%Y-%m-%d'),
+    }
+
+
+class TestEngagementTranslationInfo(dict, Enum):
+    """Test scenarios of engagement translation content."""
+
+    engagementtranslation1 = {
+        'name': fake.text(max_nb_chars=20),
+        'description': fake.text(max_nb_chars=20),
+        'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\"type\":\"unstyled\",\
+            \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'content': 'Content Sample',
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
     }

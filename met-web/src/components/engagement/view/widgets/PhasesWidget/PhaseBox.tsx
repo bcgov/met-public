@@ -20,7 +20,7 @@ interface PhaseBoxProps {
 }
 export const PhaseBox = ({
     title,
-    backgroundColor = 'white',
+    backgroundColor = 'var(--bcds-surface-background-white)',
     learnMoreBox,
     iconBox,
     currentPhase,

@@ -55,12 +55,12 @@ def get_named_config(environment: Union[str, None]) -> 'Config':
     }
     try:
         print(f'Loading configuration: {environment}...')
-        return config_mapping.get(environment, ProdConfig)()
+        return config_mapping.get(environment or 'production', ProdConfig)()
     except KeyError as e:
         raise KeyError(f'Configuration "{environment}" not found.') from e
 
 
-def env_truthy(env_var, default: bool = False):
+def env_truthy(env_var, default: Union[bool, str] = False):
     """
     Return True if the environment variable is set to a truthy value.
 
@@ -97,6 +97,7 @@ class Config:  # pylint: disable=too-few-public-methods
         os.environ['FLASK_DEBUG'] = str(self.USE_DEBUG)
 
     @property
+    # pylint: disable=invalid-name
     def SQLALCHEMY_DATABASE_URI(self) -> str:
         """
         Dynamically fetch the SQLAlchemy Database URI based on the DB config.
@@ -162,6 +163,12 @@ class Config:  # pylint: disable=too-few-public-methods
     # CORS settings
     CORS_ORIGINS = os.getenv('CORS_ORIGINS', '').split(',')
 
+    # CORS_MAX_AGE defines the maximum age (in seconds) for Cross-Origin Resource Sharing (CORS) settings.
+    # This value is used to indicate how long the results of a preflight request (OPTIONS) can be cached
+    # by the client, reducing the frequency of preflight requests for the specified HTTP methods.
+    # Adjust this value based on security considerations.
+    CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None)  # Default: 0 seconds
+
     EPIC_CONFIG = {
         'ENABLED': env_truthy('EPIC_INTEGRATION_ENABLED'),
         'JWT_OIDC_ISSUER': os.getenv('EPIC_JWT_OIDC_ISSUER'),
@@ -178,8 +185,12 @@ class Config:  # pylint: disable=too-few-public-methods
         'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
         'SERVICE_ACCOUNT_ID': os.getenv('MET_ADMIN_CLIENT_ID'),
         'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
-        'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'ADMIN_BASE_URL': os.getenv('KEYCLOAK_ADMIN_TOKEN_URL', ''),
+        'ADMIN_USERNAME': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'ADMIN_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
+        'CSS_API_URL': os.getenv('CSS_API_URL', ''),
+        'CSS_API_ENVIRONMENT': os.getenv('CSS_API_ENVIRONMENT', ''),
+        'CSS_API_INTEGRATION_ID': os.getenv('CSS_API_INTEGRATION_ID'),
         'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
     }
 
@@ -197,9 +208,9 @@ class Config:  # pylint: disable=too-few-public-methods
         'JWKS_URI': os.getenv('JWT_OIDC_JWKS_URI', f'{_issuer}/protocol/openid-connect/certs'),
         'ALGORITHMS': os.getenv('JWT_OIDC_ALGORITHMS', 'RS256'),
         'AUDIENCE': os.getenv('JWT_OIDC_AUDIENCE', 'account'),
-        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', 'True')),
+        'CACHING_ENABLED': str(env_truthy('JWT_OIDC_CACHING_ENABLED', True)),
         'JWKS_CACHE_TIMEOUT': int(os.getenv('JWT_OIDC_JWKS_CACHE_TIMEOUT', '300')),
-        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'realm_access.roles'),
+        'ROLE_CLAIM': os.getenv('JWT_OIDC_ROLE_CLAIM', 'client_roles'),
     }
 
     # PostgreSQL configuration
@@ -288,7 +299,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'CLOSEOUT': {
             'ID': os.getenv('CLOSEOUT_EMAIL_TEMPLATE_ID'),
             'SUBJECT': os.getenv('CLOSEOUT_EMAIL_SUBJECT',
-                                 'MET - Engagement Closed'),
+                                 'The public commenting period for {engagement_name} is now closed.'),
         },
         'ACCESS_REQUEST': {
             'ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
@@ -306,6 +317,8 @@ class Config:  # pylint: disable=too-few-public-methods
         'SERVICE_CLIENT_SECRET': os.getenv('CDOGS_SERVICE_CLIENT_SECRET'),
         'TOKEN_URL': os.getenv('CDOGS_TOKEN_URL'),
     }
+
+    PROPAGATE_EXCEPTIONS = True
 
 
 class DevConfig(Config):  # pylint: disable=too-few-public-methods
@@ -368,6 +381,7 @@ class TestConfig(TestKeyConfig, Config):  # pylint: disable=too-few-public-metho
         'HOST': os.getenv('DATABASE_TEST_HOST', Config.DB.get('HOST')),
         'PORT': os.getenv('DATABASE_TEST_PORT', Config.DB.get('PORT')),
     }
+    IS_SINGLE_TENANT_ENVIRONMENT = False
 
 
 class DockerConfig(Config):  # pylint: disable=too-few-public-methods

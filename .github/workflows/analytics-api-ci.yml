@@ -67,6 +67,8 @@ jobs:
       KEYCLOAK_TEST_BASE_URL: "http://localhost:8081"
       KEYCLOAK_TEST_REALMNAME: "demo"
       USE_TEST_KEYCLOAK_DOCKER: "YES"
+
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
       
     runs-on: ubuntu-20.04
 

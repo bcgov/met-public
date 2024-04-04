@@ -82,6 +82,7 @@ const config: Config.InitialOptions = {
         'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
         'dnd-core': 'dnd-core-cjs',
         '\\.(css|scss)$': '<rootDir>/tests/unit/components/styleMock.tsx',
+        "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/__mocks__/fileMock.ts",
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

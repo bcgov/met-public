@@ -64,11 +64,19 @@ objects:
                 name: ${DB_APP_NAME}
           - name: DATABASE_HOST
             value: ${DB_APP_NAME}
+          - name: DATABASE_PORT
+            value: ${DB_APP_PORT}
           - name: S3_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 key: secret-access-key
                 name: s3
+          - name: CORS_ORIGINS
+            value: ${CORS_ORIGINS}
+          - name: KEYCLOAK_BASE_URL
+            value: ${KEYCLOAK_BASE_URL}
+          - name: KEYCLOAK_REALMNAME
+            value: ${KEYCLOAK_REALMNAME}
           envFrom:
           - configMapRef:
               name: jwt-oidc
@@ -178,6 +186,22 @@ parameters:
     description: "The postgresql application name"
     required: true
     value: met-patroni
+  - name: DB_APP_PORT
+    description: "The postgresql application port"
+    required: true
+    value: '5432'
+  - name: CORS_ORIGINS
+    description: "Allowable origins for Cross-Origin Resource Sharing"
+    required: true
+    value: 'http://localhost:3000'
+  - name: KEYCLOAK_BASE_URL
+    description: "Keycloak base url"
+    required: true
+    value: ''
+  - name: KEYCLOAK_REALMNAME
+    description: "Realm name for the project"
+    required: true
+    value: 'standard'
   - name: IMAGE_TAG
     description: "The image tag to deploy"
     required: true

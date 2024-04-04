@@ -63,7 +63,7 @@ export const AddTeamMemberModal = () => {
             setUsersLoading(true);
             const response = await getUserList({
                 search_text: searchText,
-                include_groups: false,
+                include_roles: false,
             });
             setUsers(response.items);
             setUsersLoading(false);

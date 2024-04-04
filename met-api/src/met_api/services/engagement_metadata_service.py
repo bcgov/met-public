@@ -1,84 +1,185 @@
 """Service for engagement management."""
-from datetime import datetime
 
-from met_api.constants.engagement_status import Status
-from met_api.constants.membership_type import MembershipType
+from typing import List, Optional
+from met_api.models import db
+from met_api.models.db import transactional
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.engagement_metadata import EngagementMetadataModel
+from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.schemas.engagement_metadata import EngagementMetadataSchema
-from met_api.services import authorization
-from met_api.services.project_service import ProjectService
-from met_api.utils.roles import Role
 
 
 class EngagementMetadataService:
     """Engagement metadata management service."""
 
     @staticmethod
-    def get_metadata(engagement_id) -> EngagementMetadataSchema:
-        """Get Engagement metadata by the id."""
-        engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
-        if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
-            one_of_roles = (
-                MembershipType.TEAM_MEMBER.name,
-                Role.VIEW_ALL_ENGAGEMENTS.value
-            )
-            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+    def get(metadata_id) -> dict:
+        """
+        Get engagement metadata by id.
 
-        metadata_model: EngagementMetadataModel = EngagementMetadataModel.find_by_id(engagement_id)
-        metadata = EngagementMetadataSchema().dump(metadata_model)
-        return metadata
-
-    @staticmethod
-    def create_metadata(request_json: dict):
-        """Create engagement metadata."""
-        if engagement_id := request_json.get('engagement_id', None):
-            one_of_roles = (
-                MembershipType.TEAM_MEMBER.name,
-                Role.CREATE_ENGAGEMENT.value
-            )
-            authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
-
-        metadata_model = EngagementMetadataService._create_metadata_model(request_json)
-        metadata_model.commit()
-        updated_metadata: EngagementMetadataModel = metadata_model.find_by_id(metadata_model.engagement_id)
-        # publish changes to EPIC
-        ProjectService.update_project_info(updated_metadata.engagement_id)
-        return updated_metadata
+        Args:
+            id: The ID of the engagement metadata.
+        Returns:
+            A serialized point of engagement metadata.
+        Raises:
+            HTTP 404 error if the engagement metadata is not found.
+            Authorization error if the user does not have the required role.
+        """
+        engagement_metadata = EngagementMetadata.query.get(metadata_id)
+        if not engagement_metadata:
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
+        return dict(EngagementMetadataSchema().dump(engagement_metadata))
 
     @staticmethod
-    def _create_metadata_model(metadata: dict) -> EngagementMetadataModel:
-        """Save engagement metadata."""
-        new_metadata_model = EngagementMetadataModel(
-            engagement_id=metadata.get('engagement_id', None),
-            # TODO: Uncomment depending on future metadata work
-            # project_metadata=metadata.get('project_metadata', None),
-            created_date=datetime.utcnow(),
-            updated_date=None,
+    def get_by_engagement(engagement_id, taxon_id=None) -> List[dict]:
+        """
+        Get metadata by engagement id.
+
+        Args:
+            engagement_id: The ID of the engagement.
+        Returns:
+            A list of serialized engagement metadata points.
+        Raises:
+            HTTP 404 error if the engagement is not found.
+        """
+        engagement_model = EngagementModel.query.get(engagement_id)
+        if not engagement_model:
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
+        results = engagement_model.metadata
+        if taxon_id:
+            results = [item for item in results if item.taxon_id == taxon_id]
+        return EngagementMetadataSchema(many=True).dump(results)
+
+    @staticmethod
+    def check_association(engagement_id, metadata_id) -> bool:
+        """
+        Check if some metadata is actually associated with an engagement.
+
+        Used to prevent users from accessing metadata that does not belong to
+        an engagement they have access to.
+        Args:
+            engagement_id: The ID of the engagement.
+            metadata_id: The ID of the metadata.
+        Returns:
+            True if the metadata is associated with the engagement, False otherwise.
+        """
+        engagement_metadata = EngagementMetadata.query.get(metadata_id)
+        if not engagement_metadata:
+            raise KeyError(
+                f'Engagement metadata with id {metadata_id} does not exist.')
+        return engagement_metadata.engagement_id == engagement_id
+
+    @staticmethod
+    @transactional(database=db)
+    def create(engagement_id: int, taxon_id: int, value: str) -> dict:
+        """
+        Create engagement metadata.
+
+        Args:
+            engagement_id: The ID of the engagement.
+            taxon_id: The ID of the metadata taxon.
+            value: The value of the metadata.
+        Returns:
+            The created metadata.
+        """
+        # Ensure that the engagement exists, or else raise the appropriate error
+        engagement = EngagementModel.query.get(engagement_id)
+        if not engagement:
+            raise KeyError(
+                f'Engagement with id {engagement_id} does not exist.')
+        taxon = MetadataTaxon.query.get(taxon_id)
+        if not taxon:
+            raise ValueError(f'Taxon with id {taxon_id} does not exist.')
+        if engagement.tenant.id != taxon.tenant.id:
+            raise ValueError(
+                f'Taxon {taxon} does not belong to tenant {engagement.tenant}')
+        metadata = {
+            'engagement_id': engagement_id,
+            'taxon_id': taxon_id,
+            'value': value,
+        }
+        engagement_metadata = EngagementMetadataSchema().load(
+            metadata, session=db.session
         )
-        new_metadata_model.save()
-        return new_metadata_model
+        db.session.add(engagement_metadata)  # type: ignore
+        engagement_metadata.save()
+        return dict(EngagementMetadataSchema().dump(engagement_metadata))
+
+    def create_for_engagement(self, engagement_id: int, metadata: dict, **kwargs) -> Optional[dict]:
+        """
+        Create engagement metadata.
+
+        Args:
+            engagement_id: The ID of the engagement.
+            metadata: The point of engagement metadata to create.
+        Returns:
+            The created metadata.
+        """
+        metadata = metadata or {}
+        metadata = self.create(metadata, engagement_id, **kwargs)
 
     @staticmethod
-    def update_metadata(data: dict):
-        """Update engagement metadata partially."""
-        engagement_id = data.get('engagement_id', None)
-        if not engagement_id:
-            raise KeyError('Engagement id is required.')
+    @transactional()
+    def update(metadata_id: int, value: str) -> dict:
+        """
+        Update engagement metadata.
 
-        authorization.check_auth(
-            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
-            engagement_id=engagement_id
-        )
+        Args:
+            id: The ID of the engagement metadata.
+            metadata: The fields to update.
+        Returns:
+            The updated metadata.
+        """
+        metadata = EngagementMetadata.query.get(metadata_id)
+        if not metadata:
+            raise KeyError(f'Engagement metadata with id {metadata_id}'
+                           ' does not exist.')
+        metadata.value = value
+        return dict(EngagementMetadataSchema().dump(metadata, many=False))
 
-        saved_metadata = EngagementMetadataModel.find_by_id(engagement_id)
+    @staticmethod
+    @transactional()
+    def update_by_taxon(engagement_id: int, taxon_id: int, values: List[str]) -> List[dict]:
+        """
+        Update engagement metadata by taxon.
 
-        if saved_metadata:
-            updated_metadata = EngagementMetadataModel.update(data)
-        else:
-            updated_metadata = EngagementMetadataService._create_metadata_model(data)
+        Args:
+            engagement_id: The ID of the engagement.
+            taxon_id: The ID of the metadata taxon.
+            values: The values to store for the taxon.
+        Returns:
+            The updated metadata as a list.
+        """
+        query = EngagementMetadata.query.filter_by(
+            engagement_id=engagement_id, taxon_id=taxon_id)
+        metadata = query.all()
+        if len(metadata) > len(values):
+            for i in range(len(values), len(metadata)):
+                metadata[i].delete()
+        metadata = query.all()  # remove deleted entries from the list
+        for i, value in enumerate(values):
+            if i < len(metadata):
+                metadata[i].value = value
+        if len(values) > len(metadata):
+            for i in range(len(metadata), len(values)):
+                metadata.append(EngagementMetadata(
+                    engagement_id=engagement_id, taxon_id=taxon_id, value=values[i]
+                ))
+        db.session.add_all(metadata)
+        return EngagementMetadataSchema(many=True).dump(metadata)
 
-        # publish changes to EPIC
-        ProjectService.update_project_info(updated_metadata.engagement_id)
+    @staticmethod
+    @transactional()
+    def delete(metadata_id: int) -> None:
+        """
+        Delete engagement metadata.
 
-        return updated_metadata
+        Args:
+            id: The ID of the engagement metadata.
+        """
+        metadata = EngagementMetadata.query.get(metadata_id)
+        if not metadata:
+            raise KeyError(f'Engagement metadata with id {metadata_id}'
+                           ' does not exist.')
+        db.session.delete(metadata)  # type: ignore

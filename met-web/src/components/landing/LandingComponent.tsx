@@ -7,7 +7,6 @@ import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { LandingContext } from './LandingContext';
 import { Container } from '@mui/system';
-import { AppConfig } from 'config';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation } from 'hooks';
 
@@ -106,10 +105,10 @@ const LandingComponent = () => {
                         ref={tileBlockRef}
                     >
                         <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Engagement name</MetLabel>
+                            <MetLabel>{translate('landingPage.engagementNameLabel')}</MetLabel>
                             <TextField
                                 fullWidth
-                                placeholder="Type engagement's name..."
+                                placeholder={translate('landingPage.placeholder')}
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -119,7 +118,7 @@ const LandingComponent = () => {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <MetLabel>Status</MetLabel>
+                            <MetLabel>{translate('landingPage.statusLabel')}</MetLabel>
                             <TextField
                                 id="status"
                                 name="status"
@@ -144,9 +143,15 @@ const LandingComponent = () => {
                                 <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }}>
                                     {''}
                                 </MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Open}>Open</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Upcoming}>Upcoming</MenuItem>
-                                <MenuItem value={EngagementDisplayStatus.Closed}>Closed</MenuItem>
+                                <MenuItem value={EngagementDisplayStatus.Open}>
+                                    {translate('landingPage.status.open')}
+                                </MenuItem>
+                                <MenuItem value={EngagementDisplayStatus.Upcoming}>
+                                    {translate('landingPage.status.upcoming')}
+                                </MenuItem>
+                                <MenuItem value={EngagementDisplayStatus.Closed}>
+                                    {translate('landingPage.status.closed')}
+                                </MenuItem>
                             </TextField>
                         </Grid>
                     </Grid>

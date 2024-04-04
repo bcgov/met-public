@@ -24,8 +24,9 @@ class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
         """
         offset_days: int = int(current_app.config.get('OFFSET_DAYS'))
         engagements_closing_soon = ClosingSoonEmailService.get_engagements_closing_soon(offset_days)
-        template_id = current_app.config.get('ENGAGEMENT_CLOSING_SOON_EMAIL_TEMPLATE_ID', None)
-        subject = current_app.config.get('ENGAGEMENT_CLOSING_SOON_EMAIL_SUBJECT')
+        templates = current_app.config['EMAIL_TEMPLATES']
+        template_id = templates['CLOSING_SOON']['ID']
+        subject = templates['CLOSING_SOON']['SUBJECT']
         template = Template.get_template('engagement_closing_soon.html')
         for engagement in engagements_closing_soon:
             # Process each mails.First set status as PROCESSING

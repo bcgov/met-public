@@ -12,6 +12,7 @@ import { PreviewBanner } from './PreviewBanner';
 
 const SurveySubmitWrapped = () => {
     const { savedSurvey, isTokenValid, slug } = useContext(ActionContext);
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const navigate = useNavigate();
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
@@ -38,14 +39,14 @@ const SurveySubmitWrapped = () => {
                         <When condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`/${slug}`);
+                                    navigate(`${languagePath}/${slug}`);
                                 }}
                             />
                         </When>
                         <InvalidTokenModal
                             open={!isTokenValid && Boolean(savedSurvey.engagement)}
                             handleClose={() => {
-                                navigate(`/${slug}`);
+                                navigate(`${languagePath}/${slug}`);
                             }}
                         />
                     </MetPaper>

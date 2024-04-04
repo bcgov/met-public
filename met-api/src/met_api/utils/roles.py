@@ -44,7 +44,7 @@ class Role(Enum):
     ACCESS_DASHBOARD = 'access_dashboard'
     VIEW_MEMBERS = 'view_members'
     EDIT_MEMBERS = 'edit_members'
-    VIEW_ALL_SURVEYS = 'view_all_surveys'  # Super user can view all kind of surveys including hidden
+    VIEW_ALL_SURVEYS = 'view_all_surveys'  # Administrator can view all kind of surveys including hidden
     EDIT_ALL_SURVEYS = 'edit_all_surveys'
     EDIT_DRAFT_ENGAGEMENT = 'edit_draft_engagement'
     EDIT_SCHEDULED_ENGAGEMENT = 'edit_scheduled_engagement'

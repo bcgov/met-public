@@ -82,7 +82,7 @@ export default function EmailPreview({
 }
 
 const container = {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--bcds-surface-background-white)',
     border: '1px solid #eee',
     borderRadius: '5px',
     boxShadow: '0 5px 10px rgba(20,50,70,.2)',

@@ -71,7 +71,12 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                 <Stack direction="column" alignItems="center" justifyContent="center">
                     <MarkerIcon fontSize="large" htmlColor="red" />
                     <When condition={Boolean(markerLabel)}>
-                        <MetSmallText bold bgcolor={'white'} borderRadius="10px" padding="0 2px 0 2px">
+                        <MetSmallText
+                            bold
+                            bgcolor={'var(--bcds-surface-background-white)'}
+                            borderRadius="10px"
+                            padding="0 2px 0 2px"
+                        >
                             {markerLabel}
                         </MetSmallText>
                     </When>

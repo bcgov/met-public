@@ -26,7 +26,7 @@ const SettingsForm = () => {
     const baseUrl = getBaseUrl();
     const engagementUrl = !survey?.engagement_id
         ? 'Link will appear when the survey is linked to an engagement'
-        : `${baseUrl}/${engagementSlug}`;
+        : `${baseUrl}/${engagementSlug}/dashboard/public`;
 
     const handleTooltipClose = () => {
         setCopyTooltip(false);

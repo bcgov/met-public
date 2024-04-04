@@ -20,9 +20,10 @@ from faker import Faker
 
 from met_api.constants.engagement_status import Status
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
+from met_api.models.pagination_options import PaginationOptions
 from tests.utilities.factory_utils import factory_engagement_model
+
 
 fake = Faker()
 

@@ -1,13 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementMetadata } from '../../../services/engagementMetadataService';
-import {
-    createDefaultEngagement,
-    createDefaultEngagementMetadata,
-    Engagement,
-    EngagementMetadata,
-} from '../../../models/engagement';
+import { getEngagementContent } from 'services/engagementContentService';
+import { getSummaryContent } from 'services/engagementSummaryService';
+import { createDefaultEngagement, Engagement } from '../../../models/engagement';
+import { EngagementContent, CONTENT_TYPE } from 'models/engagementContent';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
@@ -30,15 +27,15 @@ interface UnpublishEngagementParams {
 
 export interface EngagementViewContext {
     savedEngagement: Engagement;
-    engagementMetadata: EngagementMetadata;
     isEngagementLoading: boolean;
     isWidgetsLoading: boolean;
-    isEngagementMetadataLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
     unpublishEngagement: ({ id, status_id }: UnpublishEngagementParams) => Promise<void>;
     widgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
+    content: string;
+    richContent: string;
 }
 
 export type EngagementParams = {
@@ -55,15 +52,15 @@ export const ActionContext = createContext<EngagementViewContext>({
         return Promise.reject(Error('not implemented'));
     },
     savedEngagement: createDefaultEngagement(),
-    engagementMetadata: createDefaultEngagementMetadata(),
     isEngagementLoading: true,
     isWidgetsLoading: true,
-    isEngagementMetadataLoading: true,
     widgets: [],
     mockStatus: SubmissionStatus.Upcoming,
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
+    content: '',
+    richContent: '',
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -74,12 +71,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         engagementIdParam ? Number(engagementIdParam) : null,
     );
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
-    const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata>(createDefaultEngagementMetadata());
     const [mockStatus, setMockStatus] = useState(savedEngagement.submission_status);
     const [widgets, setWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [isEngagementMetadataLoading, setIsEngagementMetadataLoading] = useState(true);
+    const [content, setContent] = useState('');
+    const [richContent, setRichContent] = useState('');
 
     const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
 
@@ -162,7 +159,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         try {
             const result = await getEngagement(Number(engagementId));
             setSavedEngagement({ ...result });
-            setEngagementLoading(false);
         } catch (error) {
             dispatch(
                 openNotification({
@@ -192,23 +188,32 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
     };
 
-    const fetchEngagementMetadata = async () => {
+    const fetchContents = async () => {
         if (!savedEngagement.id) {
             return;
         }
         try {
-            const result = await getEngagementMetadata(Number(engagementId));
-            setEngagementMetadata(result);
-            setIsEngagementMetadataLoading(false);
+            //TODO needs to changed along with the changes for tabs for public page
+            const engagementContents = await getEngagementContent(Number(engagementId));
+            const summaryItemId = await getSummaryItemId(engagementContents);
+            const summaryContent = await getSummaryContent(summaryItemId);
+            setContent(summaryContent[0].content);
+            setRichContent(summaryContent[0].rich_content);
+            setEngagementLoading(false);
         } catch (error) {
-            setIsEngagementMetadataLoading(false);
+            setEngagementLoading(false);
             dispatch(
                 openNotification({
                     severity: 'error',
-                    text: 'Error occurred while fetching Engagement Metadata',
+                    text: 'Error occurred while fetching Engagement contents',
                 }),
             );
         }
+    };
+
+    const getSummaryItemId = async (tabs: EngagementContent[]) => {
+        const summaryItem = tabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
+        return summaryItem?.id || 0; // Return null if summary item is not found
     };
 
     const handleFetchEngagementIdBySlug = async () => {
@@ -233,22 +238,22 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     useEffect(() => {
         fetchWidgets();
-        fetchEngagementMetadata();
+        fetchContents();
     }, [savedEngagement]);
 
     return (
         <ActionContext.Provider
             value={{
                 savedEngagement,
-                engagementMetadata,
                 isEngagementLoading,
                 scheduleEngagement,
                 widgets,
                 isWidgetsLoading,
-                isEngagementMetadataLoading,
                 updateMockStatus,
                 mockStatus,
                 unpublishEngagement,
+                content,
+                richContent,
             }}
         >
             {children}

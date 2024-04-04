@@ -27,6 +27,7 @@ declare global {
             //tenant
             REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT: string;
             REACT_APP_DEFAULT_TENANT: string;
+            REACT_APP_DEFAULT_LANGUAGE_ID: string;
         };
     }
 }
@@ -62,6 +63,7 @@ const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 // tenant conifg
 const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT', 'true') === 'true';
 const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
+const DEFAULT_LANGUAGE_ID = getEnv('REACT_APP_DEFAULT_LANGUAGE_ID');
 
 export const AppConfig = {
     apiUrl: API_URL,
@@ -86,5 +88,8 @@ export const AppConfig = {
     tenant: {
         isSingleTenantEnvironment: IS_SINGLE_TENANT_ENVIRONMENT,
         defaultTenant: DEFAULT_TENANT,
+    },
+    language: {
+        defaultLanguageId: DEFAULT_LANGUAGE_ID || 'en',
     },
 };
