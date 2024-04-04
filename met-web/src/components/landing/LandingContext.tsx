@@ -91,7 +91,9 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
         try {
             const loadedFilters = await getMetadataFilters();
             setMetadataFilters(loadedFilters);
-        } catch (error) {}
+        } catch (error) {
+        console.error(error)
+        }
     };
 
     useEffect(() => {
