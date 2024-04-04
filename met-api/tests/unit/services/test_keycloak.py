@@ -19,7 +19,6 @@ Test-Suite to ensure that the Keycloak Service is working as expected.
 import pytest
 import requests
 from met_api.services.keycloak import KeycloakService
-from tests.utilities.factory_scenarios import KeycloakScenario
 from unittest.mock import patch
 
 

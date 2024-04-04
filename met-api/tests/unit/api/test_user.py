@@ -24,13 +24,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 from flask import current_app
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Tenant as TenantModel
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
-from met_api.utils.enums import ContentType, UserStatus
+from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
-from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames
-from met_api.exceptions.business_exception import BusinessException
 from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model, set_global_tenant
 
 

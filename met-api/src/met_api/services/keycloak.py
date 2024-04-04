@@ -13,7 +13,6 @@
 # limitations under the License.
 """Utils for keycloak administration."""
 
-import json
 from typing import List
 
 import requests

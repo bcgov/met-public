@@ -4,14 +4,15 @@ Tests to verify the EngagementMembership API endpoints.
 Test-Suite to ensure that the /engagements/{engagement_id}/memberships endpoint is working as expected.
 """
 import json
-import pytest
 from http import HTTPStatus
-
 from unittest.mock import MagicMock, patch
+
+import pytest
+
+from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.membership_service import MembershipService
-from met_api.constants.membership_type import MembershipType
-from met_api.utils.enums import ContentType, MembershipStatus, KeycloakCompositeRoleNames
+from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames, MembershipStatus
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
 

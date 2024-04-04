@@ -17,20 +17,16 @@
 Test-Suite to ensure that the user membership endpoints are working as expected.
 """
 from http import HTTPStatus
+from unittest.mock import MagicMock, patch
+
 import pytest
 
-from unittest.mock import MagicMock, patch
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.membership import Membership as MembershipModel
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames, MembershipStatus, UserStatus
-from tests.utilities.factory_scenarios import TestJwtClaims
-from tests.utilities.factory_utils import (
-    factory_auth_header,
-    factory_engagement_model,
-    factory_membership_model,
-    factory_staff_user_model,
-)  # noqa: E501
+from tests.utilities.factory_utils import (  # noqa: E501
+    factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model)
 
 
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
