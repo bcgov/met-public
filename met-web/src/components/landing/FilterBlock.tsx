@@ -183,13 +183,13 @@ const FilterBlock = () => {
                         }}
                         renderValue={(value) => {
                             // for rendering the selected value
-                            return selectableStatuses.get(value) || '';
+                            return selectableStatuses.get(value) ?? '';
                         }}
                         displayEmpty
                         inputProps={{
                             'aria-label': translate('landing.filters.aria.statusFilter').replace(
                                 '{0}',
-                                selectableStatuses.get(selectedValue) || '',
+                                selectableStatuses.get(selectedValue) ?? '',
                             ),
                             style: { padding: 0 },
                         }}
