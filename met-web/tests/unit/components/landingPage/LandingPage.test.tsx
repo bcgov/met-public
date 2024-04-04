@@ -89,14 +89,14 @@ describe('Landing page tests', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByPlaceholderText('Engagement Title')).toBeInTheDocument();
-            expect(screen.getByText('Search Engagements')).toBeInTheDocument();
-            expect(screen.getByText('Filter')).toBeInTheDocument();
+            expect(screen.getByPlaceholderText('landing.filters.searchPlaceholder')).toBeInTheDocument();
+            expect(screen.getByText('landing.filters.search')).toBeInTheDocument();
+            expect(screen.getByText('landing.filters.drawer.openButton')).toBeInTheDocument();
             expect(
                 screen.getByText((content, element) => {
                     return (
                         (element as HTMLElement).classList.contains('MuiSelect-select') &&
-                        element?.textContent === 'All Engagements'
+                        element?.textContent === 'landing.filters.status.all'
                     );
                 }),
             ).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe('Landing page tests', () => {
             </LandingContext.Provider>,
         );
 
-        const searchInput = screen.getByPlaceholderText('Engagement Title');
+        const searchInput = screen.getByPlaceholderText('landing.filters.searchPlaceholder');
         fireEvent.change(searchInput, { target: { value: 'New Search' } });
 
         await waitFor(() => {
@@ -176,9 +176,8 @@ describe('Landing page tests', () => {
         const statusDropdown = allButtons.find((button) => button.id === 'status-filter') as HTMLElement;
         fireEvent.mouseDown(statusDropdown); // click event doesn't work for MUI Select
         // Wait for the dropdown to appear
-        // const openOption = await screen.findByText('Open Engagements');
         const listbox = within(getByRole(document.body, 'listbox'));
-        const openOption = listbox.getByText('Open Engagements');
+        const openOption = listbox.getByText('landing.filters.status.open');
         fireEvent.click(openOption);
 
         await waitFor(() => {
@@ -217,7 +216,7 @@ describe('Landing page tests', () => {
             </LandingContext.Provider>,
         );
 
-        const filterButton = screen.getByText('Filter');
+        const filterButton = screen.getByText('landing.filters.drawer.openButton');
         // Open the drawer...
         fireEvent.click(filterButton);
 
@@ -225,7 +224,7 @@ describe('Landing page tests', () => {
             expect(setDrawerOpenedMock).toHaveBeenCalledWith(true);
         });
 
-        const closeButton = screen.getByText('Apply Filters');
+        const closeButton = screen.getByText('landing.filters.drawer.apply');
         // Close it again >:)
         fireEvent.click(closeButton);
 
