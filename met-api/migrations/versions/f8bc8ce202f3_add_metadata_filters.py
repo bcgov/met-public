@@ -1,7 +1,7 @@
 """Add metadata filters to the engagement metadata taxa table.
 
 Revision ID: f8bc8ce202f3
-Revises: c4f7189494ed
+Revises: 734f160dd120
 Create Date: 2024-03-21 13:02:12.680363
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'f8bc8ce202f3'
-down_revision = 'c4f7189494ed'
+down_revision = '734f160dd120'
 branch_labels = None
 depends_on = None
 
