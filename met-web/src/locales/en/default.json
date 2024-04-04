@@ -59,17 +59,9 @@
         "contactEmail": "email@gov.bc.ca"
     },
     "landingPage": {
-        "engagementNameLabel": "Engagement name",
-        "placeholder": "Type engagement's name...",
-        "statusLabel": "Status",
         "tile": {
-            "error": "error Loading",
+            "error": "Error while loading",
             "status": "Status:"
-        },
-        "status": {
-            "open": "Open",
-            "upcoming": "Upcoming",
-            "closed": "Closed"
         }
     },
     "buttonText": {
