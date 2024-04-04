@@ -66,7 +66,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         for user_id in user_ids:
             query_user_url = (f'{self.base_url}/{self.integration_id}/'
                               f'{self.environment}/users/{user_id}/roles')
-            print(query_user_url)
             response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
             if response.status_code == 200:
                 if (roles := response.json().get('data')) is not None:
