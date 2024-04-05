@@ -15,18 +15,18 @@ from sqlalchemy.sql.schema import ForeignKey
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, Status
 from met_api.constants.user import SYSTEM_USER
-from met_api.models.membership import Membership as MembershipModel
-from met_api.models.staff_user import StaffUser
-from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
+from met_api.models.membership import Membership as MembershipModel
+from met_api.models.pagination_options import PaginationOptions
+from met_api.models.staff_user import StaffUser
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from met_api.utils.enums import MembershipStatus
 from met_api.utils.filter_types import filter_map
-from .engagement_metadata import (
-    EngagementMetadata as EngagementMetadataModel)
+
 from .base_model import BaseModel
 from .db import db
+from .engagement_metadata import EngagementMetadata as EngagementMetadataModel
 from .engagement_status import EngagementStatus
 
 

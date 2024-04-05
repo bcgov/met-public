@@ -19,12 +19,12 @@ Test-Suite to ensure that the /Engagement endpoint is working as expected.
 import copy
 import json
 from http import HTTPStatus
+from unittest.mock import patch
 
 import pytest
-from unittest.mock import patch
 from faker import Faker
-from marshmallow import ValidationError
 from flask import current_app
+from marshmallow import ValidationError
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.models.tenant import Tenant as TenantModel
@@ -35,9 +35,9 @@ from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_metadata_model, factory_engagement_model, factory_membership_model,
-    factory_metadata_taxon_model, factory_participant_model,
-    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, factory_tenant_model,
-    set_global_tenant)
+    factory_metadata_taxon_model, factory_participant_model, factory_staff_user_model, factory_submission_model,
+    factory_survey_and_eng_model, factory_tenant_model, set_global_tenant)
+
 
 fake = Faker()
 

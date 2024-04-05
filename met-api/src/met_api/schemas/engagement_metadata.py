@@ -1,10 +1,11 @@
 """Schemas for serializing and deserializing classes related to engagement metadata."""
 
-from marshmallow import ValidationError, fields, pre_load, validate, Schema
+from marshmallow import Schema, ValidationError, fields, pre_load, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow_sqlalchemy.fields import Nested
-from met_api.models.engagement_metadata import (EngagementMetadata, MetadataTaxon,
-                                                MetadataTaxonDataType, MetadataTaxonFilterType)
+
+from met_api.models.engagement_metadata import (
+    EngagementMetadata, MetadataTaxon, MetadataTaxonDataType, MetadataTaxonFilterType)
 
 
 class EngagementMetadataSchema(SQLAlchemyAutoSchema):
