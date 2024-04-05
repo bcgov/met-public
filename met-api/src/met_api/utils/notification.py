@@ -5,12 +5,10 @@ import re
 
 import requests
 
-from http import HTTPStatus
 from flask import current_app
 from met_api.models.tenant import Tenant
 from met_api.services.rest_service import RestService
 from met_api.constants.email_verification import INTERNAL_EMAIL_DOMAIN
-from met_api.exceptions.business_exception import BusinessException
 
 
 def get_tenant_site_url(tenant_id, path=''):
