@@ -1,6 +1,7 @@
 ## April 04, 2024
 
 - **Feature** Engagement filtering - Add filtering by taxon [🎟️DESENG-445](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-445)
+
   - Added properties to metadata taxa to allow them to be marked as filterable.
   - Added a new file `filter_types.py` where additional filters can be added as subquery factory functions.
   - Added a new endpoint to the API to retrieve filterable taxa.
@@ -14,8 +15,6 @@
   - Updated the public-facing engagement list to allow filtering by metadata taxa. This makes use of the new API endpoint to retrieve filterable taxa.
   - Added a new filter "drawer" to the listing page to hold these and any future filter types.
   - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
-
-## April 04, 2024
 
 - **Task**: Keycloak Unit Tests for New CSS API Integration [DESENG-508](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-508)
   - Updated Keycloak Unit Tests for New CSS API Integration.
