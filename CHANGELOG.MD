@@ -1,7 +1,7 @@
 ## April 05, 2024
 
 - **Task**: Allow for any gov.bc.ca email to receive emails in MET's dev & test environments [DESENG-533](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-533)
-  - Enabled dev open shift to use GC_NOTIF api key of test which allows all email.
+  - Enabled dev open shift to use GC_NOTIFY api key of test which allows all email.
   - Added new env var `SEND_EMAIL_INTERNAL_ONLY` to allow for internal emails such as govt emails only.
 
 ## April 04, 2024
