@@ -19,12 +19,12 @@ from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.engagement_scope_options import EngagementScopeOptions
-from .engagement_metadata import (
-    EngagementMetadata as EngagementMetadataModel)
 from met_api.schemas.engagement import EngagementSchema
 from met_api.utils.datetime import local_datetime
 from met_api.utils.enums import MembershipStatus
 from met_api.utils.filter_types import filter_map
+from .engagement_metadata import (
+    EngagementMetadata as EngagementMetadataModel)
 from .base_model import BaseModel
 from .db import db
 from .engagement_status import EngagementStatus
@@ -278,8 +278,9 @@ class Engagement(BaseModel):
     @staticmethod
     def _filter_by_metadata(query, search_options):
         """
-        Filter the engagements based on metadata criteria, ensuring that each engagement
-        matches all of the provided criteria.
+        Filter the engagements based on metadata criteria.
+
+        Ensures that each engagement matches all of the provided criteria.
         """
         if 'metadata' not in search_options:
             return query

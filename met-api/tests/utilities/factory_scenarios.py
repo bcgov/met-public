@@ -18,7 +18,6 @@ Test Utility for creating test scenarios.
 
 from datetime import datetime, timedelta
 from enum import Enum
-from re import T
 
 from faker import Faker
 

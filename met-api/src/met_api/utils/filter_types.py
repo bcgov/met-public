@@ -1,15 +1,11 @@
-"""
-Filters used to filter by metadata contents in various ways.
-"""
+"""Filters used to filter by metadata contents in various ways."""
 
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxonFilterType
-from sqlalchemy import select, func, distinct, exists
-
-
-from sqlalchemy.sql import select, func, distinct, exists
+from sqlalchemy import func
 
 
 def list_match_all(query, values):
+    """Create and return a subquery selecting engagements that have all of the provided values."""
     # Create a subquery to find engagements that have the required number of matching metadata entries
     values_count = len(values)
     subquery = query.filter(
@@ -25,11 +21,11 @@ def list_match_all(query, values):
 
 
 def list_match_any(query, values):
+    """Create and return a subquery selecting engagements that have any of the provided values."""
     metadata_subq = query.filter(
         EngagementMetadata.value.in_(values)
     ).subquery()
 
-    # Return a subquery that selects the engagements that have any of the provided values
     return metadata_subq
 
 

@@ -15,12 +15,12 @@
 """Tests for the metadata taxon service."""
 
 from faker import Faker
-from met_api.models import engagement
 from met_api.models.engagement_metadata import MetadataTaxon
 from met_api.services.metadata_taxon_service import MetadataTaxonService
 from met_api.services.engagement_metadata_service import EngagementMetadataService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestEngagementMetadataTaxonInfo
-from tests.utilities.factory_utils import factory_engagement_model, factory_metadata_taxon_model, factory_taxon_requirements
+from tests.utilities.factory_utils import (factory_engagement_model,
+                                           factory_metadata_taxon_model, factory_taxon_requirements)
 
 fake = Faker()
 engagement_metadata_service = EngagementMetadataService()

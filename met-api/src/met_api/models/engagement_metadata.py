@@ -91,6 +91,7 @@ class MetadataTaxonDataType(str, enum.Enum):
 
 class MetadataTaxonFilterType(str, enum.Enum):
     """The filter types that can be applied to a metadata property."""
+
     CHIPS_ALL = 'chips_all'
     CHIPS_ANY = 'chips_any'
 

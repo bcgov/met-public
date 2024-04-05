@@ -220,6 +220,7 @@ class MetadataTaxon(Resource):
 class MetadataFilterOptions(Resource):
     """
     Resource for getting filter options for a tenant's metadata taxa.
+
     This resource is read-only and does not require any specific roles.
     """
 
