@@ -13,7 +13,6 @@
 # limitations under the License.
 """Utils for keycloak administration."""
 
-import json
 from typing import List
 
 import requests
@@ -76,31 +75,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
 
         return user_role_mapping
 
-    # @staticmethod
-    # def _get_group_id(admin_token: str, group_name: str):
-    #     """Get a group id for the group name."""
-    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
-    #     base_url = keycloak['BASE_URL']
-    #     realm = keycloak['REALMNAME']
-    #     timeout = keycloak['CONNECT_TIMEOUT']
-    #     get_group_url = f'{base_url}/admin/realms/{realm}/groups?search={group_name}'
-    #     headers = {
-    #         'Content-Type': ContentType.JSON.value,
-    #         'Authorization': f'Bearer {admin_token}'
-    #     }
-    #     response = requests.get(get_group_url, headers=headers, timeout=timeout)
-    #     return KeycloakService._find_group_or_subgroup_id(response.json(), group_name)
-
-    # @staticmethod
-    # def _find_group_or_subgroup_id(groups: list, group_name: str):
-    #     """Return group id by searching main and sub groups."""
-    #     for group in groups:
-    #         if group['name'] == group_name:
-    #             return group['id']
-    #         if group_id := KeycloakService._find_group_or_subgroup_id(group['subGroups'], group_name):
-    #             return group_id
-    #     return None
-
     def _get_admin_token(self):
         """Create an admin token."""
         headers = {
@@ -115,28 +89,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
                  f'&client_secret={self.admin_secret}'
         )
         return response.json().get('access_token')
-
-    # @staticmethod
-    # def _remove_user_from_group(user_id: str, group_name: str):
-    #     """Remove user from the keycloak group."""
-    #     keycloak = current_app.config['KEYCLOAK_CONFIG']
-    #     base_url = keycloak['BASE_URL']
-    #     realm = keycloak['REALMNAME']
-    #     timeout = keycloak['CONNECT_TIMEOUT']
-    #     # Create an admin token
-    #     admin_token = self._get_admin_token()
-    #     # Get the '$group_name' group
-    #     group_id = KeycloakService._get_group_id(admin_token, group_name)
-
-    #     # Add user to the keycloak group '$group_name'
-    #     headers = {
-    #         'Content-Type': ContentType.JSON.value,
-    #         'Authorization': f'Bearer {admin_token}'
-    #     }
-    #     remove_group_url = f'{base_url}/admin/realms/{realm}/users/{user_id}/groups/{group_id}'
-    #     response = requests.delete(remove_group_url, headers=headers,
-    #                                timeout=timeout)
-    #     response.raise_for_status()
 
     def assign_composite_role_to_user(self, user_id: str, composite_role: str):
         """Add user to the keycloak composite roles."""
@@ -167,37 +119,6 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         remove_from_role_url = f'{self.base_url}/{self.integration_id}/{self.environment}/users/{user_id}/roles/{role}'
         response = requests.delete(remove_from_role_url, headers=headers, timeout=self.timeout)
         response.raise_for_status()
-
-    def add_user(self, user: dict):
-        """Add user to Keycloak.Mainly used for Tests;Dont use it for actual user creation in application."""
-        # Add user and set password
-        admin_token = self._get_admin_token()
-
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-
-        add_user_url = f'{self.base_url}/admin/realms/{self.realm}/users'
-        response = requests.post(add_user_url, data=json.dumps(user), headers=headers,
-                                 timeout=self.timeout)
-        response.raise_for_status()
-
-        return self.get_user_by_username(user.get('username'), admin_token)
-
-    def get_user_by_username(self, username, admin_token=None):
-        """Get user from Keycloak by username."""
-        if not admin_token:
-            admin_token = self._get_admin_token()
-
-        headers = {
-            'Content-Type': ContentType.JSON.value,
-            'Authorization': f'Bearer {admin_token}'
-        }
-        # Get the user and return
-        query_user_url = f'{self.base_url}/admin/realms/{self.realm}/users?username={username}'
-        response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
-        return response.json()[0]
 
     def toggle_user_enabled_status(self, user_id, enabled):
         """Toggle the enabled status of a user in Keycloak."""
