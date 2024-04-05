@@ -31,6 +31,10 @@ code {
   &:hover {
     background-color: var(--bcds-surface-secondary-hover) !important;
   }
+  &.Mui-selected {
+    // from MET design library
+    background-color: var(--bcds-surface-brand-blue-20) !important;
+  }
 }
 
 /** Overriding Met table styles **/
