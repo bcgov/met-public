@@ -12,6 +12,8 @@ import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
+import { EngagementContent, createDefaultEngagementContent } from 'models/engagementContent';
+import { getEngagementContent } from 'services/engagementContentService';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
@@ -77,7 +79,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-
+    const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
 
     const handleAddBannerImage = (files: File[]) => {
@@ -143,6 +145,20 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         });
         return taxonMetadataMap;
     }, [engagementMetadata]);
+
+    const fetchEngagementContents = async () => {
+        if (isCreate) {
+            return;
+        }
+
+        try {
+            const engagementContents = await getEngagementContent(Number(engagementId));
+            setContentTabs(engagementContents);
+        } catch (err) {
+            console.log(err);
+            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Contents' }));
+        }
+    };
 
     const setEngagement = (engagement: Engagement) => {
         setSavedEngagement({ ...engagement });
