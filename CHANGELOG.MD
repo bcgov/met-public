@@ -15,6 +15,11 @@
   - Added a new filter "drawer" to the listing page to hold these and any future filter types.
   - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
 
+## April 04, 2024
+
+- **Task**: Keycloak Unit Tests for New CSS API Integration [DESENG-508](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-508)
+  - Updated Keycloak Unit Tests for New CSS API Integration.
+
 ## April 02, 2024
 
 - **Task**: DEV clean up [DESENG-503](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-503)
