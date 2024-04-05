@@ -23,7 +23,6 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
-from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
@@ -65,6 +64,7 @@ from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
+from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
     TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo,
@@ -595,7 +595,8 @@ def factory_survey_translation_and_engagement_model():
         survey_id=survey.id,
         language_id=lang.id,
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
-        form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
+        form_json=TestSurveyTranslationInfo.survey_translation1.get(
+            'form_json'),
     )
     translation.save()
     return translation, survey, lang

@@ -1,11 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { Engagement } from 'models/engagement';
 import { getEngagements } from 'services/engagementService';
+import { getMetadataFilters } from 'services/engagementMetadataService';
 import { PAGE_SIZE } from './constants';
+import { MetadataFilter } from 'components/metadataManagement/types';
 
 interface SearchFilters {
     name: string;
     status: number[];
+    metadata: MetadataFilter[];
 }
 
 export interface LandingContextProps {
@@ -16,12 +19,18 @@ export interface LandingContextProps {
     totalEngagements: number;
     page: number;
     setPage: React.Dispatch<React.SetStateAction<number>>;
+    metadataFilters: MetadataFilter[];
+    clearFilters: () => void;
+    drawerOpened: boolean;
+    setDrawerOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const initialSearchFilters = {
     name: '',
     status: [],
+    metadata: [],
 };
+
 export const LandingContext = createContext<LandingContextProps>({
     engagements: [],
     loadingEngagements: false,
@@ -34,14 +43,26 @@ export const LandingContext = createContext<LandingContextProps>({
     setPage: () => {
         throw new Error('setPage unimplemented');
     },
+    metadataFilters: [],
+    clearFilters: () => {
+        throw new Error('clearFilters unimplemented');
+    },
+    drawerOpened: false,
+    setDrawerOpened: () => {
+        throw new Error('setDrawerOpened unimplemented');
+    },
 });
 
 export const LandingContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [totalEngagements, setTotalEngagements] = useState(0);
     const [loadingEngagements, setLoadingEngagements] = useState(true);
+    // The array of filters that are available for the user to select
+    const [metadataFilters, setMetadataFilters] = useState<MetadataFilter[]>([]);
     const [searchFilters, setSearchFilters] = useState<SearchFilters>(initialSearchFilters);
     const [page, setPage] = useState(1);
+    // whether the filter drawer is covering the screen
+    const [drawerOpened, setDrawerOpened] = useState(false);
 
     const loadEngagements = async () => {
         try {
@@ -54,16 +75,41 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
                 include_banner_url: true,
                 engagement_status: status,
                 search_text: name,
+                metadata: searchFilters.metadata,
             });
             setEngagements(loadedEngagements.items);
             setTotalEngagements(loadedEngagements.total);
             setLoadingEngagements(false);
-        } catch (error) {}
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
         loadEngagements();
     }, [searchFilters, page]);
+
+    const loadFilters = async () => {
+        try {
+            const loadedFilters = await getMetadataFilters();
+            setMetadataFilters(loadedFilters);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        loadFilters();
+    }, []);
+
+    const clearFilters = () => {
+        setSearchFilters({
+            ...searchFilters,
+            status: [],
+            metadata: [],
+        });
+        setPage(1);
+    };
 
     return (
         <LandingContext.Provider
@@ -75,6 +121,10 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
                 totalEngagements,
                 page,
                 setPage,
+                metadataFilters,
+                clearFilters,
+                drawerOpened,
+                setDrawerOpened,
             }}
         >
             {children}

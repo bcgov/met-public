@@ -18,6 +18,8 @@ const TileBlock = () => {
                 justifyContent="flex-start"
                 columnSpacing={2}
                 rowSpacing={4}
+                item
+                xs={10}
             >
                 <RepeatedGrid times={4} item xs={12} sm={6} md={4} lg={3}>
                     <TileSkeleton />
@@ -33,6 +35,8 @@ const TileBlock = () => {
             alignItems="flex-start"
             columnSpacing={2}
             rowSpacing={4}
+            item
+            xs={10}
         >
             {engagements.map((engagement) => {
                 return (
@@ -47,7 +51,7 @@ const TileBlock = () => {
                         justifyContent={{ xs: 'center', sm: 'flex-start' }}
                         alignItems={{ xs: 'center', sm: 'flex-start' }}
                     >
-                        <Grid item>
+                        <Grid item xs={12}>
                             <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                         </Grid>
                     </Grid>

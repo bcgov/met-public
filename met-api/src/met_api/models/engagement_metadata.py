@@ -89,6 +89,13 @@ class MetadataTaxonDataType(str, enum.Enum):
         return value in cls._value2member_map_
 
 
+class MetadataTaxonFilterType(str, enum.Enum):
+    """The filter types that can be applied to a metadata property."""
+
+    CHIPS_ALL = 'chips_all'
+    CHIPS_ANY = 'chips_any'
+
+
 class MetadataTaxon(BaseModel):
     """
     A taxon to group metadata by.
@@ -110,6 +117,9 @@ class MetadataTaxon(BaseModel):
     data_type = db.Column(db.String(64), nullable=True, default='text')
     one_per_engagement = db.Column(db.Boolean)
     position = db.Column(db.Integer, nullable=False, index=True)
+    filter_type = db.Column(db.String(64), nullable=True)
+    # Whether to include freeform values from engagements in the user-facing filter options
+    include_freeform = db.Column(db.Boolean, nullable=False, default=False)
 
     def __init__(self, **kwargs) -> None:
         """Initialize a new instance of the MetadataTaxon class."""

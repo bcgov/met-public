@@ -97,7 +97,7 @@ const refreshToken = (dispatch: Dispatch<Action>) => {
     }, 60000);
 };
 
-const doLogin = (redirectUri?: string) => KeycloakData.login({ redirectUri: redirectUri ?? getBaseUrl() });
+const doLogin = (redirectUri?: string) => KeycloakData.login({ redirectUri: (redirectUri ?? getBaseUrl()) + '/' });
 
 const doLogout = async () => {
     // Remove tokens from session storage

@@ -40,6 +40,8 @@ export interface MetadataTaxonModify {
     data_type?: string; // The data type for the taxon, optional
     one_per_engagement?: boolean; // Whether the taxon is limited to one entry per engagement, optional
     preset_values?: string[]; // The preset values for the taxon
+    filter_type?: string | null; // The filter type for the taxon, optional
+    include_freeform?: boolean; // Whether to include freeform values in options for filtering, optional
 }
 
 export interface MetadataTaxon extends MetadataTaxonModify {
