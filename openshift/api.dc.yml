@@ -226,6 +226,7 @@ objects:
     KEYCLOAK_REALMNAME: ${KEYCLOAK_REALMNAME}
     KEYCLOAK_BASE_URL: ${KEYCLOAK_BASE_URL}
     KEYCLOAK_ADMIN_TOKEN_URL: ${KEYCLOAK_ADMIN_TOKEN_URL}
+    SEND_EMAIL_INTERNAL_ONLY: ${SEND_EMAIL_INTERNAL_ONLY}
 - kind: Secret
   apiVersion: v1
   type: Opaque
@@ -403,6 +404,10 @@ parameters:
   - name: KEYCLOAK_ADMIN_TOKEN_URL
     description: "Keycloak url to get admin token"
     required: true
+    value: ''
+  - name: SEND_EMAIL_INTERNAL_ONLY
+    description: "Send Email only to internal email ids"
+    required: false
     value: ''
   - name: CDOGS_BASE_URL
     description: "Base url to access CDOGS"
