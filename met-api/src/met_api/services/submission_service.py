@@ -62,7 +62,8 @@ class SubmissionService:
             MembershipType.TEAM_MEMBER.name,
             Role.REVIEW_COMMENTS.value
         )
-        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.id)
+        authorization.check_auth(
+            one_of_roles=one_of_roles, engagement_id=engagement.id)
 
     @classmethod
     def get_by_token(cls, token):
@@ -101,7 +102,8 @@ class SubmissionService:
             EngagementSettingsModel.find_by_id(engagement_id)
         if engagement_settings:
             if engagement_settings.send_report:
-                SubmissionService._send_submission_response_email(participant_id, engagement_id)
+                SubmissionService._send_submission_response_email(
+                    participant_id, engagement_id)
         return submission_result
 
     @classmethod
@@ -127,6 +129,7 @@ class SubmissionService:
         comments_result = [Comment.update(submission.id, comment, db.session)
                            for comment in data.get('comments', [])]
         SubmissionModel.update(SubmissionSchema().dump(submission), db.session)
+        db.session.commit()
         return comments_result
 
     @staticmethod
@@ -350,7 +353,8 @@ class SubmissionService:
         templates = current_app.config.get('EMAIL_TEMPLATES')
         if engagement.status_id == EngagementStatus.Closed.value:
             template_id = templates['CLOSED_ENGAGEMENT_REJECTED']['ID']
-            template = Template.get_template('email_rejected_comment_closed.html')
+            template = Template.get_template(
+                'email_rejected_comment_closed.html')
             subject = templates['CLOSED_ENGAGEMENT_REJECTED']['SUBJECT']. \
                 format(engagement_name=engagement_name)
         else:
@@ -401,7 +405,8 @@ class SubmissionService:
         participant = ParticipantModel.find_by_id(participant_id)
         templates = current_app.config['EMAIL_TEMPLATES']
         template_id = templates['SUBMISSION_RESPONSE']['ID']
-        subject, body, args = SubmissionService._render_submission_response_email_template(engagement_id)
+        subject, body, args = SubmissionService._render_submission_response_email_template(
+            engagement_id)
         try:
             notification.send_email(subject=subject,
                                     email=ParticipantModel.decode_email(
@@ -423,7 +428,8 @@ class SubmissionService:
         template = Template.get_template('submission_response.html')
         subject = templates['SUBMISSION_RESPONSE']['SUBJECT']
         dashboard_path = SubmissionService._get_dashboard_path(engagement)
-        engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
+        engagement_url = notification.get_tenant_site_url(
+            engagement.tenant_id, dashboard_path)
         email_environment = templates['ENVIRONMENT']
         tenant_name = SubmissionService._get_tenant_name(
             engagement.tenant_id)
@@ -445,7 +451,8 @@ class SubmissionService:
 
     @staticmethod
     def _get_dashboard_path(engagement: EngagementModel):
-        engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
+        engagement_slug = EngagementSlugModel.find_by_engagement_id(
+            engagement.id)
         paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
             return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(
