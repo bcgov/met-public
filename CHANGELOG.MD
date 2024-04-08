@@ -3,6 +3,9 @@
 - **Bugfix**: Submission of rejected comments [🎟️ DESENG-527](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-527)
   - Fixed issue where resubmitted comments would not reappear in the queue for approval.
   - Added unit tests to ensure the issue does not reoccur.
+- **Task**: MET - Clean up outstanding dependabot PRs [DESENG-535](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-535)
+  - Bump axios from 0.26.1 to 0.28.0 in met-web. Dependabot suggested this upgrade, but it required a few minor code changes.
+  - Updated the type definition of the 'error' parameter to include a generic type '{ message?: string }' to handle the AxiosError response properly.
 
 ## April 05, 2024
 
