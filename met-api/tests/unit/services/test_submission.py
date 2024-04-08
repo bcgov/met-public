@@ -15,10 +15,12 @@
 
 Test suite to ensure that the Submission service routines are working as expected.
 """
+from re import T
 from typing import List
 from unittest.mock import patch
 
 from met_api.constants.email_verification import EmailVerificationType
+from met_api.models import staff_user
 from met_api.models.comment import Comment
 from met_api.schemas.comment import CommentSchema
 from met_api.services import authorization
@@ -57,6 +59,7 @@ def test_create_submission(session):  # pylint:disable=unused-argument
 def test_update_submission(session):  # pylint:disable=unused-argument
     """Assert that a submission can be updated using update_comments."""
     survey, eng = factory_survey_and_eng_model()
+    staff_user = factory_staff_user_model(3)
     email_verification = factory_email_verification(survey.id)
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
@@ -69,9 +72,17 @@ def test_update_submission(session):  # pylint:disable=unused-argument
     }
     submission = SubmissionService().create(
         email_verification.verification_token, submission_request)
-    # pretend the comment was rejected
-    submission.comment_status_id = Status.Rejected.value
-    session.flush()
+    # reject the commnent
+    staff_review_details = {
+        'status_id': Status.Rejected.value,
+        'has_personal_info': True,  # the reason for rejection
+        'notify_email': False,
+    }
+    with patch.object(authorization, 'check_auth', return_value=True):
+        submission_record = SubmissionService().review_comment(
+            submission.id, staff_review_details, staff_user.external_id)
+        assert submission_record.get(
+            'comment_status_id') == Status.Rejected.value
     assert submission.comment_status_id == Status.Rejected.value
     comment: CommentSchema = CommentSchema().dump(
         factory_comment_model(survey.id, submission.id))
