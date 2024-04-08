@@ -138,7 +138,7 @@ def factory_subscription_model():
     return subscription
 
 
-def factory_email_verification(survey_id, type=None):
+def factory_email_verification(survey_id, type=None, submission_id=None):
     """Produce a EmailVerification model."""
     email_verification = EmailVerificationModel(
         verification_token=fake.uuid4(),
@@ -151,6 +151,9 @@ def factory_email_verification(survey_id, type=None):
 
     if survey_id:
         email_verification.survey_id = survey_id
+
+    if submission_id:
+        email_verification.submission_id = submission_id
 
     email_verification.save()
     return email_verification
@@ -205,7 +208,8 @@ def factory_metadata_requirements(auth: Optional[Auth] = None):
     """Create a tenant, an associated staff user, and engagement, for tests."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
-    (engagement_info := TestEngagementInfo.engagement1.copy())['tenant_id'] = tenant.id
+    (engagement_info := TestEngagementInfo.engagement1.copy())[
+        'tenant_id'] = tenant.id
     engagement = factory_engagement_model(engagement_info)
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
@@ -225,7 +229,8 @@ def factory_taxon_requirements(auth: Optional[Auth] = None):
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
-    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
+    factory_staff_user_model(
+        TestJwtClaims.staff_admin_role.get('sub'), staff_info)
     if auth:
         headers = factory_auth_header(
             auth,
@@ -276,7 +281,8 @@ def factory_participant_model(
 ):
     """Produce a participant model."""
     participant = ParticipantModel(
-        email_address=ParticipantModel.encode_email(participant['email_address']),
+        email_address=ParticipantModel.encode_email(
+            participant['email_address']),
     )
     participant.save()
     return participant
@@ -414,7 +420,8 @@ def patch_token_info(claims, monkeypatch):
         """Return token info."""
         return claims
 
-    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
+    monkeypatch.setattr(
+        'met_api.utils.user_context._get_token_info', token_info)
 
     # Add a database user that matches the token
     # factory_staff_user_model(external_id=claims.get('sub'))
@@ -474,7 +481,8 @@ def factory_poll_model(widget, poll_info: dict = TestWidgetPollInfo.poll1):
 
 def factory_poll_answer_model(poll, answer_info: dict = TestPollAnswerInfo.answer1):
     """Produce a Poll  model."""
-    answer = PollAnswerModel(answer_text=answer_info.get('answer_text'), poll_id=poll.id)
+    answer = PollAnswerModel(answer_text=answer_info.get(
+        'answer_text'), poll_id=poll.id)
     answer.save()
     return answer
 

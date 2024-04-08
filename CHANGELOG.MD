@@ -1,3 +1,9 @@
+## April 08, 2024
+
+- **Bugfix**: Submission of rejected comments [🎟️ DESENG-527](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-527)
+  - Fixed issue where resubmitted comments would not reappear in the queue for approval.
+  - Added unit tests to ensure the issue does not reoccur.
+
 ## April 05, 2024
 
 - **Task**: Allow for any gov.bc.ca email to receive emails in MET's dev & test environments [DESENG-533](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-533)
