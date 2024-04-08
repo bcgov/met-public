@@ -61,7 +61,7 @@ def test_update_submission(session):  # pylint:disable=unused-argument
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
     submission_request: SubmissionSchema = {
-        'submission_json': {"test_question": "test answer"},
+        'submission_json': {'test_question': 'test answer'},
         'engagement_id': eng.id,
         'survey_id': survey.id,
         'participant_id': participant.id,

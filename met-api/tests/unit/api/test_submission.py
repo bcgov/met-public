@@ -26,9 +26,7 @@ from faker import Faker
 
 from met_api.constants.comment_status import Status
 from met_api.constants.email_verification import EmailVerificationType
-from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.membership_type import MembershipType
-from met_api.schemas.comment import CommentSchema
 from met_api.services.submission_service import SubmissionService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
@@ -79,7 +77,7 @@ def test_edit_rejected_submission(client, jwt, session):  # pylint:disable=unuse
     participant = factory_participant_model()
     factory_engagement_setting_model(eng.id)
     submission_request = {
-        'submission_json': {"test_question": "test answer"},
+        'submission_json': {'test_question': 'test answer'},
         'engagement_id': eng.id,
         'survey_id': survey.id,
         'participant_id': participant.id,
@@ -87,12 +85,11 @@ def test_edit_rejected_submission(client, jwt, session):  # pylint:disable=unuse
     }
     submission = factory_submission_model(
         survey.id, eng.id, participant.id, TestSubmissionInfo.rejected_submission)
-    comment: CommentSchema = CommentSchema().dump(
-        factory_comment_model(survey.id, submission.id))
     email_verification = factory_email_verification(
         survey.id, type=EmailVerificationType.RejectedComment, submission_id=submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.put(f'/api/submissions/public/{email_verification.verification_token}', data=json.dumps(submission_request),
+    rv = client.put(f'/api/submissions/public/{email_verification.verification_token}',
+                    data=json.dumps(submission_request),
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     # roll back any pending changes to make sure the session is clean
