@@ -31,7 +31,7 @@ def send_email(subject, email, html_body, args, template_id):
         return
 
     if not is_allowed_email(email):
-        raise ValueError('The email provided is not allowed in this environement.')
+        raise ValueError('The email provided is not allowed in this environment.')
 
     sender = current_app.config['EMAIL_TEMPLATES']['FROM_ADDRESS']
     service_account_token = RestService.get_service_account_token()
