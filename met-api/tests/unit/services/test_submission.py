@@ -15,12 +15,10 @@
 
 Test suite to ensure that the Submission service routines are working as expected.
 """
-from re import T
 from typing import List
 from unittest.mock import patch
 
 from met_api.constants.email_verification import EmailVerificationType
-from met_api.models import staff_user
 from met_api.models.comment import Comment
 from met_api.schemas.comment import CommentSchema
 from met_api.services import authorization
