@@ -25,24 +25,32 @@ code {
 }
 
 /** Overriding Select Menu Dropdown color **/
-// Background white and on hover light grey
+// Background white and on hover/focus, light grey
 .MuiMenuItem-root {
-  background-color: var(--bcds-surface-background-white) !important;
-  &:hover {
-    background-color: var(--bcds-surface-secondary-hover) !important;
-  }
+  background-color: var(--bcds-surface-background-white);
+
   &.Mui-selected {
-    // from MET design library
-    background-color: var(--bcds-surface-brand-blue-20) !important;
+    background-color: var(--bcds-surface-brand-blue-20);
+    &:hover, &.Mui-focusVisible {
+      background-color: var(--bcds-surface-secondary-hover);
+    }
+  }
+
+  &.Mui-disabled, &.Mui-disabled:hover {
+    background-color: var(--bcds-surface-background-white);
+  }
+  // the focusVisible class is added when the item is focused by keyboard
+  &.Mui-focusVisible, &:hover {
+    background-color: var(--bcds-surface-secondary-hover);
   }
 }
 
 /** Overriding Met table styles **/
 // set background color of tr to white
-.MuiTable-root tbody > tr {
-  background-color: var(--bcds-surface-background-white) !important;
+.MuiTable-root tbody > tr.MuiTableRow {
+  background-color: var(--bcds-surface-background-white);
 }
 // set background color of tr on hover to light gray
-tbody.MuiTableBody-root > tr:hover {
-  background-color: var(--bcds-surface-secondary-hover) !important;
+tbody.MuiTableBody-root > tr.MuiTableRow-hover:hover {
+  background-color: var(--bcds-surface-secondary-hover);
 }
