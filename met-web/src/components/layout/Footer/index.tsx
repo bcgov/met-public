@@ -80,7 +80,7 @@ const Footer = () => {
                     </Grid>
                     <Grid item xs={6}>
                         <Link
-                            to={isLoggedIn ? `/dashboard` : `/${LanguageId}`}
+                            to={isLoggedIn ? `/home` : `/${LanguageId}`}
                             color={Palette.text.primary}
                             component={NavLink}
                         >

@@ -32,7 +32,7 @@ export const AuthKeyCloakContextProvider = ({ children }: { children: JSX.Elemen
                 });
                 setIsAuthenticated(authenticated); // Update authentication state
                 UserService.setKeycloakInstance(KeycloakData);
-                UserService.initKeycloak(dispatch);
+                UserService.setAuthData(dispatch);
             } catch (error) {
                 console.error('Authentication initialization failed:', error);
             } finally {

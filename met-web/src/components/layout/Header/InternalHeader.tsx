@@ -69,7 +69,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                                     cursor: 'pointer',
                                 }}
                                 onClick={() => {
-                                    navigate('/dashboard');
+                                    navigate('/home');
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -87,7 +87,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                                 marginRight: { xs: '1em', md: '3em' },
                             }}
                             onClick={() => {
-                                navigate('/dashboard');
+                                navigate('/home');
                             }}
                             alt="British Columbia Logo"
                         />
@@ -95,7 +95,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                     {isMediumScreen ? (
                         <HeaderTitle
                             onClick={() => {
-                                navigate('/dashboard');
+                                navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
@@ -104,7 +104,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                     ) : (
                         <HeaderTitle
                             onClick={() => {
-                                navigate('/dashboard');
+                                navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >

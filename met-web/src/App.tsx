@@ -91,7 +91,7 @@ const App = () => {
 
         // Determine the appropriate URL to redirect
         const redirectToDefaultUrl = (base: string, includeLanguage = true) => {
-            const languageSegment = includeLanguage ? `/${defaultLanguage}` : '/dashboard';
+            const languageSegment = includeLanguage ? `/${defaultLanguage}` : '/home';
             window.location.replace(`/${base}${languageSegment}`);
         };
 

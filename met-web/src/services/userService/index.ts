@@ -18,13 +18,16 @@ import { getBaseUrl } from 'helper';
 
 let KeycloakData: Keycloak.default;
 
+/**
+ * Setting Keycloak instance.
+ */
 const setKeycloakInstance = (instance: Keycloak.default) => {
     KeycloakData = instance;
 };
 /**
- * Initializes Keycloak instance.
+ * Setting user authentication data in storage
  */
-const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
+const setAuthData = async (dispatch: Dispatch<AnyAction>) => {
     try {
         const authenticated = !!KeycloakData.token;
         if (!authenticated) {
@@ -149,7 +152,7 @@ const getAssignedEngagements = async (externalId: string, roles: string[]) => {
 };
 
 const UserService = {
-    initKeycloak,
+    setAuthData,
     updateUser,
     doLogin,
     doLogout,
