@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Box, Button, IconButton, MenuItem, Tooltip, Menu, Skeleton, Grid, Divider } from '@mui/material';
+import { Box, Button, IconButton, MenuItem, Menu, Skeleton, Grid, Divider } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 import CustomTabContent from './CustomTabContent';
@@ -13,6 +13,7 @@ import { EngagementContentContext } from './EngagementContentContext';
 import { If, Then, Else } from 'react-if';
 import ContentTabModal from './ContentTabModal';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { MetTooltip } from 'components/common';
 
 export const ContentTabs: React.FC = () => {
     const { fetchEngagementContents, contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
@@ -104,7 +105,7 @@ export const ContentTabs: React.FC = () => {
                                         label={
                                             <Box display="flex" alignItems="center">
                                                 <span>{tab.title}</span>
-                                                <Tooltip title="Edit Tab">
+                                                <MetTooltip title="Edit Tab">
                                                     <IconButton onClick={() => handleEditTab(index)} aria-label="edit">
                                                         <FontAwesomeIcon
                                                             icon={faPenToSquare as IconProp}
@@ -112,9 +113,9 @@ export const ContentTabs: React.FC = () => {
                                                             data-testid="edit-tab-details"
                                                         />
                                                     </IconButton>
-                                                </Tooltip>
+                                                </MetTooltip>
                                                 {index !== 0 && (
-                                                    <Tooltip title="Delete Tab">
+                                                    <MetTooltip title="Delete Tab">
                                                         <IconButton
                                                             onClick={() => handleDeleteTab(index)}
                                                             aria-label="delete"
@@ -124,7 +125,7 @@ export const ContentTabs: React.FC = () => {
                                                                 fontSize="small"
                                                             />
                                                         </IconButton>
-                                                    </Tooltip>
+                                                    </MetTooltip>
                                                 )}
                                             </Box>
                                         }
@@ -134,7 +135,7 @@ export const ContentTabs: React.FC = () => {
                                     aria-controls="add-tab-menu"
                                     aria-haspopup={!customTabAdded} // Only allow the dropdown if customTabAdded is false
                                     onClick={handleMenuOpen}
-                                    disabled={isAllTabTypesPresent()} // Disable the button if customTabAdded is true
+                                    disabled={isAllTabTypesPresent() || !savedEngagement.id} // Disable the button if customTabAdded is true
                                     data-testid="add-tab-menu"
                                 >
                                     <FontAwesomeIcon icon={faPlus as IconProp} fontSize="small" />

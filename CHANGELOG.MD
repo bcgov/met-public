@@ -6,6 +6,10 @@
     (e.g, complex focus states) are still styled appropriately and in an accessible manner.
   - Soon, we will be doing a more in-depth revamp of dropdowns in the app to make them more
     accessible and user-friendly. This helps work towards that goal.
+- **Bugfix**: MET Web - No save feedback unless main content tab is selected [🎟️ DESENG-541](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-541)
+  - Implemented notifications for successful saves across all engagement tabs.
+  - Resolved issue with saving engagement summary content during engagement creation.
+  - Updated tooltip on engagement content to use MetTooltip for consistency.
 
 ## April 08, 2024
 

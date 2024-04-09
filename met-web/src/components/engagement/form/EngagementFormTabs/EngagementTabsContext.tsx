@@ -339,6 +339,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 engagement_id: savedEngagement.id,
             });
             await loadSettings();
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
         } catch (error) {
@@ -376,6 +377,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             );
             setEngagementSummaryContent(result);
             setRichContent(result.rich_content);
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
         } catch (error) {
@@ -413,6 +415,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             );
             setEngagementCustomContent(result);
             setCustomJsonContent(result.custom_json_content);
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
         } catch (error) {
@@ -466,6 +469,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 engagement_id: savedEngagement.id,
             });
             setSavedSlug(response.slug);
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
         } catch (error) {
@@ -507,6 +511,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     };
 
     const handleSaveEngagementMetadata = async () => {
+        setSaving(true);
         const result = await metadataFormRef.current?.submitForm();
         if (metadataFormRef.current && !result) {
             dispatch(
@@ -516,6 +521,10 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 }),
             );
         }
+        if (metadataFormRef.current && result) {
+            dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
+        }
+        setSaving(false);
         return result;
     };
 
