@@ -87,7 +87,6 @@ class Engagements(Resource):
 
             if metadata := args.get('metadata', []):
                 metadata = json.loads(metadata)
-                print(metadata)
                 if not isinstance(metadata, list) or not all(isinstance(item, dict) for item in metadata):
                     # if metadata is not a list of dictionaries, it is in the wrong format.
                     # blank it to avoid any issues.
