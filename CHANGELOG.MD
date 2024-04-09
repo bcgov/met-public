@@ -1,3 +1,10 @@
+## April 09, 2024
+
+- **Bugfix**: Stop Axios from trying to be a smarty pants and sending data in a format Flask doesn't understand
+  - This was preventing the filtering feature from working
+  - Directly serialize any metadata filters before the request to avoid Axios's new nested object serialization
+  - Deserialize it again on the Flask side
+
 ## April 08, 2024
 
 - **Bugfix**: Submission of rejected comments [🎟️ DESENG-527](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-527)

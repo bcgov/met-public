@@ -75,7 +75,7 @@ export const LandingContextProvider = ({ children }: { children: JSX.Element | J
                 include_banner_url: true,
                 engagement_status: status,
                 search_text: name,
-                metadata: searchFilters.metadata,
+                metadata: JSON.stringify(searchFilters.metadata),
             });
             setEngagements(loadedEngagements.items);
             setTotalEngagements(loadedEngagements.total);

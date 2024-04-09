@@ -558,47 +558,46 @@ def test_get_engagements_metadata_match_all(client, session):  # pylint:disable=
     })
     # pass in pagination options and do the count
     metadata_1 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Category value'],
             'filter_type': 'chips_all',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
-    print(f'/api/engagements/?metadata[]={metadata_1}')
-    rv = client.get(f'/api/engagements/?metadata[]={metadata_1}')
+    rv = client.get(f'/api/engagements/?metadata={metadata_1}')
 
     assert rv.status_code == 200
     assert rv.json.get('total') == 10
 
     metadata_2 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Different'],
             'filter_type': 'chips_all',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
-    rv = client.get(f'/api/engagements/?metadata[]={metadata_2}')
+    rv = client.get(f'/api/engagements/?metadata={metadata_2}')
     assert rv.status_code == 200
     assert rv.json.get('total') == 1
 
     metadata_3 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Category value', 'Different'],
             'filter_type': 'chips_all',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
     rv = client.get(
-        f'/api/engagements/?metadata[]={metadata_3}')
+        f'/api/engagements/?metadata={metadata_3}')
     assert rv.status_code == 200
     # the filter should only return the engagement with both values
     assert rv.json.get('total') == 1
@@ -633,47 +632,46 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
     })
     # pass in pagination options and do the count
     metadata_1 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Category value'],
             'filter_type': 'chips_any',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
-    print(f'/api/engagements/?metadata[]={metadata_1}')
-    rv = client.get(f'/api/engagements/?metadata[]={metadata_1}')
+    rv = client.get(f'/api/engagements/?metadata={metadata_1}')
 
     assert rv.status_code == 200
     assert rv.json.get('total') == 10
 
     metadata_2 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Different'],
             'filter_type': 'chips_any',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
-    rv = client.get(f'/api/engagements/?metadata[]={metadata_2}')
+    rv = client.get(f'/api/engagements/?metadata={metadata_2}')
     assert rv.status_code == 200
     assert rv.json.get('total') == 1
 
     metadata_3 = json.dumps(
-        {
+        [{
             'name': 'Category',
             'values': ['Category value', 'Different'],
             'filter_type': 'chips_any',
             'taxon_id': taxon.id
-        },
+        }],
         separators=(',', ':')  # Remove spaces between keys and values
     )
 
     rv = client.get(
-        f'/api/engagements/?metadata[]={metadata_3}')
+        f'/api/engagements/?metadata={metadata_3}')
     assert rv.status_code == 200
     # the filter should return the engagements with either value
     assert rv.json.get('total') == 10

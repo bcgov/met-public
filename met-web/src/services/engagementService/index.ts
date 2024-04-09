@@ -6,7 +6,6 @@ import { PatchEngagementRequest, PostEngagementRequest, PutEngagementRequest } f
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { Page } from 'services/type';
-import { MetadataFilter } from 'components/metadataManagement/types';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
     const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_LIST);
@@ -28,7 +27,7 @@ interface GetEngagementsParams {
     published_to_date?: string;
     include_banner_url?: boolean;
     has_team_access?: boolean;
-    metadata?: MetadataFilter[];
+    metadata?: string;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);
