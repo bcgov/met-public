@@ -32,7 +32,7 @@ const AuthenticatedRoutes = () => {
             <ScrollToTop />
             <FormioListener />
             <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/engagements" element={<EngagementListing />} />
                 <Route path="/surveys" element={<SurveyListing />} />
                 <Route path="/surveys/create" element={<CreateSurvey />} />
