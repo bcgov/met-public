@@ -1,4 +1,3 @@
-import { _kc } from 'constants/tenantConstants';
 import {
     userToken,
     userDetails,
@@ -17,18 +16,20 @@ import { getMembershipsByUser } from 'services/membershipService';
 import { USER_ROLES } from 'services/userService/constants';
 import { getBaseUrl } from 'helper';
 
-const KeycloakData = _kc;
+let KeycloakData: Keycloak.default;
+
 /**
- * Initializes Keycloak instance.
+ * Setting Keycloak instance.
  */
-const initKeycloak = async (dispatch: Dispatch<AnyAction>) => {
+const setKeycloakInstance = (instance: Keycloak.default) => {
+    KeycloakData = instance;
+};
+/**
+ * Setting user authentication data in storage
+ */
+const setAuthData = async (dispatch: Dispatch<AnyAction>) => {
     try {
-        const authenticated = await KeycloakData.init({
-            onLoad: 'check-sso',
-            silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
-            pkceMethod: 'S256',
-            checkLoginIframe: false,
-        });
+        const authenticated = !!KeycloakData.token;
         if (!authenticated) {
             console.warn('not authenticated!');
             dispatch(userAuthentication(authenticated));
@@ -151,7 +152,7 @@ const getAssignedEngagements = async (externalId: string, roles: string[]) => {
 };
 
 const UserService = {
-    initKeycloak,
+    setAuthData,
     updateUser,
     doLogin,
     doLogout,
@@ -159,6 +160,7 @@ const UserService = {
     getToken,
     hasRole,
     hasAdminRole,
+    setKeycloakInstance,
 };
 
 export default UserService;

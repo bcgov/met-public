@@ -79,7 +79,11 @@ const Footer = () => {
                         <MetLabel>{translate('footer.moreInfo')}</MetLabel>
                     </Grid>
                     <Grid item xs={6}>
-                        <Link to={`/${LanguageId}`} color={Palette.text.primary} component={NavLink}>
+                        <Link
+                            to={isLoggedIn ? `/home` : `/${LanguageId}`}
+                            color={Palette.text.primary}
+                            component={NavLink}
+                        >
                             {translate('footer.home')}
                         </Link>
                     </Grid>

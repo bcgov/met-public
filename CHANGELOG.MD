@@ -1,15 +1,26 @@
+## April 10, 2024
+- **Task** Update contributing guide for developers [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
+
 ## April 09, 2024
 
-- **Bugfix**: Stop Axios from trying to be a smarty pants and sending data in a format Flask doesn't understand
+- **Bugfix**: Stop Axios from trying to be a smarty pants and sending data in a format Flask doesn't understand [🎟️ DESENG-580](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-580)
   - This was preventing the filtering feature from working
   - Directly serialize any metadata filters before the request to avoid Axios's new nested object serialization
   - Deserialize it again on the Flask side
+- **Task**: MET Web - Some URLs not taking users to correct locations/timing out [DESENG-542](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-542)
+  - Created authentication provider to know the logged-in state before the App component is rendered.
+  - Optimized tenant identification from the url.
+  - Optimized path segments identification.
 - **Task**: CSS Selector specificity [🎟️ DESENG-577](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-577)
   - Replace the `!important` flag with more specific CSS selectors, specifically within dropdowns,
     to ensure that the correct styles are applied, and that states we have not yet designed for
     (e.g, complex focus states) are still styled appropriately and in an accessible manner.
   - Soon, we will be doing a more in-depth revamp of dropdowns in the app to make them more
     accessible and user-friendly. This helps work towards that goal.
+- **Bugfix**: MET Web - No save feedback unless main content tab is selected [🎟️ DESENG-541](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-541)
+  - Implemented notifications for successful saves across all engagement tabs.
+  - Resolved issue with saving engagement summary content during engagement creation.
+  - Updated tooltip on engagement content to use MetTooltip for consistency.
 
 ## April 08, 2024
 
