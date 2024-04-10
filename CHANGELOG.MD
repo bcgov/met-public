@@ -1,3 +1,6 @@
+## April 10, 2024
+- **Task** Update contributing guide for developers [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
+
 ## April 09, 2024
 
 - **Task**: CSS Selector specificity [🎟️ DESENG-577](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-577)
