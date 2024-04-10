@@ -1,3 +1,10 @@
+## April 09, 2024
+
+- **Task**: MET Web - Some URLs not taking users to correct locations/timing out [DESENG-542](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-542)
+  - Created authentication provider to know the logged-in state before the App component is rendered.
+  - Optimized tenant identification from the url.
+  - Optimized path segments identification.
+
 ## April 05, 2024
 
 - **Task**: Allow for any gov.bc.ca email to receive emails in MET's dev & test environments [DESENG-533](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-533)
