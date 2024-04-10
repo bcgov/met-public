@@ -1,4 +1,5 @@
 """Service for engagement content management."""
+from asyncio.windows_events import NULL
 from http import HTTPStatus
 from flask import current_app
 
@@ -14,6 +15,27 @@ from met_api.utils.roles import Role
 
 class EngagementContentService:
     """Engagement content management service."""
+
+    @staticmethod
+    def get_content_by_content_id(engagement_content_id):
+        """Get content by content id."""
+        content_data = {}
+        engagement_content_record = EngagementContentModel.find_by_id(engagement_content_id)
+        if not engagement_content_record:
+            raise BusinessException(
+                error='Engagement Content not found',
+                status_code=HTTPStatus.NOT_FOUND
+            )
+        content_data['id'] = engagement_content_record.id
+        content_data['title'] = engagement_content_record.title
+        if engagement_content_record.content_type == EngagementContentType.Custom.name:
+            custom_content_records = EngagementCustomContentService.get_custom_content(engagement_content_id)
+            if custom_content_records:
+                custom_record = custom_content_records[0]
+                content_data['title'] = custom_record.get('title')
+                content_data['custom_text_content'] = custom_record.get('custom_text_content')
+                content_data['custom_json_content'] = custom_record.get('custom_json_content')
+        return content_data
 
     @staticmethod
     def get_contents_by_engagement_id(engagement_id):
