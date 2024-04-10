@@ -5,6 +5,22 @@
   - Optimized tenant identification from the url.
   - Optimized path segments identification.
 
+- **Task**: CSS Selector specificity [🎟️ DESENG-577](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-577)
+  - Replace the `!important` flag with more specific CSS selectors, specifically within dropdowns,
+    to ensure that the correct styles are applied, and that states we have not yet designed for
+    (e.g, complex focus states) are still styled appropriately and in an accessible manner.
+  - Soon, we will be doing a more in-depth revamp of dropdowns in the app to make them more
+    accessible and user-friendly. This helps work towards that goal.
+
+## April 08, 2024
+
+- **Bugfix**: Submission of rejected comments [🎟️ DESENG-527](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-527)
+  - Fixed issue where resubmitted comments would not reappear in the queue for approval.
+  - Added unit tests to ensure the issue does not reoccur.
+- **Task**: MET - Clean up outstanding dependabot PRs [DESENG-535](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-535)
+  - Bump axios from 0.26.1 to 0.28.0 in met-web. Dependabot suggested this upgrade, but it required a few minor code changes.
+  - Updated the type definition of the 'error' parameter to include a generic type '{ message?: string }' to handle the AxiosError response properly.
+
 ## April 05, 2024
 
 - **Task**: Allow for any gov.bc.ca email to receive emails in MET's dev & test environments [DESENG-533](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-533)

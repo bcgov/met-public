@@ -157,11 +157,11 @@ export const AddToEngagementModal = () => {
         getUserMemberships();
     };
 
-    const setErrors = (error: AxiosError) => {
+    const setErrors = (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status !== HTTP_STATUS_CODES.CONFLICT) {
             return;
         }
-        setBackendError(error.response?.data.message || '');
+        setBackendError(error.response?.data?.message || '');
     };
 
     const onSubmit: SubmitHandler<AddUserForm> = async (data: AddUserForm) => {
