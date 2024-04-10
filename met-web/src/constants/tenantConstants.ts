@@ -10,4 +10,4 @@ export const tenantDetail: ITenantDetail = {
 };
 
 // eslint-disable-next-line
-export const _kc: Keycloak.KeycloakInstance = new (Keycloak as any)(tenantDetail);
+export const _kc: Keycloak.default = new (Keycloak as any)(tenantDetail);

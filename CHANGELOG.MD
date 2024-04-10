@@ -3,6 +3,11 @@
 
 ## April 09, 2024
 
+- **Task**: MET Web - Some URLs not taking users to correct locations/timing out [DESENG-542](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-542)
+  - Created authentication provider to know the logged-in state before the App component is rendered.
+  - Optimized tenant identification from the url.
+  - Optimized path segments identification.
+
 - **Task**: CSS Selector specificity [🎟️ DESENG-577](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-577)
   - Replace the `!important` flag with more specific CSS selectors, specifically within dropdowns,
     to ensure that the correct styles are applied, and that states we have not yet designed for

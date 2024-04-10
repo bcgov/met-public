@@ -47,3 +47,16 @@ export const blobToFile = (theBlob: Blob, fileName: string): File => {
     //Cast to a File() type
     return <File>theBlob;
 };
+
+export const determinePathSegments = () => {
+    const url = new URL(window.location.href);
+    // filters out empty segments, which can occur if there are leading or trailing slashes in the pathname
+    const pathSegments = url.pathname.split('/').filter((segment) => segment.trim() !== '');
+    return pathSegments;
+};
+
+export const findTenantInPath = () => {
+    // finding tenant from the path segments
+    const pathSegments = determinePathSegments();
+    return pathSegments.length > 0 ? pathSegments[0].toLowerCase() : '';
+};

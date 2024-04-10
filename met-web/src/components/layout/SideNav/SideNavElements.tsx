@@ -9,7 +9,7 @@ interface Route {
 }
 
 export const Routes: Route[] = [
-    { name: 'Home', path: '/', base: '/', authenticated: false, allowedRoles: [] },
+    { name: 'Home', path: '/home', base: '/', authenticated: false, allowedRoles: [] },
     {
         name: 'Engagements',
         path: '/engagements',

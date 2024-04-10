@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import UserService from './services/userService';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
 import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
@@ -26,6 +25,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import i18n from './i18n';
 import DocumentTitle from 'DocumentTitle';
 import { Language } from 'constants/language';
+import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
+import { determinePathSegments, findTenantInPath } from './utils';
 
 interface Translations {
     [languageId: string]: { [key: string]: string };
@@ -36,17 +37,13 @@ const App = () => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
-    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
-    const pathSegments = window.location.pathname.split('/');
+    const pathSegments = determinePathSegments();
     const language: LanguageState = useAppSelector((state) => state.language);
-    const basename = pathSegments[1].toLowerCase();
+    const basename = findTenantInPath();
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     const [translations, setTranslations] = useState<Translations>({});
-
-    useEffect(() => {
-        UserService.initKeycloak(dispatch);
-    }, [dispatch]);
+    const { isAuthenticated } = useContext(AuthKeyCloakContext);
 
     useEffect(() => {
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
@@ -83,28 +80,35 @@ const App = () => {
     };
 
     const loadTenant = () => {
+        // Load default tenant if in a single tenant environment
         if (AppConfig.tenant.isSingleTenantEnvironment) {
             fetchTenant(AppConfig.tenant.defaultTenant);
             return;
         }
 
+        const defaultTenant = AppConfig.tenant.defaultTenant;
+        const defaultLanguage = AppConfig.language.defaultLanguageId;
+
+        // Determine the appropriate URL to redirect
+        const redirectToDefaultUrl = (base: string, includeLanguage = true) => {
+            const languageSegment = includeLanguage ? `/${defaultLanguage}` : '/home';
+            window.location.replace(`/${base}${languageSegment}`);
+        };
+
+        const shouldIncludeLanguage = !isAuthenticated;
+
         if (basename) {
             fetchTenant(basename);
-            if (pathSegments.length === 2) {
-                const defaultLanguage = AppConfig.language.defaultLanguageId; // Set the default language here
-                const defaultUrl = `/${basename}/${defaultLanguage}`;
-                window.location.replace(defaultUrl);
+            // if language or admin dashboard url not set
+            if (pathSegments.length < 2) {
+                redirectToDefaultUrl(basename, shouldIncludeLanguage);
             }
-            return;
+        } else if (defaultTenant) {
+            fetchTenant(defaultTenant);
+            redirectToDefaultUrl(defaultTenant, shouldIncludeLanguage);
+        } else {
+            dispatch(loadingTenant(false));
         }
-
-        if (!basename && AppConfig.tenant.defaultTenant) {
-            const defaultLanguage = AppConfig.language.defaultLanguageId; // Set the default language here
-            const defaultUrl = `/${AppConfig.tenant.defaultTenant}/${defaultLanguage}`;
-            window.location.replace(defaultUrl);
-        }
-
-        dispatch(loadingTenant(false));
     };
 
     const preloadTranslations = async () => {
@@ -185,7 +189,7 @@ const App = () => {
         );
     }
 
-    if (!isLoggedIn) {
+    if (!isAuthenticated) {
         return (
             <Router basename={tenant.basename}>
                 <DocumentTitle />

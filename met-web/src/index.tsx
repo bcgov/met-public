@@ -9,6 +9,7 @@ import { Formio } from '@formio/react';
 import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthKeyCloakContextProvider } from 'components/auth/AuthKeycloakContext';
 
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
@@ -17,15 +18,19 @@ Formio.Utils.Evaluator.noeval = false;
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>
+
     <HelmetProvider>
         <Provider store={store}>
-            <ThemeProvider theme={BaseTheme}>
-                <StyledEngineProvider injectFirst>
-                    <App />
-                </StyledEngineProvider>
-            </ThemeProvider>
+            <AuthKeyCloakContextProvider>
+                <ThemeProvider theme={BaseTheme}>
+                    <StyledEngineProvider injectFirst>
+                        <App />
+                    </StyledEngineProvider>
+                </ThemeProvider>
+            </AuthKeyCloakContextProvider>
         </Provider>
     </HelmetProvider>,
+
     // </React.StrictMode>
 );
 
