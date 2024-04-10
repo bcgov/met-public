@@ -85,9 +85,12 @@ class Engagements(Resource):
             if external_user_id is None:
                 exclude_internal = True
 
-            metadata = args.getlist('metadata[]')
-            if metadata:
-                metadata = [json.loads(m) for m in metadata]
+            if metadata := args.get('metadata', []):
+                metadata = json.loads(metadata)
+                if not isinstance(metadata, list) or not all(isinstance(item, dict) for item in metadata):
+                    # if metadata is not a list of dictionaries, it is in the wrong format.
+                    # blank it to avoid any issues.
+                    metadata = []
 
             search_options = {
                 'search_text': args.get('search_text', '', type=str),
