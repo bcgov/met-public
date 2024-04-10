@@ -218,6 +218,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             });
 
             setEngagement(result);
+            const engagementContents = await getEngagementContent(Number(result.id));
+            setContentTabs(engagementContents);
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been created' }));
             setSaving(false);
             return Promise.resolve(result);
