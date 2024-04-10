@@ -52,6 +52,10 @@ from met_api.models.survey import Survey as SurveyModel
 from met_api.models.survey_translation import SurveyTranslation as SurveyTranslationModel
 from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
 from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
+from met_api.models.engagement_content import EngagementContent as EngagementContentModel
+from met_api.models.engagement_content_translation import (
+    EngagementContentTranslation as EngagementContentTranslationModel,
+)
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
@@ -66,13 +70,41 @@ from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
 from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementInfo, TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo, TestEngagementTranslationInfo, TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo,
-    TestJwtClaims, TestLanguageInfo, TestParticipantInfo, TestPollAnswerInfo, TestPollAnswerTranslationInfo,
-    TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo, TestSubscribeInfo,
-    TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
-    TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
-    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
+    TestCommentInfo,
+    TestEngagementInfo,
+    TestEngagementMetadataInfo,
+    TestEngagementMetadataTaxonInfo,
+    TestEngagementSlugInfo,
+    TestEngagementTranslationInfo,
+    TestEventItemTranslationInfo,
+    TestEventnfo,
+    TestFeedbackInfo,
+    TestJwtClaims,
+    TestLanguageInfo,
+    TestParticipantInfo,
+    TestPollAnswerInfo,
+    TestPollAnswerTranslationInfo,
+    TestPollResponseInfo,
+    TestReportSettingInfo,
+    TestSubmissionInfo,
+    TestSubscribeInfo,
+    TestSubscribeItemTranslationInfo,
+    TestSurveyInfo,
+    TestSurveyTranslationInfo,
+    TestTenantInfo,
+    TestTimelineEventTranslationInfo,
+    TestTimelineInfo,
+    TestUserInfo,
+    TestWidgetDocumentInfo,
+    TestWidgetInfo,
+    TestWidgetItemInfo,
+    TestWidgetMap,
+    TestWidgetPollInfo,
+    TestWidgetTranslationInfo,
+    TestWidgetVideo,
+    TestEngagementContentInfo,
+    TestEngagementContentTranslationInfo
+)
 
 
 fake = Faker()
@@ -208,8 +240,7 @@ def factory_metadata_requirements(auth: Optional[Auth] = None):
     """Create a tenant, an associated staff user, and engagement, for tests."""
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
-    (engagement_info := TestEngagementInfo.engagement1.copy())[
-        'tenant_id'] = tenant.id
+    (engagement_info := TestEngagementInfo.engagement1.copy())['tenant_id'] = tenant.id
     engagement = factory_engagement_model(engagement_info)
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
@@ -229,8 +260,7 @@ def factory_taxon_requirements(auth: Optional[Auth] = None):
     tenant = factory_tenant_model()
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
-    factory_staff_user_model(
-        TestJwtClaims.staff_admin_role.get('sub'), staff_info)
+    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
     if auth:
         headers = factory_auth_header(
             auth,
@@ -281,8 +311,7 @@ def factory_participant_model(
 ):
     """Produce a participant model."""
     participant = ParticipantModel(
-        email_address=ParticipantModel.encode_email(
-            participant['email_address']),
+        email_address=ParticipantModel.encode_email(participant['email_address']),
     )
     participant.save()
     return participant
@@ -420,8 +449,7 @@ def patch_token_info(claims, monkeypatch):
         """Return token info."""
         return claims
 
-    monkeypatch.setattr(
-        'met_api.utils.user_context._get_token_info', token_info)
+    monkeypatch.setattr('met_api.utils.user_context._get_token_info', token_info)
 
     # Add a database user that matches the token
     # factory_staff_user_model(external_id=claims.get('sub'))
@@ -481,8 +509,7 @@ def factory_poll_model(widget, poll_info: dict = TestWidgetPollInfo.poll1):
 
 def factory_poll_answer_model(poll, answer_info: dict = TestPollAnswerInfo.answer1):
     """Produce a Poll  model."""
-    answer = PollAnswerModel(answer_text=answer_info.get(
-        'answer_text'), poll_id=poll.id)
+    answer = PollAnswerModel(answer_text=answer_info.get('answer_text'), poll_id=poll.id)
     answer.save()
     return answer
 
@@ -603,8 +630,7 @@ def factory_survey_translation_and_engagement_model():
         survey_id=survey.id,
         language_id=lang.id,
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
-        form_json=TestSurveyTranslationInfo.survey_translation1.get(
-            'form_json'),
+        form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
     )
     translation.save()
     return translation, survey, lang
@@ -832,3 +858,41 @@ def factory_engagement_translation_model(
     )
     engagement_translation.save()
     return engagement_translation
+
+
+def factory_enagement_content_model(
+    engagement_id: int = None, engagement_content: dict = TestEngagementContentInfo.content1
+):
+    """Produce a engagement content model instance."""
+    if engagement_id is None:
+        engagement_id = factory_engagement_model().id
+
+    engagement_content = EngagementContentModel(
+        title=engagement_content.get('title'),
+        icon_name=engagement_content.get('icon_name'),
+        content_type=engagement_content.get('content_type'),
+        engagement_id=engagement_id,
+        is_internal=engagement_content.get('is_internal', False),
+    )
+    engagement_content.save()
+    return engagement_content
+
+
+def engagement_content_model_with_language():
+    """Produce a engagement content model instance with language."""
+    content_model = factory_enagement_content_model()
+    language_model = factory_language_model({'code': 'en', 'name': 'English'})
+    return content_model, language_model
+
+
+def factory_engagement_content_translation_model(
+    engagement_content_translation: dict = TestEngagementContentTranslationInfo.translation_info1,
+):
+    """Produce a engagement content translation model."""
+    engagement_content_translation = EngagementContentTranslationModel(
+        engagement_content_id=engagement_content_translation.get('engagement_content_id'),
+        language_id=engagement_content_translation.get('language_id'),
+        content_title=engagement_content_translation.get('content_title'),
+    )
+    engagement_content_translation.save()
+    return engagement_content_translation

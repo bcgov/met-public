@@ -29,6 +29,7 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.timeline_event_status import TimelineEventStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
+from met_api.models import engagement
 from met_api.utils.enums import ContentTitle, LoginSource, UserStatus
 
 
@@ -1011,4 +1012,14 @@ class TestEngagementTranslationInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+    }
+
+
+class TestEngagementContentTranslationInfo(dict, Enum):
+    """Test scenarios of engagement content translation content."""
+
+    translation_info1 = {
+        'engagement_content_id': 1,
+        'language_id': 2,
+        'content_title': fake.text(max_nb_chars=20),
     }
