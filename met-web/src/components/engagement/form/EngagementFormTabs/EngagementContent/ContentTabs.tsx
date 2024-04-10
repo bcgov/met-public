@@ -12,6 +12,7 @@ import { ActionContext } from '../../ActionContext';
 import { EngagementContentContext } from './EngagementContentContext';
 import { If, Then, Else } from 'react-if';
 import ContentTabModal from './ContentTabModal';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export const ContentTabs: React.FC = () => {
     const { fetchEngagementContents, contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
@@ -106,7 +107,7 @@ export const ContentTabs: React.FC = () => {
                                                 <Tooltip title="Edit Tab">
                                                     <IconButton onClick={() => handleEditTab(index)} aria-label="edit">
                                                         <FontAwesomeIcon
-                                                            icon={faPenToSquare}
+                                                            icon={faPenToSquare as IconProp}
                                                             fontSize="small"
                                                             data-testid="edit-tab-details"
                                                         />
@@ -118,7 +119,10 @@ export const ContentTabs: React.FC = () => {
                                                             onClick={() => handleDeleteTab(index)}
                                                             aria-label="delete"
                                                         >
-                                                            <FontAwesomeIcon icon={faTrash} fontSize="small" />
+                                                            <FontAwesomeIcon
+                                                                icon={faTrash as IconProp}
+                                                                fontSize="small"
+                                                            />
                                                         </IconButton>
                                                     </Tooltip>
                                                 )}
@@ -133,7 +137,7 @@ export const ContentTabs: React.FC = () => {
                                     disabled={isAllTabTypesPresent()} // Disable the button if customTabAdded is true
                                     data-testid="add-tab-menu"
                                 >
-                                    <FontAwesomeIcon icon={faPlus} fontSize="small" />
+                                    <FontAwesomeIcon icon={faPlus as IconProp} fontSize="small" />
                                 </Button>
                             </MetTabList>
                         </Box>

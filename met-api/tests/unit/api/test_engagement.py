@@ -19,12 +19,12 @@ Test-Suite to ensure that the /Engagement endpoint is working as expected.
 import copy
 import json
 from http import HTTPStatus
+from unittest.mock import patch
 
 import pytest
-from unittest.mock import patch
 from faker import Faker
-from marshmallow import ValidationError
 from flask import current_app
+from marshmallow import ValidationError
 
 from met_api.constants.engagement_status import EngagementDisplayStatus, SubmissionStatus
 from met_api.models.tenant import Tenant as TenantModel
@@ -34,9 +34,10 @@ from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_membership_model, factory_participant_model,
-    factory_staff_user_model, factory_submission_model, factory_survey_and_eng_model, factory_tenant_model,
-    set_global_tenant)
+    factory_auth_header, factory_engagement_metadata_model, factory_engagement_model, factory_membership_model,
+    factory_metadata_taxon_model, factory_participant_model, factory_staff_user_model, factory_submission_model,
+    factory_survey_and_eng_model, factory_tenant_model, set_global_tenant)
+
 
 fake = Faker()
 
@@ -181,7 +182,8 @@ def test_get_engagements_reviewer(client, jwt, session, engagement_info,
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.FORBIDDEN.value
 
-    factory_membership_model(user_id=user.id, engagement_id=eng_id, member_type='REVIEWER')
+    factory_membership_model(
+        user_id=user.id, engagement_id=eng_id, member_type='REVIEWER')
 
     # Reveiwer has access to draft engagement if he is assigned
     rv = client.get(f'/api/engagements/{eng_id}',
@@ -226,7 +228,8 @@ def test_search_engagements_by_status(client, jwt,
 
 def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argument
     """Verify the functionality of searching engagements with different access levels."""
-    similar_engagement_base_name = fake.name()  # Generate a base name for similar engagements
+    similar_engagement_base_name = fake.name(
+    )  # Generate a base name for similar engagements
     set_global_tenant()
 
     similar_engagements = []
@@ -234,7 +237,8 @@ def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argu
 
     # Create multiple engagements with similar names for testing search
     for i in range(total_similar_engagements):
-        name = f'{similar_engagement_base_name}{i}'  # Append a number to distinguish names
+        # Append a number to distinguish names
+        name = f'{similar_engagement_base_name}{i}'
         similar_engagements.append(factory_engagement_model(name=name))
 
     # Create a dissimilar engagement
@@ -259,10 +263,12 @@ def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argu
     assert rv.json.get('total') == 0, 'No role, so no results expected'
 
     # Admin-level searches
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(
+        jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}', headers=headers,
                     content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == total_similar_engagements, 'Matching similar names count for admin'
+    assert rv.json.get(
+        'total') == total_similar_engagements, 'Matching similar names count for admin'
 
     # Admin searches with team-level access
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
@@ -280,32 +286,40 @@ def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argu
     # Team member searches for similar engagements
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}', headers=headers,
                     content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == total_similar_engagements, 'Name search fetches all engagements for team member'
+    assert rv.json.get(
+        'total') == total_similar_engagements, 'Name search fetches all engagements for team member'
 
     # Team member with no membership, access should be denied
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 0, 'Team member with no membership should not fetch any results'
+    assert rv.json.get(
+        'total') == 0, 'Team member with no membership should not fetch any results'
 
     # Create membership for a specific engagement for the team member
-    factory_membership_model(user_id=user.id, engagement_id=similar_engagements[0].id, member_type='TEAM_MEMBER')
+    factory_membership_model(
+        user_id=user.id, engagement_id=similar_engagements[0].id, member_type='TEAM_MEMBER')
 
     # Team member search with membership, should return the specific engagement
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 1, 'Name search works for team member with membership'
+    assert rv.json.get(
+        'total') == 1, 'Name search works for team member with membership'
 
     # Create membership for a different engagement and search with the base name
-    factory_membership_model(user_id=user.id, engagement_id=eng2.id, member_type='TEAM_MEMBER')
+    factory_membership_model(
+        user_id=user.id, engagement_id=eng2.id, member_type='TEAM_MEMBER')
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 1, 'Different name, so returns only base name results.'
+    assert rv.json.get(
+        'total') == 1, 'Different name, so returns only base name results.'
 
     # Create membership for another similar engagement and perform the search
-    factory_membership_model(user_id=user.id, engagement_id=similar_engagements[1].id, member_type='TEAM_MEMBER')
+    factory_membership_model(
+        user_id=user.id, engagement_id=similar_engagements[1].id, member_type='TEAM_MEMBER')
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}&has_team_access=true',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 2, 'Similar name, team member search fetches multiple results'
+    assert rv.json.get(
+        'total') == 2, 'Similar name, team member search fetches multiple results'
 
 
 def test_search_engagements_not_logged_in(client, session):  # pylint:disable=unused-argument
@@ -313,22 +327,30 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
     factory_engagement_model()
 
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 1, 'its visible for public user wit no tenant information'
+    assert rv.json.get(
+        'total') == 1, 'its visible for public user wit no tenant information'
     assert rv.status_code == 200
 
-    tenant_header = {TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
-    rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 0, 'Tenant based fetching.So dont return the non-tenant info.'
+    tenant_header = {TENANT_ID_HEADER: current_app.config.get(
+        'DEFAULT_TENANT_SHORT_NAME')}
+    rv = client.get('/api/engagements/', headers=tenant_header,
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get(
+        'total') == 0, 'Tenant based fetching.So dont return the non-tenant info.'
     assert rv.status_code == 200
 
     factory_engagement_model(TestEngagementInfo.engagement3)
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 2, 'Both of the engagaments should visible for public user wit no tenant information'
+    assert rv.json.get(
+        'total') == 2, 'Both of the engagaments should visible for public user wit no tenant information'
     assert rv.status_code == 200
 
-    tenant_header = {TENANT_ID_HEADER: current_app.config.get('DEFAULT_TENANT_SHORT_NAME')}
-    rv = client.get('/api/engagements/', headers=tenant_header, content_type=ContentType.JSON.value)
-    assert rv.json.get('total') == 1, 'Tenant based fetching.So dont return the non-tenant info.'
+    tenant_header = {TENANT_ID_HEADER: current_app.config.get(
+        'DEFAULT_TENANT_SHORT_NAME')}
+    rv = client.get('/api/engagements/', headers=tenant_header,
+                    content_type=ContentType.JSON.value)
+    assert rv.json.get(
+        'total') == 1, 'Tenant based fetching.So dont return the non-tenant info.'
     assert rv.status_code == 200
 
 
@@ -441,8 +463,10 @@ def test_patch_new_survey_block_engagement(client, jwt, session,
     assert rv.status_code == 200
     actual_status_blocks = rv.json.get('status_block')
     assert len(actual_status_blocks) == 1
-    assert actual_status_blocks[0].get('block_text') == engagement_edits.get('status_block')[0].get('block_text')
-    assert actual_status_blocks[0].get('survey_status') == engagement_edits.get('status_block')[0].get('survey_status')
+    assert actual_status_blocks[0].get('block_text') == engagement_edits.get(
+        'status_block')[0].get('block_text')
+    assert actual_status_blocks[0].get('survey_status') == engagement_edits.get(
+        'status_block')[0].get('survey_status')
 
 
 def test_update_survey_block_engagement(client, jwt, session,
@@ -473,14 +497,16 @@ def test_update_survey_block_engagement(client, jwt, session,
     assert rv.status_code == 200
     actual_status_blocks = rv.json.get('status_block')
     assert len(actual_status_blocks) == 2
-    upcoming_block = next(x for x in actual_status_blocks if x.get('survey_status') == SubmissionStatus.Closed.name)
+    upcoming_block = next(x for x in actual_status_blocks if x.get(
+        'survey_status') == SubmissionStatus.Closed.name)
     assert upcoming_block.get('block_text') == block_text_for_upcoming
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
 def test_count_submissions(client, jwt, session, engagement_info):  # pylint:disable=unused-argument
     """Assert that an engagement can be POSTed."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(
+        jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     factory_staff_user_model(TestJwtClaims.public_user_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
@@ -501,3 +527,153 @@ def test_count_submissions(client, jwt, session, engagement_info):  # pylint:dis
     assert submission_meta_data.get('approved', 0) == 1
     assert submission_meta_data.get('pending', 0) == 1
     assert submission_meta_data.get('needs_further_review', 0) == 1
+
+
+def test_get_engagements_metadata_match_all(client, session):  # pylint:disable=unused-argument
+    """Assert that engagements can be looked up by metadata (match all)."""
+    engagements = [factory_engagement_model({
+        **TestEngagementInfo.engagement1,
+        'tenant_id': 1
+    }) for _ in range(0, 10)]
+    taxon = factory_metadata_taxon_model(1, {
+        'name': 'Category',
+        'description': 'Category description',
+        'data_type': 'text',
+        'tenant_id': 1
+    })
+    for engagement in engagements:
+        factory_engagement_metadata_model({
+            'engagement_id': engagement.id,
+            'taxon_id': taxon.id,
+            'value': 'Category value',
+            'tenant_id': 1
+        })
+
+    # Add a value to one of the engagements to test the filter
+    factory_engagement_metadata_model({
+        'engagement_id': engagements[0].id,
+        'taxon_id': taxon.id,
+        'value': 'Different',
+        'tenant_id': 1
+    })
+    # pass in pagination options and do the count
+    metadata_1 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Category value'],
+            'filter_type': 'chips_all',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    print(f'/api/engagements/?metadata[]={metadata_1}')
+    rv = client.get(f'/api/engagements/?metadata[]={metadata_1}')
+
+    assert rv.status_code == 200
+    assert rv.json.get('total') == 10
+
+    metadata_2 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Different'],
+            'filter_type': 'chips_all',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    rv = client.get(f'/api/engagements/?metadata[]={metadata_2}')
+    assert rv.status_code == 200
+    assert rv.json.get('total') == 1
+
+    metadata_3 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Category value', 'Different'],
+            'filter_type': 'chips_all',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    rv = client.get(
+        f'/api/engagements/?metadata[]={metadata_3}')
+    assert rv.status_code == 200
+    # the filter should only return the engagement with both values
+    assert rv.json.get('total') == 1
+
+
+def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=unused-argument
+    """Assert that engagements can be looked up by metadata (match all)."""
+    engagements = [factory_engagement_model({
+        **TestEngagementInfo.engagement1,
+        'tenant_id': 1
+    }) for _ in range(0, 10)]
+    taxon = factory_metadata_taxon_model(1, {
+        'name': 'Category',
+        'description': 'Category description',
+        'data_type': 'text',
+        'tenant_id': 1
+    })
+    for engagement in engagements:
+        factory_engagement_metadata_model({
+            'engagement_id': engagement.id,
+            'taxon_id': taxon.id,
+            'value': 'Category value',
+            'tenant_id': 1
+        })
+
+    # Add a value to one of the engagements to test the filter
+    factory_engagement_metadata_model({
+        'engagement_id': engagements[0].id,
+        'taxon_id': taxon.id,
+        'value': 'Different',
+        'tenant_id': 1
+    })
+    # pass in pagination options and do the count
+    metadata_1 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Category value'],
+            'filter_type': 'chips_any',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    print(f'/api/engagements/?metadata[]={metadata_1}')
+    rv = client.get(f'/api/engagements/?metadata[]={metadata_1}')
+
+    assert rv.status_code == 200
+    assert rv.json.get('total') == 10
+
+    metadata_2 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Different'],
+            'filter_type': 'chips_any',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    rv = client.get(f'/api/engagements/?metadata[]={metadata_2}')
+    assert rv.status_code == 200
+    assert rv.json.get('total') == 1
+
+    metadata_3 = json.dumps(
+        {
+            'name': 'Category',
+            'values': ['Category value', 'Different'],
+            'filter_type': 'chips_any',
+            'taxon_id': taxon.id
+        },
+        separators=(',', ':')  # Remove spaces between keys and values
+    )
+
+    rv = client.get(
+        f'/api/engagements/?metadata[]={metadata_3}')
+    assert rv.status_code == 200
+    # the filter should return the engagements with either value
+    assert rv.json.get('total') == 10

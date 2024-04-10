@@ -15,8 +15,12 @@
 
 Test suite to ensure that the Submission service routines are working as expected.
 """
+from typing import List
 from unittest.mock import patch
 
+from met_api.constants.email_verification import EmailVerificationType
+from met_api.models.comment import Comment
+from met_api.schemas.comment import CommentSchema
 from met_api.services import authorization
 from met_api.constants.comment_status import Status
 from met_api.schemas.submission import SubmissionSchema
@@ -48,6 +52,47 @@ def test_create_submission(session):  # pylint:disable=unused-argument
 
     assert submission is not None
     assert actual_email_verification['is_active'] is False
+
+
+def test_update_submission(session):  # pylint:disable=unused-argument
+    """Assert that a submission can be updated using update_comments."""
+    survey, eng = factory_survey_and_eng_model()
+    staff_user = factory_staff_user_model(3)
+    email_verification = factory_email_verification(survey.id)
+    participant = factory_participant_model()
+    factory_engagement_setting_model(eng.id)
+    submission_request: SubmissionSchema = {
+        'submission_json': {'test_question': 'test answer'},
+        'engagement_id': eng.id,
+        'survey_id': survey.id,
+        'participant_id': participant.id,
+        'verification_token': email_verification.verification_token,
+    }
+    submission = SubmissionService().create(
+        email_verification.verification_token, submission_request)
+    # reject the commnent
+    staff_review_details = {
+        'status_id': Status.Rejected.value,
+        'has_personal_info': True,  # the reason for rejection
+        'notify_email': False,
+    }
+    with patch.object(authorization, 'check_auth', return_value=True):
+        submission_record = SubmissionService().review_comment(
+            submission.id, staff_review_details, staff_user.external_id)
+        assert submission_record.get(
+            'comment_status_id') == Status.Rejected.value
+    assert submission.comment_status_id == Status.Rejected.value
+    comment: CommentSchema = CommentSchema().dump(
+        factory_comment_model(survey.id, submission.id))
+    email_verification = factory_email_verification(
+        survey.id, type=EmailVerificationType.RejectedComment, submission_id=submission.id)
+    updated_submission: List[Comment] = SubmissionService().update_comments(
+        email_verification.verification_token, {'comments': [comment]})
+    # Roll back any changes still in the transaction to make sure data was
+    # committed by the service
+    session.rollback()
+    assert updated_submission[0].text == comment['text']
+    assert submission.comment_status_id == Status.Pending.value
 
 
 def test_create_submission_rollback(session):  # pylint:disable=unused-argument

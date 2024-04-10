@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Autocomplete, TextField, Chip, IconButton, Stack } from '@mui/material';
 import { Control, Controller, FieldError } from 'react-hook-form';
-import { ArrowCircleUp, HighlightOff } from '@mui/icons-material';
+import { AddCircleOutline, HighlightOff } from '@mui/icons-material';
 
 const PresetValuesEditor = ({
     control, // The control object (from react-hook-form)
@@ -66,7 +66,6 @@ const PresetValuesEditor = ({
                             <TextField
                                 {...params}
                                 variant="outlined"
-                                label="Preset values"
                                 placeholder="Type a new option..."
                                 error={!!errors.preset_values}
                                 helperText={errorMessage}
@@ -81,7 +80,7 @@ const PresetValuesEditor = ({
                                                         onArrayChange(null, [...value, inputValue]);
                                                     }}
                                                 >
-                                                    <ArrowCircleUp />
+                                                    <AddCircleOutline />
                                                 </IconButton>
                                             )}
                                             <IconButton

@@ -4,9 +4,9 @@ from typing import List, Optional
 
 from met_api.models import db
 from met_api.models.db import transactional
-from met_api.models.engagement_metadata import MetadataTaxon
+from met_api.models.engagement_metadata import MetadataTaxon, MetadataTaxonFilterType
 from met_api.models.tenant import Tenant
-from met_api.schemas.engagement_metadata import MetadataTaxonSchema
+from met_api.schemas.engagement_metadata import MetadataTaxonFilterSchema, MetadataTaxonSchema
 
 
 class MetadataTaxonService:
@@ -27,6 +27,35 @@ class MetadataTaxonService:
         results = tenant.metadata_taxa if tenant else []
         sorted_results = sorted(results, key=lambda taxon: taxon.position)
         return MetadataTaxonSchema(many=True).dump(sorted_results)
+
+    @staticmethod
+    def get_filter_options(tenant_id: int) -> dict:
+        """Get all filterable taxa for a tenant."""
+        tenant = Tenant.query.get(tenant_id)
+        results = sorted(tenant.metadata_taxa,
+                         key=lambda taxon: taxon.position) if tenant else []
+        filters = []
+        available_filters = [e.value for e in MetadataTaxonFilterType]
+        for taxon in results:
+            if taxon.filter_type in available_filters:
+                values = []
+                if taxon.freeform and taxon.include_freeform:
+                    # Include values specified on engagements as usable options
+                    # (unique values only)
+                    values = list({entry.value for entry in taxon.entries})
+                else:
+                    # Just use the preset values
+                    values = taxon.preset_values
+                # Don't return the filter if the user has no options; this prevents
+                # the frontend from displaying a useless filter
+                if values:
+                    filters.append({
+                        'taxon_id': taxon.id,
+                        'name': taxon.name,
+                        'filter_type': taxon.filter_type,
+                        'values': values
+                    })
+        return MetadataTaxonFilterSchema(many=True).dump(filters)
 
     @staticmethod
     def create(tenant_id: int, taxon_data: dict) -> dict:

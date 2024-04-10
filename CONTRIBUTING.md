@@ -4,7 +4,7 @@ Government employees, public and members of the private sector are encouraged to
 
 (If you are new to GitHub, you might start with a [basic tutorial](https://help.github.com/articles/set-up-git) and check out a more detailed guide to [pull requests](https://help.github.com/articles/using-pull-requests/).)
 
-Pull requests will be evaluated by the repository guardians on a schedule and if deemed beneficial will be committed to the main.
+Pull requests will be evaluated by the repository guardians on a schedule and if deemed beneficial will be committed to the main branch.
 
 All contributors retain the original copyright to their stuff, but by contributing to this project, you grant a world-wide, royalty-free, perpetual, irrevocable, non-exclusive, transferable license to all users **under the terms of the [license](./LICENSE) under which this project is distributed**.
 
@@ -38,16 +38,18 @@ One common technique used for segmenting PRs is to create a "parent" feature bra
 
 With this method of segmentation, you don't need to worry about committing incomplete or broken features to main. When all child branches have been completed for the feature, the parent is then merged back into main in a final PR. This final review can contain your CHANGELOG.md entry. In the title or description of your PR, please indicate that all work has already been reviewed.
 
+__Example__: You're tasked with adding a new page to the frontend which requires read access to the DB via a new API route. You create a feature branch off of main, then a child branch off of your feature branch. You then add the new API endpoint required. You submit a PR for this work by requesting to merge your child branch into your parent feature branch. Once merged, you create another child branch off your feature branch and add the new page. You submit this work as its own PR - merging into the parent feature branch again. All work is now complete so you finish things off by submitting a PR to merge your parent feature branch into the main branch. The work has already been approved in previous reviews. You can now choose to update the Changelog. If you need to add any additional, unreviewed work, you can make a note about it in the PR description.
+
 ## Merge Techniques
 
 Due to how PRs are commonly segmented in this repository, and due to its active nature, rebasing is discouraged as a way to merge changes. Traditional merge commits are preferred as they preserve history and make it easier to resolve merge conflicts.
 
 ## Guidelines for reviewers
 
-Conditions for whether to Approve or Request Changes for a PR can come with a lot of nuance. We try to air on the side of Approve unless there are obvious changes needed. Below is a list of reasons to "stop" a PR. Items with a star next to them are subject to interpretation by the review. Some items may prompt to discussion between the reviewer and the submitting developer so that choices can be justified.
+Conditions for whether to Approve or Request Changes for a PR can come with a lot of nuance. We try to err on the side of Approve unless there are obvious changes needed. Below is a list of reasons to "stop" a PR. Items with a star next to them are subject to interpretation by the review. Some items may prompt to discussion between the reviewer and the submitting developer so that choices can be justified.
 
 Examples of when to Request Changes
-- Logging functions are left in that aren't required or needed later
+- Logging functions are left in that aren't required or needed later (with exceptions for error logging, i.e. console.error, etc.)
 - Commented-code is left in that isn't needed later
 - Widespread incorrect syntax use (using snake case for many variables in JS when it's not required)
 - Significant amount of repeition in code that can be condensed without much issue (code isn't DRY) *

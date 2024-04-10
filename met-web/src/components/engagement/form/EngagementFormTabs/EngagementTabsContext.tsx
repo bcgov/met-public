@@ -508,7 +508,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
 
     const handleSaveEngagementMetadata = async () => {
         const result = await metadataFormRef.current?.submitForm();
-        if (!result) {
+        if (metadataFormRef.current && !result) {
             dispatch(
                 openNotification({
                     severity: 'error',

@@ -1,5 +1,55 @@
-## April 2, 2024
-- Add contributing guidelines for repository [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
+## April 10, 2024
+- **Task** Update contributing guide for developers [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
+
+## April 09, 2024
+
+- **Task**: CSS Selector specificity [🎟️ DESENG-577](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-577)
+  - Replace the `!important` flag with more specific CSS selectors, specifically within dropdowns,
+    to ensure that the correct styles are applied, and that states we have not yet designed for
+    (e.g, complex focus states) are still styled appropriately and in an accessible manner.
+  - Soon, we will be doing a more in-depth revamp of dropdowns in the app to make them more
+    accessible and user-friendly. This helps work towards that goal.
+
+## April 08, 2024
+
+- **Bugfix**: Submission of rejected comments [🎟️ DESENG-527](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-527)
+  - Fixed issue where resubmitted comments would not reappear in the queue for approval.
+  - Added unit tests to ensure the issue does not reoccur.
+- **Task**: MET - Clean up outstanding dependabot PRs [DESENG-535](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-535)
+  - Bump axios from 0.26.1 to 0.28.0 in met-web. Dependabot suggested this upgrade, but it required a few minor code changes.
+  - Updated the type definition of the 'error' parameter to include a generic type '{ message?: string }' to handle the AxiosError response properly.
+
+## April 05, 2024
+
+- **Task**: Allow for any gov.bc.ca email to receive emails in MET's dev & test environments [DESENG-533](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-533)
+  - Enabled dev open shift to use GC_NOTIFY api key of test which allows all email.
+  - Added new env var `SEND_EMAIL_INTERNAL_ONLY` to allow for internal emails such as govt emails only.
+
+## April 04, 2024
+
+- **Feature** Engagement filtering - Add filtering by taxon [🎟️DESENG-445](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-445)
+
+  - Added properties to metadata taxa to allow them to be marked as filterable.
+  - Added a new file `filter_types.py` where additional filters can be added as subquery factory functions.
+  - Added a new endpoint to the API to retrieve filterable taxa.
+  - Modified the search endpoint to allow filtering by metadata.
+  - Added schemas, data validation and unit tests for the new functionality.
+  - Updated the Metadata Management UI to allow taxa to be marked as filterable.
+    - Currently, the only two filter types are `chips_any` and `chips_all`.
+    - `chips_any`: Displays as a series of toggleable buttons ("chips"), uses the `list_match_any` subquery returning engagements with any of the selected values.
+    - `chips_all`: Similar to chips_any; uses the `list_match_all` subquery to get only engagements with ALL of the selected values.
+  - If multiple filterable taxa are selected, all the taxon filters must be met for an engagement to be returned.
+  - Updated the public-facing engagement list to allow filtering by metadata taxa. This makes use of the new API endpoint to retrieve filterable taxa.
+  - Added a new filter "drawer" to the listing page to hold these and any future filter types.
+  - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
+
+- **Task**: Keycloak Unit Tests for New CSS API Integration [DESENG-508](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-508)
+  - Updated Keycloak Unit Tests for New CSS API Integration.
+
+## April 02, 2024
+
+- **Task**: DEV clean up [DESENG-503](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-503)
+  - Updated deployment configurations to add new configs.
 
 ## March 28, 2024
 
@@ -18,7 +68,7 @@
 
 - **Bug Fix**: Various bugs in the survey tab [DESENG-520](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-523)
   - Update survey components and services to fix the bugs.
-    -  Removed is_template and is_hidden values from autosaving to avoid the debounce function consuming it older values
+    - Removed is_template and is_hidden values from autosaving to avoid the debounce function consuming it older values
 - **Task**: Add a custom dynamic page to engagement [DESENG-501](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-501)
   - Integrated new summary and custom content tabs into the engagement form, providing users with structured sections for managing different types of content, enhancing overall organization and user experience.
   - Implemented functionality to allow users to add custom tabs with a variety of provided icons, along with options to edit or delete tabs as needed, granting users greater flexibility and control over their engagement content layout.
@@ -37,7 +87,6 @@
   - Added poll results to results tab.
   - Added poll results API.
   - Added Unit tests.
-  
 - **Task**: Change static english text to be able to support string translations [DESENG-467](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-467)
   - Implemented a language selector in the public header.
   - Incorporated logic to dynamically adjust the unauthenticated route based on the selected language and load the appropriate translation file.

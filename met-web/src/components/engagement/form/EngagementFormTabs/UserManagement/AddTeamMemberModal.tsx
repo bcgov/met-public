@@ -84,11 +84,11 @@ export const AddTeamMemberModal = () => {
         }, 1000),
     ).current;
 
-    const setErrors = (error: AxiosError) => {
+    const setErrors = (error: AxiosError<{ message?: string }>) => {
         if (error.response?.status !== 409) {
             return;
         }
-        setBackendError(error.response?.data.message || '');
+        setBackendError(error.response?.data?.message || '');
     };
 
     const onSubmit: SubmitHandler<AddTeamMemberForm> = async (data: AddTeamMemberForm) => {

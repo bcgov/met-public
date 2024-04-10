@@ -169,6 +169,10 @@ class Config:  # pylint: disable=too-few-public-methods
     # Adjust this value based on security considerations.
     CORS_MAX_AGE = os.getenv('CORS_MAX_AGE', None)  # Default: 0 seconds
 
+    # If enabled, Emails will be send onlt to the internal email address set in constant INTERNAL_EMAIL_DOMAIN
+    # such as `@gov.bc.ca` . Mainly used for dev and test environments.
+    SEND_EMAIL_INTERNAL_ONLY = env_truthy('SEND_EMAIL_INTERNAL_ONLY', default=False)
+
     EPIC_CONFIG = {
         'ENABLED': env_truthy('EPIC_INTEGRATION_ENABLED'),
         'JWT_OIDC_ISSUER': os.getenv('EPIC_JWT_OIDC_ISSUER'),

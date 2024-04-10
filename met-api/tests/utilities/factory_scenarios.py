@@ -305,12 +305,44 @@ class TestEngagementMetadataTaxonInfo(dict, Enum):
         'one_per_engagement': True,
     }
 
-    taxon4 = {
+    filterable_taxon1 = {
         'name': fake.name(),
         'description': fake.text(max_nb_chars=256),
-        'data_type': 'url',
+        'data_type': 'text',
+        'freeform': True,
+        'one_per_engagement': False,
+        'filter_type': 'chips_all',
+        'include_freeform': True
+    }
+
+    filterable_taxon2 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'text',
         'freeform': False,
         'one_per_engagement': False,
+        'filter_type': 'chips_all',
+        'include_freeform': False
+    }
+
+    filterable_taxon3 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'text',
+        'freeform': False,
+        'one_per_engagement': False,
+        'filter_type': 'chips_any',
+        'include_freeform': False
+    }
+
+    filterable_taxon4 = {
+        'name': fake.name(),
+        'description': fake.text(max_nb_chars=256),
+        'data_type': 'text',
+        'freeform': True,
+        'one_per_engagement': False,
+        'filter_type': 'chips_any',
+        'include_freeform': True
     }
 
 
