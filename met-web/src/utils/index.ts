@@ -55,7 +55,7 @@ export const determinePathSegments = () => {
     return pathSegments;
 };
 
-export const determineBaseName = () => {
+export const findTenantInPath = () => {
     // filters out empty segments, which can occur if there are leading or trailing slashes in the pathname
     const pathSegments = determinePathSegments();
     return pathSegments.length > 0 ? pathSegments[0].toLowerCase() : '';

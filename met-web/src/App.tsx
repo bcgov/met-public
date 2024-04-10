@@ -26,7 +26,7 @@ import i18n from './i18n';
 import DocumentTitle from 'DocumentTitle';
 import { Language } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
-import { determinePathSegments, determineBaseName } from './utils';
+import { determinePathSegments, findTenantInPath } from './utils';
 
 interface Translations {
     [languageId: string]: { [key: string]: string };
@@ -40,7 +40,7 @@ const App = () => {
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
     const pathSegments = determinePathSegments();
     const language: LanguageState = useAppSelector((state) => state.language);
-    const basename = determineBaseName();
+    const basename = findTenantInPath();
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     const [translations, setTranslations] = useState<Translations>({});
     const { isAuthenticated } = useContext(AuthKeyCloakContext);
