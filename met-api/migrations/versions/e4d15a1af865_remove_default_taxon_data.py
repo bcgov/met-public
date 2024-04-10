@@ -8,9 +8,8 @@ Create Date: 2024-02-08 12:40:09.456210
 from alembic import op
 from sqlalchemy.sql import table, column
 from sqlalchemy import String, Integer, DateTime, Boolean, Text
-from datetime import datetime
+from datetime import datetime, timezone
 
-from met_api.models import engagement_metadata
 
 # revision identifiers, used by Alembic.
 revision = 'e4d15a1af865'
@@ -129,8 +128,8 @@ def upgrade():
 
 def downgrade():
     for taxa in taxa_data:
-        taxa['created_date'] = datetime.utcnow()
-        taxa['updated_date'] = datetime.utcnow()
+        taxa['created_date'] = datetime.now(timezone.utc)
+        taxa['updated_date'] = datetime.now(timezone.utc)
 
     # Perform bulk insert
     op.bulk_insert(engagement_metadata_taxa_table, taxa_data)
