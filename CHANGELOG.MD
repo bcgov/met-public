@@ -5,6 +5,10 @@
     - Created Unit tests for engagement content translations
 
 ## April 10, 2024
+
+- **Task** Remove default taxa from GDX tenant [DESENG-578](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-578)
+  - Removed the pre-populated taxon entries from the GDX tenant.
+  - With the power of the editor interface, tenants are now expected to create their own taxon entries.
 - **Task** Update contributing guide for developers [DESENG-475](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-475)
 
 ## April 09, 2024
