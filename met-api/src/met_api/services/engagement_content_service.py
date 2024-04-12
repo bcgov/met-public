@@ -1,5 +1,4 @@
 """Service for engagement content management."""
-from asyncio.windows_events import NULL
 from http import HTTPStatus
 from flask import current_app
 

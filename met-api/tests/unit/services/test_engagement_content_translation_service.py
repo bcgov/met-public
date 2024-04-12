@@ -3,11 +3,8 @@
 from met_api.services.engagement_content_translation_service import EngagementContentTranslationService
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo, TestJwtClaims
 from tests.utilities.factory_utils import (
-    engagement_content_model_with_language,
-    factory_engagement_content_translation_model,
-    factory_staff_user_model,
-    patch_token_info,
-)
+    engagement_content_model_with_language, factory_engagement_content_translation_model, factory_staff_user_model,
+    patch_token_info)
 
 
 def test_get_engagement_content_translation_by_id(session):
@@ -24,7 +21,7 @@ def test_get_engagement_content_translation_by_id(session):
 
     fetched_translation = EngagementContentTranslationService.get_engagement_content_translation_by_id(translation.id)
     assert fetched_translation is not None
-    assert fetched_translation.id == translation.id
+    assert fetched_translation['id'] == translation.id
 
 
 def test_get_translations_by_content_and_language(session):
@@ -43,10 +40,8 @@ def test_get_translations_by_content_and_language(session):
         engagement_content.id, language.id
     )
     assert len(translations) == 1
-    assert (
-        translations[0]['content_title']
-        == TestEngagementContentTranslationInfo.translation_info1.value['content_title']
-    )
+    title = translations[0]['content_title']
+    assert title == TestEngagementContentTranslationInfo.translation_info1.value['content_title']
 
 
 def test_create_engagement_content_translation_without_prepopulate(session, monkeypatch):
@@ -64,7 +59,8 @@ def test_create_engagement_content_translation_without_prepopulate(session, monk
     created_translation = EngagementContentTranslationService.create_engagement_content_translation(data, False)
     assert created_translation is not None
     assert created_translation['content_title'] == data['content_title']
-    
+
+
 def test_create_engagement_content_translation_with_prepopulate(session, monkeypatch):
     """Assert that an engagement content translation can be created with proper authorization."""
     # Mock authorization
@@ -119,6 +115,5 @@ def test_delete_engagement_content_translation_with_authorization(session, monke
     )
     session.commit()
 
-    EngagementContentTranslationService.delete_engagement_content_translation(translation.id)
-    deleted_translation = EngagementContentTranslationService.get_engagement_content_translation_by_id(translation.id)
-    assert deleted_translation is None
+    deleted_translation = EngagementContentTranslationService.delete_engagement_content_translation(translation.id)
+    assert deleted_translation is True

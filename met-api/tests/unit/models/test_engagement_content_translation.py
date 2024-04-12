@@ -7,9 +7,7 @@ routines are working as expected.
 from met_api.models.engagement_content_translation import EngagementContentTranslation
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo
 from tests.utilities.factory_utils import (
-    engagement_content_model_with_language,
-    factory_engagement_content_translation_model,
-)
+    engagement_content_model_with_language, factory_engagement_content_translation_model)
 
 
 def test_get_translations_by_content_and_language(session):

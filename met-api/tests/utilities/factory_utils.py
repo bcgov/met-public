@@ -23,12 +23,16 @@ from flask import current_app, g
 
 from met_api.auth import Auth
 from met_api.config import get_named_config
+from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.engagement_status import Status
 from met_api.constants.widget import WidgetType
 from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
+from met_api.models.engagement_content import EngagementContent as EngagementContentModel
+from met_api.models.engagement_content_translation import \
+    EngagementContentTranslation as EngagementContentTranslationModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
@@ -52,10 +56,6 @@ from met_api.models.survey import Survey as SurveyModel
 from met_api.models.survey_translation import SurveyTranslation as SurveyTranslationModel
 from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
 from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
-from met_api.models.engagement_content import EngagementContent as EngagementContentModel
-from met_api.models.engagement_content_translation import (
-    EngagementContentTranslation as EngagementContentTranslationModel,
-)
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
@@ -68,43 +68,14 @@ from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import MembershipStatus
-from met_api.constants.email_verification import EmailVerificationType
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo,
-    TestEngagementInfo,
-    TestEngagementMetadataInfo,
-    TestEngagementMetadataTaxonInfo,
-    TestEngagementSlugInfo,
-    TestEngagementTranslationInfo,
-    TestEventItemTranslationInfo,
-    TestEventnfo,
-    TestFeedbackInfo,
-    TestJwtClaims,
-    TestLanguageInfo,
-    TestParticipantInfo,
-    TestPollAnswerInfo,
-    TestPollAnswerTranslationInfo,
-    TestPollResponseInfo,
-    TestReportSettingInfo,
-    TestSubmissionInfo,
-    TestSubscribeInfo,
-    TestSubscribeItemTranslationInfo,
-    TestSurveyInfo,
-    TestSurveyTranslationInfo,
-    TestTenantInfo,
-    TestTimelineEventTranslationInfo,
-    TestTimelineInfo,
-    TestUserInfo,
-    TestWidgetDocumentInfo,
-    TestWidgetInfo,
-    TestWidgetItemInfo,
-    TestWidgetMap,
-    TestWidgetPollInfo,
-    TestWidgetTranslationInfo,
-    TestWidgetVideo,
-    TestEngagementContentInfo,
-    TestEngagementContentTranslationInfo
-)
+    TestCommentInfo, TestEngagementContentInfo, TestEngagementContentTranslationInfo, TestEngagementInfo,
+    TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
+    TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo,
+    TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
+    TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
+    TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
+    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
 
 
 fake = Faker()

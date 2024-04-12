@@ -18,8 +18,9 @@ class EngagementContentTranslationService:
     @staticmethod
     def get_engagement_content_translation_by_id(translation_id):
         """Get engagement content translation by id."""
+        translation_schema = ECTranslationSchema(many=False)
         translation_record = ECTranslationModel.find_by_id(translation_id)
-        return translation_record
+        return translation_schema.dump(translation_record)
 
     @staticmethod
     def get_translations_by_content_and_language(engagement_content_id=None, language_id=None):
@@ -38,15 +39,13 @@ class EngagementContentTranslationService:
             if not language_record:
                 raise ValueError('Language not found')
 
-            one_of_roles = (
-                MembershipType.TEAM_MEMBER.name,
-                Role.CREATE_ENGAGEMENT.value
-            )
+            one_of_roles = (MembershipType.TEAM_MEMBER.name, Role.CREATE_ENGAGEMENT.value)
             authorization.check_auth(one_of_roles=one_of_roles)
 
             if pre_populate:
                 default_content = EngagementContentService.get_content_by_content_id(
-                    translation_data['engagement_content_id'])
+                    translation_data['engagement_content_id']
+                )
                 if default_content.get('id') is not None:
                     translation_data['content_title'] = default_content.get('title', None)
                     translation_data['custom_text_content'] = default_content.get('custom_text_content', None)
@@ -63,10 +62,7 @@ class EngagementContentTranslationService:
         """Update engagement content translation."""
         EngagementContentTranslationService._verify_translation_exists(translation_id)
 
-        one_of_roles = (
-                MembershipType.TEAM_MEMBER.name,
-                Role.EDIT_ENGAGEMENT.value
-            )
+        one_of_roles = (MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value)
         authorization.check_auth(one_of_roles=one_of_roles)
 
         updated_translation = ECTranslationModel.update_engagement_content_translation(translation_id, translation_data)

@@ -6,8 +6,8 @@ Manages the Engagement Content Translations.
 from __future__ import annotations
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
-from .base_model import BaseModel
 from sqlalchemy.exc import IntegrityError
+from .base_model import BaseModel
 from .db import db
 
 
