@@ -1,7 +1,7 @@
 """Enagement Content Translation
 
 Revision ID: 495d2dbe19b8
-Revises: f8bc8ce202f3
+Revises: e4d15a1af865
 Create Date: 2024-04-10 14:20:23.777834
 
 """
@@ -11,7 +11,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '495d2dbe19b8'
-down_revision = 'f8bc8ce202f3'
+down_revision = 'e4d15a1af865'
 branch_labels = None
 depends_on = None
 
