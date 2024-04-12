@@ -1,3 +1,9 @@
+## April 11, 2024
+- **Task** Multi-language - Create engagement content translation tables & API routes [DESENG-544](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-544)
+    - Created a new table for engagement content translations
+    - Created API routes and services for engagement content translations
+    - Created Unit tests for engagement content translations
+
 ## April 10, 2024
 
 - **Task** Remove default taxa from GDX tenant [DESENG-578](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-578)

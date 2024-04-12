@@ -64,18 +64,14 @@ from .event_item_translation import API as EVENT_ITEM_TRANSLATION_API
 from .subscribe_item_translation import API as SUBSCRIBE_ITEM_TRANSLATION_API
 from .timeline_event_translation import API as TIMELINE_EVENT_TRANSLATION_API
 from .engagement_translation import API as ENGAGEMENT_TRANSLATION_API
+from .engagement_content_translation import API as ENGAGEMENT_CONTENT_TRANSLATION_API
 
 __all__ = ('API_BLUEPRINT',)
 
 URL_PREFIX = '/api/'
 API_BLUEPRINT = Blueprint('API', __name__, url_prefix=URL_PREFIX)
 
-API = Api(
-    API_BLUEPRINT,
-    title='MET API',
-    version='1.0',
-    description='The Core API for MET'
-)
+API = Api(API_BLUEPRINT, title='MET API', version='1.0', description='The Core API for MET')
 
 # HANDLER = ExceptionHandler(API)
 
@@ -118,3 +114,4 @@ API.add_namespace(EVENT_ITEM_TRANSLATION_API, path='/events/<int:event_id>/trans
 API.add_namespace(SUBSCRIBE_ITEM_TRANSLATION_API, path='/subscribe/<int:widget_subscribe_id>/translations')
 API.add_namespace(TIMELINE_EVENT_TRANSLATION_API, path='/timelines/<int:timeline_id>/translations')
 API.add_namespace(ENGAGEMENT_TRANSLATION_API, path='/engagement/<int:engagement_id>/translations')
+API.add_namespace(ENGAGEMENT_CONTENT_TRANSLATION_API, path='/engagement_content/<int:content_id>/translations')

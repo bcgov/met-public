@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/engagement_content_translation",
+    "type": "object",
+    "title": "Engagement Content Translation Schema",
+    "description": "Schema for Engagement Content Translation data structure.",
+    "default": {},
+    "examples": [
+        {
+            "language_id": 1,
+            "engagement_content_id": 1,
+            "content_title": "Sample Title",
+            "custom_text_content": "Sample text content",
+            "custom_json_content": {},
+            "pre_populate": true
+        }
+    ],
+    "required": ["language_id", "engagement_content_id", "content_title"],
+    "properties": {
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "number",
+            "title": "Language ID",
+            "description": "The ID of the language for the translation."
+        },
+        "engagement_content_id": {
+            "$id": "#/properties/engagement_content_id",
+            "type": "number",
+            "title": "Engagement Content ID",
+            "description": "The ID of the engagement content being translated."
+        },
+        "content_title": {
+            "$id": "#/properties/content_title",
+            "type": "string",
+            "title": "Content Title",
+            "description": "The title of the engagement content."
+        },
+        "custom_text_content": {
+            "$id": "#/properties/custom_text_content",
+            "type": "string",
+            "title": "Custom Text Content",
+            "description": "Custom textual content of the translation.",
+            "nullable": true
+        },
+        "custom_json_content": {
+            "$id": "#/properties/custom_json_content",
+            "type": "object",
+            "title": "Custom JSON Content",
+            "description": "Custom JSON structured content of the translation.",
+            "nullable": true
+        }
+    }
+}
