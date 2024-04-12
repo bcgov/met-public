@@ -26,7 +26,7 @@ flask-jwt-oidc==0.3.0
 flask-marshmallow==0.11.0
 flask-restx==1.2.0
 gunicorn==21.2.0
-idna==3.4
+idna==3.7
 importlib-resources==6.1.0
 itsdangerous==2.0.1
 jaeger-client==4.8.0
