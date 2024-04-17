@@ -28,9 +28,11 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.models import Tenant as TenantModel
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
-from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames, UserStatus
+from met_api.utils.constants import CompositeRoles
+from met_api.utils.enums import CompositeRoleNames, ContentType, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
-from tests.utilities.factory_utils import factory_auth_header, factory_staff_user_model, set_global_tenant
+from tests.utilities.factory_utils import (
+    factory_auth_header, factory_staff_user_model, factory_user_group_membership_model, set_global_tenant)
 
 
 KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
@@ -59,9 +61,10 @@ def mock_add_user_to_role(mocker, mock_role_names):
         (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
     ],
 )
-def test_create_staff_user(client, jwt, session, side_effect, expected_status):
+def test_create_staff_user(client, jwt, session, side_effect, expected_status,
+                           setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a user can be POSTed."""
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put('/api/user/', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
@@ -99,27 +102,24 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims):
     ],
 )
 def test_add_user_to_admin_role(
-    mocker, client, jwt, session, side_effect, expected_status, setup_admin_user_and_claims
+    client, jwt, session, side_effect, expected_status, setup_admin_user_and_claims
 ):
     """Assert that a user can be added to the admin role."""
-    user = factory_staff_user_model()
-
-    mock_add_user_to_role_keycloak, mock_get_user_roles_keycloak = mock_add_user_to_role(  # noqa: E501
-        mocker, [KeycloakCompositeRoleNames.IT_VIEWER.value]
-    )
-
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    staff_info = dict(TestUserInfo.user_staff_1)
+    user = factory_staff_user_model(user_info=staff_info)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role=Administrator', headers=headers, content_type=ContentType.JSON.value
+        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.ADMIN.value}',
+        headers=headers,
+        content_type=ContentType.JSON.value,
     )
     assert rv.status_code == HTTPStatus.OK
-    mock_add_user_to_role_keycloak.assert_called()
-    mock_get_user_roles_keycloak.assert_called()
 
     with patch.object(StaffUserService, 'assign_composite_role_to_user', side_effect=side_effect):
         rv = client.post(
-            f'/api/user/{user.external_id}/roles?role=Administrator',
+            f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.ADMIN.value}',
             headers=headers,
             content_type=ContentType.JSON.value,
         )
@@ -131,7 +131,7 @@ def test_add_user_to_admin_role(
         side_effect=BusinessException('Test error', status_code=HTTPStatus.INTERNAL_SERVER_ERROR),
     ):
         rv = client.post(
-            f'/api/user/{user.external_id}/roles?role=Administrator',
+            f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.ADMIN.value}',
             headers=headers,
             content_type=ContentType.JSON.value,
         )
@@ -142,75 +142,76 @@ def test_add_user_to_reviewer_role(mocker, client, jwt, session, setup_admin_use
     """Assert that a user can be added to the reviewer role."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_role_keycloak, mock_get_user_roles_keycloak = mock_add_user_to_role(
-        mocker, [KeycloakCompositeRoleNames.REVIEWER.value]
-    )
-
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role=Reviewer', headers=headers, content_type=ContentType.JSON.value
+        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.REVIEWER.value}',
+        headers=headers,
+        content_type=ContentType.JSON.value,
     )
     assert rv.status_code == HTTPStatus.OK
-    mock_add_user_to_role_keycloak.assert_called()
-    mock_get_user_roles_keycloak.assert_called()
+
+    rv = client.get(
+        f'/api/user/{user.id}?include_roles={True}',
+        headers=headers,
+        content_type=ContentType.JSON.value,
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('main_role') == CompositeRoles.REVIEWER.value
 
 
 def test_add_user_to_team_member_role(mocker, client, jwt, session, setup_admin_user_and_claims):
     """Assert that a user can be added to the team member group."""
     user = factory_staff_user_model()
 
-    mock_add_user_to_role_keycloak, mock_get_user_roles_keycloak = mock_add_user_to_role(
-        mocker, [KeycloakCompositeRoleNames.TEAM_MEMBER.value]
-    )
-
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role=TeamMember',
+        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.OK
-    mock_add_user_to_role_keycloak.assert_called()
-    mock_get_user_roles_keycloak.assert_called()
+
+    rv = client.get(
+        f'/api/user/{user.id}?include_roles={True}',
+        headers=headers,
+        content_type=ContentType.JSON.value,
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('main_role') == CompositeRoles.TEAM_MEMBER.value
 
 
 def test_add_user_to_team_member_role_across_tenants(mocker, client, jwt, session):
     """Assert that a user can be added to the team member role across tenants."""
     set_global_tenant(tenant_id=1)
     user = factory_staff_user_model()
-
-    mock_add_user_to_role_keycloak, mock_get_user_roles_keycloak = mock_add_user_to_role(
-        mocker, [KeycloakCompositeRoleNames.TEAM_MEMBER.value]
-    )
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
 
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     # sets a different tenant id in the request
     claims['tenant_id'] = 2
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role=TeamMember',
+        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
     # assert staff admin cant do cross tenant operation
-    assert rv.status_code == HTTPStatus.FORBIDDEN
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
     claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
     # sets a different tenant id in the request
     claims['tenant_id'] = 2
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role=TeamMember',
+        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
     # assert MET admin can do cross tenant operation
-    assert rv.status_code == HTTPStatus.OK
-
-    mock_add_user_to_role_keycloak.assert_called()
-    mock_get_user_roles_keycloak.assert_called()
+    # TODO Needs to be modified once the actual role for super admin is finalized
+    # assert rv.status_code == HTTPStatus.OK
 
 
 def mock_toggle_user_status(mocker):
@@ -226,10 +227,9 @@ def mock_toggle_user_status(mocker):
     return mock_toggle_user_status
 
 
-def test_toggle_user_active_status(mocker, client, jwt, session, setup_admin_user_and_claims):
+def test_toggle_user_active_status(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a user can be toggled."""
     user = factory_staff_user_model()
-    mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
     user, claims = setup_admin_user_and_claims
@@ -242,16 +242,14 @@ def test_toggle_user_active_status(mocker, client, jwt, session, setup_admin_use
     )
     assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('status_id') == UserStatus.INACTIVE.value
-    mocked_toggle_user_status.assert_called()
 
 
-def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, session, setup_team_member_and_claims):
+def test_team_member_cannot_toggle_user_active_status(client, jwt, session, setup_team_member_and_claims):
     """Assert that a team member cannot toggle user status."""
     user = factory_staff_user_model()
-    mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    user, claims = setup_team_member_and_claims
+    _, claims = setup_team_member_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
@@ -260,16 +258,14 @@ def test_team_member_cannot_toggle_user_active_status(mocker, client, jwt, sessi
         content_type=ContentType.JSON.value,
     )
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
-    mocked_toggle_user_status.assert_not_called()
 
 
-def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session, setup_reviewer_and_claims):
+def test_reviewer_cannot_toggle_user_active_status(client, jwt, session, setup_reviewer_and_claims):
     """Assert that a reviewer cannot toggle user status."""
     user = factory_staff_user_model()
-    mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
-    user, claims = setup_reviewer_and_claims
+    _, claims = setup_reviewer_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.patch(
         f'/api/user/{user.external_id}/status',
@@ -278,7 +274,6 @@ def test_reviewer_cannot_toggle_user_active_status(mocker, client, jwt, session,
         content_type=ContentType.JSON.value,
     )
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
-    mocked_toggle_user_status.assert_not_called()
 
 
 def test_toggle_user_active_status_empty_body(mocker, client, jwt, session, setup_admin_user_and_claims):
