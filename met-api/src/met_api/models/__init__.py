@@ -66,4 +66,7 @@ from .poll_answer_translation import PollAnswerTranslation
 from .timeline_event_translation import TimelineEventTranslation
 from .subscribe_item_translation import SubscribeItemTranslation
 from .engagement_translation import EngagementTranslation
-from .engagement_content_translation import EngagementContentTranslation
+from .user_group import UserGroup
+from .user_role import UserRole
+from .group_role_mapping import GroupRoleMapping
+from .user_group_membership import UserGroupMembership

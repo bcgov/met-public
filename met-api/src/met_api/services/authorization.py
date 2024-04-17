@@ -4,13 +4,14 @@ This module is to handle authorization related queries.
 """
 from http import HTTPStatus
 
-from flask import current_app
+from flask import current_app, g
 from flask_restx import abort
 
 from met_api.constants.membership_type import MembershipType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.enums import MembershipStatus
 from met_api.utils.user_context import UserContext, user_context
 
@@ -26,13 +27,19 @@ def check_auth(**kwargs):
     user_from_db = StaffUserModel.get_user_by_external_id(user_from_context.sub)
     if not user_from_db:
         abort(HTTPStatus.FORBIDDEN, 'User not found')
-    token_roles = set(user_from_context.roles)
+
+    # Retrieve tenant specific user roles from met-db
+    user_roles, tenant_id = UserGroupMembershipService.get_user_roles_within_a_tenant(user_from_context.sub,
+                                                                                      g.tenant_id)
+    if not user_roles:
+        abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
+
     permitted_roles = set(kwargs.get('one_of_roles', []))
-    has_valid_roles = token_roles & permitted_roles
+    has_valid_roles = set(user_roles) & permitted_roles
     if has_valid_roles:
         if not skip_tenant_check:
 
-            user_tenant_id = user_from_db.tenant_id
+            user_tenant_id = tenant_id
             _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
         return
     team_permitted_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name} & permitted_roles
@@ -82,10 +89,10 @@ def _has_team_membership(kwargs, user_from_context, team_permitted_roles) -> boo
     skip_tenant_check = current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT')
     if not skip_tenant_check:
         # check tenant matching
-        if membership.tenant_id and str(membership.tenant_id) != str(user_from_context.tenant_id):
+        if membership.tenant_id and str(membership.tenant_id) != str(g.tenant_id):
             current_app.logger.debug(f'Aborting . Tenant Id on membership and user context Mismatch'
                                      f'membership.tenant_id:{membership.tenant_id} '
-                                     f'user_from_context.tenant_id: {user_from_context.tenant_id}')
+                                     f'user_from_context.tenant_id: {g.tenant_id}')
             abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 
     return membership.type.name in team_permitted_roles

@@ -23,12 +23,10 @@ class Role(Enum):
 
     # STAFF Based roles
     CREATE_TENANT = 'create_tenant'
-    VIEW_TENANT = 'view_tenant'
     VIEW_USERS = 'view_users'
     TOGGLE_USER_STATUS = 'toggle_user_status'
     CREATE_ADMIN_USER = 'create_admin_user'
     UPDATE_USER_GROUP = 'update_user_group'
-    CREATE_TEAM = 'create_team'
     CREATE_ENGAGEMENT = 'create_engagement'
     VIEW_SURVEYS = 'view_surveys'
     CREATE_SURVEY = 'create_survey'

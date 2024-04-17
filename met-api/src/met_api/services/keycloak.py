@@ -18,7 +18,7 @@ from typing import List
 import requests
 
 from met_api.config import Config
-from met_api.utils.enums import ContentType, KeycloakCompositeRoleNames
+from met_api.utils.enums import CompositeRoleNames, ContentType
 
 
 class KeycloakService:  # pylint: disable=too-few-public-methods
@@ -132,7 +132,7 @@ class KeycloakService:  # pylint: disable=too-few-public-methods
         response = requests.get(query_user_url, headers=headers, timeout=self.timeout)
 
         if response.status_code == 200 and enabled:
-            role_name = KeycloakCompositeRoleNames.IT_VIEWER.value
+            role_name = CompositeRoleNames.VIEWER.value
             self.assign_composite_role_to_user(user_id=user_id, composite_role=role_name)
 
         if response.status_code == 200 and not enabled:
