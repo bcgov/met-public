@@ -166,8 +166,7 @@ class StaffUserService:
 
         composite_role = UserGroupMembershipService.get_user_group_within_tenant(db_user.external_id,
                                                                                  g.tenant_id)
-        if composite_role:
-            if CompositeRoleNames.ADMIN.value == composite_role:
-                raise BusinessException(
-                    error='This user is already an Administrator.',
-                    status_code=HTTPStatus.CONFLICT.value)
+        if composite_role and CompositeRoleNames.ADMIN.value == composite_role:
+            raise BusinessException(
+                error='This user is already an Administrator.',
+                status_code=HTTPStatus.CONFLICT.value)
