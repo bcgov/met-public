@@ -19,7 +19,7 @@ Test-Suite to ensure that the /user endpoint is working as expected.
 """
 import copy
 from http import HTTPStatus
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from flask import current_app
@@ -33,25 +33,6 @@ from met_api.utils.enums import CompositeRoleNames, ContentType, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_staff_user_model, factory_user_group_membership_model, set_global_tenant)
-
-
-KEYCLOAK_SERVICE_MODULE = 'met_api.services.keycloak.KeycloakService'
-
-
-def mock_add_user_to_role(mocker, mock_role_names):
-    """Mock the KeycloakService.assign_composite_role_to_user method."""
-    mock_response = MagicMock()
-    mock_response.status_code = HTTPStatus.NO_CONTENT
-
-    mock_add_user_to_role_keycloak = mocker.patch(
-        f'{KEYCLOAK_SERVICE_MODULE}.assign_composite_role_to_user', return_value=mock_response
-    )
-    mock_get_user_roles_keycloak = mocker.patch(
-        f'{KEYCLOAK_SERVICE_MODULE}.get_user_roles',
-        return_value=[{'name': group_name} for group_name in mock_role_names],
-    )
-
-    return mock_add_user_to_role_keycloak, mock_get_user_roles_keycloak
 
 
 @pytest.mark.parametrize(
@@ -138,7 +119,7 @@ def test_add_user_to_admin_role(
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def test_add_user_to_reviewer_role(mocker, client, jwt, session, setup_admin_user_and_claims):
+def test_add_user_to_reviewer_role(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a user can be added to the reviewer role."""
     user = factory_staff_user_model()
 
@@ -160,7 +141,7 @@ def test_add_user_to_reviewer_role(mocker, client, jwt, session, setup_admin_use
     assert rv.json.get('main_role') == CompositeRoles.REVIEWER.value
 
 
-def test_add_user_to_team_member_role(mocker, client, jwt, session, setup_admin_user_and_claims):
+def test_add_user_to_team_member_role(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a user can be added to the team member group."""
     user = factory_staff_user_model()
 
@@ -182,7 +163,7 @@ def test_add_user_to_team_member_role(mocker, client, jwt, session, setup_admin_
     assert rv.json.get('main_role') == CompositeRoles.TEAM_MEMBER.value
 
 
-def test_add_user_to_team_member_role_across_tenants(mocker, client, jwt, session):
+def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
     """Assert that a user can be added to the team member role across tenants."""
     set_global_tenant(tenant_id=1)
     user = factory_staff_user_model()
@@ -212,19 +193,6 @@ def test_add_user_to_team_member_role_across_tenants(mocker, client, jwt, sessio
     # assert MET admin can do cross tenant operation
     # TODO Needs to be modified once the actual role for super admin is finalized
     # assert rv.status_code == HTTPStatus.OK
-
-
-def mock_toggle_user_status(mocker):
-    """Mock the KeycloakService.add_user_to_group method."""
-    mock_response = MagicMock()
-    mock_response.status_code = HTTPStatus.NO_CONTENT
-
-    mock_toggle_user_status = mocker.patch(
-        f'{KEYCLOAK_SERVICE_MODULE}.toggle_user_enabled_status',
-        return_value=mock_response,
-    )
-
-    return mock_toggle_user_status
 
 
 def test_toggle_user_active_status(client, jwt, session, setup_admin_user_and_claims):
@@ -276,10 +244,9 @@ def test_reviewer_cannot_toggle_user_active_status(client, jwt, session, setup_r
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
 
-def test_toggle_user_active_status_empty_body(mocker, client, jwt, session, setup_admin_user_and_claims):
+def test_toggle_user_active_status_empty_body(client, jwt, session, setup_admin_user_and_claims):
     """Assert that returns bad request if bad request body."""
     user = factory_staff_user_model()
-    mocked_toggle_user_status = mock_toggle_user_status(mocker)
 
     assert user.status_id == UserStatus.ACTIVE.value
     user, claims = setup_admin_user_and_claims
@@ -290,7 +257,6 @@ def test_toggle_user_active_status_empty_body(mocker, client, jwt, session, setu
         content_type=ContentType.JSON.value,
     )
     assert rv.status_code == HTTPStatus.BAD_REQUEST
-    mocked_toggle_user_status.assert_not_called()
 
 
 def test_get_staff_users_by_id(client, jwt, session, setup_admin_user_and_claims):
