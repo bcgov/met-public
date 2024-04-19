@@ -6,6 +6,7 @@
     - Eliminated redundant or unused roles from the system.
     - Updated unit tests to to fetch roles directly from the database instead of relying on role generation from the factory and eliminated the Keycloak mock.
     - Renamed admin and viewer role.
+    - Removed the usage of CSS API for role management.
 
 ## April 11, 2024
 - **Task** Multi-language - Create engagement content translation tables & API routes [DESENG-544](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-544)
