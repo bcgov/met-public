@@ -59,22 +59,22 @@ class LoginSource(Enum):
     IDIR = 'idir'
 
 
-class KeycloakPermissionLevels(Enum):
-    """Keycloak permission levels."""
+class CompositeRoleNames(Enum):
+    """Composite role names."""
 
-    IT_ADMIN = 'Administrator'
-    IT_VIEWER = 'Viewer'
-    TEAM_MEMBER = 'Member'
-    REVIEWER = 'Reviewer'
-
-
-class KeycloakCompositeRoleNames(Enum):
-    """Keycloak composite role names."""
-
-    IT_ADMIN = 'IT_ADMIN'
-    IT_VIEWER = 'IT_VIEWER'
+    ADMIN = 'ADMIN'
+    VIEWER = 'VIEWER'
     TEAM_MEMBER = 'TEAM_MEMBER'
     REVIEWER = 'REVIEWER'
+
+
+class CompositeRoleId(IntEnum):
+    """Composite role IDs."""
+
+    ADMIN = 1
+    TEAM_MEMBER = 2
+    REVIEWER = 3
+    VIEWER = 4
 
 
 class MembershipType(IntEnum):

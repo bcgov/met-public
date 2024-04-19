@@ -1,6 +1,7 @@
 """Service for membership."""
 from datetime import datetime
 from http import HTTPStatus
+from flask import g
 
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
@@ -9,9 +10,10 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services import authorization
-from met_api.services.staff_user_service import KEYCLOAK_SERVICE, StaffUserService
+from met_api.services.staff_user_service import StaffUserService
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.constants import CompositeRoles
-from met_api.utils.enums import KeycloakCompositeRoleNames, MembershipStatus
+from met_api.utils.enums import CompositeRoleId, CompositeRoleNames, MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
@@ -55,8 +57,8 @@ class MembershipService:
 
         user_id = user_details.get('id')
 
-        roles = user_details.get('composite_roles')
-        if KeycloakCompositeRoleNames.IT_ADMIN.value in roles:
+        roles = user_details.get('main_role')
+        if CompositeRoleNames.ADMIN.value in roles:
             raise BusinessException(
                 error='This user is already a Administrator.',
                 status_code=HTTPStatus.CONFLICT.value)
@@ -84,8 +86,8 @@ class MembershipService:
         default_role = CompositeRoles.TEAM_MEMBER.name
         default_membership_type = MembershipType.TEAM_MEMBER
 
-        is_reviewer = CompositeRoles.REVIEWER.value in user_details.get('composite_roles')
-        is_team_member = CompositeRoles.TEAM_MEMBER.value in user_details.get('composite_roles')
+        is_reviewer = CompositeRoles.REVIEWER.value in user_details.get('main_role')
+        is_team_member = CompositeRoles.TEAM_MEMBER.value in user_details.get('main_role')
 
         if is_reviewer:
             # If the user is assigned to the REVIEWER role, set the role name and membership type accordingly
@@ -111,10 +113,15 @@ class MembershipService:
                 status_code=HTTPStatus.BAD_REQUEST
             )
 
-        KEYCLOAK_SERVICE.assign_composite_role_to_user(
-            user_id=user.get('external_id'),
-            composite_role=composite_role
-        )
+        # Get the corresponding group_id from the CompositeRoleId enum
+        group_id = CompositeRoleId[composite_role].value
+        role_already_assigned = UserGroupMembershipService.get_user_group_within_tenant(user.get('external_id'),
+                                                                                        g.tenant_id)
+        if not role_already_assigned:
+            UserGroupMembershipService.assign_composite_role_to_user({
+                'external_id': user.get('external_id'),
+                'group_id': group_id
+            })
 
     @staticmethod
     def _create_membership_model(engagement_id, user_id, membership_type=MembershipType.TEAM_MEMBER):

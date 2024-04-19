@@ -13,8 +13,11 @@ from met_api.auth import jwt
 from met_api.config import get_named_config
 from met_api.models import db, ma, migrate
 from met_api.models.tenant import Tenant as TenantModel
+from met_api.services.staff_user_service import StaffUserService
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils import constants
 from met_api.utils.cache import cache
+from met_api.utils.roles import Role
 
 # Security Response headers
 csp = (
@@ -129,19 +132,45 @@ def setup_jwt_manager(app_context, jwt_manager):
 
     def get_roles(token_info) -> list:
         """
-        Consumes a token_info dictionary and returns a list of roles.
+        Get user roles based on token info.
 
-        Uses a configurable path to the roles in the token_info dictionary.
+        Uses UserGroupMembershipService to retrieve user roles within a tenant.
         """
         role_access_path = app_context.config['JWT_CONFIG']['ROLE_CLAIM']
+        roles_from_token = []
+        # TODO Needs to be modified once the actual role for super admin is finalized
+        current_token_info = token_info.copy()
         for key in role_access_path.split('.'):
-            token_info = token_info.get(key, None)
-            if token_info is None:
-                app_context.logger.warning('Unable to find role in token_info. '
-                                           'Please check your JWT_ROLE_CALLBACK '
-                                           'configuration.')
-                return []
-        return token_info
+            # Navigate deeper at each step via reassignment
+            current_token_info = current_token_info.get(key, None)
+            if current_token_info is None:
+                app_context.logger.warning('Unable to find role info in Keycloak data.')
+                break
+            # Check if the obtained value is a list and can be extended
+            if isinstance(current_token_info, list):
+                roles_from_token.extend(current_token_info)
+                break
+            app_context.logger.warning('Role info from keycloak is not a list!')
+            break
+
+        keycloak_forwarded_roles = [Role.CREATE_TENANT.value]
+        user_roles = list(set(roles_from_token).intersection(keycloak_forwarded_roles))
+
+        # Retrieve user by external ID from token info
+        user = StaffUserService.get_user_by_external_id(token_info['sub'])
+
+        if user:
+            # Retrieve user roles within a tenant using UserGroupMembershipService
+            additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
+                token_info['sub'], g.tenant_id)
+            if additional_user_roles:
+                # Add additional user roles to user_roles list
+                user_roles.extend(additional_user_roles)
+            app_context.logger.warning('Unable to find a role for the user within the tenant.')
+        else:
+            app_context.logger.warning('Unable to find an active user within the tenant.')
+
+        return user_roles
 
     app_context.config['JWT_ROLE_CALLBACK'] = get_roles
     jwt_manager.init_app(app_context)

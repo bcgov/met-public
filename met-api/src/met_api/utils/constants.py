@@ -19,10 +19,10 @@ from enum import Enum
 class CompositeRoles(Enum):
     """Enumeration representing user roles."""
 
-    IT_ADMIN = 'Administrator'
+    ADMIN = 'Administrator'
     TEAM_MEMBER = 'Team Member'
     REVIEWER = 'Reviewer'
-    IT_VIEWER = 'Viewer'
+    VIEWER = 'Viewer'
 
     @staticmethod
     def get_name_by_value(value):

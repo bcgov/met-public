@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import g, jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
@@ -27,6 +27,7 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.roles import Role
 from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
@@ -50,7 +51,8 @@ class StaffUsers(Resource):
         try:
             user_data = TokenInfo.get_user_data()
             user = StaffUserService().create_or_update_user(user_data)
-            user.roles = user_data.get('roles')
+            user.roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
+                user.external_id, g.tenant_id)
             return StaffUserSchema().dump(user), HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
