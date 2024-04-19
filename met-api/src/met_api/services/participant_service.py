@@ -1,9 +1,5 @@
 """Service for user management."""
 from met_api.models.participant import Participant as ParticipantModel
-from met_api.services.keycloak import KeycloakService
-
-
-KEYCLOAK_SERVICE = KeycloakService()
 
 
 class ParticipantService:
