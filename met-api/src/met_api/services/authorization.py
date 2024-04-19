@@ -29,8 +29,8 @@ def check_auth(**kwargs):
         abort(HTTPStatus.FORBIDDEN, 'User not found')
 
     # Retrieve tenant specific user roles from met-db
-    user_roles, tenant_id = UserGroupMembershipService.get_user_roles_within_a_tenant(user_from_context.sub,
-                                                                                      g.tenant_id)
+    user_roles, tenant_id = UserGroupMembershipService.get_user_roles_within_tenant(user_from_context.sub,
+                                                                                    g.tenant_id)
     if not user_roles:
         abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 

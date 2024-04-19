@@ -51,7 +51,7 @@ class StaffUsers(Resource):
         try:
             user_data = TokenInfo.get_user_data()
             user = StaffUserService().create_or_update_user(user_data)
-            user.roles, _ = UserGroupMembershipService.get_user_roles_within_a_tenant(
+            user.roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
                 user.external_id, g.tenant_id)
             return StaffUserSchema().dump(user), HTTPStatus.OK
         except KeyError as err:

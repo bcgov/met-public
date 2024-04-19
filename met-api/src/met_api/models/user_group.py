@@ -15,6 +15,9 @@ class UserGroup(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
 
+    # Define the relationship with GroupRoleMapping
+    role_mappings = db.relationship('GroupRoleMapping', backref='user_group')
+
     @classmethod
     def get_all_groups(cls):
         """Get all the available groups."""

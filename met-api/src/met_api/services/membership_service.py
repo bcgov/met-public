@@ -115,8 +115,8 @@ class MembershipService:
 
         # Get the corresponding group_id from the CompositeRoleId enum
         group_id = CompositeRoleId[composite_role].value
-        role_already_assigned = UserGroupMembershipService.get_user_group_within_a_tenant(user.get('external_id'),
-                                                                                          g.tenant_id)
+        role_already_assigned = UserGroupMembershipService.get_user_group_within_tenant(user.get('external_id'),
+                                                                                        g.tenant_id)
         if not role_already_assigned:
             UserGroupMembershipService.assign_composite_role_to_user({
                 'external_id': user.get('external_id'),

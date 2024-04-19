@@ -21,6 +21,8 @@ class UserGroupMembership(BaseModel):  # pylint: disable=too-few-public-methods,
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), primary_key=True, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False)
 
+    groups = db.relationship('UserGroup', backref='user_group_membership')
+
     __table_args__ = (
         PrimaryKeyConstraint('id', 'staff_user_external_id', 'tenant_id'),
     )
@@ -67,9 +69,8 @@ class UserGroupMembership(BaseModel):  # pylint: disable=too-few-public-methods,
             staff_user_external_id=external_id, tenant_id=tenant_id).first()
         if membership:
             # Update membership fields
-            for key in ['is_active']:
-                if key in membership_data:
-                    setattr(membership, key, False)
+            if key := 'is_active' in membership_data:
+                setattr(membership, key, False)
 
             db.session.commit()
 

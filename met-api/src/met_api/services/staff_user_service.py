@@ -7,14 +7,11 @@ from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
-from met_api.services.keycloak import KeycloakService
 from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils import notification
 from met_api.utils.constants import CompositeRoles
 from met_api.utils.enums import CompositeRoleId, CompositeRoleNames
 from met_api.utils.template import Template
-
-KEYCLOAK_SERVICE = KeycloakService()
 
 
 class StaffUserService:
@@ -103,10 +100,10 @@ class StaffUserService:
 
     @staticmethod
     def attach_roles(user_collection):
-        """Attach keycloak composite roles to user object."""
+        """Attach composite roles to user object."""
         for user in user_collection:
-            composite_role = UserGroupMembershipService.get_user_group_within_a_tenant(user.get('external_id'),
-                                                                                       g.tenant_id)
+            composite_role = UserGroupMembershipService.get_user_group_within_tenant(user.get('external_id'),
+                                                                                     g.tenant_id)
             user['composite_roles'] = ''
             if composite_role:
                 user['composite_roles'] = composite_role
@@ -161,26 +158,14 @@ class StaffUserService:
 
         return StaffUserSchema().dump(db_user)
 
-    @classmethod
-    def remove_composite_role_from_user(cls, external_id: str, role: str):
-        """Create or update a user."""
-        db_user = StaffUserModel.get_user_by_external_id(external_id)
-
-        if db_user is None:
-            raise KeyError('User not found')
-
-        KEYCLOAK_SERVICE.remove_composite_role_from_user(user_id=external_id, role=role)
-
-        return StaffUserSchema().dump(db_user)
-
     @staticmethod
     def validate_user(db_user: StaffUserModel):
         """Validate user."""
         if db_user is None:
             raise KeyError('User not found')
 
-        composite_role = UserGroupMembershipService.get_user_group_within_a_tenant(db_user.external_id,
-                                                                                   g.tenant_id)
+        composite_role = UserGroupMembershipService.get_user_group_within_tenant(db_user.external_id,
+                                                                                 g.tenant_id)
         if composite_role:
             if CompositeRoleNames.ADMIN.value == composite_role:
                 raise BusinessException(

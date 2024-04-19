@@ -139,24 +139,29 @@ def setup_jwt_manager(app_context, jwt_manager):
         role_access_path = app_context.config['JWT_CONFIG']['ROLE_CLAIM']
         roles_from_token = []
         # TODO Needs to be modified once the actual role for super admin is finalized
+        current_token_info = token_info.copy()
         for key in role_access_path.split('.'):
-            role = token_info.get(key, None)
-            if role is not None:  # Check if role is found
-                roles_from_token.extend(role)
+            # Navigate deeper at each step via reassignment
+            current_token_info = current_token_info.get(key, None)
+            if current_token_info is None:
+                app_context.logger.warning('Unable to find role info in Keycloak data.')
+                break
+            # Check if the obtained value is a list and can be extended
+            if isinstance(current_token_info, list):
+                roles_from_token.extend(current_token_info)
+                break
+            app_context.logger.warning('Role info from keycloak is not a list!')
+            break
 
-        # Check if 'create_tenant' role exists in token_info
-        if Role.CREATE_TENANT.value in roles_from_token:
-            # Append 'create_tenant' role to user_roles list
-            user_roles = [Role.CREATE_TENANT.value]
-        else:
-            user_roles = []
+        keycloak_forwarded_roles = [Role.CREATE_TENANT.value]
+        user_roles = list(set(roles_from_token).intersection(keycloak_forwarded_roles))
 
         # Retrieve user by external ID from token info
         user = StaffUserService.get_user_by_external_id(token_info['sub'])
 
         if user:
             # Retrieve user roles within a tenant using UserGroupMembershipService
-            additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_a_tenant(
+            additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
                 token_info['sub'], g.tenant_id)
             if additional_user_roles:
                 # Add additional user roles to user_roles list

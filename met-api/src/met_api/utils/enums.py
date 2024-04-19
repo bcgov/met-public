@@ -60,7 +60,7 @@ class LoginSource(Enum):
 
 
 class CompositeRoleNames(Enum):
-    """Keycloak composite role names."""
+    """Composite role names."""
 
     ADMIN = 'ADMIN'
     VIEWER = 'VIEWER'
@@ -69,7 +69,7 @@ class CompositeRoleNames(Enum):
 
 
 class CompositeRoleId(IntEnum):
-    """Keycloak composite role names."""
+    """Composite role IDs."""
 
     ADMIN = 1
     TEAM_MEMBER = 2
