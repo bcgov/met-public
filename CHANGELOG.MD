@@ -1,8 +1,14 @@
+## April 22, 2024
+
+- **Task** Openshift - Update the buildconfig for the MET-cron job runner [🎟️ DESENG-559](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-559)
+  - Versioning now uses the openshift.io namespace
+
 ## April 11, 2024
+
 - **Task** Multi-language - Create engagement content translation tables & API routes [DESENG-544](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-544)
-    - Created a new table for engagement content translations
-    - Created API routes and services for engagement content translations
-    - Created Unit tests for engagement content translations
+  - Created a new table for engagement content translations
+  - Created API routes and services for engagement content translations
+  - Created Unit tests for engagement content translations
 
 ## April 10, 2024
 
