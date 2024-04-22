@@ -1,19 +1,17 @@
 """Service for user management."""
 from http import HTTPStatus
 
-from flask import current_app
+from flask import current_app, g
 
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.staff_user import StaffUser as StaffUserModel
 from met_api.schemas.staff_user import StaffUserSchema
-from met_api.services.keycloak import KeycloakService
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils import notification
-from met_api.utils.constants import COMPOSITE_ROLE_MAPPING, CompositeRoles
-from met_api.utils.enums import KeycloakCompositeRoleNames
+from met_api.utils.constants import CompositeRoles
+from met_api.utils.enums import CompositeRoleId, CompositeRoleNames
 from met_api.utils.template import Template
-
-KEYCLOAK_SERVICE = KeycloakService()
 
 
 class StaffUserService:
@@ -41,7 +39,7 @@ class StaffUserService:
         self.validate_fields(user)
 
         external_id = user.get('external_id')
-        db_user = StaffUserModel.get_user_by_external_id(external_id)
+        db_user = StaffUserModel.get_user_by_external_id(external_id, include_inactive=True)
 
         if db_user is None:
             new_user = StaffUserModel.create_user(user)
@@ -102,22 +100,14 @@ class StaffUserService:
 
     @staticmethod
     def attach_roles(user_collection):
-        """Attach keycloak composite roles to user object."""
-        user_roles = KEYCLOAK_SERVICE.get_users_roles(
-            [user.get('external_id') for user in user_collection])
+        """Attach composite roles to user object."""
         for user in user_collection:
-            composite_roles = user_roles.get(user.get('external_id'))
+            composite_role = UserGroupMembershipService.get_user_group_within_tenant(user.get('external_id'),
+                                                                                     g.tenant_id)
             user['composite_roles'] = ''
-            if composite_roles:
-                user['composite_roles'] = [COMPOSITE_ROLE_MAPPING.get(role, '') for role in composite_roles]
-                if CompositeRoles.IT_ADMIN.value in user['composite_roles']:
-                    user['main_role'] = CompositeRoles.IT_ADMIN.value
-                elif CompositeRoles.TEAM_MEMBER.value in user['composite_roles']:
-                    user['main_role'] = CompositeRoles.TEAM_MEMBER.value
-                elif CompositeRoles.REVIEWER.value in user['composite_roles']:
-                    user['main_role'] = CompositeRoles.REVIEWER.value
-                else:
-                    user['main_role'] = user['composite_roles'][0]
+            if composite_role:
+                user['composite_roles'] = composite_role
+                user['main_role'] = CompositeRoles[composite_role].value
 
     @classmethod
     def find_users(
@@ -159,19 +149,12 @@ class StaffUserService:
 
         cls.validate_user(db_user)
 
-        KEYCLOAK_SERVICE.assign_composite_role_to_user(user_id=external_id, composite_role=composite_role)
-
-        return StaffUserSchema().dump(db_user)
-
-    @classmethod
-    def remove_composite_role_from_user(cls, external_id: str, role: str):
-        """Create or update a user."""
-        db_user = StaffUserModel.get_user_by_external_id(external_id)
-
-        if db_user is None:
-            raise KeyError('User not found')
-
-        KEYCLOAK_SERVICE.remove_composite_role_from_user(user_id=external_id, role=role)
+        # Get the corresponding group_id from the CompositeRoleId enum
+        group_id = CompositeRoleId[composite_role].value
+        UserGroupMembershipService.assign_composite_role_to_user({
+            'external_id': external_id,
+            'group_id': group_id
+        })
 
         return StaffUserSchema().dump(db_user)
 
@@ -181,11 +164,9 @@ class StaffUserService:
         if db_user is None:
             raise KeyError('User not found')
 
-        composite_roles = KEYCLOAK_SERVICE.get_user_roles(user_id=db_user.external_id)
-
-        if 'data' in composite_roles and len(composite_roles['data']) > 0:
-            role_names = [role.get('name') for role in composite_roles]
-            if KeycloakCompositeRoleNames.IT_ADMIN.value in role_names:
-                raise BusinessException(
-                    error='This user is already an Administrator.',
-                    status_code=HTTPStatus.CONFLICT.value)
+        composite_role = UserGroupMembershipService.get_user_group_within_tenant(db_user.external_id,
+                                                                                 g.tenant_id)
+        if composite_role and CompositeRoleNames.ADMIN.value == composite_role:
+            raise BusinessException(
+                error='This user is already an Administrator.',
+                status_code=HTTPStatus.CONFLICT.value)

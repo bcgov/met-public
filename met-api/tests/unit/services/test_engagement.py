@@ -22,7 +22,9 @@ from faker import Faker
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
-from tests.utilities.factory_utils import factory_engagement_model, factory_staff_user_model, patch_token_info
+from tests.utilities.factory_utils import (
+    factory_engagement_model, factory_staff_user_model, factory_user_group_membership_model, patch_token_info,
+    set_global_tenant)
 
 fake = Faker()
 date_format = '%Y-%m-%d'
@@ -31,7 +33,9 @@ date_format = '%Y-%m-%d'
 def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     engagement_data = TestEngagementInfo.engagement1
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert
@@ -46,7 +50,9 @@ def test_create_engagement(session, monkeypatch):  # pylint:disable=unused-argum
 def test_create_engagement_with_survey_block(session, monkeypatch):  # pylint:disable=unused-argument
     """Assert that an Org can be created."""
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     engagement_data = TestEngagementInfo.engagement2
     saved_engagament = EngagementService().create_engagement(engagement_data)
     # fetch the engagement with id and assert

@@ -2,6 +2,14 @@
 
 - **Task** Openshift - Update the buildconfig for the MET-cron job runner [🎟️ DESENG-559](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-559)
   - Versioning now uses the openshift.io namespace
+- **Task** In-app role management [DESENG-574](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-574)
+  - Introduced new database models to manage user roles and user-to-role mappings in the Met database.
+  - Revamped the authentication validation process to rely on roles retrieved directly from the database,
+    rather than relying solely on token-based roles.
+  - Eliminated redundant or unused roles from the system.
+  - Updated unit tests to to fetch roles directly from the database instead of relying on role generation from the factory and eliminated the Keycloak mock.
+  - Renamed admin and viewer role.
+  - Removed the usage of CSS API for role management.
 
 ## April 11, 2024
 

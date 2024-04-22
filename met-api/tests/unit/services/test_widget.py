@@ -23,8 +23,8 @@ from met_api.schemas.widget_item import WidgetItemSchema
 from met_api.services.widget_service import WidgetService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo, TestWidgetInfo, TestWidgetItemInfo
 from tests.utilities.factory_utils import (
-    factory_engagement_model, factory_staff_user_model, factory_widget_item_model, factory_widget_model,
-    patch_token_info)
+    factory_engagement_model, factory_staff_user_model, factory_user_group_membership_model, factory_widget_item_model,
+    factory_widget_model, patch_token_info, set_global_tenant)
 
 
 fake = Faker()
@@ -40,7 +40,9 @@ def test_create_widget(session, monkeypatch):  # pylint:disable=unused-argument
         'widget_type_id': WidgetType.WHO_IS_LISTENING.value
     }
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     widget_record = WidgetService().create_widget(widget_to_create, engagement.id)
 
     # Assert that was created

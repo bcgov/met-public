@@ -23,8 +23,9 @@ from sqlalchemy import event, text
 from met_api import create_app, setup_jwt_manager
 from met_api.auth import jwt as _jwt
 from met_api.models import db as _db
-from tests.utilities.factory_utils import factory_staff_user_model
+from tests.utilities.factory_utils import factory_staff_user_model, factory_user_group_membership_model
 from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
+from met_api.utils.enums import CompositeRoleId
 
 
 @pytest.fixture(scope='session')
@@ -180,6 +181,7 @@ def setup_admin_user_and_claims(jwt):
     """Set up a user with the staff admin role."""
     staff_info = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_info)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     claims['sub'] = str(user.external_id)
 
@@ -192,6 +194,7 @@ def setup_reviewer_and_claims(jwt):
     """Set up a user with the reviewer role."""
     staff_info = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_info)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.REVIEWER.value)
     claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
 
@@ -204,6 +207,7 @@ def setup_team_member_and_claims(jwt):
     """Set up a user with the team member role."""
     staff_info = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_info)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.TEAM_MEMBER.value)
     claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
     claims['sub'] = str(user.external_id)
 

@@ -28,12 +28,12 @@ from met_api.constants.comment_status import Status
 from met_api.constants.email_verification import EmailVerificationType
 from met_api.constants.membership_type import MembershipType
 from met_api.services.submission_service import SubmissionService
-from met_api.utils.enums import ContentType
+from met_api.utils.enums import CompositeRoleId, ContentType
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubmissionInfo
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_comment_model, factory_email_verification, factory_engagement_setting_model,
     factory_membership_model, factory_participant_model, factory_staff_user_model, factory_submission_model,
-    factory_survey_and_eng_model)
+    factory_survey_and_eng_model, factory_user_group_membership_model)
 
 
 DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -59,7 +59,7 @@ def test_valid_submission(client, jwt, session, side_effect, expected_status):  
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/submissions/public/{email_verification.verification_token}', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     with patch.object(SubmissionService, 'create', side_effect=side_effect):
         rv = client.post(f'/api/submissions/public/{email_verification.verification_token}',
@@ -91,7 +91,7 @@ def test_edit_rejected_submission(client, jwt, session):  # pylint:disable=unuse
     rv = client.put(f'/api/submissions/public/{email_verification.verification_token}',
                     data=json.dumps(submission_request),
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     # roll back any pending changes to make sure the session is clean
     # the changes should still be committed because the submission was updated
     session.rollback()
@@ -111,14 +111,15 @@ def test_get_submission_by_id(client, jwt, session, submission_info,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/{submission.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('submission_json', None) is None
 
 
 @pytest.mark.parametrize('submission_info', [TestSubmissionInfo.submission1])
-def test_get_submission_page(client, jwt, session, submission_info):  # pylint:disable=unused-argument
+def test_get_submission_page(client, jwt, session, submission_info,
+                             setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement page can be fetched."""
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
 
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
@@ -128,11 +129,13 @@ def test_get_submission_page(client, jwt, session, submission_info):  # pylint:d
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
 
 
-def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-argument
+def test_get_comment_filtering(client, jwt, session,
+                               setup_admin_user_and_claims,
+                               setup_reviewer_and_claims):  # pylint:disable=unused-argument
     """Assert comments filtering works for different users."""
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
@@ -144,15 +147,15 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get('items')
                ) == 0, 'Public user cant see unapproved comments'
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('items', [])[0].get('submission_json', None) is None
     assert len(rv.json.get('items')
                ) == 1, 'Admin user can see unapproved comments'
@@ -165,28 +168,28 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get('items')
                ) == 1, 'Public user can see approved comments'
 
-    claims = TestJwtClaims.staff_admin_role
+    user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get('items')
-               ) == 2, 'Admin user can see unapproved and unapproved comments'
+               ) == 2, 'Admin user can see approved and unapproved comments'
 
     # create membership for the reviewer user and see
     user = factory_staff_user_model()
     factory_membership_model(
         user_id=user.id, engagement_id=eng.id, member_type=MembershipType.REVIEWER.name)
-    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
+    user, claims = setup_reviewer_and_claims
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get(
         'items')) == 1, 'Reviewer with reviewer team membership can see only approved comments'
 
@@ -194,14 +197,15 @@ def test_get_comment_filtering(client, jwt, session):  # pylint:disable=unused-a
     user = factory_staff_user_model()
     factory_membership_model(
         user_id=user.id, engagement_id=eng.id, member_type=MembershipType.TEAM_MEMBER.name)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.TEAM_MEMBER.value)
     claims = copy.deepcopy(TestJwtClaims.team_member_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/submissions/survey/{survey.id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get(
-        'items')) == 2, 'Team Member with team membership can see unapproved and unapproved comments'
+        'items')) == 2, 'Team Member with team membership can see approved and unapproved comments'
 
 
 def test_invalid_submission(client, jwt, session):  # pylint:disable=unused-argument
@@ -263,7 +267,7 @@ def test_advanced_search_submission(client, jwt, session, submission_info):  # p
         query_string=params
     )
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert len(rv.json.get('items', [])) == 1
 
     fetched_submission = rv.json.get('items')[0]
