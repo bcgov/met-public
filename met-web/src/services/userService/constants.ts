@@ -2,11 +2,9 @@ export const USER_ROLES = {
     PUBLIC_USER: 'public_user',
     ANONYMOUS_USER: 'anonymous_user',
     CREATE_TENANT: 'create_tenant',
-    VIEW_TENANT: 'view_tenant',
     VIEW_USERS: 'view_users',
     CREATE_ADMIN_USER: 'create_admin_user',
     UPDATE_USER_GROUP: 'update_user_group',
-    CREATE_TEAM: 'create_team',
     CREATE_ENGAGEMENT: 'create_engagement',
     CREATE_SURVEY: 'create_survey',
     PUBLISH_ENGAGEMENT: 'publish_engagement',
@@ -39,4 +37,12 @@ export const USER_ROLES = {
     EXPORT_ALL_TO_CSV: 'export_all_to_csv',
     EXPORT_INTERNAL_COMMENT_SHEET: 'export_internal_comment_sheet',
     EXPORT_PROPONENT_COMMENT_SHEET: 'export_proponent_comment_sheet',
+};
+
+export type UserStatusName = 'ACTIVE' | 'INACTIVE';
+export type UserStatus = 1 | 2;
+
+export const USER_STATUS: { [x in UserStatusName]: UserStatus } = {
+    ACTIVE: 1,
+    INACTIVE: 2,
 };
