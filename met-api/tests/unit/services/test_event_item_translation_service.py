@@ -2,7 +2,8 @@
 from met_api.services.event_item_translation_service import EventItemTranslationService
 from tests.utilities.factory_scenarios import TestEventItemTranslationInfo, TestJwtClaims
 from tests.utilities.factory_utils import (
-    event_item_model_with_language, factory_event_item_translation_model, factory_staff_user_model, patch_token_info)
+    event_item_model_with_language, factory_event_item_translation_model, factory_staff_user_model,
+    factory_user_group_membership_model, patch_token_info, set_global_tenant)
 
 
 def test_get_event_item_translation_by_id(session):
@@ -49,7 +50,9 @@ def test_create_event_item_translation_with_authorization(
     """Assert that an event item translation can be created with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     event_item, event, language = event_item_model_with_language()
     data = {
         ** TestEventItemTranslationInfo.event_item_info1.value,
@@ -73,7 +76,9 @@ def test_create_event_item_translation_with_authorization_pre_populate(
     """Assert that an event item translation can be created with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     event_item, event, language = event_item_model_with_language()
     data = {
         ** TestEventItemTranslationInfo.event_item_info1.value,
@@ -97,7 +102,9 @@ def test_update_event_item_translation_with_authorization(
     """Assert that an event item translation can be updated with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     event_item, event, language = event_item_model_with_language()
     translation = factory_event_item_translation_model(
         {
@@ -124,7 +131,9 @@ def test_delete_event_item_translation_with_authorization(
     """Assert that an event item translation can be deleted with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     event_item, event, language = event_item_model_with_language()
     translation = factory_event_item_translation_model(
         {

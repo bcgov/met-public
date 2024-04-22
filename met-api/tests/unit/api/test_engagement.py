@@ -30,13 +30,13 @@ from met_api.constants.engagement_status import EngagementDisplayStatus, Submiss
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.services.engagement_service import EngagementService
 from met_api.utils.constants import TENANT_ID_HEADER
-from met_api.utils.enums import ContentType
+from met_api.utils.enums import CompositeRoleId, ContentType
 from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSubmissionInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_metadata_model, factory_engagement_model, factory_membership_model,
     factory_metadata_taxon_model, factory_participant_model, factory_staff_user_model, factory_submission_model,
-    factory_survey_and_eng_model, factory_tenant_model, set_global_tenant)
+    factory_survey_and_eng_model, factory_tenant_model, factory_user_group_membership_model, set_global_tenant)
 
 
 fake = Faker()
@@ -54,7 +54,7 @@ def test_add_engagements(client, jwt, session, engagement_info, side_effect, exp
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     with patch.object(EngagementService, 'create_engagement', side_effect=side_effect):
         rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
@@ -78,7 +78,7 @@ def test_tenant_id_in_create_engagements(client, jwt, session,
     headers[TENANT_ID_HEADER] = tenant_short_name
     rv = client.post('/api/engagements/', data=json.dumps(TestEngagementInfo.engagement1),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     engagament_tenant_id = rv.json.get('tenant_id')
     assert engagament_tenant_id == str(tenant.id)
 
@@ -102,11 +102,12 @@ def test_tenant_id_in_create_engagements(client, jwt, session,
                            content_type=ContentType.JSON.value)
 
     # 403 since engagement tenant id is different from users tenant id
-    assert response.status_code == 403
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
     # set users tenant id to be same as engagment tenant id
     staff_2 = dict(TestUserInfo.user_staff_2)
     user = factory_staff_user_model(user_info=staff_2)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -115,7 +116,7 @@ def test_tenant_id_in_create_engagements(client, jwt, session,
                            data=json.dumps(engagement_data),
                            headers=headers,
                            content_type=ContentType.JSON.value)
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json['tenant_id'] == str(tenant_2.id)
 
 
@@ -127,7 +128,7 @@ def test_add_engagements_invalid(client, jwt, session, engagement_info,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 401
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
@@ -142,7 +143,7 @@ def test_get_engagements(client, jwt, session, engagement_info, side_effect, exp
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     created_eng = rv.json
 
     rv = client.get(f'/api/engagements/{created_eng.get("id")}', data=json.dumps(engagement_info),
@@ -175,6 +176,7 @@ def test_get_engagements_reviewer(client, jwt, session, engagement_info,
     eng_id = created_eng.get('id')
     staff_2 = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_2)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.REVIEWER.value)
     claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -203,7 +205,7 @@ def test_search_engagements_by_status(client, jwt,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     page = 1
     page_size = 10
@@ -226,11 +228,13 @@ def test_search_engagements_by_status(client, jwt,
     assert rv.status_code == expected_status
 
 
-def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argument
+def test_search_engagements(client, jwt, session,
+                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Verify the functionality of searching engagements with different access levels."""
     similar_engagement_base_name = fake.name(
     )  # Generate a base name for similar engagements
     set_global_tenant()
+    _, claims = setup_admin_user_and_claims
 
     similar_engagements = []
     total_similar_engagements = 4
@@ -250,7 +254,7 @@ def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argu
     # Perform a public search with no parameters to return all engagements
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
     assert rv.json.get('total') == total_no_engagements
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     # Perform a public search for similar engagements
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}',
@@ -263,8 +267,7 @@ def test_search_engagements(client, jwt, session):  # pylint:disable=unused-argu
     assert rv.json.get('total') == 0, 'No role, so no results expected'
 
     # Admin-level searches
-    headers = factory_auth_header(
-        jwt=jwt, claims=TestJwtClaims.staff_admin_role)
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/engagements/?search_text={similar_engagement_base_name}', headers=headers,
                     content_type=ContentType.JSON.value)
     assert rv.json.get(
@@ -329,7 +332,7 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
     assert rv.json.get(
         'total') == 1, 'its visible for public user wit no tenant information'
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     tenant_header = {TENANT_ID_HEADER: current_app.config.get(
         'DEFAULT_TENANT_SHORT_NAME')}
@@ -337,13 +340,13 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
                     content_type=ContentType.JSON.value)
     assert rv.json.get(
         'total') == 0, 'Tenant based fetching.So dont return the non-tenant info.'
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     factory_engagement_model(TestEngagementInfo.engagement3)
     rv = client.get('/api/engagements/', content_type=ContentType.JSON.value)
     assert rv.json.get(
         'total') == 2, 'Both of the engagaments should visible for public user wit no tenant information'
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     tenant_header = {TENANT_ID_HEADER: current_app.config.get(
         'DEFAULT_TENANT_SHORT_NAME')}
@@ -351,7 +354,7 @@ def test_search_engagements_not_logged_in(client, session):  # pylint:disable=un
                     content_type=ContentType.JSON.value)
     assert rv.json.get(
         'total') == 1, 'Tenant based fetching.So dont return the non-tenant info.'
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])
@@ -379,11 +382,11 @@ def test_patch_engagement(client, jwt, session, engagement_info, side_effect, ex
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     rv = client.get(f'/api/engagements/{engagement_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('name') == engagement_edits.get('name')
     assert engagement_edits.get('start_date') in rv.json.get('start_date')
     assert engagement_edits.get('end_date') in rv.json.get('end_date')
@@ -417,25 +420,26 @@ def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unu
 
     staff_1 = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_1)
-    claims = copy.deepcopy(TestJwtClaims.public_user_role.value)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.TEAM_MEMBER.value)
+    claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 403, 'Not a team member.So throws exception.'
+    assert rv.status_code == HTTPStatus.FORBIDDEN, 'Not a team member.So throws exception.'
 
     factory_membership_model(user_id=user.id, engagement_id=engagement_id)
 
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200, 'Added as team member.So throws exception.'
+    assert rv.status_code == HTTPStatus.OK, 'Added as team member.So throws exception.'
 
     rv = client.get(f'/api/engagements/{engagement_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('name') == engagement_edits.get('name')
 
 
@@ -456,11 +460,11 @@ def test_patch_new_survey_block_engagement(client, jwt, session,
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     rv = client.get(f'/api/engagements/{engagement_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     actual_status_blocks = rv.json.get('status_block')
     assert len(actual_status_blocks) == 1
     assert actual_status_blocks[0].get('block_text') == engagement_edits.get(
@@ -490,11 +494,11 @@ def test_update_survey_block_engagement(client, jwt, session,
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     rv = client.get(f'/api/engagements/{engagement_id}',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     actual_status_blocks = rv.json.get('status_block')
     assert len(actual_status_blocks) == 2
     upcoming_block = next(x for x in actual_status_blocks if x.get(
@@ -569,7 +573,7 @@ def test_get_engagements_metadata_match_all(client, session):  # pylint:disable=
 
     rv = client.get(f'/api/engagements/?metadata={metadata_1}')
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 10
 
     metadata_2 = json.dumps(
@@ -583,7 +587,7 @@ def test_get_engagements_metadata_match_all(client, session):  # pylint:disable=
     )
 
     rv = client.get(f'/api/engagements/?metadata={metadata_2}')
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 1
 
     metadata_3 = json.dumps(
@@ -598,7 +602,7 @@ def test_get_engagements_metadata_match_all(client, session):  # pylint:disable=
 
     rv = client.get(
         f'/api/engagements/?metadata={metadata_3}')
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     # the filter should only return the engagement with both values
     assert rv.json.get('total') == 1
 
@@ -643,7 +647,7 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
 
     rv = client.get(f'/api/engagements/?metadata={metadata_1}')
 
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 10
 
     metadata_2 = json.dumps(
@@ -657,7 +661,7 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
     )
 
     rv = client.get(f'/api/engagements/?metadata={metadata_2}')
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     assert rv.json.get('total') == 1
 
     metadata_3 = json.dumps(
@@ -672,6 +676,6 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
 
     rv = client.get(
         f'/api/engagements/?metadata={metadata_3}')
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     # the filter should return the engagements with either value
     assert rv.json.get('total') == 10

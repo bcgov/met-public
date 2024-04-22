@@ -56,6 +56,7 @@ from met_api.models.survey import Survey as SurveyModel
 from met_api.models.survey_translation import SurveyTranslation as SurveyTranslationModel
 from met_api.models.timeline_event import TimelineEvent as TimelineEventModel
 from met_api.models.timeline_event_translation import TimelineEventTranslation as TimelineEventTranslationModel
+from met_api.models.user_group_membership import UserGroupMembership as UserGroupMembershipModel
 from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
@@ -67,7 +68,7 @@ from met_api.models.widget_translation import WidgetTranslation as WidgetTransla
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
-from met_api.utils.enums import MembershipStatus
+from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementContentInfo, TestEngagementContentTranslationInfo, TestEngagementInfo,
     TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
@@ -215,6 +216,7 @@ def factory_metadata_requirements(auth: Optional[Auth] = None):
     engagement = factory_engagement_model(engagement_info)
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role['sub'], staff_info)
+    factory_user_group_membership_model(TestJwtClaims.staff_admin_role['sub'], tenant.id)
     taxon = factory_metadata_taxon_model(tenant.id)
     if auth:
         headers = factory_auth_header(
@@ -232,6 +234,7 @@ def factory_taxon_requirements(auth: Optional[Auth] = None):
     tenant.short_name = fake.lexify(text='????').upper()
     (staff_info := TestUserInfo.user_staff_1.copy())['tenant_id'] = tenant.id
     factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'), staff_info)
+    factory_user_group_membership_model(TestJwtClaims.staff_admin_role['sub'], tenant.id)
     if auth:
         headers = factory_auth_header(
             auth,
@@ -275,6 +278,25 @@ def factory_staff_user_model(external_id=None, user_info: dict = TestUserInfo.us
     )
     user.save()
     return user
+
+
+def factory_user_group_membership_model(external_id=None, tenant_id=None, group_id=None):
+    """Produce a user group membership model."""
+    # Generate a external id if not passed
+    external_id = external_id or fake.uuid4()
+    # Generate a group id if not passed
+    group_id = group_id or CompositeRoleId.ADMIN.value
+    # Check if tenant_id is provided, otherwise use a default value
+    if tenant_id is None:
+        tenant_id = '1'
+    membership = UserGroupMembershipModel(
+        staff_user_external_id=str(external_id),
+        group_id=group_id,
+        tenant_id=tenant_id,
+        is_active=True,
+    )
+    membership.save()
+    return membership
 
 
 def factory_participant_model(

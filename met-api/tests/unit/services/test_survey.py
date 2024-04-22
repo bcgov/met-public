@@ -18,7 +18,8 @@ Test suite to ensure that the Survey service routines are working as expected.
 
 from met_api.services.survey_service import SurveyService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSurveyInfo
-from tests.utilities.factory_utils import factory_staff_user_model, patch_token_info
+from tests.utilities.factory_utils import (
+    factory_staff_user_model, factory_user_group_membership_model, patch_token_info, set_global_tenant)
 
 
 def test_create_survey(session, monkeypatch,):  # pylint:disable=unused-argument
@@ -28,7 +29,9 @@ def test_create_survey(session, monkeypatch,):  # pylint:disable=unused-argument
         'display': TestSurveyInfo.survey1.get('form_json').get('display'),
     }
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     saved_survey = SurveyService().create(survey_data)
     # fetch the survey with id and assert
     fetched_survey = SurveyService().get(saved_survey.id)

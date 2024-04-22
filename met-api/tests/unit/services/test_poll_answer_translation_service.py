@@ -6,8 +6,8 @@ Test suite to ensure that the PollAnswerTranslationService routines are working 
 from met_api.services.poll_answer_translation_service import PollAnswerTranslationService
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_poll_answer_translation_model, factory_staff_user_model, patch_token_info,
-    poll_answer_model_with_poll_enagement)
+    factory_poll_answer_translation_model, factory_staff_user_model, factory_user_group_membership_model,
+    patch_token_info, poll_answer_model_with_poll_enagement, set_global_tenant)
 
 
 def test_get_poll_answer_translation_by_id(session):
@@ -54,7 +54,9 @@ def test_create_poll_answer_translation_with_authorization(
     """Assert that a poll answer translation can be created with proper authorization."""
     # Mock the authorization check or provide necessary setup
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     answer, poll, language = poll_answer_model_with_poll_enagement()
     data = {
         'poll_answer_id': answer.id,
@@ -77,7 +79,9 @@ def test_create_poll_answer_translation_with_authorization_with_prepopulate(
     """Assert that a poll answer translation can be created with proper authorization."""
     # Mock the authorization check or provide necessary setup
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     answer, poll, language = poll_answer_model_with_poll_enagement()
 
     data = {
@@ -101,7 +105,9 @@ def test_update_poll_answer_translation_with_authorization(
     """Assert that a poll answer translation can be updated with proper authorization."""
     # Mock the authorization check or provide necessary setup
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     answer, poll, language = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
@@ -127,7 +133,9 @@ def test_delete_poll_answer_translation_with_authorization(
     """Assert that a poll answer translation can be deleted with proper authorization."""
     # Mock the authorization check or provide necessary setup
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     answer, poll, language = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {

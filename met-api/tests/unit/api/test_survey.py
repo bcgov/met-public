@@ -31,12 +31,12 @@ from met_api.models.membership import Membership as MembershipModel
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.services.survey_service import SurveyService
 from met_api.utils.constants import TENANT_ID_HEADER
-from met_api.utils.enums import ContentType, MembershipStatus
+from met_api.utils.enums import CompositeRoleId, ContentType, MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestEngagementInfo, TestJwtClaims, TestSurveyInfo, TestTenantInfo, TestUserInfo)
 from tests.utilities.factory_utils import (
     factory_auth_header, factory_engagement_model, factory_membership_model, factory_staff_user_model,
-    factory_survey_model, factory_tenant_model, set_global_tenant)
+    factory_survey_model, factory_tenant_model, factory_user_group_membership_model, set_global_tenant)
 
 
 surveys_url = '/api/surveys/'
@@ -101,12 +101,14 @@ def test_create_survey_with_tenant(client, jwt, session,
         'name': TestSurveyInfo.survey2.get('name'),
         'display': TestSurveyInfo.survey2.get('form_json').get('display'),
     }), headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 403
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
     # emulate Tenant 2 staff admin by setting tenant id
     staff_info = dict(TestUserInfo.user_staff_3)
     staff_info['tenant_id'] = tenant_2.id
     user = factory_staff_user_model(user_info=staff_info)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
+    set_global_tenant(tenant_id=user.tenant_id)
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -222,10 +224,12 @@ def test_survey_link(client, jwt, session, side_effect, expected_status,
     assert rv.json.get('engagement_id') == str(eng_id)
 
 
-def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=unused-argument
+def test_get_hidden_survey_for_admins(client, jwt, session,
+                                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a hidden survey can be fetched by admins."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     set_global_tenant()
+    _, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     factory_survey_model(TestSurveyInfo.hidden_survey)
 
     page = 1
@@ -242,12 +246,13 @@ def test_get_hidden_survey_for_admins(client, jwt, session):  # pylint:disable=u
 
 def test_get_survey_for_reviewer(client, jwt, session):  # pylint:disable=unused-argument
     """Assert reviewers different permission."""
+    set_global_tenant()
     staff_1 = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_1)
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id, CompositeRoleId.REVIEWER.value)
     claims = copy.deepcopy(TestJwtClaims.reviewer_role.value)
     claims['sub'] = str(user.external_id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    set_global_tenant()
     survey1 = factory_survey_model(TestSurveyInfo.survey1)
 
     # Attempt to access unlinked survey
@@ -311,10 +316,12 @@ def test_get_hidden_survey_for_team_member(client, jwt, session):  # pylint:disa
     assert rv.json.get('total') == 0
 
 
-def test_get_template_survey(client, jwt, session):  # pylint:disable=unused-argument
+def test_get_template_survey(client, jwt, session,
+                             setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a hidden survey cannot be fetched by team members."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.staff_admin_role)
     set_global_tenant()
+    _, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     factory_survey_model(TestSurveyInfo.survey_template)
 
     page = 1
@@ -389,7 +396,7 @@ def test_surveys_clone_admin(mocker, client, jwt, session, survey_info,
 def test_surveys_clone_team_member(mocker, client, jwt, session, survey_info,
                                    setup_team_member_and_claims):
     """Assert that a survey can be cloned."""
-    user, claims = setup_team_member_and_claims
+    _, claims = setup_team_member_and_claims
     survey = factory_survey_model()
     headers = factory_auth_header(jwt=jwt, claims=claims)
 

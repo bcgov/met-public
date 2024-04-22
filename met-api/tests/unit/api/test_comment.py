@@ -46,7 +46,7 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     factory_comment_model(survey.id, submission.id)
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
     with patch.object(CommentService, 'get_comments_paginated', side_effect=ValueError('Test error')):
         rv = client.get(f'/api/comments/survey/{survey.id}', headers=headers, content_type=ContentType.JSON.value)
@@ -54,11 +54,11 @@ def test_get_comments(client, jwt, session):  # pylint:disable=unused-argument
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
+def test_review_comment(client, jwt, session,
+                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.staff_admin_role
+    _, claims = setup_admin_user_and_claims
 
-    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)
@@ -69,14 +69,13 @@ def test_review_comment(client, jwt, session):  # pylint:disable=unused-argument
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put(f'/api/submissions/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
 
 
-def test_review_comment_by_team_member(client, jwt, session):  # pylint:disable=unused-argument
+def test_review_comment_by_team_member(client, jwt, session,
+                                       setup_team_member_and_claims):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.team_member_role
-
-    user = factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
+    user, claims = setup_team_member_and_claims
 
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
@@ -124,11 +123,11 @@ def test_review_comment_by_reviewer(client, jwt, session):  # pylint:disable=unu
     assert rv.status_code == HTTPStatus.FORBIDDEN.value
 
 
-def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=unused-argument
+def test_review_comment_internal_note(client, jwt, session,
+                                      setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.staff_admin_role
+    _, claims = setup_admin_user_and_claims
 
-    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)
@@ -144,18 +143,18 @@ def test_review_comment_internal_note(client, jwt, session):  # pylint:disable=u
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.put(f'/api/submissions/{submission.id}',
                     data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     staff_notes = rv.json.get('staff_note', None)
     assert len(staff_notes) == 1
     assert staff_notes[0].get('note_type') == StaffNoteType.Internal.name
     assert staff_notes[0].get('note') == note
 
 
-def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unused-argument
+def test_review_comment_review_note(client, jwt, session,
+                                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a comment can be reviewed."""
-    claims = TestJwtClaims.staff_admin_role
+    _, claims = setup_admin_user_and_claims
     set_global_tenant()
-    factory_staff_user_model(TestJwtClaims.staff_admin_role.get('sub'))
     participant = factory_participant_model()
     survey, eng = factory_survey_and_eng_model()
     submission = factory_submission_model(survey.id, eng.id, participant.id)
@@ -173,7 +172,7 @@ def test_review_comment_review_note(client, jwt, session):  # pylint:disable=unu
     with patch.object(notification, 'send_email', return_value=False) as mock_mail:
         rv = client.put(f'/api/submissions/{submission.id}',
                         data=json.dumps(to_dict), headers=headers, content_type=ContentType.JSON.value)
-        assert rv.status_code == 200
+        assert rv.status_code == HTTPStatus.OK
         staff_notes = rv.json.get('staff_note', None)
         assert len(staff_notes) == 1
         assert staff_notes[0].get('note_type') == StaffNoteType.Review.name
@@ -216,7 +215,7 @@ def test_get_comments_spreadsheet_staff(mocker, client, jwt, session,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}/sheet/staff',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()
@@ -263,7 +262,7 @@ def test_get_comments_spreadsheet_proponent(mocker, client, jwt, session,
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get(f'/api/comments/survey/{survey.id}/sheet/proponent',
                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
+    assert rv.status_code == HTTPStatus.OK
     mock_post_generate_document.assert_called()
     mock_get_access_token.assert_called()
     mock_post_upload_template.assert_called()

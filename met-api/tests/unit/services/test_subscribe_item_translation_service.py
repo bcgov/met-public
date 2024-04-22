@@ -3,8 +3,8 @@
 from met_api.services.subscribe_item_translation_service import SubscribeItemTranslationService
 from tests.utilities.factory_scenarios import TestJwtClaims, TestSubscribeItemTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_staff_user_model, factory_subscribe_item_translation_model, patch_token_info,
-    subscribe_item_model_with_language)
+    factory_staff_user_model, factory_subscribe_item_translation_model, factory_user_group_membership_model,
+    patch_token_info, set_global_tenant, subscribe_item_model_with_language)
 
 
 def test_get_subscribe_item_translation_by_id(session):
@@ -51,7 +51,9 @@ def test_create_subscribe_item_translation_with_authorization(
     """Assert that a subscribe item translation can be created with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
     data = {
         **TestSubscribeItemTranslationInfo.translate_info1.value,
@@ -75,7 +77,9 @@ def test_create_subscribe_item_translation_with_authorization_with_prepopulate(
     """Assert that a subscribe item translation can be created with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
     data = {
         'subscribe_item_id': subscribe_item.id,
@@ -97,7 +101,9 @@ def test_update_subscribe_item_translation_with_authorization(
     """Assert that a subscribe item translation can be updated with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
     translation = factory_subscribe_item_translation_model(
         {
@@ -124,7 +130,9 @@ def test_delete_subscribe_item_translation_with_authorization(
     """Assert that a subscribe item translation can be deleted with proper authorization."""
     # Mock authorization
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
-    factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    set_global_tenant()
+    user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
+    factory_user_group_membership_model(str(user.external_id), user.tenant_id)
     subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
     translation = factory_subscribe_item_translation_model(
         {
