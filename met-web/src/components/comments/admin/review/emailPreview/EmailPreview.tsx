@@ -17,7 +17,7 @@ export default function EmailPreview({
     children: React.ReactNode;
     [prop: string]: unknown;
 }) {
-    const scheduledDate = formatDate(survey.engagement?.scheduled_date || '', 'MMM DD YYYY');
+    const endDate = formatDate(survey.engagement?.end_date, 'MMM DD, YYYY');
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     const isClosed = survey.engagement?.engagement_status.id === EngagementStatus.Closed;
     const engagementName = survey.engagement?.name || '';
@@ -46,7 +46,7 @@ export default function EmailPreview({
                         {!isClosed ? (
                             <>
                                 You can edit and re-submit your feedback. The comment period is open until {''}
-                                {scheduledDate}. You must re-submit your feedback before the comment period closes.
+                                {endDate}. You must re-submit your feedback before the comment period closes.
                             </>
                         ) : (
                             <>
