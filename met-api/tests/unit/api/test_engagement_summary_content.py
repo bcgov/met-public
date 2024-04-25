@@ -50,7 +50,8 @@ def test_engagement_summary_content(client, jwt, session, engagement_content_inf
 
     data = {
         'content': 'Content Sample',
-        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
+        \"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'engagement_id': engagement.id
     }

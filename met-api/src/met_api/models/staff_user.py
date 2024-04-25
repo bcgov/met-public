@@ -106,15 +106,15 @@ class StaffUser(BaseModel):
         if not user:
             return None
 
-        update_fields = dict(
-            first_name=user_dict.get('first_name', user.first_name),
-            middle_name=user_dict.get('middle_name', user.middle_name),
-            last_name=user_dict.get('last_name', user.last_name),
-            email_address=user_dict.get('email_address', user.email_address),
-            contact_number=user_dict.get('contact_number', user.contact_number),
-            external_id=user_dict.get('external_id', user.external_id),
-            username=user_dict.get('username', user.username),
-        )
+        update_fields = {
+            'first_name': user_dict.get('first_name', user.first_name),
+            'middle_name': user_dict.get('middle_name', user.middle_name),
+            'last_name': user_dict.get('last_name', user.last_name),
+            'email_address': user_dict.get('email_address', user.email_address),
+            'contact_number': user_dict.get('contact_number', user.contact_number),
+            'external_id': user_dict.get('external_id', user.external_id),
+            'username': user_dict.get('username', user.username),
+        }
         query.update(update_fields)
         db.session.commit()
         return user
