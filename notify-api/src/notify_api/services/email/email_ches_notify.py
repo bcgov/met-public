@@ -42,12 +42,14 @@ class EmailChesNotify(EmailBaseService):  # pylint: disable=too-few-public-metho
             f'client_id={ches_client_id}&client_secret={ches_client_secret}&grant_type=client_credentials'
         token_request_headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         try:
+            # pylint: disable=missing-timeout
             ches_token_response = requests.post(ches_token_url,
                                                 data=token_request_data,
                                                 headers=token_request_headers)
             ches_api_token = ches_token_response.json().get('access_token')
             email_request_headers = \
                 {'Content-Type': 'application/json', 'Authorization': f'Bearer {ches_api_token}'}
+            # pylint: disable=missing-timeout
             email_response = requests.post(ches_email_endpoint,
                                            headers=email_request_headers,
                                            data=json.dumps(ches_payload))

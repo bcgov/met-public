@@ -23,4 +23,5 @@ class EmailBaseService(ABC):  # pylint: disable=too-few-public-methods
     @abstractmethod
     def send(self, email_payload: Dict):
         """Send Email."""
+        # pylint: disable=W0719
         raise Exception('Not Implemented')
