@@ -7,7 +7,7 @@ from met_api.constants.engagement_status import Status
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.utils.datetime import local_datetime
 from met_api.utils.template import Template
-from met_cron.models.db import db
+from met_api.models.db import db
 from met_cron.services.mail_service import EmailService
 
 

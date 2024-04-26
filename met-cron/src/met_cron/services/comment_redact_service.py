@@ -9,7 +9,7 @@ from met_api.constants.user import SYSTEM_USER
 from met_api.models.comment import Comment as MetCommentModel
 from met_api.models.engagement import Engagement as MetEngagementModel
 from met_api.models.submission import Submission as MetSubmissionModel
-from met_cron.models.db import db, session_scope
+from met_api.models.db import db
 from sqlalchemy import and_
 
 
@@ -32,9 +32,9 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
             return        
         current_app.logger.info('>>>>>Total Submissions to redact found: %s.', len(submissions))
         submissions_ids = [submission.id for submission in submissions]
-        with session_scope() as session:
-            CommentRedactService._redact_comments_by_submission_ids(submissions_ids, session)
-            CommentRedactService._redact_submission_json_comments(submissions_ids, session)
+        CommentRedactService._redact_comments_by_submission_ids(submissions_ids)
+        CommentRedactService._redact_submission_json_comments(submissions_ids)
+        db.session.commit()
 
 
     @staticmethod
@@ -52,9 +52,9 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
 
     @staticmethod
-    def _redact_comments_by_submission_ids(submission_ids: List[int], session):
+    def _redact_comments_by_submission_ids(submission_ids: List[int]):
         current_app.logger.info(f'>>>>>Redacting comments for submissions: {submission_ids}')
-        session.query(MetCommentModel)\
+        db.session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .update(
             {
@@ -66,16 +66,16 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
 
 
     @staticmethod
-    def _redact_submission_json_comments(submission_ids: List[int], session):
+    def _redact_submission_json_comments(submission_ids: List[int]):
         current_app.logger.info(f'>>>>>Fetching keys to redact aka component_types from comments for submissions: {submission_ids}')
-        comments = session.query(MetCommentModel)\
+        comments = db.session.query(MetCommentModel)\
         .filter(MetCommentModel.submission_id.in_(submission_ids))\
         .all()
         # e.g. ['simpletextarea', 'simpletextarea1', 'simpletextfield']
         keys_to_redact = [comment.component_id for comment in comments]
 
         current_app.logger.info(f'>>>>>Redacting comments in submission_json for submissions: {submission_ids}')
-        for submission in session.query(MetSubmissionModel).filter(MetSubmissionModel.id.in_(submission_ids)):
+        for submission in db.session.query(MetSubmissionModel).filter(MetSubmissionModel.id.in_(submission_ids)):
             new_submission_json = {}
             for key, value in submission.submission_json.items():
                 if key in keys_to_redact:
@@ -85,4 +85,3 @@ class CommentRedactService:  # pylint: disable=too-few-public-methods
             submission.submission_json = new_submission_json
             submission.updated_by = SYSTEM_USER
             submission.updated_date = datetime.utcnow()
-
