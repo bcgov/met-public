@@ -59,7 +59,7 @@ def test_create_user_from_dict(session):
         'external_id': external_id,
     }
     new_user = StaffUserModel.create_user(user_dict)
-    assert type(new_user) == StaffUserModel
+    assert type(new_user) is StaffUserModel
     assert new_user.external_id == external_id
     assert new_user.first_name == first_name
 

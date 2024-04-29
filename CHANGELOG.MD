@@ -1,3 +1,9 @@
+## April 29, 2024
+- **Task** Upgrade python to 3.12 [DESENG-466](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-466)
+  - Upgrading the version of python to 3.12
+  - Upgrading the dependencies to support the version of python.
+  - Modify code as needed if the newer version does not support the former.
+
 ## April 22, 2024
 
 - **Task** Openshift - Update the buildconfig for the MET-cron job runner [🎟️ DESENG-559](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-559)

@@ -71,9 +71,18 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
             items = query.all()
             return items, len(items)
 
-        page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
+        # Calculate offset and limit for pagination
+        offset = (pagination_options.page - 1) * pagination_options.size
+        limit = pagination_options.size
 
-        return page.items, page.total
+        # Apply pagination using limit and offset
+        paginated_query = query.offset(offset).limit(limit)
+
+        # Fetch paginated items and total count
+        items = paginated_query.all()
+        total_count = query.count()
+
+        return items, total_count
 
     @classmethod
     def filter_by_search_options(cls, survey_search_options: SurveySearchOptions, query):
@@ -140,15 +149,15 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         record = query.first()
         if not record:
             return None
-        update_fields = dict(
-            form_json=survey.get('form_json', record.form_json),
-            updated_date=datetime.utcnow(),
-            updated_by=survey.get('updated_by', record.updated_by),
-            name=survey.get('name', record.name),
-            is_hidden=survey.get('is_hidden', record.is_hidden),
-            is_template=survey.get('is_template', record.is_template),
-            generate_dashboard=survey.get('generate_dashboard', record.generate_dashboard),
-        )
+        update_fields = {
+            'form_json': survey.get('form_json', record.form_json),
+            'updated_date': datetime.utcnow(),
+            'updated_by': survey.get('updated_by', record.updated_by),
+            'name': survey.get('name', record.name),
+            'is_hidden': survey.get('is_hidden', record.is_hidden),
+            'is_template': survey.get('is_template', record.is_template),
+            'generate_dashboard': survey.get('generate_dashboard', record.generate_dashboard),
+        }
         query.update(update_fields)
         db.session.commit()
         return record

@@ -208,11 +208,11 @@ class Comment(BaseModel):
     def update(cls, submission_id, comment: CommentSchema, session=None) -> Comment:
         """Update comment text."""
         query = Comment.query.filter_by(id=comment.get('id'), submission_id=submission_id)
-        update_fields = dict(
-            text=comment.get('text', None),
-            updated_by=comment.get('participant_id', None),
-            updated_date=datetime.utcnow(),
-        )
+        update_fields = {
+            'text': comment.get('text', None),
+            'updated_by': comment.get('participant_id', None),
+            'updated_date': datetime.utcnow(),
+        }
 
         query.update(update_fields)
         if session is None:

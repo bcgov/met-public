@@ -13,7 +13,7 @@ from met_api.services.email_verification_service import EmailVerificationService
 from met_api.utils import notification
 from met_cron.utils.subscription_checker import CheckSubscription
 
-from met_cron.models.db import db
+from met_api.models.db import db
 
 
 class EmailService:  # pylint: disable=too-few-public-methods
