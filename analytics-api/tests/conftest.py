@@ -18,7 +18,7 @@ from sqlalchemy import event, text
 from analytics_api import create_app
 from analytics_api.models import db as _db
 from flask_migrate import Migrate, upgrade
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 
 
 @pytest.fixture(scope='session')
@@ -82,7 +82,7 @@ def session(app, db):  # pylint: disable=redefined-outer-name, invalid-name
         conn = db.engine.connect()
         txn = conn.begin()
 
-        sess = scoped_session(_db.session)
+        sess = db.scoped_session(sessionmaker(bind=conn, binds={}))
 
         # establish  a SAVEPOINT just before beginning the test
         # (http://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#using-savepoint)
