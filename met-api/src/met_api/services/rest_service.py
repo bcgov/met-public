@@ -118,9 +118,9 @@ class RestService:
             raise ValueError('Missing required parameters')
 
         token_url = issuer_url + '/protocol/openid-connect/token'
-        # pylint: disable=missing-timeout
         auth_response = requests.post(token_url, auth=(kc_service_id, kc_secret), headers={
-            'Content-Type': ContentType.FORM_URL_ENCODED.value}, data='grant_type=client_credentials')
+            'Content-Type': ContentType.FORM_URL_ENCODED.value}, data='grant_type=client_credentials',
+            timeout=None)
         auth_response.raise_for_status()
         return auth_response.json().get('access_token')
 
@@ -140,8 +140,7 @@ class RestService:
             'client_id': client_id
         }
 
-        # pylint: disable=missing-timeout
-        auth_response = requests.post(token_url, headers=headers, data=data)
+        auth_response = requests.post(token_url, headers=headers, data=data, timeout=None)
         auth_response.raise_for_status()
 
         return auth_response.json().get('access_token')

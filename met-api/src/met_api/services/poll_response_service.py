@@ -1,6 +1,7 @@
 """Service for Poll Response management."""
 
 from http import HTTPStatus
+from typing import Callable
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from met_api.exceptions.business_exception import BusinessException
@@ -10,6 +11,8 @@ from met_api.models import Poll, PollAnswer, db
 from met_api.services import authorization
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.roles import Role
+
+func: Callable
 
 
 class PollResponseService:
@@ -64,7 +67,6 @@ class PollResponseService:
             engagement_id=engagement_id,
         )
 
-    # pylint: disable=no-member
     @staticmethod
     def get_poll_details_with_response_counts(poll_id):
         """
@@ -84,7 +86,6 @@ class PollResponseService:
             db.session.query(
                 PollAnswer.id.label('answer_id'),
                 PollAnswer.answer_text,
-                # pylint: disable=not-callable
                 func.count(PollResponseModel.selected_answer_id).label('response_count')
             )
             .select_from(PollAnswer)

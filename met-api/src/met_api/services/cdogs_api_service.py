@@ -54,8 +54,7 @@ class CdogsApiService:
 
     @staticmethod
     def _post_generate_document(json_request_body, headers, url):
-        # pylint: disable=missing-timeout
-        response = requests.post(url, data=json_request_body, headers=headers)
+        response = requests.post(url, data=json_request_body, headers=headers, timeout=None)
         return response
 
     def upload_template(self, template_file_path):
@@ -95,8 +94,7 @@ class CdogsApiService:
 
     @staticmethod
     def _post_upload_template(headers, url, template):
-        # pylint: disable=missing-timeout
-        response = requests.post(url, headers=headers, files=template)
+        response = requests.post(url, headers=headers, files=template, timeout=None)
         return response
 
     def check_template_cached(self, template_hash_code: str):
@@ -107,8 +105,7 @@ class CdogsApiService:
 
         url = f'{self.base_url}/api/v2/template/{template_hash_code}'
 
-        # pylint: disable=missing-timeout
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=None)
         return response.status_code == HTTPStatus.OK
 
     @staticmethod
@@ -120,14 +117,14 @@ class CdogsApiService:
         basic_auth_encoded = base64.b64encode(
             bytes(f'{service_client}:{service_client_secret}', 'utf-8')).decode('utf-8')
         data = 'grant_type=client_credentials'
-        # pylint: disable=missing-timeout
         response = requests.post(
             token_url,
             data=data,
             headers={
                 'Authorization': f'Basic {basic_auth_encoded}',
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            },
+            timeout=None
         )
 
         response_json = response.json()
