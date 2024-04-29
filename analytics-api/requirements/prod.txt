@@ -7,11 +7,11 @@ Flask-Moment
 Flask-SQLAlchemy
 SQLAlchemy-Continuum
 flask-restx
-flask-marshmallow==0.11.0
+flask-marshmallow==1.0.0
 flask-jwt-oidc
 python-dotenv
 psycopg2-binary
-marshmallow-sqlalchemy==0.25.0
+marshmallow-sqlalchemy==1.0.0
 marshmallow_enum
 jsonschema
 requests
@@ -26,7 +26,7 @@ sqlalchemy-utils
 Flask-Caching
 asyncio-nats-client
 asyncio-nats-streaming
-sqlalchemy<1.4
+sqlalchemy==1.4.52
 secure
 python-dotenv
 aws-requests-auth
