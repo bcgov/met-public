@@ -44,13 +44,15 @@ class EmailChesNotify(EmailBaseService):  # pylint: disable=too-few-public-metho
         try:
             ches_token_response = requests.post(ches_token_url,
                                                 data=token_request_data,
-                                                headers=token_request_headers)
+                                                headers=token_request_headers,
+                                                timeout=None)
             ches_api_token = ches_token_response.json().get('access_token')
             email_request_headers = \
                 {'Content-Type': 'application/json', 'Authorization': f'Bearer {ches_api_token}'}
             email_response = requests.post(ches_email_endpoint,
                                            headers=email_request_headers,
-                                           data=json.dumps(ches_payload))
+                                           data=json.dumps(ches_payload),
+                                           timeout=None)
             print(email_response)
         except Exception as e:  # noqa: B902
             print(e)  # log and continue

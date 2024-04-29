@@ -32,4 +32,6 @@ class SmsNotification(Resource):
         """Send notification."""
         # sms_payload = request.get_json(force=True)
         # get_sms_service().send(sms_payload)
+        # TODO: Implement post method in subclasses.
+        # pylint: disable=W0719
         raise Exception('Not implemented')

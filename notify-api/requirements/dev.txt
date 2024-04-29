@@ -2,7 +2,7 @@
 -r prod.txt
 
 coverage
-pylint==v2.13.8
+pylint==3.1.0
 pylint-flask
 pytest
 pytest-cov
