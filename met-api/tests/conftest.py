@@ -19,6 +19,7 @@ import copy
 import pytest
 from flask_migrate import Migrate, upgrade
 from sqlalchemy import event, text
+import sqlalchemy.orm
 
 from met_api import create_app, setup_jwt_manager
 from met_api.auth import jwt as _jwt
@@ -108,8 +109,8 @@ def session(app, db):  # pylint: disable=redefined-outer-name, invalid-name
         conn = db.engine.connect()
         txn = conn.begin()
 
-        options = dict(bind=conn, binds={})
-        sess = db._make_scoped_session(options=options)
+        session_factory = sqlalchemy.orm.sessionmaker(bind=conn)
+        sess = sqlalchemy.orm.scoped_session(session_factory)
 
         # establish  a SAVEPOINT just before beginning the test
         # (http://docs.sqlalchemy.org/en/latest/orm/session_transaction.html#using-savepoint)
