@@ -49,12 +49,10 @@ def check_auth(**kwargs):
         return
     membership_eligible_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name
                                  } & required_roles
-    if membership_eligible_roles:
-        # check if the user is a member
-        has_valid_team_access = _has_team_membership(kwargs, user_from_context,
-                                                      membership_eligible_roles)
-        if has_valid_team_access:
-            return
+    # check if the user is a member of a passed engagement
+    if membership_eligible_roles and _has_team_membership(kwargs, user_from_context,
+                                                      membership_eligible_roles):
+        return
 
     abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 
