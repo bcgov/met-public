@@ -395,15 +395,7 @@ class TestJwtClaims(dict, Enum):
         'email': 'staff@gov.bc.ca',
         'identity_provider': LoginSource.IDIR.value,
         'client_roles': [
-            'staff',
-            'view_engagement',
-            'create_survey',
-            'view_users',
-            'create_admin_user',
-            'edit_members',
-            'toggle_user_status',
-            'update_user_group',
-            'create_tenant'
+            'super_admin'
         ]
     }
 
