@@ -1,3 +1,8 @@
+## April 30, 2024
+
+- **Feature** Add Super Admin role [🎟️ DESENG-557](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-557)
+  - Added unit tests for the new role, and updated an existing test related to cross-tenant access.
+
 ## April 22, 2024
 
 - **Task** Openshift - Update the buildconfig for the MET-cron job runner [🎟️ DESENG-559](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-559)
