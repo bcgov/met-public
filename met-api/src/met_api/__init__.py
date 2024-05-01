@@ -153,7 +153,11 @@ def setup_jwt_manager(app_context, jwt_manager):
             app_context.logger.warning('Role info from keycloak is not a list!')
             break
 
-        keycloak_forwarded_roles = [Role.CREATE_TENANT.value]
+        # Any roles from keycloak that should be available in the API.
+        # For now, we only want to know if a user is a super admin;
+        # everything else is handled in-app by the UserGroupMembershipService...
+        keycloak_forwarded_roles = [Role.SUPER_ADMIN.value]
+        # ... so any extraneous roles are discarded
         user_roles = list(set(roles_from_token).intersection(keycloak_forwarded_roles))
 
         # Retrieve user by external ID from token info
@@ -166,10 +170,10 @@ def setup_jwt_manager(app_context, jwt_manager):
             if additional_user_roles:
                 # Add additional user roles to user_roles list
                 user_roles.extend(additional_user_roles)
-            app_context.logger.warning('Unable to find a role for the user within the tenant.')
         else:
             app_context.logger.warning('Unable to find an active user within the tenant.')
-
+        if not user_roles:
+            app_context.logger.warning('Unable to find a role for the user within the tenant.')
         return user_roles
 
     app_context.config['JWT_ROLE_CALLBACK'] = get_roles
