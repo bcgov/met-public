@@ -83,7 +83,7 @@ export const AppConfig = {
         url: KC_URL || '',
         clientId: KC_CLIENT || '',
         realm: KC_REALM || '',
-        adminRole: KC_ADMIN_ROLE || 'admin',
+        adminRole: KC_ADMIN_ROLE || 'super_admin',
     },
     tenant: {
         isSingleTenantEnvironment: IS_SINGLE_TENANT_ENVIRONMENT,
