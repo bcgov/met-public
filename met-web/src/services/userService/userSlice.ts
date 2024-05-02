@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserDetail, UserState } from './types';
+import { USER_ROLES } from './constants';
+import { AppConfig } from 'config';
 
 const initialState: UserState = {
     bearerToken: '',
@@ -30,6 +32,13 @@ export const userSlice = createSlice({
             state.bearerToken = action.payload;
         },
         userRoles: (state, action: PayloadAction<string[]>) => {
+            if (action.payload.includes(AppConfig.keycloak.adminRole)) {
+                // If they're a super admin, add everything to the `roles` array.
+                // This is because most UI elements do a simple `roles.includes`
+                // check to determine when they should be invisible or disabled.
+                state.roles = Object.values(USER_ROLES);
+                return;
+            }
             state.roles = action.payload;
         },
         userDetails: (state, action: PayloadAction<UserDetail>) => {

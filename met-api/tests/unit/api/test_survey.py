@@ -85,8 +85,8 @@ def test_create_survey_with_tenant(client, jwt, session,
     survey_tenant_id = rv.json.get('tenant_id')
     assert survey_tenant_id == str(tenant.id)
 
-    # Create a tenant
-    tenant_data = TestTenantInfo.tenant2
+    # Create a tenant, specifying a custom shortname to avoid collisions
+    tenant_data = {**TestTenantInfo.tenant2, 'short_name': 'TENANT2'}
     factory_tenant_model(tenant_data)
     tenant2_short_name = tenant_data['short_name']
     tenant_2 = TenantModel.find_by_short_name(tenant2_short_name)
