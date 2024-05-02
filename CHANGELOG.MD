@@ -7,6 +7,8 @@
   - The role can be only be assigned through the single sign-on (SSO) service.
   - This overrides any other permissions set, e.g, a Viewer user who gets the super_admin role
     will have all the permissions of a normal super admin.
+  - Change the React app's admin role to `SUPER_ADMIN` (previously `CREATE_TENANT`).
+  - Force all UI elements to be enabled for the `SUPER_ADMIN` role.
 
 ## April 22, 2024
 

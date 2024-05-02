@@ -1,4 +1,5 @@
 export const USER_ROLES = {
+    SUPER_ADMIN: 'super_admin',
     PUBLIC_USER: 'public_user',
     ANONYMOUS_USER: 'anonymous_user',
     CREATE_TENANT: 'create_tenant',
