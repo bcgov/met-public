@@ -7,12 +7,10 @@ from http import HTTPStatus
 from flask import current_app, g
 from flask_restx import abort
 
-from met_api.config import Config
 from met_api.constants.membership_type import MembershipType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
-from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.enums import MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.user_context import UserContext, user_context

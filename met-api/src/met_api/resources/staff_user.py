@@ -27,7 +27,6 @@ from met_api.schemas.staff_user import StaffUserSchema
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
-from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.roles import Role
 from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
