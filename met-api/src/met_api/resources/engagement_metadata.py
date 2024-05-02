@@ -23,11 +23,12 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
 from marshmallow import ValidationError
-from met_api.auth import auth, auth_methods
+from met_api.auth import auth_methods
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from met_api.services.engagement_metadata_service import EngagementMetadataService
 from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 EDIT_ENGAGEMENT_ROLES = [Role.EDIT_ENGAGEMENT.value]
@@ -74,7 +75,7 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.marshal_list_with(metadata_return_model)
-    @auth.has_one_of_roles(VIEW_ENGAGEMENT_ROLES)
+    @require_role(VIEW_ENGAGEMENT_ROLES)
     def get(engagement_id):
         """Fetch engagement metadata entries by engagement id."""
         return metadata_service.get_by_engagement(engagement_id)
@@ -85,7 +86,7 @@ class EngagementMetadata(Resource):
     @API.expect(metadata_create_model)
     # type: ignore
     @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)
-    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    @require_role(EDIT_ENGAGEMENT_ROLES)
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
         authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
@@ -106,7 +107,7 @@ class EngagementMetadata(Resource):
     @API.doc(security='apikey')
     @API.expect(metadata_bulk_update_model, validate=True)
     @API.marshal_list_with(metadata_return_model)
-    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    @require_role(EDIT_ENGAGEMENT_ROLES)
     def patch(engagement_id):
         """Update the values of existing metadata entries for an engagement."""
         authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
@@ -130,7 +131,7 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(VIEW_ENGAGEMENT_ROLES)
+    @require_role(VIEW_ENGAGEMENT_ROLES)
     def get(engagement_id, metadata_id):
         """Fetch an engagement metadata entry by id."""
         authorization.check_auth(one_of_roles=VIEW_ENGAGEMENT_ROLES,
@@ -149,7 +150,7 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    @require_role(EDIT_ENGAGEMENT_ROLES)
     @API.expect(metadata_update_model)
     def patch(engagement_id, metadata_id):
         """Update the values of an existing metadata entry for an engagement."""
@@ -174,7 +175,7 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.has_one_of_roles(EDIT_ENGAGEMENT_ROLES)
+    @require_role(EDIT_ENGAGEMENT_ROLES)
     def delete(engagement_id, metadata_id):
         """Delete an existing metadata entry for an engagement."""
         try:

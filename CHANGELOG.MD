@@ -1,6 +1,12 @@
 ## April 30, 2024
 
 - **Feature** Add Super Admin role [🎟️ DESENG-557](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-557)
+  - Added a new role, `SUPER_ADMIN`, to MET.
+  - The `SUPER_ADMIN` role has the highest level of access in the MET application.
+  - The `SUPER_ADMIN` role can perform all actions in MET, including actions in other tenants.
+  - The role can be only be assigned through the single sign-on (SSO) service.
+  - This overrides any other permissions set, e.g, a Viewer user who gets the super_admin role
+    will have all the permissions of a normal super admin.
   - Change the React app's admin role to `SUPER_ADMIN` (previously `CREATE_TENANT`).
   - Force all UI elements to be enabled for the `SUPER_ADMIN` role.
 
