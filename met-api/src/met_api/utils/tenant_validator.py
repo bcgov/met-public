@@ -41,10 +41,10 @@ def require_role(required_roles: List[str] | str) -> callable:
 
     def decorator(func: callable) -> callable:
         @wraps(func)
-        @_jwt.has_one_of_roles({Role.SUPER_ADMIN.value,}.union(required_roles))
+        @_jwt.has_one_of_roles({Role.SUPER_ADMIN.value}.union(required_roles))
         def wrapper(*args, **kwargs) -> callable:
             return func(*args, **kwargs)
-        
+
         return wrapper
 
     return decorator

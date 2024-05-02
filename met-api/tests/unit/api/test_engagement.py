@@ -130,6 +130,7 @@ def test_add_engagements_invalid(client, jwt, session, engagement_info,
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
+
 # pylint:disable=unused-argument
 def test_creating_engagments_cross_tenant(client, jwt, session, setup_admin_user_and_claims,
                                           setup_super_admin_user_and_claims):
@@ -156,19 +157,19 @@ def test_creating_engagments_cross_tenant(client, jwt, session, setup_admin_user
     # Assert that the staff admin user can create engagements in their tenant,
     # but not in other tenants
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                        headers=headers, content_type=ContentType.JSON.value)
+                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     headers[TENANT_ID_HEADER] = tenant_2.short_name
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                        headers=headers, content_type=ContentType.JSON.value)
+                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
     # Assert that the super admin user can create engagements in any tenant
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                        headers=super_headers, content_type=ContentType.JSON.value)
+                     headers=super_headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     super_headers[TENANT_ID_HEADER] = tenant_2.short_name
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
-                        headers=super_headers, content_type=ContentType.JSON.value)
+                     headers=super_headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
 

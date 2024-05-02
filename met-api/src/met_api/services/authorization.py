@@ -36,7 +36,7 @@ def check_auth(**kwargs):
         abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 
     if Role.SUPER_ADMIN.value in user_roles:
-        return # Let Super Admins do anything they want :3
+        return  # Let Super Admins do anything they want :3
 
     required_roles = set(kwargs.get('one_of_roles', []))
     has_valid_roles = set(user_roles) & required_roles
@@ -50,7 +50,7 @@ def check_auth(**kwargs):
                                  } & required_roles
     # check if the user is a member of a passed engagement
     if membership_eligible_roles and _has_team_membership(kwargs, user_from_context,
-                                                      membership_eligible_roles):
+                                                          membership_eligible_roles):
         return
 
     abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)

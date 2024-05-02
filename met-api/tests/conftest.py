@@ -175,6 +175,7 @@ def auth_mock(monkeypatch):
     """Mock check_auth."""
     pass
 
+
 @pytest.fixture
 def setup_super_admin_user_and_claims(jwt):
     """Set up a user with the super-admin role."""
@@ -185,6 +186,7 @@ def setup_super_admin_user_and_claims(jwt):
     claims['sub'] = str(user.external_id)
 
     return user, claims
+
 
 # Fixture for setting up user and claims for an admin user
 @pytest.fixture
