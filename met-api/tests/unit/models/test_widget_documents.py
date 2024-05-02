@@ -78,7 +78,7 @@ def test_documents_by_widget_id(session):
     session.add(document3)
     session.commit()
     expected_docs = WidgetDocumentService.get_documents_by_widget_id(widget.id)
-    assert(all(expected_docs[i].id <= expected_docs[i + 1].id for i in range(len(expected_docs) - 1)))
+    assert (all(expected_docs[i].id <= expected_docs[i + 1].id for i in range(len(expected_docs) - 1)))
 
 
 def test_edit_widget_document(session):

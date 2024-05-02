@@ -66,11 +66,12 @@ class RestService:
         except (ReqConnectionError, ConnectTimeout) as exc:
             current_app.logger.error('---Error on POST---')
             current_app.logger.error(exc)
-            raise Exception(exc) from exc
+            raise ValueError('Error on POST') from exc
         except HTTPError as exc:
             current_app.logger.error(f"HTTPError on POST with status code {response.status_code if response else ''}")
             if response and response.status_code >= 500:
-                raise Exception(exc) from exc
+                raise ValueError(
+                    f"HTTPError on POST with status code {response.status_code if response else ''}") from exc
             raise exc
         finally:
             RestService.__log_response(response)
@@ -118,7 +119,8 @@ class RestService:
 
         token_url = issuer_url + '/protocol/openid-connect/token'
         auth_response = requests.post(token_url, auth=(kc_service_id, kc_secret), headers={
-            'Content-Type': ContentType.FORM_URL_ENCODED.value}, data='grant_type=client_credentials')
+            'Content-Type': ContentType.FORM_URL_ENCODED.value}, data='grant_type=client_credentials',
+            timeout=None)
         auth_response.raise_for_status()
         return auth_response.json().get('access_token')
 
@@ -138,7 +140,7 @@ class RestService:
             'client_id': client_id
         }
 
-        auth_response = requests.post(token_url, headers=headers, data=data)
+        auth_response = requests.post(token_url, headers=headers, data=data, timeout=None)
         auth_response.raise_for_status()
 
         return auth_response.json().get('access_token')
