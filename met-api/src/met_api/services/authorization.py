@@ -4,10 +4,10 @@ This module is to handle authorization related queries.
 """
 from http import HTTPStatus
 
-from met_api.config import Config
 from flask import current_app, g
 from flask_restx import abort
 
+from met_api.config import Config
 from met_api.constants.membership_type import MembershipType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
@@ -16,6 +16,7 @@ from met_api.services.user_group_membership_service import UserGroupMembershipSe
 from met_api.utils.enums import MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.user_context import UserContext, user_context
+
 
 UNAUTHORIZED_MSG = 'You are not authorized to perform this action!'
 
@@ -31,7 +32,7 @@ def check_auth(**kwargs):
         abort(HTTPStatus.FORBIDDEN, 'User not found')
 
     # Retrieve tenant specific user roles from met-db
-    user_roles = current_app.config['JWT_ROLE_CALLBACK'](user_from_context._token_info)
+    user_roles = current_app.config['JWT_ROLE_CALLBACK'](user_from_context.token_info)
 
     if not user_roles:
         abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)

@@ -6,14 +6,14 @@ from __future__ import annotations
 
 from typing import Optional
 
-from met_api.utils.roles import Role
-from met_api.utils.token_info import TokenInfo
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
 from met_api.utils.enums import UserStatus
+from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
 from .base_model import BaseModel
 from .db import db
