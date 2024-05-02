@@ -6,11 +6,11 @@ Flask-Script==2.0.5
 Flask-Moment
 Flask-SQLAlchemy
 flask-restx
-flask-marshmallow==0.11.0
+flask-marshmallow==1.0.0
 flask-jwt-oidc
 python-dotenv
 psycopg2-binary
-marshmallow-sqlalchemy==0.25.0
+marshmallow-sqlalchemy==1.0.0
 jsonschema
 requests
 itsdangerous
@@ -19,7 +19,7 @@ jaeger-client
 Werkzeug<3
 sqlalchemy-utils
 Flask-Caching
-sqlalchemy<1.4
+sqlalchemy==1.4.52
 secure
 python-dotenv
 requests

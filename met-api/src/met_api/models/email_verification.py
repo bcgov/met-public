@@ -58,11 +58,11 @@ class EmailVerification(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def update(cls, email_verification: EmailVerificationSchema, session=None) -> EmailVerification:
         """Update an email verification."""
-        update_fields = dict(
-            is_active=email_verification.get('is_active', None),
-            updated_date=datetime.utcnow(),
-            updated_by=email_verification.get('updated_by', None),
-        )
+        update_fields = {
+            'is_active': email_verification.get('is_active', None),
+            'updated_date': datetime.utcnow(),
+            'updated_by': email_verification.get('updated_by', None),
+        }
         email_verification_id = email_verification.get('id', None)
         query = EmailVerification.query.filter_by(id=email_verification_id)
         record = query.first()

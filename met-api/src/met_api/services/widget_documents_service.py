@@ -61,7 +61,7 @@ class WidgetDocumentService:
     @staticmethod
     def create_document(widget_id, doc_details):
         """Create documents for the widget."""
-        if parent_id := (doc_details.get('parent_document_id', None)):
+        if parent_id := doc_details.get('parent_document_id', None):
             WidgetDocumentService._validate_parent_type(parent_id)
 
         doc = WidgetDocumentService._create_document_from_dict(doc_details, parent_id, widget_id)

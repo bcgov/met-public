@@ -1,5 +1,9 @@
 ## April 30, 2024
 
+- **Task** Dagster ETL error [DESENG-599](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-599)
+  - Upgrading the version of python to 3.12 for dagster user code
+  - Upgrading the dependencies to support the version of python.
+  - Fixing a bug on survey etl service.
 - **Feature** Add Super Admin role [🎟️ DESENG-557](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-557)
   - Added a new role, `SUPER_ADMIN`, to MET.
   - The `SUPER_ADMIN` role has the highest level of access in the MET application.
@@ -10,6 +14,13 @@
   - Change the React app's admin role to `SUPER_ADMIN` (previously `CREATE_TENANT`).
   - Force all UI elements to be enabled for the `SUPER_ADMIN` role.
   - Added unit tests for the new role, and updated an existing test related to cross-tenant access.
+
+## April 29, 2024
+
+- **Task** Upgrade python to 3.12 [DESENG-466](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-466)
+  - Upgrading the version of python to 3.12
+  - Upgrading the dependencies to support the version of python.
+  - Modify code as needed if the newer version does not support the former.
 
 ## April 22, 2024
 

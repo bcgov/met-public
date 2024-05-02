@@ -75,7 +75,7 @@ def test_add_engagement_metadata_invalid_engagement(client, jwt, session):
     """Test that metadata cannot be added to an invalid engagement."""
     taxon, engagement, _, headers = factory_metadata_requirements(jwt)
     data = {'taxon_id': taxon.id, 'value': fake.sentence()}
-    response = client.post(f'/api/engagements/{engagement.id+1}/metadata',
+    response = client.post(f'/api/engagements/{engagement.id + 1}/metadata',
                            headers=headers,
                            data=json.dumps(data),
                            content_type=ContentType.JSON.value)

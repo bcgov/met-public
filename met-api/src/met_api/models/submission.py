@@ -100,11 +100,11 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def update(cls, submission: SubmissionSchema, session=None) -> Submission:
         """Update submission."""
-        update_fields = dict(
-            submission_json=submission.get('submission_json', None),
-            updated_date=datetime.utcnow(),
-            updated_by=submission.get('updated_by', None),
-        )
+        update_fields = {
+            'submission_json': submission.get('submission_json', None),
+            'updated_date': datetime.utcnow(),
+            'updated_by': submission.get('updated_by', None),
+        }
         submission_id = submission.get('id', None)
         query = Submission.query.filter_by(id=submission_id)
         record = query.first()
@@ -132,18 +132,18 @@ class Submission(BaseModel):  # pylint: disable=too-few-public-methods
         if not query.first():
             return None
 
-        update_fields = dict(
-            comment_status_id=status_id,
-            has_personal_info=has_personal_info,
-            has_profanity=has_profanity,
-            has_threat=has_threat,
-            rejected_reason_other=rejected_reason_other,
-            notify_email=notify_email,
-            reviewed_by=comment.get('reviewed_by'),
-            review_date=datetime.utcnow(),
-            updated_by=comment.get('participant_id'),
-            updated_date=datetime.utcnow(),
-        )
+        update_fields = {
+            'comment_status_id': status_id,
+            'has_personal_info': has_personal_info,
+            'has_profanity': has_profanity,
+            'has_threat': has_threat,
+            'rejected_reason_other': rejected_reason_other,
+            'notify_email': notify_email,
+            'reviewed_by': comment.get('reviewed_by'),
+            'review_date': datetime.utcnow(),
+            'updated_by': comment.get('participant_id'),
+            'updated_date': datetime.utcnow(),
+        }
 
         query.update(update_fields)
         if session is None:

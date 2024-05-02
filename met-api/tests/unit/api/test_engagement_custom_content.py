@@ -74,7 +74,8 @@ def test_engagement_custom_content(client, jwt, session, engagement_content_info
 
     data = {
         'custom_text_content': 'Content Sample',
-        'custom_json_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\"type\":\"unstyled\",\"depth\":0,\
+        'custom_json_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
+        \"type\":\"unstyled\",\"depth\":0,\
         \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'engagement_id': engagement.id
     }

@@ -32,7 +32,7 @@ env:
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
-  met-cron-cd:
+  met-etl-cd:
     runs-on: ubuntu-20.04
 
     if: github.repository == 'bcgov/met-public'

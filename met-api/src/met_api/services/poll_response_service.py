@@ -1,6 +1,7 @@
 """Service for Poll Response management."""
 
 from http import HTTPStatus
+from typing import Callable
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 from met_api.exceptions.business_exception import BusinessException
@@ -10,6 +11,8 @@ from met_api.models import Poll, PollAnswer, db
 from met_api.services import authorization
 from met_api.constants.membership_type import MembershipType
 from met_api.utils.roles import Role
+
+func: Callable
 
 
 class PollResponseService:

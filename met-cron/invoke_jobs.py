@@ -27,8 +27,8 @@ setup_logging(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'logging.
 
 
 def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
-    """Return a configured Flask App using the Factory method."""
-    from met_cron.models import db, ma
+    """Return a configured Flask App using the Factory method.""" 
+    from met_api.models import db
 
     app = Flask(__name__)
     print(f'>>>>> Creating app in run_mode: {run_mode}')
@@ -39,7 +39,6 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'production')):
     # Configure Sentry
     app.logger.info(f'<<<< Starting Jobs >>>>')
     db.init_app(app)
-    ma.init_app(app)
 
     register_shellcontext(app)
 
