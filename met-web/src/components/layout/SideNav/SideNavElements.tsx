@@ -45,4 +45,11 @@ export const Routes: Route[] = [
         authenticated: true,
         allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
     },
+    {
+        name: 'Tenant Admin',
+        path: '/tenantadmin',
+        base: 'tenantadmin',
+        authenticated: true,
+        allowedRoles: [USER_ROLES.SUPER_ADMIN],
+    },
 ];
