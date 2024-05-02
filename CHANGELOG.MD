@@ -9,6 +9,7 @@
     will have all the permissions of a normal super admin.
   - Change the React app's admin role to `SUPER_ADMIN` (previously `CREATE_TENANT`).
   - Force all UI elements to be enabled for the `SUPER_ADMIN` role.
+  - Added unit tests for the new role, and updated an existing test related to cross-tenant access.
 
 ## April 22, 2024
 

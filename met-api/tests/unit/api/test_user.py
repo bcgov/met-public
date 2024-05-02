@@ -30,16 +30,16 @@ from met_api.services.staff_user_membership_service import StaffUserMembershipSe
 from met_api.services.staff_user_service import StaffUserService
 from met_api.utils.constants import CompositeRoles
 from met_api.utils.enums import CompositeRoleNames, ContentType, UserStatus
-from tests.utilities.factory_scenarios import TestJwtClaims, TestUserInfo
+from tests.utilities.factory_scenarios import TestJwtClaims, TestTenantInfo, TestUserInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_staff_user_model, factory_user_group_membership_model, set_global_tenant)
+    factory_auth_header, factory_staff_user_model, factory_tenant_model, factory_user_group_membership_model, set_global_tenant)
 
 
 @pytest.mark.parametrize(
     'side_effect, expected_status',
     [
-        (KeyError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
-        (ValueError('Test error'), HTTPStatus.INTERNAL_SERVER_ERROR),
+        (KeyError('Test error'), HTTPStatus.BAD_REQUEST),
+        (ValueError('Test error'), HTTPStatus.BAD_REQUEST),
     ],
 )
 def test_create_staff_user(client, jwt, session, side_effect, expected_status,
@@ -59,20 +59,33 @@ def test_create_staff_user(client, jwt, session, side_effect, expected_status,
     assert rv.status_code == expected_status
 
 
-def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims):
-    """Assert that a user can be POSTed."""
+def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims, setup_super_admin_user_and_claims):
+    """Assert that users can be fetched as a list."""
     set_global_tenant()
     staff_1 = dict(TestUserInfo.user_staff_1)
     staff_2 = dict(TestUserInfo.user_staff_1)
+    staff_other_tenant = dict(TestUserInfo.user_staff_2)
+    staff_other_tenant['tenant_id'] = factory_tenant_model(TestTenantInfo.tenant2).id
     factory_staff_user_model(user_info=staff_1)
     factory_staff_user_model(user_info=staff_2)
+    factory_staff_user_model(user_info=staff_other_tenant)
 
-    user, claims = setup_admin_user_and_claims
+    # Check that staff admins can see users within the same tenant
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    assert rv.json.get('total') == 4
-    assert len(rv.json.get('items')) == 4
+    assert rv.json.get('total') == 5
+    assert len(rv.json.get('items')) == 5
+
+    # Check that MET admins (super admins) can see all users, even across tenants
+    _, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('total') == 6
+    # There is one more user, from the other tenant
+    assert len(rv.json.get('items')) == 6
 
 
 @pytest.mark.parametrize(
@@ -167,6 +180,8 @@ def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
     """Assert that a user can be added to the team member role across tenants."""
     set_global_tenant(tenant_id=1)
     user = factory_staff_user_model()
+    # users can't modify their own roles, so we need a second user
+    other_user = factory_staff_user_model()
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
 
     claims = copy.deepcopy(TestJwtClaims.staff_admin_role.value)
@@ -174,7 +189,7 @@ def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
     claims['tenant_id'] = 2
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
+        f'/api/user/{other_user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
@@ -186,13 +201,13 @@ def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
     claims['tenant_id'] = 2
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(
-        f'/api/user/{user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
+        f'/api/user/{other_user.external_id}/roles?role={CompositeRoleNames.TEAM_MEMBER.value}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
     # assert MET admin can do cross tenant operation
     # TODO Needs to be modified once the actual role for super admin is finalized
-    # assert rv.status_code == HTTPStatus.OK
+    assert rv.status_code == HTTPStatus.OK
 
 
 def test_toggle_user_active_status(client, jwt, session, setup_admin_user_and_claims):
