@@ -1,3 +1,8 @@
+## May 2, 2024
+
+- **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
+  - The page will be updated to list and manage tenants in upcoming tickets.
+
 ## April 30, 2024
 
 - **Task** Dagster ETL error [DESENG-599](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-599)
