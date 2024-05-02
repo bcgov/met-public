@@ -2,6 +2,7 @@ import { setEngagements } from './engagementSlice';
 import http from 'apiManager/httpRequestHandler';
 import { AnyAction, Dispatch } from 'redux';
 import { Engagement } from 'models/engagement';
+import { TranslationSummary } from 'models/translation';
 import { PatchEngagementRequest, PostEngagementRequest, PutEngagementRequest } from './types';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
@@ -50,6 +51,18 @@ export const getEngagement = async (engagementId: number): Promise<Engagement> =
     }
     return Promise.reject('Failed to fetch engagement');
 };
+
+export const getAvailableTranslations = async (engagementId: number): Promise<Page<TranslationSummary>> => {
+    const url = replaceUrl(Endpoints.EngagementTranslations.GET_SUMMARY, 'engagement_id', String(engagementId));
+    if (!engagementId || isNaN(Number(engagementId))) {
+        throw new Error('Invalid Engagement Id ' + engagementId);
+    }
+    const response = await http.GetRequest<Page<TranslationSummary>>(url);
+    if (response.data) {
+        return response.data;
+    }
+    throw new Error('Failed to fetch engagement translation summary.')
+}
 
 export const postEngagement = async (data: PostEngagementRequest): Promise<Engagement> => {
     const response = await http.PostRequest<Engagement>(Endpoints.Engagement.CREATE, data);

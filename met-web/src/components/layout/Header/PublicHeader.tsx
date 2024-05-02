@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +12,7 @@ import { useAppSelector, useAppTranslation } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
+import { LanguageContext } from 'components/common/LanguageContext';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -19,6 +20,7 @@ const PublicHeader = () => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
+    const { engagementViewMounted } = useContext(LanguageContext);
 
     const logoUrl = translate('common.logoUrl');
     const headerTitle = translate('header.title');
@@ -89,7 +91,7 @@ const PublicHeader = () => {
                         </Button>
                     </When>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <LanguageSelector />
+                        {engagementViewMounted && <LanguageSelector />}
                     </Box>
                 </Toolbar>
                 <EnvironmentBanner />

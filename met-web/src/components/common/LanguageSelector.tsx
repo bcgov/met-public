@@ -1,11 +1,12 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useContext } from 'react';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { LanguageState, saveLanguage, loadingLanguage } from 'reduxSlices/languageSlice';
 import { MetLabel } from 'components/common';
 import { Palette } from 'styles/Theme';
 import { Grid, MenuItem, Select } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Language, LANGUAGE_NAME } from 'constants/language';
+import { Languages, LANGUAGE_NAMES } from 'constants/language';
+import { LanguageContext } from './LanguageContext';
 
 interface LanguageDropDownItem {
     value: string;
@@ -17,6 +18,11 @@ const LanguageSelector = () => {
     const language: LanguageState = useAppSelector((state) => state.language);
     const navigate = useNavigate();
     const location = useLocation();
+    const { engagementViewMounted } = useContext(LanguageContext);
+
+    useEffect(() => {
+        console.log('check state', engagementViewMounted);
+    }, [engagementViewMounted]);
 
     const handleChangeLanguage = (selectedLanguage: string) => {
         if (!selectedLanguage) {
@@ -51,11 +57,11 @@ const LanguageSelector = () => {
     };
 
     const ITEMS: LanguageDropDownItem[] = useMemo(() => {
-        return Object.values(Language).map((lang) => ({
+        return Object.values(Languages).map((lang) => ({
             value: lang,
-            label: LANGUAGE_NAME[lang],
+            label: LANGUAGE_NAMES[lang],
         }));
-    }, [LANGUAGE_NAME]);
+    }, [LANGUAGE_NAMES]);
 
     useEffect(() => {
         // Update language dropdown when the language ID in the URL changes

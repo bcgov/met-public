@@ -7,6 +7,9 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/engagements/`,
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
+    EngagementTranslations: {
+        GET_SUMMARY: `${AppConfig.apiUrl}/engagements/engagement_id/translations/list`,
+    },
     EngagementMetadata: {
         GET_BY_ENG: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,
         GET_BY_KEY: `${AppConfig.apiUrl}/engagements/engagement_id/tenant/tenant_id/key`,

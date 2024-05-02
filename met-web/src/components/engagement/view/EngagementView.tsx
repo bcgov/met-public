@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, useMediaQuery, Theme } from '@mui/material';
 import { ActionContext } from './ActionContext';
+import { LanguageContext } from 'components/common/LanguageContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
@@ -21,6 +22,9 @@ export const EngagementView = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
+    const { engagementViewMounted, setEngagementViewMounted, fetchAvailableEngagementTranslations } =
+        useContext(LanguageContext);
+    const [test, setTest] = useState(false);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
@@ -28,6 +32,16 @@ export const EngagementView = () => {
     window.history.replaceState({}, document.title);
 
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
+    useEffect(() => {
+        setEngagementViewMounted(true);
+        console.log('saved', savedEngagement);
+        // fetchAvailableEngagementTranslations();
+
+        return () => {
+            setEngagementViewMounted(false);
+        };
+    }, []);
 
     const handleStartSurvey = () => {
         if (!isPreview) {
