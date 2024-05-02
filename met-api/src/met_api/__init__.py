@@ -163,13 +163,12 @@ def setup_jwt_manager(app_context, jwt_manager):
         # Retrieve user by external ID from token info
         user = StaffUserService.get_user_by_external_id(token_info['sub'])
 
-        if user:
-            # Retrieve user roles within a tenant using UserGroupMembershipService
-            additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
-                token_info['sub'], g.tenant_id)
-            if additional_user_roles:
-                # Add additional user roles to user_roles list
-                user_roles.extend(additional_user_roles)
+        # Retrieve user roles within a tenant using UserGroupMembershipService
+        additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
+            token_info['sub'], g.tenant_id)
+        if user and additional_user_roles:
+            # Add additional user roles to user_roles list
+            user_roles.extend(additional_user_roles)
         else:
             app_context.logger.warning('Unable to find an active user within the tenant.')
         if not user_roles:
