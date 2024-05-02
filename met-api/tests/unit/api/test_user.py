@@ -32,8 +32,8 @@ from met_api.utils.constants import CompositeRoles
 from met_api.utils.enums import CompositeRoleNames, ContentType, UserStatus
 from tests.utilities.factory_scenarios import TestJwtClaims, TestTenantInfo, TestUserInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_staff_user_model, factory_tenant_model,
-    factory_user_group_membership_model, set_global_tenant)
+    factory_auth_header, factory_staff_user_model, factory_tenant_model, factory_user_group_membership_model,
+    set_global_tenant)
 
 
 @pytest.mark.parametrize(
