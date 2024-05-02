@@ -68,7 +68,7 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims, setu
     staff_other_tenant['tenant_id'] = factory_tenant_model(TestTenantInfo.tenant2).id
     factory_staff_user_model(user_info=staff_1)
     factory_staff_user_model(user_info=staff_2)
-    other_tenant_user = factory_staff_user_model(user_info=staff_other_tenant)
+    factory_staff_user_model(user_info=staff_other_tenant)
 
     # Check that staff admins can see users within the same tenant
     _, claims = setup_admin_user_and_claims
