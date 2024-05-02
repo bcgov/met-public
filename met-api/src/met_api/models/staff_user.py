@@ -6,6 +6,8 @@ from __future__ import annotations
 
 from typing import Optional
 
+from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
@@ -40,7 +42,10 @@ class StaffUser(BaseModel):
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text='', include_inactive=False):
         """Fetch list of users by access type."""
         query = cls.query
-        query = cls._add_tenant_filter(query)
+        # Don't filter out users from other tenants if the user is a super admin; show everything
+        if Role.SUPER_ADMIN.value not in TokenInfo.get_user_roles():
+            query = cls._add_tenant_filter(query)
+
         if pagination_options.sort_key:
             sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
                 else desc(text(pagination_options.sort_key))
