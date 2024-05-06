@@ -1,3 +1,9 @@
+## May 6, 2024
+
+- **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
+  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default 
+  description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
+
 ## May 2, 2024
 
 - **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
