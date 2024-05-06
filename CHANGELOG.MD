@@ -1,3 +1,8 @@
+## May 6, 2024
+
+- **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
+  - Upgrading the version of met-formio.
+
 ## May 2, 2024
 
 - **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
