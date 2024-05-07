@@ -1,3 +1,9 @@
+## May 7, 2024
+
+- **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
+  - Tested users can belong to more than one tenant.
+  - Overide the default tenant filter for staff_user table to check with user_group_membership table.
+
 ## May 2, 2024
 
 - **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
