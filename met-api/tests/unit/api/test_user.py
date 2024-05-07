@@ -67,15 +67,23 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims, setu
     staff_2 = dict(TestUserInfo.user_staff_1)
     staff_other_tenant = dict(TestUserInfo.user_staff_2)
     staff_other_tenant['tenant_id'] = factory_tenant_model(TestTenantInfo.tenant2).id
-    factory_staff_user_model(user_info=staff_1)
-    factory_staff_user_model(user_info=staff_2)
-    factory_staff_user_model(user_info=staff_other_tenant)
+    user1 = factory_staff_user_model(user_info=staff_1)
+    # Mapping user1 to its tenant via user group membership
+    factory_user_group_membership_model(str(user1.external_id), user1.tenant_id)
+    user2 = factory_staff_user_model(user_info=staff_2)
+    # Mapping user2 to its tenant via user group membership
+    factory_user_group_membership_model(str(user2.external_id), user2.tenant_id)
+
+    user3 = factory_staff_user_model(user_info=staff_other_tenant)
+    # Mapping user3 to its tenant via user group membership
+    factory_user_group_membership_model(str(user3.external_id), user3.tenant_id)
 
     # Check that staff admins can see users within the same tenant
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
+    print(rv.json.get('items'))
     assert rv.json.get('total') == 5
     assert len(rv.json.get('items')) == 5
 
