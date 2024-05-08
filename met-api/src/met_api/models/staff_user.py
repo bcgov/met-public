@@ -6,16 +6,18 @@ from __future__ import annotations
 
 from typing import Optional
 
+from flask import g
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
+from met_api.models.user_group_membership import UserGroupMembership
 from met_api.utils.enums import UserStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
-from .base_model import BaseModel
+from .base_model import TENANT_ID, BaseModel
 from .db import db
 from .pagination_options import PaginationOptions
 
@@ -65,6 +67,17 @@ class StaffUser(BaseModel):
 
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
         return page.items, page.total
+
+    @classmethod
+    def _add_tenant_filter(cls, query):
+        """Add tenant filtering to the query based on user group membership."""
+        has_tenant_id = hasattr(cls, TENANT_ID)
+        has_g_tenant_id = hasattr(g, TENANT_ID) and g.tenant_id
+        if has_tenant_id and has_g_tenant_id:
+            return query.join(
+                UserGroupMembership, UserGroupMembership.staff_user_external_id == cls.external_id
+            ).filter(UserGroupMembership.tenant_id == g.tenant_id)
+        return query
 
     @classmethod
     def get_by_id(cls, _id, include_inactive=False) -> Optional[StaffUser]:
