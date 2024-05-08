@@ -15,6 +15,9 @@ defaults:
     shell: bash
     working-directory: ./met-web
 
+env:
+  FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
+
 jobs:
   setup-job:
     runs-on: ubuntu-20.04
