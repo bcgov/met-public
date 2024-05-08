@@ -83,7 +83,6 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims, setu
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
-    print(rv.json.get('items'))
     assert rv.json.get('total') == 5
     assert len(rv.json.get('items')) == 5
 
