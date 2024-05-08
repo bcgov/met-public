@@ -14,7 +14,7 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -25,6 +25,7 @@ jest.mock('react-redux', () => ({
             USER_ROLES.VIEW_SURVEYS,
             USER_ROLES.VIEW_USERS,
             USER_ROLES.VIEW_FEEDBACKS,
+            USER_ROLES.SUPER_ADMIN,
         ];
     }),
 }));

@@ -39,8 +39,7 @@ class UserContext:  # pylint: disable=too-many-instance-attributes
         self._last_name: str = token_info.get('lastname', None)
         self._tenant_id: str = token_info.get(TENANT_ID_JWT_CLAIM, None)
         self._bearer_token: str = _get_token()
-        self._roles: list = current_app.config['JWT_ROLE_CALLBACK'](token_info) if 'client_roles' in token_info \
-            else []
+        self._roles: list = current_app.config['JWT_ROLE_CALLBACK'](token_info) if token_info else []
         self._sub: str = token_info.get('sub', None)
         self._name: str = f"{token_info.get('firstname', None)} {token_info.get('lastname', None)}"
 

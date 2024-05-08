@@ -17,55 +17,33 @@
 A simple decorator to validate roles with in the tenant.
 """
 from functools import wraps
-from http import HTTPStatus
-from typing import Dict
+from typing import Dict, List
 
-from flask import abort, current_app, g
+from flask import current_app, g
 
 from met_api.auth import jwt as _jwt
 from met_api.utils.roles import Role
-from met_api.models.staff_user import StaffUser
 
 
-def require_role(role, skip_tenant_check_for_admin=False):
+def require_role(required_roles: List[str] | str) -> callable:
     """Validate a token for roles and against tenant as well.
 
     Args:
-        role (str): The role that the user is required to have.
-        skip_tenant_check_for_admin (bool, optional): A flag to indicate
-        whether to skip tenant checks for MET Admins.
-            If set to True, tenant checks are skipped for users with MET
-            administrative privileges.
-            Defaults to False. Set it to True for cross tenant operations
-            like first time adding a administrator to tenant.
+        required_roles (str|list[str]): The role(s) that the user is required to have.
 
     Returns:
         function: A decorator function that can be used to enforce
         role-based authorization.
     """
+    # allow for a single role or a list of roles
+    if isinstance(required_roles, str):
+        required_roles = [required_roles]
 
-    def decorator(func):
+    def decorator(func: callable) -> callable:
         @wraps(func)
-        @_jwt.has_one_of_roles(role)
-        def wrapper(*args, **kwargs):
-            # single tenanted env doesn't need tenant id checks..so pass
-            if current_app.config.get('IS_SINGLE_TENANT_ENVIRONMENT'):
-                return func(*args, **kwargs)
-
-            # Get the tenant information from the JWT payload or any global context
-            token_info: Dict = _get_token_info() or {}
-
-            if skip_tenant_check_for_admin and is_met_global_admin(token_info):
-                return func(*args, **kwargs)
-
-            user_id = token_info.get('sub', None)
-            # fetch user from the db
-            user = StaffUser.get_user_by_external_id(user_id)
-            if user and user.tenant_id == g.tenant_id:
-                return func(*args, **kwargs)
-            else:
-                abort(HTTPStatus.FORBIDDEN,
-                      description='The user does not exist or has no access to this tenant')
+        @_jwt.has_one_of_roles({Role.SUPER_ADMIN.value}.union(required_roles))
+        def wrapper(*args, **kwargs) -> callable:
+            return func(*args, **kwargs)
 
         return wrapper
 
@@ -77,6 +55,6 @@ def _get_token_info() -> Dict:
 
 
 def is_met_global_admin(token_info) -> bool:
-    """Return True if the user is MET Admin ie who can manage all tenants."""
+    """Return True if the user is a MET Admin who can manage all tenants."""
     roles = current_app.config['JWT_ROLE_CALLBACK'](token_info)
-    return Role.CREATE_TENANT.value in roles
+    return Role.SUPER_ADMIN.value in roles

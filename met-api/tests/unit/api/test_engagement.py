@@ -104,7 +104,7 @@ def test_tenant_id_in_create_engagements(client, jwt, session,
     # 403 since engagement tenant id is different from users tenant id
     assert response.status_code == HTTPStatus.UNAUTHORIZED
 
-    # set users tenant id to be same as engagment tenant id
+    # set user's tenant id to be same as engagement's tenant id
     staff_2 = dict(TestUserInfo.user_staff_2)
     user = factory_staff_user_model(user_info=staff_2)
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
@@ -129,6 +129,48 @@ def test_add_engagements_invalid(client, jwt, session, engagement_info,
     rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
+
+
+# pylint:disable=unused-argument
+def test_creating_engagments_cross_tenant(client, jwt, session, setup_admin_user_and_claims,
+                                          setup_super_admin_user_and_claims):
+    """Tests to ensure that (only) super-admins can create engagements across tenants.
+
+    By extension, this tests the superuser's general ability to perform actions across tenants,
+    where this would be disallowed for any other user.
+    """
+    adm_user, adm_claims = setup_admin_user_and_claims
+    sup_user, sup_claims = setup_super_admin_user_and_claims
+    tenant_short_name = current_app.config.get('DEFAULT_TENANT_SHORT_NAME')
+    tenant_1 = TenantModel.find_by_short_name(tenant_short_name)
+    assert tenant_1 is not None
+    tenant_2 = factory_tenant_model(TestTenantInfo.tenant2)
+
+    adm_user.tenant_id = tenant_1.id
+    sup_user.tenant_id = tenant_1.id
+
+    engagement_info = TestEngagementInfo.engagement1
+
+    headers = factory_auth_header(jwt=jwt, claims=adm_claims)
+    super_headers = factory_auth_header(jwt=jwt, claims=sup_claims)
+
+    # Assert that the staff admin user can create engagements in their tenant,
+    # but not in other tenants
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    headers[TENANT_ID_HEADER] = tenant_2.short_name
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.UNAUTHORIZED
+    # Assert that the super admin user can create engagements in any tenant
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=super_headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    super_headers[TENANT_ID_HEADER] = tenant_2.short_name
+    rv = client.post('/api/engagements/', data=json.dumps(engagement_info),
+                     headers=super_headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
 
 
 @pytest.mark.parametrize('engagement_info', [TestEngagementInfo.engagement1])

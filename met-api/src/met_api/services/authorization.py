@@ -11,9 +11,10 @@ from met_api.constants.membership_type import MembershipType
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.staff_user import StaffUser as StaffUserModel
-from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.enums import MembershipStatus
+from met_api.utils.roles import Role
 from met_api.utils.user_context import UserContext, user_context
+
 
 UNAUTHORIZED_MSG = 'You are not authorized to perform this action!'
 
@@ -29,32 +30,33 @@ def check_auth(**kwargs):
         abort(HTTPStatus.FORBIDDEN, 'User not found')
 
     # Retrieve tenant specific user roles from met-db
-    user_roles, tenant_id = UserGroupMembershipService.get_user_roles_within_tenant(user_from_context.sub,
-                                                                                    g.tenant_id)
+    user_roles = current_app.config['JWT_ROLE_CALLBACK'](user_from_context.token_info)
+
     if not user_roles:
         abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 
-    permitted_roles = set(kwargs.get('one_of_roles', []))
-    has_valid_roles = set(user_roles) & permitted_roles
+    if Role.SUPER_ADMIN.value in user_roles:
+        return  # Let Super Admins do anything they want :3
+
+    required_roles = set(kwargs.get('one_of_roles', []))
+    has_valid_roles = set(user_roles) & required_roles
     if has_valid_roles:
-        if not skip_tenant_check:
-
-            user_tenant_id = tenant_id
-            _validate_tenant(kwargs.get('engagement_id'), user_tenant_id)
-        return
-    team_permitted_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name} & permitted_roles
-
-    if team_permitted_roles:
-        # check if he is a member of particular engagement.
-
-        has_valid_team_access = _has_team_membership(kwargs, user_from_context, team_permitted_roles)
-        if has_valid_team_access:
+        if skip_tenant_check:
             return
+        if 'engagement_id' in kwargs:
+            _check_engagement_has_tenant(kwargs.get('engagement_id'), g.tenant_id)
+        return
+    membership_eligible_roles = {MembershipType.TEAM_MEMBER.name, MembershipType.REVIEWER.name
+                                 } & required_roles
+    # check if the user is a member of a passed engagement
+    if membership_eligible_roles and _has_team_membership(kwargs, user_from_context,
+                                                          membership_eligible_roles):
+        return
 
     abort(HTTPStatus.FORBIDDEN, UNAUTHORIZED_MSG)
 
 
-def _validate_tenant(eng_id, tenant_id):
+def _check_engagement_has_tenant(eng_id, tenant_id):
     """Validate users tenant id with engagements tenant id."""
     if not eng_id:
         return
