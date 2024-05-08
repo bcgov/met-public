@@ -225,24 +225,31 @@ def test_get_engagement_translation_by_id(client, jwt, session, engagement_trans
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 @pytest.mark.parametrize('engagement_translation_info', [TestEngagementTranslationInfo.engagementtranslation1])
-def test_get_available_engagement_translation_languages(client, jwt, session, engagement_translation_info,
-                                          setup_admin_user_and_claims):  # pylint:disable=unused-argument
-    """Assert that a engagement translation can be fetched by id."""
+def test_get_available_engagement_translation_languages(client, jwt, session, engagement_translation_info):  # pylint:disable=unused-argument
     engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
-    engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
-    user, claims = setup_admin_user_and_claims
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    engagement_translation = factory_engagement_translation_model(engagement_translation_info)
+    language = factory_language_model({'name': 'French', 'code': 'fr', 'right_to_left': False})
+
     query_url = f'/api/engagement/{engagement.id}/translations/languages'
 
-    rv = client.get(query_url, headers=headers, content_type=ContentType.JSON.value)
+    """Assert that an engagement with a no translations returns no languages available."""
+    rv = client.get(query_url, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     json_data = rv.json
-    # assert json_data['engagement_id'] == engagement.id
+    assert json_data == []
+
+    engagement_translation_info['engagement_id'] = engagement.id
+    engagement_translation_info['language_id'] = language.id
+    factory_engagement_translation_model(engagement_translation_info)
+
+    """Assert that an engagement with a French translation returns 
+    that it has a translation available in the French language."""
+    rv = client.get(query_url, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    json_data = rv.json
+    assert json_data[0]['name'] == 'French'
+    assert json_data[0]['code'] == 'fr'
 
     with patch.object(EngagementTranslationService, 'get_available_engagement_translation_languages',
                       side_effect=[KeyError('Test error'),ValueError('Test error')]):
-        rv = client.get(query_url, headers=headers, content_type=ContentType.JSON.value)
+        rv = client.get(query_url, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.BAD_REQUEST
