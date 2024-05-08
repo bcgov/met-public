@@ -1,3 +1,9 @@
+## May 8, 2024
+
+- **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
+- Allow for the web app to see if there are available translations by language
+- Disable language switching itself for now until design decisions are made
+
 ## May 7, 2024
 
 - **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
