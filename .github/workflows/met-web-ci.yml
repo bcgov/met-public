@@ -42,8 +42,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
-          npm install --legacy-peer-deps
+          npm config set //npm.fontawesome.com/:_authToken=${FONTAWESOME_PACKAGE_TOKEN}
+          npm ci
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
       - name: Lint
         id: lint
         run: |
@@ -64,8 +66,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
-          npm install --legacy-peer-deps
+          npm config set //npm.fontawesome.com/:_authToken=${FONTAWESOME_PACKAGE_TOKEN}
+          npm ci
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
 
       - name: Test with jest
         id: test
@@ -101,8 +105,10 @@ jobs:
       - name: Install dependencies
         run: |
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
-          npm install --legacy-peer-deps
+          npm config set //npm.fontawesome.com/:_authToken=${FONTAWESOME_PACKAGE_TOKEN}
+          npm ci
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
       - name: build to check strictness
         id: build
         run: |
