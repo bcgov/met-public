@@ -8,7 +8,7 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
     },
     EngagementTranslations: {
-        GET_SUMMARY: `${AppConfig.apiUrl}/engagements/engagement_id/translations/list`,
+        GET_TRANSLATION_LANGUAGES: `${AppConfig.apiUrl}/engagement/engagement_id/translations/languages`,
     },
     EngagementMetadata: {
         GET_BY_ENG: `${AppConfig.apiUrl}/engagements/engagement_id/metadata`,

@@ -20,7 +20,7 @@ const PublicHeader = () => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
-    const { engagementViewMounted } = useContext(LanguageContext);
+    const { engagementViewMounted, availableEngagementTranslations } = useContext(LanguageContext);
 
     const logoUrl = translate('common.logoUrl');
     const headerTitle = translate('header.title');
@@ -91,7 +91,7 @@ const PublicHeader = () => {
                         </Button>
                     </When>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {engagementViewMounted && <LanguageSelector />}
+                        {engagementViewMounted && availableEngagementTranslations.length > 0 && <LanguageSelector />}
                     </Box>
                 </Toolbar>
                 <EnvironmentBanner />

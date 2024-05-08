@@ -11,6 +11,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
+import { getAvailableTranslationLanguages } from 'services/engagementService';
 import { PhasesWidget } from './widgets/PhasesWidget';
 import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
 import { EngagementBanner } from './EngagementBanner';
@@ -22,8 +23,7 @@ export const EngagementView = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
-    const { engagementViewMounted, setEngagementViewMounted, fetchAvailableEngagementTranslations } =
-        useContext(LanguageContext);
+    const { setEngagementViewMounted, setAvailableEngagementTranslations } = useContext(LanguageContext);
     const [test, setTest] = useState(false);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
@@ -35,13 +35,23 @@ export const EngagementView = () => {
 
     useEffect(() => {
         setEngagementViewMounted(true);
-        console.log('saved', savedEngagement);
-        // fetchAvailableEngagementTranslations();
-
-        return () => {
-            setEngagementViewMounted(false);
-        };
+        return () => setEngagementViewMounted(false);
     }, []);
+
+    useEffect(() => {
+        if (savedEngagement?.id) {
+            fetchAvailableEngagementTranslations(savedEngagement.id);
+        }
+    }, [savedEngagement]);
+
+    const fetchAvailableEngagementTranslations = async (engagementId: number) => {
+        try {
+            const result = await getAvailableTranslationLanguages(engagementId);
+            setAvailableEngagementTranslations(result);
+        } catch (error) {
+            setAvailableEngagementTranslations([]);
+        }
+    };
 
     const handleStartSurvey = () => {
         if (!isPreview) {

@@ -1,81 +1,80 @@
-import React, { useMemo, useEffect, useContext } from 'react';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { LanguageState, saveLanguage, loadingLanguage } from 'reduxSlices/languageSlice';
+import React, { useState, useEffect, useContext } from 'react';
+import { useAppDispatch } from 'hooks';
 import { MetLabel } from 'components/common';
 import { Palette } from 'styles/Theme';
 import { Grid, MenuItem, Select } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Languages, LANGUAGE_NAMES } from 'constants/language';
+import { Language } from 'models/language';
 import { LanguageContext } from './LanguageContext';
-
-interface LanguageDropDownItem {
-    value: string;
-    label: string;
-}
 
 const LanguageSelector = () => {
     const dispatch = useAppDispatch();
-    const language: LanguageState = useAppSelector((state) => state.language);
-    const navigate = useNavigate();
     const location = useLocation();
-    const { engagementViewMounted } = useContext(LanguageContext);
+    const { availableEngagementTranslations } = useContext(LanguageContext);
+    const [languages, setLanguages] = useState<Language[]>([]);
 
     useEffect(() => {
-        console.log('check state', engagementViewMounted);
-    }, [engagementViewMounted]);
+        if (availableEngagementTranslations.length > 0) {
+            // English is assumed to be the "default" language.
+            const languagesPlusDefault = [
+                {
+                    id: 0,
+                    name: 'English',
+                    code: 'en',
+                    right_to_left: false,
+                },
+                ...availableEngagementTranslations,
+            ];
+            setLanguages(languagesPlusDefault);
+        } else {
+            setLanguages([]);
+        }
+    }, [availableEngagementTranslations]);
 
     const handleChangeLanguage = (selectedLanguage: string) => {
-        if (!selectedLanguage) {
-            dispatch(loadingLanguage(false));
-            return;
-        }
-
-        try {
-            sessionStorage.setItem('languageId', selectedLanguage);
-            dispatch(
-                saveLanguage({
-                    id: selectedLanguage,
-                }),
-            );
-
-            // Change the URL when the language is changed
-            const pathSegments = location.pathname.split('/');
-            const languageIndex = pathSegments.findIndex((seg) => seg.length === 2); // Find index of the 2-character language code
-            if (languageIndex !== -1) {
-                pathSegments[languageIndex] = selectedLanguage;
-            } else {
-                // Language code not found in path, insert it at the appropriate position
-                pathSegments.splice(1, 0, selectedLanguage);
-            }
-            dispatch(loadingLanguage(false));
-
-            navigate(pathSegments.join('/'));
-        } catch {
-            dispatch(loadingLanguage(false));
-            console.error('Error occurred while fetching Language information');
-        }
+        // TODO: Implement engagement language switching.
+        // if (!selectedLanguage) {
+        //     dispatch(loadingLanguage(false));
+        //     return;
+        // }
+        // try {
+        //     sessionStorage.setItem('languageId', selectedLanguage);
+        //     dispatch(
+        //         saveLanguage({
+        //             id: selectedLanguage,
+        //         }),
+        //     );
+        //     // Change the URL when the language is changed
+        //     const pathSegments = location.pathname.split('/');
+        //     const languageIndex = pathSegments.findIndex((seg) => seg.length === 2); // Find index of the 2-character language code
+        //     if (languageIndex !== -1) {
+        //         pathSegments[languageIndex] = selectedLanguage;
+        //     } else {
+        //         // Language code not found in path, insert it at the appropriate position
+        //         pathSegments.splice(1, 0, selectedLanguage);
+        //     }
+        //     dispatch(loadingLanguage(false));
+        //     navigate(pathSegments.join('/'));
+        // } catch {
+        //     dispatch(loadingLanguage(false));
+        //     console.error('Error occurred while fetching Language information');
+        // }
     };
 
-    const ITEMS: LanguageDropDownItem[] = useMemo(() => {
-        return Object.values(Languages).map((lang) => ({
-            value: lang,
-            label: LANGUAGE_NAMES[lang],
-        }));
-    }, [LANGUAGE_NAMES]);
-
     useEffect(() => {
+        // TODO: Add logic to update URL when engagement language changes.
         // Update language dropdown when the language ID in the URL changes
-        const pathSegments = location.pathname.split('/');
-        const languageIndex = pathSegments.findIndex((seg) => seg.length === 2); // Find index of the 2-character language code
-        if (languageIndex !== -1) {
-            const languageId = pathSegments[languageIndex].toLowerCase();
-            sessionStorage.setItem('languageId', languageId);
-            dispatch(
-                saveLanguage({
-                    id: languageId,
-                }),
-            );
-        }
+        // const pathSegments = location.pathname.split('/');
+        // const languageIndex = pathSegments.findIndex((seg) => seg.length === 2); // Find index of the 2-character language code
+        // if (languageIndex !== -1) {
+        //     const languageId = pathSegments[languageIndex].toLowerCase();
+        //     sessionStorage.setItem('languageId', languageId);
+        //     dispatch(
+        //         saveLanguage({
+        //             id: languageId,
+        //         }),
+        //     );
+        // }
     }, [dispatch, location.pathname]);
 
     return (
@@ -87,7 +86,7 @@ const LanguageSelector = () => {
                 <Select
                     id="language"
                     aria-label="select-language"
-                    value={language.id}
+                    value={0}
                     size="small"
                     sx={{
                         backgroundColor: 'var(--bcds-surface-background-white)',
@@ -96,9 +95,9 @@ const LanguageSelector = () => {
                     }}
                     onChange={(event) => handleChangeLanguage(event.target.value as string)}
                 >
-                    {ITEMS.map((item) => (
-                        <MenuItem key={item.value} value={item.value}>
-                            {item.label}
+                    {languages.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                            {item.name}
                         </MenuItem>
                     ))}
                 </Select>

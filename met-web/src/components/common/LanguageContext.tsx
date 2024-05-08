@@ -1,44 +1,35 @@
-import React, { createContext, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAvailableTranslations } from 'services/engagementService';
+import React, { createContext, useState } from 'react';
+import { Language } from 'models/language';
 
 export interface LanguageContextType {
     engagementViewMounted: boolean;
+    availableEngagementTranslations: Language[];
     setEngagementViewMounted: (engagementViewMounted: boolean) => void;
-    fetchAvailableEngagementTranslations: (engagementId: number) => void;
+    setAvailableEngagementTranslations: (languages: Language[]) => void;
 }
 
 export const LanguageContext = createContext<LanguageContextType>({
     engagementViewMounted: false,
+    availableEngagementTranslations: [],
     setEngagementViewMounted: (engagementViewMounted: boolean) => {
         /** Left intentionally blank */
     },
-    fetchAvailableEngagementTranslations: (engagementId: number) => {
+    setAvailableEngagementTranslations: (languages: Language[]) => {
         /** Left intentionally blank */
     },
 });
 
 export const LanguageProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    // const navigate = useNavigate();
     const [engagementViewMounted, setEngagementViewMounted] = useState(false);
-    const [availableEngagementTranslations, setAvailableEngagementTranslations] = useState([]);
-
-    const fetchAvailableEngagementTranslations = async (engagementId: number) => {
-        try {
-            const result = await getAvailableTranslations(engagementId);
-            console.log('');
-            // setAvailableEngagementTranslations(result);
-        } catch (error) {
-            // navigate('/not-found');
-        }
-    };
+    const [availableEngagementTranslations, setAvailableEngagementTranslations] = useState<Language[]>([]);
 
     return (
         <LanguageContext.Provider
             value={{
                 engagementViewMounted,
+                availableEngagementTranslations,
                 setEngagementViewMounted,
-                fetchAvailableEngagementTranslations,
+                setAvailableEngagementTranslations,
             }}
         >
             {children}
