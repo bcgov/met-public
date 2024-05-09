@@ -108,4 +108,3 @@ class EngagementTranslation(BaseModel):
             .filter(LanguageModel.id.in_(available_translations_query))\
             .all()
         return language_list
-    
