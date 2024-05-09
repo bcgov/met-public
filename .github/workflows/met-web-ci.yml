@@ -19,7 +19,7 @@ jobs:
   setup-job:
     runs-on: ubuntu-20.04
 
-    if: github.repository == 'ratheesh-aot/met-public'
+    if: github.repository == 'bcgov/met-public'
 
     steps:
       - uses: actions/checkout@v2
@@ -41,7 +41,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
       - name: Lint
         id: lint
@@ -56,13 +55,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: |
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
 
       - name: Test with jest
@@ -93,12 +91,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
       - name: build to check strictness
         id: build
