@@ -2,6 +2,8 @@
 # pull official base image
 FROM node:16-alpine as build-stage
 
+ARG FONTAWESOME_TOKEN
+
 # set working directory
 WORKDIR /app
 
@@ -12,6 +14,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 
+RUN npm config set '//npm.fontawesome.com/:_authToken' ${FONTAWESOME_TOKEN}
 RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
