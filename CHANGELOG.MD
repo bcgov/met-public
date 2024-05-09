@@ -1,6 +1,6 @@
 ## May 9, 2024
 
-- **Feature** Added the initial version of the tenant listing page
+- **Feature** Added the initial version of the tenant listing page [🎟️ DESENG-592](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-592)
   - The page lists all tenants in the system
   - Functionality to view or create individual tenants is still under construction
   - Began work on adding new components from the MET component library, with high reusability in mind
