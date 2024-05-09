@@ -41,6 +41,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
+          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
       - name: Lint
         id: lint
@@ -61,6 +62,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
 
       - name: Test with jest
@@ -96,6 +98,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
+          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
           npm install --legacy-peer-deps
       - name: build to check strictness
         id: build
