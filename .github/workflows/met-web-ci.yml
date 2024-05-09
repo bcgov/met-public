@@ -28,7 +28,6 @@ jobs:
   linting:
     needs: setup-job
     runs-on: ubuntu-20.04
-    environment: dev
 
     strategy:
       matrix:
@@ -42,8 +41,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm config set '@fortawesome:registry' https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+          npm config set "//npm.fontawesome.com/:_authToken" ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
           npm install --legacy-peer-deps
       - name: Lint
         id: lint
@@ -64,8 +63,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm config set '@fortawesome:registry' https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+          npm config set "//npm.fontawesome.com/:_authToken" ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
           npm install --legacy-peer-deps
 
       - name: Test with jest
@@ -101,8 +100,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm config set '@fortawesome:registry' https://npm.fontawesome.com/
-          npm config set '//npm.fontawesome.com/:_authToken' "${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}"
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/
+          npm config set "//npm.fontawesome.com/:_authToken" ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
           npm install --legacy-peer-deps
       - name: build to check strictness
         id: build
