@@ -28,6 +28,7 @@ jobs:
   linting:
     needs: setup-job
     runs-on: ubuntu-20.04
+    environment: dev
 
     strategy:
       matrix:
