@@ -1,0 +1,114 @@
+import { AddCircleOutline } from '@mui/icons-material';
+import { Box, Grid, Skeleton } from '@mui/material';
+import { Button } from 'components/MetDesignSystem/Input/Button';
+import { Header1, Header2, BodyText } from 'components/MetDesignSystem/Typography/';
+import { ResponsiveContainer } from 'components/MetDesignSystem/Layout';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeadCell,
+    TableHeadRow,
+    TableRow,
+} from 'components/MetDesignSystem/Layout/Table';
+import { getAllTenants } from 'services/tenantService';
+
+import React, { useEffect } from 'react';
+import { Tenant } from 'models/tenant';
+import { Else, If, Then } from 'react-if';
+import { BreadcrumbTrail } from 'components/MetDesignSystem/Navigation/Breadcrumb';
+
+const TenantListing = () => {
+    const [tenants, setTenants] = React.useState<Tenant[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(true);
+
+    useEffect(() => {
+        const fetchTenants = async () => {
+            const tenants = await getAllTenants();
+            setTenants(tenants);
+            setLoading(false);
+        };
+        fetchTenants();
+    }, []);
+
+    return (
+        <ResponsiveContainer>
+            <BreadcrumbTrail
+                smallScreenOnly
+                crumbs={[{ name: 'Dashboard', link: '../home' }, { name: 'Tenant Admin' }]}
+            />
+
+            <Header1>Tenant Admin</Header1>
+            <Grid container spacing={0} direction="row" mb="2em">
+                <Grid item xs={12} sm={7} lg={9}>
+                    <Header2 decorated sx={{ mb: 0 }}>
+                        Tenant Instances {!loading && `(${tenants.length})`}
+                    </Header2>
+                </Grid>
+                <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
+                    {/* TODO: redirect to "Create Tenant Instance" page */}
+                    <Button disabled variant="primary" icon={<AddCircleOutline />}>
+                        Add Instance
+                    </Button>
+                </Grid>
+            </Grid>
+            <Box
+                style={{
+                    // Allow the table to scroll horizontally
+                    display: 'block',
+                    overflowX: 'auto',
+                    // Allow the keyboard focus outline on table rows to
+                    // display outside the scrollable area
+                    width: 'calc(100% + 4px)',
+                    padding: '0px 2px 2px',
+                    margin: '0px -2px -2px',
+                }}
+            >
+                <Table>
+                    <TableHead>
+                        <TableHeadRow>
+                            <TableHeadCell sx={{ minWidth: '240px' }}>Name</TableHeadCell>
+                            <TableHeadCell sx={{ minWidth: '480px' }}>Description</TableHeadCell>
+                        </TableHeadRow>
+                    </TableHead>
+                    <TableBody>
+                        <If condition={loading}>
+                            <Then>
+                                {[...Array(5)].map((_, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>
+                                            <Skeleton variant="text" width={240} />
+                                            <Skeleton variant="text" width={240} />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Skeleton variant="text" width={480} />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </Then>
+                            <Else>
+                                {tenants.map((tenant) => (
+                                    <TableRow onClick={() => console.log(tenant.name)} key={tenant.name} tabIndex={0}>
+                                        <TableCell>
+                                            <BodyText bold style={{ marginBottom: '8px' }}>
+                                                {tenant.name}
+                                            </BodyText>
+                                            {/* TODO: Replace when primary contact info is added to tenants */}
+                                            <BodyText small>&lt;Primary Contact&gt;</BodyText>
+                                        </TableCell>
+                                        <TableCell>
+                                            <BodyText small>{tenant.description}</BodyText>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </Else>
+                        </If>
+                    </TableBody>
+                </Table>
+            </Box>
+        </ResponsiveContainer>
+    );
+};
+
+export default TenantListing;

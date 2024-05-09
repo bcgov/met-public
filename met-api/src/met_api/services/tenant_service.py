@@ -29,3 +29,8 @@ class TenantService:
         if not tenant:
             raise ValueError('Tenant not found.', cls, tenant_id)
         return TenantSchema().dump(tenant)
+
+    def get_all(self):
+        """Get all tenants."""
+        tenants = TenantModel.query.all()
+        return TenantSchema().dump(tenants, many=True)

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
 import EngagementForm from '../components/engagement/form';
 import EngagementListing from '../components/engagement/listing';
@@ -25,7 +25,7 @@ import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
 import ReportSettings from 'components/survey/report';
 import FormioListener from 'components/FormioListener';
-import TenantManagement from 'components/tenantManagement/listing';
+import TenantListing from 'components/tenantManagement/Listing';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -63,7 +63,13 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
                 <Route path="/metadatamanagement" element={<MetadataManagement />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
-                    <Route path="/tenantadmin" element={<TenantManagement />} />
+                    <Route
+                        path="/tenantadmin"
+                        element={<TenantListing />}
+                        handle={{
+                            crumb: () => <Link to="/tenantadmin">Tenant Management</Link>,
+                        }}
+                    />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />

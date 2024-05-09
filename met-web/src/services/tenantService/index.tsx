@@ -11,3 +11,11 @@ export const getTenant = async (id: string): Promise<Tenant> => {
     }
     return Promise.reject('Failed to fetch tenant info');
 };
+
+export const getAllTenants = async (): Promise<Tenant[]> => {
+    const response = await http.GetRequest<Tenant[]>(Endpoints.Tenants.GET_LIST);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject('Failed to fetch tenants');
+};
