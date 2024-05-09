@@ -41,10 +41,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: |
-          npm config set "demo-test" ${{ secrets.CODECOV_TOKEN }}
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/
-          npm config set "//npm.fontawesome.com/:_authToken" ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
           npm install --legacy-peer-deps
+        env:
+          FONTAWESOME_NPM_AUTH_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
       - name: Lint
         id: lint
         run: |
