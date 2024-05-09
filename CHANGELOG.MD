@@ -2,7 +2,7 @@
 
 - **Feature** Add font awesome to MET web [🎟️ DESENG-543](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-543)
   - Added font awesome to MET web.
-  - Created .npmrc file to set the registry for forntawesome
+  - Created .npmrc file to set the registry for fontawesome
   - Updated github actions to pull fontawesome auth token from github secrets
 
 ## May 7, 2024
