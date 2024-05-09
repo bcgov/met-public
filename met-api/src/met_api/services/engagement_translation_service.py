@@ -113,7 +113,7 @@ class EngagementTranslationService:
         authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.id)
 
         return EngagementTranslationModel.delete_engagement_translation(engagement_translation_id)
-    
+
     @staticmethod
     def get_available_engagement_translation_languages(engagement_id):
         "Get a list of all languages for each entry in the engagement_translation table"

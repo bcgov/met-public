@@ -7,11 +7,9 @@ from __future__ import annotations
 from typing import Optional
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSON
+from met_api.models.language import Language as LanguageModel
 from .base_model import BaseModel
 from .db import db
-from met_api.models.language import Language as LanguageModel
-
-
 
 class EngagementTranslation(BaseModel):
     """Definition of the Engagement Translation entity."""
@@ -100,7 +98,7 @@ class EngagementTranslation(BaseModel):
             db.session.commit()
             return True
         return False
-    
+
     @staticmethod
     def get_available_translation_languages(engagement_id):
         """Get the list of translations for this engagement, then tally the languages that are used."""
@@ -110,3 +108,4 @@ class EngagementTranslation(BaseModel):
             .filter(LanguageModel.id.in_(available_translations_query))\
             .all()
         return language_list
+    

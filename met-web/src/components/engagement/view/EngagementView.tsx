@@ -24,7 +24,6 @@ export const EngagementView = () => {
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
     const { setEngagementViewMounted, setAvailableEngagementTranslations } = useContext(LanguageContext);
-    const [test, setTest] = useState(false);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();

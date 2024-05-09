@@ -16,7 +16,7 @@ interface EngagementInfoSectionProps {
     children?: React.ReactNode;
 }
 const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSectionProps) => {
-    const { id, name, end_date, start_date, rich_description, submission_status } = savedEngagement;
+    const { name, end_date, start_date, rich_description, submission_status } = savedEngagement;
     const { mockStatus } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
