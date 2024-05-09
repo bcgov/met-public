@@ -47,6 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo '//npm.fontawesome.com/:_authToken=${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}' > .npmrc
+          npm config list
           npm install --legacy-peer-deps
       - name: Lint
         id: lint
