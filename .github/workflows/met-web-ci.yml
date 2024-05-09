@@ -15,7 +15,6 @@ defaults:
     shell: bash
     working-directory: ./met-web
 
-
 jobs:
   setup-job:
     runs-on: ubuntu-20.04
@@ -40,14 +39,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: 'https://npm.fontawesome.com/'
-          scope: '@fortawesome'
-          always-auth: true
-        
       - name: Install dependencies
+        env:
+          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
         run: |
-          echo '//npm.fontawesome.com/:_authToken=${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}' > .npmrc
-          npm config list
+          npm config set '@fortawesome:registry' https://npm.fontawesome.com/
+          npm config set '//npm.fontawesome.com/:_authToken' "$FONTAWESOME_PACKAGE_TOKEN"
           npm install --legacy-peer-deps
       - name: Lint
         id: lint
