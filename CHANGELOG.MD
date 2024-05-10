@@ -4,6 +4,12 @@
 - Allow for the web app to see if there are available translations by language
 - Disable language switching itself for now until design decisions are made
 
+## May 9, 2024
+
+- **Feature** [Engagement Filtering UXD] - Public | No Results Message [🎟️ DESENG-586](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-586)
+  - Added a new no results page to display to users when their search term(s) and / or filter(s) returns no engagement results on landing page.
+  - Contact information is developed but hidden currently as this was the approach requested in the ticket till the contact information is decided.
+
 ## May 8, 2024
 
 - **Feature** Add font awesome to MET web [🎟️ DESENG-543](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-543)
