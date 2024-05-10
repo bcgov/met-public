@@ -24,7 +24,7 @@ import { LanguageState } from 'reduxSlices/languageSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import i18n from './i18n';
 import DocumentTitle from 'DocumentTitle';
-import { Language } from 'constants/language';
+import { Languages } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
 
@@ -117,7 +117,7 @@ const App = () => {
         }
 
         try {
-            const supportedLanguages = Object.values(Language);
+            const supportedLanguages = Object.values(Languages);
             const translationPromises = supportedLanguages.map((languageId) => getTranslationFile(languageId));
             const translationFiles = await Promise.all(translationPromises);
 

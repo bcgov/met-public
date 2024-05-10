@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, useMediaQuery, Theme } from '@mui/material';
 import { ActionContext } from './ActionContext';
+import { LanguageContext } from 'components/common/LanguageContext';
 import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
@@ -10,6 +11,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
+import { getAvailableTranslationLanguages } from 'services/engagementService';
 import { PhasesWidget } from './widgets/PhasesWidget';
 import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
 import { EngagementBanner } from './EngagementBanner';
@@ -21,6 +23,7 @@ export const EngagementView = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isPreview = isLoggedIn;
     const { savedEngagement } = useContext(ActionContext);
+    const { setEngagementViewMounted, setAvailableEngagementTranslations } = useContext(LanguageContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
@@ -28,6 +31,26 @@ export const EngagementView = () => {
     window.history.replaceState({}, document.title);
 
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+
+    useEffect(() => {
+        setEngagementViewMounted(true);
+        return () => setEngagementViewMounted(false);
+    }, []);
+
+    useEffect(() => {
+        if (savedEngagement?.id) {
+            fetchAvailableEngagementTranslations(savedEngagement.id);
+        }
+    }, [savedEngagement]);
+
+    const fetchAvailableEngagementTranslations = async (engagementId: number) => {
+        try {
+            const result = await getAvailableTranslationLanguages(engagementId);
+            setAvailableEngagementTranslations(result);
+        } catch (error) {
+            setAvailableEngagementTranslations([]);
+        }
+    };
 
     const handleStartSurvey = () => {
         if (!isPreview) {
