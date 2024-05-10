@@ -36,7 +36,6 @@ API = Namespace('engagement_translation', description='Endpoints for Engagement 
 class EngagementTranslationResourceByLanguage(Resource):
     """Resource for managing a engagement translation."""
 
-
     @staticmethod
     @cross_origin(origins=allowedorigins())
     def get(engagement_id, language_id):
@@ -131,6 +130,7 @@ class EngagementTranslation(Resource):
             return str(err), HTTPStatus.NOT_FOUND
         except ValidationError as err:
             return str(err.messages), HTTPStatus.BAD_REQUEST
+
 
 @cors_preflight('GET')
 @API.route('/languages')

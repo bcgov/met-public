@@ -11,11 +11,11 @@ from met_api.models.language import Language as LanguageModel
 from .base_model import BaseModel
 from .db import db
 
+
 class EngagementTranslation(BaseModel):
     """Definition of the Engagement Translation entity."""
 
     __tablename__ = 'engagement_translation'
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     engagement_id = db.Column(db.Integer, db.ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     language_id = db.Column(db.Integer, db.ForeignKey('language.id', ondelete='CASCADE'), nullable=False)

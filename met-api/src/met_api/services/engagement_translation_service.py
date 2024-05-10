@@ -116,7 +116,7 @@ class EngagementTranslationService:
 
     @staticmethod
     def get_available_engagement_translation_languages(engagement_id):
-        "Get a list of all languages for each entry in the engagement_translation table"
+        """Get a list of all languages for each entry in the engagement_translation table."""
         language_schema = LanguageSchema(many=True)
         available_translations = EngagementTranslationModel.get_available_translation_languages(engagement_id)
 
