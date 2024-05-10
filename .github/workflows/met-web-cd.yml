@@ -28,6 +28,7 @@ env:
   OPENSHIFT_SA_NAME: ${{ secrets.OPENSHIFT_SA_NAME }}
   OPENSHIFT_IMAGE_REGISTRY: ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
+  FONTAWESOME_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
 
 jobs:
   met-web-cd:
@@ -52,7 +53,7 @@ jobs:
 
       - name: Build image
         run: |
-          docker build . --file Dockerfile --tag image
+          docker build . --file Dockerfile --build-arg FONTAWESOME_TOKEN=${{ env.FONTAWESOME_TOKEN}} --tag image
 
       - name: Push image
         run: |

@@ -1,8 +1,15 @@
-## May 8, 2024
+## May 10, 2024
 
 - **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
 - Allow for the web app to see if there are available translations by language
 - Disable language switching itself for now until design decisions are made
+
+## May 8, 2024
+
+- **Feature** Add font awesome to MET web [🎟️ DESENG-543](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-543)
+  - Added font awesome to MET web.
+  - Created .npmrc file to set the registry for fontawesome
+  - Updated github actions to pull fontawesome auth token from github secrets
 
 ## May 7, 2024
 
