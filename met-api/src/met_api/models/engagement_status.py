@@ -14,7 +14,7 @@ class EngagementStatus(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     status_name = db.Column(db.String(50))
     description = db.Column(db.String(50))
-    engagement_status_id = db.relationship('Engagement', backref='engagement_status', cascade='all, delete')
+    engagement_status_id = db.relationship('Engagement', backref='engagement_status', viewonly=True)
 
 
 class EngagementStatusSchema(ma.Schema):

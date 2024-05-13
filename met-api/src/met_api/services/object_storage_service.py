@@ -28,10 +28,7 @@ class ObjectStorageService:
 
     def get_url(self, filename: str):
         """Get the object url."""
-        if(not self.s3_auth.aws_host or
-            not self.s3_bucket or
-            not filename
-           ):
+        if (not self.s3_auth.aws_host or not self.s3_bucket or not filename):
             return ''
 
         return f'https://{self.s3_auth.aws_host}/{self.s3_bucket}/{filename}'
@@ -57,9 +54,9 @@ class ObjectStorageService:
             s3uri = s3sourceuri if s3sourceuri is not None else self.get_url(uniquefilename)
 
             if s3sourceuri is None:
-                response = requests.put(s3uri, data=None, auth=self.s3_auth)
+                response = requests.put(s3uri, data=None, auth=self.s3_auth, timeout=None)
             else:
-                response = requests.get(s3uri, auth=self.s3_auth)
+                response = requests.get(s3uri, auth=self.s3_auth, timeout=None)
 
             file['filepath'] = s3uri
             file['authheader'] = response.request.headers['Authorization']

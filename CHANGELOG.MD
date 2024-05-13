@@ -1,3 +1,63 @@
+## May 10, 2024
+
+- **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
+- Allow for the web app to see if there are available translations by language
+- Disable language switching itself for now until design decisions are made
+
+## May 9, 2024
+
+- **Feature** [Engagement Filtering UXD] - Public | No Results Message [🎟️ DESENG-586](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-586)
+  - Added a new no results page to display to users when their search term(s) and / or filter(s) returns no engagement results on landing page.
+  - Contact information is developed but hidden currently as this was the approach requested in the ticket till the contact information is decided.
+
+## May 8, 2024
+
+- **Feature** Add font awesome to MET web [🎟️ DESENG-543](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-543)
+  - Added font awesome to MET web.
+  - Created .npmrc file to set the registry for fontawesome
+  - Updated github actions to pull fontawesome auth token from github secrets
+
+## May 7, 2024
+
+- **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
+  - Tested users can belong to more than one tenant.
+  - Overide the default tenant filter for staff_user table to check with user_group_membership table.
+  
+## May 6, 2024
+
+- **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
+  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default 
+  description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
+
+## May 2, 2024
+
+- **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
+  - The page will be updated to list and manage tenants in upcoming tickets.
+
+## April 30, 2024
+
+- **Task** Dagster ETL error [DESENG-599](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-599)
+  - Upgrading the version of python to 3.12 for dagster user code
+  - Upgrading the dependencies to support the version of python.
+  - Fixing a bug on survey etl service.
+- **Feature** Add Super Admin role [🎟️ DESENG-557](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-557)
+  - Added a new role, `SUPER_ADMIN`, to MET.
+  - The `SUPER_ADMIN` role has the highest level of access in the MET application.
+  - The `SUPER_ADMIN` role can perform all actions in MET, including actions in other tenants.
+  - The role can be only be assigned through the single sign-on (SSO) service.
+  - This overrides any other permissions set, e.g, a Viewer user who gets the super_admin role
+    will have all the permissions of a normal super admin.
+  - Change the React app's admin role to `SUPER_ADMIN` (previously `CREATE_TENANT`).
+  - Force all UI elements to be enabled for the `SUPER_ADMIN` role.
+  - Added unit tests for the new role, and updated an existing test related to cross-tenant access.
+
+## April 29, 2024
+
+- **Task** Upgrade python to 3.12 [DESENG-466](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-466)
+  - Upgrading the version of python to 3.12
+  - Upgrading the dependencies to support the version of python.
+  - Modify code as needed if the newer version does not support the former.
+
 ## April 22, 2024
 
 - **Task** Openshift - Update the buildconfig for the MET-cron job runner [🎟️ DESENG-559](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-559)

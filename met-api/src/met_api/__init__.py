@@ -153,23 +153,26 @@ def setup_jwt_manager(app_context, jwt_manager):
             app_context.logger.warning('Role info from keycloak is not a list!')
             break
 
-        keycloak_forwarded_roles = [Role.CREATE_TENANT.value]
+        # Any roles from keycloak that should be available in the API.
+        # For now, we only want to know if a user is a super admin;
+        # everything else is handled in-app by the UserGroupMembershipService...
+        keycloak_forwarded_roles = [Role.SUPER_ADMIN.value]
+        # ... so any extraneous roles are discarded
         user_roles = list(set(roles_from_token).intersection(keycloak_forwarded_roles))
 
         # Retrieve user by external ID from token info
         user = StaffUserService.get_user_by_external_id(token_info['sub'])
 
-        if user:
-            # Retrieve user roles within a tenant using UserGroupMembershipService
-            additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
-                token_info['sub'], g.tenant_id)
-            if additional_user_roles:
-                # Add additional user roles to user_roles list
-                user_roles.extend(additional_user_roles)
-            app_context.logger.warning('Unable to find a role for the user within the tenant.')
+        # Retrieve user roles within a tenant using UserGroupMembershipService
+        additional_user_roles, _ = UserGroupMembershipService.get_user_roles_within_tenant(
+            token_info['sub'], g.tenant_id)
+        if user and additional_user_roles:
+            # Add additional user roles to user_roles list
+            user_roles.extend(additional_user_roles)
         else:
             app_context.logger.warning('Unable to find an active user within the tenant.')
-
+        if not user_roles:
+            app_context.logger.warning('Unable to find a role for the user within the tenant.')
         return user_roles
 
     app_context.config['JWT_ROLE_CALLBACK'] = get_roles

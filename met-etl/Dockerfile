@@ -1,4 +1,4 @@
-FROM python:3.8.5-buster
+FROM python:3.12.2-bullseye
 
 ARG DAGSTER_VERSION=0.19.3
 

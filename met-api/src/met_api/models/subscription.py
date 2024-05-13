@@ -79,11 +79,11 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def update_subscription_for_participant(cls, subscription: dict, session=None) -> Subscription:
         """Update subscription for a participant."""
-        update_fields = dict(
-            is_subscribed=subscription.get('is_subscribed', False),
-            updated_date=datetime.utcnow(),
-            updated_by=subscription.get('updated_by', None),
-        )
+        update_fields = {
+            'is_subscribed': subscription.get('is_subscribed', False),
+            'updated_date': datetime.utcnow(),
+            'updated_by': subscription.get('updated_by', None),
+        }
         participant_id = subscription.get('participant_id', None)
         query = Subscription.query.filter_by(participant_id=participant_id)
         record = query.first()
@@ -97,11 +97,11 @@ class Subscription(BaseModel):  # pylint: disable=too-few-public-methods
     @classmethod
     def update_subscription_for_participant_eng(cls, subscription: dict, session=None) -> Subscription:
         """Update subscription for a participant and engagement."""
-        update_fields = dict(
-            is_subscribed=subscription.get('is_subscribed', False),
-            updated_date=datetime.utcnow(),
-            updated_by=subscription.get('updated_by', None),
-        )
+        update_fields = {
+            'is_subscribed': subscription.get('is_subscribed', False),
+            'updated_date': datetime.utcnow(),
+            'updated_by': subscription.get('updated_by', None),
+        }
         participant_id = subscription.get('participant_id', None)
         engagement_id = subscription.get('engagement_id', None)
         query = Subscription.query.filter_by(participant_id=participant_id, engagement_id=engagement_id)

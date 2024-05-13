@@ -6,14 +6,18 @@ from __future__ import annotations
 
 from typing import Optional
 
+from flask import g
 from sqlalchemy import Column, ForeignKey, String, asc, desc, func
 from sqlalchemy.orm import column_property
 from sqlalchemy.sql import text
 from sqlalchemy.sql.operators import ilike_op
 
+from met_api.models.user_group_membership import UserGroupMembership
 from met_api.utils.enums import UserStatus
+from met_api.utils.roles import Role
+from met_api.utils.token_info import TokenInfo
 
-from .base_model import BaseModel
+from .base_model import TENANT_ID, BaseModel
 from .db import db
 from .pagination_options import PaginationOptions
 
@@ -40,7 +44,10 @@ class StaffUser(BaseModel):
     def get_all_paginated(cls, pagination_options: PaginationOptions, search_text='', include_inactive=False):
         """Fetch list of users by access type."""
         query = cls.query
-        query = cls._add_tenant_filter(query)
+        # Don't filter out users from other tenants if the user is a super admin; show everything
+        if Role.SUPER_ADMIN.value not in TokenInfo.get_user_roles():
+            query = cls._add_tenant_filter(query)
+
         if pagination_options.sort_key:
             sort = asc(text(pagination_options.sort_key)) if pagination_options.sort_order == 'asc' \
                 else desc(text(pagination_options.sort_key))
@@ -60,6 +67,17 @@ class StaffUser(BaseModel):
 
         page = query.paginate(page=pagination_options.page, per_page=pagination_options.size)
         return page.items, page.total
+
+    @classmethod
+    def _add_tenant_filter(cls, query):
+        """Add tenant filtering to the query based on user group membership."""
+        has_tenant_id = hasattr(cls, TENANT_ID)
+        has_g_tenant_id = hasattr(g, TENANT_ID) and g.tenant_id
+        if has_tenant_id and has_g_tenant_id:
+            return query.join(
+                UserGroupMembership, UserGroupMembership.staff_user_external_id == cls.external_id
+            ).filter(UserGroupMembership.tenant_id == g.tenant_id)
+        return query
 
     @classmethod
     def get_by_id(cls, _id, include_inactive=False) -> Optional[StaffUser]:
@@ -106,15 +124,15 @@ class StaffUser(BaseModel):
         if not user:
             return None
 
-        update_fields = dict(
-            first_name=user_dict.get('first_name', user.first_name),
-            middle_name=user_dict.get('middle_name', user.middle_name),
-            last_name=user_dict.get('last_name', user.last_name),
-            email_address=user_dict.get('email_address', user.email_address),
-            contact_number=user_dict.get('contact_number', user.contact_number),
-            external_id=user_dict.get('external_id', user.external_id),
-            username=user_dict.get('username', user.username),
-        )
+        update_fields = {
+            'first_name': user_dict.get('first_name', user.first_name),
+            'middle_name': user_dict.get('middle_name', user.middle_name),
+            'last_name': user_dict.get('last_name', user.last_name),
+            'email_address': user_dict.get('email_address', user.email_address),
+            'contact_number': user_dict.get('contact_number', user.contact_number),
+            'external_id': user_dict.get('external_id', user.external_id),
+            'username': user_dict.get('username', user.username),
+        }
         query.update(update_fields)
         db.session.commit()
         return user

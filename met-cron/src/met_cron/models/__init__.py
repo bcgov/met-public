@@ -14,4 +14,4 @@
 
 """This exports all of the models and schemas used by the application."""
 
-from .db import db, ma, migrate
+from .db import db, migrate

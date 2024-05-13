@@ -8,7 +8,7 @@ on:
       - "met-api/**"
   push:
     branches:
-      - main    
+      - main
 
 defaults:
   run:
@@ -31,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.12]
 
     steps:
       - uses: actions/checkout@v2
@@ -65,7 +65,6 @@ jobs:
       JWT_OIDC_TEST_CLIENT_SECRET: "1111111111"
       JWT_OIDC_TEST_JWKS_CACHE_TIMEOUT: "6000"
 
-
       KEYCLOAK_ADMIN_CLIENTID: "met-admin"
       KEYCLOAK_ADMIN_SECRET: "2222222222"
       KEYCLOAK_AUTH_AUDIENCE: "met-web"
@@ -73,7 +72,7 @@ jobs:
       KEYCLOAK_BASE_URL: "http://localhost:8081/auth"
       KEYCLOAK_REALMNAME: "demo"
       USE_KEYCLOAK_DOCKER: "YES"
-    
+
       KEYCLOAK_TEST_ADMIN_CLIENTID: "met-admin"
       KEYCLOAK_TEST_ADMIN_SECRET: "2222222222"
       KEYCLOAK_TEST_AUTH_AUDIENCE: "met-web"
@@ -82,7 +81,7 @@ jobs:
       KEYCLOAK_TEST_REALMNAME: "demo"
       USE_TEST_KEYCLOAK_DOCKER: "YES"
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
-      
+
     runs-on: ubuntu-20.04
 
     services:
@@ -96,6 +95,10 @@ jobs:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    strategy:
+      matrix:
+        python-version: [3.12]
 
     steps:
       - uses: actions/checkout@v2
@@ -116,14 +119,14 @@ jobs:
         run: |
           echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           flags: metapi
           name: codecov-met-api
-          fail_ci_if_error: true   
-          verbose: true 
+          fail_ci_if_error: true
+          verbose: true
           override_branch: ${{env.CODECOV_BRANCH}}
           token: ${{ secrets.CODECOV_TOKEN }}
 

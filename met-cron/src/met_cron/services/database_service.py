@@ -13,7 +13,7 @@
 # limitations under the License.
 """Service to do maintenance on Database."""
 
-from met_cron.models.db import db
+from met_api.models.db import db
 
 class DatabaseService:  # pylint: disable=too-few-public-methods
     """Database maintenance Service."""
