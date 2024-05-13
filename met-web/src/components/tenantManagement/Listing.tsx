@@ -18,16 +18,24 @@ import React, { useEffect } from 'react';
 import { Tenant } from 'models/tenant';
 import { Else, If, Then } from 'react-if';
 import { BreadcrumbTrail } from 'components/MetDesignSystem/Navigation/Breadcrumb';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const TenantListing = () => {
     const [tenants, setTenants] = React.useState<Tenant[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
-
+    const dispatch = useAppDispatch();
     useEffect(() => {
-        const fetchTenants = async () => {
-            const tenants = await getAllTenants();
-            setTenants(tenants);
-            setLoading(false);
+        const fetchTenants = () => {
+            getAllTenants()
+                .then((returnedTenants) => {
+                    setTenants(returnedTenants);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    dispatch(openNotification({ text: error, severity: 'error' }));
+                    setLoading(false);
+                });
         };
         fetchTenants();
     }, []);
@@ -89,7 +97,7 @@ const TenantListing = () => {
                             </Then>
                             <Else>
                                 {tenants.map((tenant) => (
-                                    <TableRow onClick={() => console.log(tenant.name)} key={tenant.name} tabIndex={0}>
+                                    <TableRow onClick={() => {}} key={tenant.name} tabIndex={0}>
                                         <TableCell>
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}

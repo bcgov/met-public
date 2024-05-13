@@ -29,6 +29,7 @@ API = Namespace('tenants', description='Endpoints for Tenants Management')
 """Custom exception messages
 """
 
+
 @cors_preflight('GET OPTIONS')
 @API.route('/')
 class Tenants(Resource):
@@ -46,9 +47,10 @@ class Tenants(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
+
 @cors_preflight('GET OPTIONS')
 @API.route('/<tenant_id>')
-class Feedback(Resource):
+class Tenant(Resource):
     """Resource for managing a single tenant."""
 
     @staticmethod
