@@ -61,7 +61,9 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/dashboard/:dashboardType" element={<PublicDashboard />} />
                 <Route path="/engagements/:engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
-                <Route path="/metadatamanagement" element={<MetadataManagement />} />
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.MANAGE_METADATA]} />}>
+                    <Route path="/metadatamanagement" element={<MetadataManagement />} />
+                </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
                     <Route path="/tenantadmin" element={<TenantManagement />} />
                 </Route>
