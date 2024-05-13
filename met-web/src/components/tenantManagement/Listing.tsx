@@ -1,4 +1,5 @@
-import { AddCircleOutline } from '@mui/icons-material';
+import { faCirclePlus } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/MetDesignSystem/Input/Button';
 import { Header1, Header2, BodyText } from 'components/MetDesignSystem/Typography/';
@@ -25,6 +26,7 @@ const TenantListing = () => {
     const [tenants, setTenants] = React.useState<Tenant[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
     const dispatch = useAppDispatch();
+    const circlePlusIcon = <FontAwesomeIcon icon={faCirclePlus} />;
     useEffect(() => {
         const fetchTenants = () => {
             getAllTenants()
@@ -56,7 +58,7 @@ const TenantListing = () => {
                 </Grid>
                 <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
                     {/* TODO: redirect to "Create Tenant Instance" page */}
-                    <Button disabled variant="primary" icon={<AddCircleOutline />}>
+                    <Button disabled variant="primary" icon={circlePlusIcon}>
                         Add Instance
                     </Button>
                 </Grid>
@@ -97,7 +99,13 @@ const TenantListing = () => {
                             </Then>
                             <Else>
                                 {tenants.map((tenant) => (
-                                    <TableRow onClick={() => {}} key={tenant.name} tabIndex={0}>
+                                    <TableRow
+                                        onClick={() => {
+                                            return;
+                                        }}
+                                        key={tenant.name}
+                                        tabIndex={0}
+                                    >
                                         <TableCell>
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}
