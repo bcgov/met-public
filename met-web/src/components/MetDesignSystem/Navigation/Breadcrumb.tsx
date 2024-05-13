@@ -15,11 +15,11 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
         <Breadcrumbs aria-label="breadcrumb" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
             {crumbs.map((crumb, index) =>
                 crumb.link ? (
-                    <Link small key={index} to={crumb.link}>
+                    <Link small key={crumb.name} to={crumb.link}>
                         {crumb.name}
                     </Link>
                 ) : (
-                    <BodyText small bold={index == crumbs.length - 1} key={index} sx={{ lineHeight: '24px' }}>
+                    <BodyText small bold={index == crumbs.length - 1} key={crumb.name} sx={{ lineHeight: '24px' }}>
                         {crumb.name}
                     </BodyText>
                 ),

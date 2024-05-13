@@ -9,7 +9,7 @@ export const getTenant = async (id: string): Promise<Tenant> => {
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to fetch tenant info');
+    return Promise.reject(Error('Failed to fetch tenant info'));
 };
 
 export const getAllTenants = async (): Promise<Tenant[]> => {
@@ -17,5 +17,5 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
     if (response.data) {
         return response.data;
     }
-    return Promise.reject('Failed to fetch tenants');
+    return Promise.reject(Error('Failed to fetch tenants'));
 };

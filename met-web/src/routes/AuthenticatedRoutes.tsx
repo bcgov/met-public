@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import NotFound from './NotFound';
 import EngagementForm from '../components/engagement/form';
 import EngagementListing from '../components/engagement/listing';
@@ -63,13 +63,7 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
                 <Route path="/metadatamanagement" element={<MetadataManagement />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
-                    <Route
-                        path="/tenantadmin"
-                        element={<TenantListing />}
-                        handle={{
-                            crumb: () => <Link to="/tenantadmin">Tenant Management</Link>,
-                        }}
-                    />
+                    <Route path="/tenantadmin" element={<TenantListing />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />

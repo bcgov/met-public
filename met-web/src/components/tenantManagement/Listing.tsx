@@ -35,7 +35,7 @@ const TenantListing = () => {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    dispatch(openNotification({ text: error, severity: 'error' }));
+                    dispatch(openNotification({ text: error.message, severity: 'error' }));
                     setLoading(false);
                 });
         };
