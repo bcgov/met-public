@@ -1,3 +1,9 @@
+## May 13, 2024
+
+- **Bugfix** Date shown on rejection email preview is incorrect [🎟️ DESENG-597](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-597)
+  - Fixed the date formatting issue and using the end_date in the email preview
+  - Updated unit tests
+
 ## May 10, 2024
 
 - **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
