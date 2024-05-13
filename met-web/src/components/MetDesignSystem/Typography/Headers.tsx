@@ -10,7 +10,7 @@ export const Header1 = styled('h1')({
 });
 
 export const Header2 = styled('h2')<{ decorated?: boolean }>((props) => ({
-    lineHeight: '1.3',
+    lineHeight: '1.5',
     fontSize: '1.5rem',
     marginBottom: '1.5rem',
     marginTop: '0.5rem',

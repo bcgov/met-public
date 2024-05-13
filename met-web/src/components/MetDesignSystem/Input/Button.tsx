@@ -46,6 +46,7 @@ export const Button: React.FC<ButtonProps> = ({
                 // If the colormap has the "stroke" property, use it as the border
                 border: 'stroke' in colorMap && colorMap.stroke ? `1px solid ${colorMap.stroke}` : 'none',
                 padding: '0 1.5rem',
+                marginBottom: '1.5rem',
                 fontWeight: 500,
                 fontSize: '16px',
                 height: height,

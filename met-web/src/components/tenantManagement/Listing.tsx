@@ -50,11 +50,9 @@ const TenantListing = () => {
             />
 
             <Header1>Tenant Admin</Header1>
-            <Grid container spacing={0} direction="row" mb="2em">
+            <Grid container spacing={0} direction="row" mb="0.5em">
                 <Grid item xs={12} sm={7} lg={9}>
-                    <Header2 decorated sx={{ mb: 0 }}>
-                        Tenant Instances {!loading && `(${tenants.length})`}
-                    </Header2>
+                    <Header2 decorated>Tenant Instances {!loading && `(${tenants.length})`}</Header2>
                 </Grid>
                 <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
                     {/* TODO: redirect to "Create Tenant Instance" page */}
