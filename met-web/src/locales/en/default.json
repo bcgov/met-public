@@ -301,5 +301,26 @@
             "The page you're looking for cannot be found.",
             "The page you're looking for might have been removed, moved or is temporarily unavailable."
         ]
+    },
+    "NoResults": {
+        "header": "Unfortunately we couldn’t find any matching engagements.",
+        "paragraph": "Here are some things you can try:",
+        "list": [
+            "Reduce the number of filters applied",
+            "Clear all applied filters",
+            "Use a more generic search term"
+        ],
+        "contact": {
+            "header": "Still can’t find what you’re looking for?",
+            "paragraph": "Please contact us, we are here to help.",
+            "telephone": {
+                "text": "Telephone",
+                "number": "250 123-4567"
+            },
+            "email": {
+                "text": "Email",
+                "address": "emailaddress@gov.bc.ca"
+            }
+        }
     }
 }

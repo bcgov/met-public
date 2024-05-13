@@ -130,3 +130,26 @@ class EngagementTranslation(Resource):
             return str(err), HTTPStatus.NOT_FOUND
         except ValidationError as err:
             return str(err.messages), HTTPStatus.BAD_REQUEST
+
+
+@cors_preflight('GET')
+@API.route('/languages')
+class EngagementTranslationsLanguages(Resource):
+    """Get a list of languages that this engagement is translated into."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(engagement_id):
+        """Get a list of all languages available for each of this engagement's translations."""
+        try:
+            available_translation_language = (
+                EngagementTranslationService.get_available_engagement_translation_languages(
+                    engagement_id
+                )
+            )
+            return (
+                jsonify(available_translation_language),
+                HTTPStatus.OK,
+            )
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.BAD_REQUEST
