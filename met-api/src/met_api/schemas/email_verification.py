@@ -19,6 +19,7 @@ class EmailVerificationSchema(Schema):
     id = fields.Int(data_key='id')
     email_address = fields.Str(data_key='email_address')
     participant_id = fields.Int(data_key='participant_id')
+    verification_token = fields.Str(data_key='verification_token')
     language_code = fields.Str(data_key='language')
     is_active = fields.Bool(data_key='is_active')
     survey_id = fields.Int(data_key='survey_id')

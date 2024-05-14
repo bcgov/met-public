@@ -161,7 +161,7 @@ class EmailVerificationService:
             engagement_id=engagement.id, token=token, lang=lang_code
         )
         unsubscribe_path = paths.get('UNSUBSCRIBE').format(
-            engagement_id=engagement.id, participant_id=participant_id, lang_code=lang_code
+            engagement_id=engagement.id, participant_id=participant_id, lang=lang_code
         )
         confirm_url = notification.get_tenant_site_url(engagement.tenant_id, confirm_path)
         unsubscribe_url = notification.get_tenant_site_url(

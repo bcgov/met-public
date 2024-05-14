@@ -131,7 +131,8 @@ def test_post_subscription_email_verification(client, jwt, session, notify_mock,
     to_dict = {
         'email_address': fake.email(),
         'survey_id': survey.id,
-        'type': EmailVerificationType.Subscribe
+        'type': EmailVerificationType.Subscribe,
+        'language': 'en',
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/email_verification/{SubscriptionTypes.PROJECT.value}/subscribe',
