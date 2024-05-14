@@ -8,6 +8,7 @@ React.js frontend application for The Modern Engagement Tool project.
 * Install the following:
     - [Node.js](https://nodejs.org/en/)
 * Install Dependencies
+    - Set token for fontawesome by running `npm config set '//npm.fontawesome.com/:_authToken' "FONTAWESOME_PACKAGE_TOKEN"`
     - Run `npm install` in the root of the project (met-web)
 
 ## Environment Variables

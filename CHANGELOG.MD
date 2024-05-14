@@ -5,6 +5,25 @@
   - The system tries to determine the language from the user's browser, but if it can't, it defaults to English
   - A future, larger refactor could allow us to remember the user's language preference and always use that
 
+## May 8, 2024
+
+- **Feature** Add font awesome to MET web [🎟️ DESENG-543](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-543)
+  - Added font awesome to MET web.
+  - Created .npmrc file to set the registry for fontawesome
+  - Updated github actions to pull fontawesome auth token from github secrets
+
+## May 7, 2024
+
+- **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
+  - Tested users can belong to more than one tenant.
+  - Overide the default tenant filter for staff_user table to check with user_group_membership table.
+
+## May 6, 2024
+
+- **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
+  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default
+    description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
+
 ## May 2, 2024
 
 - **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
