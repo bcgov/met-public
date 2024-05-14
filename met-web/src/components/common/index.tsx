@@ -277,6 +277,17 @@ export const HeaderTitle = styled(Typography)(() => ({
     fontFamily: MET_Header_Font_Family,
 }));
 
+export const SubHeader = styled(Typography)(() => ({
+    fontSize: '28px',
+    fontFamily: MET_Header_Font_Family,
+}));
+
+export const ListItem = styled(Typography)(() => ({
+    fontSize: '14px',
+    fontFamily: MET_Header_Font_Family,
+    marginBottom: 1,
+}));
+
 export const MetSmallText = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography

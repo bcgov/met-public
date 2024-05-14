@@ -5,6 +5,7 @@ import { TileSkeleton } from './TileSkeleton';
 import EngagementTile from './EngagementTile';
 import { LandingContext } from './LandingContext';
 import { PAGE_SIZE } from './constants';
+import NoResult from 'routes/NoResults';
 
 const TileBlock = () => {
     const { engagements, loadingEngagements, totalEngagements, page, setPage } = useContext(LandingContext);
@@ -24,6 +25,22 @@ const TileBlock = () => {
                 <RepeatedGrid times={4} item xs={12} sm={6} md={4} lg={3}>
                     <TileSkeleton />
                 </RepeatedGrid>
+            </Grid>
+        );
+    }
+    if (engagements.length == 0) {
+        return (
+            <Grid
+                container
+                direction="row"
+                alignItems={'flex-start'}
+                justifyContent="flex-start"
+                columnSpacing={2}
+                rowSpacing={4}
+                item
+                xs={10}
+            >
+                <NoResult />
             </Grid>
         );
     }
