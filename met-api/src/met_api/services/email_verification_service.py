@@ -109,6 +109,7 @@ class EmailVerificationService:
         subject, body, args, template_id = EmailVerificationService._render_email_template(
             survey,
             email_verification.get('verification_token'),
+            email_verification.get('language_code', current_app.config['DEFAULT_LANGUAGE']),
             email_verification.get('type'),
             subscription_type,
             participant_id
@@ -128,21 +129,22 @@ class EmailVerificationService:
     def _render_email_template(
         survey: SurveyModel,
         token,
+        lang_code: str,
         email_type: EmailVerificationType,
         subscription_type,
         participant_id,
     ):
         if email_type == EmailVerificationType.Subscribe:
             return EmailVerificationService._render_subscribe_email_template(
-                survey, token, subscription_type, participant_id)
+                survey, token, subscription_type, participant_id, lang_code)
         # if email_type == EmailVerificationType.RejectedComment:
         # TODO: move reject comment email verification logic here
         #    return
-        return EmailVerificationService._render_survey_email_template(survey, token)
+        return EmailVerificationService._render_survey_email_template(survey, token, lang_code)
 
     @staticmethod
     # pylint: disable-msg=too-many-locals
-    def _render_subscribe_email_template(survey: SurveyModel, token, subscription_type, participant_id):
+    def _render_subscribe_email_template(survey: SurveyModel, token, subscription_type, participant_id, lang_code):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
@@ -155,10 +157,10 @@ class EmailVerificationService:
         paths = current_app.config['PATH_CONFIG']
         template_id = templates['SUBSCRIBE']['ID']
         confirm_path = paths.get('SUBSCRIBE').format(
-            engagement_id=engagement.id, token=token
+            engagement_id=engagement.id, token=token, lang=lang_code
         )
         unsubscribe_path = paths.get('UNSUBSCRIBE').format(
-            engagement_id=engagement.id, participant_id=participant_id
+            engagement_id=engagement.id, participant_id=participant_id, lang_code=lang_code
         )
         confirm_url = notification.get_tenant_site_url(engagement.tenant_id, confirm_path)
         unsubscribe_url = notification.get_tenant_site_url(
@@ -186,7 +188,7 @@ class EmailVerificationService:
         return subject, body, args, template_id
 
     @staticmethod
-    def _render_survey_email_template(survey: SurveyModel, token):
+    def _render_survey_email_template(survey: SurveyModel, token, lang_code):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
         engagement_name = engagement.name
@@ -194,8 +196,8 @@ class EmailVerificationService:
         templates = current_app.config['EMAIL_TEMPLATES']
         subject_template = templates['VERIFICATION']['SUBJECT']
         template = Template.get_template('email_verification.html')
-        survey_path = paths['SURVEY'].format(survey_id=survey.id, token=token)
-        engagement_path = EmailVerificationService.get_engagement_path(engagement)
+        survey_path = paths['SURVEY'].format(survey_id=survey.id, token=token, lang=lang_code)
+        engagement_path = EmailVerificationService.get_engagement_path(engagement, lang_code=lang_code)
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
         args = {
@@ -218,14 +220,15 @@ class EmailVerificationService:
         return subject, body, args, templates['VERIFICATION']['ID']
 
     @staticmethod
-    def get_engagement_path(engagement: EngagementModel, is_public_url=True):
+    def get_engagement_path(engagement: EngagementModel, is_public_url=True, lang_code=None):
+        lang_code = lang_code or current_app.config['DEFAULT_LANGUAGE']
         """Get an engagement path."""
         paths = current_app.config['PATH_CONFIG']
         if is_public_url:
             engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
             if engagement_slug:
-                return paths['ENGAGEMENT']['SLUG'].format(slug=engagement_slug.slug)
-        return paths['ENGAGEMENT']['VIEW'].format(engagement_id=engagement.id)
+                return paths['ENGAGEMENT']['SLUG'].format(slug=engagement_slug.slug, lang=lang_code)
+        return paths['ENGAGEMENT']['VIEW'].format(engagement_id=engagement.id, lang=lang_code)
 
     @staticmethod
     def _get_tenant_name(tenant_id):

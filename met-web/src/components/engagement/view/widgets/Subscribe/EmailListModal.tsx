@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { MetDisclaimer } from 'components/common';
 import { ActionContext } from '../../ActionContext';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
 import { createSubscribeEmailVerification } from 'services/emailVerificationService';
@@ -10,6 +10,7 @@ import { EmailVerificationType } from 'models/emailVerification';
 import { SubscriptionType } from 'constants/subscriptionType';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { LanguageState } from 'reduxSlices/languageSlice';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
     const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const language: LanguageState = useAppSelector((state) => state.language);
 
     const sendEmail = async () => {
         try {
@@ -26,6 +28,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     email_address: email,
                     survey_id: savedEngagement.surveys[0].id,
                     type: EmailVerificationType.Subscribe,
+                    language: language.id,
                 },
                 defaultType,
             );

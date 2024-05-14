@@ -31,6 +31,7 @@ interface CreateEmailVerification {
     email_address: string;
     survey_id: number;
     type: EmailVerificationType;
+    language: string;
 }
 export const createEmailVerification = async (request: CreateEmailVerification): Promise<EmailVerification> => {
     try {

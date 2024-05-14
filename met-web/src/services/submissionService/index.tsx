@@ -15,6 +15,7 @@ interface ReviewCommentRequest {
     rejected_reason_other?: string;
     notify_email?: boolean;
     staff_note: unknown[];
+    language: string;
 }
 export const reviewComments = async (requestData: ReviewCommentRequest): Promise<SurveySubmission> => {
     const url = replaceUrl(Endpoints.SurveySubmission.REVIEW, 'submission_id', String(requestData.submission_id));
