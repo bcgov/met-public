@@ -4,6 +4,11 @@
   - Fixed the date formatting issue and using the end_date in the email preview
   - Updated unit tests
 
+- **Feature** Create role for metadata management [🎟️ DESENG-603](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-603)
+- Implemented a new role named "manage_metadata" within the Admin group to restrci access for metadata management
+- Updated the frontend to restrict access to the "metadata management" link in the menu for users without the newly added role
+- Backend changes to incorporate the new role for access control purposes, ensuring only authorized users can perform metadata management actions
+
 ## May 10, 2024
 
 - **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
