@@ -116,7 +116,6 @@ class MetadataTaxa(Resource):
     @cross_origin(origins=allowedorigins())
     @API.marshal_list_with(taxon_return_model)
     @ensure_tenant_access()
-    @require_role(MANAGE_METADATA_ROLE)
     def get(tenant: Tenant):
         """Fetch a list of metadata taxa for the current tenant."""
         tenant_taxa = taxon_service.get_by_tenant(tenant.id)

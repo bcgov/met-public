@@ -79,7 +79,7 @@ class EngagementMetadata(Resource):
         authorization.check_auth(
             one_of_roles=(
                 MembershipType.TEAM_MEMBER.name,
-                Role.MANAGE_METADATA.value
+                Role.VIEW_ENGAGEMENT.value
             ),
             engagement_id=engagement_id
         )
@@ -97,7 +97,7 @@ class EngagementMetadata(Resource):
         authorization.check_auth(
             one_of_roles=(
                 MembershipType.TEAM_MEMBER.name,
-                Role.MANAGE_METADATA.value
+                Role.EDIT_ENGAGEMENT.value
             ),
             engagement_id=engagement_id
         )
@@ -123,7 +123,7 @@ class EngagementMetadata(Resource):
         authorization.check_auth(
             one_of_roles=(
                 MembershipType.TEAM_MEMBER.name,
-                Role.MANAGE_METADATA.value
+                Role.EDIT_ENGAGEMENT.value
             ),
             engagement_id=engagement_id
         )
@@ -152,7 +152,7 @@ class EngagementMetadataById(Resource):
         authorization.check_auth(
             one_of_roles=(
                 MembershipType.TEAM_MEMBER.name,
-                Role.MANAGE_METADATA.value
+                Role.VIEW_ENGAGEMENT.value
             ),
             engagement_id=engagement_id
         )
@@ -177,7 +177,7 @@ class EngagementMetadataById(Resource):
         authorization.check_auth(
             one_of_roles=(
                 MembershipType.TEAM_MEMBER.name,
-                Role.MANAGE_METADATA.value
+                Role.EDIT_ENGAGEMENT.value
             ),
             engagement_id=engagement_id
         )
@@ -207,7 +207,7 @@ class EngagementMetadataById(Resource):
             authorization.check_auth(
                 one_of_roles=(
                     MembershipType.TEAM_MEMBER.name,
-                    Role.MANAGE_METADATA.value
+                    Role.EDIT_ENGAGEMENT.value
                 ),
                 engagement_id=engagement_id
             )
