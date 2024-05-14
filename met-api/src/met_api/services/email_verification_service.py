@@ -126,6 +126,7 @@ class EmailVerificationService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
+    # pylint: disable-msg=too-many-arguments
     def _render_email_template(
         survey: SurveyModel,
         token,
@@ -191,7 +192,6 @@ class EmailVerificationService:
     def _render_survey_email_template(survey: SurveyModel, token, lang_code):
         # url is origin url excluding context path
         engagement: EngagementModel = EngagementModel.find_by_id(survey.engagement_id)
-        engagement_name = engagement.name
         paths = current_app.config['PATH_CONFIG']
         templates = current_app.config['EMAIL_TEMPLATES']
         subject_template = templates['VERIFICATION']['SUBJECT']
@@ -201,14 +201,14 @@ class EmailVerificationService:
         site_url = notification.get_tenant_site_url(engagement.tenant_id)
         tenant_name = EmailVerificationService._get_tenant_name(engagement.tenant_id)
         args = {
-            'engagement_name': engagement_name,
+            'engagement_name': engagement.name,
             'survey_url': f'{site_url}{survey_path}',
             'engagement_url': f'{site_url}{engagement_path}',
             'tenant_name': tenant_name,
             'end_date': datetime.strftime(engagement.end_date, EmailVerificationService.full_date_format),
             'email_environment': templates['ENVIRONMENT'],
         }
-        subject = subject_template.format(engagement_name=engagement_name)
+        subject = subject_template.format(engagement_name=engagement.name)
         body = template.render(
             engagement_name=args.get('engagement_name'),
             survey_url=args.get('survey_url'),
@@ -221,8 +221,8 @@ class EmailVerificationService:
 
     @staticmethod
     def get_engagement_path(engagement: EngagementModel, is_public_url=True, lang_code=None):
-        lang_code = lang_code or current_app.config['DEFAULT_LANGUAGE']
         """Get an engagement path."""
+        lang_code = lang_code or current_app.config['DEFAULT_LANGUAGE']
         paths = current_app.config['PATH_CONFIG']
         if is_public_url:
             engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)

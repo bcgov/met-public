@@ -185,7 +185,7 @@ class SubmissionService:
             'type': EmailVerificationType.RejectedComment,
         }, session)
         SubmissionService._send_rejected_email(
-            staff_review_details, submission, review_note, 
+            staff_review_details, submission, review_note,
             email_verification.get('verification_token'), lang_code)
 
     @classmethod
@@ -325,7 +325,8 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(staff_review_details: dict, submission: SubmissionModel, review_note, token, lang_code) -> None:
+    def _send_rejected_email(staff_review_details: dict, submission: SubmissionModel,
+                             review_note, token, lang_code) -> None:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
