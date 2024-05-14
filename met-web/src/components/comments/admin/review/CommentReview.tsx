@@ -14,7 +14,7 @@ import {
     Link,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
-import { useAppDispatch, useAppTranslation } from 'hooks';
+import { useAppDispatch, useAppTranslation, useAppSelector } from 'hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import {
@@ -41,6 +41,7 @@ import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
 import CommentIcon from '@mui/icons-material/Comment';
+import { LanguageState } from 'reduxSlices/languageSlice';
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 
 const CommentReview = () => {
@@ -67,6 +68,8 @@ const CommentReview = () => {
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
 
     const MAX_OTHER_REASON_CHAR = 500;
+
+    const language: LanguageState = useAppSelector((state) => state.language);
 
     const getEmailPreview = () => {
         return (
@@ -166,6 +169,7 @@ const CommentReview = () => {
                 rejected_reason_other: otherReason,
                 notify_email: notifyEmail,
                 staff_note: updatedStaffNote,
+                language: language.id,
             });
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));

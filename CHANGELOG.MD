@@ -1,3 +1,10 @@
+## May 14, 2024
+
+- **Bugfix** Add language code to email links [🎟️ DESENG-579](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-579)
+  - Added a language code to email template links so that they point to a valid page again
+  - The system tries to determine the language from the user's browser, but if it can't, it defaults to English
+  - A future, larger refactor could allow us to remember the user's language preference and always use that
+
 ## May 13, 2024
 
 - **Bugfix** Date shown on rejection email preview is incorrect [🎟️ DESENG-597](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-597)
@@ -33,12 +40,12 @@
 - **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
   - Tested users can belong to more than one tenant.
   - Overide the default tenant filter for staff_user table to check with user_group_membership table.
-  
+
 ## May 6, 2024
 
 - **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
-  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default 
-  description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
+  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default
+    description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
 
 ## May 2, 2024
 
