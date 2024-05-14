@@ -1,3 +1,10 @@
+## May 14, 2024
+
+- **Bugfix** Add language code to email links [🎟️ DESENG-579](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-579)
+  - Added a language code to email template links so that they point to a valid page again
+  - The system tries to determine the language from the user's browser, but if it can't, it defaults to English
+  - A future, larger refactor could allow us to remember the user's language preference and always use that
+
 ## May 2, 2024
 
 - **Feature** Added a new landing page for tenant management [🎟️ DESENG-591](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-591)
