@@ -11,36 +11,105 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing an tenant resource."""
+"""API endpoints for managing a tenant resource."""
 
 from http import HTTPStatus
 
+from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from marshmallow import ValidationError
 
-from met_api.auth import auth
+from met_api.auth import jwt as _jwt
+from met_api.schemas import utils as schema_utils
+from met_api.schemas.tenant import TenantSchema
 from met_api.services.tenant_service import TenantService
 from met_api.utils.util import allowedorigins, cors_preflight
-
 
 API = Namespace('tenants', description='Endpoints for Tenants Management')
 """Custom exception messages
 """
 
 
-@cors_preflight('GET OPTIONS')
-@API.route('/<tenant_id>')
-class Feedback(Resource):
-    """Resource for managing feedbacks."""
+@cors_preflight('GET, POST, OPTIONS')
+@API.route('/')
+class TenantList(Resource):
+    """Resource for managing tenants."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @auth.optional
+    @_jwt.requires_auth
+    def get():
+        """Fetch all tenants."""
+        try:
+            tenants = TenantService().get_all()
+            return jsonify(tenants), HTTPStatus.OK
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def post():
+        """Create a new tenant."""
+        try:
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'tenant')
+            if not valid_format:
+                print(errors)
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+
+            tenant = TenantSchema().load(request_json)
+            created_tenant = TenantService().create(tenant)
+            return created_tenant, HTTPStatus.CREATED
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET, DELETE, PATCH')
+@API.route('/<tenant_id>')
+class Tenant(Resource):
+    """Resource for managing a single tenant."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
     def get(tenant_id):
-        """Fetch a tenant."""
+        """Fetch a tenant by ID."""
         try:
             tenant = TenantService().get(tenant_id)
-
             return tenant, HTTPStatus.OK
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def delete(tenant_id):
+        """Delete a tenant."""
+        try:
+            TenantService().delete(tenant_id)
+            return {'status': 'success', 'message': 'Tenant deleted successfully'}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(tenant_id):
+        """Update a tenant."""
+        try:
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'tenant_update')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+
+            updated_tenant = TenantService().update(tenant_id, request_json)
+            return updated_tenant, HTTPStatus.OK
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR

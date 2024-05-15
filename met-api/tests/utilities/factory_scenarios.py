@@ -159,6 +159,8 @@ class TestTenantInfo(dict, Enum):
     tenant1 = {
         'short_name': 'EAO',
         'name': fake.name(),
+        'contact_name': fake.name(),
+        'contact_email': fake.email(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
         'logo_url': None,
@@ -166,6 +168,8 @@ class TestTenantInfo(dict, Enum):
     tenant2 = {
         'short_name': 'EMLI',
         'name': fake.name(),
+        'contact_name': fake.name(),
+        'contact_email': fake.email(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
         'logo_url': None,
