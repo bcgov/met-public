@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { SubmitHandler } from 'react-hook-form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -256,12 +256,12 @@ const Form = () => {
             mt={'1em'}
         >
             <Grid item>
-                <PrimaryButton type="submit" disabled={isCreating} data-testid="save-button">
+                <PrimaryButtonOld type="submit" disabled={isCreating} data-testid="save-button">
                     Save & Close
-                </PrimaryButton>
+                </PrimaryButtonOld>
             </Grid>
             <Grid item>
-                <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>Cancel</SecondaryButton>
+                <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>Cancel</SecondaryButtonOld>
             </Grid>
         </Grid>
     );

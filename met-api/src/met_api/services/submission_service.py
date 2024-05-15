@@ -78,6 +78,7 @@ class SubmissionService:
     def create(cls, token, submission: SubmissionSchema):
         """Create submission."""
         cls._validate_fields(submission)
+        lang_code = submission.get('language_code', current_app.config['DEFAULT_LANGUAGE'])
         survey_id = submission.get('survey_id')
         survey = SurveyService.get(survey_id)
         engagement_id = survey.get('engagement_id')
@@ -103,7 +104,7 @@ class SubmissionService:
         if engagement_settings:
             if engagement_settings.send_report:
                 SubmissionService._send_submission_response_email(
-                    participant_id, engagement_id)
+                    participant_id, engagement_id, lang_code)
         return submission_result
 
     @classmethod
@@ -156,7 +157,8 @@ class SubmissionService:
         cls.validate_review(staff_review_details, user, submission)
         reviewed_by = ' '.join(
             [user.get('first_name', ''), user.get('last_name', '')])
-
+        default_lang = current_app.config['DEFAULT_LANGUAGE']
+        lang_code = staff_review_details.get('language_code', default_lang)
         staff_review_details['reviewed_by'] = reviewed_by
         staff_review_details['user_id'] = user.get('id')
         should_send_email = SubmissionService._should_send_email(
@@ -171,11 +173,11 @@ class SubmissionService:
             rejection_review_note = StaffNote.get_staff_note_by_type(
                 submission_id, StaffNoteType.Review.name)
             SubmissionService._trigger_email(
-                rejection_review_note[0].note, db.session, staff_review_details, submission)
+                rejection_review_note[0].note, db.session, staff_review_details, submission, lang_code)
         return SubmissionSchema().dump(submission)
 
     @staticmethod
-    def _trigger_email(review_note, session, staff_review_details: dict, submission):
+    def _trigger_email(review_note, session, staff_review_details: dict, submission, lang_code):
         email_verification = EmailVerificationService().create({
             'participant_id': submission.participant_id,
             'survey_id': submission.survey_id,
@@ -183,7 +185,8 @@ class SubmissionService:
             'type': EmailVerificationType.RejectedComment,
         }, session)
         SubmissionService._send_rejected_email(
-            staff_review_details, submission, review_note, email_verification.get('verification_token'))
+            staff_review_details, submission, review_note,
+            email_verification.get('verification_token'), lang_code)
 
     @classmethod
     def validate_review(cls, values: dict, user, submission):
@@ -322,12 +325,13 @@ class SubmissionService:
         }
 
     @staticmethod
-    def _send_rejected_email(staff_review_details: dict, submission: SubmissionModel, review_note, token) -> None:
+    def _send_rejected_email(staff_review_details: dict, submission: SubmissionModel,
+                             review_note, token, lang_code) -> None:
         """Send an verification email.Throws error if fails."""
         participant_id = submission.participant_id
         participant = ParticipantModel.find_by_id(participant_id)
         template_id, subject, body, args = SubmissionService._render_email_template(
-            staff_review_details, submission, review_note, token)
+            staff_review_details, submission, review_note, token, lang_code)
         try:
             notification.send_email(subject=subject,
                                     email=ParticipantModel.decode_email(
@@ -344,7 +348,7 @@ class SubmissionService:
 
     @staticmethod
     # pylint: disable-msg=too-many-locals
-    def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token):
+    def _render_email_template(staff_review_details: dict, submission: SubmissionModel, review_note, token, lang_code):
         engagement: EngagementModel = EngagementModel.find_by_id(
             submission.engagement_id)
         templates = current_app.config['EMAIL_TEMPLATES']
@@ -368,7 +372,8 @@ class SubmissionService:
             engagement.tenant_id)
         submission_path = paths['SUBMISSION'].format(
             engagement_id=submission.engagement_id,
-            submission_id=submission.id, token=token
+            submission_id=submission.id, token=token,
+            lang=lang_code
         )
         submission_url = notification.get_tenant_site_url(
             engagement.tenant_id, submission_path)
@@ -400,13 +405,13 @@ class SubmissionService:
         return template_id, subject, body, args
 
     @staticmethod
-    def _send_submission_response_email(participant_id, engagement_id) -> None:
+    def _send_submission_response_email(participant_id, engagement_id, lang_code) -> None:
         """Send response to survey submission."""
         participant = ParticipantModel.find_by_id(participant_id)
         templates = current_app.config['EMAIL_TEMPLATES']
         template_id = templates['SUBMISSION_RESPONSE']['ID']
         subject, body, args = SubmissionService._render_submission_response_email_template(
-            engagement_id)
+            engagement_id, lang_code)
         try:
             notification.send_email(subject=subject,
                                     email=ParticipantModel.decode_email(
@@ -422,12 +427,12 @@ class SubmissionService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_submission_response_email_template(engagement_id):
+    def _render_submission_response_email_template(engagement_id, lang_code):
         engagement: EngagementModel = EngagementModel.find_by_id(engagement_id)
         templates = current_app.config['EMAIL_TEMPLATES']
         template = Template.get_template('submission_response.html')
         subject = templates['SUBMISSION_RESPONSE']['SUBJECT']
-        dashboard_path = SubmissionService._get_dashboard_path(engagement)
+        dashboard_path = SubmissionService._get_dashboard_path(engagement, lang_code)
         engagement_url = notification.get_tenant_site_url(
             engagement.tenant_id, dashboard_path)
         email_environment = templates['ENVIRONMENT']
@@ -450,16 +455,18 @@ class SubmissionService:
         return subject, body, args
 
     @staticmethod
-    def _get_dashboard_path(engagement: EngagementModel):
+    def _get_dashboard_path(engagement: EngagementModel, lang_code):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(
             engagement.id)
         paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
             return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(
-                slug=engagement_slug.slug
+                slug=engagement_slug.slug,
+                lang=lang_code
             )
         return paths['ENGAGEMENT']['DASHBOARD'].format(
-            engagement_id=engagement.id
+            engagement_id=engagement.id,
+            lang=lang_code
         )
 
     @staticmethod

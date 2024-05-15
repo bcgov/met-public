@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
-import { MetBody } from 'components/common';
+import { MetBodyOld } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { Link, Box } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
@@ -99,7 +99,7 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                         </Then>
                         <Else>
                             <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
-                            <MetBody bold>{labelText}</MetBody>
+                            <MetBodyOld bold>{labelText}</MetBodyOld>
                         </Else>
                     </If>
                 </Box>

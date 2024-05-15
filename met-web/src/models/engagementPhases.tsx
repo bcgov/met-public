@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Grid } from '@mui/material';
-import { MetParagraph } from 'components/common';
+import { MetParagraphOld } from 'components/common';
 
 export enum EngagementPhases {
     Standalone = 0,
@@ -46,10 +46,10 @@ export const ENGAGEMENT_PHASES = {
         learnMoreBackgroundColor: '#EFFBFD',
         learnMoreText: (
             <Grid item xs={12}>
-                <MetParagraph>
+                <MetParagraphOld>
                     Engage with Indigenous nations, stakeholders, technical experts and the public to identify potential
                     key issues early in the process, and ways they could be addressed.
-                </MetParagraph>
+                </MetParagraphOld>
             </Grid>
         ),
         popOverText:
@@ -63,10 +63,10 @@ export const ENGAGEMENT_PHASES = {
         accordionBackground: '#F2DEDE',
         learnMoreText: (
             <Grid item xs={12}>
-                <MetParagraph>
+                <MetParagraphOld>
                     Review detailed project description, and input from early engagement and technical advisors, to
                     determine whether to proceed to environmental assessment. Consensus with Indigenous nations sought.
-                </MetParagraph>
+                </MetParagraphOld>
             </Grid>
         ),
     },
@@ -78,11 +78,11 @@ export const ENGAGEMENT_PHASES = {
         learnMoreBackgroundColor: '#ECF3FC',
         learnMoreText: (
             <Grid item xs={12}>
-                <MetParagraph>
+                <MetParagraphOld>
                     Engage with Indigenous nations, stakeholders, technical experts to establish how the environmental
                     assessment will be conducted, including scope, procedures and methods, and how provincial and
                     Indigenous processes and decision-making will align. Consensus with Indigenous nations sought.
-                </MetParagraph>
+                </MetParagraphOld>
             </Grid>
         ),
         popOverText:
@@ -97,21 +97,21 @@ export const ENGAGEMENT_PHASES = {
         learnMoreText: (
             <>
                 <Grid item xs={12}>
-                    <MetParagraph>
+                    <MetParagraphOld>
                         Proponent consults and does technical studies, then develops the initial application. EAO then
                         seeks feedback on it from Indigenous nations, stakeholders, technical experts and the public.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraph>
+                    <MetParagraphOld>
                         Proponent revises application, and submits to EAO for review. Consensus with Indigenous nations
                         sought.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraph sx={{ fontStyle: 'italic' }}>
+                    <MetParagraphOld sx={{ fontStyle: 'italic' }}>
                         Decision point: accept revised application or require further revisions.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
             </>
         ),
@@ -127,18 +127,18 @@ export const ENGAGEMENT_PHASES = {
         learnMoreText: (
             <>
                 <Grid item xs={12}>
-                    <MetParagraph>
+                    <MetParagraphOld>
                         Assess potential effects of the project. Develop assessment report and draft conditions to
                         address potential adverse effects, in consultation with technical experts and Indigenous
                         nations. Seek and incorporate feedback from Indigenous nations, stakeholders, technical experts
                         and the public. Consensus with Indigenous nations sought.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraph sx={{ fontStyle: 'italic' }}>
+                    <MetParagraphOld sx={{ fontStyle: 'italic' }}>
                         Decision point: recommend to ministers whether or not to issue an Environmental Assessment
                         Certificate.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
             </>
         ),
@@ -153,10 +153,10 @@ export const ENGAGEMENT_PHASES = {
         learnMoreBackgroundColor: '#F3EFFF',
         learnMoreText: (
             <Grid item xs={12}>
-                <MetParagraph sx={{ fontStyle: 'italic' }}>
+                <MetParagraphOld sx={{ fontStyle: 'italic' }}>
                     Decision point: Ministers determine whether or not project will receive an Environmental Assessment
                     Certificate, and if so, what conditions will be required to address potential adverse effects.
-                </MetParagraph>
+                </MetParagraphOld>
             </Grid>
         ),
     },
@@ -169,16 +169,16 @@ export const ENGAGEMENT_PHASES = {
         learnMoreText: (
             <>
                 <Grid item xs={12}>
-                    <MetParagraph>
+                    <MetParagraphOld>
                         Monitor project to make sure requirements are being followed. Projects not in compliance are
                         subject to enforcement measures, including fines.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraph>
+                    <MetParagraphOld>
                         Proponents may also seek amendments to the Certificate as permitting and construction proceeds
                         and operations get underway.
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
             </>
         ),

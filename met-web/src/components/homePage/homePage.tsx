@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import { MetHeader1 } from 'components/common';
+import { MetHeader1Old } from 'components/common';
 const HomePage = () => {
     return (
         <Grid
@@ -12,7 +12,7 @@ const HomePage = () => {
             textAlign="center"
             style={{ minHeight: '100vh' }}
         >
-            <MetHeader1>Welcome to MET</MetHeader1>
+            <MetHeader1Old>Welcome to MET</MetHeader1Old>
         </Grid>
     );
 };

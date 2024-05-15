@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { Grid, Stack, Typography } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
-import { PrimaryButton, SecondaryButton } from 'components/common';
+import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { ImageUploadContext } from './imageUploadContext';
 
 interface UploaderProps {
@@ -73,7 +73,7 @@ const Uploader = ({
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             onClick={() => {
                                 setAddedImageFileUrl('');
                                 setAddedImageFileName('');
@@ -85,15 +85,15 @@ const Uploader = ({
                             size="small"
                         >
                             Remove
-                        </SecondaryButton>
-                        <PrimaryButton
+                        </SecondaryButtonOld>
+                        <PrimaryButtonOld
                             onClick={() => {
                                 setCropModalOpen(true);
                             }}
                             size="small"
                         >
                             Crop
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Grid>
             </Grid>

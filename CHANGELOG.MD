@@ -1,20 +1,36 @@
+## May 14, 2024
+
+- **Bugfix** Add language code to email links [🎟️ DESENG-579](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-579)
+  - Added a language code to email template links so that they point to a valid page again
+  - The system tries to determine the language from the user's browser, but if it can't, it defaults to English
+  - A future, larger refactor could allow us to remember the user's language preference and always use that
+
 ## May 13, 2024
 
 - **Bugfix** Date shown on rejection email preview is incorrect [🎟️ DESENG-597](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-597)
   - Fixed the date formatting issue and using the end_date in the email preview
   - Updated unit tests
 
+- **Feature** Create role for metadata management [🎟️ DESENG-603](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-603)
+- Implemented a new role named "manage_metadata" within the Admin group to restrci access for metadata management
+- Updated the frontend to restrict access to the "metadata management" link in the menu for users without the newly added role
+- Backend changes to incorporate the new role for access control purposes, ensuring only authorized users can perform metadata management actions
+
 ## May 10, 2024
 
 - **Bugfix** Language picker should only appear on engagements with more than one language [🎟️ DESENG-575](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-575)
-- Allow for the web app to see if there are available translations by language
-- Disable language switching itself for now until design decisions are made
+  - Allow for the web app to see if there are available translations by language
+  - Disable language switching itself for now until design decisions are made
 
 ## May 9, 2024
 
 - **Feature** [Engagement Filtering UXD] - Public | No Results Message [🎟️ DESENG-586](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-586)
   - Added a new no results page to display to users when their search term(s) and / or filter(s) returns no engagement results on landing page.
   - Contact information is developed but hidden currently as this was the approach requested in the ticket till the contact information is decided.
+- **Feature** Added the initial version of the tenant listing page [🎟️ DESENG-592](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-592)
+  - The page lists all tenants in the system
+  - Functionality to view or create individual tenants is still under construction
+  - Began work on adding new components from the MET component library, with high reusability in mind
 
 ## May 8, 2024
 
@@ -28,12 +44,12 @@
 - **Feature** Ensure users can belong to more than one tenant [🎟️ DESENG-478](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-478)
   - Tested users can belong to more than one tenant.
   - Overide the default tenant filter for staff_user table to check with user_group_membership table.
-  
+
 ## May 6, 2024
 
 - **Feature** Auto-populate question descriptions [🎟️ DESENG-596](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-596)
-  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default 
-  description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
+  - Upgrading the version of met-formio to version 1.0.15-rc1. This version has the changes to have a default
+    description for the form components. The changes were pushed to met-formio by the PR: https://github.com/bcgov/met-formio/pull/25.
 
 ## May 2, 2024
 

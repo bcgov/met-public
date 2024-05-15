@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
-import { modalStyle, PrimaryButton, MetHeader1, MetBody } from 'components/common';
+import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
 import { ThankYouPanelProps } from './types';
 import { ActionContext } from './ActionContext';
 
@@ -17,9 +17,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
         >
             <Grid container item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 bold sx={{ mb: 2 }}>
+                    <MetHeader1Old bold sx={{ mb: 2 }}>
                         Thank you
-                    </MetHeader1>
+                    </MetHeader1Old>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography id="modal-modal-header"></Typography>
@@ -27,14 +27,14 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
             </Grid>
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>Your submission was successful.</MetBody>
+                    <MetBodyOld sx={{ mb: 1 }}>Your submission was successful.</MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>
+                    <MetBodyOld sx={{ mb: 1 }}>
                         We appreciate you take the time to voice your opinion about {savedEngagement.name}. When the
                         engagement period is over ({savedEngagement.end_date}), you will receive a link to access the
                         full survey report and view all the comments we received.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
 
                 <Grid
@@ -46,9 +46,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
                     spacing={1}
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton onClick={handleClose} sx={{ m: 1 }}>
+                    <PrimaryButtonOld onClick={handleClose} sx={{ m: 1 }}>
                         Close
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

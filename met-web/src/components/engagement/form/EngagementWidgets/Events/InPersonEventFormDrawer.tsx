@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -260,12 +260,15 @@ const InPersonEventFormDrawer = () => {
                                 marginTop="2em"
                             >
                                 <Grid item>
-                                    <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
+                                    <PrimaryButtonOld
+                                        type="submit"
+                                        loading={isCreating}
+                                    >{`Save & Close`}</PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => handleEventDrawerOpen(EVENT_TYPE.MEETUP, false)}>
+                                    <SecondaryButtonOld onClick={() => handleEventDrawerOpen(EVENT_TYPE.MEETUP, false)}>
                                         Cancel
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                         </Grid>

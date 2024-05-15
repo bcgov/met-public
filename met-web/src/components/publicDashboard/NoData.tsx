@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, SxProps, Theme } from '@mui/material';
-import { MetBody, MetPaper } from 'components/common';
+import { MetBodyOld, MetPaper } from 'components/common';
 import { DASHBOARD } from './constants';
 import { useAppTranslation } from 'hooks';
 
@@ -30,7 +30,7 @@ export const NoData = ({ sx }: NoDataProps) => {
                 height="100%"
             >
                 <Grid item>
-                    <MetBody>{translate('dashboard.noData')}</MetBody>
+                    <MetBodyOld>{translate('dashboard.noData')}</MetBodyOld>
                 </Grid>
             </Grid>
         </MetPaper>

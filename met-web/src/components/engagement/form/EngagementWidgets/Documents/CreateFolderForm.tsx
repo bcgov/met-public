@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid, TextField, Stack } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton, WidgetButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld, WidgetButton } from 'components/common';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
@@ -110,17 +110,17 @@ const CreateFolderForm = () => {
                                 width="100%"
                                 justifyContent="flex-start"
                             >
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     data-testid="create-folder-form/save-button"
                                     sx={{ mb: 1 }}
                                     loading={creatingFolder}
                                     onClick={handleCreateFolder}
                                 >
                                     Save
-                                </PrimaryButton>
-                                <SecondaryButton sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
+                                </PrimaryButtonOld>
+                                <SecondaryButtonOld sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
                                     Cancel
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </Stack>
                         </Grid>
                     </Grid>

@@ -25,12 +25,6 @@ class TenantService:
             current_app.logger.info('Error on building cache {}', e)
 
     @classmethod
-    def get_all(cls):
-        """Get all tenant by id."""
-        tenants = TenantModel.find_all()
-        return TenantSchema(many=True).dump(tenants)
-
-    @classmethod
     def get(cls, tenant_id):
         """Get a tenant by id."""
         tenant = TenantModel.find_by_short_name(tenant_id)
@@ -38,6 +32,11 @@ class TenantService:
             raise ValueError('Tenant not found.', cls, tenant_id)
         return TenantSchema().dump(tenant)
 
+    def get_all(self):
+        """Get all tenants."""
+        tenants = TenantModel.query.all()
+        return TenantSchema().dump(tenants, many=True)
+    
     @classmethod
     def create(cls, data: dict):
         """Create a new tenant."""

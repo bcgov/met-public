@@ -49,7 +49,7 @@ jest.mock('@mui/material', () => ({
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
+    PrimaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
         return <button onClick={onClick}>{children}</button>;
     },
 }));

@@ -1,5 +1,5 @@
 import { Box, List, ListItem, ListItemButton, Stack } from '@mui/material';
-import { MetParagraph } from 'components/common';
+import { MetParagraphOld } from 'components/common';
 import React from 'react';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
@@ -38,15 +38,15 @@ export const QuestionBlock = ({ data, selectedQuestionIndex, handleSelected }: Q
                             }}
                         >
                             <Stack direction="column">
-                                <MetParagraph color={'gray'}>
+                                <MetParagraphOld color={'gray'}>
                                     {translate('dashboard.barBlock.questionBarBlock')} {index + 1}
-                                </MetParagraph>
-                                <MetParagraph
+                                </MetParagraphOld>
+                                <MetParagraphOld
                                     sx={{ fontWeight: 'bold' }}
                                     color={DASHBOARD.SURVEY_RESULT.SELECTED_TEXT_COLOR}
                                 >
                                     {result.label}
-                                </MetParagraph>
+                                </MetParagraphOld>
                             </Stack>
                         </ListItemButton>
                     </ListItem>

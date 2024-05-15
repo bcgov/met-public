@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetSmallText } from 'components/common';
+import { MetSmallTextOld } from 'components/common';
 import { Stack, Box } from '@mui/material';
 import { INFO_ARROW } from 'models/engagementPhases';
 
@@ -12,10 +12,10 @@ export const InfoArrow = () => {
                     padding: '0.25em 1em',
                 }}
             >
-                <MetSmallText color="white">
+                <MetSmallTextOld color="white">
                     Engagement and consensus-seeking with participating First Nations occur at each stage of the
                     process, supported by dispute resolution at certain stages if required.
-                </MetSmallText>
+                </MetSmallTextOld>
             </Box>
             <Box
                 sx={{

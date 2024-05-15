@@ -5,10 +5,10 @@ import { EmailPanelProps } from './types';
 import {
     MetLabel,
     modalStyle,
-    PrimaryButton,
-    SecondaryButton,
-    MetHeader1,
-    MetBody,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+    MetHeader1Old,
+    MetBodyOld,
     MetDescription,
     MetDisclaimer,
 } from 'components/common';
@@ -59,30 +59,30 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 rowSpacing={2}
             >
                 <Grid item xs={12}>
-                    <MetHeader1 bold sx={{ mb: 2 }}>
+                    <MetHeader1Old bold sx={{ mb: 2 }}>
                         Verify your email address
-                    </MetHeader1>
+                    </MetHeader1Old>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <MetBody>
+                    <MetBodyOld>
                         To provide you with the best experience possible, we require you to validate your email address.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <MetBody>
+                    <MetBodyOld>
                         You will receive a link to provide your feedback at the email address you provide.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
 
                 <Grid item xs={12}>
-                    <MetBody>
+                    <MetBodyOld>
                         <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
                         not a robot, and ensures we have your consent to collect your feedback. Your email address will
                         remain confidential and will only be used to authenticate your participation in this public
                         comment period.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
                     <MetDisclaimer>
@@ -154,12 +154,12 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButton onClick={handleClose} disabled={isSaving}>
+                        <SecondaryButtonOld onClick={handleClose} disabled={isSaving}>
                             Cancel
-                        </SecondaryButton>
-                        <PrimaryButton type="submit" variant={'contained'} loading={isSaving}>
+                        </SecondaryButtonOld>
+                        <PrimaryButtonOld type="submit" variant={'contained'} loading={isSaving}>
                             Submit
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Grid>
             </Grid>

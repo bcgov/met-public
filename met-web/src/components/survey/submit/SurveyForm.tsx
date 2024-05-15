@@ -4,7 +4,7 @@ import { ActionContext } from './ActionContext';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
 import { useAppSelector } from 'hooks';
-import { PrimaryButton, SecondaryButton } from 'components/common';
+import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { SurveyFormProps } from '../types';
 import { When } from 'react-if';
 import { useAppTranslation } from 'hooks';
@@ -49,16 +49,16 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButton onClick={() => handleClose()}>
+                        <SecondaryButtonOld onClick={() => handleClose()}>
                             {translate('surveySubmit.surveyForm.button.cancel')}
-                        </SecondaryButton>
-                        <PrimaryButton
+                        </SecondaryButtonOld>
+                        <PrimaryButtonOld
                             disabled={!isValid || isLoggedIn || isSubmitting}
                             onClick={() => handleSubmit(submissionData)}
                             loading={isSubmitting}
                         >
                             {translate('surveySubmit.surveyForm.button.submit')}
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Grid>
             </When>

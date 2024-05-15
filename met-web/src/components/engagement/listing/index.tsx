@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -404,14 +404,14 @@ const EngagementListing = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             data-testid="engagement/listing/searchButton"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
                             <SearchIcon />
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                         <When condition={!isMediumScreen}>
-                            <SecondaryButton
+                            <SecondaryButtonOld
                                 data-testid="engagement/listing/advancedSearch"
                                 name="advancedSearch"
                                 onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
@@ -428,11 +428,11 @@ const EngagementListing = () => {
                                 }
                             >
                                 Advanced Search
-                            </SecondaryButton>
+                            </SecondaryButtonOld>
                         </When>
                     </Stack>
                     <When condition={isMediumScreen}>
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             data-testid="engagement/listing/advancedSearch"
                             name="advancedSearch"
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
@@ -454,16 +454,16 @@ const EngagementListing = () => {
                                 />
                             }
                             Advanced Search
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </When>
                     <PermissionsGate scopes={[USER_ROLES.CREATE_ENGAGEMENT]} errorProps={{ disabled: true }}>
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             component={Link}
                             to="/engagements/create/form"
                             data-testid="create-engagement-button-landingPage"
                         >
                             + Create Engagement
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </PermissionsGate>
                 </Stack>
             </Grid>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Grid, Stack, Link } from '@mui/material';
 import { useAppSelector } from 'hooks';
-import { MetLabel, MetParagraph, MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetLabel, MetParagraphOld, MetPageGridContainer, PrimaryButtonOld } from 'components/common';
 import { UserDetailsContext } from './UserDetailsContext';
 import { formatDate } from 'components/common/dateHelper';
 import AssignedEngagementsListing from './AssignedEngagementsListing';
@@ -40,7 +40,7 @@ export const UserDetails = () => {
                             <UserDetail
                                 label="Name"
                                 value={
-                                    <MetParagraph>{`${savedUser?.last_name}, ${savedUser?.first_name}`}</MetParagraph>
+                                    <MetParagraphOld>{`${savedUser?.last_name}, ${savedUser?.first_name}`}</MetParagraphOld>
                                 }
                             />
                         </Grid>
@@ -56,7 +56,9 @@ export const UserDetails = () => {
                             <UserDetail
                                 label="Date Added"
                                 value={
-                                    <MetParagraph>{savedUser ? formatDate(savedUser?.created_date) : ''}</MetParagraph>
+                                    <MetParagraphOld>
+                                        {savedUser ? formatDate(savedUser?.created_date) : ''}
+                                    </MetParagraphOld>
                                 }
                             />
                         </Grid>
@@ -64,17 +66,20 @@ export const UserDetails = () => {
 
                     <Grid container>
                         <Grid item xs={12}>
-                            <UserDetail label="Role" value={<MetParagraph>{savedUser?.main_role}</MetParagraph>} />
+                            <UserDetail
+                                label="Role"
+                                value={<MetParagraphOld>{savedUser?.main_role}</MetParagraphOld>}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <UserDetail
                                 label="Status"
                                 value={
-                                    <MetParagraph>
+                                    <MetParagraphOld>
                                         {savedUser?.status_id === USER_STATUS.ACTIVE.value
                                             ? USER_STATUS.ACTIVE.label
                                             : USER_STATUS.INACTIVE.label}
-                                    </MetParagraph>
+                                    </MetParagraphOld>
                                 }
                             />
                         </Grid>
@@ -89,7 +94,7 @@ export const UserDetails = () => {
             <Grid container item justifyContent={'flex-end'} alignItems={'flex-end'} xs={12}>
                 <Grid item xs={6}></Grid>
                 <Grid container justifyContent={'flex-end'} alignItems={'flex-end'} item xs={6}>
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         onClick={() => setAddUserModalOpen(true)}
                         disabled={
                             savedUser?.main_role === USER_COMPOSITE_ROLE.VIEWER.label ||
@@ -98,7 +103,7 @@ export const UserDetails = () => {
                         }
                     >
                         + Add to an Engagement
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
             </Grid>
             <Grid item xs={12}>

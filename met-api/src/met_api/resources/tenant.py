@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing a tenant resource."""
+"""API endpoints for managing tenant resources."""
 
 from http import HTTPStatus
 
@@ -20,31 +20,36 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
+from met_api.auth import auth
 from met_api.auth import jwt as _jwt
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.tenant import TenantSchema
 from met_api.services.tenant_service import TenantService
+from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
+
 
 API = Namespace('tenants', description='Endpoints for Tenants Management')
 """Custom exception messages
 """
 
 
-@cors_preflight('GET, POST, OPTIONS')
+@cors_preflight('GET OPTIONS')
 @API.route('/')
-class TenantList(Resource):
+class Tenants(Resource):
     """Resource for managing tenants."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @_jwt.requires_auth
+    @require_role(Role.SUPER_ADMIN.value)
     def get():
         """Fetch all tenants."""
         try:
             tenants = TenantService().get_all()
-            return jsonify(tenants), HTTPStatus.OK
-        except (KeyError, ValueError) as err:
+
+            return tenants, HTTPStatus.OK
+        except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
@@ -68,21 +73,23 @@ class TenantList(Resource):
             return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@cors_preflight('GET, DELETE, PATCH')
+@cors_preflight('GET OPTIONS')
 @API.route('/<tenant_id>')
 class Tenant(Resource):
     """Resource for managing a single tenant."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
+    @auth.optional
     def get(tenant_id):
-        """Fetch a tenant by ID."""
+        """Fetch a tenant."""
         try:
             tenant = TenantService().get(tenant_id)
+
             return tenant, HTTPStatus.OK
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
+        
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth

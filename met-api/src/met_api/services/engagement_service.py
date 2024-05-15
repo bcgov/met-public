@@ -311,7 +311,8 @@ class EngagementService:
     @staticmethod
     def _send_closeout_emails(engagement: EngagementModel) -> None:
         """Send the engagement closeout emails.Throws error if fails."""
-        subject, body, args = EngagementService._render_email_template(engagement)
+        lang_code = current_app.config['DEFAULT_LANGUAGE']
+        subject, body, args = EngagementService._render_email_template(engagement, lang_code)
         participants = SubmissionModel.get_engaged_participants(engagement.id)
         template_id = current_app.config['EMAIL_TEMPLATES']['CLOSEOUT']['ID']
         emails = [participant.decode_email(participant.email_address) for participant in participants]
@@ -327,9 +328,9 @@ class EngagementService:
                 status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
-    def _render_email_template(engagement: EngagementModel):
+    def _render_email_template(engagement: EngagementModel, lang_code):
         template = Template.get_template('email_engagement_closeout.html')
-        dashboard_path = EngagementService._get_dashboard_path(engagement)
+        dashboard_path = EngagementService._get_dashboard_path(engagement, lang_code)
         engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
         templates = current_app.config['EMAIL_TEMPLATES']
         subject = templates['CLOSEOUT']['SUBJECT'].format(engagement_name=engagement.name)
@@ -356,9 +357,9 @@ class EngagementService:
         return tenant.name
 
     @staticmethod
-    def _get_dashboard_path(engagement: EngagementModel):
+    def _get_dashboard_path(engagement: EngagementModel, lang_code):
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
-            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(slug=engagement_slug.slug)
-        return paths['ENGAGEMENT']['DASHBOARD'].format(engagement_id=engagement.id)
+            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(slug=engagement_slug.slug, lang=lang_code)
+        return paths['ENGAGEMENT']['DASHBOARD'].format(engagement_id=engagement.id, lang=lang_code)

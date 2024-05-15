@@ -10,7 +10,14 @@ import {
     useMediaQuery,
     Theme,
 } from '@mui/material';
-import { MetLabel, modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
+import {
+    MetLabel,
+    modalStyle,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+    MetHeader1Old,
+    MetBodyOld,
+} from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
 
@@ -64,14 +71,14 @@ const EmailModal = ({
                     rowSpacing={2}
                 >
                     <Grid item xs={12}>
-                        <MetHeader1 bold sx={{ mb: 2 }}>
+                        <MetHeader1Old bold sx={{ mb: 2 }}>
                             {header}
-                        </MetHeader1>
+                        </MetHeader1Old>
                     </Grid>
 
                     {subText.map((subtext) => (
                         <Grid item xs={12}>
-                            <MetBody bold={subtext.bold}>{subtext.text}</MetBody>
+                            <MetBodyOld bold={subtext.bold}>{subtext.text}</MetBodyOld>
                         </Grid>
                     ))}
 
@@ -142,12 +149,12 @@ const EmailModal = ({
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton sx={{ mb: isSmallScreen ? 2 : 0 }} onClick={() => updateModal(false)}>
+                            <SecondaryButtonOld sx={{ mb: isSmallScreen ? 2 : 0 }} onClick={() => updateModal(false)}>
                                 Cancel
-                            </SecondaryButton>
-                            <PrimaryButton loading={isSaving} type="submit" variant={'contained'}>
+                            </SecondaryButtonOld>
+                            <PrimaryButtonOld loading={isSaving} type="submit" variant={'contained'}>
                                 Submit
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Stack>
                     </Grid>
                 </Grid>

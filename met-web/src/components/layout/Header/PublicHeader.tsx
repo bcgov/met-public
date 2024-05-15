@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
-import { HeaderTitle } from 'components/common';
+import { HeaderTitleOld } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
@@ -77,14 +77,14 @@ const PublicHeader = () => {
                             alt={translate('common.defaultBCText')}
                         />
                     </When>
-                    <HeaderTitle
+                    <HeaderTitleOld
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
                             navigate(`/${language}`);
                         }}
                     >
                         {headerTitle}
-                    </HeaderTitle>
+                    </HeaderTitleOld>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout()}>
                             {translate('common.logout')}

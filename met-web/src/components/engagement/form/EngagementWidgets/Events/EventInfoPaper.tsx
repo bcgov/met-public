@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MetParagraph, MetWidgetPaper } from 'components/common';
+import { MetParagraphOld, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -38,52 +38,52 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                 >
                     <When condition={!!eventItem.description}>
                         <Grid item xs={3}>
-                            <MetParagraph>Description:</MetParagraph>
+                            <MetParagraphOld>Description:</MetParagraphOld>
                         </Grid>
                         <Grid item xs={9}>
-                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {eventItem.description}
-                            </MetParagraph>
+                            </MetParagraphOld>
                         </Grid>
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>Location:</MetParagraph>
+                        <MetParagraphOld>Location:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {eventItem.location_name}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                     <Grid item xs={3}>
-                        <MetParagraph>Address:</MetParagraph>
+                        <MetParagraphOld>Address:</MetParagraphOld>
                     </Grid>
 
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {eventItem.location_address}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
 
                     <Grid item xs={3}>
-                        <MetParagraph>Date:</MetParagraph>
+                        <MetParagraphOld>Date:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
 
                     <Grid item xs={3}>
-                        <MetParagraph>Time:</MetParagraph>
+                        <MetParagraphOld>Time:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                                 eventItem.end_date,
                                 'h:mm a',
                             )} PT`}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                 </Grid>
                 <Grid container item xs={1.5}>

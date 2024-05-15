@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid, Skeleton, Stack } from '@mui/material';
-import { MetBody, MetHeader3, MetLabel, MetPaper } from 'components/common';
+import { MetBodyOld, MetHeader3, MetLabel, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { ActionContext } from '../../ActionContext';
 import { EngagementPhase } from './EngagementPhase';
@@ -56,12 +56,12 @@ export const PhasesWidget = () => {
                         </Grid>
                     </When>
                     <Grid item xs={12}>
-                        <MetBody>
+                        <MetBodyOld>
                             Click ‘learn more’ on the sections below for more details about each phase in the
                             Environmental Assessment process. Click the speech bubble icon
                             {<ForumIcon fontSize="1.2em" sx={{ marginLeft: '0.5em' }} />} to learn more about each
                             unique public commenting period.
-                        </MetBody>
+                        </MetBodyOld>
                     </Grid>
                     <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                         <Stack direction="row" sx={{ overflowX: 'auto', overflowY: 'clip' }}>

@@ -49,10 +49,10 @@ jest.mock('axios');
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children }: { children: ReactNode }) => {
+    PrimaryButtonOld: ({ children }: { children: ReactNode }) => {
         return <button>{children}</button>;
     },
-    SecondaryButton: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
+    SecondaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
         return <button onClick={onClick}>{children}</button>;
     },
 }));

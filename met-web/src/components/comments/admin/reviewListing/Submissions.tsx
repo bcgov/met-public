@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useLocation } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetHeader1, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld, MetHeader1Old, SecondaryButtonOld } from 'components/common';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink } from '@mui/material';
@@ -118,13 +118,13 @@ const Submissions = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
                             <SearchIcon />
-                        </PrimaryButton>
-                        <SecondaryButton
+                        </PrimaryButtonOld>
+                        <SecondaryButtonOld
                             data-testid="comment-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                             startIcon={
@@ -140,12 +140,12 @@ const Submissions = () => {
                             }
                         >
                             Advanced Search
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Stack>
                     <Stack direction="row" spacing={1}>
-                        <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
+                        <PrimaryButtonOld component={Link} to={`/surveys/${survey.id}/comments/all`}>
                             Read All Comments
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Stack>
             </Grid>
@@ -157,9 +157,9 @@ const Submissions = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <MetHeader1>
+                <MetHeader1Old>
                     <strong>{`${survey.name} Comments`}</strong>
-                </MetHeader1>
+                </MetHeader1Old>
                 <MetTable
                     headCells={headCells}
                     rows={submissions}

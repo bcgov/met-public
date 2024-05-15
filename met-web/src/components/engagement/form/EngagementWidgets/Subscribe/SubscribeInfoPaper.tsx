@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
+import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton, useMediaQuery } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -52,7 +52,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </Grid>
                     <When condition={Boolean(subscribeItem.description)}>
                         <Grid item xs={isMediumScreen ? 4 : 3}>
-                            <MetParagraph>Description:</MetParagraph>
+                            <MetParagraphOld>Description:</MetParagraphOld>
                         </Grid>
                         <Grid
                             item
@@ -73,12 +73,12 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraph>
+                        <MetParagraphOld>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {subscribeItem.call_to_action_text}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                 </Grid>
                 <Grid container item xs={1.5}>

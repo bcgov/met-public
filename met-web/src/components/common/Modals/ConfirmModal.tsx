@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
-import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
+import { modalStyle, PrimaryButtonOld, SecondaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
 import { NotificationModalProps } from './types';
 
 const ConfirmModal = ({
@@ -24,17 +24,17 @@ const ConfirmModal = ({
         >
             <Grid container direction="row" item xs={12}>
                 <Grid item xs={12}>
-                    <MetHeader1 bold sx={{ mb: 2 }}>
+                    <MetHeader1Old bold sx={{ mb: 2 }}>
                         {header}
-                    </MetHeader1>
+                    </MetHeader1Old>
                 </Grid>
             </Grid>
             <Grid container direction="row" item xs={12}>
                 {subText.map((subtext, index) => (
                     <Grid key={index} item xs={12}>
-                        <MetBody bold={subtext.bold} sx={{ mb: 1 }}>
+                        <MetBodyOld bold={subtext.bold} sx={{ mb: 1 }}>
                             {subtext.text}
-                        </MetBody>
+                        </MetBodyOld>
                     </Grid>
                 ))}
                 <Grid
@@ -49,21 +49,21 @@ const ConfirmModal = ({
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
                         {isSmallScreen ? (
                             <>
-                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                <PrimaryButtonOld onClick={handleConfirm} type="submit" variant={'contained'}>
                                     {confirmButtonText ? confirmButtonText : 'Confirm'}
-                                </PrimaryButton>
-                                <SecondaryButton onClick={handleClose}>
+                                </PrimaryButtonOld>
+                                <SecondaryButtonOld onClick={handleClose}>
                                     {cancelButtonText ? cancelButtonText : 'Cancel'}
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </>
                         ) : (
                             <>
-                                <SecondaryButton onClick={handleClose}>
+                                <SecondaryButtonOld onClick={handleClose}>
                                     {cancelButtonText ? cancelButtonText : 'Cancel'}
-                                </SecondaryButton>
-                                <PrimaryButton onClick={handleConfirm} type="submit" variant={'contained'}>
+                                </SecondaryButtonOld>
+                                <PrimaryButtonOld onClick={handleConfirm} type="submit" variant={'contained'}>
                                     {confirmButtonText ? confirmButtonText : 'Confirm'}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </>
                         )}
                     </Stack>

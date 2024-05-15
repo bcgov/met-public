@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { MetBody, MetLabel } from 'components/common';
+import { MetBodyOld, MetLabel } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary, useMediaQuery, Theme } from '@mui/material';
 import { Engagement } from 'models/engagement';
 import { When } from 'react-if';
@@ -81,11 +81,11 @@ const EngagementsAccordion = ({
                                     <MetLabel>{engagement.name}</MetLabel>
                                 </Grid>
                                 <Grid item md={5} sm={12} textAlign={isMobile ? 'left' : 'right'}>
-                                    <MetBody>
+                                    <MetBodyOld>
                                         {engagement.start_date}
                                         {' - '}
                                         {engagement.end_date}
-                                    </MetBody>
+                                    </MetBodyOld>
                                 </Grid>
                             </Grid>
                         </AccordionSummary>

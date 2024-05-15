@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import SearchIcon from '@mui/icons-material/Search';
 import { USER_STATUS, User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
@@ -100,9 +100,9 @@ const UserManagementListing = () => {
                             onChange={(e) => setSearchBarText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton onClick={handleSearchClick}>
+                        <PrimaryButtonOld onClick={handleSearchClick}>
                             <SearchIcon />
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Stack>
             </Grid>

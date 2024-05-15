@@ -26,6 +26,7 @@ jest.mock('react-redux', () => ({
             USER_ROLES.VIEW_USERS,
             USER_ROLES.VIEW_FEEDBACKS,
             USER_ROLES.SUPER_ADMIN,
+            USER_ROLES.MANAGE_METADATA,
         ];
     }),
 }));

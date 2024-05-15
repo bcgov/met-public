@@ -9,11 +9,12 @@ import { EmailModalProps } from './types';
 import { checkEmail } from 'utils';
 import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { ActionContext } from './ActionContext';
 import ThankYouPanel from './ThankYouPanel';
 import { EmailVerificationType } from 'models/emailVerification';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
+import { LanguageState } from 'reduxSlices/languageSlice';
 
 const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
     const [email, setEmail] = useState('');
     const { savedEngagement } = useContext(ActionContext);
     const [isSaving, setSaving] = useState(false);
+    const language: LanguageState = useAppSelector((state) => state.language);
 
     const close = () => {
         handleClose();
@@ -44,6 +46,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
                 email_address: email,
                 survey_id: savedEngagement.surveys[0].id,
                 type: EmailVerificationType.Survey,
+                language: language.id,
             });
             window.snowplow('trackSelfDescribingEvent', {
                 schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',

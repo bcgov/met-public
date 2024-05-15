@@ -3,11 +3,11 @@ import MetTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import {
     MetPageGridContainer,
-    PrimaryButton,
-    MetParagraph,
+    PrimaryButtonOld,
+    MetParagraphOld,
     MetLabel,
     MetTooltip,
-    SecondaryButton,
+    SecondaryButtonOld,
 } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField, Menu, MenuItem } from '@mui/material';
@@ -241,7 +241,7 @@ const CommentTextListing = () => {
                                     </Grid>
                                     <Grid item xs={11}>
                                         <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
-                                        <MetParagraph>{' ' + comment.text}</MetParagraph>
+                                        <MetParagraphOld>{' ' + comment.text}</MetParagraphOld>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -284,14 +284,14 @@ const CommentTextListing = () => {
                                     justifyContent: 'flex-start',
                                 }}
                             >
-                                <MetParagraph
+                                <MetParagraphOld
                                     sx={{
                                         pb: '0.1em',
                                     }}
                                 >
                                     <b>Comment Date: </b>
-                                </MetParagraph>
-                                <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
+                                </MetParagraphOld>
+                                <MetParagraphOld>{formatDate(row.created_date)}</MetParagraphOld>
                             </Stack>
                         </Grid>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
@@ -309,14 +309,14 @@ const CommentTextListing = () => {
                                         justifyContent: 'flex-start',
                                     }}
                                 >
-                                    <MetParagraph
+                                    <MetParagraphOld
                                         sx={{
                                             pb: '0.1em',
                                         }}
                                     >
                                         <b>Reviewed By: </b>
-                                    </MetParagraph>
-                                    <MetParagraph>{row.reviewed_by}</MetParagraph>
+                                    </MetParagraphOld>
+                                    <MetParagraphOld>{row.reviewed_by}</MetParagraphOld>
                                 </Stack>
                             </Grid>
                         </When>
@@ -347,25 +347,25 @@ const CommentTextListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         data-testid="CommentListing/search-button"
                         variant="contained"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <SearchIcon />
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={5}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                    <PrimaryButtonOld component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
                         Return to Comments List
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                     <PermissionsGate
                         scopes={[USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET, USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET]}
                         errorProps={{ disabled: true }}
                     >
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             variant="contained"
                             onClick={handleExportToCSVOpen}
                             aria-controls="simple-menu"
@@ -381,7 +381,7 @@ const CommentTextListing = () => {
                             }
                         >
                             Export to CSV
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </PermissionsGate>
                     <Menu
                         id="simple-menu"

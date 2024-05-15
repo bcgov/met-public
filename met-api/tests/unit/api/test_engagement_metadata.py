@@ -109,7 +109,7 @@ def test_add_engagement_metadata_invalid_user(client, jwt, session):
                            headers=headers,
                            data=json.dumps(metadata_info),
                            content_type=ContentType.JSON.value)
-    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.status_code == HTTPStatus.FORBIDDEN
 
 
 def test_update_engagement_metadata(client, jwt, session):
@@ -130,6 +130,13 @@ def test_update_engagement_metadata(client, jwt, session):
     assert response.json.get('id') == metadata.id
     assert response.json.get('engagement_id') == engagement.id
     assert response.json.get('value') == 'new value'
+
+    # Test if Metadata does not belong to the engagement
+    engagement_id = fake.pyint()
+    response = client.get(f'/api/engagements/{engagement_id}/metadata/{metadata.id}',
+                          headers=headers,
+                          content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_bulk_update_engagement_metadata(client, jwt, session):
@@ -182,3 +189,25 @@ def test_delete_engagement_metadata(client, jwt, session):
                              content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.NO_CONTENT, (f'Wrong response code; '
                                                            f'HTTP {response.status_code} -> {response.text}')
+
+
+def test_get_engagement_metadata_by_id(client, jwt, session):
+    """Test that metadata can be fetched by id."""
+    taxon, engagement, _, headers = factory_metadata_requirements(jwt)
+    metadata = factory_engagement_metadata_model({
+        'engagement_id': engagement.id,
+        'taxon_id': taxon.id,
+        'value': fake.sentence(),
+    })
+    response = client.get(f'/api/engagements/{engagement.id}/metadata/{metadata.id}',
+                          headers=headers,
+                          content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.OK, (f'Wrong response code; '
+                                                   f'HTTP {response.status_code} -> {response.text}')
+
+    # Test if Metadata does not belong to the engagement
+    engagement_id = fake.pyint()
+    response = client.get(f'/api/engagements/{engagement_id}/metadata/{metadata.id}',
+                          headers=headers,
+                          content_type=ContentType.JSON.value)
+    assert response.status_code == HTTPStatus.BAD_REQUEST

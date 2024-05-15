@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2 } from 'components/common';
+import { MetPaper, MetHeader2Old } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
@@ -44,9 +44,9 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -73,7 +73,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                 xs={12}
                 paddingBottom={0}
             >
-                <MetHeader2 bold>{widget.title}</MetHeader2>
+                <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {events.map((event: Event) => {

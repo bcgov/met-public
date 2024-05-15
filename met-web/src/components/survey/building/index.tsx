@@ -20,7 +20,7 @@ import { getSurvey, putSurvey } from 'services/surveyService';
 import { Survey } from 'models/survey';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetHeader3, MetPageGridContainer, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetPageGridContainer, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -403,10 +403,10 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton disabled={!formData} loading={isSaving} onClick={handleSaveForm}>
+                    <PrimaryButtonOld disabled={!formData} loading={isSaving} onClick={handleSaveForm}>
                         {'Report Settings'}
-                    </PrimaryButton>
-                    <SecondaryButton onClick={() => navigate('/surveys')}>Cancel</SecondaryButton>
+                    </PrimaryButtonOld>
+                    <SecondaryButtonOld onClick={() => navigate('/surveys')}>Cancel</SecondaryButtonOld>
                 </Stack>
             </Grid>
             <AutoSaveSnackBar

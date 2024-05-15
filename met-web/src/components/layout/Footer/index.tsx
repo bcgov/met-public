@@ -1,5 +1,5 @@
 import { Box, Divider, Grid, Link, Stack } from '@mui/material';
-import { MetBody, MetLabel, SocialIconButton } from 'components/common';
+import { MetBodyOld, MetLabel, SocialIconButton } from 'components/common';
 import React from 'react';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Palette } from 'styles/Theme';
@@ -32,7 +32,7 @@ const Footer = () => {
                 }}
                 padding={{ xs: '2em 1em', md: '2em 6em' }}
             >
-                <MetBody color="white">{translate('footer.body')}</MetBody>
+                <MetBodyOld color="white">{translate('footer.body')}</MetBodyOld>
             </Grid>
             <Grid
                 item
@@ -63,7 +63,7 @@ const Footer = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <MetBody>{translate('footer.connectWithUs')}</MetBody>
+                        <MetBodyOld>{translate('footer.connectWithUs')}</MetBodyOld>
                     </Grid>
                 </Grid>
                 <Grid
@@ -147,7 +147,7 @@ const Footer = () => {
                     </Stack>
                 </Grid>
                 <Grid item xs={12} sm={6} container justifyContent={'flex-end'} alignItems="flex-end">
-                    <MetBody>{translate('footer.copyrightNotice')}</MetBody>
+                    <MetBodyOld>{translate('footer.copyrightNotice')}</MetBodyOld>
                 </Grid>
             </Grid>
         </Grid>

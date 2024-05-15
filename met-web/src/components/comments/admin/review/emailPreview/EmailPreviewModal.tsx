@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Modal } from '@mui/material';
-import { PrimaryButton, modalStyle } from 'components/common';
+import { PrimaryButtonOld, modalStyle } from 'components/common';
 
 type EmailModal = {
     open: boolean;
@@ -26,7 +26,7 @@ const EmailPreviewModal = ({ open, header, renderEmail, handleClose }: EmailModa
                     {renderEmail}
                 </Grid>
                 <Grid item xs={3}>
-                    <PrimaryButton onClick={() => handleClose()}>Close Preview</PrimaryButton>
+                    <PrimaryButtonOld onClick={() => handleClose()}>Close Preview</PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Modal>
