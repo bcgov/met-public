@@ -12,7 +12,7 @@ import { BrowserRouter } from 'react-router-dom';
 jest.mock('axios');
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: React.ReactNode }) => {
+    PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
@@ -33,7 +33,7 @@ jest.mock('hooks', () => {
         'dashboard.projectLocation': 'Project Location',
         'dashboard.submissionTrend.label': 'Live Activity - Engagement',
         'dashboard.link.0': '<<Return to ',
-        'dashboard.link.1': ' Engagement'
+        'dashboard.link.1': ' Engagement',
     };
 
     return {

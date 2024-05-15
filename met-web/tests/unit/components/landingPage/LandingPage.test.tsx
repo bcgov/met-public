@@ -11,7 +11,7 @@ jest.mock('axios');
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: React.ReactNode }) => {
+    PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
