@@ -174,6 +174,7 @@ const Endpoints = {
     },
     Tenants: {
         GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
+        GET_LIST: `${AppConfig.apiUrl}/tenants/`,
     },
     AnalyticsUserResponseDetail: {
         GET_COUNT_BY_MONTH: `${AppConfig.analyticsApiUrl}/responses/month/engagement_id`,

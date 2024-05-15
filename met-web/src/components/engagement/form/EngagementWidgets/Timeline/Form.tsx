@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { SubmitHandler } from 'react-hook-form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -331,14 +331,14 @@ const Form = () => {
 
                                         {1 < timelineEvents.length && (
                                             <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                                                <SecondaryButton
+                                                <SecondaryButtonOld
                                                     value={index}
                                                     onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                         handleRemoveEvent(event);
                                                     }}
                                                 >
                                                     Remove Event
-                                                </SecondaryButton>
+                                                </SecondaryButtonOld>
                                             </Grid>
                                         )}
 
@@ -348,7 +348,7 @@ const Form = () => {
                                     </Grid>
                                 ))}
                             <Grid item>
-                                <PrimaryButton onClick={() => handleAddEvent()}>Add Event</PrimaryButton>
+                                <PrimaryButtonOld onClick={() => handleAddEvent()}>Add Event</PrimaryButtonOld>
                             </Grid>
                         </Grid>
 
@@ -363,12 +363,14 @@ const Form = () => {
                             mt={'3em'}
                         >
                             <Grid item>
-                                <PrimaryButton type="submit" disabled={isCreating}>
+                                <PrimaryButtonOld type="submit" disabled={isCreating}>
                                     Save & Close
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>Cancel</SecondaryButton>
+                                <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
+                                    Cancel
+                                </SecondaryButtonOld>
                             </Grid>
                         </Grid>
                     </Grid>

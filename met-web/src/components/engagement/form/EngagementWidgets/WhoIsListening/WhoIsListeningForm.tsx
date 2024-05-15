@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Autocomplete, Grid, TextField, Divider } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -114,14 +114,14 @@ const WhoIsListeningForm = () => {
                     />
                 </Grid>
                 <Grid item>
-                    <PrimaryButton onClick={() => addContact()} fullWidth>
+                    <PrimaryButtonOld onClick={() => addContact()} fullWidth>
                         Add This Contact
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton fullWidth onClick={() => handleAddContactDrawerOpen(true)}>
+                    <SecondaryButtonOld fullWidth onClick={() => handleAddContactDrawerOpen(true)}>
                         Create New Contact
-                    </SecondaryButton>
+                    </SecondaryButtonOld>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -129,14 +129,14 @@ const WhoIsListeningForm = () => {
             </Grid>
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                 <Grid item>
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         disabled={addedContacts.length === 0}
                         loading={savingWidgetItems}
                         onClick={() => saveWidgetItems()}
-                    >{`Save & Close`}</PrimaryButton>
+                    >{`Save & Close`}</PrimaryButtonOld>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButton>
+                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

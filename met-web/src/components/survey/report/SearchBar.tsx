@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Stack, TextField } from '@mui/material';
-import { PrimaryButton } from 'components/common';
+import { PrimaryButtonOld } from 'components/common';
 import SearchIcon from '@mui/icons-material/Search';
 import { ReportSettingsContext } from './ReportSettingsContext';
 
@@ -23,7 +23,7 @@ const SearchBar = () => {
                     }}
                     size="small"
                 />
-                <PrimaryButton
+                <PrimaryButtonOld
                     data-testid="survey/report/search-button"
                     onClick={() => {
                         setSearchFilter({
@@ -33,7 +33,7 @@ const SearchBar = () => {
                     }}
                 >
                     <SearchIcon />
-                </PrimaryButton>
+                </PrimaryButtonOld>
             </Stack>
         </>
     );

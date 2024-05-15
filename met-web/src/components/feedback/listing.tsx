@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
 import { CommentTypeEnum, Feedback, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -155,7 +155,7 @@ const FeedbackListing = () => {
                     sx={{ p: 2 }}
                 >
                     <When condition={authorized}>
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             onClick={() => {
                                 setPaginationOptions({
                                     page: 1,
@@ -172,7 +172,7 @@ const FeedbackListing = () => {
                             }}
                         >
                             {statusFilter == FeedbackStatusEnum.NotReviewed ? 'View Archive' : 'View Feedback'}
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </When>
                 </Stack>
             </Grid>

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -180,14 +180,14 @@ const Form = () => {
                                 mt={'3em'}
                             >
                                 <Grid item>
-                                    <PrimaryButton type="submit" disabled={isCreating}>
+                                    <PrimaryButtonOld type="submit" disabled={isCreating}>
                                         Save & Close
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>
+                                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
                                         Cancel
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -1,6 +1,6 @@
 import { Box, Grid, Stack, Link } from '@mui/material';
 import * as React from 'react';
-import { MetBody } from 'components/common';
+import { MetBodyOld } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Survey } from 'models/survey';
 import dayjs from 'dayjs';
@@ -36,13 +36,13 @@ export default function EmailPreview({
                     />
                 </Stack>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>
+                    <MetBodyOld sx={{ mb: 1 }}>
                         Thank you for taking the time to provide your feedback on {engagementName}.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 {children}
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 2 }}>
+                    <MetBodyOld sx={{ mb: 2 }}>
                         {!isClosed ? (
                             <>
                                 You can edit and re-submit your feedback. The comment period is open until {''}
@@ -54,11 +54,11 @@ export default function EmailPreview({
                                 your feedback cannot be edited.
                             </>
                         )}
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
                     {!isClosed ? (
-                        <MetBody
+                        <MetBodyOld
                             sx={{
                                 borderLeft: '4px solid grey',
                                 paddingLeft: '8px',
@@ -67,14 +67,14 @@ export default function EmailPreview({
                             }}
                         >
                             <Link>Edit your feedback</Link>
-                        </MetBody>
+                        </MetBodyOld>
                     ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
+                    <MetBodyOld sx={{ mb: 1 }}>Thank you,</MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>The {tenant.name} Team</MetBody>
+                    <MetBodyOld sx={{ mb: 1 }}>The {tenant.name} Team</MetBodyOld>
                 </Grid>
             </Box>
         </Box>

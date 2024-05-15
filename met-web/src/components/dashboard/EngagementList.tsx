@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
-import { MetHeader2, MetHeader4, MetPageGridContainer } from 'components/common';
+import { MetHeader2Old, MetHeader4, MetPageGridContainer } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary, Skeleton, styled } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EngagementAccordion from './EngagementsAccordion';
@@ -41,7 +41,7 @@ const EngagementList = () => {
             rowSpacing={3}
         >
             <Grid item xs={12}>
-                <MetHeader2>Engagements Dashboard</MetHeader2>
+                <MetHeader2Old>Engagements Dashboard</MetHeader2Old>
             </Grid>
             <Grid item xs={12}>
                 <StyledAccordion defaultExpanded={true}>

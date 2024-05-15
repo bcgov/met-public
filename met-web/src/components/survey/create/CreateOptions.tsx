@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { postSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, PrimaryButton, SecondaryButton, MetDescription } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld, MetDescription } from 'components/common';
 import { Disclaimer } from './Disclaimer';
 import { FORMIO_FORM, FORMIO_WIZARD } from './constants';
 
@@ -128,10 +128,10 @@ export const CreateOptions = () => {
 
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSaveClick} loading={isSaving}>
+                    <PrimaryButtonOld onClick={handleSaveClick} loading={isSaving}>
                         {'Save & Continue'}
-                    </PrimaryButton>
-                    <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
+                    </PrimaryButtonOld>
+                    <SecondaryButtonOld onClick={() => navigate(-1)}>Cancel</SecondaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

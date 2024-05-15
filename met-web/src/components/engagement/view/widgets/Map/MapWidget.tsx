@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetPaper, MetHeader2, MetLabel } from 'components/common';
+import { MetPaper, MetHeader2Old, MetLabel } from 'components/common';
 import { Grid, Skeleton, Divider, Box, IconButton, Link, useMediaQuery, Theme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
@@ -56,9 +56,9 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -87,7 +87,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         xs={12}
                         paddingBottom={0}
                     >
-                        <MetHeader2 bold>{widget.title}</MetHeader2>
+                        <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     <Grid item xs={12}>

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { cloneDeep } from 'lodash';
 import { Grid, Stack, TextField } from '@mui/material';
 import { ActionContext } from './ActionContext';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { SurveyFormProps } from '../types';
 import { useAppTranslation } from 'hooks';
 
@@ -53,10 +53,10 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButton onClick={() => handleClose()}>
+                    <SecondaryButtonOld onClick={() => handleClose()}>
                         {translate('surveyEdit.editForm.button.cancel')}
-                    </SecondaryButton>
-                    <PrimaryButton
+                    </SecondaryButtonOld>
+                    <PrimaryButtonOld
                         disabled={isSubmitting}
                         onClick={() => {
                             if (submission) handleSubmit();
@@ -64,7 +64,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                         loading={isSubmitting}
                     >
                         {translate('surveyEdit.editForm.button.submit')}
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

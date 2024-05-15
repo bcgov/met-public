@@ -3,11 +3,11 @@ import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop } fro
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
     CircularProgressWithLabel,
-    MetHeader1,
+    MetHeader1Old,
     MetPaper,
     MetDescription,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
 } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
@@ -105,9 +105,9 @@ const Dashboard = () => {
                             >
                                 <When condition={!isTablet}>
                                     <Grid item xs={12} sm={6}>
-                                        <MetHeader1 textAlign={{ xs: 'center', sm: 'left' }}>
+                                        <MetHeader1Old textAlign={{ xs: 'center', sm: 'left' }}>
                                             {translate('dashboard.header')}
-                                        </MetHeader1>
+                                        </MetHeader1Old>
                                     </Grid>
                                     <Grid
                                         item
@@ -118,20 +118,20 @@ const Dashboard = () => {
                                         justifyContent="flex-end"
                                     >
                                         <Stack direction="row" spacing={1}>
-                                            <PrimaryButton
+                                            <PrimaryButtonOld
                                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                                 onClick={handleReadComments}
                                             >
                                                 {translate('dashboard.buttonText.readComments')}
-                                            </PrimaryButton>
-                                            <SecondaryButton
+                                            </PrimaryButtonOld>
+                                            <SecondaryButtonOld
                                                 onClick={() => {
                                                     setIsPrinting(true);
                                                 }}
                                                 loading={isPrinting}
                                             >
                                                 {translate('dashboard.buttonText.exportToPDF')}
-                                            </SecondaryButton>
+                                            </SecondaryButtonOld>
                                         </Stack>
                                     </Grid>
                                 </When>
@@ -162,7 +162,7 @@ const Dashboard = () => {
                                                     xs={12}
                                                     sx={{ mb: 1 }}
                                                 >
-                                                    <MetHeader1 bold>{engagement.name}</MetHeader1>
+                                                    <MetHeader1Old bold>{engagement.name}</MetHeader1Old>
                                                 </Grid>
                                                 <Grid
                                                     item

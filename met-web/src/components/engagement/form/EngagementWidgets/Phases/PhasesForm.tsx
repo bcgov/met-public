@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Autocomplete, Checkbox, Divider, FormControl, FormControlLabel, Grid, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { EngagementPhases } from 'models/engagementPhases';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -133,15 +133,15 @@ const PhasesForm = () => {
             </Grid>
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                 <Grid item>
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         data-testid="savePhasesWidgetButton"
                         loading={savingWidgetItems}
                         disabled={!selectedOption?.id && !isStandalone}
                         onClick={() => saveWidgetItem()}
-                    >{`Save & Close`}</PrimaryButton>
+                    >{`Save & Close`}</PrimaryButtonOld>
                 </Grid>
                 <Grid item>
-                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButton>
+                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

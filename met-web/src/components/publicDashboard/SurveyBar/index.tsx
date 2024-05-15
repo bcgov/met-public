@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Skeleton, Divider, useMediaQuery, Theme, Stack, ToggleButtonGroup } from '@mui/material';
 import { Palette } from 'styles/Theme';
-import { MetHeader1, MetPaper, MetParagraph, MetLabel, PrimaryButton, MetToggleButton } from 'components/common';
+import {
+    MetHeader1Old,
+    MetPaper,
+    MetParagraphOld,
+    MetLabel,
+    PrimaryButtonOld,
+    MetToggleButton,
+} from 'components/common';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -97,7 +104,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         <MetLabel>{translate('dashboard.barBlock.label')}</MetLabel>
                     </Then>
                     <Else>
-                        <MetHeader1>{translate('dashboard.barBlock.label')}</MetHeader1>
+                        <MetHeader1Old>{translate('dashboard.barBlock.label')}</MetHeader1Old>
                     </Else>
                 </If>
             </Grid>
@@ -159,9 +166,9 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         </Grid>
                         <When condition={isTablet}>
                             <Grid item xs={12}>
-                                <MetParagraph sx={{ fontWeight: 'bold' }}>
+                                <MetParagraphOld sx={{ fontWeight: 'bold' }}>
                                     {translate('dashboard.barBlock.label')}
-                                </MetParagraph>
+                                </MetParagraphOld>
                             </Grid>
                         </When>
                         <Grid item xs={12} md={8}>
@@ -175,13 +182,13 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
 
                     <When condition={isTablet}>
                         <Grid container item xs={12} alignItems="center" justifyContent="center">
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 sx={{ mt: 3, width: '80%' }}
                                 data-testid="SurveyBlock/take-me-to-survey-button-mobile"
                                 onClick={readComments}
                             >
                                 {translate('dashboard.barBlock.button')}
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Grid>
                     </When>
                 </MetPaper>

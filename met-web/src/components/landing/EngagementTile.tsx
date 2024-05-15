@@ -5,7 +5,14 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Engagement } from 'models/engagement';
 import { Box, Stack } from '@mui/material';
-import { MetBody, MetHeader4, MetLabel, MetParagraph, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetBodyOld,
+    MetHeader4,
+    MetLabel,
+    MetParagraphOld,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+} from 'components/common';
 import { getEngagement } from 'services/engagementService';
 import { If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
@@ -99,7 +106,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             <CardContent>
                 <Box sx={{ minHeight: 200 }}>
                     <MetHeader4>{name}</MetHeader4>
-                    <MetParagraph
+                    <MetParagraphOld
                         sx={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -110,20 +117,20 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         mt="0.5em"
                     >
                         {description}
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Box>
-                <MetBody bold mt="1em">
+                <MetBodyOld bold mt="1em">
                     {EngagementDate}
-                </MetBody>
+                </MetBodyOld>
                 <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
-                    <MetBody bold>{translate('landingPage.tile.status')}</MetBody>
+                    <MetBodyOld bold>{translate('landingPage.tile.status')}</MetBodyOld>
                     <EngagementStatusChip submissionStatus={submission_status} />
                 </Stack>
             </CardContent>
             <CardActions>
                 <If condition={submission_status === SubmissionStatus.Open}>
                     <Then>
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
                                 event.stopPropagation();
@@ -131,7 +138,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                             }}
                         >
                             {translate('buttonText.shareYourThoughts')}
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Then>
                 </If>
                 <If
@@ -140,7 +147,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     }
                 >
                     <Then>
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             fullWidth
                             onClick={(event: React.MouseEvent) => {
                                 event.stopPropagation();
@@ -148,7 +155,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                             }}
                         >
                             {translate('buttonText.viewEngagement')}
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Then>
                 </If>
             </CardActions>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetHeader1, MetPaper, MetParagraph } from 'components/common';
+import { MetHeader1Old, MetPaper, MetParagraphOld } from 'components/common';
 import { Grid } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
@@ -43,10 +43,10 @@ export const Form = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>{translate('formCAC.form.header')}</MetHeader1>
+                                <MetHeader1Old>{translate('formCAC.form.header')}</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{translate('formCAC.form.paragraph')}</MetParagraph>
+                                <MetParagraphOld>{translate('formCAC.form.paragraph')}</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

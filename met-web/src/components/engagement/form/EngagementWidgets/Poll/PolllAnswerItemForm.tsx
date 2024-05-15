@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, TextField, Divider } from '@mui/material';
-import { SecondaryButton, MetLabel } from 'components/common';
+import { SecondaryButtonOld, MetLabel } from 'components/common';
 import { PollAnswer } from 'models/pollWidget';
 
 interface PollAnswerItemProps {
@@ -29,7 +29,7 @@ const PollAnswerItemForm: React.FC<PollAnswerItemProps> = React.memo(
                 </Grid>
                 {canRemove && (
                     <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                        <SecondaryButton onClick={() => onRemove(index)}>Remove Answer</SecondaryButton>
+                        <SecondaryButtonOld onClick={() => onRemove(index)}>Remove Answer</SecondaryButtonOld>
                     </Grid>
                 )}
                 <Grid item xs={12}>

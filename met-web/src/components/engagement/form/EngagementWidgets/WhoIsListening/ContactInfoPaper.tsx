@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
+import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -30,9 +30,9 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                     </Grid>
                     <When condition={Boolean(contact.title)}>
                         <Grid item xs={12}>
-                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.title}
-                            </MetParagraph>
+                            </MetParagraphOld>
                         </Grid>
                     </When>
                 </Grid>
@@ -47,49 +47,49 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                 >
                     <When condition={!!contact.phone_number}>
                         <Grid item xs={3}>
-                            <MetParagraph>Phone:</MetParagraph>
+                            <MetParagraphOld>Phone:</MetParagraphOld>
                         </Grid>
                         <Grid item xs={9}>
-                            <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.phone_number}
-                            </MetParagraph>
+                            </MetParagraphOld>
                         </Grid>
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>Email:</MetParagraph>
+                        <MetParagraphOld>Email:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph>{contact.email}</MetParagraph>
+                        <MetParagraphOld>{contact.email}</MetParagraphOld>
                     </Grid>
                     <When condition={!!contact.address}>
                         <Grid item xs={3}>
-                            <MetParagraph>Address:</MetParagraph>
+                            <MetParagraphOld>Address:</MetParagraphOld>
                         </Grid>
                         <Grid item xs={9}>
-                            <MetParagraph
+                            <MetParagraphOld
                                 width={'100%'}
                                 overflow="hidden"
                                 textOverflow={'ellipsis'}
                                 whiteSpace="nowrap"
                             >
                                 {contact.address}
-                            </MetParagraph>
+                            </MetParagraphOld>
                         </Grid>
                     </When>
                     <When condition={Boolean(contact.bio)}>
                         <Grid item xs={3}>
-                            <MetParagraph>Bio:</MetParagraph>
+                            <MetParagraphOld>Bio:</MetParagraphOld>
                         </Grid>
                         <Grid item xs={9}>
-                            <MetParagraph
+                            <MetParagraphOld
                                 width={'100%'}
                                 overflow="hidden"
                                 textOverflow={'ellipsis'}
                                 whiteSpace="nowrap"
                             >
                                 {contact.bio}
-                            </MetParagraph>
+                            </MetParagraphOld>
                         </Grid>
                     </When>
                 </Grid>

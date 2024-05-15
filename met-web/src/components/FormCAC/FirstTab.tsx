@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
-import { MetLabel, MetParagraph, PrimaryButton } from 'components/common';
+import { MetLabel, MetParagraphOld, PrimaryButtonOld } from 'components/common';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
 import { When } from 'react-if';
@@ -52,15 +52,15 @@ export const FirstTab: React.FC = () => {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <MetLabel>{translate('formCAC.tab1.labels.0')}</MetLabel>
-                <MetParagraph>{translate('formCAC.tab1.paragraph.0')}</MetParagraph>
+                <MetParagraphOld>{translate('formCAC.tab1.paragraph.0')}</MetParagraphOld>
             </Grid>
             <Grid item xs={12}>
-                <MetParagraph>{translate('formCAC.tab1.paragraph.1')}</MetParagraph>
+                <MetParagraphOld>{translate('formCAC.tab1.paragraph.1')}</MetParagraphOld>
             </Grid>
 
             <Grid item xs={12}>
                 <MetLabel>{translate('formCAC.tab1.labels.1')}</MetLabel>
-                <MetParagraph>{translate('formCAC.tab1.paragraph.2')}</MetParagraph>
+                <MetParagraphOld>{translate('formCAC.tab1.paragraph.2')}</MetParagraphOld>
             </Grid>
 
             <Grid item xs={12}>
@@ -125,9 +125,9 @@ export const FirstTab: React.FC = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <PrimaryButton onClick={handleSubmit(handleNextClick)}>
+                <PrimaryButtonOld onClick={handleSubmit(handleNextClick)}>
                     {translate('formCAC.tab1.button.next')}
-                </PrimaryButton>
+                </PrimaryButtonOld>
             </Grid>
         </Grid>
     );

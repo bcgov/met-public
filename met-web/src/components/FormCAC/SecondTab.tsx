@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid } from '@mui/material';
-import { MetDescription, MetLabel, PrimaryButton } from 'components/common';
+import { MetDescription, MetLabel, PrimaryButtonOld } from 'components/common';
 import { FormContext } from './FormContext';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
@@ -122,9 +122,9 @@ export const SecondTab = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <PrimaryButton loading={submittingForm} onClick={handleSubmit(onSubmit)}>
+                <PrimaryButtonOld loading={submittingForm} onClick={handleSubmit(onSubmit)}>
                     {translate('formCAC.tab2.button.submit')}
-                </PrimaryButton>
+                </PrimaryButtonOld>
             </Grid>
         </Grid>
     );

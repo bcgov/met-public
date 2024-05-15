@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Box } from '@mui/material';
-import { MetPaper, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetPaper, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
 import PollResultsView from './PollResults/PollResultsView';
@@ -36,29 +36,29 @@ const EngagementResults = () => {
                     sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
                 >
                     <Grid item xs={12}>
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             sx={{ marginRight: 1 }}
                             data-testid="save-engagement-button"
                             onClick={() => handleSaveAndContinueEngagement()}
                             loading={isSaving}
                         >
                             Save and Continue
-                        </PrimaryButton>
-                        <PrimaryButton
+                        </PrimaryButtonOld>
+                        <PrimaryButtonOld
                             sx={{ marginRight: 1 }}
                             data-testid="save-and-exit-engagement-button"
                             onClick={() => handleSaveAndExitEngagement()}
                             loading={isSaving}
                         >
                             Save and Exit
-                        </PrimaryButton>
-                        <SecondaryButton
+                        </PrimaryButtonOld>
+                        <SecondaryButtonOld
                             data-testid="preview-engagement-button"
                             onClick={() => handlePreviewEngagement()}
                             disabled={isSaving}
                         >
                             {'Preview'}
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Grid>
                 </Box>
             </Grid>

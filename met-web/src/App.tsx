@@ -4,7 +4,7 @@ import './App.scss';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from './hooks';
 import { MidScreenLoader, MobileToolbar } from './components/common';
-import { Box, Container, useMediaQuery, Theme, Toolbar } from '@mui/material';
+import { Box, Container, useMediaQuery, Theme } from '@mui/material';
 import InternalHeader from './components/layout/Header/InternalHeader';
 import PublicHeader from './components/layout/Header/PublicHeader';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
@@ -225,7 +225,7 @@ const App = () => {
             <Router basename={tenant.basename}>
                 <DocumentTitle />
                 <InternalHeader />
-                <Container>
+                <Container sx={{ padding: { xs: 0, sm: 0, md: 0 } }}>
                     <MobileToolbar />
                     <AuthenticatedRoutes />
                     <FeedbackModal />
@@ -242,8 +242,7 @@ const App = () => {
                 <InternalHeader drawerWidth={drawerWidth} />
                 <Notification />
                 <NotificationModal />
-                <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '17px' }}>
-                    <Toolbar />
+                <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '80px' }}>
                     <AuthenticatedRoutes />
                     <FeedbackModal />
                 </Box>
