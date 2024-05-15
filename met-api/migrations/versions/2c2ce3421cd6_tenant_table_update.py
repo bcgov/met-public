@@ -1,7 +1,7 @@
 """Tenant table update
 
 Revision ID: 2c2ce3421cd6
-Revises: 614b5376f19c
+Revises: 1407e0ad88f6
 Create Date: 2024-05-14 11:45:22.800840
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '2c2ce3421cd6'
-down_revision = '614b5376f19c'
+down_revision = '1407e0ad88f6'
 branch_labels = None
 depends_on = None
 

@@ -65,9 +65,10 @@ def test_create_tenant(client, jwt, session, tenant_info, setup_super_admin_user
 
 
 @pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
-def test_get_tenants(client, jwt, session, tenant_info):
+def test_get_tenants(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
     """Assert that tenants can be fetched."""
-    headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
+    user, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
     factory_tenant_model(tenant_info)
 
     rv = client.get('/api/tenants/', headers=headers, content_type=ContentType.JSON.value)

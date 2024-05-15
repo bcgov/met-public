@@ -32,11 +32,12 @@ class TenantService:
             raise ValueError('Tenant not found.', cls, tenant_id)
         return TenantSchema().dump(tenant)
 
-    def get_all(self):
+    @classmethod
+    def get_all(cls):
         """Get all tenants."""
         tenants = TenantModel.query.all()
         return TenantSchema().dump(tenants, many=True)
-    
+
     @classmethod
     def create(cls, data: dict):
         """Create a new tenant."""
