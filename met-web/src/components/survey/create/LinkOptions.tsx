@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchSurveys, linkSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Survey } from 'models/survey';
 import { Disclaimer } from './Disclaimer';
 
@@ -104,10 +104,10 @@ const LinkOptions = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButton onClick={handleSave} loading={isSaving}>
+                    <PrimaryButtonOld onClick={handleSave} loading={isSaving}>
                         {'Save & Continue'}
-                    </PrimaryButton>
-                    <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
+                    </PrimaryButtonOld>
+                    <SecondaryButtonOld onClick={() => navigate(-1)}>Cancel</SecondaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

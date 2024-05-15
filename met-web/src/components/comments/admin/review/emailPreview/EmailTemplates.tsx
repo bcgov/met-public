@@ -1,5 +1,5 @@
 import React from 'react';
-import { MetBody } from 'components/common';
+import { MetBodyOld } from 'components/common';
 import { Grid } from '@mui/material';
 import { When } from 'react-if';
 import { StaffNote } from 'models/staffNote';
@@ -20,29 +20,31 @@ export const RejectEmailTemplate = ({
 }: RejectionEmailProps) => (
     <>
         <Grid item xs={12}>
-            <MetBody sx={{ mb: 1 }}>
+            <MetBodyOld sx={{ mb: 1 }}>
                 We have reviewed your feedback and can’t accept it for the following reason(s):
-            </MetBody>
+            </MetBodyOld>
         </Grid>
         <ul>
             <When condition={hasPersonalInfo}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>Your feedback contains personal information</MetBody>
+                        <MetBodyOld sx={{ mb: 1 }}>Your feedback contains personal information</MetBodyOld>
                     </Grid>
                 </li>
             </When>
             <When condition={hasProfanity}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>Your feedback contains profanity or inappropriate language</MetBody>
+                        <MetBodyOld sx={{ mb: 1 }}>
+                            Your feedback contains profanity or inappropriate language
+                        </MetBodyOld>
                     </Grid>
                 </li>
             </When>
             <When condition={otherReason}>
                 <li>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>{` Your feedback contains ${otherReason}.`}</MetBody>
+                        <MetBodyOld sx={{ mb: 1 }}>{` Your feedback contains ${otherReason}.`}</MetBodyOld>
                     </Grid>
                 </li>
             </When>
@@ -50,7 +52,7 @@ export const RejectEmailTemplate = ({
 
         <When condition={!!reviewNotes}>
             <Grid item xs={12}>
-                <MetBody sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</MetBody>
+                <MetBodyOld sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</MetBodyOld>
             </Grid>
         </When>
     </>

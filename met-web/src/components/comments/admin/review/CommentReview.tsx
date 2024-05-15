@@ -19,13 +19,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import {
     MetLabel,
-    MetParagraph,
+    MetParagraphOld,
     MetPageGridContainer,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
     MetHeader3,
     MetHeader4,
-    MetSmallText,
+    MetSmallTextOld,
     MetTooltip,
 } from 'components/common';
 import { CommentStatus } from 'constants/commentStatus';
@@ -223,7 +223,7 @@ const CommentReview = () => {
                             <MetLabel>Comment ID:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{id}</MetParagraph>
+                            <MetParagraphOld sx={{ pl: 2 }}>{id}</MetParagraphOld>
                         </Grid>
                     </Grid>
 
@@ -232,7 +232,7 @@ const CommentReview = () => {
                             <MetLabel>Status:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{CommentStatus[comment_status_id]}</MetParagraph>
+                            <MetParagraphOld sx={{ pl: 2 }}>{CommentStatus[comment_status_id]}</MetParagraphOld>
                         </Grid>
                     </Grid>
 
@@ -241,7 +241,7 @@ const CommentReview = () => {
                             <MetLabel>Comment Date:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraph>
+                            <MetParagraphOld sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraphOld>
                         </Grid>
                     </Grid>
 
@@ -250,7 +250,7 @@ const CommentReview = () => {
                             <MetLabel>Reviewed by:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{reviewed_by}</MetParagraph>
+                            <MetParagraphOld sx={{ pl: 2 }}>{reviewed_by}</MetParagraphOld>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" item xs={6} spacing={1}></Grid>
@@ -259,7 +259,7 @@ const CommentReview = () => {
                             <MetLabel>Date Reviewed:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ pl: 2 }}>{formatDate(review_date)}</MetParagraph>
+                            <MetParagraphOld sx={{ pl: 2 }}>{formatDate(review_date)}</MetParagraphOld>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -311,7 +311,7 @@ const CommentReview = () => {
                                             <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
                                         </Grid>
                                         <Grid xs={12} item>
-                                            <MetParagraph>{comment.text}</MetParagraph>
+                                            <MetParagraphOld>{comment.text}</MetParagraphOld>
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -343,17 +343,17 @@ const CommentReview = () => {
                                     <FormControlLabel
                                         value={CommentStatus.Approved}
                                         control={<Radio />}
-                                        label={<MetParagraph>Approve</MetParagraph>}
+                                        label={<MetParagraphOld>Approve</MetParagraphOld>}
                                     />
                                     <FormControlLabel
                                         value={CommentStatus.Rejected}
                                         control={<Radio />}
-                                        label={<MetParagraph>Reject</MetParagraph>}
+                                        label={<MetParagraphOld>Reject</MetParagraphOld>}
                                     />
                                     <FormControlLabel
                                         value={CommentStatus.NeedsFurtherReview}
                                         control={<Radio />}
-                                        label={<MetParagraph>Needs further review</MetParagraph>}
+                                        label={<MetParagraphOld>Needs further review</MetParagraphOld>}
                                     />
                                 </RadioGroup>
                             </FormControl>
@@ -365,7 +365,7 @@ const CommentReview = () => {
                                         <MetHeader4 sx={{ color: '#494949' }}>Reason for Rejection</MetHeader4>
                                     </FormLabel>
                                     <FormControlLabel
-                                        label={<MetParagraph>Contains personal information</MetParagraph>}
+                                        label={<MetParagraphOld>Contains personal information</MetParagraphOld>}
                                         control={
                                             <Checkbox
                                                 checked={hasPersonalInfo}
@@ -375,7 +375,9 @@ const CommentReview = () => {
                                     />
                                     <FormControlLabel
                                         label={
-                                            <MetParagraph>Contains profanity or inappropriate language</MetParagraph>
+                                            <MetParagraphOld>
+                                                Contains profanity or inappropriate language
+                                            </MetParagraphOld>
                                         }
                                         control={
                                             <Checkbox
@@ -385,7 +387,7 @@ const CommentReview = () => {
                                         }
                                     />
                                     <FormControlLabel
-                                        label={<MetParagraph>Contains threat/menace</MetParagraph>}
+                                        label={<MetParagraphOld>Contains threat/menace</MetParagraphOld>}
                                         control={
                                             <Checkbox
                                                 checked={hasThreat}
@@ -393,14 +395,14 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetSmallText bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
+                                    <MetSmallTextOld bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
                                         {translate('comment.admin.review.threatTextOne')}{' '}
                                         {translate('comment.admin.review.threatContact')}{' '}
                                         {translate('comment.admin.review.threatTextTwo')}{' '}
                                         <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
-                                    </MetSmallText>
+                                    </MetSmallTextOld>
                                     <FormControlLabel
-                                        label={<MetParagraph sx={{ color: '#494949' }}>Other</MetParagraph>}
+                                        label={<MetParagraphOld sx={{ color: '#494949' }}>Other</MetParagraphOld>}
                                         control={
                                             <Checkbox
                                                 checked={hasOtherReason}
@@ -413,13 +415,15 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetParagraph sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
+                                    <MetParagraphOld sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
                                         This will be inserted in the email sent to the respondent:
-                                        <MetParagraph sx={{ fontStyle: 'italic', color: '#707070', fontSize: '13px' }}>
+                                        <MetParagraphOld
+                                            sx={{ fontStyle: 'italic', color: '#707070', fontSize: '13px' }}
+                                        >
                                             We have reviewed your feedback and can't accept it for the following
                                             reason(s): - Your feedback contains "other"
-                                        </MetParagraph>
-                                    </MetParagraph>
+                                        </MetParagraphOld>
+                                    </MetParagraphOld>
                                     <TextField
                                         disabled={!hasOtherReason}
                                         value={otherReason}
@@ -430,13 +434,13 @@ const CommentReview = () => {
                                         multiline
                                     />
                                     <br />
-                                    <MetParagraph sx={{ fontWeight: 'bold', color: '#494949' }}>
+                                    <MetParagraphOld sx={{ fontWeight: 'bold', color: '#494949' }}>
                                         Review Notes
-                                    </MetParagraph>
-                                    <MetParagraph sx={{ color: '#707070', fontSize: '13px' }}>
+                                    </MetParagraphOld>
+                                    <MetParagraphOld sx={{ color: '#707070', fontSize: '13px' }}>
                                         This note will be inserted in the email sent to the respondent to help them
                                         understand what needs to be edited for their comment(s) to be approved.
-                                    </MetParagraph>
+                                    </MetParagraphOld>
                                     {reviewNotes.map((staffNote) => {
                                         return (
                                             <TextField
@@ -466,7 +470,9 @@ const CommentReview = () => {
                                             alignItems="flex-end"
                                             justifyContent="flex-end"
                                         >
-                                            <SecondaryButton onClick={previewEmail}>{'Preview Email'}</SecondaryButton>
+                                            <SecondaryButtonOld onClick={previewEmail}>
+                                                {'Preview Email'}
+                                            </SecondaryButtonOld>
                                         </Grid>
                                     </When>
                                     <br />
@@ -491,18 +497,18 @@ const CommentReview = () => {
                                         );
                                     })}
                                     <br />
-                                    <MetParagraph>
+                                    <MetParagraphOld>
                                         Clicking the "Save" button will trigger an automatic email to be sent to the
                                         person who made this comment. They will have the option to edit and re-submit
                                         their comment. The edited comment will have to be approved before it is
                                         published.
-                                    </MetParagraph>
+                                    </MetParagraphOld>
                                     <br />
                                     <FormControlLabel
                                         label={
-                                            <MetParagraph>
+                                            <MetParagraphOld>
                                                 Don't send this email to the person who commented.
-                                            </MetParagraph>
+                                            </MetParagraphOld>
                                         }
                                         control={
                                             <Checkbox
@@ -544,11 +550,11 @@ const CommentReview = () => {
                         </When>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButton loading={isSaving} onClick={handleSave}>
+                                <PrimaryButtonOld loading={isSaving} onClick={handleSave}>
                                     {'Save & Continue'}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
 
-                                <SecondaryButton onClick={() => navigate(-1)}>Cancel</SecondaryButton>
+                                <SecondaryButtonOld onClick={() => navigate(-1)}>Cancel</SecondaryButtonOld>
                             </Stack>
                         </Grid>
                     </Else>

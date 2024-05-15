@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -228,12 +228,12 @@ const AddFileDrawer = () => {
                             marginTop="8em"
                         >
                             <Grid item>
-                                <PrimaryButton loading={isCreatingFile} onClick={handleSubmit(onSubmit)}>
+                                <PrimaryButtonOld loading={isCreatingFile} onClick={handleSubmit(onSubmit)}>
                                     {`Save & Close`}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton onClick={() => handleClose()}>{`Cancel`}</SecondaryButton>
+                                <SecondaryButtonOld onClick={() => handleClose()}>{`Cancel`}</SecondaryButtonOld>
                             </Grid>
                         </Grid>
                     </Grid>

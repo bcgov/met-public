@@ -4,7 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl from 'maplibre-gl';
 import { GeoJSON } from 'geojson';
 import MarkerIcon from '@mui/icons-material/LocationOnRounded';
-import { MetSmallText } from 'components/common';
+import { MetSmallTextOld } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
 import { AnyLayer } from 'mapbox-gl';
@@ -71,14 +71,14 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                 <Stack direction="column" alignItems="center" justifyContent="center">
                     <MarkerIcon fontSize="large" htmlColor="red" />
                     <When condition={Boolean(markerLabel)}>
-                        <MetSmallText
+                        <MetSmallTextOld
                             bold
                             bgcolor={'var(--bcds-surface-background-white)'}
                             borderRadius="10px"
                             padding="0 2px 0 2px"
                         >
                             {markerLabel}
-                        </MetSmallText>
+                        </MetSmallTextOld>
                     </When>
                 </Stack>
             </Marker>

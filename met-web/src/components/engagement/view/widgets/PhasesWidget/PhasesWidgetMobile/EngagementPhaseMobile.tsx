@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetParagraph } from 'components/common';
+import { MetHeader4, MetParagraphOld } from 'components/common';
 import { EngagementPhases, PAST_PHASE, ProcessStageProps } from 'models/engagementPhases';
 import { PhaseBoxMobile } from './PhaseBoxMobile';
 import { LearnMoreBox } from '../LearnMoreBox';
@@ -45,7 +45,7 @@ export const EngagementPhaseMobile = ({
                 </LearnMoreBox>
             }
             accordionBackground={isCurrent ? accordionBackground : PAST_PHASE.learnMoreBackgroundColor}
-            iconBox={popOverText ? <MetParagraph>{popOverText}</MetParagraph> : false}
+            iconBox={popOverText ? <MetParagraphOld>{popOverText}</MetParagraphOld> : false}
             isCurrentPhase={phaseId === currentPhase}
             currentPhase={currentPhase}
         />

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { globalFocusVisible, colors } from '..';
+import { globalFocusVisible, colors } from '../../common';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const BodyText = styled('p')<{ bold?: boolean; small?: boolean }>(({ bold, small }) => ({

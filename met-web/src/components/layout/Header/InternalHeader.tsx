@@ -9,7 +9,7 @@ import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
-import { HeaderTitle } from 'components/common';
+import { HeaderTitleOld } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -93,23 +93,23 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                         />
                     </When>
                     {isMediumScreen ? (
-                        <HeaderTitle
+                        <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
                             {translate('header.title')}
-                        </HeaderTitle>
+                        </HeaderTitleOld>
                     ) : (
-                        <HeaderTitle
+                        <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
                             {translate('header.smallTitle')}
-                        </HeaderTitle>
+                        </HeaderTitleOld>
                     )}
                     <Button
                         data-testid="button-header"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
-import { globalFocusShadow, colors, elevations } from '..';
+import { globalFocusShadow, colors, elevations } from '../../common';
 
 type ButtonProps = {
     children: React.ReactNode;

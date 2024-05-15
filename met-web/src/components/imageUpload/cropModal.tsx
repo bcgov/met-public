@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { MetDescription, modalStyle, PrimaryButton } from 'components/common';
+import { MetDescription, modalStyle, PrimaryButtonOld } from 'components/common';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
@@ -99,13 +99,13 @@ export const CropModal = () => {
                                 </MetDescription>
                             </Grid>
                             <Grid item xs={12} container justifyContent="flex-end">
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     onClick={() => {
                                         handleCropDone(croppedArea);
                                     }}
                                 >
                                     Save
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                         </Grid>
                     </Container>

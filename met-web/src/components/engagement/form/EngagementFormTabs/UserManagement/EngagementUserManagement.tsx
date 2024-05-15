@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Box } from '@mui/material';
-import { MetLabel, MetPaper, PrimaryButton, SecondaryButton, MetParagraph } from 'components/common';
+import { MetLabel, MetPaper, PrimaryButtonOld, SecondaryButtonOld, MetParagraphOld } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { formatDate } from 'components/common/dateHelper';
@@ -31,7 +31,7 @@ const EngagementUserManagement = () => {
                             <MetLabel>Engagement Created by:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ ml: 2 }}>{savedEngagement.user_id}</MetParagraph>
+                            <MetParagraphOld sx={{ ml: 2 }}>{savedEngagement.user_id}</MetParagraphOld>
                         </Grid>
                     </Grid>
 
@@ -40,12 +40,14 @@ const EngagementUserManagement = () => {
                             <MetLabel>Date Created:</MetLabel>
                         </Grid>
                         <Grid item>
-                            <MetParagraph sx={{ ml: 2 }}>{formatDate(savedEngagement.created_date)}</MetParagraph>
+                            <MetParagraphOld sx={{ ml: 2 }}>{formatDate(savedEngagement.created_date)}</MetParagraphOld>
                         </Grid>
                     </Grid>
 
                     <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1}>
-                        <PrimaryButton onClick={() => setAddTeamMemberOpen(true)}>+ Add Team Member</PrimaryButton>
+                        <PrimaryButtonOld onClick={() => setAddTeamMemberOpen(true)}>
+                            + Add Team Member
+                        </PrimaryButtonOld>
                     </Grid>
 
                     <Grid item xs={12}>
@@ -63,29 +65,29 @@ const EngagementUserManagement = () => {
                         sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
                     >
                         <Grid item xs={12}>
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 sx={{ marginRight: 1 }}
                                 data-testid="save-engagement-button"
                                 onClick={() => handleSaveAndContinueEngagement()}
                                 loading={isSaving}
                             >
                                 Save and Continue
-                            </PrimaryButton>
-                            <PrimaryButton
+                            </PrimaryButtonOld>
+                            <PrimaryButtonOld
                                 sx={{ marginRight: 1 }}
                                 data-testid="save-and-exit-engagement-button"
                                 onClick={() => handleSaveAndExitEngagement()}
                                 loading={isSaving}
                             >
                                 Save and Exit
-                            </PrimaryButton>
-                            <SecondaryButton
+                            </PrimaryButtonOld>
+                            <SecondaryButtonOld
                                 data-testid="preview-engagement-button"
                                 onClick={() => handlePreviewEngagement()}
                                 disabled={isSaving}
                             >
                                 {'Preview'}
-                            </SecondaryButton>
+                            </SecondaryButtonOld>
                         </Grid>
                     </Box>
                 </Grid>

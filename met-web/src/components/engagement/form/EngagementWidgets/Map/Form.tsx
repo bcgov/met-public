@@ -3,8 +3,8 @@ import Divider from '@mui/material/Divider';
 import { Grid, Typography, Stack, IconButton } from '@mui/material';
 import {
     MetLabel,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
     MidScreenLoader,
     MetWidgetPaper,
     MetDescription,
@@ -267,9 +267,9 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
                                 <Grid item>
-                                    <SecondaryButton loading={calculatingZoom} onClick={handlePreviewMap}>
+                                    <SecondaryButtonOld loading={calculatingZoom} onClick={handlePreviewMap}>
                                         Preview Map
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                             <Grid
@@ -282,12 +282,15 @@ const Form = () => {
                                 marginTop="2em"
                             >
                                 <Grid item>
-                                    <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
+                                    <PrimaryButtonOld
+                                        type="submit"
+                                        loading={isCreating}
+                                    >{`Save & Close`}</PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>
+                                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
                                         Cancel
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                         </Grid>

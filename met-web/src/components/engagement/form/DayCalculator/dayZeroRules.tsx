@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MetHeader4, MetBody } from 'components/common';
+import { MetHeader4, MetBodyOld } from 'components/common';
 
 const DayZeroRules = () => (
     <div>
@@ -8,11 +8,11 @@ const DayZeroRules = () => (
         <div>
             <ul>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         If a deadline falls on a holiday the deadline is extended to the next day that is not a holiday.
                         For example, if the deadline for a comment period is December 26, boxing day, the deadline is
                         extended to December 27.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
             </ul>
         </div>
@@ -20,11 +20,11 @@ const DayZeroRules = () => (
         <div>
             <ul>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         If a deadline falls on a day when the office is not open (Saturday, Sunday) the deadline is
                         extended to the next day that the office is open. For example, if the deadline for a comment
                         period falls on a Saturday then the deadline is extended to Monday.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
             </ul>
         </div>
@@ -32,17 +32,17 @@ const DayZeroRules = () => (
         <div>
             <ul>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         When calculating periods (for example 30 day comment period) the first day must be excluded and
                         the last day included. For example, a 30 day comment period starts March 1, 2017, the comment
                         period does not end until March 31, 2017.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         Legislated time periods must be calculated with day -0- eg, Evaluation 30 days, Application
                         Review 180 days, Ministers Decision 45 days, and Public Comment Periods.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
             </ul>
         </div>
@@ -50,7 +50,7 @@ const DayZeroRules = () => (
         <div>
             <ul>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         There is no specific mention of time of day in the Interpretation Act so the day would end at
                         midnight. If a comment is received before midnight on the last day of the comment period it
                         would be included in the comment period. If an email was received at 11:59PM it would be
@@ -58,7 +58,7 @@ const DayZeroRules = () => (
                         midnight then the comment would also be included in the comment period. Comments sent by mail or
                         courier must be post marked by the last day of the comment period in order to be included in the
                         comment period.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
             </ul>
         </div>
@@ -66,12 +66,12 @@ const DayZeroRules = () => (
         <div>
             <ul>
                 <li>
-                    <MetBody>
+                    <MetBodyOld>
                         Suspending a project during the Application Review period, when the suspension resumes it starts
                         back on the day it was suspended on. If a project is suspended on day 50 of the 180, in
                         accordance with the spirit of the Act, day 49 was the last full day of the Application Review
                         Period, when the project resumes, it would resume on day 50 to allow 180 full days of review.
-                    </MetBody>
+                    </MetBodyOld>
                 </li>
             </ul>
         </div>

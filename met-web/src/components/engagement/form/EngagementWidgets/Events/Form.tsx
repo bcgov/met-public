@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Divider } from '@mui/material';
-import { PrimaryButton, WidgetButton } from 'components/common';
+import { PrimaryButtonOld, WidgetButton } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { EventsContext } from './EventsContext';
 import EventsInfoBlock from './EventsInfoBlock';
@@ -45,13 +45,13 @@ const Form = () => {
             </Grid>
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
                 <Grid item>
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         onClick={() => {
                             handleWidgetDrawerOpen(false);
                         }}
                     >
                         Close
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

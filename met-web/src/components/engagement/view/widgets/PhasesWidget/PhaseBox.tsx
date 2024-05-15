@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
 import { Box, Grid, Link, Popover, Stack, SxProps, Theme, useTheme } from '@mui/material';
-import { MetHeader4, MetIconText, MetPaper, MetSmallText } from 'components/common';
+import { MetHeader4, MetIconText, MetPaper, MetSmallTextOld } from 'components/common';
 import { PhaseContext } from '.';
 import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
@@ -99,7 +99,7 @@ export const PhaseBox = ({
                                 <Grid item container direction="row" justifyContent="flex-end">
                                     <Grid item>
                                         <Link
-                                            component={MetSmallText}
+                                            component={MetSmallTextOld}
                                             sx={{ cursor: 'pointer', color: 'white', ':hover': { fontWeight: 'bold' } }}
                                             onClick={handleReadMoreClick}
                                             color="inherit"

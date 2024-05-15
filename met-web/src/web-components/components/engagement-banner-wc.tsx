@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom/client';
 import { EngagementBanner } from '../../components/engagement/view/EngagementBanner/StandAloneBanner';
 import createWcTheme from '../styles/wcTheme';
 import { store } from '../../store';
-import { PrimaryButton } from 'components/common';
+import { PrimaryButtonOld } from 'components/common';
 import { Grid } from '@mui/material';
 
 export default class EngagementBannerWC extends HTMLElement {
@@ -61,9 +61,11 @@ export default class EngagementBannerWC extends HTMLElement {
                                         xs={12}
                                         justifyContent="flex-end"
                                     >
-                                        <PrimaryButton onClick={() => (window.location.href = props['engagementurl'])}>
+                                        <PrimaryButtonOld
+                                            onClick={() => (window.location.href = props['engagementurl'])}
+                                        >
                                             View Engagement
-                                        </PrimaryButton>
+                                        </PrimaryButtonOld>
                                     </Grid>
                                 }
                                 engagementSlug={this._getSlugFromUrl(props['engagementurl'])}

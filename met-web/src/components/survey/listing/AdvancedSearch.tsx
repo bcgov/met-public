@@ -10,7 +10,7 @@ import {
     Theme,
     useMediaQuery,
 } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { AdvancedSearchFilters, SurveyListingContext } from './SurveyListingContext';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import CheckIcon from '@mui/icons-material/Check';
@@ -211,21 +211,21 @@ export const AdvancedSearch = () => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButton
+                    <SecondaryButtonOld
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
-                    </SecondaryButton>
-                    <PrimaryButton
+                    </SecondaryButtonOld>
+                    <PrimaryButtonOld
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}
                     >
                         Search
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Divider, Grid } from '@mui/material';
-import { PrimaryButton } from 'components/common';
+import { PrimaryButtonOld } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import CreateFolderForm from './CreateFolderForm';
 import DocumentsBlock from './DocumentsBlock';
@@ -32,7 +32,7 @@ const DocumentForm = () => {
 
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                 <Grid item>
-                    <PrimaryButton onClick={() => handleWidgetDrawerOpen(false)}>{`Close`}</PrimaryButton>
+                    <PrimaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Close`}</PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

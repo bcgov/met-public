@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Survey } from 'models/survey';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -404,14 +404,14 @@ const Surveys = () => {
                                 onChange={(e) => setSearchText(e.target.value)}
                                 size="small"
                             />
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 data-testid="survey/listing/search-button"
                                 onClick={() => handleSearchBarClick(searchText)}
                             >
                                 <SearchIcon />
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Stack>
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             data-testid="survey-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                             startIcon={
@@ -428,12 +428,12 @@ const Surveys = () => {
                             fullWidth={isMediumScreen ? true : false}
                         >
                             Advanced Search
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Stack>
                     <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
-                        <PrimaryButton component={Link} to="/surveys/create">
+                        <PrimaryButtonOld component={Link} to="/surveys/create">
                             + Create Survey
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </PermissionsGate>
                 </Stack>
             </Grid>

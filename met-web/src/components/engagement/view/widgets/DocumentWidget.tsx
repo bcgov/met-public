@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2 } from 'components/common';
+import { MetPaper, MetHeader2Old } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem } from 'models/document';
@@ -50,7 +50,7 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
         <>
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
-                    <MetHeader2 bold>{widget.title}</MetHeader2>
+                    <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 {documents.map((document: DocumentItem) => {

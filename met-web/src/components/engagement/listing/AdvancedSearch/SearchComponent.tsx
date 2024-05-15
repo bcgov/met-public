@@ -10,9 +10,9 @@ import {
     useMediaQuery,
     Theme,
 } from '@mui/material';
-import { MetParagraph, MetLabel } from 'components/common';
+import { MetParagraphOld, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
-import { PrimaryButton, SecondaryButton } from '../../../common';
+import { PrimaryButtonOld, SecondaryButtonOld } from '../../../common';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
@@ -131,7 +131,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 />
                             }
                             label={
-                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Draft]}</MetParagraph>
+                                <MetParagraphOld>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
+                                </MetParagraphOld>
                             }
                         />
                         <FormControlLabel
@@ -148,9 +150,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 />
                             }
                             label={
-                                <MetParagraph>
+                                <MetParagraphOld>
                                     {EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
-                                </MetParagraph>
+                                </MetParagraphOld>
                             }
                         />
                         <FormControlLabel
@@ -167,7 +169,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 />
                             }
                             label={
-                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}</MetParagraph>
+                                <MetParagraphOld>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
+                                </MetParagraphOld>
                             }
                         />
                         <FormControlLabel
@@ -183,7 +187,11 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={<MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Open]}</MetParagraph>}
+                            label={
+                                <MetParagraphOld>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Open]}
+                                </MetParagraphOld>
+                            }
                         />
                         <FormControlLabel
                             control={
@@ -199,7 +207,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 />
                             }
                             label={
-                                <MetParagraph>{EngagementDisplayStatus[EngagementDisplayStatus.Closed]}</MetParagraph>
+                                <MetParagraphOld>
+                                    {EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
+                                </MetParagraphOld>
                             }
                         />
                         <FormControlLabel
@@ -216,9 +226,9 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                 />
                             }
                             label={
-                                <MetParagraph>
+                                <MetParagraphOld>
                                     {EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
-                                </MetParagraph>
+                                </MetParagraphOld>
                             }
                         />
                     </FormGroup>
@@ -320,16 +330,19 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButton data-testid="reset-filter-button" onClick={() => handleResetSearchFilters()}>
+                        <SecondaryButtonOld
+                            data-testid="reset-filter-button"
+                            onClick={() => handleResetSearchFilters()}
+                        >
                             Reset All Filters
-                        </SecondaryButton>
-                        <PrimaryButton
+                        </SecondaryButtonOld>
+                        <PrimaryButtonOld
                             data-testid="search-button"
                             sx={{ marginLeft: 1 }}
                             onClick={() => handleSearch()}
                         >
                             Search
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Grid>
             </Grid>

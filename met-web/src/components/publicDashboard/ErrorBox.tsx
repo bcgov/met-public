@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, IconButton, SxProps, Theme } from '@mui/material';
-import { MetBody, MetHeader4, MetPaper } from 'components/common';
+import { MetBodyOld, MetHeader4, MetPaper } from 'components/common';
 import LoopIcon from '@mui/icons-material/Loop';
 import { DASHBOARD } from './constants';
 import { useAppTranslation } from 'hooks';
@@ -38,7 +38,7 @@ export const ErrorBox = ({
             >
                 <Grid item>
                     <MetHeader4 color="error">{translate('dashboard.errorBox.header')}</MetHeader4>
-                    <MetBody color="error">{translate('dashboard.errorBox.body')}</MetBody>
+                    <MetBodyOld color="error">{translate('dashboard.errorBox.body')}</MetBodyOld>
                     <IconButton onClick={() => onClick()}>
                         <LoopIcon sx={{ color: DASHBOARD.KPI.RADIALBAR.FILL_COLOR, fontSize: '4em' }} />
                     </IconButton>

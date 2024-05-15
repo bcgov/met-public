@@ -1,9 +1,9 @@
 import { faCirclePlus } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Grid, Skeleton } from '@mui/material';
-import { Button } from 'components/MetDesignSystem/Input/Button';
-import { Header1, Header2, BodyText } from 'components/MetDesignSystem/Typography/';
-import { ResponsiveContainer } from 'components/MetDesignSystem/Layout';
+import { Button } from 'components/common/Input/Button';
+import { Header1, Header2, BodyText } from 'components/common/Typography/';
+import { ResponsiveContainer } from 'components/common/Layout';
 import {
     Table,
     TableBody,
@@ -12,13 +12,13 @@ import {
     TableHeadCell,
     TableHeadRow,
     TableRow,
-} from 'components/MetDesignSystem/Layout/Table';
+} from 'components/common/Layout/Table';
 import { getAllTenants } from 'services/tenantService';
 
 import React, { useEffect } from 'react';
 import { Tenant } from 'models/tenant';
 import { Else, If, Then } from 'react-if';
-import { BreadcrumbTrail } from 'components/MetDesignSystem/Navigation/Breadcrumb';
+import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Divider } from '@mui/material';
-import { PrimaryButton, WidgetButton, MetParagraph } from 'components/common';
+import { PrimaryButtonOld, WidgetButton, MetParagraphOld } from 'components/common';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { SubscribeContext } from './SubscribeContext';
 import { SUBSCRIBE_TYPE } from 'models/subscription';
@@ -32,16 +32,16 @@ const Form = () => {
             <When condition={!subscribeFormExists}>
                 <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
                     <Grid item xs={12}>
-                        <MetParagraph>
+                        <MetParagraphOld>
                             The email list will collect email addresses for a mailing list. A "double-opt-in" email will
                             be sent to confirm the subscription. Only the email addresses that have been double-opted-in
                             will be on the list.
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                     <Grid item xs={12} marginBottom="1em">
-                        <MetParagraph>
+                        <MetParagraphOld>
                             The form sign-up will open the pre-defined form. The text and CTA for both are customizable.
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                 </Grid>
             </When>
@@ -74,13 +74,13 @@ const Form = () => {
 
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
                 <Grid item>
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         onClick={() => {
                             handleWidgetDrawerOpen(false);
                         }}
                     >
                         Close
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

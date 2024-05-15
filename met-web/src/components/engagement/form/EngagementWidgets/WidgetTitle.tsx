@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MetHeader3, PrimaryButton } from 'components/common';
+import { MetHeader3, PrimaryButtonOld } from 'components/common';
 import { Widget } from 'models/widget';
 import { CircularProgress, IconButton, Stack, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -73,13 +73,13 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                             <CircularProgress size={20} color="info" />
                         </Then>
                         <Else>
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 onClick={() => {
                                     saveTitle();
                                 }}
                             >
                                 Save
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Else>
                     </If>
                 </Stack>

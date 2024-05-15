@@ -6,8 +6,8 @@ import {
     MetLabel,
     MetPageGridContainer,
     MetPaper,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
 } from 'components/common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { ReportSettingsContext } from './ReportSettingsContext';
@@ -90,13 +90,13 @@ const SettingsForm = () => {
                                                     position="end"
                                                     sx={{ height: '100%', maxHeight: '100%' }}
                                                 >
-                                                    <SecondaryButton
+                                                    <SecondaryButtonOld
                                                         variant="contained"
                                                         disableElevation
                                                         onClick={handleCopyUrl}
                                                     >
                                                         <ContentCopyIcon />
-                                                    </SecondaryButton>
+                                                    </SecondaryButtonOld>
                                                 </InputAdornment>
                                             ),
                                         }}
@@ -115,16 +115,16 @@ const SettingsForm = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     data-testid={'survey/report/save-button'}
                                     onClick={() => setSavingSettings(true)}
                                     loading={savingSettings}
                                 >
                                     Save
-                                </PrimaryButton>
-                                <SecondaryButton onClick={() => navigate(`/surveys/${survey?.id}/build`)}>
+                                </PrimaryButtonOld>
+                                <SecondaryButtonOld onClick={() => navigate(`/surveys/${survey?.id}/build`)}>
                                     Back
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </Stack>
                         </Grid>
                     </Grid>

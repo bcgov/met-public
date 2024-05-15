@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid } from '@mui/material';
-import { MetHeader1, MetParagraph, MetLabel } from 'components/common';
+import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -102,10 +102,10 @@ export const Subscription = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>{tenant?.name}</MetHeader1>
+                                <MetHeader1Old>{tenant?.name}</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{translate('subscription.paragraph')}</MetParagraph>
+                                <MetParagraphOld>{translate('subscription.paragraph')}</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

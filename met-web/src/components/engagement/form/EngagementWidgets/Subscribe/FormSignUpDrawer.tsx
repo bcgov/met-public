@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, FormControlLabel, Radio, FormLabel, FormControl, FormHelperText } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -242,13 +242,13 @@ const FormSignUpDrawer = () => {
                             marginTop="2em"
                         >
                             <Grid item>
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     onClick={handleSubmit(onSubmit)}
                                     loading={isCreating}
-                                >{`Save & Close`}</PrimaryButton>
+                                >{`Save & Close`}</PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
+                                <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
                             </Grid>
                         </Grid>
                     </Grid>

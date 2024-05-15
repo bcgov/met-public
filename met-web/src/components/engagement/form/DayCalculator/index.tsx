@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Modal, Grid, Stack, useMediaQuery, TextField, Autocomplete, Link as MuiLink, Typography } from '@mui/material';
 import {
     modalStyle,
-    MetHeader1,
+    MetHeader1Old,
     MetHeader4,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
     MetLabel,
-    MetBody,
+    MetBodyOld,
 } from 'components/common';
 import { When } from 'react-if';
 import dayjs from 'dayjs';
@@ -179,9 +179,9 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 <Grid container direction="row" item xs={12} wrap="nowrap">
                     <Grid item md={11} xs={12}>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                            <MetHeader1 bold sx={{ mb: 2 }} data-testid="daycalculator-title">
+                            <MetHeader1Old bold sx={{ mb: 2 }} data-testid="daycalculator-title">
                                 Day Calculator
-                            </MetHeader1>
+                            </MetHeader1Old>
                         </Stack>
                     </Grid>
                 </Grid>
@@ -625,9 +625,9 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton data-testid={'reset-button'} onClick={() => resetToDefault()}>
+                            <SecondaryButtonOld data-testid={'reset-button'} onClick={() => resetToDefault()}>
                                 Reset All
-                            </SecondaryButton>
+                            </SecondaryButtonOld>
                         </Stack>
                     </Grid>
                 </Grid>
@@ -640,20 +640,20 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                     <Stack direction="row" alignItems="center" spacing={2}>
                         <When condition={selectedOption?.label == dayZeroLabel}>
                             {
-                                <MetBody sx={{ mb: 2 }}>
+                                <MetBodyOld sx={{ mb: 2 }}>
                                     {options[0].description}
                                     <MuiLink onClick={() => setShowHideStatus(!showHideStatus)}>{`${
                                         showHideStatus ? 'Hide' : 'Show'
                                     }`}</MuiLink>{' '}
                                     Day Zero rules.
-                                </MetBody>
+                                </MetBodyOld>
                             }
                         </When>
                         <When condition={selectedOption?.label == calendarLabel}>
-                            {<MetBody sx={{ mb: 2 }}>{options[1].description}</MetBody>}
+                            {<MetBodyOld sx={{ mb: 2 }}>{options[1].description}</MetBodyOld>}
                         </When>
                         <When condition={selectedOption?.label == suspensionLabel}>
-                            {<MetBody sx={{ mb: 2 }}>{options[2].description}</MetBody>}
+                            {<MetBodyOld sx={{ mb: 2 }}>{options[2].description}</MetBodyOld>}
                         </When>
                     </Stack>
                 </Grid>
@@ -678,12 +678,12 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                            <SecondaryButtonOld data-testid={'cancel-button'} onClick={() => updateModal(false)}>
                                 Close
-                            </SecondaryButton>
-                            <PrimaryButton data-testid={'calculator-button'} onClick={() => calculator()}>
+                            </SecondaryButtonOld>
+                            <PrimaryButtonOld data-testid={'calculator-button'} onClick={() => calculator()}>
                                 Calculate
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Stack>
                     </Grid>
                 </Grid>

@@ -14,7 +14,14 @@ import {
     TextField,
     useTheme,
 } from '@mui/material';
-import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetHeader3,
+    MetLabel,
+    MetSmallTextOld,
+    modalStyle,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+} from 'components/common';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserDetailsContext } from './UserDetailsContext';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
@@ -298,7 +305,9 @@ export const AddToEngagementModal = () => {
                             </Grid>
                             <When condition={backendError}>
                                 <Grid item xs={12}>
-                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                    <MetSmallTextOld sx={{ color: theme.palette.error.main }}>
+                                        {backendError}
+                                    </MetSmallTextOld>
                                 </Grid>
                             </When>
 
@@ -317,10 +326,10 @@ export const AddToEngagementModal = () => {
                                     width="100%"
                                     justifyContent="flex-end"
                                 >
-                                    <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton loading={isAssigningRole} type="submit">
+                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
+                                    <PrimaryButtonOld loading={isAssigningRole} type="submit">
                                         Submit
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </Stack>
                             </Grid>
                         </Grid>

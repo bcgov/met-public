@@ -1,5 +1,5 @@
 import React from 'react';
-import { SecondaryButton } from 'components/common';
+import { SecondaryButtonOld } from 'components/common';
 import { Grid, Link } from '@mui/material';
 import { SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';
@@ -35,9 +35,9 @@ const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: Subsc
             <Grid container item xs={12} justifyContent={'flex-end'}>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}>
                     <Grid container xs={12} direction="row" justifyContent="flex-end">
-                        <SecondaryButton onClick={handleNavigate}>
+                        <SecondaryButtonOld onClick={handleNavigate}>
                             {subscribeOption.subscribe_items[0].call_to_action_text}
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Grid>
                 </When>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>

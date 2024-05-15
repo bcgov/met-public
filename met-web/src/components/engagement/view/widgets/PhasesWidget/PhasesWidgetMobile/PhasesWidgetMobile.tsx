@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton, Typography } from '@mui/material';
-import { MetBody, MetHeader3, MetPaper } from 'components/common';
+import { MetBodyOld, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { styled } from '@mui/material/styles';
 import { ActionContext } from '../../../ActionContext';
@@ -68,10 +68,10 @@ export const PhasesWidgetMobile = () => {
                     <MetHeader3 bold>{phasesWidget.title}</MetHeader3>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody>
+                    <MetBodyOld>
                         Click on the sections below to expand them and learn more about each EA process phase. You can
                         also learn more about each engagement period by clicking the engagement icon.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 <Grid item xs={12} sx={{ maxWidth: '99%' }}>
                     <Accordion expanded={expanded} onChange={handleChange(!expanded)} data-testid="eaProcessAccordion">
