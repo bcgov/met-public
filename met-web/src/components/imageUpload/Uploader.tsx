@@ -3,19 +3,15 @@ import { Grid, Stack, Typography } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
 import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { ImageUploadContext } from './imageUploadContext';
+import { colors } from 'components/common';
+import { Button } from 'components/common/Input';
 
 interface UploaderProps {
-    margin?: number;
-    helpText?: string;
     height?: string;
     accept?: Accept;
+    children: React.ReactNode;
 }
-const Uploader = ({
-    margin = 2,
-    helpText = 'Drag and drop some files here, or click to select files',
-    height = '10em',
-    accept = {},
-}: UploaderProps) => {
+const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => {
     const {
         handleAddFile,
         addedImageFileUrl,
@@ -45,7 +41,7 @@ const Uploader = ({
                     item
                     xs={12}
                     style={{
-                        border: '1px dashed #606060',
+                        borderRadius: '8px',
                         height: height,
                         padding: '0',
                     }}
@@ -73,7 +69,8 @@ const Uploader = ({
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButtonOld
+                        <Button
+                            variant="secondary"
                             onClick={() => {
                                 setAddedImageFileUrl('');
                                 setAddedImageFileName('');
@@ -83,17 +80,20 @@ const Uploader = ({
                                 URL.revokeObjectURL(addedImageFileUrl);
                             }}
                             size="small"
+                            sx={{ width: '88px' }}
                         >
                             Remove
-                        </SecondaryButtonOld>
-                        <PrimaryButtonOld
+                        </Button>
+                        <Button
+                            variant="secondary"
                             onClick={() => {
                                 setCropModalOpen(true);
                             }}
                             size="small"
+                            sx={{ width: '88px' }}
                         >
                             Crop
-                        </PrimaryButtonOld>
+                        </Button>
                     </Stack>
                 </Grid>
             </Grid>
@@ -115,18 +115,20 @@ const Uploader = ({
                     <Grid
                         {...getRootProps()}
                         container
-                        direction="row"
+                        direction="column"
                         alignItems="center"
                         justifyContent="center"
                         style={{
-                            border: '1px dashed #606060',
-                            background: '#F2F2F2 0% 0% no-repeat padding-box',
+                            paddingTop: '1em',
+                            borderRadius: '8px',
+                            border: `2px dashed ${colors.surface.gray[80]}`,
+                            background: colors.surface.blue[10],
                             height: height,
                             cursor: 'pointer',
                         }}
                     >
                         <input {...getInputProps()} multiple={false} accept={'image/*'} />
-                        <Typography m={margin}>{helpText}</Typography>
+                        {children}
                     </Grid>
                 </section>
             )}

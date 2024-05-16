@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { MetDescription, modalStyle, PrimaryButtonOld } from 'components/common';
+import { MetDescription, modalStyle } from 'components/common';
+import { Button } from 'components/common/Input';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
@@ -90,7 +91,7 @@ export const CropModal = () => {
                             marginTop: '30em',
                         }}
                     >
-                        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+                        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={1}>
                             <Grid item xs={12}>
                                 <MetDescription>
                                     The image will be cropped at the correct ratio to display as a banner on MET. You
@@ -98,14 +99,16 @@ export const CropModal = () => {
                                     could be hidden depending on the display size.
                                 </MetDescription>
                             </Grid>
-                            <Grid item xs={12} container justifyContent="flex-end">
-                                <PrimaryButtonOld
+                            <Grid item xs={12} container alignContent="flex-start" justifyContent="flex-end">
+                                <Button
+                                    variant="primary"
+                                    sx={{ mb: 0 }}
                                     onClick={() => {
                                         handleCropDone(croppedArea);
                                     }}
                                 >
                                     Save
-                                </PrimaryButtonOld>
+                                </Button>
                             </Grid>
                         </Grid>
                     </Container>

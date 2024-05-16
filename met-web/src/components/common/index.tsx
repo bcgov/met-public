@@ -107,6 +107,7 @@ export const colors = {
             90: '#825C00',
             100: '#593F00',
         },
+        white: '#FFFFFF',
     },
 };
 

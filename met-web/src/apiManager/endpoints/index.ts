@@ -173,8 +173,11 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/timelines/timeline_id`,
     },
     Tenants: {
-        GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
+        CREATE: `${AppConfig.apiUrl}/tenants/`,
         GET_LIST: `${AppConfig.apiUrl}/tenants/`,
+        GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
+        UPDATE: `${AppConfig.apiUrl}/tenants/tenant_id`,
+        DELETE: `${AppConfig.apiUrl}/tenants/tenant_id`,
     },
     AnalyticsUserResponseDetail: {
         GET_COUNT_BY_MONTH: `${AppConfig.analyticsApiUrl}/responses/month/engagement_id`,
