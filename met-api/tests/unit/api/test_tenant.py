@@ -16,6 +16,8 @@
 
 Test-Suite to ensure that the tenant endpoint is working as expected.
 """
+import json
+import pytest
 from http import HTTPStatus
 from unittest.mock import patch
 
@@ -43,3 +45,71 @@ def test_get_tenant(client, jwt, session):  # pylint:disable=unused-argument
         rv = client.get(f'/api/tenants/{tenant_short_name}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
+def test_create_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
+    """Assert that a tenant can be POSTed."""
+    user, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    # remove logo_url from tenant_info
+    tenant_info.pop('logo_url')
+    rv = client.post('/api/tenants/', data=json.dumps(tenant_info),
+                     headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.CREATED
+    assert rv.json.get('short_name') == tenant_info.get('short_name')
+    assert rv.json.get('name') == tenant_info.get('name')
+    assert rv.json.get('contact_name') == tenant_info.get('contact_name')
+    assert rv.json.get('contact_email') == tenant_info.get('contact_email')
+    assert rv.json.get('title') == tenant_info.get('title')
+
+
+@pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
+def test_get_tenants(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
+    """Assert that tenants can be fetched."""
+    user, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    factory_tenant_model(tenant_info)
+
+    rv = client.get('/api/tenants/', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    assert len(rv.json) > 1
+    tenant_short_names = [tenant.get('short_name') for tenant in rv.json]
+    # Check if the tenant with short_name exists in the response
+    assert tenant_info.get('short_name') in tenant_short_names
+
+
+@pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
+def test_patch_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
+    """Assert that a tenant can be PATCHed."""
+    user, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    tenant = factory_tenant_model(tenant_info)
+
+    rv = client.get(f'/api/tenants/{tenant.short_name}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('short_name') == tenant_info.get('short_name')
+
+    tenant_edits = {
+        'name': 'Example Inc',
+        'title': 'Example Title',
+    }
+
+    rv = client.patch(f'/api/tenants/{tenant.id}', data=json.dumps(tenant_edits),
+                      headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+
+    rv = client.get(f'/api/tenants/{tenant.short_name}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.json.get('name') == tenant_edits.get('name')
+
+
+@pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
+def test_delete_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
+    """Assert that a tenant can be deleted."""
+    user, claims = setup_super_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    tenant = factory_tenant_model(tenant_info)
+
+    rv = client.delete(f'/api/tenants/{tenant.id}', headers=headers, content_type=ContentType.JSON.value)
+    assert rv.status_code == HTTPStatus.OK
