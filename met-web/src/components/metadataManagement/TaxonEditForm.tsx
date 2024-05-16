@@ -15,7 +15,15 @@ import {
     useMediaQuery,
     Theme,
 } from '@mui/material';
-import { Save, Check, Edit, Close, Delete, Error, FilterAltOff, HelpOutline } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
+import { faPen } from '@fortawesome/pro-solid-svg-icons/faPen';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faTrash } from '@fortawesome/pro-solid-svg-icons/faTrash';
+import { faCircleExclamation } from '@fortawesome/pro-solid-svg-icons/faCircleExclamation';
+import { faCircleQuestion } from '@fortawesome/pro-regular-svg-icons/faCircleQuestion';
+import { Palette } from 'styles/Theme';
+import { Save, FilterAltOff } from '@mui/icons-material';
 import * as yup from 'yup';
 import React, { useContext, useEffect } from 'react';
 import { MetadataTaxon } from 'models/engagement';
@@ -33,7 +41,12 @@ const HelpTooltip = ({ children }: { children: string | string[] }) => {
     if (Array.isArray(children)) children = children.join(' ');
     return (
         <Tooltip title={children}>
-            <HelpOutline tabIndex={0} color="primary" aria-label={children} />
+            <FontAwesomeIcon
+                icon={faCircleQuestion}
+                style={{ fontSize: '20px', color: Palette.primary.main }}
+                tabIndex={0}
+                aria-label={children}
+            />
         </Tooltip>
     );
 };
@@ -197,7 +210,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                         <Grid item xs={6} container alignItems="center">
                             {!isSmallScreen && (
                                 <Avatar sx={{ backgroundColor: 'primary.main', marginRight: '0.5em' }}>
-                                    <Edit />
+                                    <FontAwesomeIcon icon={faPen} style={{ fontSize: '20px' }} />
                                 </Avatar>
                             )}
                             <MetHeader3>Edit taxon</MetHeader3>
@@ -209,7 +222,8 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                 aria-label="delete"
                                 onClick={() => removeMetadataTaxon(taxon.id)}
                             >
-                                <Delete /> Delete
+                                <FontAwesomeIcon icon={faTrash} style={{ fontSize: '20px', paddingRight: '5px' }} />
+                                {}Delete
                             </Button>
                         </Grid>
                     </Grid>
@@ -433,7 +447,8 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                 aria-label="Discard changes to taxon"
                                 onClick={() => setSelectedTaxonId(-1)}
                             >
-                                <Close /> Cancel
+                                <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px', paddingRight: '5px' }} />
+                                {}Cancel
                             </Button>
                         </Tooltip>
                         <If condition={Object.keys(methods.formState.errors).length === 0}>
@@ -459,7 +474,11 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                             disabled
                                             sx={{ marginLeft: '0.5em' }}
                                         >
-                                            <Check /> Saved
+                                            <FontAwesomeIcon
+                                                icon={faCheck}
+                                                style={{ fontSize: '20px', paddingRight: '5px' }}
+                                            />
+                                            {}Saved
                                         </Button>
                                     </Else>
                                 </If>
@@ -476,7 +495,11 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                             disabled
                                             sx={{ marginLeft: '0.5em' }}
                                         >
-                                            <Error /> Save
+                                            <FontAwesomeIcon
+                                                icon={faCircleExclamation}
+                                                style={{ fontSize: '20px', paddingRight: '5px' }}
+                                            />
+                                            {}Save
                                         </Button>
                                     </span>
                                 </Tooltip>

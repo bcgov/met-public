@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Stack, TextField } from '@mui/material';
 import { PrimaryButtonOld } from 'components/common';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { ReportSettingsContext } from './ReportSettingsContext';
 
 const SearchBar = () => {
@@ -32,7 +33,7 @@ const SearchBar = () => {
                         });
                     }}
                 >
-                    <SearchIcon />
+                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
                 </PrimaryButtonOld>
             </Stack>
         </>

@@ -21,9 +21,10 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import ShapeFileUpload from 'components/engagement/form/EngagementWidgets/Map/ShapeFileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
-import LinkIcon from '@mui/icons-material/Link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { When } from 'react-if';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import * as turf from '@turf/turf';
 import { WidgetTitle } from '../WidgetTitle';
 
@@ -112,7 +113,7 @@ const Form = () => {
             reset({});
             handleWidgetDrawerOpen(false);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add map' }));
             setIsCreating(false);
         }
     };
@@ -202,7 +203,10 @@ const Form = () => {
                                         >
                                             <Grid item xs>
                                                 <Stack spacing={2} direction="row" alignItems="center">
-                                                    <LinkIcon color="info" />
+                                                    <FontAwesomeIcon
+                                                        icon={faLinkSimple}
+                                                        style={{ fontSize: '22px', color: '#757575' }}
+                                                    />
                                                     <Typography>{mapData?.file_name}</Typography>
                                                 </Stack>
                                             </Grid>
@@ -215,7 +219,7 @@ const Form = () => {
                                                 color="inherit"
                                                 aria-label="Remove GeoJSON"
                                             >
-                                                <HighlightOffIcon />
+                                                <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                                             </IconButton>
                                         </Grid>
                                     </MetWidgetPaper>

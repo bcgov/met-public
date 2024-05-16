@@ -2,18 +2,19 @@ import React, { useContext } from 'react';
 import { Grid, IconButton, Stack, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faFileLines } from '@fortawesome/pro-regular-svg-icons/faFileLines';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { deleteDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
-import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { DraggableProvided } from '@hello-pangea/dnd';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import LinkIcon from '@mui/icons-material/Link';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 const DocumentFile = ({
     documentItem,
@@ -51,12 +52,19 @@ const DocumentFile = ({
                             aria-label="drag-indicator"
                             {...draggableProvided.dragHandleProps}
                         >
-                            <DragIndicatorIcon />
+                            <FontAwesomeIcon
+                                icon={faGripDotsVertical}
+                                style={{ fontSize: '24px', margin: '0px 4px' }}
+                            />
                         </IconButton>
                     </Grid>
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            {documentItem.is_uploaded ? <InsertDriveFileIcon /> : <LinkIcon />}
+                            {documentItem.is_uploaded ? (
+                                <FontAwesomeIcon icon={faFileLines} style={{ fontSize: '22px' }} />
+                            ) : (
+                                <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '22px' }} />
+                            )}
                             <Typography>{documentItem.title}</Typography>
                         </Stack>
                     </Grid>
@@ -67,7 +75,7 @@ const DocumentFile = ({
                             color="inherit"
                             aria-label="Edit Folder"
                         >
-                            <Edit />
+                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                         </IconButton>
                         <IconButton
                             onClick={() =>
@@ -94,7 +102,7 @@ const DocumentFile = ({
                             color="inherit"
                             aria-label="Remove File"
                         >
-                            <HighlightOffIcon />
+                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
                 </Grid>

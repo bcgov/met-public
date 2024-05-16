@@ -3,7 +3,8 @@ import ReactMapGL, { Marker, NavigationControl, Source, Layer } from 'react-map-
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl from 'maplibre-gl';
 import { GeoJSON } from 'geojson';
-import MarkerIcon from '@mui/icons-material/LocationOnRounded';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
 import { MetSmallTextOld } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
@@ -69,7 +70,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
             </When>
             <Marker latitude={latitude} longitude={longitude} anchor="bottom">
                 <Stack direction="column" alignItems="center" justifyContent="center">
-                    <MarkerIcon fontSize="large" htmlColor="red" />
+                    <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: '22px', color: 'red' }} />
                     <When condition={Boolean(markerLabel)}>
                         <MetSmallTextOld
                             bold

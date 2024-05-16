@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { When } from 'react-if';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
+import { faMessageCheck } from '@fortawesome/pro-solid-svg-icons/faMessageCheck';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
+import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircleExclamation';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
@@ -12,8 +19,6 @@ import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'co
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
 import { getEngagements } from 'services/engagementService';
-import SearchIcon from '@mui/icons-material/Search';
-import CommentIcon from '@mui/icons-material/Comment';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
@@ -21,11 +26,7 @@ import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
-import CheckIcon from '@mui/icons-material/Check';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
-import CloseRounded from '@mui/icons-material/CloseRounded';
-import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
 import { updateURLWithPagination } from 'components/common/Table/utils';
@@ -190,7 +191,7 @@ const EngagementListing = () => {
             align: 'left',
             hideSorticon: true,
             allowSort: false,
-            icon: <CommentIcon />,
+            icon: <FontAwesomeIcon icon={faMessageCheck} style={{ fontSize: '28px' }} />,
             renderCell: (row: Engagement) => {
                 return <></>;
             },
@@ -205,7 +206,7 @@ const EngagementListing = () => {
             align: 'left',
             icon: (
                 <ApprovedIcon>
-                    <CheckIcon fontSize="small" />
+                    <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px' }} />
                 </ApprovedIcon>
             ),
             allowSort: false,
@@ -246,7 +247,7 @@ const EngagementListing = () => {
             align: 'left',
             icon: (
                 <NFRIcon>
-                    <PriorityHighRoundedIcon fontSize="small" />
+                    <FontAwesomeIcon icon={faCircleExclamation} style={{ fontSize: '20px' }} />
                 </NFRIcon>
             ),
             allowSort: false,
@@ -290,7 +291,7 @@ const EngagementListing = () => {
             align: 'left',
             icon: (
                 <RejectedIcon>
-                    <CloseRounded fontSize="small" />
+                    <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
                 </RejectedIcon>
             ),
             allowSort: false,
@@ -334,7 +335,7 @@ const EngagementListing = () => {
             align: 'left',
             icon: (
                 <NewIcon>
-                    <FiberNewOutlined fontSize="small" />
+                    <FontAwesomeIcon icon={faCommentsQuestionCheck} style={{ fontSize: '20px' }} />
                 </NewIcon>
             ),
             allowSort: false,
@@ -408,7 +409,7 @@ const EngagementListing = () => {
                             data-testid="engagement/listing/searchButton"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
-                            <SearchIcon />
+                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
                         </PrimaryButtonOld>
                         <When condition={!isMediumScreen}>
                             <SecondaryButtonOld
@@ -416,12 +417,11 @@ const EngagementListing = () => {
                                 name="advancedSearch"
                                 onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
                                 startIcon={
-                                    <ExpandMoreIcon
-                                        sx={{
-                                            transition: (theme) =>
-                                                theme.transitions.create('transform', {
-                                                    duration: theme.transitions.duration.shortest,
-                                                }),
+                                    <FontAwesomeIcon
+                                        icon={faChevronDown}
+                                        style={{
+                                            fontSize: '12px',
+                                            transition: 'transform 0.3s ease',
                                             transform: advancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                         }}
                                     />
@@ -438,19 +438,14 @@ const EngagementListing = () => {
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
                         >
                             {
-                                <ExpandMoreIcon
-                                    sx={[
-                                        {
-                                            transform: 'rotate(0deg)',
-                                            transition: (theme) =>
-                                                theme.transitions.create('all', {
-                                                    duration: theme.transitions.duration.shortest,
-                                                }),
-                                        },
-                                        advancedSearchOpen && {
-                                            transform: 'rotate(180deg)',
-                                        },
-                                    ]}
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    style={{
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
+                                        transform: advancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        padding: '0px 10px',
+                                    }}
                                 />
                             }
                             Advanced Search

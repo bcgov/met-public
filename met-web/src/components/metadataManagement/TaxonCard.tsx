@@ -13,16 +13,11 @@ import {
     Divider,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import {
-    ExpandMore,
-    DragIndicator,
-    FormatQuote,
-    EditAttributes,
-    InsertDriveFile,
-    FileCopy,
-    FilterAlt,
-    FilterAltOff,
-} from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faFileLines } from '@fortawesome/pro-regular-svg-icons/faFileLines';
+import { FormatQuote, EditAttributes, FileCopy, FilterAlt, FilterAltOff } from '@mui/icons-material';
 import React from 'react';
 import { MetHeader4 } from 'components/common';
 import { TaxonTypes } from './TaxonTypes';
@@ -135,7 +130,10 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                     aria-label="Drag to reorganize; press to select and edit this taxon."
                                     // this button doubles as a keyboard focus target for the card
                                 >
-                                    <DragIndicator />
+                                    <FontAwesomeIcon
+                                        icon={faGripDotsVertical}
+                                        style={{ fontSize: '24px', margin: '0px 4px' }}
+                                    />
                                 </IconButton>
                             </Tooltip>
                         </Grid>
@@ -170,7 +168,7 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 aria-expanded={isExpanded}
                                 aria-controls={`taxon-${taxon.id}-content`}
                             >
-                                <ExpandMore />
+                                <FontAwesomeIcon icon={faChevronDown} style={{ fontSize: '20px' }} />
                             </IconButton>
                         </Grid>
                     </Grid>
@@ -226,7 +224,13 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 {/* Multi-select */}
                                 <DetailsRow
                                     name="Multi-select"
-                                    icon={taxon.one_per_engagement ? <InsertDriveFile /> : <FileCopy />}
+                                    icon={
+                                        taxon.one_per_engagement ? (
+                                            <FontAwesomeIcon icon={faFileLines} style={{ fontSize: '22px' }} />
+                                        ) : (
+                                            <FileCopy />
+                                        )
+                                    }
                                 >
                                     <Typography variant="body1" pl={1}>
                                         {taxon.one_per_engagement
@@ -292,7 +296,10 @@ export const TaxonCardSkeleton: React.FC = () => {
                 <Grid item container xs alignItems="center" spacing={1}>
                     <Grid item>
                         <IconButton color="inherit" size="small">
-                            <DragIndicator />
+                            <FontAwesomeIcon
+                                icon={faGripDotsVertical}
+                                style={{ fontSize: '24px', margin: '0px 4px' }}
+                            />
                         </IconButton>
                     </Grid>
                     <Grid item>
@@ -303,7 +310,7 @@ export const TaxonCardSkeleton: React.FC = () => {
                     </Grid>
                     <Grid item>
                         <IconButton color="inherit" size="small" aria-label="expand">
-                            <ExpandMore />
+                            <FontAwesomeIcon icon={faChevronDown} style={{ fontSize: '20px' }} />
                         </IconButton>
                     </Grid>
                 </Grid>

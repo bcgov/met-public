@@ -1,10 +1,11 @@
 import React from 'react';
 import { MetLabel, MetWidgetPaper } from 'components/common';
 import { Grid, CircularProgress, Stack, IconButton, Tooltip } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import PushPinIcon from '@mui/icons-material/PushPin';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
+import { faThumbtack } from '@fortawesome/pro-solid-svg-icons/faThumbtack';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { If, Then, Else } from 'react-if';
 
 interface MetWidgetProps {
@@ -35,12 +36,15 @@ const MetWidget = ({
                     <If condition={sortable}>
                         <Then>
                             <IconButton sx={{ margin: 0, padding: 0 }} color="inherit" aria-label="drag-indicator">
-                                <DragIndicatorIcon />
+                                <FontAwesomeIcon
+                                    icon={faGripDotsVertical}
+                                    style={{ fontSize: '24px', margin: '0px 4px' }}
+                                />
                             </IconButton>
                         </Then>
                         <Else>
                             <Tooltip title="This widget has a fixed position.">
-                                <PushPinIcon />
+                                <FontAwesomeIcon icon={faThumbtack} style={{ fontSize: '24px', margin: '8px 4px' }} />
                             </Tooltip>
                         </Else>
                     </If>
@@ -58,7 +62,7 @@ const MetWidget = ({
                                     onClick={onEdit}
                                     data-testid="widget/edit"
                                 >
-                                    <EditIcon />
+                                    <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                                 </IconButton>
                             </Then>
                             <Else>
@@ -76,7 +80,11 @@ const MetWidget = ({
                             onClick={onDelete}
                             data-testid={`widget/remove-${testId}`}
                         >
-                            {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
+                            {deleting ? (
+                                <CircularProgress size="1em" color="inherit" />
+                            ) : (
+                                <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
+                            )}
                         </IconButton>
                     </Stack>
                 </Grid>

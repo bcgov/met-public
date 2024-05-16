@@ -1,3 +1,9 @@
+## May 16, 2024
+
+- **Bugfix** Replace Material Icons with Font Awesome [🎟️ DESENG-608](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-608)
+  - Replaced Material Icons with Font Awesome for all icons for which we had a mapping
+  - Noted a few icons for which we did not have a mapping and those have been added to the ticket
+
 ## May 14, 2024
 
 - **Bugfix** Add language code to email links [🎟️ DESENG-579](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-579)

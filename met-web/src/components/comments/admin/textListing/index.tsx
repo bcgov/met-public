@@ -11,7 +11,8 @@ import {
 } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField, Menu, MenuItem } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
@@ -23,9 +24,9 @@ import { formatDate, formatToUTC } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-import CommentIcon from '@mui/icons-material/Comment';
-import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { faMessageCheck } from '@fortawesome/pro-solid-svg-icons/faMessageCheck';
+import { faMessageSlash } from '@fortawesome/pro-solid-svg-icons/faMessageSlash';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { getStaffCommentSheet, getProponentCommentSheet } from 'services/commentService';
 import { downloadFile } from 'utils';
 import { getSurvey } from 'services/surveyService';
@@ -218,7 +219,10 @@ const CommentTextListing = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageCheck}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>
@@ -232,7 +236,10 @@ const CommentTextListing = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentsDisabledIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageSlash}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>
@@ -352,7 +359,7 @@ const CommentTextListing = () => {
                         variant="contained"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
-                        <SearchIcon />
+                        <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
                     </PrimaryButtonOld>
                 </Stack>
             </Grid>
@@ -372,10 +379,12 @@ const CommentTextListing = () => {
                             aria-haspopup="true"
                             loading={isExporting}
                             startIcon={
-                                <ExpandMoreIcon
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
                                     style={{
-                                        transition: 'transform 0.3s',
-                                        transform: exportToCSVOpen ? 'rotate(180deg)' : 'none',
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
+                                        transform: exportToCSVOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                     }}
                                 />
                             }

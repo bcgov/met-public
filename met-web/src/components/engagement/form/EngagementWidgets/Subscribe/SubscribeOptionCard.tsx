@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/pro-regular-svg-icons/faEnvelope';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
@@ -75,7 +76,10 @@ const SubscribeOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <EmailOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faEnvelope}
+                                style={{ padding: '10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

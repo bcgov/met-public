@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chip, useTheme } from '@mui/material';
-import { Check } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
 import { useAppTranslation } from 'hooks';
 
 export const MetadataFilterChip = ({
@@ -23,7 +24,7 @@ export const MetadataFilterChip = ({
                 .replace('{0}', name)
                 .replace('{1}', selectionHint)}
             color="default"
-            avatar={selected ? <Check /> : undefined}
+            avatar={selected ? <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px' }} /> : undefined}
             variant={selected ? 'filled' : 'outlined'}
             onClick={onClick}
             sx={{

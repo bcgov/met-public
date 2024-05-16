@@ -1,13 +1,14 @@
 import * as React from 'react';
 import TreeView from '@mui/lab/TreeView';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
+import { faChevronRight } from '@fortawesome/pro-regular-svg-icons/faChevronRight';
+import { faFolder } from '@fortawesome/pro-regular-svg-icons/faFolder';
+import { faFileLines } from '@fortawesome/pro-regular-svg-icons/faFileLines';
 import { If, Then, Else } from 'react-if';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { StyledTreeItem } from './StyledTreeItem';
 import { TreeItemProps } from '@mui/lab/TreeItem';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 
 type DocumentTreeProps = TreeItemProps & {
     documentItem: DocumentItem;
@@ -18,8 +19,8 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
         <TreeView
             aria-label="documentTree"
             defaultExpanded={['3']}
-            defaultCollapseIcon={<ArrowDropDownIcon sx={{ height: '35px', width: '35px' }} />}
-            defaultExpandIcon={<ArrowRightIcon sx={{ height: '35px', width: '35px' }} />}
+            defaultCollapseIcon={<FontAwesomeIcon icon={faChevronDown} style={{ fontSize: '18px' }} />}
+            defaultExpandIcon={<FontAwesomeIcon icon={faChevronRight} style={{ fontSize: '18px' }} />}
             defaultEndIcon={<div style={{ width: 24 }} />}
             sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
@@ -29,7 +30,7 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                         labelUrl={documentItem.url}
                         nodeId={`${documentItem.id}`}
                         labelText={documentItem.title}
-                        labelIcon={FolderOutlinedIcon}
+                        labelIcon={faFolder}
                     >
                         {documentItem.children?.map((document: DocumentItem) => {
                             return (
@@ -37,11 +38,7 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                                     nodeId={`${document.id}`}
                                     innerDocument
                                     labelText={document.title}
-                                    labelIcon={
-                                        document.type === DOCUMENT_TYPE.FOLDER
-                                            ? FolderOutlinedIcon
-                                            : DescriptionOutlinedIcon
-                                    }
+                                    labelIcon={document.type === DOCUMENT_TYPE.FOLDER ? faFolder : faFileLines}
                                     labelUrl={document.url}
                                 />
                             );
@@ -52,7 +49,7 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                     <StyledTreeItem
                         nodeId={`${documentItem.id}`}
                         labelText={documentItem.title}
-                        labelIcon={DescriptionOutlinedIcon}
+                        labelIcon={faFileLines}
                         labelUrl={documentItem.url}
                     />
                 </Else>

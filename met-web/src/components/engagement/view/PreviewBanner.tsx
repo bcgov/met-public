@@ -6,11 +6,12 @@ import { EngagementStatusChip } from '../status';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { MetHeader1Old, PrimaryButtonOld, SecondaryButtonOld, MetBodyOld, MetPaper } from 'components/common';
 import { useAppSelector } from 'hooks';
-import ImageIcon from '@mui/icons-material/Image';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareQuestion } from '@fortawesome/pro-regular-svg-icons/faSquareQuestion';
+import { faFileSlash } from '@fortawesome/pro-regular-svg-icons/faFileSlash';
+import { faFileCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faFileCircleExclamation';
 import IconButton from '@mui/material/IconButton';
 import ScheduleModal from 'components/engagement/view/ScheduleModal';
-import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
 import { PermissionsGate } from 'components/permissionsGate';
@@ -80,7 +81,10 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no image"
                                             >
-                                                <ImageIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faSquareQuestion}
+                                                    style={{ fontSize: '22px', padding: '0px 8px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item container direction="row" alignItems="center" xs={10} sm={11}>
@@ -97,7 +101,10 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/surveys/create?engagementId=${engagementId}`)}
                                                 aria-label="no survey"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
@@ -114,7 +121,10 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no description"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
@@ -131,7 +141,10 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no content"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
@@ -146,7 +159,10 @@ export const PreviewBanner = () => {
                                             color="inherit"
                                             aria-label="not published"
                                         >
-                                            <UnpublishedIcon />
+                                            <FontAwesomeIcon
+                                                icon={faFileSlash}
+                                                style={{ fontSize: '20px', paddingRight: '5px' }}
+                                            />
                                         </IconButton>
                                     </Grid>
                                     <Grid item sm={11}>

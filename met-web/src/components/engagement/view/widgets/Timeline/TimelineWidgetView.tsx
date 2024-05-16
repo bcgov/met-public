@@ -6,8 +6,9 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { TimelineWidget, TimelineEvent } from 'models/timelineWidget';
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
-import CheckIcon from '@mui/icons-material/Check';
-import LensRoundedIcon from '@mui/icons-material/LensRounded';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
+import { faCircle } from '@fortawesome/pro-solid-svg-icons/faCircle';
 import { Palette } from 'styles/Theme';
 import { EventStatus } from 'models/timelineWidget';
 
@@ -82,19 +83,20 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             [EventStatus.InProgress]: (
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
-                        <LensRoundedIcon sx={{ fontSize: '20px', color: Palette.action.active }} />
+                        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '20px', color: Palette.action.active }} />
                     </Avatar>
                 </Avatar>
             ),
             [EventStatus.Completed]: (
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
-                        <CheckIcon
-                            sx={{
-                                stroke: Palette.action.active,
-                                strokeWidth: 3,
+                        <FontAwesomeIcon
+                            icon={faCheck}
+                            style={{
                                 fontSize: '20px',
                                 color: Palette.action.active,
+                                stroke: Palette.action.active,
+                                strokeWidth: 3,
                             }}
                         />
                     </Avatar>

@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { MetHeader3, PrimaryButtonOld } from 'components/common';
 import { Widget } from 'models/widget';
 import { CircularProgress, IconButton, Stack, TextField } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { Else, If, Then } from 'react-if';
 import { useUpdateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { useAppDispatch } from 'hooks';
@@ -99,7 +100,7 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
                             setEditing(true);
                         }}
                     >
-                        <EditIcon color="info" />
+                        <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px', color: '#757575' }} />
                     </IconButton>
                 </Stack>
             </Else>
