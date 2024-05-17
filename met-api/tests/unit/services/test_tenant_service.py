@@ -73,7 +73,7 @@ def test_update_tenant(session):
         with patch.object(TenantModel, 'find_by_id', return_value=tenant):
             with patch.object(TenantModel, 'update', return_value=None):
                 with patch.object(TenantSchema, 'dump', return_value={**tenant_data, 'short_name': 'GDX'}):
-                    result = TenantService.update(tenant.id, tenant_data)
+                    result = TenantService.update(tenant.short_name, tenant_data)
                     assert result['name'] == tenant_data['name']
 
 

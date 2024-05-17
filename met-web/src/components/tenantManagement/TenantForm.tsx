@@ -132,7 +132,7 @@ export const TenantForm = ({
                         control={control}
                         rules={{
                             required: true,
-                            maxLength: { value: 30, message: 'This name is too long!' },
+                            maxLength: { value: 50, message: 'This name is too long!' },
                         }}
                         render={({ field }) => (
                             <TextField
@@ -143,7 +143,7 @@ export const TenantForm = ({
                                 error={errors.name?.message}
                                 required
                                 counter
-                                maxLength={30}
+                                maxLength={50}
                             />
                         )}
                     />

@@ -27,6 +27,7 @@ import ReportSettings from 'components/survey/report';
 import FormioListener from 'components/FormioListener';
 import TenantListingPage from 'components/tenantManagement/Listing';
 import TenantCreationPage from 'components/tenantManagement/Create';
+import TenantEditPage from 'components/tenantManagement/Edit';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -70,6 +71,9 @@ const AuthenticatedRoutes = () => {
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
                     <Route path="/tenantadmin/create" element={<TenantCreationPage />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
+                    <Route path="/tenantadmin/edit/:tenantShortName" element={<TenantEditPage />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />
