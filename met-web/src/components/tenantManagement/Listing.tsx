@@ -116,7 +116,7 @@ const TenantListingPage = () => {
                                                 {tenant.name}
                                             </BodyText>
                                             {/* TODO: Replace when primary contact info is added to tenants */}
-                                            <BodyText size="small">&lt;Primary Contact&gt;</BodyText>
+                                            <BodyText size="small">{tenant.contact_name}</BodyText>
                                         </TableCell>
                                         <TableCell>
                                             <BodyText size="small">{tenant.description}</BodyText>

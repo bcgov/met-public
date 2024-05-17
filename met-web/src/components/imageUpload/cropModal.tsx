@@ -8,6 +8,8 @@ import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
 import getCroppedImg from './cropImage';
 import { blobToFile } from 'utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons';
 
 export const CropModal = () => {
     const {
@@ -102,12 +104,14 @@ export const CropModal = () => {
                             <Grid item xs={12} container alignContent="flex-start" justifyContent="flex-end">
                                 <Button
                                     variant="primary"
+                                    size="small"
                                     sx={{ mb: 0 }}
                                     onClick={() => {
                                         handleCropDone(croppedArea);
                                     }}
                                 >
-                                    Save
+                                    <FontAwesomeIcon icon={faCheck} style={{ marginRight: '8px' }} />
+                                    Done
                                 </Button>
                             </Grid>
                         </Grid>
