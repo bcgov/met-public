@@ -6,20 +6,22 @@ import { BodyText } from 'components/common/Typography/';
 import ImageUpload from 'components/imageUpload';
 import { Tenant } from 'models/tenant';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
 import { getAllTenants } from 'services/tenantService';
 export const TenantForm = ({
     initialTenant,
     onSubmit,
+    submitText = 'Save',
     onCancel,
+    cancelText = 'Cancel',
 }: {
     initialTenant?: Tenant;
     onSubmit: (data: Tenant) => void;
-    onCancel: () => void;
+    submitText?: string;
+    onCancel?: () => void;
+    cancelText?: string;
 }) => {
-    const navigate = useNavigate();
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url || '');
     const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
@@ -329,11 +331,13 @@ export const TenantForm = ({
                 </Detail>
                 <Detail invisible sx={{ flexDirection: 'row', gap: '24px' }}>
                     <Button disabled={!isDirty || !isValid} onClick={handleSubmit(onSubmit)} variant="primary">
-                        Create Tenant
+                        {submitText}
                     </Button>
-                    <Button variant="secondary" onClick={onCancel}>
-                        Cancel
-                    </Button>
+                    {onCancel && (
+                        <Button variant="secondary" onClick={onCancel}>
+                            {cancelText}
+                        </Button>
+                    )}
                 </Detail>
             </DetailsContainer>
         </FormGroup>

@@ -1,12 +1,10 @@
 import React, { useEffect } from 'react';
-import { Button as MuiButton, ButtonProps as MuiButtonProps, Input, InputProps, Box } from '@mui/material';
-import { colors, elevations, globalFocusVisible } from '..';
+import { Button as MuiButton, Input, InputProps, Box } from '@mui/material';
+import { colors, globalFocusVisible } from '..';
 import { FormField, FormFieldProps } from './FormField';
 import { BodyText } from '../Typography';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { error } from 'console';
-import { text } from 'stream/consumers';
 
 type TextInputProps = {
     value?: string;

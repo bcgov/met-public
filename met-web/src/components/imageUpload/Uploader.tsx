@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from 'react';
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
-import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { ImageUploadContext } from './imageUploadContext';
 import { colors } from 'components/common';
 import { Button } from 'components/common/Input';

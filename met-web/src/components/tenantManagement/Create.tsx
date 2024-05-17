@@ -53,7 +53,7 @@ const TenantCreationPage = () => {
                     <BodyText size="small">* Required fields</BodyText>
                 </Grid>
             </Grid>
-            <TenantForm onSubmit={onSubmit} onCancel={onCancel} />
+            <TenantForm onSubmit={onSubmit} submitText="Create Instance" onCancel={onCancel} />
         </ResponsiveContainer>
     );
 };

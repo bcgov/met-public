@@ -3,7 +3,6 @@ import { CropModal } from './cropModal';
 import { ImageUploadContextProvider } from './imageUploadContext';
 import Uploader from './Uploader';
 import { Accept } from 'react-dropzone';
-import { Typography } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUpload } from '@fortawesome/pro-regular-svg-icons';
 import { colors } from 'components/common';
