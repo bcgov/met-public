@@ -4,6 +4,7 @@ import { Box, Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer } from 'components/common/Layout';
+import { useNavigate } from 'react-router-dom';
 import {
     Table,
     TableBody,
@@ -26,6 +27,7 @@ const TenantListing = () => {
     const [tenants, setTenants] = React.useState<Tenant[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const circlePlusIcon = <FontAwesomeIcon icon={faCirclePlus} />;
     useEffect(() => {
         const fetchTenants = () => {
@@ -99,7 +101,7 @@ const TenantListing = () => {
                                 {tenants.map((tenant) => (
                                     <TableRow
                                         onClick={() => {
-                                            return;
+                                            navigate(`/tenantadmin/${tenant.short_name}/detail`);
                                         }}
                                         key={tenant.name}
                                         tabIndex={0}
@@ -108,8 +110,7 @@ const TenantListing = () => {
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}
                                             </BodyText>
-                                            {/* TODO: Replace when primary contact info is added to tenants */}
-                                            <BodyText small>&lt;Primary Contact&gt;</BodyText>
+                                            <BodyText small>{tenant.contact_name}</BodyText>
                                         </TableCell>
                                         <TableCell>
                                             <BodyText small>{tenant.description}</BodyText>
