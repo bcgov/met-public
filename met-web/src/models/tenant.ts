@@ -6,7 +6,7 @@ export interface Tenant {
     basename?: string;
     contact_name?: string;
     contact_email?: string;
-    short_name?: string;
+    short_name: string;
     logo_credit?: string;
     logo_description?: string;
 }

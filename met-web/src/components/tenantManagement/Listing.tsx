@@ -4,7 +4,6 @@ import { Box, Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { useNavigate } from 'react-router-dom';
 import {
     Table,
     TableBody,
