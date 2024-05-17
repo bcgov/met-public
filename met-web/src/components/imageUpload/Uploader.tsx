@@ -63,12 +63,7 @@ const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => 
                     />
                 </Grid>
                 <Grid item xs={12} container justifyContent="flex-end" direction="row">
-                    <Stack
-                        direction={{ sm: 'column-reverse', lg: 'row' }}
-                        spacing={1}
-                        width="100%"
-                        justifyContent="flex-end"
-                    >
+                    <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
                         <Button
                             variant="secondary"
                             onClick={() => {

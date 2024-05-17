@@ -4,24 +4,35 @@ import { Button, TextAreaField, TextField } from 'components/common/Input';
 import { DetailsContainer, Detail } from 'components/common/Layout';
 import { BodyText } from 'components/common/Typography/';
 import ImageUpload from 'components/imageUpload';
-import { createTenant } from 'services/tenantService';
 import { Tenant } from 'models/tenant';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAppDispatch } from 'hooks';
+import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
-
-export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
-    const dispatch = useAppDispatch();
+import { getAllTenants } from 'services/tenantService';
+export const TenantForm = ({
+    initialTenant,
+    onSubmit,
+    onCancel,
+}: {
+    initialTenant?: Tenant;
+    onSubmit: (data: Tenant) => void;
+    onCancel: () => void;
+}) => {
     const navigate = useNavigate();
     const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(tenant?.logo_url || '');
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url || '');
+    const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
+
+    useEffect(() => {
+        getAllTenants().then((tenants) =>
+            setTenantShortNames(tenants.map((tenant) => tenant.short_name.toLowerCase())),
+        );
+    }, []);
 
     const { handleSubmit, formState, control, reset, setValue } = useForm<Tenant>({
         defaultValues: {
-            ...(tenant || {
+            ...(initialTenant || {
                 name: '',
                 contact_name: '',
                 contact_email: '',
@@ -40,7 +51,7 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
 
     useEffect(() => {
         reset({
-            ...(tenant || {
+            ...(initialTenant || {
                 name: '',
                 contact_name: '',
                 contact_email: '',
@@ -53,9 +64,9 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
             }),
         });
         setBannerImage(null);
-        setSavedBannerImageFileName(tenant?.logo_url || '');
-        setValue('logo_url', tenant?.logo_url || '');
-    }, [tenant, reset]);
+        setSavedBannerImageFileName(initialTenant?.logo_url || '');
+        setValue('logo_url', initialTenant?.logo_url || '');
+    }, [initialTenant, reset]);
 
     const handleAddHeroImage = (files: File[]) => {
         if (files.length > 0) {
@@ -82,20 +93,11 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
         }
     };
 
-    const onSubmit: SubmitHandler<Tenant> = async (data, event) => {
-        if (Object.keys(errors).length || !isValid) {
-            dispatch(
-                openNotification({ text: 'Please correct the highlighted errors before saving.', severity: 'error' }),
-            );
-            return false;
-        }
+    const onFormSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
             data.logo_url = await handleUploadHeroImage();
-            await createTenant(data);
-            dispatch(openNotification({ text: 'Tenant created successfully!', severity: 'success' }));
-            navigate('../tenantadmin');
+            onSubmit(data);
         } catch (error) {
-            dispatch(openNotification({ text: 'Unknown error while creating tenant', severity: 'error' }));
             console.error(error);
         }
     };
@@ -105,23 +107,23 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
         if ((event.ctrlKey || event.metaKey || event.altKey) && event.key === 'Enter') {
             event.nativeEvent.stopImmediatePropagation();
             event.preventDefault(); // Prevent default to stop any native form submission
-            handleSubmit(onSubmit)();
+            handleSubmit(onFormSubmit)();
         }
     };
 
     return (
-        <DetailsContainer
-            sx={{
-                maxWidth: '1000px',
-                margin: {
-                    // on small screens, negate the padding of the ResponsiveContainer
-                    // so the container hugs the edge of the screen
-                    xs: '0 -16px',
-                    sm: '0',
-                },
-            }}
-        >
-            <FormGroup onKeyDown={handleKeys}>
+        <FormGroup onKeyDown={handleKeys}>
+            <DetailsContainer
+                sx={{
+                    maxWidth: '1000px',
+                    margin: {
+                        // on small screens, negate the padding of the ResponsiveContainer
+                        // so the container hugs the edge of the screen
+                        xs: '0 -16px',
+                        sm: '0',
+                    },
+                }}
+            >
                 <Detail>
                     <Controller
                         name="name"
@@ -137,7 +139,6 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                                 instructions="The name of the tenant instance"
                                 placeholder="Name"
                                 error={errors.name?.message}
-                                clearable
                                 required
                                 counter
                                 maxLength={30}
@@ -159,7 +160,6 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                                 instructions="Who should people contact about this tenant instance?"
                                 placeholder="Full Name"
                                 error={errors.contact_name?.message}
-                                clearable
                                 required
                             />
                         )}
@@ -180,12 +180,11 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                             <TextField
                                 {...field}
                                 error={errors.contact_email?.message}
-                                required
-                                clearable
                                 autoComplete="email"
                                 title="Primary Contact Email"
                                 instructions="Where should people send emails about this tenant instance?"
                                 placeholder="Email"
+                                required
                             />
                         )}
                     />
@@ -197,6 +196,11 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                         rules={{
                             required: true,
                             pattern: { value: /^[a-zA-Z0-9_-]+$/, message: 'Your input contains invalid symbols' },
+                            validate: (value) =>
+                                tenantShortNames.includes(value.toLowerCase()) &&
+                                value.toLowerCase() !== initialTenant?.short_name.toLowerCase()
+                                    ? 'This short name is already in use'
+                                    : true,
                         }}
                         render={({ field }) => (
                             <TextField
@@ -228,7 +232,6 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                                 {...field}
                                 required
                                 error={errors.title?.message}
-                                clearable
                                 title="Hero Banner Title"
                                 instructions="The title that appears on top of the hero banner"
                                 placeholder="Title"
@@ -251,7 +254,6 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                                 {...field}
                                 error={errors.description?.message}
                                 required
-                                clearable
                                 title="Hero Banner Description"
                                 instructions="The text that appears below the title on the hero banner"
                                 placeholder="Description"
@@ -329,11 +331,11 @@ export const TenantForm = ({ tenant }: { tenant?: Tenant }) => {
                     <Button disabled={!isDirty || !isValid} onClick={handleSubmit(onSubmit)} variant="primary">
                         Create Tenant
                     </Button>
-                    <Button variant="secondary" onClick={() => navigate('../tenantadmin')}>
+                    <Button variant="secondary" onClick={onCancel}>
                         Cancel
                     </Button>
                 </Detail>
-            </FormGroup>
-        </DetailsContainer>
+            </DetailsContainer>
+        </FormGroup>
     );
 };

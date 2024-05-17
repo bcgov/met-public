@@ -6,6 +6,7 @@ import { BodyText } from '../Typography';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { error } from 'console';
+import { text } from 'stream/consumers';
 
 type TextInputProps = {
     value?: string;
@@ -104,7 +105,9 @@ export const TextField = ({
             ? {
                   endAdornment: (
                       <MuiButton
-                          onClick={() => handleSetValue('')}
+                          onClick={() => {
+                              handleSetValue('');
+                          }}
                           title="Clear this field"
                           sx={{
                               minWidth: 'unset',
