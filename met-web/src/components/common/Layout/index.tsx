@@ -21,3 +21,4 @@ export const ResponsiveContainer = styled(MuiBox)(({ theme }) => {
 });
 
 export { Table, TableHead, TableHeadRow, TableHeadCell, TableBody, TableRow, TableCell, TableContainer } from './Table';
+export { DetailsContainer, Detail } from './Details';

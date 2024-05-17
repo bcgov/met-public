@@ -25,7 +25,8 @@ import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
 import ReportSettings from 'components/survey/report';
 import FormioListener from 'components/FormioListener';
-import TenantListing from 'components/tenantManagement/Listing';
+import TenantListingPage from 'components/tenantManagement/Listing';
+import TenantCreationPage from 'components/tenantManagement/Create';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -65,7 +66,10 @@ const AuthenticatedRoutes = () => {
                     <Route path="/metadatamanagement" element={<MetadataManagement />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
-                    <Route path="/tenantadmin" element={<TenantListing />} />
+                    <Route path="/tenantadmin" element={<TenantListingPage />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
+                    <Route path="/tenantadmin/create" element={<TenantCreationPage />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />
