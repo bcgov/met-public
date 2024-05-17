@@ -1,7 +1,7 @@
 export interface Tenant {
-    name: string;
+    name?: string;
+    title: string;
     description?: string;
-    title?: string;
     logo_url?: string;
     basename?: string;
     contact_name?: string;

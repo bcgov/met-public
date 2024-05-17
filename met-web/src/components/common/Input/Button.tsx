@@ -38,6 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
     return (
         <MuiButton
             onClick={onClick}
+            {...buttonProps}
             disabled={disabled}
             startIcon={icon && iconPosition === 'left' ? icon : undefined}
             endIcon={icon && iconPosition === 'right' ? icon : undefined}
@@ -81,8 +82,8 @@ export const Button: React.FC<ButtonProps> = ({
                     boxShadow: 'none',
                     color: typeColors.disabled,
                 },
+                ...buttonProps.sx,
             }}
-            {...buttonProps}
         >
             {children}
         </MuiButton>

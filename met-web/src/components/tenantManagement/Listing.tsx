@@ -22,8 +22,9 @@ import { Else, If, Then } from 'react-if';
 import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { useNavigate } from 'react-router-dom';
 
-const TenantListing = () => {
+const TenantListingPage = () => {
     const [tenants, setTenants] = React.useState<Tenant[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
     const dispatch = useAppDispatch();
@@ -57,8 +58,13 @@ const TenantListing = () => {
                     <Header2 decorated>Tenant Instances {!loading && `(${tenants.length})`}</Header2>
                 </Grid>
                 <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
-                    {/* TODO: redirect to "Create Tenant Instance" page */}
-                    <Button disabled variant="primary" icon={circlePlusIcon}>
+                    <Button
+                        variant="primary"
+                        icon={circlePlusIcon}
+                        onClick={() => {
+                            navigate('./create');
+                        }}
+                    >
                         Add Instance
                     </Button>
                 </Grid>
@@ -110,10 +116,10 @@ const TenantListing = () => {
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}
                                             </BodyText>
-                                            <BodyText small>{tenant.contact_name}</BodyText>
+                                            <BodyText size="small">{tenant.contact_name}</BodyText>
                                         </TableCell>
                                         <TableCell>
-                                            <BodyText small>{tenant.description}</BodyText>
+                                            <BodyText size="small">{tenant.description}</BodyText>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -126,4 +132,4 @@ const TenantListing = () => {
     );
 };
 
-export default TenantListing;
+export default TenantListingPage;

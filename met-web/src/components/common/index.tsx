@@ -107,6 +107,25 @@ export const colors = {
             90: '#825C00',
             100: '#593F00',
         },
+        white: '#FFFFFF',
+    },
+    notification: {
+        success: {
+            shade: '#42814A',
+            tint: '#F6FFF8',
+        },
+        warning: {
+            shade: '#FCBA19',
+            tint: '#FFECBE',
+        },
+        danger: {
+            shade: '#CE3E39',
+            tint: '#F4E1E2',
+        },
+        error: {
+            shade: '#CE3E39',
+            tint: '#F4E1E2',
+        },
     },
 };
 

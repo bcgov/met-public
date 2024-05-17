@@ -19,3 +19,11 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
     }
     return Promise.reject(Error('Failed to fetch tenants'));
 };
+
+export const createTenant = async (tenant: Tenant): Promise<Tenant> => {
+    const response = await http.PostRequest<Tenant>(Endpoints.Tenants.CREATE, tenant);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to create tenant'));
+};
