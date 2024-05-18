@@ -65,7 +65,6 @@ export const TenantForm = ({
                 logo_description: '',
             }),
         });
-        setBannerImage(null);
         setSavedBannerImageFileName(initialTenant?.logo_url || '');
         setValue('logo_url', initialTenant?.logo_url || '');
     }, [initialTenant, reset]);
@@ -74,12 +73,13 @@ export const TenantForm = ({
         if (files.length > 0) {
             setBannerImage(files[0]);
             setSavedBannerImageFileName(files[0].name);
+            setValue('logo_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
             return;
         }
 
         setBannerImage(null);
         setSavedBannerImageFileName('');
-        setValue('logo_url', '');
+        setValue('logo_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     };
 
     const handleUploadHeroImage = async () => {
@@ -88,7 +88,7 @@ export const TenantForm = ({
         }
         try {
             const savedDocumentDetails = await saveObject(bannerImage, { filename: bannerImage.name });
-            return savedDocumentDetails?.uniquefilename || '';
+            return savedDocumentDetails?.filepath || '';
         } catch (error) {
             console.log(error);
             throw new Error('Error occurred during banner image upload');
@@ -330,7 +330,7 @@ export const TenantForm = ({
                     />
                 </Detail>
                 <Detail invisible sx={{ flexDirection: 'row', gap: '24px' }}>
-                    <Button disabled={!isDirty || !isValid} onClick={handleSubmit(onSubmit)} variant="primary">
+                    <Button disabled={!isDirty || !isValid} onClick={handleSubmit(onFormSubmit)} variant="primary">
                         {submitText}
                     </Button>
                     {onCancel && (

@@ -106,7 +106,7 @@ const TenantListingPage = () => {
                                 {tenants.map((tenant) => (
                                     <TableRow
                                         onClick={() => {
-                                            navigate(`./edit/${tenant.short_name}`);
+                                            navigate(`./${tenant.short_name}/detail`);
                                         }}
                                         key={tenant.name}
                                         tabIndex={0}

@@ -73,7 +73,7 @@ const AuthenticatedRoutes = () => {
                     <Route path="/tenantadmin/create" element={<TenantCreationPage />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
-                    <Route path="/tenantadmin/edit/:tenantShortName" element={<TenantEditPage />} />
+                    <Route path="/tenantadmin/:tenantShortName/edit" element={<TenantEditPage />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />
