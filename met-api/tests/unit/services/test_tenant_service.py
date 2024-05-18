@@ -83,7 +83,7 @@ def test_update_tenant_not_found(session):
     with patch.object(authorization, 'check_auth', return_value=True):
         with patch.object(TenantModel, 'find_by_id', return_value=None):
             with pytest.raises(ValueError):
-                TenantService.update(1, tenant_data)
+                TenantService.update('1', tenant_data)
 
 
 def test_update_tenant_error(session):
@@ -94,7 +94,7 @@ def test_update_tenant_error(session):
         with patch.object(TenantModel, 'find_by_id', return_value=tenant):
             with patch.object(TenantModel, 'update', side_effect=SQLAlchemyError):
                 with pytest.raises(ValueError):
-                    TenantService.update(tenant.id, tenant_data)
+                    TenantService.update(tenant.short_name, tenant_data)
 
 
 def test_delete_tenant(session):
@@ -103,7 +103,7 @@ def test_delete_tenant(session):
     with patch.object(authorization, 'check_auth', return_value=True):
         with patch.object(TenantModel, 'find_by_id', return_value=tenant):
             with patch.object(TenantModel, 'delete', return_value=None):
-                result = TenantService.delete(tenant.id)
+                result = TenantService.delete(tenant.short_name)
                 assert result['status'] == 'success'
                 assert result['message'] == 'Tenant deleted successfully'
 
@@ -113,7 +113,7 @@ def test_delete_tenant_not_found(session):
     with patch.object(authorization, 'check_auth', return_value=True):
         with patch.object(TenantModel, 'find_by_id', return_value=None):
             with pytest.raises(ValueError):
-                TenantService.delete(1)
+                TenantService.delete('1')
 
 
 def test_delete_tenant_error(session):
@@ -123,4 +123,4 @@ def test_delete_tenant_error(session):
         with patch.object(TenantModel, 'find_by_id', return_value=tenant):
             with patch.object(TenantModel, 'delete', side_effect=SQLAlchemyError):
                 with pytest.raises(ValueError):
-                    TenantService.delete(tenant.id)
+                    TenantService.delete(tenant.short_name)
