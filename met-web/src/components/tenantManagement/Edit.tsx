@@ -5,13 +5,12 @@ import { ResponsiveContainer } from 'components/common/Layout';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { BreadcrumbTrail } from 'components/common/Navigation';
 import { TenantForm } from './TenantForm';
-import { updateTenant } from 'services/tenantService';
+import { updateTenant, getTenant } from 'services/tenantService';
 import { SubmitHandler } from 'react-hook-form';
 import { Tenant } from 'models/tenant';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getTenant } from 'services/tenantService';
 import NotFound from 'routes/NotFound';
 import { MidScreenLoader } from 'components/common';
 
@@ -22,25 +21,31 @@ const TenantEditPage = () => {
     const [tenant, setTenant] = React.useState<Tenant>();
     const [loading, setLoading] = React.useState<boolean>(true);
 
-    if (!shortName) {
-        return <NotFound />;
-    }
-
     useEffect(() => {
         const fetchTenant = async () => {
+            if (!shortName) {
+                setLoading(false);
+                return;
+            }
             try {
                 const tenant = await getTenant(shortName);
                 setTenant(tenant);
                 setLoading(false);
             } catch (error) {
-                dispatch(openNotification({ text: 'Unknown error while fetching tenant', severity: 'error' }));
-                console.error(error);
                 setLoading(false);
             }
         };
 
         fetchTenant();
     }, [shortName, dispatch]);
+
+    if (loading) {
+        return <MidScreenLoader />;
+    }
+
+    if (!tenant || !shortName) {
+        return <NotFound />;
+    }
 
     const onSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
@@ -56,14 +61,6 @@ const TenantEditPage = () => {
     const onCancel = () => {
         navigate('../tenantadmin');
     };
-
-    if (loading) {
-        return <MidScreenLoader />;
-    }
-
-    if (!tenant) {
-        return <NotFound />;
-    }
 
     return (
         <ResponsiveContainer>
