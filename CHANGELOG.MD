@@ -1,3 +1,6 @@
+## May 21, 2024
+- **Task** Clean up met-cron [🎟️ DESENG-602](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-602)
+
 ## May 16, 2024
 
 - **Bugfix** Replace Material Icons with Font Awesome [🎟️ DESENG-608](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-608)

@@ -49,7 +49,6 @@ def get_named_config(environment: Union[str, None]) -> '_Config':
         'production': ProdConfig,
         'testing':    TestConfig,
         'docker':     DockerConfig,
-        'migration':  MigrationConfig,
     }
     try:
         print(f'Loading configuration: {environment}...')
@@ -231,16 +230,6 @@ class _Config():  # pylint: disable=too-few-public-methods
 
     # config for offset days to send reminder emails
     OFFSET_DAYS = os.getenv('OFFSET_DAYS', 2)
-
-class MigrationConfig():  # pylint: disable=too-few-public-methods
-    """Base class configuration that should set reasonable defaults for all the other configurations."""
-
-    # SQLAlchemy settings
-    # Echoes the SQL queries generated - useful for debugging
-    SQLALCHEMY_ECHO = env_truthy('SQLALCHEMY_ECHO', True)
-    # Disable modification tracking for performance
-    SQLALCHEMY_TRACK_MODIFICATIONS = env_truthy('SQLALCHEMY_TRACK_MODIFICATIONS', True)
-
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
