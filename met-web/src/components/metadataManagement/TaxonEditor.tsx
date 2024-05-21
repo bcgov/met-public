@@ -282,7 +282,6 @@ export const TaxonEditor = () => {
                                 color="secondary"
                                 label="Scroll for more"
                                 onClick={() => {
-                                    // Your click handler function
                                     scroll(400);
                                 }}
                             />
