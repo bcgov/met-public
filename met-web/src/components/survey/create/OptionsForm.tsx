@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, Stack, Radio } from '@mui/material';
-import { MetPageGridContainer, PrimaryButton, SecondaryButton, MetHeader3 } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld, SecondaryButtonOld, MetHeader3 } from 'components/common';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
 import { useNavigate } from 'react-router-dom';
@@ -88,8 +88,8 @@ const OptionsForm = () => {
             <When condition={!value}>
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={2}>
-                        <PrimaryButton disabled={true}>{'Save & Continue'}</PrimaryButton>
-                        <SecondaryButton onClick={() => navigate('/surveys')}>Cancel</SecondaryButton>
+                        <PrimaryButtonOld disabled={true}>{'Save & Continue'}</PrimaryButtonOld>
+                        <SecondaryButtonOld onClick={() => navigate('/surveys')}>Cancel</SecondaryButtonOld>
                     </Stack>
                 </Grid>
             </When>

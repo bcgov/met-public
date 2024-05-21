@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import ImageUpload from 'components/imageUpload';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -270,12 +270,12 @@ const AddContactDrawer = () => {
                             marginTop="8em"
                         >
                             <Grid item>
-                                <PrimaryButton loading={isCreatingContact} onClick={handleSubmit(onSubmit)}>
+                                <PrimaryButtonOld loading={isCreatingContact} onClick={handleSubmit(onSubmit)}>
                                     {`Save & Close`}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton onClick={handleCloseDrawer}>{`Cancel`}</SecondaryButton>
+                                <SecondaryButtonOld onClick={handleCloseDrawer}>{`Cancel`}</SecondaryButtonOld>
                             </Grid>
                         </Grid>
                     </Grid>

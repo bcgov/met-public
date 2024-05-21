@@ -1,10 +1,11 @@
 import React, { ReactNode, useContext, useRef, useState } from 'react';
 import { Box, Grid, Link, Popover, Stack, SxProps, Theme, useTheme } from '@mui/material';
-import { MetHeader4, MetIconText, MetPaper, MetSmallText } from 'components/common';
+import { MetHeader4, MetIconText, MetPaper, MetSmallTextOld } from 'components/common';
 import { PhaseContext } from '.';
 import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
 import { CURRENT_PHASE, EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
@@ -58,7 +59,10 @@ export const PhaseBox = ({
                                     },
                                 }}
                             >
-                                <LocationOnIcon fontSize="medium" htmlColor={CURRENT_PHASE.iconColor} />
+                                <FontAwesomeIcon
+                                    icon={faLocationDot}
+                                    style={{ fontSize: '22px', color: CURRENT_PHASE.iconColor, padding: '2px 5px' }}
+                                />
                                 <MetIconText sx={{ fontStyle: 'italic', overflow: 'visible' }}>
                                     Current Phase
                                 </MetIconText>
@@ -99,7 +103,7 @@ export const PhaseBox = ({
                                 <Grid item container direction="row" justifyContent="flex-end">
                                     <Grid item>
                                         <Link
-                                            component={MetSmallText}
+                                            component={MetSmallTextOld}
                                             sx={{ cursor: 'pointer', color: 'white', ':hover': { fontWeight: 'bold' } }}
                                             onClick={handleReadMoreClick}
                                             color="inherit"

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetPaper, MetSurvey, MetTooltip, SecondaryButton } from 'components/common';
+import { MetHeader4, MetPaper, MetSurvey, MetTooltip, SecondaryButtonOld } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -102,12 +102,12 @@ export const SurveyBlock = () => {
                             title={!savedEngagement.id ? 'Please save the engagement before adding a survey.' : ''}
                         >
                             <span>
-                                <SecondaryButton
+                                <SecondaryButtonOld
                                     onClick={handleAddSurvey}
                                     disabled={!savedEngagement.id || savedEngagement.surveys.length > 0}
                                 >
                                     Add Survey
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </span>
                         </MetTooltip>
                     </Grid>

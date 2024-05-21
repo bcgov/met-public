@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetParagraph, MetHeader4 } from 'components/common';
+import { MetPaper, MetHeader2Old, MetParagraphOld, MetHeader4 } from 'components/common';
 import { Avatar, Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { TimelineWidget, TimelineEvent } from 'models/timelineWidget';
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
-import CheckIcon from '@mui/icons-material/Check';
-import LensRoundedIcon from '@mui/icons-material/LensRounded';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
+import { faCircle } from '@fortawesome/pro-solid-svg-icons/faCircle';
 import { Palette } from 'styles/Theme';
 import { EventStatus } from 'models/timelineWidget';
 
@@ -82,19 +83,20 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             [EventStatus.InProgress]: (
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
-                        <LensRoundedIcon sx={{ fontSize: '20px', color: Palette.action.active }} />
+                        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '20px', color: Palette.action.active }} />
                     </Avatar>
                 </Avatar>
             ),
             [EventStatus.Completed]: (
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
-                        <CheckIcon
-                            sx={{
-                                stroke: Palette.action.active,
-                                strokeWidth: 3,
+                        <FontAwesomeIcon
+                            icon={faCheck}
+                            style={{
                                 fontSize: '20px',
                                 color: Palette.action.active,
+                                stroke: Palette.action.active,
+                                strokeWidth: 3,
                             }}
                         />
                     </Avatar>
@@ -113,13 +115,13 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                 </Grid>
                 <Grid item xs={11} sx={{ paddingLeft: '10px' }}>
                     <MetHeader4 bold>{tEvent.description}</MetHeader4>
-                    <MetParagraph
+                    <MetParagraphOld
                         style={{
                             paddingBottom: index + 1 === timelineWidget.events.length ? '0' : '20px',
                         }}
                     >
                         {tEvent.time}
-                    </MetParagraph>
+                    </MetParagraphOld>
                 </Grid>
             </Grid>
         );
@@ -130,9 +132,9 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="20em" />
@@ -157,11 +159,11 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                     xs={12}
                     paddingBottom={0}
                 >
-                    <MetHeader2 bold>{timelineWidget.title}</MetHeader2>
+                    <MetHeader2Old bold>{timelineWidget.title}</MetHeader2Old>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraph>{timelineWidget.description}</MetParagraph>
+                    <MetParagraphOld>{timelineWidget.description}</MetParagraphOld>
                 </Grid>
                 <Grid item xs={12}>
                     {timelineWidget &&

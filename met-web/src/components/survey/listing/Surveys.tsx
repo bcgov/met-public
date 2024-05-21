@@ -2,31 +2,33 @@ import React, { useContext, useState } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Survey } from 'models/survey';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink, Theme, useMediaQuery } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
+import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircleExclamation';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
+import { faEyeSlash } from '@fortawesome/pro-solid-svg-icons/faEyeSlash';
+import { faCheck as regularCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
+import { faCheck as solidCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faObjectsColumn } from '@fortawesome/pro-solid-svg-icons/faObjectsColumn';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import Stack from '@mui/material/Stack';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from 'components/engagement/listing/Icons';
-import CloseRounded from '@mui/icons-material/CloseRounded';
-import FiberNewOutlined from '@mui/icons-material/FiberNewOutlined';
 import { PermissionsGate } from 'components/permissionsGate';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import CheckIcon from '@mui/icons-material/Check';
-import LinkIcon from '@mui/icons-material/Link';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Palette } from 'styles/Theme';
 import { AdvancedSearch } from './AdvancedSearch';
 import { SurveyListingContext } from './SurveyListingContext';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { USER_ROLES } from 'services/userService/constants';
 
 const Surveys = () => {
@@ -122,7 +124,7 @@ const Surveys = () => {
                             placement="right"
                             arrow
                         >
-                            <VisibilityOffIcon />
+                            <FontAwesomeIcon icon={faEyeSlash} style={{ fontSize: '20px' }} />
                         </MetTooltip>
                     );
                 }
@@ -139,7 +141,7 @@ const Surveys = () => {
                             placement="right"
                             arrow
                         >
-                            <DashboardIcon />
+                            <FontAwesomeIcon icon={faObjectsColumn} style={{ fontSize: '22px' }} />
                         </MetTooltip>
                     );
                 }
@@ -159,7 +161,7 @@ const Surveys = () => {
                             placement="right"
                             arrow
                         >
-                            <LinkIcon />
+                            <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '20px' }} />
                         </MetTooltip>
                     );
                 }
@@ -175,7 +177,10 @@ const Surveys = () => {
                         placement="right"
                         arrow
                     >
-                        <CheckIcon sx={{ stroke: Palette.icons.surveyReady, strokeWidth: '2' }} />
+                        <FontAwesomeIcon
+                            icon={solidCheck}
+                            style={{ fontSize: '20px', color: Palette.icons.surveyReady }}
+                        />
                     </MetTooltip>
                 );
             },
@@ -209,7 +214,7 @@ const Surveys = () => {
             align: 'left',
             icon: (
                 <ApprovedIcon>
-                    <CheckIcon fontSize="small" />
+                    <FontAwesomeIcon icon={regularCheck} style={{ fontSize: '20px' }} />
                 </ApprovedIcon>
             ),
             allowSort: false,
@@ -248,7 +253,7 @@ const Surveys = () => {
             align: 'left',
             icon: (
                 <NFRIcon>
-                    <PriorityHighRoundedIcon fontSize="small" />
+                    <FontAwesomeIcon icon={faCircleExclamation} style={{ fontSize: '20px' }} />
                 </NFRIcon>
             ),
             allowSort: false,
@@ -291,7 +296,7 @@ const Surveys = () => {
             align: 'left',
             icon: (
                 <RejectedIcon>
-                    <CloseRounded fontSize="small" />
+                    <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
                 </RejectedIcon>
             ),
             allowSort: false,
@@ -334,7 +339,7 @@ const Surveys = () => {
             align: 'left',
             icon: (
                 <NewIcon>
-                    <FiberNewOutlined fontSize="small" />
+                    <FontAwesomeIcon icon={faCommentsQuestionCheck} style={{ fontSize: '20px' }} />
                 </NewIcon>
             ),
             allowSort: false,
@@ -404,23 +409,22 @@ const Surveys = () => {
                                 onChange={(e) => setSearchText(e.target.value)}
                                 size="small"
                             />
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 data-testid="survey/listing/search-button"
                                 onClick={() => handleSearchBarClick(searchText)}
                             >
-                                <SearchIcon />
-                            </PrimaryButton>
+                                <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                            </PrimaryButtonOld>
                         </Stack>
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             data-testid="survey-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                             startIcon={
-                                <ExpandMoreIcon
-                                    sx={{
-                                        transition: (theme) =>
-                                            theme.transitions.create('transform', {
-                                                duration: theme.transitions.duration.shortest,
-                                            }),
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    style={{
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
                                         transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                     }}
                                 />
@@ -428,12 +432,12 @@ const Surveys = () => {
                             fullWidth={isMediumScreen ? true : false}
                         >
                             Advanced Search
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Stack>
                     <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
-                        <PrimaryButton component={Link} to="/surveys/create">
+                        <PrimaryButtonOld component={Link} to="/surveys/create">
                             + Create Survey
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </PermissionsGate>
                 </Stack>
             </Grid>

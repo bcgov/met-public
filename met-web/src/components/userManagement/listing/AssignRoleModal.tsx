@@ -14,7 +14,14 @@ import {
     TextField,
     useTheme,
 } from '@mui/material';
-import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetHeader3,
+    MetLabel,
+    MetSmallTextOld,
+    modalStyle,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+} from 'components/common';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
@@ -284,7 +291,9 @@ export const AssignRoleModal = () => {
                             </Grid>
                             <When condition={backendError}>
                                 <Grid item xs={12}>
-                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                    <MetSmallTextOld sx={{ color: theme.palette.error.main }}>
+                                        {backendError}
+                                    </MetSmallTextOld>
                                 </Grid>
                             </When>
                             <Grid
@@ -302,10 +311,10 @@ export const AssignRoleModal = () => {
                                     width="100%"
                                     justifyContent="flex-end"
                                 >
-                                    <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton loading={isAssigningRole} type="submit">
+                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
+                                    <PrimaryButtonOld loading={isAssigningRole} type="submit">
                                         Submit
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </Stack>
                             </Grid>
                         </Grid>

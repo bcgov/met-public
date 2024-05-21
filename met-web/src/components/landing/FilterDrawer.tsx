@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import { LandingContext } from './LandingContext';
 import { SwipeableDrawer, IconButton, Typography, Stack, Button, Grid, useTheme, useMediaQuery } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { MetadataFilterChip } from './MetadataFilterChip';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
@@ -77,7 +78,7 @@ const FilterDrawer = () => {
                     right: '1em',
                 }}
             >
-                <Close />
+                <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
             </IconButton>
             <Typography mt={3} mb={6} variant="h5">
                 {translate('landing.filters.drawer.title')}
@@ -164,7 +165,7 @@ const FilterDrawer = () => {
                         },
                     }}
                     onClick={clearFilters}
-                    endIcon={<Close />}
+                    endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
                 >
                     {translate('landing.filters.clear')}
                 </Button>

@@ -9,10 +9,11 @@ import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
-import { HeaderTitle } from 'components/common';
+import { HeaderTitleOld } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
-import MenuIcon from '@mui/icons-material/Menu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/pro-regular-svg-icons/faBars';
 import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
 import { useAppTranslation } from 'hooks';
@@ -40,7 +41,6 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                 <Toolbar>
                     <When condition={!isMediumScreen}>
                         <IconButton
-                            component={MenuIcon}
                             color="info"
                             sx={{
                                 height: '2em',
@@ -48,7 +48,9 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                                 marginRight: { xs: '1em' },
                             }}
                             onClick={() => setOpen(!open)}
-                        />
+                        >
+                            <FontAwesomeIcon icon={faBars} style={{ fontSize: '20px' }} />
+                        </IconButton>
                     </When>
                     <When condition={logoUrl && !imageError}>
                         <Box
@@ -93,23 +95,23 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                         />
                     </When>
                     {isMediumScreen ? (
-                        <HeaderTitle
+                        <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
                             {translate('header.title')}
-                        </HeaderTitle>
+                        </HeaderTitleOld>
                     ) : (
-                        <HeaderTitle
+                        <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
                             {translate('header.smallTitle')}
-                        </HeaderTitle>
+                        </HeaderTitleOld>
                     )}
                     <Button
                         data-testid="button-header"

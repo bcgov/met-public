@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid, MenuItem, Stack, TextField } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { AdvancedSearchFilters, CommentListingContext, initialSearchFilters } from './CommentListingContext';
 
@@ -159,22 +159,22 @@ export const AdvancedSearch = () => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButton
+                    <SecondaryButtonOld
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
-                    </SecondaryButton>
-                    <PrimaryButton
+                    </SecondaryButtonOld>
+                    <PrimaryButtonOld
                         data-testid="advanced-search-button"
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}
                     >
                         Search
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

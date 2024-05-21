@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API endpoints for managing an tenant resource."""
+"""API endpoints for managing tenant resources."""
 
 from http import HTTPStatus
 
@@ -20,6 +20,8 @@ from flask_restx import Namespace, Resource
 
 from met_api.auth import auth
 from met_api.services.tenant_service import TenantService
+from met_api.utils.roles import Role
+from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
 
@@ -29,9 +31,27 @@ API = Namespace('tenants', description='Endpoints for Tenants Management')
 
 
 @cors_preflight('GET OPTIONS')
+@API.route('/')
+class Tenants(Resource):
+    """Resource for managing tenants."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @require_role(Role.SUPER_ADMIN.value)
+    def get():
+        """Fetch all tenants."""
+        try:
+            tenants = TenantService().get_all()
+
+            return tenants, HTTPStatus.OK
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET OPTIONS')
 @API.route('/<tenant_id>')
-class Feedback(Resource):
-    """Resource for managing feedbacks."""
+class Tenant(Resource):
+    """Resource for managing a single tenant."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())

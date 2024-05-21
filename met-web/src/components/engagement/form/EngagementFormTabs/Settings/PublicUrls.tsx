@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { InputAdornment, TextField, Tooltip, Grid, useTheme } from '@mui/material';
-import { SecondaryButton, MetDescription, MetHeader4, MetSmallText, MetLabel } from 'components/common';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { SecondaryButtonOld, MetDescription, MetHeader4, MetSmallTextOld, MetLabel } from 'components/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
 import { useAppDispatch } from 'hooks';
@@ -126,7 +127,7 @@ export const PublicUrls = () => {
                                 ),
                                 endAdornment: (
                                     <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                        <SecondaryButton
+                                        <SecondaryButtonOld
                                             variant="contained"
                                             disableElevation
                                             onClick={() => {
@@ -134,8 +135,8 @@ export const PublicUrls = () => {
                                                 setCopyTooltipEngagementLink(true);
                                             }}
                                         >
-                                            <ContentCopyIcon />
-                                        </SecondaryButton>
+                                            <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
+                                        </SecondaryButtonOld>
                                     </InputAdornment>
                                 ),
                             }}
@@ -150,7 +151,7 @@ export const PublicUrls = () => {
                 </ClickAwayListener>
                 <When condition={backendError}>
                     <Grid item xs={12}>
-                        <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                        <MetSmallTextOld sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallTextOld>
                     </Grid>
                 </When>
             </Grid>
@@ -197,7 +198,7 @@ export const PublicUrls = () => {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                        <SecondaryButton
+                                        <SecondaryButtonOld
                                             variant="contained"
                                             disableElevation
                                             onClick={() => {
@@ -205,8 +206,8 @@ export const PublicUrls = () => {
                                                 setCopyTooltipDashboardLink(true);
                                             }}
                                         >
-                                            <ContentCopyIcon />
-                                        </SecondaryButton>
+                                            <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
+                                        </SecondaryButtonOld>
                                     </InputAdornment>
                                 ),
                             }}

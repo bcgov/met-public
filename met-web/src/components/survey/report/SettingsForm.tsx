@@ -6,10 +6,11 @@ import {
     MetLabel,
     MetPageGridContainer,
     MetPaper,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
 } from 'components/common';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
 import { ReportSettingsContext } from './ReportSettingsContext';
 import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
@@ -90,13 +91,13 @@ const SettingsForm = () => {
                                                     position="end"
                                                     sx={{ height: '100%', maxHeight: '100%' }}
                                                 >
-                                                    <SecondaryButton
+                                                    <SecondaryButtonOld
                                                         variant="contained"
                                                         disableElevation
                                                         onClick={handleCopyUrl}
                                                     >
-                                                        <ContentCopyIcon />
-                                                    </SecondaryButton>
+                                                        <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
+                                                    </SecondaryButtonOld>
                                                 </InputAdornment>
                                             ),
                                         }}
@@ -115,16 +116,16 @@ const SettingsForm = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     data-testid={'survey/report/save-button'}
                                     onClick={() => setSavingSettings(true)}
                                     loading={savingSettings}
                                 >
                                     Save
-                                </PrimaryButton>
-                                <SecondaryButton onClick={() => navigate(`/surveys/${survey?.id}/build`)}>
+                                </PrimaryButtonOld>
+                                <SecondaryButtonOld onClick={() => navigate(`/surveys/${survey?.id}/build`)}>
                                     Back
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </Stack>
                         </Grid>
                     </Grid>

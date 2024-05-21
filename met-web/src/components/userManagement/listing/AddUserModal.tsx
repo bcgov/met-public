@@ -1,7 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, CircularProgress, Grid, Paper, Stack, TextField, useTheme } from '@mui/material';
-import { MetHeader3, MetLabel, MetSmallText, modalStyle, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetHeader3,
+    MetLabel,
+    MetSmallTextOld,
+    modalStyle,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+} from 'components/common';
 import { UserManagementContext } from './UserManagementContext';
 import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -202,7 +209,9 @@ export const AddUserModal = () => {
                             </Grid>
                             <When condition={backendError}>
                                 <Grid item xs={12}>
-                                    <MetSmallText sx={{ color: theme.palette.error.main }}>{backendError}</MetSmallText>
+                                    <MetSmallTextOld sx={{ color: theme.palette.error.main }}>
+                                        {backendError}
+                                    </MetSmallTextOld>
                                 </Grid>
                             </When>
 
@@ -221,10 +230,10 @@ export const AddUserModal = () => {
                                     width="100%"
                                     justifyContent="flex-end"
                                 >
-                                    <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                    <PrimaryButton loading={isAddingToEngagement} type="submit">
+                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
+                                    <PrimaryButtonOld loading={isAddingToEngagement} type="submit">
                                         Submit
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </Stack>
                             </Grid>
                         </Grid>

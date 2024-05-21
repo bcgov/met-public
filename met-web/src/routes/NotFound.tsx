@@ -1,5 +1,5 @@
 import { Grid, Toolbar, SvgIcon, Box } from '@mui/material';
-import { MetHeader1, MetHeader4 } from 'components/common';
+import { MetHeader1Old, MetHeader4 } from 'components/common';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
 import { Link } from 'react-router-dom';
@@ -44,9 +44,9 @@ const NotFound = () => {
                 padding={'2em 2em 1em 2em'}
             >
                 <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
-                    <MetHeader1 bold sx={{ fontSize: '2em' }}>
+                    <MetHeader1Old bold sx={{ fontSize: '2em' }}>
                         {translate('notFound.header.0')}
-                    </MetHeader1>
+                    </MetHeader1Old>
                 </Grid>
                 <Grid item sx={{ marginStyle, marginBottom: 2 }}>
                     <SvgIcon

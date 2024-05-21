@@ -43,12 +43,15 @@ def test_email_verification(client, jwt, session, notify_mock, ):  # pylint:disa
         'email_address': fake.email(),
         'survey_id': survey.id,
         'type': EmailVerificationType.Survey,
+        'language': 'en',
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/email_verification/', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
+    # Unfortunately we can't test against the actual email at this time
+    assert rv.json.get('language_code') == 'en'
 
 
 @pytest.mark.parametrize('side_effect, expected_status', [
@@ -128,7 +131,8 @@ def test_post_subscription_email_verification(client, jwt, session, notify_mock,
     to_dict = {
         'email_address': fake.email(),
         'survey_id': survey.id,
-        'type': EmailVerificationType.Subscribe
+        'type': EmailVerificationType.Subscribe,
+        'language': 'en',
     }
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/email_verification/{SubscriptionTypes.PROJECT.value}/subscribe',

@@ -1,9 +1,9 @@
 import { Box, Grid, Stack, Link } from '@mui/material';
 import * as React from 'react';
-import { MetBody } from 'components/common';
+import { MetBodyOld } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Survey } from 'models/survey';
-import { formatDate } from 'components/common/dateHelper';
+import dayjs from 'dayjs';
 import { useAppSelector } from 'hooks';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -17,7 +17,7 @@ export default function EmailPreview({
     children: React.ReactNode;
     [prop: string]: unknown;
 }) {
-    const scheduledDate = formatDate(survey.engagement?.scheduled_date || '', 'MMM DD YYYY');
+    const endDate = survey.engagement?.end_date ? dayjs(survey.engagement.end_date).format('MMM DD, YYYY') : '';
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     const isClosed = survey.engagement?.engagement_status.id === EngagementStatus.Closed;
     const engagementName = survey.engagement?.name || '';
@@ -36,17 +36,17 @@ export default function EmailPreview({
                     />
                 </Stack>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>
+                    <MetBodyOld sx={{ mb: 1 }}>
                         Thank you for taking the time to provide your feedback on {engagementName}.
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 {children}
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 2 }}>
+                    <MetBodyOld sx={{ mb: 2 }}>
                         {!isClosed ? (
                             <>
                                 You can edit and re-submit your feedback. The comment period is open until {''}
-                                {scheduledDate}. You must re-submit your feedback before the comment period closes.
+                                {endDate}. You must re-submit your feedback before the comment period closes.
                             </>
                         ) : (
                             <>
@@ -54,11 +54,11 @@ export default function EmailPreview({
                                 your feedback cannot be edited.
                             </>
                         )}
-                    </MetBody>
+                    </MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
                     {!isClosed ? (
-                        <MetBody
+                        <MetBodyOld
                             sx={{
                                 borderLeft: '4px solid grey',
                                 paddingLeft: '8px',
@@ -67,14 +67,14 @@ export default function EmailPreview({
                             }}
                         >
                             <Link>Edit your feedback</Link>
-                        </MetBody>
+                        </MetBodyOld>
                     ) : null}
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>Thank you,</MetBody>
+                    <MetBodyOld sx={{ mb: 1 }}>Thank you,</MetBodyOld>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBody sx={{ mb: 1 }}>The {tenant.name} Team</MetBody>
+                    <MetBodyOld sx={{ mb: 1 }}>The {tenant.name} Team</MetBodyOld>
                 </Grid>
             </Box>
         </Box>

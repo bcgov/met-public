@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import UserService from 'services/userService';
-import { HeaderTitle } from 'components/common';
+import { HeaderTitleOld } from 'components/common';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
@@ -12,6 +12,7 @@ import { useAppSelector, useAppTranslation } from 'hooks';
 import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
+import { LanguageContext } from 'components/common/LanguageContext';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -19,6 +20,7 @@ const PublicHeader = () => {
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
+    const { engagementViewMounted, availableEngagementTranslations } = useContext(LanguageContext);
 
     const logoUrl = translate('common.logoUrl');
     const headerTitle = translate('header.title');
@@ -75,21 +77,21 @@ const PublicHeader = () => {
                             alt={translate('common.defaultBCText')}
                         />
                     </When>
-                    <HeaderTitle
+                    <HeaderTitleOld
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
                             navigate(`/${language}`);
                         }}
                     >
                         {headerTitle}
-                    </HeaderTitle>
+                    </HeaderTitleOld>
                     <When condition={isLoggedIn}>
                         <Button color="inherit" onClick={() => UserService.doLogout()}>
                             {translate('common.logout')}
                         </Button>
                     </When>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <LanguageSelector />
+                        {engagementViewMounted && availableEngagementTranslations.length > 0 && <LanguageSelector />}
                     </Box>
                 </Toolbar>
                 <EnvironmentBanner />

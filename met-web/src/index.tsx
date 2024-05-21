@@ -10,6 +10,7 @@ import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthKeyCloakContextProvider } from 'components/auth/AuthKeycloakContext';
+import { LanguageProvider } from 'components/common/LanguageContext';
 
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
@@ -24,7 +25,9 @@ root.render(
             <AuthKeyCloakContextProvider>
                 <ThemeProvider theme={BaseTheme}>
                     <StyledEngineProvider injectFirst>
-                        <App />
+                        <LanguageProvider>
+                            <App />
+                        </LanguageProvider>
                     </StyledEngineProvider>
                 </ThemeProvider>
             </AuthKeyCloakContextProvider>

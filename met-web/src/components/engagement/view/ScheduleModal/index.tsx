@@ -1,6 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { Grid, Stack, TextField, Modal } from '@mui/material';
-import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody, MetLabel } from 'components/common';
+import {
+    modalStyle,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+    MetHeader1Old,
+    MetBodyOld,
+    MetLabel,
+} from 'components/common';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch } from 'hooks';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -111,22 +118,22 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
             >
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
-                        <MetHeader1 bold sx={{ mb: 2 }}>
+                        <MetHeader1Old bold sx={{ mb: 2 }}>
                             {reschedule ? 'Reschedule Engagement' : 'Schedule Engagement'}
-                        </MetHeader1>
+                        </MetHeader1Old>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>
+                        <MetBodyOld sx={{ mb: 1 }}>
                             The Engagement page will be visible on the date selected below but the public won’t be able
                             to provide feedback until the public comment period opens.
-                        </MetBody>
+                        </MetBodyOld>
                     </Grid>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1, fontWeight: 'bold' }}>
+                        <MetBodyOld sx={{ mb: 1, fontWeight: 'bold' }}>
                             Enter the date & time you want the Engagement page to go live.
-                        </MetBody>
+                        </MetBodyOld>
                     </Grid>
                     <Grid
                         item
@@ -173,17 +180,17 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                            <SecondaryButtonOld data-testid={'cancel-button'} onClick={() => updateModal(false)}>
                                 Cancel
-                            </SecondaryButton>
-                            <PrimaryButton
+                            </SecondaryButtonOld>
+                            <PrimaryButtonOld
                                 data-testid={'schedule-button'}
                                 onClick={handleSchedule}
                                 type="submit"
                                 variant={'contained'}
                             >
                                 Submit
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Stack>
                     </Grid>
                 </Grid>

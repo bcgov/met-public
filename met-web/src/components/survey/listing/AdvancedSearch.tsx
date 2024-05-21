@@ -10,12 +10,13 @@ import {
     Theme,
     useMediaQuery,
 } from '@mui/material';
-import { MetLabel, PrimaryButton, SecondaryButton } from 'components/common';
+import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { AdvancedSearchFilters, SurveyListingContext } from './SurveyListingContext';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import CheckIcon from '@mui/icons-material/Check';
-import LinkIcon from '@mui/icons-material/Link';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash } from '@fortawesome/pro-solid-svg-icons/faEyeSlash';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faObjectsColumn } from '@fortawesome/pro-solid-svg-icons/faObjectsColumn';
 import { Palette } from 'styles/Theme';
 
 export const AdvancedSearch = () => {
@@ -65,7 +66,7 @@ export const AdvancedSearch = () => {
                             control={<Checkbox checked={status.hidden} onChange={handleStatusChange} name="hidden" />}
                             label={
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                    <VisibilityOffIcon fontSize="small" />
+                                    <FontAwesomeIcon icon={faEyeSlash} style={{ fontSize: '20px' }} />
                                     <span>Hidden</span>
                                 </Stack>
                             }
@@ -76,7 +77,7 @@ export const AdvancedSearch = () => {
                             }
                             label={
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                    <DashboardIcon fontSize="small" />
+                                    <FontAwesomeIcon icon={faObjectsColumn} style={{ fontSize: '22px' }} />
                                     <span>Template</span>
                                 </Stack>
                             }
@@ -86,9 +87,13 @@ export const AdvancedSearch = () => {
                             label={
                                 <>
                                     <Stack direction="row" alignItems="center" spacing={1}>
-                                        <CheckIcon
-                                            fontSize="small"
-                                            sx={{ stroke: Palette.icons.surveyReady, strokeWidth: '2' }}
+                                        <FontAwesomeIcon
+                                            icon={faCheck}
+                                            style={{
+                                                fontSize: '22px',
+                                                color: Palette.icons.surveyReady,
+                                                paddingRight: '2px',
+                                            }}
                                         />
                                         <span>Ready</span>
                                     </Stack>
@@ -100,7 +105,7 @@ export const AdvancedSearch = () => {
                             label={
                                 <>
                                     <Stack direction="row" alignItems="center" spacing={1}>
-                                        <LinkIcon fontSize="small" />
+                                        <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '20px' }} />
                                         <span>Linked</span>
                                     </Stack>
                                 </>
@@ -211,21 +216,21 @@ export const AdvancedSearch = () => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButton
+                    <SecondaryButtonOld
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
-                    </SecondaryButton>
-                    <PrimaryButton
+                    </SecondaryButtonOld>
+                    <PrimaryButtonOld
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}
                     >
                         Search
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
         </Grid>

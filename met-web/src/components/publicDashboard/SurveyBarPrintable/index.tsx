@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Skeleton, Divider } from '@mui/material';
-import { MetHeader1, MetPaper, MetLabel } from 'components/common';
+import { MetHeader1Old, MetPaper, MetLabel } from 'components/common';
 import { SurveyBarData } from '../types';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
@@ -60,7 +60,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
     return (
         <>
             <Grid item xs={12} mb={2}>
-                <MetHeader1>{translate('dashboard.barBlock.label')}</MetHeader1>
+                <MetHeader1Old>{translate('dashboard.barBlock.label')}</MetHeader1Old>
             </Grid>
             {Object.values(data).map((value) => {
                 {

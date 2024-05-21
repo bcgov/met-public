@@ -18,11 +18,11 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: ReactNode;[prop: string]: unknown }) => {
+    PrimaryButtonOld: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
@@ -39,7 +39,9 @@ jest.mock('@mui/material', () => ({
 describe('Dashboard page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const getEngagementMock = jest.spyOn(engagementService, 'getEngagements').mockReturnValue(Promise.resolve({ items: [], total: 0 }));
+    const getEngagementMock = jest
+        .spyOn(engagementService, 'getEngagements')
+        .mockReturnValue(Promise.resolve({ items: [], total: 0 }));
     const getAggregatorMock = jest.spyOn(aggregatorService, 'getAggregatorData');
     const getUserResponseDetailByMonthMock = jest.spyOn(userResponseDetailService, 'getUserResponseDetailByMonth');
     const getSurveyResultDataMock = jest.spyOn(surveyResultService, 'getSurveyResultData');

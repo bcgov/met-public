@@ -2,18 +2,19 @@ import React, { useState, useContext } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useLocation } from 'react-router-dom';
-import { MetPageGridContainer, PrimaryButton, MetHeader1, SecondaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld, MetHeader1Old, SecondaryButtonOld } from 'components/common';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import Stack from '@mui/material/Stack';
 import { SurveySubmission } from 'models/surveySubmission';
 import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { AdvancedSearch } from './AdvancedSearch';
 import { CommentListingContext } from './CommentListingContext';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
@@ -118,34 +119,33 @@ const Submissions = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton
+                        <PrimaryButtonOld
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
-                            <SearchIcon />
-                        </PrimaryButton>
-                        <SecondaryButton
+                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                        </PrimaryButtonOld>
+                        <SecondaryButtonOld
                             data-testid="comment-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                             startIcon={
-                                <ExpandMoreIcon
-                                    sx={{
-                                        transition: (theme) =>
-                                            theme.transitions.create('transform', {
-                                                duration: theme.transitions.duration.shortest,
-                                            }),
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    style={{
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
                                         transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                     }}
                                 />
                             }
                         >
                             Advanced Search
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </Stack>
                     <Stack direction="row" spacing={1}>
-                        <PrimaryButton component={Link} to={`/surveys/${survey.id}/comments/all`}>
+                        <PrimaryButtonOld component={Link} to={`/surveys/${survey.id}/comments/all`}>
                             Read All Comments
-                        </PrimaryButton>
+                        </PrimaryButtonOld>
                     </Stack>
                 </Stack>
             </Grid>
@@ -157,9 +157,9 @@ const Submissions = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <MetHeader1>
+                <MetHeader1Old>
                     <strong>{`${survey.name} Comments`}</strong>
-                </MetHeader1>
+                </MetHeader1Old>
                 <MetTable
                     headCells={headCells}
                     rows={submissions}

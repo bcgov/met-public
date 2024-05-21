@@ -1,7 +1,9 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Autocomplete, TextField, Chip, IconButton, Stack } from '@mui/material';
 import { Control, Controller, FieldError } from 'react-hook-form';
-import { AddCircleOutline, HighlightOff } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { AddCircleOutline } from '@mui/icons-material';
 
 const PresetValuesEditor = ({
     control, // The control object (from react-hook-form)
@@ -88,7 +90,7 @@ const PresetValuesEditor = ({
                                                 title="Clear all values"
                                                 onClick={() => onChange([])}
                                             >
-                                                <HighlightOff />
+                                                <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                                             </IconButton>
                                         </>
                                     ),

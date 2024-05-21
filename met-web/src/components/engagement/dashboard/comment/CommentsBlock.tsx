@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CommentViewContext } from './CommentViewContext';
-import { PrimaryButton, MetPaper, MetHeader4 } from 'components/common';
+import { PrimaryButtonOld, MetPaper, MetHeader4 } from 'components/common';
 import CommentTable from './CommentTable';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -87,12 +87,12 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                             direction={{ xs: 'column', sm: 'row' }}
                             justifyContent="flex-end"
                         >
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 onClick={handleViewDashboard}
                             >
                                 {translate('commentDashboard.block.buttonText')}
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Grid>
                         <Grid item xs={12}>
                             <CommentTable />

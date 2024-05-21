@@ -1,7 +1,7 @@
 // PollAnswerForm.tsx
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
-import { PrimaryButton } from 'components/common';
+import { PrimaryButtonOld } from 'components/common';
 import { PollAnswer } from 'models/pollWidget';
 import Typography from '@mui/material/Typography';
 import PollAnswerItemForm from './PolllAnswerItemForm';
@@ -56,7 +56,7 @@ const PollAnswerForm: React.FC<PollAnswerFormProps> = ({ initialPollAnswers, onP
                 />
             ))}
             <Grid item>
-                <PrimaryButton onClick={() => handleAddAnswer()}>Add Answer</PrimaryButton>
+                <PrimaryButtonOld onClick={() => handleAddAnswer()}>Add Answer</PrimaryButtonOld>
             </Grid>
         </Grid>
     );

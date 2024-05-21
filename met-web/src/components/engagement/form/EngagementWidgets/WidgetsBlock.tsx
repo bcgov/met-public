@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Divider, Grid, Skeleton } from '@mui/material';
-import { MetHeader2, MetPaper, MetTooltip, SecondaryButton } from 'components/common';
+import { MetHeader2Old, MetPaper, MetTooltip, SecondaryButtonOld } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else, When } from 'react-if';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
@@ -76,7 +76,7 @@ const WidgetsBlock = () => {
     return (
         <Grid container item xs={12} rowSpacing={1}>
             <Grid item xs={12}>
-                <MetHeader2 bold>Widgets</MetHeader2>
+                <MetHeader2Old bold>Widgets</MetHeader2Old>
             </Grid>
             <Grid item xs={12}>
                 <MetPaper sx={{ padding: '1em' }}>
@@ -92,9 +92,9 @@ const WidgetsBlock = () => {
                                 title={!savedEngagement.id ? 'Please save the engagement before adding a widget.' : ''}
                             >
                                 <span>
-                                    <SecondaryButton onClick={handleAddWidgetClick} disabled={!savedEngagement.id}>
+                                    <SecondaryButtonOld onClick={handleAddWidgetClick} disabled={!savedEngagement.id}>
                                         Add Widget
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </span>
                             </MetTooltip>
                         </Grid>

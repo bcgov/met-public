@@ -1,7 +1,8 @@
 import React from 'react';
 import { Grid, IconButton, SxProps, Theme } from '@mui/material';
-import { MetBody, MetHeader4, MetPaper } from 'components/common';
-import LoopIcon from '@mui/icons-material/Loop';
+import { MetBodyOld, MetHeader4, MetPaper } from 'components/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsRotate } from '@fortawesome/pro-regular-svg-icons/faArrowsRotate';
 import { DASHBOARD } from './constants';
 import { useAppTranslation } from 'hooks';
 
@@ -38,9 +39,12 @@ export const ErrorBox = ({
             >
                 <Grid item>
                     <MetHeader4 color="error">{translate('dashboard.errorBox.header')}</MetHeader4>
-                    <MetBody color="error">{translate('dashboard.errorBox.body')}</MetBody>
+                    <MetBodyOld color="error">{translate('dashboard.errorBox.body')}</MetBodyOld>
                     <IconButton onClick={() => onClick()}>
-                        <LoopIcon sx={{ color: DASHBOARD.KPI.RADIALBAR.FILL_COLOR, fontSize: '4em' }} />
+                        <FontAwesomeIcon
+                            icon={faArrowsRotate}
+                            style={{ color: DASHBOARD.KPI.RADIALBAR.FILL_COLOR, fontSize: '3em' }}
+                        />
                     </IconButton>
                 </Grid>
             </Grid>

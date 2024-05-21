@@ -9,7 +9,8 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/pro-regular-svg-icons/faLocationDot';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 const Title = 'Map';
@@ -73,7 +74,10 @@ const MapOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <LocationOnIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faLocationDot}
+                                style={{ padding: '10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

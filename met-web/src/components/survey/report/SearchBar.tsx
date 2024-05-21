@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Stack, TextField } from '@mui/material';
-import { PrimaryButton } from 'components/common';
-import SearchIcon from '@mui/icons-material/Search';
+import { PrimaryButtonOld } from 'components/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { ReportSettingsContext } from './ReportSettingsContext';
 
 const SearchBar = () => {
@@ -23,7 +24,7 @@ const SearchBar = () => {
                     }}
                     size="small"
                 />
-                <PrimaryButton
+                <PrimaryButtonOld
                     data-testid="survey/report/search-button"
                     onClick={() => {
                         setSearchFilter({
@@ -32,8 +33,8 @@ const SearchBar = () => {
                         });
                     }}
                 >
-                    <SearchIcon />
-                </PrimaryButton>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                </PrimaryButtonOld>
             </Stack>
         </>
     );

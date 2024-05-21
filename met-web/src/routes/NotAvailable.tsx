@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { MetHeader1, MetParagraph, MetLabel } from 'components/common';
+import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation } from 'hooks';
@@ -41,10 +41,10 @@ export const NotAvailable = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1>{translate('landing.banner.header')}</MetHeader1>
+                                <MetHeader1Old>{translate('landing.banner.header')}</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraph>{translate('landing.banner.description')}</MetParagraph>
+                                <MetParagraphOld>{translate('landing.banner.description')}</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

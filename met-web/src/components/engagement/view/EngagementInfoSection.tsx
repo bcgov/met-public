@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Stack } from '@mui/material';
-import { MetHeader1, MetLabel } from 'components/common';
+import { MetHeader1Old, MetLabel } from 'components/common';
 import { EngagementStatusChip } from '../status';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
@@ -60,7 +60,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 spacing={1}
             >
                 <Grid item xs={12} sx={{ maxHeight: '15em', overflowY: 'auto', overflowX: 'auto' }}>
-                    <MetHeader1>{name}</MetHeader1>
+                    <MetHeader1Old>{name}</MetHeader1Old>
                     <Grid item xs={12}>
                         <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
                     </Grid>

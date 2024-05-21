@@ -3,7 +3,14 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, MenuItem } from '@mui/material';
-import { MetHeader3, MetLabel, MetParagraph, MetWidgetPaper, PrimaryButton, SecondaryButton } from 'components/common';
+import {
+    MetHeader3,
+    MetLabel,
+    MetParagraphOld,
+    MetWidgetPaper,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
+} from 'components/common';
 import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -174,13 +181,13 @@ const UploadFileDrawer = () => {
                                                         <MetLabel>{fileToUpload?.name}</MetLabel>
                                                     </Grid>
                                                     <Grid item xs={12}>
-                                                        <MetParagraph>{fileToUpload?.type}</MetParagraph>
+                                                        <MetParagraphOld>{fileToUpload?.type}</MetParagraphOld>
                                                     </Grid>
                                                     <Grid item xs={12}>
                                                         {fileToUpload && (
-                                                            <MetParagraph>
+                                                            <MetParagraphOld>
                                                                 {`${fileToUpload.size / OneMegaByte} MB`}
-                                                            </MetParagraph>
+                                                            </MetParagraphOld>
                                                         )}
                                                     </Grid>
                                                 </Grid>
@@ -264,15 +271,15 @@ const UploadFileDrawer = () => {
                             marginTop="8em"
                         >
                             <Grid item>
-                                <PrimaryButton loading={isUploadingFile} onClick={handleSubmit(onSubmit)}>
+                                <PrimaryButtonOld loading={isUploadingFile} onClick={handleSubmit(onSubmit)}>
                                     {`Save & Close`}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButton
+                                <SecondaryButtonOld
                                     disabled={isUploadingFile}
                                     onClick={() => handleClose()}
-                                >{`Cancel`}</SecondaryButton>
+                                >{`Cancel`}</SecondaryButtonOld>
                             </Grid>
                         </Grid>
                     </Grid>

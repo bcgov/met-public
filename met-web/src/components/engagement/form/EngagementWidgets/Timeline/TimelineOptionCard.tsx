@@ -10,7 +10,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/pro-regular-svg-icons/faClock';
 
 const Title = 'Timeline';
 const TimelineOptionCard = () => {
@@ -73,7 +74,10 @@ const TimelineOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <AccessTimeIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faClock}
+                                style={{ padding: '10px', fontSize: '2.5em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

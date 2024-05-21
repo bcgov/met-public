@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2, MetHeader3, MetBody, MetSmallText } from 'components/common';
+import { MetPaper, MetHeader2Old, MetHeader3, MetBodyOld, MetSmallTextOld } from 'components/common';
 import { Grid, Avatar, Link, Skeleton, useTheme, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Contact } from 'models/contact';
@@ -51,9 +51,9 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -73,7 +73,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
     return (
         <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
             <Grid item justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
-                <MetHeader2 bold>{widget.title}</MetHeader2>
+                <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {contacts.map((contact) => {
@@ -105,7 +105,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             </Grid>
                             <When condition={Boolean(contact.title)}>
                                 <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody>{contact.title}</MetBody>
+                                    <MetBodyOld>{contact.title}</MetBodyOld>
                                 </Grid>
                             </When>
                             <When condition={Boolean(contact.bio)}>
@@ -116,7 +116,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                     xs={12}
                                     sx={{ whiteSpace: 'pre-line' }}
                                 >
-                                    <MetSmallText
+                                    <MetSmallTextOld
                                         sx={{
                                             textAlign: 'left',
                                             [theme.breakpoints.down('md')]: {
@@ -125,20 +125,20 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                         }}
                                     >
                                         {contact.bio}
-                                    </MetSmallText>
+                                    </MetSmallTextOld>
                                 </Grid>
                             </When>
                             <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                <MetBody bold sx={{ mr: 1 }}>
+                                <MetBodyOld bold sx={{ mr: 1 }}>
                                     Email:{' '}
-                                </MetBody>
+                                </MetBodyOld>
                                 <Link href={`mailto:${contact.email}`}>{' ' + contact.email}</Link>
                             </Grid>
                             <When condition={Boolean(contact.phone_number)}>
                                 <Grid container justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                    <MetBody bold sx={{ mr: 1 }}>
+                                    <MetBodyOld bold sx={{ mr: 1 }}>
                                         Phone:{' '}
-                                    </MetBody>
+                                    </MetBodyOld>
                                     <Link href={`tel:${contact.phone_number}`}>{' ' + contact.phone_number}</Link>
                                 </Grid>
                             </When>

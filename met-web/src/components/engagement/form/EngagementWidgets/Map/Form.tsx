@@ -3,8 +3,8 @@ import Divider from '@mui/material/Divider';
 import { Grid, Typography, Stack, IconButton } from '@mui/material';
 import {
     MetLabel,
-    PrimaryButton,
-    SecondaryButton,
+    PrimaryButtonOld,
+    SecondaryButtonOld,
     MidScreenLoader,
     MetWidgetPaper,
     MetDescription,
@@ -21,9 +21,10 @@ import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import ShapeFileUpload from 'components/engagement/form/EngagementWidgets/Map/ShapeFileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
 import { GeoJSON } from 'geojson';
-import LinkIcon from '@mui/icons-material/Link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { When } from 'react-if';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import * as turf from '@turf/turf';
 import { WidgetTitle } from '../WidgetTitle';
 
@@ -112,7 +113,7 @@ const Form = () => {
             reset({});
             handleWidgetDrawerOpen(false);
         } catch (error) {
-            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
+            dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add map' }));
             setIsCreating(false);
         }
     };
@@ -202,7 +203,10 @@ const Form = () => {
                                         >
                                             <Grid item xs>
                                                 <Stack spacing={2} direction="row" alignItems="center">
-                                                    <LinkIcon color="info" />
+                                                    <FontAwesomeIcon
+                                                        icon={faLinkSimple}
+                                                        style={{ fontSize: '22px', color: '#757575' }}
+                                                    />
                                                     <Typography>{mapData?.file_name}</Typography>
                                                 </Stack>
                                             </Grid>
@@ -215,7 +219,7 @@ const Form = () => {
                                                 color="inherit"
                                                 aria-label="Remove GeoJSON"
                                             >
-                                                <HighlightOffIcon />
+                                                <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                                             </IconButton>
                                         </Grid>
                                     </MetWidgetPaper>
@@ -267,9 +271,9 @@ const Form = () => {
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>
                                 <Grid item>
-                                    <SecondaryButton loading={calculatingZoom} onClick={handlePreviewMap}>
+                                    <SecondaryButtonOld loading={calculatingZoom} onClick={handlePreviewMap}>
                                         Preview Map
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                             <Grid
@@ -282,12 +286,15 @@ const Form = () => {
                                 marginTop="2em"
                             >
                                 <Grid item>
-                                    <PrimaryButton type="submit" loading={isCreating}>{`Save & Close`}</PrimaryButton>
+                                    <PrimaryButtonOld
+                                        type="submit"
+                                        loading={isCreating}
+                                    >{`Save & Close`}</PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButton onClick={() => handleWidgetDrawerOpen(false)}>
+                                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
                                         Cancel
-                                    </SecondaryButton>
+                                    </SecondaryButtonOld>
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MenuItem, Modal, Grid, Stack, TextField, Select } from '@mui/material';
-import { modalStyle, MetHeader1, MetLabel, PrimaryButton } from 'components/common';
+import { modalStyle, MetHeader1Old, MetLabel, PrimaryButtonOld } from 'components/common';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
@@ -98,9 +98,9 @@ const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, ta
             >
                 <Grid item xs={12}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader1 bold sx={{ mb: 2 }} data-testid={isEditMode ? 'edit-tab' : 'add-tab'}>
+                        <MetHeader1Old bold sx={{ mb: 2 }} data-testid={isEditMode ? 'edit-tab' : 'add-tab'}>
                             {isEditMode ? 'Edit the engagement content tab' : 'Add a new engagement content tab'}
-                        </MetHeader1>
+                        </MetHeader1Old>
                     </Stack>
                 </Grid>
                 <Grid container direction="row" item xs={12} alignItems="center">
@@ -171,13 +171,13 @@ const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, ta
                     alignItems="center"
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         variant="contained"
                         onClick={fetchData}
                         data-testid={isEditMode ? 'update-tab-button' : 'add-tab-button'}
                     >
                         {isEditMode ? 'Update Tab' : 'Add Tab'}
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Modal>

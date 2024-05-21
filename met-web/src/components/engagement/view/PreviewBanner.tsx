@@ -4,13 +4,14 @@ import { Box, Typography, Grid, Skeleton, Stack, useMediaQuery, Theme, Link } fr
 import { useNavigate } from 'react-router-dom';
 import { EngagementStatusChip } from '../status';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
-import { MetHeader1, PrimaryButton, SecondaryButton, MetBody, MetPaper } from 'components/common';
+import { MetHeader1Old, PrimaryButtonOld, SecondaryButtonOld, MetBodyOld, MetPaper } from 'components/common';
 import { useAppSelector } from 'hooks';
-import ImageIcon from '@mui/icons-material/Image';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareQuestion } from '@fortawesome/pro-regular-svg-icons/faSquareQuestion';
+import { faFileSlash } from '@fortawesome/pro-regular-svg-icons/faFileSlash';
+import { faFileCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faFileCircleExclamation';
 import IconButton from '@mui/material/IconButton';
 import ScheduleModal from 'components/engagement/view/ScheduleModal';
-import ArticleIcon from '@mui/icons-material/Article';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
 import { PermissionsGate } from 'components/permissionsGate';
@@ -58,15 +59,15 @@ export const PreviewBanner = () => {
             >
                 <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                     <Grid item container direction="row" xs={8} sx={{ pt: 2, mb: 2 }}>
-                        <MetHeader1 sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1>
+                        <MetHeader1Old sx={{ mb: 2 }}>{engagementBannerText}</MetHeader1Old>
                         <When condition={isScheduled}>
                             <Grid item container direction="row" rowSpacing={1}>
-                                <MetBody>
+                                <MetBodyOld>
                                     This engagement is scheduled to go live on
                                     {' ' + scheduledDate + ' at ' + scheduledTime + ' PT'}.{' '}
                                     <Link onClick={() => setIsScheduleModalOpen(true)}>Click here</Link> to edit the
                                     date this Engagement page will go live.
-                                </MetBody>
+                                </MetBodyOld>
                             </Grid>
                         </When>
                         <When condition={isDraft}>
@@ -80,11 +81,14 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no image"
                                             >
-                                                <ImageIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faSquareQuestion}
+                                                    style={{ fontSize: '22px', padding: '0px 8px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item container direction="row" alignItems="center" xs={10} sm={11}>
-                                            <MetBody>This engagement is missing a header image.</MetBody>
+                                            <MetBodyOld>This engagement is missing a header image.</MetBodyOld>
                                         </Grid>
                                     </Grid>
                                 </When>
@@ -97,11 +101,14 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/surveys/create?engagementId=${engagementId}`)}
                                                 aria-label="no survey"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
-                                            <MetBody>This engagement is missing a survey.</MetBody>
+                                            <MetBodyOld>This engagement is missing a survey.</MetBodyOld>
                                         </Grid>
                                     </Grid>
                                 </When>
@@ -114,11 +121,14 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no description"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
-                                            <MetBody>This engagement is missing a description.</MetBody>
+                                            <MetBodyOld>This engagement is missing a description.</MetBodyOld>
                                         </Grid>
                                     </Grid>
                                 </When>
@@ -131,11 +141,14 @@ export const PreviewBanner = () => {
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                                 aria-label="no content"
                                             >
-                                                <ArticleIcon />
+                                                <FontAwesomeIcon
+                                                    icon={faFileCircleExclamation}
+                                                    style={{ fontSize: '20px', padding: '0px 6px 0px 2px' }}
+                                                />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={10} sm={10}>
-                                            <MetBody>This engagement is missing content.</MetBody>
+                                            <MetBodyOld>This engagement is missing content.</MetBodyOld>
                                         </Grid>
                                     </Grid>
                                 </When>
@@ -146,11 +159,16 @@ export const PreviewBanner = () => {
                                             color="inherit"
                                             aria-label="not published"
                                         >
-                                            <UnpublishedIcon />
+                                            <FontAwesomeIcon
+                                                icon={faFileSlash}
+                                                style={{ fontSize: '20px', paddingRight: '5px' }}
+                                            />
                                         </IconButton>
                                     </Grid>
                                     <Grid item sm={11}>
-                                        <MetBody>An Administrator can schedule the engagement when ready.</MetBody>
+                                        <MetBodyOld>
+                                            An Administrator can schedule the engagement when ready.
+                                        </MetBodyOld>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -194,7 +212,7 @@ export const PreviewBanner = () => {
                             justifyContent="flex-start"
                         >
                             <PermissionsGate scopes={[USER_ROLES.EDIT_ENGAGEMENT]} errorProps={{ disabled: true }}>
-                                <SecondaryButton
+                                <SecondaryButtonOld
                                     sx={{
                                         backgroundColor: 'background.paper',
                                         borderRadius: '4px',
@@ -202,7 +220,7 @@ export const PreviewBanner = () => {
                                     onClick={() => navigate(`/engagements/${engagementId}/form`)}
                                 >
                                     Edit Engagement
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </PermissionsGate>
 
                             <When condition={isPublished}>
@@ -210,12 +228,12 @@ export const PreviewBanner = () => {
                                     scopes={[USER_ROLES.UNPUBLISH_ENGAGEMENT]}
                                     errorProps={{ disabled: true }}
                                 >
-                                    <PrimaryButton
+                                    <PrimaryButtonOld
                                         sx={{ marginLeft: '1em' }}
                                         onClick={() => setIsUnpublishModalOpen(true)}
                                     >
                                         Unpublish Engagement
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </PermissionsGate>
                             </When>
 
@@ -224,12 +242,12 @@ export const PreviewBanner = () => {
                                     scopes={[USER_ROLES.PUBLISH_ENGAGEMENT]}
                                     errorProps={{ disabled: true }}
                                 >
-                                    <PrimaryButton
+                                    <PrimaryButtonOld
                                         sx={{ marginLeft: '1em' }}
                                         onClick={() => setIsScheduleModalOpen(true)}
                                     >
                                         Schedule Engagement
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </PermissionsGate>
                             </When>
                             <When condition={isScheduled}>
@@ -237,12 +255,12 @@ export const PreviewBanner = () => {
                                     scopes={[USER_ROLES.PUBLISH_ENGAGEMENT]}
                                     errorProps={{ disabled: true }}
                                 >
-                                    <PrimaryButton
+                                    <PrimaryButtonOld
                                         sx={{ marginLeft: '1em' }}
                                         onClick={() => setIsScheduleModalOpen(true)}
                                     >
                                         Reschedule Engagement
-                                    </PrimaryButton>
+                                    </PrimaryButtonOld>
                                 </PermissionsGate>
                             </When>
                         </Stack>

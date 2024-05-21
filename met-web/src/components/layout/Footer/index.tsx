@@ -1,11 +1,12 @@
 import { Box, Divider, Grid, Link, Stack } from '@mui/material';
-import { MetBody, MetLabel, SocialIconButton } from 'components/common';
+import { MetBodyOld, MetLabel, SocialIconButton } from 'components/common';
 import React from 'react';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Palette } from 'styles/Theme';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF } from '@fortawesome/free-brands-svg-icons/faFacebookF';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons/faInstagram';
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons/faXTwitter';
 import UserService from 'services/userService';
 import { useAppSelector } from 'hooks';
 import { Unless } from 'react-if';
@@ -32,7 +33,7 @@ const Footer = () => {
                 }}
                 padding={{ xs: '2em 1em', md: '2em 6em' }}
             >
-                <MetBody color="white">{translate('footer.body')}</MetBody>
+                <MetBodyOld color="white">{translate('footer.body')}</MetBodyOld>
             </Grid>
             <Grid
                 item
@@ -63,7 +64,7 @@ const Footer = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <MetBody>{translate('footer.connectWithUs')}</MetBody>
+                        <MetBodyOld>{translate('footer.connectWithUs')}</MetBodyOld>
                     </Grid>
                 </Grid>
                 <Grid
@@ -136,18 +137,27 @@ const Footer = () => {
                 <Grid item xs={12} sm={6}>
                     <Stack direction="row" spacing={2}>
                         <SocialIconButton>
-                            <FacebookIcon htmlColor={Palette.text.primary} />
+                            <FontAwesomeIcon
+                                icon={faFacebookF}
+                                style={{ fontSize: '20px', color: Palette.text.primary, width: '1.3em' }}
+                            />
                         </SocialIconButton>
                         <SocialIconButton>
-                            <InstagramIcon htmlColor={Palette.text.primary} />
+                            <FontAwesomeIcon
+                                icon={faInstagram}
+                                style={{ fontSize: '24px', color: Palette.text.primary, width: '1.1em' }}
+                            />
                         </SocialIconButton>
                         <SocialIconButton>
-                            <TwitterIcon htmlColor={Palette.text.primary} />
+                            <FontAwesomeIcon
+                                icon={faXTwitter}
+                                style={{ fontSize: '20px', color: Palette.text.primary, width: '1.3em' }}
+                            />
                         </SocialIconButton>
                     </Stack>
                 </Grid>
                 <Grid item xs={12} sm={6} container justifyContent={'flex-end'} alignItems="flex-end">
-                    <MetBody>{translate('footer.copyrightNotice')}</MetBody>
+                    <MetBodyOld>{translate('footer.copyrightNotice')}</MetBodyOld>
                 </Grid>
             </Grid>
         </Grid>

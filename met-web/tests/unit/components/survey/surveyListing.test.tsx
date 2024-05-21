@@ -74,7 +74,7 @@ const mockSurveyTwo = {
     },
 };
 
-jest.mock('axios')
+jest.mock('axios');
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
@@ -86,7 +86,7 @@ jest.mock('@mui/material', () => ({
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
+    PrimaryButtonOld: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
         return <button {...rest}>{children}</button>;
     },
 }));

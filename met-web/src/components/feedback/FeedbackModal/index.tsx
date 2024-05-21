@@ -11,10 +11,14 @@ import {
     SvgIcon,
 } from '@mui/material';
 import * as React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faFaceSmile } from '@fortawesome/pro-regular-svg-icons/faFaceSmile';
+import { faFaceMeh } from '@fortawesome/pro-regular-svg-icons/faFaceMeh';
+import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetBody, MetHeader3, MetLabel, modalStyle, PrimaryButton, MetDisclaimer } from '../../common';
+import { MetBodyOld, MetHeader3, MetLabel, modalStyle, PrimaryButtonOld, MetDisclaimer } from '../../common';
 import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -23,9 +27,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
 import { ZIndex } from 'styles/Theme';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { useAppTranslation } from 'hooks';
 
 export const FeedbackModal = () => {
@@ -88,7 +89,7 @@ export const FeedbackModal = () => {
 
     return (
         <>
-            <PrimaryButton
+            <PrimaryButtonOld
                 data-testid="feedback-button"
                 onClick={() => setIsOpen(true)}
                 sx={{
@@ -101,11 +102,20 @@ export const FeedbackModal = () => {
                     transformOrigin: 'bottom right',
                 }}
             >
-                <SentimentVeryDissatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
-                <SentimentSatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
-                <SentimentSatisfiedAltIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
+                <FontAwesomeIcon
+                    icon={faFaceFrown}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
+                <FontAwesomeIcon
+                    icon={faFaceMeh}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
+                <FontAwesomeIcon
+                    icon={faFaceSmile}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
                 {translate('feedback.websiteFeedback')}
-            </PrimaryButton>
+            </PrimaryButtonOld>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
                 <Grid
                     container
@@ -136,9 +146,9 @@ export const FeedbackModal = () => {
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                                <PrimaryButton onClick={handleClose}>
+                                <PrimaryButtonOld onClick={handleClose}>
                                     {translate('feedback.submitModal.button')}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                         </Then>
                         <Else>
@@ -152,7 +162,7 @@ export const FeedbackModal = () => {
                             >
                                 <Box sx={{ padding: 0 }}>
                                     <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
-                                        <CloseIcon fontSize="small" />
+                                        <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
                                     </IconButton>
                                 </Box>
                             </Grid>
@@ -184,7 +194,7 @@ export const FeedbackModal = () => {
                                     sx={{ border: comment_type == CommentTypeEnum.Issue ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes[CommentTypeEnum.Issue].label}</MetBody>
+                                        <MetBodyOld>{commentTypes[CommentTypeEnum.Issue].label}</MetBodyOld>
                                         <When condition={!comment_type}>
                                             {commentTypes[CommentTypeEnum.Issue].icon}
                                         </When>
@@ -195,7 +205,7 @@ export const FeedbackModal = () => {
                                     sx={{ border: comment_type == CommentTypeEnum.Idea ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBody>{commentTypes[CommentTypeEnum.Idea].label}</MetBody>
+                                        <MetBodyOld>{commentTypes[CommentTypeEnum.Idea].label}</MetBodyOld>
                                         <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
@@ -218,7 +228,7 @@ export const FeedbackModal = () => {
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <MetBody>{commentTypes[comment_type].label}</MetBody>
+                                                        <MetBodyOld>{commentTypes[comment_type].label}</MetBodyOld>
                                                         {commentTypes[comment_type].icon}
                                                     </Stack>
                                                 </InputAdornment>
@@ -245,14 +255,14 @@ export const FeedbackModal = () => {
                                 </MetDisclaimer>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                                <PrimaryButton
+                                <PrimaryButtonOld
                                     data-testid="submit-button"
                                     loading={isSaving}
                                     disabled={isFeedbackTypeNotSelected || isCommentNotProvided}
                                     onClick={handleSubmit}
                                 >
                                     {translate('feedback.feedbackModal.button')}
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Grid>
                         </Else>
                     </If>

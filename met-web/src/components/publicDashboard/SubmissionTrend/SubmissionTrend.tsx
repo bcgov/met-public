@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress, TextField } from '@mui/material';
-import { MetPaper, MetLabel, SecondaryButton, MetToggleButton } from 'components/common';
+import { MetPaper, MetLabel, SecondaryButtonOld, MetToggleButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
@@ -209,7 +209,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 </Stack>
                             </Grid>
                             <Grid container item justifyContent="center" alignItems="center">
-                                <SecondaryButton
+                                <SecondaryButtonOld
                                     sx={{
                                         ...dashboardCustomStyles.primaryButton,
                                         ...extraSmallStyling,
@@ -218,7 +218,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     onClick={clearDates}
                                 >
                                     {translate('dashboard.submissionTrend.filter.reset')}
-                                </SecondaryButton>
+                                </SecondaryButtonOld>
                             </Grid>
                         </Grid>
                         <Grid

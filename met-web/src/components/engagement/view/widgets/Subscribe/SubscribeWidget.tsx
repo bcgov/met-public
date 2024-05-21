@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { MetHeader2, MetPaper } from 'components/common';
+import { MetHeader2Old, MetPaper } from 'components/common';
 import { ActionContext } from '../../ActionContext';
 import { Divider, Grid, Skeleton } from '@mui/material';
 import { useAppDispatch } from 'hooks';
@@ -52,7 +52,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <MetHeader2 bold>{widget.title}</MetHeader2>
+                        <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     {subscribeItems?.map((item, index) => {

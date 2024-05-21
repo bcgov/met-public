@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { PrimaryButton, SecondaryButton } from 'components/common';
+import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { UserDetailsContext } from './UserDetailsContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -114,17 +114,17 @@ const UserStatusButton = () => {
     };
 
     return disabled ? (
-        <PrimaryButton data-testid="user-status-toggle" disabled>
+        <PrimaryButtonOld data-testid="user-status-toggle" disabled>
             {userStatus ? 'Deactivate User' : 'Reactivate User'}
-        </PrimaryButton>
+        </PrimaryButtonOld>
     ) : (
-        <SecondaryButton
+        <SecondaryButtonOld
             data-testid="user-status-toggle"
             loading={togglingUserStatus}
             onClick={() => handleToggleUserStatus(!userStatus)}
         >
             {userStatus ? 'Deactivate User' : 'Reactivate User'}
-        </SecondaryButton>
+        </SecondaryButtonOld>
     );
 };
 

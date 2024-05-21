@@ -11,7 +11,7 @@ jest.mock('axios');
 
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
-    PrimaryButton: ({ children, ...rest }: { children: React.ReactNode }) => {
+    PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
         return <button {...rest}>{children}</button>;
     },
 }));
@@ -231,5 +231,35 @@ describe('Landing page tests', () => {
         await waitFor(() => {
             expect(setDrawerOpenedMock).toHaveBeenCalledWith(false);
         });
+    });
+
+    test('NoResult component is rendered when engagements array is empty', async () => {
+        const setDrawerOpenedMock = jest.fn();
+
+        render(
+            <LandingContext.Provider
+                value={{
+                    searchFilters: {
+                        name: '',
+                        status: [],
+                        metadata: [],
+                    },
+                    metadataFilters: [],
+                    clearFilters: jest.fn(),
+                    drawerOpened: false,
+                    setDrawerOpened: setDrawerOpenedMock,
+                    setSearchFilters: jest.fn(),
+                    setPage: jest.fn(),
+                    page: 1,
+                    engagements: [],
+                    loadingEngagements: false,
+                    totalEngagements: 0,
+                }}
+            >
+                <LandingComponent />
+            </LandingContext.Provider>,
+        );
+
+        expect(screen.getByTestId('NoResultsHeader')).toBeInTheDocument();
     });
 });

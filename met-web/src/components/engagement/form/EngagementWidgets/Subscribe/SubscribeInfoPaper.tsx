@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { MetLabel, MetParagraph, MetWidgetPaper } from 'components/common';
+import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton, useMediaQuery } from '@mui/material';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import EditIcon from '@mui/icons-material/Edit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { Case, Switch, When } from 'react-if';
 import { SUBSCRIBE_TYPE, SubscribeForm } from 'models/subscription';
 import { SubscribeContext } from './SubscribeContext';
@@ -28,7 +29,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={1}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
-                        <DragIndicatorIcon />
+                        <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
                 <Grid
@@ -52,7 +53,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </Grid>
                     <When condition={Boolean(subscribeItem.description)}>
                         <Grid item xs={isMediumScreen ? 4 : 3}>
-                            <MetParagraph>Description:</MetParagraph>
+                            <MetParagraphOld>Description:</MetParagraphOld>
                         </Grid>
                         <Grid
                             item
@@ -73,18 +74,20 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </When>
 
                     <Grid item xs={3}>
-                        <MetParagraph>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraph>
+                        <MetParagraphOld>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraphOld>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraph overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {subscribeItem.call_to_action_text}
-                        </MetParagraph>
+                        </MetParagraphOld>
                     </Grid>
                 </Grid>
                 <Grid container item xs={1.5}>
                     <Grid item xs={6}>
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
-                            <EditIcon
+                            <FontAwesomeIcon
+                                icon={faPen}
+                                style={{ fontSize: '22px' }}
                                 onClick={() => {
                                     setSubscribeOptionToEdit(subscribeForm);
                                     handleSubscribeDrawerOpen(subscribeForm.type, true);
@@ -99,7 +102,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                             color="inherit"
                             aria-label="delete-icon"
                         >
-                            <HighlightOffIcon />
+                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
                 </Grid>

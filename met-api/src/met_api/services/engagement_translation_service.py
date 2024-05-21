@@ -11,6 +11,7 @@ from met_api.models.engagement_status_block import EngagementStatusBlock as Enga
 from met_api.models.engagement_summary_content import EngagementSummary as EngagementSummaryModel
 from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
 from met_api.models.language import Language as LanguageModel
+from met_api.schemas.language import LanguageSchema
 from met_api.schemas.engagement_translation import EngagementTranslationSchema
 from met_api.services import authorization
 from met_api.utils.roles import Role
@@ -112,6 +113,14 @@ class EngagementTranslationService:
         authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement.id)
 
         return EngagementTranslationModel.delete_engagement_translation(engagement_translation_id)
+
+    @staticmethod
+    def get_available_engagement_translation_languages(engagement_id):
+        """Get a list of all languages for each entry in the engagement_translation table."""
+        language_schema = LanguageSchema(many=True)
+        available_translations = EngagementTranslationModel.get_available_translation_languages(engagement_id)
+
+        return language_schema.dump(available_translations)
 
     @staticmethod
     def _verify_engagement_translation(engagement_translation_id):

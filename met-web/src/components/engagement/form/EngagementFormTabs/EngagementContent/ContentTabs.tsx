@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Box, Button, IconButton, MenuItem, Menu, Skeleton, Grid, Divider } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSquarePen } from '@fortawesome/pro-regular-svg-icons';
 import CustomTabContent from './CustomTabContent';
 import SummaryTabContent from './SummaryTabContent';
 import { MetTab, MetTabList, MetTabPanel } from '../../StyledTabComponents';
@@ -108,8 +109,8 @@ export const ContentTabs: React.FC = () => {
                                                 <MetTooltip title="Edit Tab">
                                                     <IconButton onClick={() => handleEditTab(index)} aria-label="edit">
                                                         <FontAwesomeIcon
-                                                            icon={faPenToSquare as IconProp}
-                                                            fontSize="small"
+                                                            icon={faSquarePen as IconProp}
+                                                            fontSize="medium"
                                                             data-testid="edit-tab-details"
                                                         />
                                                     </IconButton>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetPaper, MetHeader2, MetLabel } from 'components/common';
+import { MetPaper, MetHeader2Old, MetLabel } from 'components/common';
 import { Grid, Skeleton, Divider, Box, IconButton, Link, useMediaQuery, Theme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
@@ -7,7 +7,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import MetMap from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
-import OpenWithIcon from '@mui/icons-material/OpenWith';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
@@ -56,9 +57,9 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -87,7 +88,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         xs={12}
                         paddingBottom={0}
                     >
-                        <MetHeader2 bold>{widget.title}</MetHeader2>
+                        <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     <Grid item xs={12}>
@@ -111,7 +112,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
                             <Grid item>
                                 <IconButton onClick={() => setOpen(true)}>
-                                    <OpenWithIcon />
+                                    <FontAwesomeIcon icon={faExpand} style={{ fontSize: '20px' }} />
                                 </IconButton>
                             </Grid>
                             <Grid item>

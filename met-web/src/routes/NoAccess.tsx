@@ -1,6 +1,6 @@
 import { Grid, Stack, Toolbar } from '@mui/material';
 import React from 'react';
-import { MetHeader1, MetHeader4 } from 'components/common';
+import { MetHeader1Old, MetHeader4 } from 'components/common';
 
 const NoAccess = () => {
     return (
@@ -16,9 +16,9 @@ const NoAccess = () => {
             >
                 <Grid item sm={10} md={6} justifyContent="center">
                     <Stack>
-                        <MetHeader1 bold variant="h1" align="flex-start" sx={{ mb: 3 }}>
+                        <MetHeader1Old bold variant="h1" align="flex-start" sx={{ mb: 3 }}>
                             Access Request
-                        </MetHeader1>
+                        </MetHeader1Old>
                         <MetHeader4 variant="h2" align="flex-start">
                             Your login was successful and an email has been sent to our administrators to request your
                             access. Once your request is processed, you'll get a notification email to confirm you can

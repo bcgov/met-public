@@ -2,23 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { MetWidgetPaper } from 'components/common';
 import { DocumentItem } from 'models/document';
-import FolderIcon from '@mui/icons-material/Folder';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolder } from '@fortawesome/pro-solid-svg-icons/faFolder';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
+import { faArrowTurnDownRight } from '@fortawesome/pro-regular-svg-icons/faArrowTurnDownRight';
 import { If, Then, Else, When } from 'react-if';
-import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
 import DocumentSwitch from './DocumentSwitch';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { deleteDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType, Widget } from 'models/widget';
-import Edit from '@mui/icons-material/Edit';
 import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
 import { MetDroppable } from 'components/common/Dragdrop';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const DocumentFolder = ({
     documentItem,
@@ -75,13 +76,16 @@ const DocumentFolder = ({
                             aria-label="drag-indicator"
                             {...draggableProvided.dragHandleProps}
                         >
-                            <DragIndicatorIcon />
+                            <FontAwesomeIcon
+                                icon={faGripDotsVertical}
+                                style={{ fontSize: '24px', margin: '0px 4px' }}
+                            />
                         </IconButton>
                     </Grid>
 
                     <Grid item xs>
                         <Stack spacing={2} direction="row" alignItems="center">
-                            <FolderIcon color="info" />
+                            <FontAwesomeIcon icon={faFolder} style={{ fontSize: '22px', color: '#757575' }} />
                             <If condition={!edit}>
                                 <Then>
                                     <Typography onClick={() => setEdit(true)}>
@@ -115,7 +119,7 @@ const DocumentFolder = ({
                             color="inherit"
                             aria-label="Edit Folder"
                         >
-                            <Edit />
+                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                         </IconButton>
                         <IconButton
                             onClick={() =>
@@ -144,7 +148,7 @@ const DocumentFolder = ({
                             color="inherit"
                             aria-label="Remove Folder"
                         >
-                            <HighlightOffIcon />
+                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
                 </Grid>
@@ -171,7 +175,10 @@ const DocumentFolder = ({
                                                     aria-label="drag-indicator"
                                                     disabled={true}
                                                 >
-                                                    <SubdirectoryArrowRightIcon />
+                                                    <FontAwesomeIcon
+                                                        icon={faArrowTurnDownRight}
+                                                        style={{ fontSize: '22px' }}
+                                                    />
                                                 </IconButton>
                                                 <DocumentSwitch documentItem={item} draggableProvided={provided} />
                                             </Stack>

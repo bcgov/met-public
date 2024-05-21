@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { MetPaper, PrimaryButton } from '../../common';
+import { MetPaper, PrimaryButtonOld } from '../../common';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
@@ -46,18 +46,18 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                 <Switch>
                     <Case condition={currentStatus === SubmissionStatus.Open}>
                         <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 disabled={!surveyId}
                                 onClick={startSurvey}
                             >
                                 {translate('buttonText.shareYourThoughts')}
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Grid>
                     </Case>
                     <Case condition={currentStatus === SubmissionStatus.Closed}>
                         <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
@@ -69,7 +69,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 }}
                             >
                                 {translate('buttonText.viewFeedback')}
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Grid>
                     </Case>
                 </Switch>

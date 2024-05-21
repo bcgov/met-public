@@ -24,16 +24,14 @@ from flask_cors import cross_origin
 from flask_restx import Namespace, Resource, fields
 from marshmallow import ValidationError
 from met_api.auth import auth_methods
+from met_api.auth import jwt as _jwt
+from met_api.constants.membership_type import MembershipType
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from met_api.services.engagement_metadata_service import EngagementMetadataService
 from met_api.utils.roles import Role
-from met_api.utils.tenant_validator import require_role
 from met_api.utils.util import allowedorigins, cors_preflight
 
-EDIT_ENGAGEMENT_ROLES = [Role.EDIT_ENGAGEMENT.value]
-VIEW_ENGAGEMENT_ROLES = [
-    Role.VIEW_ENGAGEMENT.value, Role.EDIT_ENGAGEMENT.value]
 
 API = Namespace('engagement_metadata',
                 path='/engagements/<engagement_id>/metadata',
@@ -75,9 +73,16 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.marshal_list_with(metadata_return_model)
-    @require_role(VIEW_ENGAGEMENT_ROLES)
+    @_jwt.requires_auth
     def get(engagement_id):
         """Fetch engagement metadata entries by engagement id."""
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.VIEW_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
         return metadata_service.get_by_engagement(engagement_id)
 
     @staticmethod
@@ -86,11 +91,16 @@ class EngagementMetadata(Resource):
     @API.expect(metadata_create_model)
     # type: ignore
     @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)
-    @require_role(EDIT_ENGAGEMENT_ROLES)
+    @_jwt.requires_auth
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
-        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
-                                 engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
         request_json = request.get_json(force=True)
         try:
             engagement_metadata = metadata_service.create(
@@ -107,11 +117,16 @@ class EngagementMetadata(Resource):
     @API.doc(security='apikey')
     @API.expect(metadata_bulk_update_model, validate=True)
     @API.marshal_list_with(metadata_return_model)
-    @require_role(EDIT_ENGAGEMENT_ROLES)
+    @_jwt.requires_auth
     def patch(engagement_id):
         """Update the values of existing metadata entries for an engagement."""
-        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
-                                 engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
         data = request.get_json(force=True)
         taxon_id = data['taxon_id']
         updated_values = data['values']
@@ -131,11 +146,16 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role(VIEW_ENGAGEMENT_ROLES)
+    @_jwt.requires_auth
     def get(engagement_id, metadata_id):
         """Fetch an engagement metadata entry by id."""
-        authorization.check_auth(one_of_roles=VIEW_ENGAGEMENT_ROLES,
-                                 engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.VIEW_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
         try:
             metadata = metadata_service.get(metadata_id)
             if str(metadata['engagement_id']) != str(engagement_id):
@@ -150,12 +170,17 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role(EDIT_ENGAGEMENT_ROLES)
     @API.expect(metadata_update_model)
+    @_jwt.requires_auth
     def patch(engagement_id, metadata_id):
         """Update the values of an existing metadata entry for an engagement."""
-        authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
-                                 engagement_id=engagement_id)
+        authorization.check_auth(
+            one_of_roles=(
+                MembershipType.TEAM_MEMBER.name,
+                Role.EDIT_ENGAGEMENT.value
+            ),
+            engagement_id=engagement_id
+        )
         request_json = request.get_json(force=True)
         try:
             value = request_json.get('value')
@@ -175,12 +200,17 @@ class EngagementMetadataById(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @require_role(EDIT_ENGAGEMENT_ROLES)
+    @_jwt.requires_auth
     def delete(engagement_id, metadata_id):
         """Delete an existing metadata entry for an engagement."""
         try:
-            authorization.check_auth(one_of_roles=EDIT_ENGAGEMENT_ROLES,
-                                     engagement_id=engagement_id)
+            authorization.check_auth(
+                one_of_roles=(
+                    MembershipType.TEAM_MEMBER.name,
+                    Role.EDIT_ENGAGEMENT.value
+                ),
+                engagement_id=engagement_id
+            )
             metadata = metadata_service.get(metadata_id)
             if str(metadata['engagement_id']) != str(engagement_id):
                 raise ValidationError('Metadata does not belong to this '

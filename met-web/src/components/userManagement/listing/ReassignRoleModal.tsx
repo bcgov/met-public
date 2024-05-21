@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, Stack } from '@mui/material';
-import { MetDescription, MetHeader3, PrimaryButton, SecondaryButton, modalStyle } from 'components/common';
+import { MetDescription, MetHeader3, PrimaryButtonOld, SecondaryButtonOld, modalStyle } from 'components/common';
 import { UserManagementContext } from './UserManagementContext';
 import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -143,10 +143,10 @@ export const ReassignRoleModal = () => {
                                 width="100%"
                                 justifyContent="flex-end"
                             >
-                                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
-                                <PrimaryButton loading={isSaving} type="submit">
+                                <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
+                                <PrimaryButtonOld loading={isSaving} type="submit">
                                     Submit
-                                </PrimaryButton>
+                                </PrimaryButtonOld>
                             </Stack>
                         </Grid>
                     </form>

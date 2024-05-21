@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Grid, Stack, Modal } from '@mui/material';
-import { modalStyle, PrimaryButton, SecondaryButton, MetHeader1, MetBody } from 'components/common';
+import { modalStyle, PrimaryButtonOld, SecondaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { ActionContext } from 'components/engagement/view/ActionContext';
 
@@ -38,36 +38,36 @@ const UnpublishModal = ({ open, setModalOpen }: UnpublishModalProps) => {
             >
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
-                        <MetHeader1 bold sx={{ mb: 2 }}>
+                        <MetHeader1Old bold sx={{ mb: 2 }}>
                             Unpublish Engagement
-                        </MetHeader1>
+                        </MetHeader1Old>
                     </Grid>
                 </Grid>
                 <Grid container direction="row" item xs={12}>
                     <Grid item xs={12}>
-                        <MetBody sx={{ mb: 1 }}>This Engagement will be unpublished:</MetBody>
+                        <MetBodyOld sx={{ mb: 1 }}>This Engagement will be unpublished:</MetBodyOld>
                     </Grid>
                     <Grid item xs={12}>
                         <ul>
                             <li>
-                                <MetBody>The engagement card will be removed from the home page.</MetBody>
+                                <MetBodyOld>The engagement card will be removed from the home page.</MetBodyOld>
                             </li>
                             <li>
-                                <MetBody>
+                                <MetBodyOld>
                                     The engagement page and the survey won't be visible to the public anymore.
-                                </MetBody>
+                                </MetBodyOld>
                             </li>
                             <li>
-                                <MetBody>
+                                <MetBodyOld>
                                     If the engagement was open, the survey won't be accessible to the public anymore.
-                                </MetBody>
+                                </MetBodyOld>
                             </li>
                             <li>
-                                <MetBody>
+                                <MetBodyOld>
                                     The report and approved comments will be accessible internally only. You will have
                                     two weeks to review new comments. All comments not reviewed, rejected, or labelled
                                     as "needs further review" will be deleted on "two weeks from today date".
-                                </MetBody>
+                                </MetBodyOld>
                             </li>
                         </ul>
                     </Grid>
@@ -87,15 +87,15 @@ const UnpublishModal = ({ open, setModalOpen }: UnpublishModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButton onClick={() => setModalOpen(false)}>Cancel</SecondaryButton>
-                            <PrimaryButton
+                            <SecondaryButtonOld onClick={() => setModalOpen(false)}>Cancel</SecondaryButtonOld>
+                            <PrimaryButtonOld
                                 type="submit"
                                 variant={'contained'}
                                 loading={isUnpublishing}
                                 onClick={handleUnpublishEngagement}
                             >
                                 Submit
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Stack>
                     </Grid>
                 </Grid>

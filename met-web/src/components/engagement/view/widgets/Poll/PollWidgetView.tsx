@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MetPaper, MetHeader2, PrimaryButton } from 'components/common';
+import { MetPaper, MetHeader2Old, PrimaryButtonOld } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
 import { Widget } from 'models/widget';
@@ -138,9 +138,9 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2>
+                        <MetHeader2Old>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2>
+                        </MetHeader2Old>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="20em" />
@@ -161,7 +161,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                     xs={12}
                     paddingBottom={0}
                 >
-                    <MetHeader2 bold>{widget.title}</MetHeader2>
+                    <MetHeader2Old bold>{widget.title}</MetHeader2Old>
                     <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                 </Grid>
                 <Grid item xs={12}>
@@ -174,7 +174,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                         <>
                             {!isSubmitted && (
                                 <Grid item xs={12} sx={{ marginTop: '1em' }}>
-                                    <PrimaryButton onClick={() => handleSubmit()}>Submit</PrimaryButton>
+                                    <PrimaryButtonOld onClick={() => handleSubmit()}>Submit</PrimaryButtonOld>
                                 </Grid>
                             )}
                             {responseMessage?.message && (

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import MetTable from 'components/common/Table';
 import { HeadCell } from 'components/common/Table/types';
-import { MetLabel, MetParagraph } from 'components/common';
+import { MetLabel, MetParagraphOld } from 'components/common';
 import { Skeleton } from '@mui/material';
 import { CommentViewContext, TransformedComment } from './CommentViewContext';
 import { useAppTranslation } from 'hooks';
@@ -52,7 +52,7 @@ const CommentTable = () => {
                         <div style={{ paddingTop: '10px' }} key={comment.label}>
                             <MetLabel>{comment.label}</MetLabel>
                             <div style={{ paddingTop: '5px' }}>
-                                <MetParagraph>{comment.text}</MetParagraph>
+                                <MetParagraphOld>{comment.text}</MetParagraphOld>
                             </div>
                         </div>
                     ))}
@@ -67,7 +67,7 @@ const CommentTable = () => {
             allowSort: false,
             customStyle: { width: '20%' },
             align: 'right',
-            renderCell: (row: TransformedComment) => <MetParagraph>{row.submission_date}</MetParagraph>,
+            renderCell: (row: TransformedComment) => <MetParagraphOld>{row.submission_date}</MetParagraphOld>,
         },
     ];
 

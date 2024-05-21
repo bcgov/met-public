@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Paper, Grid } from '@mui/material';
 import MetMap from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
-import { PrimaryButton } from 'components/common';
+import { PrimaryButtonOld } from 'components/common';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface ExpandModalProps {
@@ -71,13 +71,13 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                     </Grid>
                     <Grid item xs={12} container justifyContent="flex-end" padding={2}>
                         <Grid item>
-                            <PrimaryButton
+                            <PrimaryButtonOld
                                 onClick={() => {
                                     setOpen(false);
                                 }}
                             >
                                 Close
-                            </PrimaryButton>
+                            </PrimaryButtonOld>
                         </Grid>
                     </Grid>
                 </Grid>

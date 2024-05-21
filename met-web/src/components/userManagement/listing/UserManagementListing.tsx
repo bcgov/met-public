@@ -2,10 +2,11 @@ import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { USER_STATUS, User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
-import { MetPageGridContainer, PrimaryButton } from 'components/common';
+import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
@@ -100,9 +101,9 @@ const UserManagementListing = () => {
                             onChange={(e) => setSearchBarText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButton onClick={handleSearchClick}>
-                            <SearchIcon />
-                        </PrimaryButton>
+                        <PrimaryButtonOld onClick={handleSearchClick}>
+                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                        </PrimaryButtonOld>
                     </Stack>
                 </Stack>
             </Grid>

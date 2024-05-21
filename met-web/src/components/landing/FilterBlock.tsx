@@ -13,7 +13,12 @@ import {
     useTheme,
 } from '@mui/material';
 import { DeletableFilterChip } from './DeletableFilterChip';
-import { Close, Check, HighlightOff, Tune, Search } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faSliders } from '@fortawesome/pro-regular-svg-icons/faSliders';
 import { MetadataFilter } from 'components/metadataManagement/types';
 import { MetLabel } from 'components/common';
 import { debounce } from 'lodash';
@@ -103,10 +108,12 @@ const FilterBlock = () => {
                         InputProps={{
                             sx: { height: 48 },
                             startAdornment: (
-                                <Search
-                                    sx={{
+                                <FontAwesomeIcon
+                                    icon={faMagnifyingGlass}
+                                    style={{
+                                        fontSize: '20px',
                                         color: theme.palette.primary.main,
-                                        mr: 0.5,
+                                        marginRight: '5px',
                                     }}
                                 />
                             ),
@@ -123,7 +130,7 @@ const FilterBlock = () => {
                                         setSearchText('');
                                     }}
                                 >
-                                    <HighlightOff />
+                                    <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                                 </IconButton>
                             ) : undefined,
                         }}
@@ -145,7 +152,7 @@ const FilterBlock = () => {
                         aria-label={translate('landing.filters.aria.openDrawer')}
                         variant="contained"
                         color="primary"
-                        startIcon={<Tune />}
+                        startIcon={<FontAwesomeIcon icon={faSliders} style={{ fontSize: '18px' }} />}
                         onClick={() => setDrawerOpened(true)}
                         sx={{ height: 48 }}
                     >
@@ -259,7 +266,7 @@ const FilterBlock = () => {
                             <MenuItem key={status} value={status}>
                                 {selectedValue === status && (
                                     <ListItemIcon>
-                                        <Check fontSize="small" />
+                                        <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px' }} />
                                     </ListItemIcon>
                                 )}
                                 <ListItemText primary={label} />
@@ -285,7 +292,7 @@ const FilterBlock = () => {
                             borderRadius: '2em',
                             p: 2,
                         }}
-                        endIcon={<Close />}
+                        endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
                     >
                         {translate('landing.filters.clear')}
                     </Button>

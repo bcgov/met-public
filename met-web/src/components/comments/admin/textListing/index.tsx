@@ -3,15 +3,16 @@ import MetTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import {
     MetPageGridContainer,
-    PrimaryButton,
-    MetParagraph,
+    PrimaryButtonOld,
+    MetParagraphOld,
     MetLabel,
     MetTooltip,
-    SecondaryButton,
+    SecondaryButtonOld,
 } from 'components/common';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { Link as MuiLink, Grid, Stack, TextField, Menu, MenuItem } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CommentStatusChip } from '../../status';
@@ -23,9 +24,9 @@ import { formatDate, formatToUTC } from 'components/common/dateHelper';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { updateURLWithPagination } from 'components/common/Table/utils';
-import CommentIcon from '@mui/icons-material/Comment';
-import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { faMessageCheck } from '@fortawesome/pro-solid-svg-icons/faMessageCheck';
+import { faMessageSlash } from '@fortawesome/pro-solid-svg-icons/faMessageSlash';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { getStaffCommentSheet, getProponentCommentSheet } from 'services/commentService';
 import { downloadFile } from 'utils';
 import { getSurvey } from 'services/surveyService';
@@ -218,7 +219,10 @@ const CommentTextListing = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageCheck}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>
@@ -232,7 +236,10 @@ const CommentTextListing = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentsDisabledIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageSlash}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>
@@ -241,7 +248,7 @@ const CommentTextListing = () => {
                                     </Grid>
                                     <Grid item xs={11}>
                                         <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
-                                        <MetParagraph>{' ' + comment.text}</MetParagraph>
+                                        <MetParagraphOld>{' ' + comment.text}</MetParagraphOld>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -284,14 +291,14 @@ const CommentTextListing = () => {
                                     justifyContent: 'flex-start',
                                 }}
                             >
-                                <MetParagraph
+                                <MetParagraphOld
                                     sx={{
                                         pb: '0.1em',
                                     }}
                                 >
                                     <b>Comment Date: </b>
-                                </MetParagraph>
-                                <MetParagraph>{formatDate(row.created_date)}</MetParagraph>
+                                </MetParagraphOld>
+                                <MetParagraphOld>{formatDate(row.created_date)}</MetParagraphOld>
                             </Stack>
                         </Grid>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
@@ -309,14 +316,14 @@ const CommentTextListing = () => {
                                         justifyContent: 'flex-start',
                                     }}
                                 >
-                                    <MetParagraph
+                                    <MetParagraphOld
                                         sx={{
                                             pb: '0.1em',
                                         }}
                                     >
                                         <b>Reviewed By: </b>
-                                    </MetParagraph>
-                                    <MetParagraph>{row.reviewed_by}</MetParagraph>
+                                    </MetParagraphOld>
+                                    <MetParagraphOld>{row.reviewed_by}</MetParagraphOld>
                                 </Stack>
                             </Grid>
                         </When>
@@ -347,41 +354,43 @@ const CommentTextListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <PrimaryButton
+                    <PrimaryButtonOld
                         data-testid="CommentListing/search-button"
                         variant="contained"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
-                        <SearchIcon />
-                    </PrimaryButton>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                    </PrimaryButtonOld>
                 </Stack>
             </Grid>
             <Grid item xs={12} lg={5}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <PrimaryButton component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                    <PrimaryButtonOld component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
                         Return to Comments List
-                    </PrimaryButton>
+                    </PrimaryButtonOld>
                     <PermissionsGate
                         scopes={[USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET, USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET]}
                         errorProps={{ disabled: true }}
                     >
-                        <SecondaryButton
+                        <SecondaryButtonOld
                             variant="contained"
                             onClick={handleExportToCSVOpen}
                             aria-controls="simple-menu"
                             aria-haspopup="true"
                             loading={isExporting}
                             startIcon={
-                                <ExpandMoreIcon
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
                                     style={{
-                                        transition: 'transform 0.3s',
-                                        transform: exportToCSVOpen ? 'rotate(180deg)' : 'none',
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
+                                        transform: exportToCSVOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                     }}
                                 />
                             }
                         >
                             Export to CSV
-                        </SecondaryButton>
+                        </SecondaryButtonOld>
                     </PermissionsGate>
                     <Menu
                         id="simple-menu"
