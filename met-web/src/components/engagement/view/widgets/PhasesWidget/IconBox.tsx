@@ -1,7 +1,8 @@
 import React, { ReactNode, useRef, useState } from 'react';
 import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
 import { Arrow, PopperArrow } from 'components/common/MetPopper';
-import CloseIcon from '@mui/icons-material/Close';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { ForumIcon } from './ForumIcon';
 
 export const IconBox = ({ children }: { children: ReactNode }) => {
@@ -43,7 +44,7 @@ export const IconBox = ({ children }: { children: ReactNode }) => {
                                 onClick={() => setOpen(!open)}
                                 sx={{ position: 'relative', top: '0%', left: '92%', color: '#458686' }}
                             >
-                                <CloseIcon fontSize="small" />
+                                <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
                             </IconButton>
                             <Box maxWidth={'30em'} padding="1em">
                                 {children}

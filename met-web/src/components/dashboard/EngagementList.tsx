@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import { MetHeader2Old, MetHeader4, MetPageGridContainer } from 'components/common';
 import { Accordion, AccordionDetails, AccordionSummary, Skeleton, styled } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import EngagementAccordion from './EngagementsAccordion';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { DashboardContext } from './DashboardContext';
@@ -45,7 +46,10 @@ const EngagementList = () => {
             </Grid>
             <Grid item xs={12}>
                 <StyledAccordion defaultExpanded={true}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ flexDirection: 'row-reverse' }}>
+                    <AccordionSummary
+                        expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
+                        sx={{ flexDirection: 'row-reverse' }}
+                    >
                         <MetHeader4>Upcoming Engagements</MetHeader4>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -60,7 +64,10 @@ const EngagementList = () => {
             </Grid>
             <Grid item xs={12}>
                 <StyledAccordion defaultExpanded={true}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ flexDirection: 'row-reverse' }}>
+                    <AccordionSummary
+                        expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
+                        sx={{ flexDirection: 'row-reverse' }}
+                    >
                         <MetHeader4>Open Engagements</MetHeader4>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -74,7 +81,10 @@ const EngagementList = () => {
             </Grid>
             <Grid item xs={12}>
                 <StyledAccordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ flexDirection: 'row-reverse' }}>
+                    <AccordionSummary
+                        expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
+                        sx={{ flexDirection: 'row-reverse' }}
+                    >
                         <MetHeader4>Recently Closed Engagements (last 30 days)</MetHeader4>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -88,7 +98,10 @@ const EngagementList = () => {
             </Grid>
             <Grid item xs={12}>
                 <StyledAccordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ flexDirection: 'row-reverse' }}>
+                    <AccordionSummary
+                        expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
+                        sx={{ flexDirection: 'row-reverse' }}
+                    >
                         <MetHeader4>Closed Engagements (over 30 days ago)</MetHeader4>
                     </AccordionSummary>
                     <AccordionDetails>

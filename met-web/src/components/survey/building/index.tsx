@@ -10,11 +10,12 @@ import {
     FormControlLabel,
     Tooltip,
 } from '@mui/material';
-import HelpIcon from '@mui/icons-material/Help';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleQuestion } from '@fortawesome/pro-solid-svg-icons/faCircleQuestion';
+import { faPencilSlash } from '@fortawesome/pro-regular-svg-icons/faPencilSlash';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import ClearIcon from '@mui/icons-material/Clear';
 import { SurveyParams } from '../types';
 import { getSurvey, putSurvey } from 'services/surveyService';
 import { Survey } from 'models/survey';
@@ -256,7 +257,7 @@ const SurveyFormBuilder = () => {
                                 }}
                                 color="inherit"
                             >
-                                <BorderColorIcon sx={{ fontSize: '1rem' }} />
+                                <FontAwesomeIcon icon={faPen} style={{ fontSize: '1rem' }} />
                             </IconButton>
                         </>
                     ) : (
@@ -268,7 +269,7 @@ const SurveyFormBuilder = () => {
                                 }}
                                 color="inherit"
                             >
-                                <ClearIcon />
+                                <FontAwesomeIcon icon={faPencilSlash} style={{ fontSize: '20px' }} />
                             </IconButton>
                         </>
                     )}
@@ -358,7 +359,10 @@ const SurveyFormBuilder = () => {
                         }}
                     >
                         <IconButton>
-                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                            <FontAwesomeIcon
+                                icon={faCircleQuestion}
+                                style={{ fontSize: '18px', color: `${Palette.primary.main}` }}
+                            />
                         </IconButton>
                     </Tooltip>
                 </Stack>
@@ -396,7 +400,10 @@ const SurveyFormBuilder = () => {
                         }}
                     >
                         <IconButton>
-                            <HelpIcon sx={{ fontSize: 20, color: `${Palette.primary.main}` }} />
+                            <FontAwesomeIcon
+                                icon={faCircleQuestion}
+                                style={{ fontSize: '18px', color: `${Palette.primary.main}` }}
+                            />
                         </IconButton>
                     </Tooltip>
                 </Stack>

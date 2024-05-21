@@ -14,8 +14,9 @@ import {
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { SxProps, styled } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { Palette } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
@@ -187,6 +188,7 @@ const StyledWidgetButton = styled(MuiButton)(() => ({
 const StyledSocialIconButton = styled(IconButton)(() => ({
     border: '1px solid #494949',
     color: '#494949',
+    borderRadius: '100%',
 }));
 
 const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
@@ -325,7 +327,7 @@ export const MetSurvey = ({
                     <Stack direction="row" spacing={1}>
                         <When condition={!!onEditClick}>
                             <IconButton color="inherit" onClick={onEditClick} data-testid="survey-widget/edit">
-                                <EditIcon />
+                                <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                             </IconButton>
                         </When>
                         <When condition={!!onDeleteClick}>
@@ -334,7 +336,11 @@ export const MetSurvey = ({
                                 onClick={onDeleteClick}
                                 data-testid={`survey-widget/remove-${testId}`}
                             >
-                                {deleting ? <CircularProgress size="1em" color="inherit" /> : <HighlightOffIcon />}
+                                {deleting ? (
+                                    <CircularProgress size="1em" color="inherit" />
+                                ) : (
+                                    <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
+                                )}
                             </IconButton>
                         </When>
                     </Stack>

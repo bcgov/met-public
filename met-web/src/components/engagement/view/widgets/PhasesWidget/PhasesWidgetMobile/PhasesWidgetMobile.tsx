@@ -4,7 +4,8 @@ import { MetBodyOld, MetHeader3, MetPaper } from 'components/common';
 import { WidgetType } from 'models/widget';
 import { styled } from '@mui/material/styles';
 import { ActionContext } from '../../../ActionContext';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight } from '@fortawesome/pro-regular-svg-icons/faChevronRight';
 import { EngagementPhaseMobile } from './EngagementPhaseMobile';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
@@ -24,7 +25,10 @@ const Accordion = styled((props: AccordionProps) => <MuiAccordion disableGutters
 );
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-    <MuiAccordionSummary expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />} {...props} />
+    <MuiAccordionSummary
+        expandIcon={<FontAwesomeIcon icon={faChevronRight} style={{ fontSize: '0.9rem' }} />}
+        {...props}
+    />
 ))(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, .05)' : 'rgba(0, 0, 0, .03)',
     flexDirection: 'row-reverse',

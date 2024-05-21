@@ -6,9 +6,10 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { If, Then, When } from 'react-if';
-import LocationOn from '@mui/icons-material/LocationOn';
 import { EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
@@ -65,7 +66,10 @@ export const PhaseBoxMobile = ({
                                             <If condition={isCurrentPhase}>
                                                 <Then>
                                                     <Box marginLeft={'1em'} color="#D8292F">
-                                                        <LocationOn fontSize="large" />
+                                                        <FontAwesomeIcon
+                                                            icon={faLocationDot}
+                                                            style={{ fontSize: '30px' }}
+                                                        />
                                                     </Box>
                                                 </Then>
                                             </If>
@@ -83,7 +87,12 @@ export const PhaseBoxMobile = ({
                                 <Grid item container direction="row" xs={12} justifyContent="flex-start">
                                     <Accordion sx={{ background: accordionBackground }}>
                                         <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon color="info" />}
+                                            expandIcon={
+                                                <FontAwesomeIcon
+                                                    icon={faChevronDown}
+                                                    style={{ fontSize: '18px', color: '#757575' }}
+                                                />
+                                            }
                                             aria-controls="panel1a-content"
                                             id="panel1a-header"
                                         >

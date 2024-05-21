@@ -7,7 +7,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import MetMap from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
-import OpenWithIcon from '@mui/icons-material/OpenWith';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
@@ -111,7 +112,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
                             <Grid item>
                                 <IconButton onClick={() => setOpen(true)}>
-                                    <OpenWithIcon />
+                                    <FontAwesomeIcon icon={faExpand} style={{ fontSize: '20px' }} />
                                 </IconButton>
                             </Grid>
                             <Grid item>

@@ -7,13 +7,14 @@ import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import Stack from '@mui/material/Stack';
 import { SurveySubmission } from 'models/surveySubmission';
 import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { AdvancedSearch } from './AdvancedSearch';
 import { CommentListingContext } from './CommentListingContext';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
@@ -122,18 +123,17 @@ const Submissions = () => {
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
                         >
-                            <SearchIcon />
+                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
                         </PrimaryButtonOld>
                         <SecondaryButtonOld
                             data-testid="comment-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
                             startIcon={
-                                <ExpandMoreIcon
-                                    sx={{
-                                        transition: (theme) =>
-                                            theme.transitions.create('transform', {
-                                                duration: theme.transitions.duration.shortest,
-                                            }),
+                                <FontAwesomeIcon
+                                    icon={faChevronDown}
+                                    style={{
+                                        fontSize: '12px',
+                                        transition: 'transform 0.3s ease',
                                         transform: isAdvancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                                     }}
                                 />

@@ -40,9 +40,10 @@ import { RejectEmailTemplate } from './emailPreview/EmailTemplates';
 import EmailPreview from './emailPreview/EmailPreview';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { getSurvey } from 'services/surveyService';
-import CommentIcon from '@mui/icons-material/Comment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMessageCheck } from '@fortawesome/pro-solid-svg-icons/faMessageCheck';
+import { faMessageSlash } from '@fortawesome/pro-solid-svg-icons/faMessageSlash';
 import { LanguageState } from 'reduxSlices/languageSlice';
-import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -289,7 +290,10 @@ const CommentReview = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageCheck}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>
@@ -303,7 +307,10 @@ const CommentReview = () => {
                                                         arrow
                                                     >
                                                         <span>
-                                                            <CommentsDisabledIcon color="info" />
+                                                            <FontAwesomeIcon
+                                                                icon={faMessageSlash}
+                                                                style={{ fontSize: '24px', color: '#757575' }}
+                                                            />
                                                         </span>
                                                     </MetTooltip>
                                                 </Grid>

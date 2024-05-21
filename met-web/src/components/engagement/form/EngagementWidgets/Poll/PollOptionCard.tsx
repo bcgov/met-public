@@ -10,7 +10,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
-import PollIcon from '@mui/icons-material/Poll';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePollVertical } from '@fortawesome/pro-regular-svg-icons/faSquarePollVertical';
 
 const Title = 'Poll';
 const PollOptionCard = () => {
@@ -73,7 +74,10 @@ const PollOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <PollIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faSquarePollVertical}
+                                style={{ padding: '10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

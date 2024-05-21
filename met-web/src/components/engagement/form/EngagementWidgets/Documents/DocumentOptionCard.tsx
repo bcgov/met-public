@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { MetPaper, MetLabel, MetDescription } from 'components/common';
 import { Grid, CircularProgress } from '@mui/material';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileLines } from '@fortawesome/pro-regular-svg-icons/faFileLines';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetTabValues } from '../type';
 import { WidgetType } from 'models/widget';
@@ -72,7 +73,10 @@ const DocumentOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <DescriptionOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faFileLines}
+                                style={{ padding: '10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

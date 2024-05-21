@@ -11,7 +11,11 @@ import {
     SvgIcon,
 } from '@mui/material';
 import * as React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faFaceSmile } from '@fortawesome/pro-regular-svg-icons/faFaceSmile';
+import { faFaceMeh } from '@fortawesome/pro-regular-svg-icons/faFaceMeh';
+import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
 import { MetBodyOld, MetHeader3, MetLabel, modalStyle, PrimaryButtonOld, MetDisclaimer } from '../../common';
@@ -23,9 +27,6 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
 import { ZIndex } from 'styles/Theme';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { useAppTranslation } from 'hooks';
 
 export const FeedbackModal = () => {
@@ -101,9 +102,18 @@ export const FeedbackModal = () => {
                     transformOrigin: 'bottom right',
                 }}
             >
-                <SentimentVeryDissatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
-                <SentimentSatisfiedIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
-                <SentimentSatisfiedAltIcon fontSize="small" sx={{ marginRight: 1, transform: 'rotate(90deg)' }} />
+                <FontAwesomeIcon
+                    icon={faFaceFrown}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
+                <FontAwesomeIcon
+                    icon={faFaceMeh}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
+                <FontAwesomeIcon
+                    icon={faFaceSmile}
+                    style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
+                />
                 {translate('feedback.websiteFeedback')}
             </PrimaryButtonOld>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
@@ -152,7 +162,7 @@ export const FeedbackModal = () => {
                             >
                                 <Box sx={{ padding: 0 }}>
                                     <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
-                                        <CloseIcon fontSize="small" />
+                                        <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
                                     </IconButton>
                                 </Box>
                             </Grid>

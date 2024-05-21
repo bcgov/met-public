@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { InputAdornment, TextField, Tooltip, Grid, useTheme } from '@mui/material';
 import { SecondaryButtonOld, MetDescription, MetHeader4, MetSmallTextOld, MetLabel } from 'components/common';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { ActionContext } from 'components/engagement/form/ActionContext';
 import { useAppDispatch } from 'hooks';
@@ -134,7 +135,7 @@ export const PublicUrls = () => {
                                                 setCopyTooltipEngagementLink(true);
                                             }}
                                         >
-                                            <ContentCopyIcon />
+                                            <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
                                         </SecondaryButtonOld>
                                     </InputAdornment>
                                 ),
@@ -205,7 +206,7 @@ export const PublicUrls = () => {
                                                 setCopyTooltipDashboardLink(true);
                                             }}
                                         >
-                                            <ContentCopyIcon />
+                                            <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
                                         </SecondaryButtonOld>
                                     </InputAdornment>
                                 ),
