@@ -27,3 +27,12 @@ export const createTenant = async (tenant: Tenant): Promise<Tenant> => {
     }
     return Promise.reject(Error('Failed to create tenant'));
 };
+
+export const updateTenant = async (tenant: Tenant, shortName: string): Promise<Tenant> => {
+    const url = replaceUrl(Endpoints.Tenants.UPDATE, 'tenant_id', shortName);
+    const response = await http.PatchRequest<Tenant>(url, tenant);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to update tenant'));
+};

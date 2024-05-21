@@ -35,7 +35,7 @@ class TenantService:
     @classmethod
     def get_all(cls):
         """Get all tenants."""
-        tenants = TenantModel.query.all()
+        tenants = TenantModel.query.order_by(TenantModel.created_date.asc()).all()
         return TenantSchema().dump(tenants, many=True)
 
     @classmethod
@@ -54,13 +54,13 @@ class TenantService:
         return TenantSchema().dump(tenant)
 
     @classmethod
-    def update(cls, tenant_id: int, data: dict):
+    def update(cls, tenant_id: str, data: dict):
         """Update an existing tenant."""
         one_of_roles = (
             Role.SUPER_ADMIN.value,
         )
         authorization.check_auth(one_of_roles=one_of_roles)
-        tenant = TenantModel.find_by_id(tenant_id)
+        tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
             raise ValueError('Tenant not found.', cls, tenant_id)
         try:
@@ -71,13 +71,13 @@ class TenantService:
         return TenantSchema().dump(tenant)
 
     @classmethod
-    def delete(cls, tenant_id: int):
+    def delete(cls, tenant_id: str):
         """Delete an existing tenant."""
         one_of_roles = (
             Role.SUPER_ADMIN.value,
         )
         authorization.check_auth(one_of_roles=one_of_roles)
-        tenant = TenantModel.find_by_id(tenant_id)
+        tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
             raise ValueError('Tenant not found.', cls, tenant_id)
         try:
