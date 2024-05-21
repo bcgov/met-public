@@ -36,3 +36,12 @@ export const updateTenant = async (tenant: Tenant, shortName: string): Promise<T
     }
     return Promise.reject(Error('Failed to update tenant'));
 };
+
+export const deleteTenant = async (shortName: string): Promise<Tenant> => {
+    const url = replaceUrl(Endpoints.Tenants.UPDATE, 'tenant_id', shortName);
+    const response = await http.DeleteRequest<Tenant>(url);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to delete tenant'));
+};
