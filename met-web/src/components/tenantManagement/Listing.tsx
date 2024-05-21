@@ -106,7 +106,7 @@ const TenantListingPage = () => {
                                 {tenants.map((tenant) => (
                                     <TableRow
                                         onClick={() => {
-                                            navigate(`./${tenant.short_name}/detail`);
+                                            navigate(`/tenantadmin/${tenant.short_name}/detail`);
                                         }}
                                         key={tenant.name}
                                         tabIndex={0}
@@ -115,7 +115,6 @@ const TenantListingPage = () => {
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}
                                             </BodyText>
-                                            {/* TODO: Replace when primary contact info is added to tenants */}
                                             <BodyText size="small">{tenant.contact_name}</BodyText>
                                         </TableCell>
                                         <TableCell>
