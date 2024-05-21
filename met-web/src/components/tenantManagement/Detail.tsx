@@ -3,7 +3,7 @@ import { Box, Grid, Skeleton } from '@mui/material';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { useParams } from 'react-router-dom';
-import { getTenant } from 'services/tenantService';
+import { getTenant, deleteTenant } from 'services/tenantService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/common/Input/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan, faCopy } from '@fortawesome/pro-regular-svg-icons';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const TenantDetail = () => {
     const [tenant, setTenant] = React.useState<Tenant | null>(null);
@@ -154,6 +155,50 @@ const TenantDetail = () => {
         );
     }
 
+    const handleDeleteTenant = async (tenantId: string) => {
+        try {
+            await deleteTenant(tenantId);
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `Tenant "${tenantId}" successfully deleted`,
+                }),
+            );
+            navigate('../tenantadmin');
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: `Error occurred while trying to delete tenant "${tenantId}"`,
+                }),
+            );
+        }
+    };
+
+    const handleDeleteClick = (tenantId: string) => {
+        dispatch(
+            openNotificationModal({
+                open: true,
+                data: {
+                    header: 'Delete Tenant Instance',
+                    subText: [
+                        {
+                            text: 'If you delete this tenant, all the data associated with it will be deleted. This action cannot be undone.',
+                        },
+                        {
+                            text: 'Are you sure you want to delete this tenant?',
+                        },
+                    ],
+                    handleConfirm: () => {
+                        handleDeleteTenant(tenantId);
+                    },
+                },
+                type: 'confirm',
+            }),
+        );
+    };
+
     return (
         <ResponsiveContainer>
             <BreadcrumbTrail
@@ -288,7 +333,7 @@ const TenantDetail = () => {
                                 variant="secondary"
                                 icon={trashCanIcon}
                                 onClick={() => {
-                                    // TODO: Add delete functionality
+                                    handleDeleteClick(tenant.short_name);
                                 }}
                                 // TODO: Change to use the danger button style
                                 style={{ marginTop: '20px', color: 'red', borderColor: 'red' }}
