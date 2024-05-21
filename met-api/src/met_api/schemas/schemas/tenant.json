@@ -11,8 +11,8 @@
         "name": "Government Digital Experience",
         "contact_name": "John Doe",
         "contact_email": "john.doe@gov.bc.ca",
+        "title": "Modern Engagement",
         "description": "Responsible for digital experience projects.",
-        "title": "Director",
         "logo_url": "https://example.com/logo.png",
         "logo_credit": "Logo by Example",
         "logo_description": "Official logo of the Government Digital Experience."
@@ -55,19 +55,19 @@
         "description": "Email of the primary contact.",
         "examples": ["john.doe@gov.bc.ca"]
       },
+      "title": {
+        "$id": "#/properties/title",
+        "type": "string",
+        "title": "Title",
+        "description": "Title of the tenant's website.",
+        "examples": ["Modern Engagement"]
+      },
       "description": {
         "$id": "#/properties/description",
         "type": "string",
         "title": "Description",
         "description": "A brief description of the tenant.",
         "examples": ["Responsible for digital experience projects."]
-      },
-      "title": {
-        "$id": "#/properties/title",
-        "type": "string",
-        "title": "Title",
-        "description": "Title of the primary contact.",
-        "examples": ["Director"]
       },
       "logo_url": {
         "$id": "#/properties/logo_url",

@@ -73,7 +73,7 @@ class Tenants(Resource):
             return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@cors_preflight('GET OPTIONS')
+@cors_preflight('GET PATCH DELETE OPTIONS')
 @API.route('/<tenant_id>')
 class Tenant(Resource):
     """Resource for managing a single tenant."""
@@ -81,7 +81,7 @@ class Tenant(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.optional
-    def get(tenant_id):
+    def get(tenant_id: str):
         """Fetch a tenant."""
         try:
             tenant = TenantService().get(tenant_id)
@@ -93,7 +93,7 @@ class Tenant(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def delete(tenant_id):
+    def delete(tenant_id: str):
         """Delete a tenant."""
         try:
             TenantService().delete(tenant_id)
@@ -106,14 +106,13 @@ class Tenant(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def patch(tenant_id):
+    def patch(tenant_id: str):
         """Update a tenant."""
         try:
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'tenant_update')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-
             updated_tenant = TenantService().update(tenant_id, request_json)
             return updated_tenant, HTTPStatus.OK
         except (KeyError, ValueError) as err:
