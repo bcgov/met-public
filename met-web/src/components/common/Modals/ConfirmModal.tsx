@@ -19,8 +19,8 @@ const ConfirmModal = ({
     subText,
     handleConfirm,
     handleClose,
-    confirmButtonText,
-    cancelButtonText,
+    confirmButtonText = 'Confirm',
+    cancelButtonText = 'Cancel',
 }: NotificationModalProps) => {
     const palette = colors.notification[style];
     const iconMap = {
@@ -78,10 +78,10 @@ const ConfirmModal = ({
                     >
                         <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
                             <Button variant="secondary" onClick={handleClose}>
-                                {cancelButtonText ? cancelButtonText : 'Cancel'}
+                                {cancelButtonText}
                             </Button>
                             <Button variant="primary" color={style} onClick={handleConfirm} type="submit">
-                                {confirmButtonText ? confirmButtonText : `Confirm`}
+                                {confirmButtonText}
                             </Button>
                         </Stack>
                     </Grid>
