@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Stack, useMediaQuery, Theme } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import { colors, modalStyle } from 'components/common';
 import { Button } from '../Input';
 import { Header2, BodyText } from '../Typography';

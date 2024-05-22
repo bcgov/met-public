@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from 'react';
+import React, { useEffect } from 'react';
 import { Button as MuiButton, Input, InputProps, Box } from '@mui/material';
 import { colors, globalFocusVisible } from '..';
 import { FormField, FormFieldProps } from './FormField';
@@ -43,7 +43,6 @@ export const TextInput: React.FC<TextInputProps> = ({
                 gap: '10px',
                 alignSelf: 'stretch',
                 borderRadius: '8px',
-                // outline: error ? `2px solid #B80C0D` : `1px solid ${colors.surface.gray[80]}`,
                 boxShadow: error
                     ? `0 0 0 2px ${colors.notification.error.shade} inset`
                     : `0 0 0 1px ${colors.surface.gray[80]} inset`,
@@ -55,8 +54,9 @@ export const TextInput: React.FC<TextInputProps> = ({
                     },
                 },
                 '&.Mui-focused': {
-                    boxShadow: `0 0 0 2px ${colors.surface.blue[70]}`,
+                    boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
                     '&:has(:disabled)': {
+                        // make sure disabled state doesn't override focus state
                         boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
                     },
                 },
@@ -65,9 +65,6 @@ export const TextInput: React.FC<TextInputProps> = ({
                     color: colors.type.regular.secondary,
                     userSelect: 'none',
                     cursor: 'not-allowed',
-                },
-                '&:has(:focus-visible), &:focus-visible.Mui-focused': {
-                    boxShadow: `0 0 0 4px ${colors.focus.regular.outer} inset`,
                 },
                 ...sx,
             }}

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { MetDescription, modalStyle } from 'components/common';
+import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';

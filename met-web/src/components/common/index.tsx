@@ -21,7 +21,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 import ReactPlayer from 'react-player';
-import { BorderTop } from '@mui/icons-material';
 
 export const colors = {
     type: {
