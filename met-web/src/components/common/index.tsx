@@ -21,6 +21,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 import ReactPlayer from 'react-player';
+import { BorderTop } from '@mui/icons-material';
 
 export const colors = {
     type: {
@@ -38,27 +39,30 @@ export const colors = {
         },
     },
     button: {
-        primary: {
-            enabled: '#053662',
-            hover: '#1E5189',
-            focused: '#053662',
-            pressed: '#032543',
-            disabled: '#EDEBE9',
+        default: {
+            shade: '#12508F',
+            icon: '#12508F',
+            tint: '#FFF8E8',
         },
-        secondary: {
-            enabled: '#FFFFFF',
-            hover: '#EDEBE9',
-            focused: '#FFFFFF',
-            pressed: '#E0DEDC',
-            disabled: '#EDEBE9',
-            stroke: '#201F1E',
+        success: {
+            shade: '#42814A',
+            icon: '#42814A',
+            tint: '#F6FFF8',
         },
-        tertiary: {
-            enabled: '#FFFFFF',
-            hover: '#F1F8FF',
-            focused: '#FFFFFF',
-            pressed: '#F1F8FF',
-            disabled: '#FFFFFF',
+        warning: {
+            shade: '#FCBA19',
+            icon: '#C08C07',
+            tint: '#FFECBE',
+        },
+        danger: {
+            shade: '#CE3E39',
+            icon: '#CE3E39',
+            tint: '#F4E1E2',
+        },
+        error: {
+            shade: '#CE3E39',
+            icon: '#CE3E39',
+            tint: '#F4E1E2',
         },
     },
     focus: {
@@ -110,20 +114,29 @@ export const colors = {
         white: '#FFFFFF',
     },
     notification: {
+        default: {
+            shade: '#12508F',
+            icon: '#12508F',
+            tint: '#FFF8E8',
+        },
         success: {
             shade: '#42814A',
+            icon: '#42814A',
             tint: '#F6FFF8',
         },
         warning: {
             shade: '#FCBA19',
+            icon: '#C08C07',
             tint: '#FFECBE',
         },
         danger: {
             shade: '#CE3E39',
+            icon: '#CE3E39',
             tint: '#F4E1E2',
         },
         error: {
             shade: '#CE3E39',
+            icon: '#CE3E39',
             tint: '#F4E1E2',
         },
     },
@@ -133,9 +146,10 @@ export const elevations = {
     // For use with CSS box-shadow property
     // Not complete in Figma yet
     none: '0px 0px transparent',
-    z1: '0px 2px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
-    z4: '0px 2px 3px 0px rgba(0, 0, 0, 0.10), 0px 6px 6px 0px rgba(0, 0, 0, 0.09), 0px 14px 9px 0px rgba(0, 0, 0, 0.05)',
-    z9: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
+    pressed: '0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 16px 0px rgba(0, 0, 0, 0.16) inset',
+    default:
+        '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
+    hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
 };
 
 export const globalFocusShadow = `inset 0px 0px 0px 2px ${colors.focus.regular.inner}`;
@@ -465,6 +479,9 @@ export const RepeatedGrid = ({ times = 1, children, ...rest }: RepeatedGridProps
 };
 
 export const modalStyle = {
+    borderRadius: '8px',
+    borderTop: '8px solid',
+    borderColor: colors.notification.default.shade,
     position: 'absolute',
     top: '50%',
     left: '48%',
@@ -474,8 +491,9 @@ export const modalStyle = {
     bgcolor: 'background.paper',
     boxShadow: 10,
     pt: 2,
-    px: 4,
     pb: 3,
+    pl: 3,
+    pr: 4,
     m: 1,
     overflowY: 'scroll',
     color: Palette.text.primary,

@@ -1,16 +1,17 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
+import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld, colors } from 'components/common';
 import { NotificationModalProps } from './types';
 
-const UpdateModal = ({ header, subText, handleClose }: NotificationModalProps) => {
+const UpdateModal = ({ header, style = 'default', subText, handleClose }: NotificationModalProps) => {
+    const palette = colors.button[style];
     return (
         <Grid
             container
             direction="row"
             justifyContent="flex-start"
             alignItems="space-between"
-            sx={{ ...modalStyle }}
+            sx={{ ...modalStyle, borderColor: palette.shade }}
             rowSpacing={2}
         >
             <Grid container direction="row" item xs={12}>

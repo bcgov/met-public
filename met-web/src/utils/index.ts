@@ -60,3 +60,24 @@ export const findTenantInPath = () => {
     const pathSegments = determinePathSegments();
     return pathSegments.length > 0 ? pathSegments[0].toLowerCase() : '';
 };
+
+// Convert hex color to RGB
+export const hexToRgb = (hex: string) => {
+    hex = hex.replace('#', '');
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return [r, g, b];
+};
+
+// Whether a color is dark (i.e. needs an inverted text style) or not
+export const isDarkColor = (color: string, sensitivity = 0.5) => {
+    // Ensure sensitivity is between 0 and 1
+    sensitivity = Math.max(0, Math.min(1, sensitivity));
+    // Convert the color to RGB
+    const [r, g, b] = hexToRgb(color);
+    // Calculate the perceived luminance of the color
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance < sensitivity;
+};

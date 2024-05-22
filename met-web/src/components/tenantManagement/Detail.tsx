@@ -14,6 +14,7 @@ import { Button } from 'components/common/Input/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan, faCopy } from '@fortawesome/pro-regular-svg-icons';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 
 const TenantDetail = () => {
     const [tenant, setTenant] = React.useState<Tenant | null>(null);
@@ -50,7 +51,7 @@ const TenantDetail = () => {
                     smallScreenOnly
                     crumbs={[
                         { name: 'Dashboard', link: '../home' },
-                        { name: 'Tenant Admin', link: '../tenant-admin' },
+                        { name: 'Tenant Admin', link: '../tenantadmin' },
                         { name: 'Loading...' },
                     ]}
                 />
@@ -176,22 +177,21 @@ const TenantDetail = () => {
         }
     };
 
-    const handleDeleteClick = (tenantId: string) => {
+    const handleDeleteClick = (tenant: Tenant) => {
         dispatch(
             openNotificationModal({
                 open: true,
                 data: {
-                    header: 'Delete Tenant Instance',
+                    style: 'danger',
+                    header: 'Delete Tenant Instance?',
+                    subHeader: `Are you sure you want to delete "${tenant.name}"?`,
                     subText: [
                         {
                             text: 'If you delete this tenant, all the data associated with it will be deleted. This action cannot be undone.',
                         },
-                        {
-                            text: 'Are you sure you want to delete this tenant?',
-                        },
                     ],
                     handleConfirm: () => {
-                        handleDeleteTenant(tenantId);
+                        handleDeleteTenant(tenant.short_name);
                     },
                 },
                 type: 'confirm',
@@ -205,7 +205,7 @@ const TenantDetail = () => {
                 smallScreenOnly
                 crumbs={[
                     { name: 'Dashboard', link: '../home' },
-                    { name: 'Tenant Admin', link: '../tenant-admin' },
+                    { name: 'Tenant Admin', link: '../tenantadmin' },
                     { name: tenant.name ? tenant.name : tenant.title },
                 ]}
             />
@@ -311,32 +311,36 @@ const TenantDetail = () => {
                                         height: '166px',
                                         alignSelf: 'stretch',
                                         margin: '16px 0',
-                                        backgroundImage: `url(${tenant.logo_url})`,
+                                        backgroundImage: `url(${tenant.logo_url || LandingPageBanner})`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <BodyText bold>Photo Credit</BodyText>
-                                <BodyText>{tenant.logo_credit}</BodyText>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <BodyText bold>Description</BodyText>
-                                <BodyText>{tenant.logo_description}</BodyText>
-                            </Grid>
+                            {tenant.logo_credit && (
+                                <Grid item xs={12}>
+                                    <BodyText bold>Photo Credit</BodyText>
+                                    <BodyText>{tenant.logo_credit}</BodyText>
+                                </Grid>
+                            )}
+                            {tenant.logo_description && (
+                                <Grid item xs={12}>
+                                    <BodyText bold>Description</BodyText>
+                                    <BodyText>{tenant.logo_description}</BodyText>
+                                </Grid>
+                            )}
                         </Grid>
                     </Detail>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Button
                                 variant="secondary"
+                                color="danger"
                                 icon={trashCanIcon}
                                 onClick={() => {
-                                    handleDeleteClick(tenant.short_name);
+                                    handleDeleteClick(tenant);
                                 }}
-                                // TODO: Change to use the danger button style
-                                style={{ marginTop: '20px', color: 'red', borderColor: 'red' }}
+                                sx={{ marginTop: '20px' }}
                             >
                                 Delete Tenant Instance
                             </Button>

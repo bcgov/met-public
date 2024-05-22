@@ -9,9 +9,8 @@ import { When } from 'react-if';
 export const NotificationModal = () => {
     const dispatch = useAppDispatch();
     const open = useAppSelector((state) => state.notificationModal.open);
-    const { header, subText, handleClose, handleConfirm, confirmButtonText, cancelButtonText } = useAppSelector(
-        (state) => state.notificationModal.data,
-    );
+    const { style, header, subHeader, subText, handleClose, handleConfirm, confirmButtonText, cancelButtonText } =
+        useAppSelector((state) => state.notificationModal.data);
     const type = useAppSelector((state) => state.notificationModal.type);
 
     function _handleClose() {
@@ -33,11 +32,13 @@ export const NotificationModal = () => {
         >
             <>
                 <When condition={type === 'update'}>
-                    <UpdateModal header={header} subText={subText} handleClose={_handleClose} />
+                    <UpdateModal style={style} header={header} subText={subText} handleClose={_handleClose} />
                 </When>
                 <When condition={type === 'confirm'}>
                     <ConfirmModal
+                        style={style}
                         header={header}
+                        subHeader={subHeader}
                         subText={subText}
                         handleConfirm={_handleConfirm}
                         handleClose={_handleClose}

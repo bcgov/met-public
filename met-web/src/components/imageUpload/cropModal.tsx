@@ -10,6 +10,7 @@ import getCroppedImg from './cropImage';
 import { blobToFile } from 'utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';
+import { BodyText } from 'components/common/Typography';
 
 export const CropModal = () => {
     const {
@@ -95,11 +96,11 @@ export const CropModal = () => {
                     >
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={1}>
                             <Grid item xs={12}>
-                                <MetDescription>
-                                    The image will be cropped at the correct ratio to display as a banner on MET. You
-                                    can zoom in or out and move the image around. Please note that part of the image
-                                    could be hidden depending on the display size.
-                                </MetDescription>
+                                <BodyText size="small">
+                                    The image will be cropped at the correct ratio to display as a banner in MET. You
+                                    can zoom in or out and move the image around. Please note that part of the image may
+                                    be hidden depending on the user's display size.
+                                </BodyText>
                             </Grid>
                             <Grid item xs={12} container alignContent="flex-start" justifyContent="flex-end">
                                 <Button
