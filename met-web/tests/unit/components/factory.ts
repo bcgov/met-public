@@ -22,6 +22,7 @@ const tenant: Tenant = {
     name: 'Tenant 1',
     title: 'Tenant Title',
     description: 'Tenant Description',
+    short_name: 'tenant1',
 };
 
 const survey: Survey = {
