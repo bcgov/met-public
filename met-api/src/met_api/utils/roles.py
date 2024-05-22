@@ -62,3 +62,4 @@ class Role(Enum):
     EXPORT_PROPONENT_COMMENT_SHEET = 'export_proponent_comment_sheet'
     SUPER_ADMIN = 'super_admin'
     MANAGE_METADATA = 'manage_metadata'
+    VIEW_LANGUAGES = 'view_languages'
