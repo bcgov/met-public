@@ -5,7 +5,7 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantDetail from '../../../../src/components/tenantManagement/Detail';
-import { MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
 
 const mockTenant = {
@@ -122,6 +122,6 @@ describe('Tenant Detail Page tests', () => {
         );
 
         const loadingTexts = screen.getAllByText('Loading...');
-        expect(loadingTexts.length).toBeGreaterThan(0); // Adjust based on expected occurrences
+        expect(loadingTexts.length).toBeGreaterThan(0);
     });
 });
