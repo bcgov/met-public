@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan, faCopy } from '@fortawesome/pro-regular-svg-icons';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
+import { globalFocusVisible } from 'components/common';
 
 const TenantDetail = () => {
     const [tenant, setTenant] = React.useState<Tenant | null>(null);
@@ -199,6 +200,11 @@ const TenantDetail = () => {
         );
     };
 
+    const copyEmail = () => {
+        navigator.clipboard.writeText(tenant.contact_email ?? '');
+        dispatch(openNotification({ text: 'Copied to clipboard', severity: 'info' }));
+    };
+
     return (
         <ResponsiveContainer>
             <BreadcrumbTrail
@@ -265,7 +271,25 @@ const TenantDetail = () => {
                                     <Grid item xs>
                                         <BodyText>{tenant.contact_name}</BodyText>
                                     </Grid>
-                                    <Grid item>
+                                    <Grid
+                                        item
+                                        xs="auto"
+                                        component={'a'}
+                                        tabIndex={0}
+                                        target="#"
+                                        sx={{
+                                            cursor: 'pointer',
+                                            display: { xs: 'none', sm: 'block' },
+                                            ...globalFocusVisible,
+                                        }}
+                                        onClick={copyEmail}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLAnchorElement>) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                copyEmail();
+                                            }
+                                        }}
+                                    >
                                         <BodyText>
                                             {tenant.contact_email} {faCopyIcon}
                                         </BodyText>
