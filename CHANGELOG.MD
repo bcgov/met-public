@@ -13,6 +13,10 @@
   - Reworked image upload component to match the design system
   - Added new form components that align with the design system
 
+- **Bugfix** Add try catch block around snowplow call [🎟️ DESENG-621](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-621)
+  - Added a try catch block to all snowplow calls
+
+## May 22, 2024
 - **Feature** Add languages side nav link [🎟️ DESENG-622](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-622)
 
 ## May 21, 2024
