@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
@@ -89,7 +89,7 @@ class Tenant(Resource):
             return tenant, HTTPStatus.OK
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        
+
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth

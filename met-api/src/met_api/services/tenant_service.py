@@ -11,6 +11,7 @@ from ..utils.cache import cache
 
 NOT_FOUND_MSG = 'Tenant not found.'
 
+
 class TenantService:
     """Tenant management service."""
 

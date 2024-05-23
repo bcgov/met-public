@@ -3,7 +3,6 @@
 Manages the tenants
 """
 from __future__ import annotations
-from enum import unique
 from typing import List, Optional
 from .base_model import BaseModel
 from .db import db
@@ -14,7 +13,8 @@ class Tenant(BaseModel):
 
     __tablename__ = 'tenant'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    short_name = db.Column(db.String(10), comment='A small code for the tenant ie GDX , EAO.', nullable=False, unique=True)
+    short_name = db.Column(db.String(10), nullable=False, unique=True,
+                           comment='A small code for the tenant ie GDX , EAO.')
     name = db.Column(db.String(50), comment='Full name of the ministry.ie Env Assessment Office')
     contact_name = db.Column(
         db.String(50), comment='Name of the primary contact', nullable=False, default='Default Contact Name'
