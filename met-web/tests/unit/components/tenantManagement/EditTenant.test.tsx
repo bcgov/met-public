@@ -7,7 +7,6 @@ import * as tenantService from 'services/tenantService';
 import TenantEditPage from 'components/tenantManagement/Edit';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const mockTenant = {
     id: 1,

@@ -6,7 +6,6 @@ import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantCreationPage from 'components/tenantManagement/Create';
 import { USER_ROLES } from 'services/userService/constants';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const mockTenant = {
     id: 1,
