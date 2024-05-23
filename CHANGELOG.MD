@@ -13,6 +13,10 @@
   - Reworked image upload component to match the design system
   - Added new form components that align with the design system
 
+- **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
+  - Removed verification token from the response object
+  - Updated the test to reflect the change
+
 - **Bugfix** Add try catch block around snowplow call [🎟️ DESENG-621](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-621)
   - Added a try catch block to all snowplow calls
 

@@ -140,13 +140,6 @@ def test_post_subscription_email_verification(client, jwt, session, notify_mock,
                      headers=headers, content_type=ContentType.JSON.value)
 
     assert rv.status_code == 200
-    verification_token = rv.json.get('verification_token')
-
-    rv = client.get(f'/api/email_verification/{verification_token}',
-                    headers=headers, content_type=ContentType.JSON.value)
-
-    assert rv.status_code == 200
-    assert rv.json.get('type') == EmailVerificationType.Subscribe
 
     with patch.object(EmailVerificationService, 'create', side_effect=side_effect):
         rv = client.post(f'/api/email_verification/{SubscriptionTypes.PROJECT.value}/subscribe',
