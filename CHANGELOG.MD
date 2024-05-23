@@ -1,3 +1,9 @@
+## May 23, 2024
+
+- **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
+  - Removed verfication token from the response object
+  - Updated the test to reflect the change
+
 ## May 21, 2024
 - **Task** Clean up met-cron [🎟️ DESENG-602](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-602)
 
