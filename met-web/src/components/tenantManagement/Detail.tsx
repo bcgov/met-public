@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react';
 import { Box, Grid, Skeleton } from '@mui/material';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
-import { ResponsiveContainer } from 'components/common/Layout';
-import { useParams } from 'react-router-dom';
+import { ResponsiveContainer, DetailsContainer, Detail } from 'components/common/Layout';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getTenant, deleteTenant } from 'services/tenantService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
 import { Tenant } from 'models/tenant';
-import { DetailsContainer, Detail } from 'components/common/Layout';
-import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/common/Input/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrashCan, faCopy } from '@fortawesome/pro-regular-svg-icons';

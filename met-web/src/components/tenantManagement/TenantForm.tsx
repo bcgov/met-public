@@ -26,7 +26,7 @@ export const TenantForm = ({
     cancelText?: string;
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url || '');
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url ?? '');
     const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
     const dispatch = useAppDispatch();
 
@@ -71,8 +71,8 @@ export const TenantForm = ({
                 logo_description: '',
             }),
         });
-        setSavedBannerImageFileName(initialTenant?.logo_url || '');
-        setValue('logo_url', initialTenant?.logo_url || '');
+        setSavedBannerImageFileName(initialTenant?.logo_url ?? '');
+        setValue('logo_url', initialTenant?.logo_url ?? '');
     }, [initialTenant, reset]);
 
     const handleAddHeroImage = (files: File[]) => {

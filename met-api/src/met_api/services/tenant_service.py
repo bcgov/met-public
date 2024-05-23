@@ -9,6 +9,7 @@ from met_api.services import authorization
 from met_api.utils.roles import Role
 from ..utils.cache import cache
 
+NOT_FOUND_MSG = 'Tenant not found.'
 
 class TenantService:
     """Tenant management service."""
@@ -29,7 +30,7 @@ class TenantService:
         """Get a tenant by id."""
         tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
-            raise ValueError('Tenant not found.', cls, tenant_id)
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
         return TenantSchema().dump(tenant)
 
     @classmethod
@@ -62,7 +63,7 @@ class TenantService:
         authorization.check_auth(one_of_roles=one_of_roles)
         tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
-            raise ValueError('Tenant not found.', cls, tenant_id)
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
         try:
             tenant.update(data)
         except SQLAlchemyError as e:
@@ -79,7 +80,7 @@ class TenantService:
         authorization.check_auth(one_of_roles=one_of_roles)
         tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
-            raise ValueError('Tenant not found.', cls, tenant_id)
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
         try:
             tenant.delete()
         except SQLAlchemyError as e:

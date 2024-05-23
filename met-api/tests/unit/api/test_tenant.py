@@ -50,7 +50,7 @@ def test_get_tenant(client, jwt, session):  # pylint:disable=unused-argument
 @pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
 def test_create_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
     """Assert that a tenant can be POSTed."""
-    user, claims = setup_super_admin_user_and_claims
+    _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     # remove logo_url from tenant_info
     tenant_info.pop('logo_url')
@@ -67,7 +67,7 @@ def test_create_tenant(client, jwt, session, tenant_info, setup_super_admin_user
 @pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
 def test_get_tenants(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
     """Assert that tenants can be fetched."""
-    user, claims = setup_super_admin_user_and_claims
+    _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     factory_tenant_model(tenant_info)
 
@@ -82,7 +82,7 @@ def test_get_tenants(client, jwt, session, tenant_info, setup_super_admin_user_a
 @pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
 def test_patch_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
     """Assert that a tenant can be PATCHed."""
-    user, claims = setup_super_admin_user_and_claims
+    _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     tenant = factory_tenant_model(tenant_info)
 
@@ -107,7 +107,7 @@ def test_patch_tenant(client, jwt, session, tenant_info, setup_super_admin_user_
 @pytest.mark.parametrize('tenant_info', [TestTenantInfo.tenant1])
 def test_delete_tenant(client, jwt, session, tenant_info, setup_super_admin_user_and_claims):
     """Assert that a tenant can be deleted."""
-    user, claims = setup_super_admin_user_and_claims
+    _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     tenant = factory_tenant_model(tenant_info)
 
