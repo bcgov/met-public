@@ -7,7 +7,7 @@ from met_api.models.tenant import Tenant as TenantModel
 from met_api.schemas.tenant import TenantSchema
 from met_api.services import authorization
 from met_api.services.tenant_service import TenantService
-from tests.utilities.factory_utils import factory_tenant_model
+from tests.utilities.factory_utils import factory_tenant_model, TestTenantInfo
 
 
 def test_get_tenant(session):
@@ -22,7 +22,7 @@ def test_get_tenant(session):
 def test_get_all_tenants(session):
     """Test getting all tenants."""
     tenant = factory_tenant_model()
-    tenant2 = factory_tenant_model()
+    tenant2 = factory_tenant_model({**TestTenantInfo.tenant1, 'short_name': 'GDX2'})
     result = TenantService.get_all()
     tenant_short_names = [tenant.get('short_name') for tenant in result]
     assert tenant.short_name in tenant_short_names

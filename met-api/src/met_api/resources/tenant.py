@@ -74,29 +74,29 @@ class Tenants(Resource):
 
 
 @cors_preflight('GET PATCH DELETE OPTIONS')
-@API.route('/<tenant_id>')
+@API.route('/<tenant_short_name>')
 class Tenant(Resource):
     """Resource for managing a single tenant."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.optional
-    def get(tenant_id: str):
+    def get(tenant_short_name: str):
         """Fetch a tenant."""
         try:
-            tenant = TenantService().get(tenant_id)
-
+            tenant = TenantService().get(tenant_short_name)
             return tenant, HTTPStatus.OK
+
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def delete(tenant_id: str):
+    def delete(tenant_short_name: str):
         """Delete a tenant."""
         try:
-            TenantService().delete(tenant_id)
+            TenantService().delete(tenant_short_name)
             return {'status': 'success', 'message': 'Tenant deleted successfully'}, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -106,14 +106,14 @@ class Tenant(Resource):
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @_jwt.requires_auth
-    def patch(tenant_id: str):
+    def patch(tenant_short_name: str):
         """Update a tenant."""
         try:
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'tenant_update')
             if not valid_format:
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
-            updated_tenant = TenantService().update(tenant_id, request_json)
+            updated_tenant = TenantService().update(tenant_short_name, request_json)
             return updated_tenant, HTTPStatus.OK
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

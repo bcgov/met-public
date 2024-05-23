@@ -20,6 +20,7 @@ from faker import Faker
 
 from met_api.models.tenant import Tenant as TenantModel
 from tests.utilities.factory_utils import factory_tenant_model
+from tests.utilities.factory_scenarios import TestTenantInfo
 
 fake = Faker()
 
@@ -43,7 +44,7 @@ def test_find_tenant_by_short_name(session):
 def test_find_all_tenants(session):
     """Assert that all tenants can be fetched."""
     factory_tenant_model()
-    factory_tenant_model()
+    factory_tenant_model({**TestTenantInfo.tenant1, 'short_name': 'GDX2'})
     tenants = TenantModel.find_all()
     assert len(tenants) >= 2
 

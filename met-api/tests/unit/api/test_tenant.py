@@ -95,7 +95,7 @@ def test_patch_tenant(client, jwt, session, tenant_info, setup_super_admin_user_
         'title': 'Example Title',
     }
 
-    rv = client.patch(f'/api/tenants/{tenant.id}', data=json.dumps(tenant_edits),
+    rv = client.patch(f'/api/tenants/{tenant.short_name}', data=json.dumps(tenant_edits),
                       headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
@@ -111,5 +111,5 @@ def test_delete_tenant(client, jwt, session, tenant_info, setup_super_admin_user
     headers = factory_auth_header(jwt=jwt, claims=claims)
     tenant = factory_tenant_model(tenant_info)
 
-    rv = client.delete(f'/api/tenants/{tenant.id}', headers=headers, content_type=ContentType.JSON.value)
+    rv = client.delete(f'/api/tenants/{tenant.short_name}', headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
