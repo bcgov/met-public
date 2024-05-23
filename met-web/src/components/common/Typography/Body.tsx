@@ -19,9 +19,9 @@ export const BodyText = ({
         large: '18px',
     }[size];
     const lineHeight = {
-        small: '1.375',
-        regular: '1.5',
-        large: '1.625',
+        small: '22px',
+        regular: '24px',
+        large: '24px',
     }[size];
     return (
         <Typography

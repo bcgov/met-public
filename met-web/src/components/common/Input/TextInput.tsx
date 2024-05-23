@@ -14,6 +14,7 @@ type TextInputProps = {
 } & Omit<InputProps, 'value' | 'onChange' | 'placeholder' | 'disabled'>;
 
 export const TextInput: React.FC<TextInputProps> = ({
+    id,
     value,
     onChange,
     placeholder,
@@ -42,20 +43,35 @@ export const TextInput: React.FC<TextInputProps> = ({
                 gap: '10px',
                 alignSelf: 'stretch',
                 borderRadius: '8px',
-                outline: error ? `2px solid #B80C0D` : `1px solid ${colors.surface.gray[80]}`,
+                boxShadow: error
+                    ? `0 0 0 2px ${colors.notification.error.shade} inset`
+                    : `0 0 0 1px ${colors.surface.gray[80]} inset`,
                 caretColor: colors.surface.blue[90],
                 '&:hover': {
-                    outline: `2px solid ${colors.surface.gray[90]}`,
+                    boxShadow: `0 0 0 2px ${colors.surface.gray[90]} inset`,
+                    '&:has(:disabled)': {
+                        boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+                    },
                 },
                 '&.Mui-focused': {
-                    outline: `2px solid ${colors.surface.blue[70]}`,
+                    boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
+                    '&:has(:disabled)': {
+                        // make sure disabled state doesn't override focus state
+                        boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+                    },
                 },
-                ...globalFocusVisible,
+                '&:has(:disabled)': {
+                    background: colors.surface.gray[10],
+                    color: colors.type.regular.secondary,
+                    userSelect: 'none',
+                    cursor: 'not-allowed',
+                },
                 ...sx,
             }}
             inputProps={{
                 error: error,
                 ...inputProps,
+                'aria-describedby': id,
                 sx: {
                     fontSize: '16px',
                     lineHeight: '24px',
@@ -63,12 +79,39 @@ export const TextInput: React.FC<TextInputProps> = ({
                     '&::placeholder': {
                         color: colors.type.regular.secondary,
                     },
+                    '&:disabled': {
+                        cursor: 'not-allowed',
+                    },
                     border: 'none',
                     ...inputProps?.sx,
                 },
             }}
             {...textFieldProps}
         />
+    );
+};
+
+const clearInputButton = (onClick: () => void) => {
+    return (
+        <MuiButton
+            onClick={onClick}
+            title="Clear this field"
+            sx={{
+                minWidth: 'unset',
+                minHeight: 'unset',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                background: 'none',
+                color: colors.surface.gray[70],
+                '&:hover, &:focus': {
+                    color: colors.surface.gray[90],
+                },
+                ...globalFocusVisible,
+            }}
+        >
+            <FontAwesomeIcon icon={faCircleXmark} />
+        </MuiButton>
     );
 };
 
@@ -88,49 +131,26 @@ export const TextField = ({
     optional,
     clearable,
     onChange,
+    disabled,
     ...textInputProps
 }: TextFieldProps) => {
     const [value, setValue] = React.useState(textInputProps.value || '');
+
     useEffect(() => {
         setValue(textInputProps.value || '');
     }, [textInputProps.value]);
+
     const handleSetValue = (newValue: string) => {
         onChange?.(newValue) ?? setValue(newValue);
     };
+
     const isError = !!error;
-    const endAdornment =
-        clearable && value.length > 0
-            ? {
-                  endAdornment: (
-                      <MuiButton
-                          onClick={() => {
-                              handleSetValue('');
-                          }}
-                          title="Clear this field"
-                          sx={{
-                              minWidth: 'unset',
-                              minHeight: 'unset',
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '50%',
-                              background: 'none',
-                              color: colors.surface.gray[70],
-                              '&:hover, &:focus': {
-                                  color: colors.surface.gray[90],
-                              },
-                              ...globalFocusVisible,
-                          }}
-                      >
-                          <FontAwesomeIcon icon={faCircleXmark} />
-                      </MuiButton>
-                  ),
-              }
-            : {};
     const length = value.length;
     return (
         <FormField
             className="met-input-text-field met-input-form-field"
             title={title}
+            disabled={disabled}
             instructions={instructions}
             required={required}
             optional={optional}
@@ -141,12 +161,13 @@ export const TextField = ({
                 error={isError}
                 value={value}
                 required={required}
-                {...endAdornment}
+                disabled={disabled}
+                endAdornment={clearable && value ? clearInputButton(() => handleSetValue('')) : undefined}
                 {...textInputProps}
                 inputProps={{ ...textInputProps.inputProps, maxLength: textInputProps.maxLength }}
                 onChange={handleSetValue}
             />
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '8px', pt: '0.25em' }}>
                 {textInputProps.counter && textInputProps.maxLength && (
                     <BodyText size="small" sx={{ color: colors.type.regular.secondary }}>
                         {length}/{textInputProps.maxLength}

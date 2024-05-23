@@ -9,6 +9,9 @@ import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
 import { getAllTenants } from 'services/tenantService';
+import { useAppDispatch } from 'hooks';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+
 export const TenantForm = ({
     initialTenant,
     onSubmit,
@@ -25,6 +28,7 @@ export const TenantForm = ({
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url || '');
     const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         getAllTenants().then((tenants) =>
@@ -32,7 +36,7 @@ export const TenantForm = ({
         );
     }, []);
 
-    const { handleSubmit, formState, control, reset, setValue } = useForm<Tenant>({
+    const { handleSubmit, formState, control, reset, setValue, watch } = useForm<Tenant>({
         defaultValues: {
             ...(initialTenant || {
                 name: '',
@@ -50,6 +54,8 @@ export const TenantForm = ({
         reValidateMode: 'onChange',
     });
     const { isDirty, isValid, errors } = formState;
+
+    const hasLogoUrl = watch('logo_url');
 
     useEffect(() => {
         reset({
@@ -98,9 +104,36 @@ export const TenantForm = ({
     const onFormSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
             data.logo_url = await handleUploadHeroImage();
+            if (!data.logo_url) {
+                data.logo_credit = '';
+                data.logo_description = '';
+            }
             onSubmit(data);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const handleCancelAttempt = () => {
+        if (isDirty) {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: onCancel,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        } else {
+            onCancel?.();
         }
     };
 
@@ -137,6 +170,7 @@ export const TenantForm = ({
                         render={({ field }) => (
                             <TextField
                                 {...field}
+                                autoFocus // field recieves focus when the form is rendered
                                 title="Tenant Instance Name"
                                 instructions="The name of the tenant instance"
                                 placeholder="Name"
@@ -302,6 +336,7 @@ export const TenantForm = ({
                             <TextField
                                 {...field}
                                 error={errors.logo_credit?.message}
+                                disabled={!hasLogoUrl}
                                 optional
                                 clearable
                                 counter
@@ -319,6 +354,7 @@ export const TenantForm = ({
                             <TextField
                                 {...field}
                                 error={errors.logo_description?.message}
+                                disabled={!hasLogoUrl}
                                 optional
                                 clearable
                                 counter
@@ -334,7 +370,7 @@ export const TenantForm = ({
                         {submitText}
                     </Button>
                     {onCancel && (
-                        <Button variant="secondary" onClick={onCancel}>
+                        <Button variant="secondary" onClick={handleCancelAttempt}>
                             {cancelText}
                         </Button>
                     )}

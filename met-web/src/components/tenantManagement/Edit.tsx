@@ -51,7 +51,7 @@ const TenantEditPage = () => {
         try {
             await updateTenant(data, shortName);
             dispatch(openNotification({ text: 'Tenant updated successfully!', severity: 'success' }));
-            navigate('../tenantadmin');
+            navigate(`../tenantadmin/${shortName}/detail`);
         } catch (error) {
             dispatch(openNotification({ text: 'Unknown error while saving tenant', severity: 'error' }));
             console.error(error);
@@ -59,7 +59,7 @@ const TenantEditPage = () => {
     };
 
     const onCancel = () => {
-        navigate('../tenantadmin');
+        navigate(`../tenantadmin/${shortName}/detail`);
     };
 
     return (
@@ -69,11 +69,12 @@ const TenantEditPage = () => {
                 crumbs={[
                     { name: 'Dashboard', link: '../../home' },
                     { name: 'Tenant Admin', link: '../tenantadmin' },
-                    { name: 'Create Tenant Instance' },
+                    { name: tenant.name ?? 'Tenant', link: `../tenantadmin/${tenant.short_name}/detail` },
+                    { name: 'Edit Instance' },
                 ]}
             />
 
-            <Header1>Create Tenant Instance</Header1>
+            <Header1>Edit Tenant Instance</Header1>
             <Grid container spacing={0} direction="column" mb="0.5em">
                 <Grid item xs={12}>
                     <Header2 decorated sx={{ mb: 0 }}>

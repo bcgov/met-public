@@ -6,7 +6,9 @@ export interface ModalSubtext {
 }
 
 export interface NotificationModalProps {
+    style?: 'default' | 'danger' | 'warning' | 'success';
     header: string;
+    subHeader?: string;
     subText: ModalSubtext[];
     handleConfirm?: () => void;
     handleClose?: () => void;

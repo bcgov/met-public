@@ -108,6 +108,12 @@ const TenantListingPage = () => {
                                         onClick={() => {
                                             navigate(`/tenantadmin/${tenant.short_name}/detail`);
                                         }}
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                event.preventDefault();
+                                                navigate(`/tenantadmin/${tenant.short_name}/detail`);
+                                            }
+                                        }}
                                         key={tenant.name}
                                         tabIndex={0}
                                     >
