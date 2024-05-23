@@ -4,6 +4,9 @@
   - Removed verfication token from the response object
   - Updated the test to reflect the change
 
+## May 22, 2024
+- **Feature** Add languages side nav link [🎟️ DESENG-622](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-622)
+
 ## May 21, 2024
 - **Task** Clean up met-cron [🎟️ DESENG-602](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-602)
 
