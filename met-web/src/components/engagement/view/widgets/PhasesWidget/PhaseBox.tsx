@@ -4,7 +4,8 @@ import { MetHeader4, MetIconText, MetPaper, MetSmallTextOld } from 'components/c
 import { PhaseContext } from '.';
 import { Else, If, Then, When } from 'react-if';
 import { IconBox } from './IconBox';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
 import { CURRENT_PHASE, EngagementPhases } from 'models/engagementPhases';
 
 interface PhaseBoxProps {
@@ -58,7 +59,10 @@ export const PhaseBox = ({
                                     },
                                 }}
                             >
-                                <LocationOnIcon fontSize="medium" htmlColor={CURRENT_PHASE.iconColor} />
+                                <FontAwesomeIcon
+                                    icon={faLocationDot}
+                                    style={{ fontSize: '22px', color: CURRENT_PHASE.iconColor, padding: '2px 5px' }}
+                                />
                                 <MetIconText sx={{ fontStyle: 'italic', overflow: 'visible' }}>
                                     Current Phase
                                 </MetIconText>

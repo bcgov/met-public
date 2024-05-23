@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, Snackbar, Stack } from '@mui/material';
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudCheck } from '@fortawesome/pro-regular-svg-icons/faCloudCheck';
 
 const FORMIO_MODAL_Z_INDEX = 10000;
 export const AutoSaveSnackBar = ({ open, handleClose }: { open: boolean; handleClose: () => void }) => {
@@ -22,7 +23,7 @@ export const AutoSaveSnackBar = ({ open, handleClose }: { open: boolean; handleC
                 severity={'success'}
                 sx={{ width: '100%' }}
                 onClose={handleClose}
-                icon={<PublishedWithChangesIcon />}
+                icon={<FontAwesomeIcon icon={faCloudCheck} style={{ fontSize: '20px', padding: '2px' }} />}
             >
                 <Stack direction="row" spacing={1} alignItems="center">
                     Autosaved!

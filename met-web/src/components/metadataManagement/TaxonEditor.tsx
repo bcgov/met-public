@@ -1,7 +1,11 @@
 import { Grid, Box, Paper, IconButton, Modal, Button, Typography, Chip, Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Close, UnfoldMore, UnfoldLess, AddCircle, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
+import { faChevronUp } from '@fortawesome/pro-solid-svg-icons/faChevronUp';
+import { UnfoldMore, UnfoldLess, AddCircle } from '@mui/icons-material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { reorder } from 'utils';
@@ -197,10 +201,10 @@ export const TaxonEditor = () => {
                             }}
                         >
                             <Chip
+                                icon={<FontAwesomeIcon icon={faChevronUp} />}
                                 variant="filled"
                                 color="secondary"
                                 label="Scroll for more"
-                                icon={<KeyboardArrowUp />}
                                 onClick={() => {
                                     scroll(-400);
                                 }}
@@ -273,10 +277,10 @@ export const TaxonEditor = () => {
                             }}
                         >
                             <Chip
+                                icon={<FontAwesomeIcon icon={faChevronDown} />}
                                 variant="filled"
                                 color="secondary"
                                 label="Scroll for more"
-                                icon={<KeyboardArrowDown />}
                                 onClick={() => {
                                     scroll(400);
                                 }}
@@ -313,7 +317,10 @@ export const TaxonEditor = () => {
                                             top: '0.3em',
                                         }}
                                     >
-                                        <Close />
+                                        <FontAwesomeIcon
+                                            icon={faXmark}
+                                            style={{ fontSize: '20px', paddingLeft: '10px' }}
+                                        />
                                     </IconButton>
                                     <TaxonEditForm taxon={selectedTaxon} />
                                 </Box>

@@ -10,7 +10,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { optionCardStyle } from '../constants';
 import { WidgetTabValues } from '../type';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
-import MovieIcon from '@mui/icons-material/Movie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVideoPlus } from '@fortawesome/pro-regular-svg-icons/faVideoPlus';
 
 const Title = 'Video';
 const VideoOptionCard = () => {
@@ -73,7 +74,10 @@ const VideoOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <MovieIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faVideoPlus}
+                                style={{ padding: '10px 2px 10px 10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

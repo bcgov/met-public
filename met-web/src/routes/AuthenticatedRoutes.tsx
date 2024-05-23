@@ -29,6 +29,7 @@ import TenantListingPage from 'components/tenantManagement/Listing';
 import TenantCreationPage from 'components/tenantManagement/Create';
 import TenantEditPage from 'components/tenantManagement/Edit';
 import TenantDetail from 'components/tenantManagement/Detail';
+import Language from 'components/language';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -66,6 +67,9 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.MANAGE_METADATA]} />}>
                     <Route path="/metadatamanagement" element={<MetadataManagement />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_LANGUAGES]} />}>
+                    <Route path="/languages" element={<Language />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
                     <Route path="/tenantadmin" element={<TenantListingPage />} />

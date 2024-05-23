@@ -4,11 +4,12 @@ import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
 import { MetBodyOld } from 'components/common';
 import { If, Then, Else } from 'react-if';
 import { Link, Box } from '@mui/material';
-import OpenInNew from '@mui/icons-material/OpenInNew';
-import { SvgIconProps } from '@mui/material';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/pro-regular-svg-icons/faArrowUpRightFromSquare';
 
 type DocumentTreeItemProps = TreeItemProps & {
-    labelIcon: React.ElementType<SvgIconProps>;
+    labelIcon?: IconProp;
     labelUrl?: string;
     nodeId: string;
 };
@@ -16,7 +17,7 @@ type DocumentTreeItemProps = TreeItemProps & {
 type StyledTreeItemProps = TreeItemProps & {
     bgColor?: string;
     color?: string;
-    labelIcon: React.ElementType<SvgIconProps>;
+    labelIcon?: IconProp;
     labelInfo?: string;
     labelText: string;
     innerDocument?: boolean;
@@ -53,7 +54,7 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
 }));
 
 export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProps) {
-    const { labelUrl, labelIcon: LabelIcon, labelText, innerDocument, ...other } = props;
+    const { labelUrl, labelIcon: LabelIcon, labelText, ...other } = props;
 
     return (
         <StyledTreeItemRoot
@@ -69,11 +70,9 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                 >
                     <If condition={labelUrl}>
                         <Then>
-                            <Box
-                                component={LabelIcon}
-                                color="inherit"
-                                sx={{ p: 0.3, ml: innerDocument ? 3 : 0, mr: 1 }}
-                            />
+                            {LabelIcon && (
+                                <FontAwesomeIcon icon={LabelIcon} style={{ fontSize: '20px', paddingRight: '8px' }} />
+                            )}
                             <Link
                                 sx={{
                                     alignItems: 'center',
@@ -94,11 +93,16 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                                 target="_blank"
                                 href={`${labelUrl}`}
                             >
-                                <Box component={OpenInNew} color="inherit" sx={{ p: 0.5, mr: 1 }} />
+                                <FontAwesomeIcon
+                                    icon={faArrowUpRightFromSquare}
+                                    style={{ fontSize: '14px', padding: '5px' }}
+                                />
                             </Link>
                         </Then>
                         <Else>
-                            <Box component={LabelIcon} color="inherit" sx={{ p: 0.3, mr: 1 }} />
+                            {LabelIcon && (
+                                <FontAwesomeIcon icon={LabelIcon} style={{ fontSize: '20px', paddingRight: '8px' }} />
+                            )}
                             <MetBodyOld bold>{labelText}</MetBodyOld>
                         </Else>
                     </If>

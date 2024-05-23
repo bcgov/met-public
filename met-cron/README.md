@@ -29,10 +29,6 @@ Before running the following commands run `. venv/bin/activate` to enter into th
 >
 > Runs the application unit tests<br>
 
-> `make db`
->
-> Runs the application database migrations.
-
 > `make lint`
 >
 > Lints the application code.

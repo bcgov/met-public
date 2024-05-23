@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { Contact } from 'models/contact';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import EditIcon from '@mui/icons-material/Edit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
+import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { When } from 'react-if';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 
@@ -21,7 +22,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                 <Grid item xs={1}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
-                        <DragIndicatorIcon />
+                        <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
                 <Grid item xs={3} container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
@@ -104,7 +105,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             color="inherit"
                             aria-label="edit-icon"
                         >
-                            <EditIcon />
+                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
                     <Grid item xs={6}>
@@ -114,7 +115,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             color="inherit"
                             aria-label="delete-icon"
                         >
-                            <HighlightOffIcon />
+                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
                 </Grid>

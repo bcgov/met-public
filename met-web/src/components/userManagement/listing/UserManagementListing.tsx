@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import SearchIcon from '@mui/icons-material/Search';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { USER_STATUS, User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
@@ -101,7 +102,7 @@ const UserManagementListing = () => {
                             size="small"
                         />
                         <PrimaryButtonOld onClick={handleSearchClick}>
-                            <SearchIcon />
+                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
                         </PrimaryButtonOld>
                     </Stack>
                 </Stack>

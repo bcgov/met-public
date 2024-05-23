@@ -5,12 +5,24 @@
   - Added a form for filling out tenant details
   - Added a new tenant creation page
   - Added a new tenant edit page
+
 - **Feature** Add design system components to common components
   - Added Table components, DetailsContainer, and Detail for layout
   - Reworked button components to match the design system and support new colors
   - Reworked modal components to match the design system
   - Reworked image upload component to match the design system
   - Added new form components that align with the design system
+
+- **Feature** Add languages side nav link [🎟️ DESENG-622](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-622)
+
+## May 21, 2024
+- **Task** Clean up met-cron [🎟️ DESENG-602](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-602)
+
+## May 16, 2024
+
+- **Bugfix** Replace Material Icons with Font Awesome [🎟️ DESENG-608](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-608)
+  - Replaced Material Icons with Font Awesome for all icons for which we had a mapping
+  - Noted a few icons for which we did not have a mapping and those have been added to the ticket
 
 ## May 14, 2024
 

@@ -9,7 +9,8 @@ import {
     PrimaryButtonOld,
     SecondaryButtonOld,
 } from 'components/common';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
 import { ReportSettingsContext } from './ReportSettingsContext';
 import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
@@ -95,7 +96,7 @@ const SettingsForm = () => {
                                                         disableElevation
                                                         onClick={handleCopyUrl}
                                                     >
-                                                        <ContentCopyIcon />
+                                                        <FontAwesomeIcon icon={faCopy} style={{ fontSize: '24px' }} />
                                                     </SecondaryButtonOld>
                                                 </InputAdornment>
                                             ),

@@ -1,7 +1,8 @@
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import { IProps } from './types';
-import RoofingIcon from '@mui/icons-material/Roofing';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faScrewdriverWrench } from '@fortawesome/pro-regular-svg-icons/faScrewdriverWrench';
 
 const UnderConstruction = React.memo(({ errorMessage = 'This page is under construction' }: IProps) => {
     return (
@@ -19,7 +20,10 @@ const UnderConstruction = React.memo(({ errorMessage = 'This page is under const
                 </Typography>
             </Grid>
             <Grid item xs={12} container direction="row" alignItems="center" justifyContent="center">
-                <RoofingIcon sx={{ height: '10em', width: '10em' }} />
+                <FontAwesomeIcon
+                    icon={faScrewdriverWrench}
+                    style={{ padding: '20px', height: '10em', width: '10em' }}
+                />
             </Grid>
         </Grid>
     );

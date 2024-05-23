@@ -9,7 +9,8 @@ import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { Else, If, Then } from 'react-if';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLeaf } from '@fortawesome/pro-regular-svg-icons/faLeaf';
 import { optionCardStyle } from '../constants';
 
 const Title = 'Environmental Assessment Process';
@@ -72,7 +73,10 @@ const PhasesOptionCard = () => {
                         spacing={1}
                     >
                         <Grid item>
-                            <ChatBubbleOutlineOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faLeaf}
+                                style={{ padding: '10px 2px 10px 10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

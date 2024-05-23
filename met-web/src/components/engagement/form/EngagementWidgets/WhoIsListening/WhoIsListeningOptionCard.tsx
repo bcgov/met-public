@@ -8,7 +8,8 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { useAppDispatch } from 'hooks';
 import { WidgetType } from 'models/widget';
 import { Else, If, Then } from 'react-if';
-import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserGroupSimple } from '@fortawesome/pro-regular-svg-icons/faUserGroupSimple';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { optionCardStyle } from '../constants';
 
@@ -73,7 +74,10 @@ const WhoIsListeningOptionCard = () => {
                         columnSpacing={1}
                     >
                         <Grid item>
-                            <PeopleAltOutlinedIcon color="info" sx={{ p: 0.5, fontSize: '4em' }} />
+                            <FontAwesomeIcon
+                                icon={faUserGroupSimple}
+                                style={{ padding: '10px 2px 10px 10px', fontSize: '3em', color: '#757575' }}
+                            />
                         </Grid>
                         <Grid
                             container

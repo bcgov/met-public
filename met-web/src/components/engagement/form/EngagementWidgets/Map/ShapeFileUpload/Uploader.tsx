@@ -3,8 +3,9 @@ import { Grid, Stack, Typography, IconButton } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
 import { MetWidgetPaper, WidgetButton } from 'components/common';
 import { FileUploadContext } from './FileUploadContext';
-import LinkIcon from '@mui/icons-material/Link';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
+import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 
 interface UploaderProps {
     acceptedFormat?: Accept;
@@ -38,7 +39,10 @@ const Uploader = ({ acceptedFormat = { 'application/zip': ['.zip'] } }: Uploader
                         <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
                             <Grid item xs>
                                 <Stack spacing={2} direction="row" alignItems="center">
-                                    <LinkIcon color="info" />
+                                    <FontAwesomeIcon
+                                        icon={faLinkSimple}
+                                        style={{ fontSize: '22px', color: '#757575' }}
+                                    />
                                     <Typography>{addedFileName ? addedFileName : savedFileName}</Typography>
                                 </Stack>
                             </Grid>
@@ -51,7 +55,7 @@ const Uploader = ({ acceptedFormat = { 'application/zip': ['.zip'] } }: Uploader
                                 color="inherit"
                                 aria-label="Remove Shapefile"
                             >
-                                <HighlightOffIcon />
+                                <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
                             </IconButton>
                         </Grid>
                     </MetWidgetPaper>
