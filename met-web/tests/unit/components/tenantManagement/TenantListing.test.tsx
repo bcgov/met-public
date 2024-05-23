@@ -83,7 +83,7 @@ describe('Tenant Listing Page tests', () => {
             expect(screen.getByText('Description One')).toBeVisible();
             expect(screen.getByText('Description Two')).toBeVisible();
 
-            expect(screen.getByText('Add Instance')).toBeVisible();
+            expect(screen.getByText('Add Tenant')).toBeVisible();
         });
     });
 });
