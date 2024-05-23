@@ -46,6 +46,7 @@ const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => 
                     }}
                 >
                     <img
+                        data-testid="uploaded-image"
                         src={existingImage}
                         style={{
                             objectFit: 'cover',

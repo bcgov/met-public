@@ -320,7 +320,7 @@ export const TenantForm = ({
                     <Box width="100%" mt="2em" mb="2em">
                         <ImageUpload
                             margin={4}
-                            data-testid="engagement-form/image-upload"
+                            data-testid="tenant-form/image-upload"
                             handleAddFile={handleAddHeroImage}
                             savedImageUrl={savedBannerImageFileName}
                             savedImageName={savedBannerImageFileName}
@@ -343,6 +343,9 @@ export const TenantForm = ({
                                 maxLength={60}
                                 title="Image Credit"
                                 instructions="Who should be credited for this image?"
+                                inputProps={{
+                                    'data-testid': 'tenant-form/image-credit',
+                                }}
                             />
                         )}
                     />
@@ -361,6 +364,9 @@ export const TenantForm = ({
                                 maxLength={80}
                                 title="Image Description"
                                 instructions="An accessible description of the image"
+                                inputProps={{
+                                    'data-testid': 'tenant-form/image-description',
+                                }}
                             />
                         )}
                     />

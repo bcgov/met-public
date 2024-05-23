@@ -7,6 +7,7 @@ import * as tenantService from 'services/tenantService';
 import TenantDetail from '../../../../src/components/tenantManagement/Detail';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 const mockTenant = {
     id: 1,
@@ -69,8 +70,11 @@ jest.mock('services/notificationService/notificationSlice', () => ({
     openNotification: jest.fn(),
 }));
 
+let capturedNotification: any;
 jest.mock('services/notificationModalService/notificationModalSlice', () => ({
-    openNotificationModal: jest.fn(),
+    openNotificationModal: jest.fn((notification: any) => {
+        capturedNotification = notification;
+    }),
 }));
 
 // Mocking BreadcrumbTrail component
@@ -107,6 +111,9 @@ describe('Tenant Detail Page tests', () => {
             expect(screen.getByText('contactone@example.com')).toBeVisible();
             expect(screen.getByText('Photographer One')).toBeVisible();
             expect(screen.getByText('Logo Description One')).toBeVisible();
+
+            expect(screen.getByText('Edit')).toBeVisible();
+            expect(screen.getByText('Delete Tenant Instance')).toBeVisible();
         });
     });
 
@@ -123,5 +130,26 @@ describe('Tenant Detail Page tests', () => {
 
         const loadingTexts = screen.getAllByText('Loading...');
         expect(loadingTexts.length).toBeGreaterThan(0);
+    });
+
+    test('Delete popup works as expected', async () => {
+        render(
+            <MemoryRouter initialEntries={['/tenantadmin/1/detail']}>
+                <Routes>
+                    <Route path="/tenantadmin/:tenantId/detail" element={<TenantDetail />} />
+                </Routes>
+            </MemoryRouter>,
+        );
+
+        await waitFor(() => {
+            screen.getByText('Delete Tenant Instance').click();
+        });
+        await waitFor(() => {
+            expect(openNotificationModal).toHaveBeenCalledTimes(1);
+            expect(capturedNotification.data.header).toBe('Delete Tenant Instance?');
+            capturedNotification.data.handleConfirm();
+            // Test that the deleteTenant function was called
+            expect(tenantService.deleteTenant).toHaveBeenCalledTimes(1);
+        });
     });
 });
