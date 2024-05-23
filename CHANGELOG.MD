@@ -1,7 +1,7 @@
 ## May 23, 2024
 
 - **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
-  - Removed verfication token from the response object
+  - Removed verification token from the response object
   - Updated the test to reflect the change
 
 ## May 22, 2024
