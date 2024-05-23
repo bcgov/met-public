@@ -1,4 +1,4 @@
-import { faCirclePlus } from '@fortawesome/pro-regular-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
@@ -28,7 +28,7 @@ const TenantListingPage = () => {
     const [loading, setLoading] = React.useState<boolean>(true);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const circlePlusIcon = <FontAwesomeIcon icon={faCirclePlus} />;
+    const circlePlusIcon = <FontAwesomeIcon icon={faPlus} />;
     useEffect(() => {
         const fetchTenants = () => {
             getAllTenants()
@@ -64,7 +64,7 @@ const TenantListingPage = () => {
                             navigate('./create');
                         }}
                     >
-                        Add Instance
+                        Add Tenant
                     </Button>
                 </Grid>
             </Grid>

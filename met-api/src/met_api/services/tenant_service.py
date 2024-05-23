@@ -36,7 +36,7 @@ class TenantService:
     @classmethod
     def get_all(cls):
         """Get all tenants."""
-        tenants = TenantModel.query.order_by(TenantModel.created_date.asc()).all()
+        tenants = TenantModel.query.order_by(TenantModel.name.asc()).all()
         return TenantSchema().dump(tenants, many=True)
 
     @classmethod
