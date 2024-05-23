@@ -59,7 +59,7 @@ export const EngagementView = () => {
             try {
                 window.snowplow('trackPageView', 'Verify Email Modal');
             } catch (error) {
-                console.log(error);
+                console.log('Verify email modal snowplow error:', error);
             }
             return;
         }

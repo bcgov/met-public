@@ -7,7 +7,7 @@ const PageViewTracker = () => {
         try {
             window.snowplow('trackPageView');
         } catch (error) {
-            console.log(error);
+            console.log('Track page view snowplow error:', error);
         }
     }, [location]);
 

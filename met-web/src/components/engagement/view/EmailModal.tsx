@@ -54,7 +54,7 @@ const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
                     data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
                 });
             } catch (error) {
-                console.log(error);
+                console.log('Email verification snowplow error:', error);
             }
             dispatch(
                 openNotification({

@@ -47,7 +47,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
                 });
             } catch (error) {
-                console.log(error);
+                console.log('Create subscription snowplow error:', error);
             }
             setOpen(false);
             dispatch(

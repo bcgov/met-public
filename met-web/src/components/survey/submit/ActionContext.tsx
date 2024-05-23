@@ -180,7 +180,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement_id },
                 });
             } catch (error) {
-                console.log(error);
+                console.log('Survey submit notification snowplow error:', error);
             }
             dispatch(
                 openNotification({
