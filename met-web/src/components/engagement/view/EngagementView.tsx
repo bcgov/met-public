@@ -56,7 +56,11 @@ export const EngagementView = () => {
         if (!isPreview) {
             setDefaultPanel('email');
             setEmailModalOpen(true);
-            window.snowplow('trackPageView', 'Verify Email Modal');
+            try {
+                window.snowplow('trackPageView', 'Verify Email Modal');
+            } catch (error) {
+                console.log(error);
+            }
             return;
         }
 

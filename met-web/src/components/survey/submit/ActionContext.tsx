@@ -174,10 +174,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 verification_token: token ? token : '',
             });
 
-            window.snowplow('trackSelfDescribingEvent', {
-                schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
-                data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement_id },
-            });
+            try {
+                window.snowplow('trackSelfDescribingEvent', {
+                    schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
+                    data: { survey_id: savedSurvey.id, engagement_id: savedSurvey.engagement_id },
+                });
+            } catch (error) {
+                console.log(error);
+            }
             dispatch(
                 openNotification({
                     severity: 'success',
