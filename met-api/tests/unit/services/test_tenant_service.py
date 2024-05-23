@@ -1,13 +1,14 @@
 """Unit tests for the tenant service."""
-import pytest
 from unittest.mock import patch
+
+import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.schemas.tenant import TenantSchema
 from met_api.services import authorization
 from met_api.services.tenant_service import TenantService
-from tests.utilities.factory_utils import factory_tenant_model, TestTenantInfo
+from tests.utilities.factory_utils import TestTenantInfo, factory_tenant_model
 
 
 def test_get_tenant(session):
