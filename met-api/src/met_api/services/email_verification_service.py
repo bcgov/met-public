@@ -62,12 +62,13 @@ class EmailVerificationService:
 
         email_verification['created_by'] = email_verification.get(
             'participant_id')
-        email_verification['verification_token'] = uuid.uuid4()
-        EmailVerification.create(email_verification, session)
+        verification_token = uuid.uuid4()
+        EmailVerification.create({**email_verification, 'verification_token': verification_token}, session)
 
         # TODO: remove this once email logic is brought over from submission service to here
         if email_verification.get('type', None) != EmailVerificationType.RejectedComment:
-            cls._send_verification_email(email_verification, subscription_type)
+            cls._send_verification_email(
+                {**email_verification, 'verification_token': verification_token}, subscription_type)
 
         return email_verification
 
