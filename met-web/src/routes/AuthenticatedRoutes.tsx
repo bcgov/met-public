@@ -26,6 +26,7 @@ import ScrollToTop from 'components/scrollToTop';
 import ReportSettings from 'components/survey/report';
 import FormioListener from 'components/FormioListener';
 import TenantListing from 'components/tenantManagement/Listing';
+import Language from 'components/language';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -63,6 +64,9 @@ const AuthenticatedRoutes = () => {
                 <Route path="/:slug/comments/:dashboardType" element={<EngagementComments />} />
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.MANAGE_METADATA]} />}>
                     <Route path="/metadatamanagement" element={<MetadataManagement />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_LANGUAGES]} />}>
+                    <Route path="/languages" element={<Language />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
                     <Route path="/tenantadmin" element={<TenantListing />} />

@@ -27,7 +27,6 @@ export const USER_ROLES = {
     EDIT_CLOSED_ENGAGEMENT: 'edit_closed_engagement',
     VIEW_ASSIGNED_ENGAGEMENTS: 'view_assigned_engagements',
     VIEW_APPROVED_COMMENTS: 'view_approved_comments',
-    APP_ADMIN: 'app-admin',
     VIEW_SURVEYS: 'view_surveys',
     VIEW_FEEDBACKS: 'view_feedbacks',
     SHOW_ALL_COMMENT_STATUS: 'show_all_comment_status',
@@ -39,6 +38,7 @@ export const USER_ROLES = {
     EXPORT_INTERNAL_COMMENT_SHEET: 'export_internal_comment_sheet',
     EXPORT_PROPONENT_COMMENT_SHEET: 'export_proponent_comment_sheet',
     MANAGE_METADATA: 'manage_metadata',
+    VIEW_LANGUAGES: 'view_languages',
 };
 
 export type UserStatusName = 'ACTIVE' | 'INACTIVE';

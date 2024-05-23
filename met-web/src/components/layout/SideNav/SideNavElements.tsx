@@ -46,6 +46,13 @@ export const Routes: Route[] = [
         allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
     },
     {
+        name: 'Languages',
+        path: '/languages',
+        base: 'languages',
+        authenticated: true,
+        allowedRoles: [USER_ROLES.VIEW_LANGUAGES],
+    },
+    {
         name: 'Tenant Admin',
         path: '/tenantadmin',
         base: 'tenantadmin',
