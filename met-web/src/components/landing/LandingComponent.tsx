@@ -5,12 +5,9 @@ import { MetHeader1Old, MetParagraphOld } from 'components/common';
 import TileBlock from './TileBlock';
 import { Container } from '@mui/system';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
-import { useAppTranslation } from 'hooks';
 import FilterBlock from './FilterBlock';
 import FilterDrawer from './FilterDrawer';
 const LandingComponent = () => {
-    const { t: translate } = useAppTranslation();
-
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
             <FilterDrawer />
@@ -47,10 +44,12 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1Old>{translate('landing.banner.header')}</MetHeader1Old>
+                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                                <MetHeader1Old>Government Digital Experience Division</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraphOld>{translate('landing.banner.description')}</MetParagraphOld>
+                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                                <MetParagraphOld>Description about the office and public engagement.</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

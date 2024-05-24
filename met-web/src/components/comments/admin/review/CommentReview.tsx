@@ -205,7 +205,8 @@ const CommentReview = () => {
     };
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
-    const threatEmailContact = translate('comment.admin.review.threatContactEmail');
+    // TODO: LANG-BACKEND - Change the value to show tenant specific
+    const threatEmailContact = 'email@gov.bc.ca';
     return (
         <MetPageGridContainer>
             <EmailPreviewModal
@@ -407,8 +408,10 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetSmallTextOld bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
-                                        {translate('comment.admin.review.threatTextOne')}{' '}
-                                        {translate('comment.admin.review.threatContact')}{' '}
+                                        {translate('comment.admin.review.threatTextOne')}
+                                        {/* TODO: LANG-BACKEND - Change the value to show tenant specific //
+                                        comment.admin.review.threatContact */}
+                                        {'FirstName LastName'}
                                         {translate('comment.admin.review.threatTextTwo')}{' '}
                                         <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
                                     </MetSmallTextOld>

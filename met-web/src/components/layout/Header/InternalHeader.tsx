@@ -25,7 +25,8 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
 
-    const logoUrl = translate('common.logoUrl');
+    // TODO: LANG-BACKEND - Change the value to show tenant specific
+    const logoUrl = '';
     return (
         <>
             <AppBar
@@ -101,7 +102,8 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {translate('header.title')}
+                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                            {'Modern Engagement'}
                         </HeaderTitleOld>
                     ) : (
                         <HeaderTitleOld
@@ -110,7 +112,8 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {translate('header.smallTitle')}
+                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                            {'MET'}
                         </HeaderTitleOld>
                     )}
                     <Button
