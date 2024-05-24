@@ -1,0 +1,202 @@
+import React, { ReactNode } from 'react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import * as reactRedux from 'react-redux';
+import * as reactRouter from 'react-router';
+import * as tenantService from 'services/tenantService';
+import TenantEditPage from 'components/tenantManagement/Edit';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { USER_ROLES } from 'services/userService/constants';
+
+const mockTenant = {
+    id: 1,
+    name: 'Tenant One',
+    title: 'Title One',
+    description: 'Description One',
+    contact_name: 'Contact One',
+    short_name: 'tenantone',
+    contact_email: 'contactone@example.com',
+    logo_url: 'https://example.com/logo.png',
+    logo_credit: 'Photographer One',
+    logo_description: 'Logo Description One',
+};
+
+jest.mock('axios');
+
+jest.mock('@mui/material', () => ({
+    ...jest.requireActual('@mui/material'),
+    Box: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    Grid: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    Skeleton: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+}));
+
+jest.mock('components/common/Typography/', () => ({
+    Header1: ({ children }: { children: ReactNode }) => <h1>{children}</h1>,
+    Header2: ({ children }: { children: ReactNode }) => <h2>{children}</h2>,
+    BodyText: ({ children }: { children: ReactNode }) => <p>{children}</p>,
+}));
+
+jest.mock('components/common/Layout', () => ({
+    ResponsiveContainer: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    DetailsContainer: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    Detail: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+}));
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(() => {
+        return {
+            roles: [USER_ROLES.SUPER_ADMIN],
+        };
+    }),
+    useDispatch: jest.fn(),
+}));
+
+const navigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useParams: jest.fn(() => {
+        return { tenantShortName: mockTenant.short_name };
+    }),
+    useNavigate: jest.fn(() => navigate),
+}));
+
+jest.mock('services/tenantService', () => ({
+    getTenant: jest.fn(),
+    getAllTenants: jest.fn(),
+    updateTenant: jest.fn(),
+}));
+
+jest.mock('services/notificationService/notificationSlice', () => ({
+    openNotification: jest.fn(),
+}));
+
+jest.mock('services/notificationModalService/notificationModalSlice', () => ({
+    openNotificationModal: jest.fn(),
+}));
+
+// Mocking BreadcrumbTrail component
+jest.mock('components/common/Navigation/Breadcrumb', () => ({
+    BreadcrumbTrail: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+}));
+
+describe('Tenant Detail Page tests', () => {
+    const dispatch = jest.fn();
+
+    const editField = (placeholder: string, value: string) => {
+        const field = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
+        field.focus();
+        field.setSelectionRange(0, field.value.length);
+        fireEvent.change(field, { target: { value } });
+        fireEvent.blur(field); // Trigger validation
+    };
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
+        jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
+        jest.spyOn(tenantService, 'getAllTenants').mockResolvedValue([mockTenant]);
+        jest.spyOn(tenantService, 'getTenant').mockResolvedValue(mockTenant);
+        render(
+            <MemoryRouter initialEntries={['/tenantadmin/tenantone/edit']}>
+                <Routes>
+                    <Route path="/tenantadmin/:tenantShortName/edit" element={<TenantEditPage />} />
+                </Routes>
+            </MemoryRouter>,
+        );
+    });
+
+    test('Loader is displayed while fetching tenant data', async () => {
+        // Ensure the fetch does not resolve (force the loader to display)
+        jest.spyOn(tenantService, 'getTenant').mockReturnValue(new Promise(() => {}));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('loader')).toBeVisible();
+            expect(tenantService.getTenant).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    test('Tenant edit page is rendered', async () => {
+        await waitFor(() => {
+            expect(screen.getByText('Edit Tenant Instance')).toBeVisible();
+            expect(screen.getByText('Tenant Details')).toBeVisible();
+            expect(screen.getByText('* Required fields')).toBeVisible();
+        });
+
+        // The data should already be fetched if the header is displayed
+        expect(tenantService.getTenant).toHaveBeenCalledTimes(1);
+
+        // Check that the form is populated with the correct data
+        await waitFor(() => {
+            const fields = screen.getAllByRole('textbox');
+            expect(fields).toHaveLength(8);
+            expect(screen.getByPlaceholderText('Name')).toContainValue('Tenant One');
+            expect(screen.getByPlaceholderText('Full Name')).toContainValue('Contact One');
+            expect(screen.getByPlaceholderText('Email')).toContainValue('contactone@example.com');
+            expect(screen.getByPlaceholderText('shortname')).toContainValue('tenantone');
+            expect(screen.getByPlaceholderText('Title')).toContainValue('Title One');
+            expect(screen.getByPlaceholderText('Description')).toContainValue('Description One');
+            expect(screen.getByTestId('uploaded-image')).toHaveAttribute('src', 'https://example.com/logo.png');
+            expect(screen.getByTestId('tenant-form/image-credit')).toContainValue('Photographer One');
+            expect(screen.getByTestId('tenant-form/image-description')).toContainValue('Logo Description One');
+        });
+
+        // Check that the buttons are visible
+        expect(screen.getByText('Update')).toBeVisible();
+        expect(screen.getByText('Update')).toBeDisabled(); // Button should be disabled until form is edited
+        expect(screen.getByText('Cancel')).toBeVisible();
+    });
+
+    test('Button is enabled after form is edited', async () => {
+        await waitFor(() => {
+            editField('Name', 'New Name');
+            expect(screen.getByText('Update')).not.toBeDisabled();
+        });
+    });
+
+    test('Email throws error if invalid', async () => {
+        await waitFor(() => {
+            editField('Email', 'invalid-email');
+            expect(screen.getByText("That doesn't look like a valid email...")).toBeVisible();
+            expect(screen.getByText('Update')).toBeDisabled();
+        });
+    });
+
+    test('Short name throws error if invalid', async () => {
+        await waitFor(() => {
+            editField('shortname', 'invalid shortname');
+            expect(screen.getByText('Your input contains invalid symbols')).toBeVisible();
+            expect(screen.getByText('Update')).toBeDisabled();
+        });
+    });
+
+    test('Character limit is enforced on fields', async () => {
+        await waitFor(() => {
+            editField('Title', 'a'.repeat(256));
+            expect(screen.getByText('This input is too long!')).toBeVisible();
+            expect(screen.getByText('Update')).toBeDisabled();
+        });
+    });
+
+    test('Cancel button navigates back to tenant details page', async () => {
+        await waitFor(() => {
+            fireEvent.click(screen.getByText('Cancel'));
+            expect(navigate).toHaveBeenCalledTimes(1);
+            expect(navigate).toHaveBeenCalledWith(`../tenantadmin/${mockTenant.short_name}/detail`);
+        });
+    });
+
+    test('Update button calls updateTenant action', async () => {
+        await waitFor(() => {
+            editField('Name', 'New Name');
+            fireEvent.click(screen.getByText('Update'));
+            expect(tenantService.updateTenant).toHaveBeenCalledTimes(1);
+            const updatedTenant = {
+                ...mockTenant,
+                name: 'New Name',
+            };
+            expect(tenantService.updateTenant).toHaveBeenCalledWith(updatedTenant, mockTenant.short_name);
+        });
+    });
+});

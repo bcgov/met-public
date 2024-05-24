@@ -1,12 +1,16 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Container, Grid, Paper } from '@mui/material';
-import { MetDescription, modalStyle, PrimaryButtonOld } from 'components/common';
+import { modalStyle } from 'components/common';
+import { Button } from 'components/common/Input';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
 import { Box } from '@mui/system';
 import getCroppedImg from './cropImage';
 import { blobToFile } from 'utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/pro-regular-svg-icons';
+import { BodyText } from 'components/common/Typography';
 
 export const CropModal = () => {
     const {
@@ -90,22 +94,26 @@ export const CropModal = () => {
                             marginTop: '30em',
                         }}
                     >
-                        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+                        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={1}>
                             <Grid item xs={12}>
-                                <MetDescription>
-                                    The image will be cropped at the correct ratio to display as a banner on MET. You
-                                    can zoom in or out and move the image around. Please note that part of the image
-                                    could be hidden depending on the display size.
-                                </MetDescription>
+                                <BodyText size="small">
+                                    The image will be cropped at the correct ratio to display as a banner in MET. You
+                                    can zoom in or out and move the image around. Please note that part of the image may
+                                    be hidden depending on the user's display size.
+                                </BodyText>
                             </Grid>
-                            <Grid item xs={12} container justifyContent="flex-end">
-                                <PrimaryButtonOld
+                            <Grid item xs={12} container alignContent="flex-start" justifyContent="flex-end">
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    sx={{ mb: 0 }}
                                     onClick={() => {
                                         handleCropDone(croppedArea);
                                     }}
                                 >
-                                    Save
-                                </PrimaryButtonOld>
+                                    <FontAwesomeIcon icon={faCheck} style={{ marginRight: '8px' }} />
+                                    Done
+                                </Button>
                             </Grid>
                         </Grid>
                     </Container>

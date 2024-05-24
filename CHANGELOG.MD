@@ -1,5 +1,18 @@
 ## May 23, 2024
 
+- **Feature** Finish tenant management UX [🎟️ DESENG-605](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-605), [🎟️ DESENG-606](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-606)
+  - Added a new tenant detail page
+  - Added a form for filling out tenant details
+  - Added a new tenant creation page
+  - Added a new tenant edit page
+
+- **Feature** Add design system components to common components
+  - Added Table components, DetailsContainer, and Detail for layout
+  - Reworked button components to match the design system and support new colors
+  - Reworked modal components to match the design system
+  - Reworked image upload component to match the design system
+  - Added new form components that align with the design system
+
 - **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
   - Removed verification token from the response object
   - Updated the test to reflect the change
@@ -29,13 +42,14 @@
 ## May 13, 2024
 
 - **Bugfix** Date shown on rejection email preview is incorrect [🎟️ DESENG-597](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-597)
+
   - Fixed the date formatting issue and using the end_date in the email preview
   - Updated unit tests
 
 - **Feature** Create role for metadata management [🎟️ DESENG-603](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-603)
-- Implemented a new role named "manage_metadata" within the Admin group to restrci access for metadata management
-- Updated the frontend to restrict access to the "metadata management" link in the menu for users without the newly added role
-- Backend changes to incorporate the new role for access control purposes, ensuring only authorized users can perform metadata management actions
+  - Implemented a new role named "manage_metadata" within the Admin group to restrci access for metadata management
+  - Updated the frontend to restrict access to the "metadata management" link in the menu for users without the newly added role
+  - Backend changes to incorporate the new role for access control purposes, ensuring only authorized users can perform metadata management actions
 
 ## May 10, 2024
 

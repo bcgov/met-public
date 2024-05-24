@@ -19,3 +19,29 @@ export const getAllTenants = async (): Promise<Tenant[]> => {
     }
     return Promise.reject(Error('Failed to fetch tenants'));
 };
+
+export const createTenant = async (tenant: Tenant): Promise<Tenant> => {
+    const response = await http.PostRequest<Tenant>(Endpoints.Tenants.CREATE, tenant);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to create tenant'));
+};
+
+export const updateTenant = async (tenant: Tenant, shortName: string): Promise<Tenant> => {
+    const url = replaceUrl(Endpoints.Tenants.UPDATE, 'tenant_id', shortName);
+    const response = await http.PatchRequest<Tenant>(url, tenant);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to update tenant'));
+};
+
+export const deleteTenant = async (shortName: string): Promise<Tenant> => {
+    const url = replaceUrl(Endpoints.Tenants.UPDATE, 'tenant_id', shortName);
+    const response = await http.DeleteRequest<Tenant>(url);
+    if (response.data) {
+        return response.data;
+    }
+    return Promise.reject(Error('Failed to delete tenant'));
+};

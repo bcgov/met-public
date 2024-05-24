@@ -161,11 +161,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
 
         if (Object.keys(formErrors).length) {
             dispatch(
-                // openNotification({ text: 'Please correct the highlighted errors before saving.', severity: 'error' }),
-                openNotification({
-                    severity: 'info',
-                    text: 'This state is never used and I had to make a custom function to open it',
-                }),
+                openNotification({ text: 'Please correct the highlighted errors before saving.', severity: 'error' }),
             );
             return false;
         }

@@ -15,10 +15,15 @@
 
 from http import HTTPStatus
 
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
+from marshmallow import ValidationError
 
 from met_api.auth import auth
+from met_api.auth import jwt as _jwt
+from met_api.schemas import utils as schema_utils
+from met_api.schemas.tenant import TenantSchema
 from met_api.services.tenant_service import TenantService
 from met_api.utils.roles import Role
 from met_api.utils.tenant_validator import require_role
@@ -47,20 +52,70 @@ class Tenants(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def post():
+        """Create a new tenant."""
+        try:
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'tenant')
+            if not valid_format:
+                print(errors)
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
-@cors_preflight('GET OPTIONS')
-@API.route('/<tenant_id>')
+            tenant = TenantSchema().load(request_json)
+            created_tenant = TenantService().create(tenant)
+            return created_tenant, HTTPStatus.CREATED
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET PATCH DELETE OPTIONS')
+@API.route('/<tenant_short_name>')
 class Tenant(Resource):
     """Resource for managing a single tenant."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @auth.optional
-    def get(tenant_id):
+    def get(tenant_short_name: str):
         """Fetch a tenant."""
         try:
-            tenant = TenantService().get(tenant_id)
-
+            tenant = TenantService().get(tenant_short_name)
             return tenant, HTTPStatus.OK
+
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def delete(tenant_short_name: str):
+        """Delete a tenant."""
+        try:
+            TenantService().delete(tenant_short_name)
+            return {'status': 'success', 'message': 'Tenant deleted successfully'}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @_jwt.requires_auth
+    def patch(tenant_short_name: str):
+        """Update a tenant."""
+        try:
+            request_json = request.get_json()
+            valid_format, errors = schema_utils.validate(request_json, 'tenant_update')
+            if not valid_format:
+                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+            updated_tenant = TenantService().update(tenant_short_name, request_json)
+            return updated_tenant, HTTPStatus.OK
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValidationError as err:
+            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR

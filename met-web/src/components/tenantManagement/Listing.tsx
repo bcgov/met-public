@@ -1,4 +1,4 @@
-import { faCirclePlus } from '@fortawesome/pro-regular-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
@@ -21,12 +21,14 @@ import { Else, If, Then } from 'react-if';
 import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { useNavigate } from 'react-router-dom';
 
-const TenantListing = () => {
+const TenantListingPage = () => {
     const [tenants, setTenants] = React.useState<Tenant[]>([]);
     const [loading, setLoading] = React.useState<boolean>(true);
     const dispatch = useAppDispatch();
-    const circlePlusIcon = <FontAwesomeIcon icon={faCirclePlus} />;
+    const navigate = useNavigate();
+    const circlePlusIcon = <FontAwesomeIcon icon={faPlus} />;
     useEffect(() => {
         const fetchTenants = () => {
             getAllTenants()
@@ -55,9 +57,14 @@ const TenantListing = () => {
                     <Header2 decorated>Tenant Instances {!loading && `(${tenants.length})`}</Header2>
                 </Grid>
                 <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
-                    {/* TODO: redirect to "Create Tenant Instance" page */}
-                    <Button disabled variant="primary" icon={circlePlusIcon}>
-                        Add Instance
+                    <Button
+                        variant="primary"
+                        icon={circlePlusIcon}
+                        onClick={() => {
+                            navigate('./create');
+                        }}
+                    >
+                        Add Tenant
                     </Button>
                 </Grid>
             </Grid>
@@ -99,7 +106,13 @@ const TenantListing = () => {
                                 {tenants.map((tenant) => (
                                     <TableRow
                                         onClick={() => {
-                                            return;
+                                            navigate(`/tenantadmin/${tenant.short_name}/detail`);
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                event.preventDefault();
+                                                navigate(`/tenantadmin/${tenant.short_name}/detail`);
+                                            }
                                         }}
                                         key={tenant.name}
                                         tabIndex={0}
@@ -108,11 +121,10 @@ const TenantListing = () => {
                                             <BodyText bold style={{ marginBottom: '8px' }}>
                                                 {tenant.name}
                                             </BodyText>
-                                            {/* TODO: Replace when primary contact info is added to tenants */}
-                                            <BodyText small>&lt;Primary Contact&gt;</BodyText>
+                                            <BodyText size="small">{tenant.contact_name}</BodyText>
                                         </TableCell>
                                         <TableCell>
-                                            <BodyText small>{tenant.description}</BodyText>
+                                            <BodyText size="small">{tenant.description}</BodyText>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -125,4 +137,4 @@ const TenantListing = () => {
     );
 };
 
-export default TenantListing;
+export default TenantListingPage;

@@ -1,0 +1,94 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/tenant_update",
+    "type": "object",
+    "title": "Tenant Schema",
+    "description": "The schema for a tenant update.",
+    "default": {},
+    "examples": [
+      {
+        "short_name": "GDX",
+        "name": "Government Digital Experience",
+        "contact_name": "John Doe",
+        "contact_email": "john.doe@gov.bc.ca",
+        "title": "Modern Engagement",
+        "description": "Responsible for digital experience projects.",
+        "logo_url": "https://example.com/logo.png",
+        "logo_credit": "Logo by Example",
+        "logo_description": "Official logo of the Government Digital Experience."
+      }
+    ],
+    "properties": {
+      "id": {
+        "$id": "#/properties/id",
+        "type": "integer",
+        "title": "Tenant ID",
+        "description": "The unique identifier for the tenant.",
+        "examples": [1]
+      },
+      "short_name": {
+        "$id": "#/properties/short_name",
+        "type": "string",
+        "title": "Short Name",
+        "description": "A small code for the tenant, e.g., GDX, EAO.",
+        "examples": ["GDX"]
+      },
+      "name": {
+        "$id": "#/properties/name",
+        "type": "string",
+        "title": "Full Name",
+        "description": "Full name of the tenant or ministry, e.g., Government Digital Experience.",
+        "examples": ["Government Digital Experience"]
+      },
+      "contact_name": {
+        "$id": "#/properties/contact_name",
+        "type": "string",
+        "title": "Contact Name",
+        "description": "Name of the primary contact.",
+        "examples": ["John Doe"]
+      },
+      "contact_email": {
+        "$id": "#/properties/contact_email",
+        "type": "string",
+        "title": "Contact Email",
+        "description": "Email of the primary contact.",
+        "examples": ["john.doe@gov.bc.ca"]
+      },
+      "title": {
+        "$id": "#/properties/title",
+        "type": "string",
+        "title": "Title",
+        "description": "Title of the tenant's website.",
+        "examples": ["Modern Engagement"]
+      },
+      "description": {
+        "$id": "#/properties/description",
+        "type": "string",
+        "title": "Description",
+        "description": "A brief description of the tenant.",
+        "examples": ["Responsible for digital experience projects."]
+      },
+      "logo_url": {
+        "$id": "#/properties/logo_url",
+        "type": "string",
+        "title": "Logo URL",
+        "description": "URL to the tenant's logo.",
+        "examples": ["https://example.com/logo.png"]
+      },
+      "logo_credit": {
+        "$id": "#/properties/logo_credit",
+        "type": "string",
+        "title": "Logo Credit",
+        "description": "Credit for the logo image.",
+        "examples": ["Logo by Example"]
+      },
+      "logo_description": {
+        "$id": "#/properties/logo_description",
+        "type": "string",
+        "title": "Logo Description",
+        "description": "Description of the logo image.",
+        "examples": ["Official logo of the Government Digital Experience."]
+      }
+    }
+  }
+  

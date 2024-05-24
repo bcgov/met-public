@@ -25,7 +25,10 @@ import UserProfile from 'components/userManagement/userDetails';
 import ScrollToTop from 'components/scrollToTop';
 import ReportSettings from 'components/survey/report';
 import FormioListener from 'components/FormioListener';
-import TenantListing from 'components/tenantManagement/Listing';
+import TenantListingPage from 'components/tenantManagement/Listing';
+import TenantCreationPage from 'components/tenantManagement/Create';
+import TenantEditPage from 'components/tenantManagement/Edit';
+import TenantDetail from 'components/tenantManagement/Detail';
 import Language from 'components/language';
 
 const AuthenticatedRoutes = () => {
@@ -69,7 +72,16 @@ const AuthenticatedRoutes = () => {
                     <Route path="/languages" element={<Language />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
-                    <Route path="/tenantadmin" element={<TenantListing />} />
+                    <Route path="/tenantadmin" element={<TenantListingPage />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
+                    <Route path="/tenantadmin/create" element={<TenantCreationPage />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
+                    <Route path="/tenantadmin/:tenantId/detail" element={<TenantDetail />} />
+                </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.SUPER_ADMIN]} />}>
+                    <Route path="/tenantadmin/:tenantShortName/edit" element={<TenantEditPage />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_FEEDBACKS]} />}>
                     <Route path="/feedback" element={<FeedbackListing />} />

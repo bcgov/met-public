@@ -3,6 +3,11 @@ import { CropModal } from './cropModal';
 import { ImageUploadContextProvider } from './imageUploadContext';
 import Uploader from './Uploader';
 import { Accept } from 'react-dropzone';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudUpload } from '@fortawesome/pro-regular-svg-icons';
+import { colors } from 'components/common';
+import { BodyText } from 'components/common/Typography';
+import { Button } from 'components/common/Input';
 
 interface UploaderProps {
     margin?: number;
@@ -19,7 +24,7 @@ export const ImageUpload = ({
     handleAddFile,
     savedImageUrl = '',
     savedImageName = '',
-    helpText = 'Drag and drop an image here, or click to select an image from your device. Formats accepted are: jpg, png, webp.',
+    helpText = 'Drag and drop your image here.',
     height = '10em',
     cropAspectRatio = 1,
     accept = {
@@ -35,7 +40,18 @@ export const ImageUpload = ({
             savedImageName={savedImageName}
             cropAspectRatio={cropAspectRatio}
         >
-            <Uploader margin={margin} helpText={helpText} height={height} accept={accept} />
+            <Uploader height={height} accept={accept}>
+                <FontAwesomeIcon icon={faCloudUpload} size="2x" color={colors.surface.blue[90]} />
+                <BodyText bold size="small" sx={{ color: colors.surface.blue[90] }}>
+                    {helpText}
+                </BodyText>
+                <BodyText size="small" sx={{ color: colors.surface.gray[80] }}>
+                    Supported formats: JPG, PNG, WEBP
+                </BodyText>
+                <Button variant="secondary" size="small" sx={{ mt: '1.5em' }}>
+                    Select File
+                </Button>
+            </Uploader>
             <CropModal />
         </ImageUploadContextProvider>
     );

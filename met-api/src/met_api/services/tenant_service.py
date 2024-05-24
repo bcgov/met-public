@@ -5,7 +5,11 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from met_api.models.tenant import Tenant as TenantModel
 from met_api.schemas.tenant import TenantSchema
+from met_api.services import authorization
+from met_api.utils.roles import Role
 from ..utils.cache import cache
+
+NOT_FOUND_MSG = 'Tenant not found.'
 
 
 class TenantService:
@@ -27,10 +31,60 @@ class TenantService:
         """Get a tenant by id."""
         tenant = TenantModel.find_by_short_name(tenant_id)
         if not tenant:
-            raise ValueError('Tenant not found.', cls, tenant_id)
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
         return TenantSchema().dump(tenant)
 
-    def get_all(self):
+    @classmethod
+    def get_all(cls):
         """Get all tenants."""
-        tenants = TenantModel.query.all()
+        tenants = TenantModel.query.order_by(TenantModel.name.asc()).all()
         return TenantSchema().dump(tenants, many=True)
+
+    @classmethod
+    def create(cls, data: dict):
+        """Create a new tenant."""
+        one_of_roles = (
+            Role.SUPER_ADMIN.value,
+        )
+        authorization.check_auth(one_of_roles=one_of_roles)
+        tenant = TenantModel(**data)
+        try:
+            tenant.save()
+        except SQLAlchemyError as e:
+            current_app.logger.error('Error creating tenant {}', e)
+            raise ValueError('Error creating tenant.') from e
+        return TenantSchema().dump(tenant)
+
+    @classmethod
+    def update(cls, tenant_id: str, data: dict):
+        """Update an existing tenant."""
+        one_of_roles = (
+            Role.SUPER_ADMIN.value,
+        )
+        authorization.check_auth(one_of_roles=one_of_roles)
+        tenant = TenantModel.find_by_short_name(tenant_id)
+        if not tenant:
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
+        try:
+            tenant.update(data)
+        except SQLAlchemyError as e:
+            current_app.logger.error('Error updating tenant {}', e)
+            raise ValueError('Error updating tenant.') from e
+        return TenantSchema().dump(tenant)
+
+    @classmethod
+    def delete(cls, tenant_id: str):
+        """Delete an existing tenant."""
+        one_of_roles = (
+            Role.SUPER_ADMIN.value,
+        )
+        authorization.check_auth(one_of_roles=one_of_roles)
+        tenant = TenantModel.find_by_short_name(tenant_id)
+        if not tenant:
+            raise ValueError(NOT_FOUND_MSG, cls, tenant_id)
+        try:
+            tenant.delete()
+        except SQLAlchemyError as e:
+            current_app.logger.error('Error deleting tenant {}', e)
+            raise ValueError('Error deleting tenant.') from e
+        return {'status': 'success', 'message': 'Tenant deleted successfully'}
