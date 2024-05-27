@@ -1,21 +1,13 @@
 import React, { FormEvent, useContext, useState } from 'react';
 import { ActionContext } from './ActionContext';
-import { Grid, Checkbox, TextField, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
+import { Grid, Checkbox, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
 import { EmailPanelProps } from './types';
-import {
-    MetLabel,
-    modalStyle,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-    MetHeader1Old,
-    MetBodyOld,
-    MetDescription,
-    MetDisclaimer,
-} from 'components/common';
+import { MetLabel, modalStyle, MetHeader1Old, MetBodyOld, MetDescription, MetDisclaimer } from 'components/common';
 import { When } from 'react-if';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { Button, CustomTextField } from 'components/common/Input';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
     const { savedEngagement } = useContext(ActionContext);
@@ -123,7 +115,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                     </Grid>
                     <Grid item xs={12}>
                         <MetLabel>Email Address</MetLabel>
-                        <TextField
+                        <CustomTextField
                             onChange={(e) => {
                                 updateEmail(e.target.value);
                                 setEmailFormError({ ...emailFormError, email: false });
@@ -132,7 +124,6 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                             InputLabelProps={{
                                 shrink: false,
                             }}
-                            variant="outlined"
                             error={emailFormError.email}
                             helperText={emailFormError.email ? 'Please enter an email' : ''}
                             fullWidth
@@ -154,12 +145,12 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButtonOld onClick={handleClose} disabled={isSaving}>
+                        <Button onClick={handleClose} disabled={isSaving} variant="secondary" size="small">
                             Cancel
-                        </SecondaryButtonOld>
-                        <PrimaryButtonOld type="submit" variant={'contained'} loading={isSaving}>
+                        </Button>
+                        <Button type="submit" variant="primary" size="small" loading={isSaving}>
                             Submit
-                        </PrimaryButtonOld>
+                        </Button>
                     </Stack>
                 </Grid>
             </Grid>

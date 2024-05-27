@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MetPaper, MetHeader2Old, PrimaryButtonOld } from 'components/common';
+import { MetPaper, MetHeader2Old } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
 import { Widget } from 'models/widget';
@@ -8,6 +8,8 @@ import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { PollStatus } from 'constants/engagementStatus';
+import { Button } from 'components/common/Input/Button';
+
 interface PollWidgetViewProps {
     widget: Widget;
 }
@@ -174,7 +176,9 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                         <>
                             {!isSubmitted && (
                                 <Grid item xs={12} sx={{ marginTop: '1em' }}>
-                                    <PrimaryButtonOld onClick={() => handleSubmit()}>Submit</PrimaryButtonOld>
+                                    <Button onClick={() => handleSubmit()} variant="primary" size="small">
+                                        Submit
+                                    </Button>
                                 </Grid>
                             )}
                             {responseMessage?.message && (

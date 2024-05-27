@@ -5,6 +5,9 @@
   - Set TODO statements to replace tenant related values from backend
   - Splitting translations based on language files and added a common translation file for items common across all languages
 
+- **Bugfix** Global Focus State (UXD) [🎟️ DESENG-583](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-583)
+  - Reworked on components to match the design system and support new colors
+  - Implemented focus states across public pages and components
 
 ## May 23, 2024
 

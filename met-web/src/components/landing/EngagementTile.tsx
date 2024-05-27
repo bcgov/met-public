@@ -5,14 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Engagement } from 'models/engagement';
 import { Box, Stack } from '@mui/material';
-import {
-    MetBodyOld,
-    MetHeader4,
-    MetLabel,
-    MetParagraphOld,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-} from 'components/common';
+import { MetBodyOld, MetHeader4, MetLabel, MetParagraphOld } from 'components/common';
 import { getEngagement } from 'services/engagementService';
 import { If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
@@ -22,6 +15,7 @@ import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { getBaseUrl } from 'helper';
 import { useAppTranslation } from 'hooks';
+import { Button } from 'components/common/Input/Button';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -87,6 +81,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
 
     const { name, end_date, start_date, description, banner_url, submission_status } = loadedEngagement;
     const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        window.location.href = engagementUrl;
+    };
+
     return (
         <Card
             sx={{
@@ -130,15 +130,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             <CardActions>
                 <If condition={submission_status === SubmissionStatus.Open}>
                     <Then>
-                        <PrimaryButtonOld
-                            fullWidth
-                            onClick={(event: React.MouseEvent) => {
-                                event.stopPropagation();
-                                window.location.href = engagementUrl;
-                            }}
-                        >
+                        <Button variant="primary" fullWidth onClick={handleClick as () => void}>
                             {translate('buttonText.shareYourThoughts')}
-                        </PrimaryButtonOld>
+                        </Button>
                     </Then>
                 </If>
                 <If
@@ -147,15 +141,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     }
                 >
                     <Then>
-                        <SecondaryButtonOld
-                            fullWidth
-                            onClick={(event: React.MouseEvent) => {
-                                event.stopPropagation();
-                                window.location.href = engagementUrl;
-                            }}
-                        >
+                        <Button variant="secondary" fullWidth onClick={handleClick as () => void}>
                             {translate('buttonText.viewEngagement')}
-                        </SecondaryButtonOld>
+                        </Button>
                     </Then>
                 </If>
             </CardActions>

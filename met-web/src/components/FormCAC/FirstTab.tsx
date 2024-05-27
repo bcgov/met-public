@@ -3,13 +3,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
-import { MetLabel, MetParagraphOld, PrimaryButtonOld } from 'components/common';
+import { MetLabel, MetParagraphOld } from 'components/common';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
 import { When } from 'react-if';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { useAppTranslation } from 'hooks';
+import { Button } from 'components/common/Input/Button';
 
 interface FormData {
     understand: boolean;
@@ -125,9 +126,9 @@ export const FirstTab: React.FC = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <PrimaryButtonOld onClick={handleSubmit(handleNextClick)}>
+                <Button variant="primary" size="small" onClick={handleSubmit(handleNextClick)}>
                     {translate('formCAC.tab1.button.next')}
-                </PrimaryButtonOld>
+                </Button>
             </Grid>
         </Grid>
     );

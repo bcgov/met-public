@@ -1,22 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { LandingContext } from './LandingContext';
-import {
-    Button,
-    Select,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
-    Grid,
-    TextField,
-    IconButton,
-    Stack,
-    useTheme,
-} from '@mui/material';
+import { Button as MuiButton, Grid, IconButton, Stack, useTheme } from '@mui/material';
 import { DeletableFilterChip } from './DeletableFilterChip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
-import { faCheck } from '@fortawesome/pro-regular-svg-icons/faCheck';
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faSliders } from '@fortawesome/pro-regular-svg-icons/faSliders';
 import { MetadataFilter } from 'components/metadataManagement/types';
@@ -24,6 +12,9 @@ import { MetLabel } from 'components/common';
 import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
+import { Button } from 'components/common/Input/Button';
+import { colors } from '../common';
+import { CustomTextField, CommonSelect } from 'components/common/Input';
 
 const FilterBlock = () => {
     const { searchFilters, setSearchFilters, setPage, clearFilters, page, setDrawerOpened } =
@@ -96,8 +87,8 @@ const FilterBlock = () => {
                 ref={tileBlockRef}
             >
                 <Grid item xl={6} lg={8} md={10} sm={8} xs={12}>
-                    <MetLabel>{translate('landing.filters.search')}</MetLabel>
-                    <TextField
+                    <MetLabel paddingBottom={'3px'}>{translate('landing.filters.search')}</MetLabel>
+                    <CustomTextField
                         fullWidth
                         placeholder={translate('landing.filters.searchPlaceholder')}
                         value={searchText}
@@ -150,11 +141,9 @@ const FilterBlock = () => {
                     <Button
                         fullWidth
                         aria-label={translate('landing.filters.aria.openDrawer')}
-                        variant="contained"
-                        color="primary"
-                        startIcon={<FontAwesomeIcon icon={faSliders} style={{ fontSize: '18px' }} />}
+                        variant="primary"
+                        icon={<FontAwesomeIcon icon={faSliders} style={{ fontSize: '18px' }} />}
                         onClick={() => setDrawerOpened(true)}
-                        sx={{ height: 48 }}
                     >
                         {translate('landing.filters.drawer.openButton')}
                     </Button>
@@ -167,20 +156,19 @@ const FilterBlock = () => {
                     flexWrap="wrap"
                     justifyContent="flex-start"
                     alignItems="flex-start"
+                    spacing={2}
                 >
-                    <Select
+                    <CommonSelect
                         value={selectedValue}
                         id="status-filter"
                         onChange={(event) => {
                             const selectedValue = Number(event.target.value);
                             if (selectedValue === -1) {
-                                // Reset status filter to an empty array for "All Engagements"
                                 setSearchFilters({
                                     ...searchFilters,
                                     status: [],
                                 });
                             } else {
-                                // Add selected status to the filter array
                                 setSearchFilters({
                                     ...searchFilters,
                                     status: [selectedValue],
@@ -188,91 +176,16 @@ const FilterBlock = () => {
                             }
                             setPage(1);
                         }}
-                        renderValue={(value) => {
-                            // for rendering the selected value
-                            return selectableStatuses.get(value) ?? '';
-                        }}
+                        renderValue={(value) => selectableStatuses.get(value as number) ?? ''}
                         displayEmpty
                         inputProps={{
-                            'aria-label': translate('landing.filters.aria.statusFilter').replace(
-                                '{0}',
-                                selectableStatuses.get(selectedValue) ?? '',
-                            ),
-                            style: { padding: 0 },
+                            'aria-label': `Status Filter - ${selectableStatuses.get(selectedValue) ?? ''}`,
                         }}
-                        sx={{
-                            mr: 1,
-                            mb: 1.5,
-                            p: 1,
-                            height: 48,
-                            borderRadius: '2em',
-                            backgroundColor: theme.palette.primary.main,
-                            color: 'white',
-                            borderColor: 'transparent',
-                            boxShadow: 3,
-                            // the arrow icon
-                            '& svg': {
-                                color: 'white',
-                            },
-                        }}
-                        MenuProps={{
-                            anchorOrigin: {
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            },
-                            transformOrigin: {
-                                vertical: 'top',
-                                horizontal: 'left',
-                            },
-                            sx: {
-                                backgroundColor: 'transparent',
-                                borderRadius: '8px',
-                                boxShadow: 3,
-                                mt: 1,
-                                ml: -1,
-                                '& .MuiPaper-root': {
-                                    borderRadius: '8px',
-                                    boxShadow: 3,
-                                    overflow: 'hidden',
-                                    border: '1px solid #D9D9D9;',
-                                },
-                                '& ul': {
-                                    p: 0,
-                                    '& li': {
-                                        fontSize: '16px',
-                                        height: 48,
-                                        '&:hover': {
-                                            backgroundColor: '#ECEAE8',
-                                        },
-                                        '&.Mui-selected': {
-                                            backgroundColor: '#D8EAFD;',
-                                        },
-                                        '& span': {
-                                            color: '#292929;',
-                                        },
-                                        '&.Mui-selected span': {
-                                            fontWeight: 'bold',
-                                            color: theme.palette.primary.main,
-                                        },
-                                        '&:not(:first-of-type)': {
-                                            borderTop: '1px solid #D9D9D9;',
-                                        },
-                                    },
-                                },
-                            },
-                        }}
-                    >
-                        {Array.from(selectableStatuses).map(([status, label]) => (
-                            <MenuItem key={status} value={status}>
-                                {selectedValue === status && (
-                                    <ListItemIcon>
-                                        <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px' }} />
-                                    </ListItemIcon>
-                                )}
-                                <ListItemText primary={label} />
-                            </MenuItem>
-                        ))}
-                    </Select>
+                        options={Array.from(selectableStatuses).map(([status, label]) => ({
+                            value: status,
+                            label: label,
+                        }))}
+                    />
                     {searchFilters.metadata.map((filter) =>
                         filter.values.map((value) => (
                             <DeletableFilterChip
@@ -282,7 +195,7 @@ const FilterBlock = () => {
                             />
                         )),
                     )}
-                    <Button
+                    <MuiButton
                         variant="text"
                         onClick={clearFilters}
                         sx={{
@@ -291,11 +204,15 @@ const FilterBlock = () => {
                             fontSize: '15px',
                             borderRadius: '2em',
                             p: 2,
+                            '&:focus, &:focus-visible': {
+                                backgroundColor: `${colors.focus.regular.inner}`,
+                                boxShadow: `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}`,
+                            },
                         }}
                         endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
                     >
                         {translate('landing.filters.clear')}
-                    </Button>
+                    </MuiButton>
                 </Stack>
             </Grid>
         </Grid>
