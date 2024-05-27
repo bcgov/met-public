@@ -1,19 +1,9 @@
 {
     "common": {
-        "logoUrl": "",
-        "defaultText": "Site Logo",
-        "defaultBCText": "British Columbia Logo",
         "logout": "Logout"
     },
-    "header": {
-        "title": "Modern Engagement",
-        "smallTitle": "MET"
-    },
+    "header": {},
     "landing": {
-        "banner": {
-            "header": "The Title of The Office",
-            "description": "Description about the office and public engagement."
-        },
         "filters": {
             "drawer": {
                 "openButton": "Filter",
@@ -38,9 +28,9 @@
                 "metadataFilterChip": "{0} filter - {1}",
                 "selected": "Applied",
                 "notSelected": "Not Applied",
-                "applyFilters":"Apply Filters and close filter options",
-                "clearFilters":"Clear all filters",
-                "statusFilter": "Engagement Status Selector - {0} selected" 
+                "applyFilters": "Apply Filters and close filter options",
+                "clearFilters": "Clear all filters",
+                "statusFilter": "Engagement Status Selector - {0} selected"
             }
         }
     },
@@ -48,59 +38,14 @@
         "admin": {
             "review": {
                 "threatTextOne": "Select this option if there is a threat/menace in the comment(s). No email will be sent. Contact",
-                "threatContact": "FirstName LastName",
-                "threatTextTwo": "at",
-                "threatContactEmail": "email@gov.bc.ca"
+                "threatTextTwo": "at"
             }
-        }
-    },
-    "cacForm": {
-        "contactTitle": "the Director of Digital Services",
-        "contactEmail": "email@gov.bc.ca"
-    },
-    "landingPage": {
-        "tile": {
-            "error": "Error while loading",
-            "status": "Status:"
         }
     },
     "buttonText": {
         "shareYourThoughts": "Share Your Thoughts",
         "viewEngagement": "View Engagement",
         "viewFeedback": "View Feedback"
-    },
-    "feedback": {
-        "websiteFeedback": "Website Feedback",
-        "notification": {
-            "success": "Your Feedback has been sent.",
-            "error": "Error occurred while sending your feedback."
-        },
-        "submitModal": {
-            "header": "Thank you for your feedback",
-            "button": "Close"
-        },
-        "feedbackModal": {
-            "label": [
-                "How do you like our feedback platform?",
-                "What else would you like to share with us?"
-            ],
-            "disclaimer": "Please do not include any personal information in your feedback. Feedback that includes personal information will be deleted.",
-            "button": "Submit"
-        }
-    },
-    "footer": {
-        "body": "The B.C. Public Service acknowledges the territories of First Nations around B.C. and is grateful to carry out our work on these lands. We acknowledge the rights, interests, priorities, and concerns of all Indigenous Peoples - First Nations, Métis and Inuit - respecting and acknowledging their distinct cultures, histories, rights, laws, and governments.",
-        "connectWithUs": "CONNECT WITH US",
-        "moreInfo": "MORE INFO",
-        "home": "Home",
-        "accessibility": "Accessibility",
-        "aboutGov": "About gov.bc.ca",
-        "copyright": "Copyright",
-        "disclaimer": "Disclaimer",
-        "login": "Admin Login",
-        "privacy": "Privacy",
-        "copyrightNotice": "© 2023 Government of British Columbia",
-        "defaultLogo": "British Columbia Logo"
     },
     "subscription": {
         "subscribe": "You have successfully confirmed your subscription. Thank you.",
@@ -237,7 +182,6 @@
                 "A Community Advisory Committee provides a venue for interested members of the public who have information on the potential effects of a project on a community to stay up to date on the progress of the environmental assessment and to be informed of opportunities to provide their input and advice. Community Advisory Committee members could, for example, provide local knowledge of the community, the environment or the use of the proposed project area.",
                 "The format and structure will depend on the potential effects of a project and community interest in a project, amongst other considerations. The starting point for a community advisory committee in every assessment (with sufficient community interest) will be an email subscription list.",
                 "The Environmental Assessment Office will provide subscribed Community Advisory Committee members information on the environmental assessment process and the proposed project, including notifications of process milestones, when and where key documents are posted, information on public comment periods and any other engagement opportunities. Members will be invited to provide their input through the public comment periods held throughout the environmental assessment and, depending on the overall interest of Community Advisory Committee members, the Environmental Assessment Office may directly seek the advice of Community Advisory Committee members and establish other engagement opportunities. See the Community Advisory Committee Guideline for further information."
-    
             ],
             "link": {
                 "text": "Community Advisory Committee Terms of Reference."
@@ -282,24 +226,6 @@
         "tabs": [
             "Information",
             "You and Your Community"
-        ]
-    },
-    "notAvailable": {
-        "label": "Sorry, this engagement is not available."
-    },
-    "notFound": {
-        "paragraph": "Suggestions to help you find what you're looking for:",
-        "list": [
-            "Check that the web URL has been entered correctly",
-            "Go to our",
-            "homepage",
-            "and browse through our past and current engagements",
-            "Telephone Device for the Deaf (TDD) across B.C.: 711",
-            "If you would like to email us, please contact *********@gov.bc.ca."
-        ],
-        "header": [
-            "The page you're looking for cannot be found.",
-            "The page you're looking for might have been removed, moved or is temporarily unavailable."
         ]
     },
     "NoResults": {

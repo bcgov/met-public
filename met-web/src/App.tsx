@@ -115,9 +115,10 @@ const App = () => {
         if (!tenant.id) {
             return;
         }
-
         try {
-            const supportedLanguages = Object.values(Languages);
+            const supportedLanguages: string[] = Object.values(Languages);
+            // Adding keyword `common` into supportedLanguages to fetch locale/common.json
+            supportedLanguages.push('common');
             const translationPromises = supportedLanguages.map((languageId) => getTranslationFile(languageId));
             const translationFiles = await Promise.all(translationPromises);
 
@@ -137,17 +138,17 @@ const App = () => {
 
     const getTranslationFile = async (languageId: string) => {
         try {
-            const translationFile = await import(`./locales/${languageId}/${tenant.id}.json`);
+            const translationFile = await import(`./locales/${languageId}.json`);
             return translationFile;
         } catch (error) {
-            const defaultTranslationFile = await import(`./locales/${languageId}/default.json`);
+            const defaultTranslationFile = await import(`./locales/en.json`);
             return defaultTranslationFile;
         }
     };
 
     useEffect(() => {
         preloadTranslations();
-    }, [tenant.id]); // Preload translations when tenant id changes
+    }, [language.id, tenant.id]); // Preload translations when language id or tenant id changes
 
     const loadTranslation = async () => {
         if (!tenant.id || !translations[language.id]) {
@@ -157,7 +158,11 @@ const App = () => {
         i18n.changeLanguage(language.id); // Set the language for react-i18next
 
         try {
-            i18n.addResourceBundle(language.id, tenant.id, translations[language.id]);
+            // adding resource to default namespace 'default'
+            i18n.addResourceBundle(language.id, 'default', translations[language.id]);
+            // adding common translation resource file to namespace 'common'
+            i18n.addResourceBundle(language.id, 'common', translations['common']);
+
             dispatch(loadingTenant(false));
         } catch (error) {
             dispatch(loadingTenant(false));

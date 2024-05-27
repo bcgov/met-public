@@ -7,6 +7,7 @@ i18n.use(initReactI18next).init({
     interpolation: {
         escapeValue: false,
     },
+    defaultNS: 'default', // default namespace as `default`
 });
 
 export default i18n;

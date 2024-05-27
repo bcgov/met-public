@@ -8,15 +8,26 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const useAppTranslation = () => {
-    const translate = useTranslation();
-    const tenantId = sessionStorage.getItem('tenantId');
+    // Every language has its own default and common namespaces
+    const translate = useTranslation(['default', 'common']);
 
     const { t } = translate;
 
     const tDynamic = (key: string) => {
-        // Create a dynamic translation key using the tenantId
-        const dynamicKey = `${tenantId}:${key}`;
-        return t(dynamicKey);
+        // Create a dynamic translation key using the `default` namespace
+        const dynamicKey = `default:${key}`;
+        const value = t(dynamicKey);
+        // If the value is the same as the key, then the key does not exist in the `default` namespace, so try the `common` namespace
+        if (key === value) {
+            const dynamicKey = `common:${key}`;
+            const value = t(dynamicKey);
+            // If the value is the same as the key log error and return the key
+            if (key == value) {
+                console.log('Error getting translation for ', key);
+            }
+            return value;
+        }
+        return value;
     };
 
     return { ...translate, t: tDynamic };
