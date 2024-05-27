@@ -1,3 +1,11 @@
+## May 27, 2024
+
+- **Feature** MET translation file keys used on pages needing translation [🎟️ DESENG-611](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-611)
+  - Removed Tenant based translations from langauge files
+  - Set TODO statements to replace tenant related values from backend
+  - Splitting translations based on language files and added a common translation file for items common across all languages
+
+
 ## May 23, 2024
 
 - **Feature** Finish tenant management UX [🎟️ DESENG-605](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-605), [🎟️ DESENG-606](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-606)
