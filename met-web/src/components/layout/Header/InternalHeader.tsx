@@ -16,16 +16,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/pro-regular-svg-icons/faBars';
 import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
-import { useAppTranslation } from 'hooks';
 
 const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
-    const { t: translate } = useAppTranslation();
 
-    const logoUrl = translate('common.logoUrl');
+    // TODO: LANG-BACKEND - Change the value to show tenant specific
+    const logoUrl = '';
     return (
         <>
             <AppBar
@@ -101,7 +100,8 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {translate('header.title')}
+                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                            {'Modern Engagement'}
                         </HeaderTitleOld>
                     ) : (
                         <HeaderTitleOld
@@ -110,7 +110,8 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {translate('header.smallTitle')}
+                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                            {'MET'}
                         </HeaderTitleOld>
                     )}
                     <Button

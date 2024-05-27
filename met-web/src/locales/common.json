@@ -1,0 +1,100 @@
+{
+    "notFound": {
+        "paragraph": "Suggestions to help you find what you're looking for:",
+        "list": [
+            "Check that the web URL has been entered correctly",
+            "Go to our",
+            "homepage",
+            "and browse through our past and current engagements",
+            "Telephone Device for the Deaf (TDD) across B.C.: 711",
+            "If you would like to email us, please contact *********@gov.bc.ca."
+        ],
+        "header": [
+            "The page you're looking for cannot be found.",
+            "The page you're looking for might have been removed, moved or is temporarily unavailable."
+        ]
+    },
+    "notAvailable": {
+        "label": "Sorry, this engagement is not available."
+    },
+    "footer": {
+        "body": "The B.C. Public Service acknowledges the territories of First Nations around B.C. and is grateful to carry out our work on these lands. We acknowledge the rights, interests, priorities, and concerns of all Indigenous Peoples - First Nations, Métis and Inuit - respecting and acknowledging their distinct cultures, histories, rights, laws, and governments.",
+        "connectWithUs": "CONNECT WITH US",
+        "moreInfo": "MORE INFO",
+        "home": "Home",
+        "accessibility": "Accessibility",
+        "aboutGov": "About gov.bc.ca",
+        "copyright": "Copyright",
+        "disclaimer": "Disclaimer",
+        "login": "Admin Login",
+        "privacy": "Privacy",
+        "copyrightNotice": "© 2023 Government of British Columbia",
+        "defaultLogo": "British Columbia Logo"
+    },
+    "feedback": {
+        "websiteFeedback": "Website Feedback",
+        "notification": {
+            "success": "Your Feedback has been sent.",
+            "error": "Error occurred while sending your feedback."
+        },
+        "submitModal": {
+            "header": "Thank you for your feedback",
+            "button": "Close"
+        },
+        "feedbackModal": {
+            "label": [
+                "How do you like our feedback platform?",
+                "What else would you like to share with us?"
+            ],
+            "disclaimer": "Please do not include any personal information in your feedback. Feedback that includes personal information will be deleted.",
+            "button": "Submit"
+        }
+    },
+    "landingPage": {
+        "tile": {
+            "error": "Error while loading",
+            "status": "Status:"
+        }
+    },
+    "comment": {
+        "admin": {
+            "review": {
+                "threatTextOne": "Select this option if there is a threat/menace in the comment(s). No email will be sent. Contact",
+                "threatTextTwo": "at"
+            }
+        }
+    },
+    "landing": {
+        "filters": {
+            "drawer": {
+                "openButton": "Filter",
+                "title": "Filter Engagements",
+                "apply": "Apply Filters",
+                "statusFilter": "Engagement Status",
+                "filterHeader": "Filter by {0}"
+            },
+            "clear": "Clear Filters",
+            "search": "Search Engagements",
+            "searchPlaceholder": "Engagement Title",
+            "status": {
+                "all": "All Engagements",
+                "open": "Open Engagements",
+                "closed": "Closed Engagements",
+                "upcoming": "Upcoming Engagements"
+            },
+            "aria": {
+                "closeDrawer": "Close filter options",
+                "openDrawer": "Open more filter options",
+                "deleteFilterChip": "{0} filter - press to remove",
+                "metadataFilterChip": "{0} filter - {1}",
+                "selected": "Applied",
+                "notSelected": "Not Applied",
+                "applyFilters": "Apply Filters and close filter options",
+                "statusFilter": "Engagement Status Selector - {0} selected"
+            }
+        }
+    },
+    "common": {
+        "logout": "Logout"
+    }
+}

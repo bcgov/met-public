@@ -1,11 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useAppTranslation } from 'hooks';
 const DocumentTitle = () => {
-    const { t: translate } = useAppTranslation();
     return (
         <Helmet>
-            <title>{translate('header.title')}</title>
+            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+            <title>Modern Engagement</title>
         </Helmet>
     );
 };

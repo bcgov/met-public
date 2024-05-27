@@ -100,8 +100,10 @@ describe('Landing page tests', () => {
                     );
                 }),
             ).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.header')).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.description')).toBeInTheDocument();
+            // TODO: LANG-BACKEND - Change the value to show tenant specific
+            expect(screen.getByText('Government Digital Experience Division')).toBeInTheDocument();
+            // TODO: LANG-BACKEND - Change the value to show tenant specific
+            expect(screen.getByText('Description about the office and public engagement.')).toBeInTheDocument();
             expect(screen.getByText(openEngagement.name)).toBeInTheDocument();
             expect(screen.getByText(closedEngagement.name)).toBeInTheDocument();
         });

@@ -22,8 +22,10 @@ const PublicHeader = () => {
     const { t: translate } = useAppTranslation();
     const { engagementViewMounted, availableEngagementTranslations } = useContext(LanguageContext);
 
-    const logoUrl = translate('common.logoUrl');
-    const headerTitle = translate('header.title');
+    // TODO: LANG-BACKEND - Change the value to show tenant specific
+    const logoUrl = '';
+    // TODO: LANG-BACKEND - Change the value to show tenant specific
+    const headerTitle = 'Modern Engagement';
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -46,7 +48,8 @@ const PublicHeader = () => {
                         >
                             <img
                                 src={logoUrl}
-                                alt={translate('common.defaultText')}
+                                // TODO: LANG-BACKEND - Change the value to show tenant specific
+                                alt="Site Logo"
                                 style={{
                                     objectFit: 'cover',
                                     height: '5em',
@@ -74,7 +77,8 @@ const PublicHeader = () => {
                             onClick={() => {
                                 navigate(`/${language}`);
                             }}
-                            alt={translate('common.defaultBCText')}
+                            // TODO: LANG-BACKEND - Change the value to show tenant specific
+                            alt="British Columbia Logo"
                         />
                     </When>
                     <HeaderTitleOld

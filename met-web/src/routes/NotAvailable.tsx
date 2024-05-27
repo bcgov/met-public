@@ -41,10 +41,15 @@ export const NotAvailable = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1Old>{translate('landing.banner.header')}</MetHeader1Old>
+                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                                <MetHeader1Old>Government Digital Experience Division</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraphOld>{translate('landing.banner.description')}</MetParagraphOld>
+                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
+                                <MetParagraphOld>
+                                    The GDX Division helps inform digital standards for web content, accessibility,
+                                    forms, and design..
+                                </MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>
