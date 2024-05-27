@@ -162,7 +162,7 @@ const App = () => {
         i18n.changeLanguage(language.id); // Set the language for react-i18next
 
         try {
-            // adding langauge based translation resources to default namespace 'default'. like en.json, fr.json etc
+            // adding language based translation resources to default namespace 'default'. like en.json, fr.json etc
             i18n.addResourceBundle(language.id, 'default', translations[language.id]);
             // adding common translation resource file (common.json) to namespace 'common'
             i18n.addResourceBundle(language.id, 'common', translations['common']);
