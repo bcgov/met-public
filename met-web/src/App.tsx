@@ -117,8 +117,6 @@ const App = () => {
         }
         try {
             const supportedLanguages: string[] = Object.values(Languages);
-            // Adding keyword `common` into supportedLanguages to fetch locale/common.json
-            supportedLanguages.push('common');
             const translationPromises = supportedLanguages.map((languageId) => getTranslationFile(languageId));
             const translationFiles = await Promise.all(translationPromises);
 
@@ -130,15 +128,21 @@ const App = () => {
                 }
             });
 
+            // Fetch the common.json file separately
+            const commonTranslations = await getTranslationFile('common');
+            if (commonTranslations) {
+                translationsObj['common'] = commonTranslations.default;
+            }
+
             setTranslations(translationsObj);
         } catch (error) {
             console.error('Error preloading translations:', error);
         }
     };
 
-    const getTranslationFile = async (languageId: string) => {
+    const getTranslationFile = async (localeId: string) => {
         try {
-            const translationFile = await import(`./locales/${languageId}.json`);
+            const translationFile = await import(`./locales/${localeId}.json`);
             return translationFile;
         } catch (error) {
             const defaultTranslationFile = await import(`./locales/en.json`);
@@ -158,9 +162,9 @@ const App = () => {
         i18n.changeLanguage(language.id); // Set the language for react-i18next
 
         try {
-            // adding resource to default namespace 'default'
+            // adding langauge based translation resources to default namespace 'default'. like en.json, fr.json etc
             i18n.addResourceBundle(language.id, 'default', translations[language.id]);
-            // adding common translation resource file to namespace 'common'
+            // adding common translation resource file (common.json) to namespace 'common'
             i18n.addResourceBundle(language.id, 'common', translations['common']);
 
             dispatch(loadingTenant(false));

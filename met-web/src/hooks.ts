@@ -12,16 +12,20 @@ export const useAppTranslation = () => {
     const translate = useTranslation(['default', 'common']);
 
     const { t } = translate;
-
+    /**
+     * Look to see if a string has a langauge-level translation (if it's related to an engagement, survey, widget, static
+     * etc.). If none is found, look for a common static text translation found in the common locale file.
+     **/
     const tDynamic = (key: string) => {
         // Create a dynamic translation key using the `default` namespace
         const dynamicKey = `default:${key}`;
+        // getting language level translations for the key
         const value = t(dynamicKey);
-        // If the value is the same as the key, then the key does not exist in the `default` namespace, so try the `common` namespace
+        // If the value is the same as the key, then the key does not exist in the langauge translations, can be check in common locale file
         if (key === value) {
             const dynamicKey = `common:${key}`;
             const value = t(dynamicKey);
-            // If the value is the same as the key log error and return the key
+            // If the value is the same as the key it does not exist in the either langauge level or common translations
             if (key == value) {
                 console.log('Error getting translation for ', key);
             }
