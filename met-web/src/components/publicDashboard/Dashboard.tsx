@@ -39,7 +39,7 @@ const Dashboard = () => {
         if (isLoggedIn) {
             navigate(`${basePath}/comments/${dashboardType}`);
         } else {
-            navigate(`${languagePath}${basePath}/comments/${dashboardType}`);
+            navigate(`${basePath}/comments/${dashboardType}${languagePath}`);
         }
     };
 

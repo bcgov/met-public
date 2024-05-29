@@ -13,7 +13,7 @@ const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: Subsc
     const languagePath = `${sessionStorage.getItem('languageId')}`;
     const handleNavigate = () => {
         const baseUrl = getBaseUrl();
-        window.open(`${baseUrl}/${languagePath}/engagements/${widget.engagement_id}/cacform/${widget.id}`, '_blank');
+        window.open(`${baseUrl}/engagements/${widget.engagement_id}/cacform/${widget.id}/${languagePath}`, '_blank');
     };
     return (
         <Grid spacing={2} container item xs={12}>

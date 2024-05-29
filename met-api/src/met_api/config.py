@@ -239,25 +239,25 @@ class Config:  # pylint: disable=too-few-public-methods
     # construct the links in the emails sent to users.
     PATH_CONFIG = PATHS = {
         'SITE': os.getenv('SITE_URL'),
-        'SURVEY': os.getenv('SURVEY_PATH', '/{lang}/surveys/submit/{survey_id}/{token}'),
+        'SURVEY': os.getenv('SURVEY_PATH', '/surveys/submit/{survey_id}/{token}/{lang}'),
         'USER_MANAGEMENT': os.getenv('USER_MANAGEMENT_PATH', '/usermanagement'),
         'SUBMISSION': os.getenv(
-            'SUBMISSION_PATH', '/{lang}/engagements/{engagement_id}/edit/{token}'
+            'SUBMISSION_PATH', '/engagements/{engagement_id}/edit/{token}/{lang}'
         ),
         'SUBSCRIBE': os.getenv(
-            'SUBSCRIBE_PATH', '/{lang}/engagements/{engagement_id}/subscribe/{token}'
+            'SUBSCRIBE_PATH', '/engagements/{engagement_id}/subscribe/{token}/{lang}'
         ),
         'UNSUBSCRIBE': os.getenv(
-            'UNSUBSCRIBE_PATH', '/{lang}/engagements/{engagement_id}/unsubscribe/{participant_id}'
+            'UNSUBSCRIBE_PATH', '/engagements/{engagement_id}/unsubscribe/{participant_id}/{lang}'
         ),
         'ENGAGEMENT': {
-            'VIEW': os.getenv('ENGAGEMENT_PATH', '/{lang}/engagements/{engagement_id}/view'),
-            'SLUG': os.getenv('ENGAGEMENT_PATH_SLUG', '/{lang}/{slug}'),
+            'VIEW': os.getenv('ENGAGEMENT_PATH', '/engagements/{engagement_id}/view/{lang}'),
+            'SLUG': os.getenv('ENGAGEMENT_PATH_SLUG', '/{slug}/{lang}'),
             'DASHBOARD': os.getenv(
-                'ENGAGEMENT_DASHBOARD_PATH', '/{lang}/engagements/{engagement_id}/comments/public'
+                'ENGAGEMENT_DASHBOARD_PATH', '/engagements/{engagement_id}/comments/public/{lang}'
             ),
             'DASHBOARD_SLUG': os.getenv(
-                'ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{lang}/{slug}/comments/public'
+                'ENGAGEMENT_DASHBOARD_PATH_SLUG', '/{slug}/comments/public/{lang}'
             ),
         }
     }

@@ -55,7 +55,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
         if (isLoggedIn) {
             navigate(`${basePath}/dashboard/public`);
         } else {
-            navigate(`${languagePath}${basePath}/dashboard/public`);
+            navigate(`${basePath}/dashboard/public/${languagePath}`);
         }
     };
 

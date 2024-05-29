@@ -14,7 +14,7 @@ const FormWrapped = () => {
     const { isTokenValid, isLoading, savedEngagement, submission } = useContext(ActionContext);
     const navigate = useNavigate();
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = slug ? `${languagePath}/${slug}` : `${languagePath}/engagements/${savedEngagement?.id}/view`;
+    const engagementPath = slug ? `${slug}/${languagePath}` : `engagements/${savedEngagement?.id}/view/${languagePath}`;
 
     if (isLoading || !savedEngagement) {
         return <Skeleton variant="rectangular" width="100%" height="38em" />;
