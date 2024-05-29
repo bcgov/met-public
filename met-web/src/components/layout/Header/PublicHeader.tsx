@@ -14,7 +14,6 @@ import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
 import { LanguageContext } from 'components/common/LanguageContext';
 import { TenantState } from 'reduxSlices/tenantSlice';
-import { te } from 'date-fns/locale';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
