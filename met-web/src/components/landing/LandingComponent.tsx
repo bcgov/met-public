@@ -7,7 +7,12 @@ import { Container } from '@mui/system';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import FilterBlock from './FilterBlock';
 import FilterDrawer from './FilterDrawer';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from '../../hooks';
+
 const LandingComponent = () => {
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
+
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
             <FilterDrawer />
@@ -44,12 +49,10 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
-                                <MetHeader1Old>Government Digital Experience Division</MetHeader1Old>
+                                <MetHeader1Old>{tenant.title}</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
-                                <MetParagraphOld>Description about the office and public engagement.</MetParagraphOld>
+                                <MetParagraphOld>{tenant.description}</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

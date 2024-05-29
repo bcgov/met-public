@@ -16,15 +16,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/pro-regular-svg-icons/faBars';
 import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from '../../../hooks';
 
 const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     const navigate = useNavigate();
 
-    // TODO: LANG-BACKEND - Change the value to show tenant specific
-    const logoUrl = '';
+    const logoUrl = tenant.logoUrl;
     return (
         <>
             <AppBar
@@ -100,8 +102,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
-                            {'Modern Engagement'}
+                            {tenant.title}
                         </HeaderTitleOld>
                     ) : (
                         <HeaderTitleOld
@@ -110,8 +111,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
-                            {'MET'}
+                            {tenant.short_name}
                         </HeaderTitleOld>
                     )}
                     <Button

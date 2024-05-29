@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
 import { LanguageContext } from 'components/common/LanguageContext';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { te } from 'date-fns/locale';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -21,11 +23,10 @@ const PublicHeader = () => {
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
     const { engagementViewMounted, availableEngagementTranslations } = useContext(LanguageContext);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
 
-    // TODO: LANG-BACKEND - Change the value to show tenant specific
-    const logoUrl = '';
-    // TODO: LANG-BACKEND - Change the value to show tenant specific
-    const headerTitle = 'Modern Engagement';
+    const logoUrl = tenant.logoUrl;
+    const headerTitle = tenant.title;
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -48,8 +49,7 @@ const PublicHeader = () => {
                         >
                             <img
                                 src={logoUrl}
-                                // TODO: LANG-BACKEND - Change the value to show tenant specific
-                                alt="Site Logo"
+                                alt={translate('common.defaultText')}
                                 style={{
                                     objectFit: 'cover',
                                     height: '5em',
@@ -77,8 +77,7 @@ const PublicHeader = () => {
                             onClick={() => {
                                 navigate(`/${language}`);
                             }}
-                            // TODO: LANG-BACKEND - Change the value to show tenant specific
-                            alt="British Columbia Logo"
+                            alt={translate('common.defaultBCText')}
                         />
                     </When>
                     <HeaderTitleOld

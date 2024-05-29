@@ -95,6 +95,8 @@
         }
     },
     "common": {
-        "logout": "Logout"
+        "logout": "Logout",
+        "defaultBCText": "British Columbia Logo",
+        "defaultText" : "Site Logo"
     }
 }
