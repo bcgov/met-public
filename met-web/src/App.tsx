@@ -72,12 +72,12 @@ const App = () => {
                     logoUrl: tenant.logo_url ?? '',
                     basename: appBaseName,
                     title: tenant.title,
-                    contact_email: tenant.contact_email,
-                    contact_name: tenant.contact_name,
-                    description: tenant.description,
+                    contact_email: tenant.contact_email ?? '',
+                    contact_name: tenant.contact_name ?? '',
+                    description: tenant.description ?? '',
                     short_name: tenant.short_name,
-                    logo_description: tenant.logo_description,
-                    logo_credit: tenant.logo_credit,
+                    logo_description: tenant.logo_description ?? '',
+                    logo_credit: tenant.logo_credit ?? '',
                 }),
             );
         } catch {
