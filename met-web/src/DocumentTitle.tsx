@@ -1,10 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from './hooks';
 const DocumentTitle = () => {
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     return (
         <Helmet>
-            {/* TODO: LANG-BACKEND - Change the value to show tenant specific */}
-            <title>Modern Engagement</title>
+            <title>{tenant.title}</title>
         </Helmet>
     );
 };
