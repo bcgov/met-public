@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'components/common/Input/Link';
+import { Button } from 'components/common/Input/Button';
 import { CommentViewContext } from './CommentViewContext';
-import { PrimaryButtonOld, MetPaper, MetHeader4 } from 'components/common';
+import { MetPaper, MetHeader4 } from 'components/common';
 import CommentTable from './CommentTable';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -63,7 +65,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
 
     return (
         <>
-            <Grid item xs={12} container direction="row" justifyContent="flex-end">
+            <Grid item xs={12} container direction="row" justifyContent="flex-end" paddingBottom={'8px'}>
                 <Link
                     to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
                     style={{ color: '#1A5A96' }}
@@ -87,12 +89,14 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                             direction={{ xs: 'column', sm: 'row' }}
                             justifyContent="flex-end"
                         >
-                            <PrimaryButtonOld
+                            <Button
+                                variant="primary"
+                                size="small"
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 onClick={handleViewDashboard}
                             >
                                 {translate('commentDashboard.block.buttonText')}
-                            </PrimaryButtonOld>
+                            </Button>
                         </Grid>
                         <Grid item xs={12}>
                             <CommentTable />

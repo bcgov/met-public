@@ -76,6 +76,10 @@ const FilterDrawer = () => {
                     position: 'absolute',
                     top: '1em',
                     right: '1em',
+                    '&:focus-visible': {
+                        outline: 'white 2px dashed',
+                        outlineOffset: '2px',
+                    },
                 }}
             >
                 <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
@@ -147,6 +151,10 @@ const FilterDrawer = () => {
                         '&:hover, &:focus': {
                             backgroundColor: '#EDEBE9',
                         },
+                        '&:focus-visible': {
+                            outline: 'white 2px dashed',
+                            outlineOffset: '2px',
+                        },
                     }}
                     onClick={() => setDrawerOpened(false)}
                 >
@@ -162,6 +170,10 @@ const FilterDrawer = () => {
                         color: 'white',
                         '&:hover,&:focus': {
                             backgroundColor: '#1E5189',
+                        },
+                        '&:focus-visible': {
+                            outline: 'white 2px dashed',
+                            outlineOffset: '2px',
                         },
                     }}
                     onClick={clearFilters}

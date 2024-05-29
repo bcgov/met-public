@@ -1,15 +1,4 @@
-import {
-    Box,
-    Grid,
-    IconButton,
-    IconContainerProps,
-    InputAdornment,
-    Modal,
-    Stack,
-    TextField,
-    Theme,
-    SvgIcon,
-} from '@mui/material';
+import { Box, Grid, IconContainerProps, InputAdornment, Modal, Stack, SvgIcon } from '@mui/material';
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
@@ -18,7 +7,7 @@ import { faFaceMeh } from '@fortawesome/pro-regular-svg-icons/faFaceMeh';
 import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetBodyOld, MetHeader3, MetLabel, modalStyle, PrimaryButtonOld, MetDisclaimer } from '../../common';
+import { MetBodyOld, MetHeader3, MetLabel, modalStyle, MetDisclaimer } from '../../common';
 import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -28,6 +17,8 @@ import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
 import { ZIndex } from 'styles/Theme';
 import { useAppTranslation } from 'hooks';
+import { Button, IconButton, CustomTextField } from 'components/common/Input';
+import { useTheme } from '@mui/material/styles';
 
 export const FeedbackModal = () => {
     const { t: translate } = useAppTranslation();
@@ -87,16 +78,21 @@ export const FeedbackModal = () => {
     const isFeedbackTypeNotSelected = rating === RatingTypeEnum.None && comment_type === CommentTypeEnum.None;
     const isCommentNotProvided = comment_type !== CommentTypeEnum.None && !comment;
 
+    const theme = useTheme();
+    const bottomSpacing = theme.spacing(40);
+    const rightSpacing = theme.spacing(0);
+
     return (
         <>
-            <PrimaryButtonOld
+            <Button
+                variant="primary"
                 data-testid="feedback-button"
                 onClick={() => setIsOpen(true)}
                 sx={{
                     borderRadius: '20px 20px 0px 0px',
                     position: 'fixed',
-                    bottom: (theme: Theme) => theme.spacing(40),
-                    right: (theme: Theme) => theme.spacing(0),
+                    bottom: bottomSpacing,
+                    right: rightSpacing,
                     transform: 'rotate(-90deg)',
                     zIndex: ZIndex.footer + 1,
                     transformOrigin: 'bottom right',
@@ -115,7 +111,7 @@ export const FeedbackModal = () => {
                     style={{ fontSize: '20px', marginRight: 1, padding: 5, transform: 'rotate(90deg)' }}
                 />
                 {translate('feedback.websiteFeedback')}
-            </PrimaryButtonOld>
+            </Button>
             <Modal aria-labelledby="modal-title" open={isOpen} onClose={() => handleClose()}>
                 <Grid
                     container
@@ -146,9 +142,9 @@ export const FeedbackModal = () => {
                                 </Stack>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                                <PrimaryButtonOld onClick={handleClose}>
+                                <Button variant="primary" onClick={handleClose}>
                                     {translate('feedback.submitModal.button')}
-                                </PrimaryButtonOld>
+                                </Button>
                             </Grid>
                         </Then>
                         <Else>
@@ -161,9 +157,7 @@ export const FeedbackModal = () => {
                                 sx={{ marginTop: -2 }}
                             >
                                 <Box sx={{ padding: 0 }}>
-                                    <IconButton aria-label="close" onClick={handleClose} sx={{ color: 'black' }}>
-                                        <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
-                                    </IconButton>
+                                    <IconButton onClick={handleClose} icon={faXmark} />
                                 </Box>
                             </Grid>
                             <Grid item xs={12}>
@@ -212,7 +206,7 @@ export const FeedbackModal = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <When condition={Boolean(comment_type)}>
-                                    <TextField
+                                    <CustomTextField
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment
@@ -255,14 +249,16 @@ export const FeedbackModal = () => {
                                 </MetDisclaimer>
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
-                                <PrimaryButtonOld
+                                <Button
+                                    variant="primary"
+                                    size="small"
                                     data-testid="submit-button"
                                     loading={isSaving}
                                     disabled={isFeedbackTypeNotSelected || isCommentNotProvided}
                                     onClick={handleSubmit}
                                 >
                                     {translate('feedback.feedbackModal.button')}
-                                </PrimaryButtonOld>
+                                </Button>
                             </Grid>
                         </Else>
                     </If>

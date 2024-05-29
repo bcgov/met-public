@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { Grid, Pagination } from '@mui/material';
+import { Grid } from '@mui/material';
 import { RepeatedGrid } from 'components/common';
 import { TileSkeleton } from './TileSkeleton';
 import EngagementTile from './EngagementTile';
 import { LandingContext } from './LandingContext';
 import { PAGE_SIZE } from './constants';
 import NoResult from 'routes/NoResults';
+import { Pagination } from 'components/common/Input';
 
 const TileBlock = () => {
     const { engagements, loadingEngagements, totalEngagements, page, setPage } = useContext(LandingContext);

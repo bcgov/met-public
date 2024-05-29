@@ -1,6 +1,7 @@
 import React from 'react';
-import { SecondaryButtonOld } from 'components/common';
-import { Grid, Link } from '@mui/material';
+import { Button } from 'components/common/Input/Button';
+import { Link } from 'components/common/Input/Link';
+import { Grid } from '@mui/material';
 import { SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
@@ -34,13 +35,13 @@ const EmailListSection = ({
             <Grid container item xs={12} justifyContent={'flex-end'}>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}>
                     <Grid container xs={12} direction="row" justifyContent="flex-end">
-                        <SecondaryButtonOld onClick={() => setOpen(true)}>
+                        <Button variant="primary" size="small" onClick={() => setOpen(true)}>
                             {subscribeOption.subscribe_items[0].call_to_action_text}
-                        </SecondaryButtonOld>
+                        </Button>
                     </Grid>
                 </When>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>
-                    <Grid item xs={12}>
+                    <Grid container xs={12}>
                         <Link onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
                             {subscribeOption.subscribe_items[0].call_to_action_text}
                         </Link>

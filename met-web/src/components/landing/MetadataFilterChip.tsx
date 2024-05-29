@@ -44,6 +44,10 @@ export const MetadataFilterChip = ({
                 '&:focus': {
                     backgroundColor: selected ? '#F1F8FE' : '#1E5189',
                 },
+                '&:focus-visible': {
+                    outline: 'white 2px dashed', // Remove default outline
+                    outlineOffset: '2px',
+                },
             }}
         />
     );
