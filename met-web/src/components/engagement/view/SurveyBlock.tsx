@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { MetPaper, PrimaryButtonOld } from '../../common';
+import { MetPaper } from '../../common';
+import { Button } from 'components/common/Input/Button';
 import { ActionContext } from './ActionContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { SurveyBlockProps } from './types';
@@ -46,18 +47,22 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                 <Switch>
                     <Case condition={currentStatus === SubmissionStatus.Open}>
                         <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                            <PrimaryButtonOld
+                            <Button
+                                variant="primary"
+                                size="small"
                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                 disabled={!surveyId}
                                 onClick={startSurvey}
                             >
                                 {translate('buttonText.shareYourThoughts')}
-                            </PrimaryButtonOld>
+                            </Button>
                         </Grid>
                     </Case>
                     <Case condition={currentStatus === SubmissionStatus.Closed}>
                         <Grid item container direction={{ xs: 'column', sm: 'row' }} xs={12} justifyContent="flex-end">
-                            <PrimaryButtonOld
+                            <Button
+                                variant="primary"
+                                size="small"
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
@@ -69,7 +74,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 }}
                             >
                                 {translate('buttonText.viewFeedback')}
-                            </PrimaryButtonOld>
+                            </Button>
                         </Grid>
                     </Case>
                 </Switch>

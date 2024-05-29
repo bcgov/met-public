@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { Grid } from '@mui/material';
-import { MetDescription, MetLabel, PrimaryButtonOld } from 'components/common';
+import { MetDescription, MetLabel } from 'components/common';
 import { FormContext } from './FormContext';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppTranslation } from 'hooks';
+import { Button } from 'components/common/Input/Button';
 
 const schema = yup
     .object({
@@ -122,9 +123,9 @@ export const SecondTab = () => {
             </Grid>
 
             <Grid item xs={12}>
-                <PrimaryButtonOld loading={submittingForm} onClick={handleSubmit(onSubmit)}>
+                <Button variant="primary" size="small" loading={submittingForm} onClick={handleSubmit(onSubmit)}>
                     {translate('formCAC.tab2.button.submit')}
-                </PrimaryButtonOld>
+                </Button>
             </Grid>
         </Grid>
     );

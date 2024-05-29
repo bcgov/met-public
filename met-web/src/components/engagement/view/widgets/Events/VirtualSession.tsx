@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, Link } from '@mui/material';
+import { Grid } from '@mui/material';
 import { MetBodyOld } from 'components/common';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
+import { Link } from 'components/common/Input/Link';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
     const justifyContent = { xs: 'center', md: 'flex-start' };
