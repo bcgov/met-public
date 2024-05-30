@@ -1,6 +1,6 @@
 ## May 29, 2024
 
-- **Feature** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
+- **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
   - Removed language from URLs other than engagement/survey links
   - Fixed the issue of null appearing in public URLs
 
