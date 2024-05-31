@@ -39,7 +39,7 @@ const Dashboard = () => {
         if (isLoggedIn) {
             navigate(`${basePath}/comments/${dashboardType}`);
         } else {
-            navigate(`${languagePath}${basePath}/comments/${dashboardType}`);
+            navigate(`${basePath}/comments/${dashboardType}${languagePath}`);
         }
     };
 
@@ -83,7 +83,7 @@ const Dashboard = () => {
                     <Grid container item xs={12} flexDirection="column">
                         <Grid item xs={12} container justifyContent="flex-end" paddingBottom={'8px'}>
                             <Link
-                                to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
+                                to={isLoggedIn ? `${basePath}/view` : `${basePath}/view${languagePath}`}
                                 data-testid="link-container"
                             >
                                 {translate('dashboard.link.0') + engagement.name + translate('dashboard.link.1')}

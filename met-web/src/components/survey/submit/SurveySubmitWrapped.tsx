@@ -39,14 +39,14 @@ const SurveySubmitWrapped = () => {
                         <When condition={isTokenValid}>
                             <SurveyForm
                                 handleClose={() => {
-                                    navigate(`${languagePath}/${slug}`);
+                                    navigate(`/${slug}/${languagePath}`);
                                 }}
                             />
                         </When>
                         <InvalidTokenModal
                             open={!isTokenValid && Boolean(savedSurvey.engagement)}
                             handleClose={() => {
-                                navigate(`${languagePath}/${slug}`);
+                                navigate(`/${slug}/${languagePath}`);
                             }}
                         />
                     </MetPaper>

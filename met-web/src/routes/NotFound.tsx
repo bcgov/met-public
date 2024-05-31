@@ -9,7 +9,6 @@ const listItemStyle = { marginBottom: 1 };
 const marginStyle = { mr: 2 };
 
 const tenantId = sessionStorage.getItem('tenantId');
-const LanguageId = sessionStorage.getItem('languageId');
 
 const SuggestionsList = ({ translate }: { translate: (key: string) => string }) => (
     <Box>
@@ -18,7 +17,7 @@ const SuggestionsList = ({ translate }: { translate: (key: string) => string }) 
             <li style={listItemStyle}>{translate('notFound.list.0')}</li>
             <li style={listItemStyle}>
                 {translate('notFound.list.1')}{' '}
-                <Link target="_blank" to={`/${tenantId}/${LanguageId}`}>
+                <Link target="_blank" to={`/${tenantId}`}>
                     {translate('notFound.list.2')}
                 </Link>{' '}
                 {translate('notFound.list.3')}

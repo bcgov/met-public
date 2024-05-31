@@ -69,7 +69,7 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                     isLoggedIn
                                         ? navigate(`/engagements/${savedEngagement.id}/dashboard/public`)
                                         : navigate(
-                                              `${languagePath}/engagements/${savedEngagement.id}/dashboard/public`,
+                                              `/engagements/${savedEngagement.id}/dashboard/public/${languagePath}`,
                                           );
                                 }}
                             >
