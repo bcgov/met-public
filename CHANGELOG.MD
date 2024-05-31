@@ -4,6 +4,9 @@
   - Removed language from URLs other than engagement/survey links
   - Fixed the issue of null appearing in public URLs
 
+- **Feature** MET split out tenant specific variables from locale files [🎟️ DESENG-612](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-612)
+  - Replaced tenant based values with data from tenant detail API
+
 ## May 27, 2024
 
 - **Feature** MET translation file keys used on pages needing translation [🎟️ DESENG-611](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-611)

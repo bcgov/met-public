@@ -44,6 +44,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessageCheck } from '@fortawesome/pro-solid-svg-icons/faMessageCheck';
 import { faMessageSlash } from '@fortawesome/pro-solid-svg-icons/faMessageSlash';
 import { LanguageState } from 'reduxSlices/languageSlice';
+import { TenantState } from 'reduxSlices/tenantSlice';
 
 const CommentReview = () => {
     const [submission, setSubmission] = useState<SurveySubmission>(createDefaultSubmission());
@@ -67,6 +68,7 @@ const CommentReview = () => {
     const { submissionId, surveyId } = useParams();
     const reviewNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Review);
     const internalNotes = updatedStaffNote.filter((staffNote) => staffNote.note_type == StaffNoteType.Internal);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     const MAX_OTHER_REASON_CHAR = 500;
 
@@ -205,8 +207,8 @@ const CommentReview = () => {
     };
 
     const defaultVerdict = comment_status_id !== CommentStatus.Pending ? comment_status_id : CommentStatus.Approved;
-    // TODO: LANG-BACKEND - Change the value to show tenant specific
-    const threatEmailContact = 'email@gov.bc.ca';
+    const threatEmailContact = tenant.contact_email;
+    const threatConactName = tenant.contact_name;
     return (
         <MetPageGridContainer>
             <EmailPreviewModal
@@ -408,11 +410,9 @@ const CommentReview = () => {
                                         }
                                     />
                                     <MetSmallTextOld bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
-                                        {translate('comment.admin.review.threatTextOne')}
-                                        {/* TODO: LANG-BACKEND - Change the value to show tenant specific //
-                                        comment.admin.review.threatContact */}
-                                        {'FirstName LastName'}
-                                        {translate('comment.admin.review.threatTextTwo')}{' '}
+                                        {translate('comment.admin.review.threatTextOne')}&nbsp;
+                                        {threatConactName}&nbsp;
+                                        {translate('comment.admin.review.threatTextTwo')} &nbsp;
                                         <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
                                     </MetSmallTextOld>
                                     <FormControlLabel
