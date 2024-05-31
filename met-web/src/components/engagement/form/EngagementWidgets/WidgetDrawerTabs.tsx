@@ -6,7 +6,6 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 import WhoIsListening from './WhoIsListening';
 import Documents from './Documents';
-import Phases from './Phases';
 import EventsForm from './Events';
 import MapForm from './Map';
 import VideoForm from './Video';
@@ -30,9 +29,6 @@ const WidgetDrawerTabs = () => {
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.SUBSCRIBE_FORM}>
                     <SubscribeForm />
-                </TabPanel>
-                <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.PHASES_FORM}>
-                    <Phases />
                 </TabPanel>
                 <TabPanel sx={{ width: '100%' }} value={WidgetTabValues.EVENTS_FORM}>
                     <EventsForm />

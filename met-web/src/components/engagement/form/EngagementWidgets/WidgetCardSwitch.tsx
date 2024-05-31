@@ -15,20 +15,6 @@ export const WidgetCardSwitch = ({ widget, removeWidget }: WidgetCardSwitchProps
     return (
         <>
             <Switch>
-                <Case condition={widget.widget_type_id === WidgetType.Phases}>
-                    <MetWidget
-                        sortable={false}
-                        testId={`phases-${widget.widget_type_id}`}
-                        title={widget.title}
-                        onDelete={() => {
-                            removeWidget(widget.id);
-                        }}
-                        onEdit={() => {
-                            handleWidgetDrawerTabValueChange(WidgetTabValues.PHASES_FORM);
-                            handleWidgetDrawerOpen(true);
-                        }}
-                    />
-                </Case>
                 <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                     <MetWidget
                         testId={`who-is-listening-${widget.widget_type_id}`}
