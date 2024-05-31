@@ -209,10 +209,18 @@ const App = () => {
                 <PageViewTracker />
                 <Notification />
                 <NotificationModal />
-                <PublicHeader />
-                <UnauthenticatedRoutes />
-                <FeedbackModal />
-                <Footer />
+                <header>
+                    <PublicHeader />
+                </header>
+                <main>
+                    <UnauthenticatedRoutes />
+                </main>
+                <section>
+                    <FeedbackModal />
+                </section>
+                <footer>
+                    <Footer />
+                </footer>
             </Router>
         );
     }

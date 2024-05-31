@@ -54,6 +54,10 @@ const TileBlock = () => {
             columnSpacing={2}
             rowSpacing={4}
             item
+            role="region"
+            aria-label="Engagement List"
+            aria-live="polite"
+            aria-atomic="true"
             xs={10}
         >
             {engagements.map((engagement) => {
@@ -92,6 +96,7 @@ const TileBlock = () => {
                         color="primary"
                         showFirstButton
                         showLastButton
+                        aria-label="Pagination"
                         onChange={(_, pageNumber) => setPage(pageNumber)}
                     />
                 </Grid>

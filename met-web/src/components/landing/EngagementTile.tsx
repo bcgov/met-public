@@ -89,6 +89,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
 
     return (
         <Card
+            aria-label={'Engagement Card of ' + name}
             sx={{
                 maxWidth: 345,
                 '&:hover': {
@@ -97,6 +98,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 },
             }}
             tabIndex={0}
+            role="article"
             onClick={() => {
                 window.location.href = engagementUrl;
             }}
@@ -107,11 +109,18 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             }}
         >
             <When condition={Boolean(banner_url)}>
-                <CardMedia sx={{ height: 140 }} image={banner_url} title={name} />
+                <CardMedia sx={{ height: 140 }} image={banner_url} role="img" title={name} aria-label={name} />
             </When>
             <CardContent>
                 <Box sx={{ minHeight: 200 }}>
-                    <MetHeader4>{name}</MetHeader4>
+                    <div
+                        style={{
+                            fontSize: '1.3em',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {name}
+                    </div>
                     <MetParagraphOld
                         sx={{
                             overflow: 'hidden',
@@ -125,7 +134,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                         {description}
                     </MetParagraphOld>
                 </Box>
-                <MetBodyOld bold mt="1em">
+                <MetBodyOld bold mt="1em" aria-label="Period of engagement is from">
                     {EngagementDate}
                 </MetBodyOld>
                 <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
@@ -136,7 +145,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             <CardActions>
                 <If condition={submission_status === SubmissionStatus.Open}>
                     <Then>
-                        <Button variant="primary" fullWidth onClick={handleClick as () => void}>
+                        <Button
+                            variant="primary"
+                            fullWidth
+                            onClick={handleClick as () => void}
+                            aria-label={translate('buttonText.shareYourThoughts')}
+                        >
                             {translate('buttonText.shareYourThoughts')}
                         </Button>
                     </Then>
@@ -147,7 +161,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     }
                 >
                     <Then>
-                        <Button variant="secondary" fullWidth onClick={handleClick as () => void}>
+                        <Button
+                            variant="secondary"
+                            fullWidth
+                            onClick={handleClick as () => void}
+                            aria-label={translate('buttonText.viewEngagement')}
+                        >
                             {translate('buttonText.viewEngagement')}
                         </Button>
                     </Then>
