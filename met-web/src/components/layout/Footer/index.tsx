@@ -133,6 +133,7 @@ const Footer = () => {
                     <Stack direction="row" spacing={2}>
                         <IconButton
                             icon={faFacebookF}
+                            title="Facebook Icon"
                             sx={{
                                 border: '1px solid #494949',
                                 borderRadius: '50%',
@@ -140,6 +141,7 @@ const Footer = () => {
                         />
                         <IconButton
                             icon={faInstagram}
+                            title="Instagram Icon"
                             sx={{
                                 border: '1px solid #494949',
                                 borderRadius: '50%',
@@ -147,6 +149,7 @@ const Footer = () => {
                         />
                         <IconButton
                             icon={faXTwitter}
+                            title="Twitter Icon"
                             sx={{
                                 border: '1px solid #494949',
                                 borderRadius: '50%',

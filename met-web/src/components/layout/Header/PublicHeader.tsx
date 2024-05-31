@@ -28,7 +28,7 @@ const PublicHeader = () => {
     const headerTitle = tenant.title;
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 }} aria-label="Public Header">
             <AppBar
                 position="static"
                 sx={{
@@ -49,6 +49,7 @@ const PublicHeader = () => {
                             <img
                                 src={logoUrl}
                                 alt={translate('common.defaultText')}
+                                aria-label={translate('common.defaultText')}
                                 style={{
                                     objectFit: 'cover',
                                     height: '5em',
@@ -76,10 +77,12 @@ const PublicHeader = () => {
                             onClick={() => {
                                 navigate(`/${language}`);
                             }}
+                            aria-label={translate('common.defaultBCText')}
                             alt={translate('common.defaultBCText')}
                         />
                     </When>
                     <HeaderTitleOld
+                        aria-label={translate('common.headerTitleAreaLabel')}
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
                             navigate(`/${language}`);
@@ -88,7 +91,12 @@ const PublicHeader = () => {
                         {headerTitle}
                     </HeaderTitleOld>
                     <When condition={isLoggedIn}>
-                        <Button color="inherit" onClick={() => UserService.doLogout()}>
+                        <Button
+                            role="button"
+                            color="inherit"
+                            onClick={() => UserService.doLogout()}
+                            aria-label={translate('common.logoutAreaLabel')}
+                        >
                             {translate('common.logout')}
                         </Button>
                     </When>

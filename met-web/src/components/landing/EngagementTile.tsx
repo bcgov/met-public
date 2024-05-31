@@ -96,8 +96,14 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     cursor: 'pointer',
                 },
             }}
+            tabIndex={0}
             onClick={() => {
                 window.location.href = engagementUrl;
+            }}
+            onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                    window.location.href = engagementUrl;
+                }
             }}
         >
             <When condition={Boolean(banner_url)}>
