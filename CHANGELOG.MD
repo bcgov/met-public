@@ -1,3 +1,9 @@
+## May 30, 2024
+
+- **Feature** Remove EAO process widget [🎟️ DESENG-626](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-626)
+  - Removed EAO process widget
+  - Added migration file to remove EAO process widget attached to any existing engagement
+
 ## May 29, 2024
 
 - **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)

@@ -47,14 +47,6 @@ const whoIsListeningWidget: Widget = {
     items: [widgetItem],
 };
 
-const engagementPhasesWidget: Widget = {
-    id: 2,
-    title: 'Engagement Phases',
-    widget_type_id: WidgetType.Phases,
-    engagement_id: 1,
-    items: [],
-};
-
 const mockLocationData = { state: { open: true }, pathname: '', search: '', hash: '', key: '' };
 
 jest.mock('hooks', () => ({
@@ -180,27 +172,5 @@ describe('Engagement View page tests', () => {
         expect(getEngagementMock).toHaveBeenCalledOnce();
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
         expect(mockContactRtkUnwrap).toHaveBeenCalledOnce();
-    });
-
-    test('Phases widget appears', async () => {
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([engagementPhasesWidget]));
-        const { container } = render(<EngagementView />);
-
-        await waitFor(() => {
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            expect(mockWidgetsRtkUnwrap).toHaveReturned();
-        });
-
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
-        expect(getEngagementMock).toHaveBeenCalledOnce();
-
-        const eaProcessAccordion = screen.getByTestId('eaProcessAccordion');
-        expect(eaProcessAccordion).toBeVisible();
     });
 });
