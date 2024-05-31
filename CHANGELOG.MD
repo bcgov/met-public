@@ -1,5 +1,9 @@
 ## May 29, 2024
 
+- **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
+  - Removed language from URLs other than engagement/survey links
+  - Fixed the issue of null appearing in public URLs
+
 - **Feature** MET split out tenant specific variables from locale files [🎟️ DESENG-612](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-612)
   - Replaced tenant based values with data from tenant detail API
 

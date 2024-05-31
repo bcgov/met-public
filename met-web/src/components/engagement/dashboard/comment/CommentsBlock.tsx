@@ -55,7 +55,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
         if (isLoggedIn) {
             navigate(`${basePath}/dashboard/public`);
         } else {
-            navigate(`${languagePath}${basePath}/dashboard/public`);
+            navigate(`${basePath}/dashboard/public${languagePath}`);
         }
     };
 
@@ -67,7 +67,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
         <>
             <Grid item xs={12} container direction="row" justifyContent="flex-end" paddingBottom={'8px'}>
                 <Link
-                    to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
+                    to={isLoggedIn ? `${basePath}/view` : `${basePath}/view${languagePath}`}
                     style={{ color: '#1A5A96' }}
                 >
                     {translate('commentDashboard.block.link.0') +

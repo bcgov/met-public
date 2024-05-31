@@ -29,7 +29,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const dateFormat = 'MMM DD, YYYY';
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const engagementPath = `/${slug}`;
-    const engagementUrl = `${getBaseUrl()}${languagePath}${engagementPath}`;
+    const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {

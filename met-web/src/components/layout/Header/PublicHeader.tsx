@@ -17,7 +17,6 @@ import { TenantState } from 'reduxSlices/tenantSlice';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const language = sessionStorage.getItem('languageId');
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
@@ -57,7 +56,7 @@ const PublicHeader = () => {
                                     cursor: 'pointer',
                                 }}
                                 onClick={() => {
-                                    navigate(`/${language}`);
+                                    navigate(`/`);
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -75,7 +74,7 @@ const PublicHeader = () => {
                                 cursor: 'pointer',
                             }}
                             onClick={() => {
-                                navigate(`/${language}`);
+                                navigate(`/`);
                             }}
                             aria-label={translate('common.defaultBCText')}
                             alt={translate('common.defaultBCText')}
@@ -85,7 +84,7 @@ const PublicHeader = () => {
                         aria-label={translate('common.headerTitleAreaLabel')}
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
-                            navigate(`/${language}`);
+                            navigate(`/`);
                         }}
                     >
                         {headerTitle}

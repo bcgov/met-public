@@ -94,25 +94,22 @@ const App = () => {
         }
 
         const defaultTenant = AppConfig.tenant.defaultTenant;
-        const defaultLanguage = AppConfig.language.defaultLanguageId;
-
+        sessionStorage.setItem('languageId', AppConfig.language.defaultLanguageId);
         // Determine the appropriate URL to redirect
-        const redirectToDefaultUrl = (base: string, includeLanguage = true) => {
-            const languageSegment = includeLanguage ? `/${defaultLanguage}` : '/home';
-            window.location.replace(`/${base}${languageSegment}`);
+        const redirectToDefaultUrl = (base: string, isAuthenticated: boolean) => {
+            const redirectUrl = `/${base}${isAuthenticated ? '/home' : ''}`;
+            window.location.replace(redirectUrl);
         };
-
-        const shouldIncludeLanguage = !isAuthenticated;
 
         if (basename) {
             fetchTenant(basename);
-            // if language or admin dashboard url not set
-            if (pathSegments.length < 2) {
-                redirectToDefaultUrl(basename, shouldIncludeLanguage);
+            // if admin dashboard url not set
+            if (pathSegments.length < 2 && isAuthenticated) {
+                redirectToDefaultUrl(basename, isAuthenticated);
             }
         } else if (defaultTenant) {
             fetchTenant(defaultTenant);
-            redirectToDefaultUrl(defaultTenant, shouldIncludeLanguage);
+            redirectToDefaultUrl(defaultTenant, isAuthenticated);
         } else {
             dispatch(loadingTenant(false));
         }
@@ -213,9 +210,7 @@ const App = () => {
                 <Notification />
                 <NotificationModal />
                 <PublicHeader />
-                <Routes>
-                    <Route path="/:lang/*" element={<UnauthenticatedRoutes />} />
-                </Routes>
+                <UnauthenticatedRoutes />
                 <FeedbackModal />
                 <Footer />
             </Router>

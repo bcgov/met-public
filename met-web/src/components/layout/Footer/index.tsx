@@ -16,7 +16,6 @@ import { IconButton, Link } from 'components/common/Input';
 
 const Footer = () => {
     const baseURL = getBaseUrl();
-    const LanguageId = sessionStorage.getItem('languageId');
     const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
 
@@ -79,7 +78,7 @@ const Footer = () => {
                         <MetLabel>{translate('footer.moreInfo')}</MetLabel>
                     </Grid>
                     <Grid item xs={6}>
-                        <Link to={isLoggedIn ? `/home` : `/${LanguageId}`} color={Palette.text.primary}>
+                        <Link to={isLoggedIn ? `/home` : `/`} color={Palette.text.primary}>
                             {translate('footer.home')}
                         </Link>
                     </Grid>

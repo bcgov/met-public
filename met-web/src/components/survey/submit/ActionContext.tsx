@@ -188,7 +188,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                     text: translate('surveySubmit.surveySubmitNotification.success'),
                 }),
             );
-            navigate(`${languagePath}/${slug}`, {
+            navigate(`/${slug}/${languagePath}`, {
                 state: {
                     open: true,
                 },
