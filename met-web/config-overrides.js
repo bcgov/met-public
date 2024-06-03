@@ -1,7 +1,5 @@
 const webpack = require('webpack');
-const wcConfig = require('./config-overrides-wc');
 module.exports = function override(config) {
-    const isWcBuild = process.argv.indexOf('--wc-build')!==-1;
     const fallback = config.resolve.fallback || {};
     Object.assign(fallback, {
         crypto: require.resolve('crypto-browserify'),
@@ -25,12 +23,5 @@ module.exports = function override(config) {
             fullySpecified: false, // disable the behavior
         },
     });
-    if(isWcBuild) {
-        config.entry = wcConfig.entry;
-        config.output = {
-            ...config.output,
-            ...wcConfig.output
-        }   
-    }
     return config;
 };

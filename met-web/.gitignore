@@ -10,9 +10,6 @@
 # production
 /build
 
-#web-components
-/wc-lib
-
 # misc
 .DS_Store
 .env.local

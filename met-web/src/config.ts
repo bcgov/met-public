@@ -38,12 +38,9 @@ const getEnv = (key: string, defaultValue = '') => {
     } else return process.env[key] || defaultValue;
 };
 
-// adding localStorage to access the MET API from external sources(eg: web-components)
-const API_URL = localStorage.getItem('met-api-url') || getEnv('REACT_APP_API_URL');
-const PUBLIC_URL = localStorage.getItem('met-public-url') || getEnv('REACT_APP_PUBLIC_URL');
-
-// adding localStorage to access the MET Analytics API from external sources(eg: web-components)
-const REACT_APP_ANALYTICS_API_URL = localStorage.getItem('analytics-api-url') || getEnv('REACT_APP_ANALYTICS_API_URL');
+const API_URL = getEnv('REACT_APP_API_URL');
+const PUBLIC_URL = getEnv('REACT_APP_PUBLIC_URL');
+const REACT_APP_ANALYTICS_API_URL = getEnv('REACT_APP_ANALYTICS_API_URL');
 
 // Formio Environment Variables
 const FORMIO_PROJECT_URL = getEnv('REACT_APP_FORMIO_PROJECT_URL');
