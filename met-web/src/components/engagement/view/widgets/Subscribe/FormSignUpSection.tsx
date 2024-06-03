@@ -7,7 +7,7 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Editor } from 'react-draft-wysiwyg';
 import { Widget } from 'models/widget';
 import { getBaseUrl } from 'helper';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 
 const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: SubscribeForm; widget: Widget }) => {
     const languagePath = `${sessionStorage.getItem('languageId')}`;

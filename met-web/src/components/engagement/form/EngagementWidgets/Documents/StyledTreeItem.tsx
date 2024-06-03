@@ -7,7 +7,7 @@ import { Box } from '@mui/material';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/pro-regular-svg-icons/faArrowUpRightFromSquare';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 
 type DocumentTreeItemProps = TreeItemProps & {
     labelIcon?: IconProp;

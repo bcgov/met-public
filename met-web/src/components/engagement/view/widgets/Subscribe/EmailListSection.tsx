@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'components/common/Input/Button';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 import { Grid } from '@mui/material';
 import { SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';

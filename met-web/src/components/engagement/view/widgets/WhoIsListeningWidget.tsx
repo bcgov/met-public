@@ -7,7 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { When } from 'react-if';
 import { useLazyGetContactQuery } from 'apiManager/apiSlices/contacts';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 
 interface WhoIsListeningWidgetProps {
     widget: Widget;
