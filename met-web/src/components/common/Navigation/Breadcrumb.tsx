@@ -1,6 +1,7 @@
 import { Breadcrumbs } from '@mui/material';
 import React from 'react';
-import { BodyText, Link } from '../Typography';
+import { BodyText } from '../Typography';
+import { Link } from '../Navigation';
 
 type BreadcrumbProps = {
     name: string;

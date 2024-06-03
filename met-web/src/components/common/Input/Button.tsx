@@ -112,11 +112,11 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
     const height: string = sizeMap[size];
     const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
     const isCustom = color !== 'default';
+    const textColor = isCustom ? customColor : colors.type.regular.primary;
+    const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 5%)` : textColor;
     const borderColor = isCustom ? customColor : colors.surface.gray[80];
     const darkBorderColor = isCustom ? `color-mix(in srgb, ${borderColor}, black 5%)` : colors.surface.gray[110];
-    const bgColor = colors.button[color as keyof typeof colors.button]?.shade;
-    const darkBackgroundColor = isCustom ? '#F8F8F8' : `color-mix(in srgb, ${bgColor}, black 20%)`;
-    const textColors = isDarkColor(darkBackgroundColor, 0.4) ? colors.type.inverted : colors.type.regular;
+    const darkBackgroundColor = isCustom ? '#F8F8F8' : `color-mix(in srgb, white, black 5%)`;
 
     return (
         <MuiButton
@@ -130,45 +130,45 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
                 ...buttonStyles,
                 height: height,
                 background: 'white',
-                color: textColors,
+                color: textColor,
                 boxShadow: elevations.default,
-                border: `2px solid ${borderColor}`,
+                border: `1px solid ${borderColor}`,
                 '&:focus': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.hover,
-                    color: textColors,
-                    border: 'none',
-                },
-                '&:focus-visible': {
-                    backgroundColor: darkBackgroundColor,
-                    outline: `2px solid ${colors.focus.regular.outer}`,
-                    boxShadow: [globalFocusShadow, elevations.hover].join(','),
-                    color: colors.type.inverted.primary,
-                    border: 'none',
+                    color: darkTextColor,
+                    border: `1px solid ${darkBorderColor}`,
                 },
                 '&:hover': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.hover,
-                    color: colors.type.inverted.primary,
-                    border: 'none',
+                    color: darkTextColor,
+                    border: `1px solid ${darkBorderColor}`,
                     '&:focus-visible': {
-                        boxShadow: [globalFocusShadow, elevations.hover].join(','),
+                        boxShadow: elevations.hover,
                     },
                 },
                 '&:active': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.pressed,
-                    color: textColors,
-                    border: `2px solid ${darkBorderColor}`,
+                    color: darkTextColor,
+                    border: isCustom ? `1px solid ${customColor}` : `1px solid transparent`,
                     '&:focus-visible': {
-                        boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                        boxShadow: elevations.pressed,
                     },
+                },
+                '&:focus-visible': {
+                    backgroundColor: darkBackgroundColor,
+                    outline: `2px solid ${colors.focus.regular.outer}`,
+                    boxShadow: elevations.hover,
+                    color: darkTextColor,
+                    border: `none`,
                 },
                 '&:disabled': {
                     backgroundColor: 'white',
                     boxShadow: 'none',
                     color: colors.type.regular.disabled,
-                    border: `2px solid ${colors.type.regular.disabled}`,
+                    border: `1px solid ${colors.type.regular.disabled}`,
                 },
                 ...buttonProps.sx,
             }}

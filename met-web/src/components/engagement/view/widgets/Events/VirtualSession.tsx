@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import { MetBodyOld } from 'components/common';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
     const justifyContent = { xs: 'center', md: 'flex-start' };

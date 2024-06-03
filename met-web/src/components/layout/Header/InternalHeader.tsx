@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
+import { Button } from 'components/common/Input';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme, IconButton } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
@@ -18,6 +18,7 @@ import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { useAppSelector } from '../../../hooks';
+import { BodyText } from 'components/common/Typography';
 
 const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -114,14 +115,10 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             {tenant.short_name}
                         </HeaderTitleOld>
                     )}
-                    <Button
-                        data-testid="button-header"
-                        sx={{
-                            color: Palette.internalHeader.color,
-                        }}
-                        onClick={() => UserService.doLogout()}
-                    >
-                        Logout
+                    <Button data-testid="button-header" variant="tertiary" onClick={() => UserService.doLogout()}>
+                        <BodyText bold size="large">
+                            Logout
+                        </BodyText>
                     </Button>
                 </Toolbar>
                 <EnvironmentBanner />

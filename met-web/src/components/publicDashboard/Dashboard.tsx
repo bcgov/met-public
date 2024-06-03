@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
-import { Link } from 'components/common/Input/Link';
+import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgressWithLabel, MetHeader1Old, MetPaper, MetDescription } from 'components/common';
