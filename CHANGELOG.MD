@@ -1,3 +1,9 @@
+## June 3, 2024
+
+- **Bugfix** Patch button styles (follow-up to [🎟️ DESENG-583](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-583))
+  - Fixed button styles to match the design system
+  - Removed state management overhead from the Link component
+
 ## May 30, 2024
 
 - **Feature** Remove EAO process widget [🎟️ DESENG-626](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-626)
@@ -7,6 +13,7 @@
 ## May 29, 2024
 
 - **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
+
   - Removed language from URLs other than engagement/survey links
   - Fixed the issue of null appearing in public URLs
 
@@ -16,6 +23,7 @@
 ## May 27, 2024
 
 - **Feature** MET translation file keys used on pages needing translation [🎟️ DESENG-611](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-611)
+
   - Removed Tenant based translations from langauge files
   - Set TODO statements to replace tenant related values from backend
   - Splitting translations based on language files and added a common translation file for items common across all languages
@@ -27,12 +35,14 @@
 ## May 23, 2024
 
 - **Feature** Finish tenant management UX [🎟️ DESENG-605](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-605), [🎟️ DESENG-606](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-606)
+
   - Added a new tenant detail page
   - Added a form for filling out tenant details
   - Added a new tenant creation page
   - Added a new tenant edit page
 
 - **Feature** Add design system components to common components
+
   - Added Table components, DetailsContainer, and Detail for layout
   - Reworked button components to match the design system and support new colors
   - Reworked modal components to match the design system
@@ -40,6 +50,7 @@
   - Added new form components that align with the design system
 
 - **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
+
   - Removed verification token from the response object
   - Updated the test to reflect the change
 
@@ -47,9 +58,11 @@
   - Added a try catch block to all snowplow calls
 
 ## May 22, 2024
+
 - **Feature** Add languages side nav link [🎟️ DESENG-622](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-622)
 
 ## May 21, 2024
+
 - **Task** Clean up met-cron [🎟️ DESENG-602](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-602)
 
 ## May 16, 2024
