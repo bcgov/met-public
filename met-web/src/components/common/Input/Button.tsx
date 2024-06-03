@@ -152,7 +152,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.pressed,
                     color: darkTextColor,
-                    border: 'none',
+                    border: isCustom ? `1px solid ${customColor}` : `1px solid transparent`,
                     '&:focus-visible': {
                         boxShadow: elevations.pressed,
                     },
