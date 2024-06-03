@@ -16,7 +16,6 @@ export interface Widget {
 export enum WidgetType {
     WhoIsListening = 1,
     Document = 2,
-    Phases = 3,
     Subscribe = 4,
     Events = 5,
     Map = 6,

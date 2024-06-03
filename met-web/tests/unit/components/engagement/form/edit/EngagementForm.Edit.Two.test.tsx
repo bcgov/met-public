@@ -183,7 +183,7 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Select Widget')).toBeVisible();
             expect(screen.getByTestId(`widget-drawer-option/${WidgetType.WhoIsListening}`));
-            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Phases}`));
+            expect(screen.getByTestId(`widget-drawer-option/${WidgetType.Document}`));
         });
     });
 

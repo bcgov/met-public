@@ -12,8 +12,6 @@ import { RouteState } from './types';
 import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { getAvailableTranslationLanguages } from 'services/engagementService';
-import { PhasesWidget } from './widgets/PhasesWidget';
-import { PhasesWidgetMobile } from './widgets/PhasesWidget/PhasesWidgetMobile/PhasesWidgetMobile';
 import { EngagementBanner } from './EngagementBanner';
 
 export const EngagementView = () => {
@@ -25,7 +23,6 @@ export const EngagementView = () => {
     const { savedEngagement } = useContext(ActionContext);
     const { setEngagementViewMounted, setAvailableEngagementTranslations } = useContext(LanguageContext);
     const surveyId = savedEngagement.surveys[0]?.id || '';
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
@@ -93,16 +90,6 @@ export const EngagementView = () => {
                     rowSpacing={2}
                     columnSpacing={1}
                 >
-                    <Grid item xs={12}>
-                        <If condition={isSmallScreen}>
-                            <Then>
-                                <PhasesWidgetMobile />
-                            </Then>
-                            <Else>
-                                <PhasesWidget />
-                            </Else>
-                        </If>
-                    </Grid>
                     <If condition={isMediumScreen}>
                         <Then>
                             <Grid
