@@ -82,7 +82,6 @@
     "scripts": {
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
-        "build-wc": "react-app-rewired build --wc-build",
         "test": "jest",
         "eject": "react-scripts eject",
         "lint": "eslint \"src/**/*.{ts,tsx}\"",
