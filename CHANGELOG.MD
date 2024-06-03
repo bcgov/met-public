@@ -3,6 +3,10 @@
 - **Feature** Remove web components [🎟️ DESENG-616](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-616)
   - Removed web components and all code that references it
 
+- **Feature** Remove EAO process widget [🎟️ DESENG-626](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-626)
+  - Removed EAO process widget
+  - Added migration file to remove EAO process widget attached to any existing engagement
+
 ## May 29, 2024
 
 - **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
