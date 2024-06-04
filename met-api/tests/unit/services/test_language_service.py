@@ -34,14 +34,6 @@ def test_get_languages(session):
     assert len(languages) >= 2
 
 
-def test_create_language(session):
-    """Assert that a language can be created."""
-    language_data = {'name': 'Italian', 'code': 'it', 'right_to_left': False}
-    created_language = LanguageService.create_language(language_data)
-
-    assert created_language.name == 'Italian'
-
-
 def test_update_language(session):
     """Assert that a language can be updated."""
     language = factory_language_model(

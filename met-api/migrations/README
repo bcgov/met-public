@@ -1,1 +1,13 @@
-Generic single-database configuration.
+# Migrations 
+
+Uses alembic, SQL Alchemy, and flask-migrate to perform DB migrations.
+
+To create a new revision:
+
+`alembic revision -m "description of revision"`
+
+## Languages
+
+The list of languages in `supported_languages.json` has been taken from [https://www.w3schools.com/tags/ref_language_codes.asp](https://www.w3schools.com/tags/ref_language_codes.asp) and modified slightly to remove duplicate or multiple language codes per language.
+
+A migration is run to insert these into the database as available languages in the app.

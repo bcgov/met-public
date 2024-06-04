@@ -9,6 +9,7 @@ from flask import jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from met_api.auth import jwt as _jwt
 from met_api.schemas import utils as schema_utils
@@ -73,7 +74,66 @@ class LanguageResource(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
             return str(err), HTTPStatus.NOT_FOUND
+        
+@cors_preflight('GET, OPTIONS')
+@API.route('/tenant/<int:tenant_id>')
+class Languages(Resource):
+    """Resource for getting existing language-tenant mappings."""
 
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(tenant_id):
+        """Fetch list of languages associated with a given tenant ID."""
+        try:
+            languages = LanguageService.get_languages_by_tenant(tenant_id)
+            return (
+                jsonify(LanguageSchema(many=True).dump(languages)),
+                HTTPStatus.OK,
+            )
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/<int:language_id>/tenant/<int:tenant_id>')
+class Languages(Resource):
+    """Resource for adding or removing language-tenant relationships."""
+
+    @staticmethod
+    def post(language_id, tenant_id):
+        """Create language-tenant mapping."""
+        try:
+            return LanguageService.map_language_to_tenant(language_id, tenant_id)
+        except IntegrityError as e:
+            # Catching language code already exists error
+            detail = (
+                str(e.orig).split('DETAIL: ')[1]
+                if 'DETAIL: ' in str(e.orig)
+                else 'Duplicate entry.'
+            )
+            raise BusinessException(
+                str(detail), HTTPStatus.INTERNAL_SERVER_ERROR
+            ) from e
+
+@cors_preflight('DELETE, OPTIONS')
+@API.route('/mappings/<int:language_mapping_id>')
+class Languages(Resource):
+    """Resourse for removing language-tenant relationships."""
+
+    @staticmethod
+    # @_jwt.requires_auth
+    # @cross_origin(origins=allowedorigins())
+    def delete(language_mapping_id):
+        """Remove a language mapping from a tenant."""
+        try:
+            success = LanguageService.remove_language_mapping_from_tenant(language_mapping_id)
+            if success:
+                return 'Successfully deleted language-tenant mapping', HTTPStatus.NO_CONTENT
+            raise ValueError('Language-tenant mapping not found')
+        except KeyError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
+        except ValueError as err:
+            return str(err), HTTPStatus.NOT_FOUND
 
 @cors_preflight('GET, POST, OPTIONS, PATCH, DELETE')
 @API.route('/')
@@ -92,26 +152,3 @@ class Languages(Resource):
             )
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-    @staticmethod
-    @_jwt.requires_auth
-    @cross_origin(origins=allowedorigins())
-    def post():
-        """Create a new language."""
-        try:
-            request_json = request.get_json()
-            valid_format, errors = schema_utils.validate(
-                request_json, 'language'
-            )
-            if not valid_format:
-                return {
-                    'message': schema_utils.serialize(errors)
-                }, HTTPStatus.BAD_REQUEST
-            result = LanguageService.create_language(request_json)
-            return LanguageSchema().dump(result), HTTPStatus.CREATED
-        except (KeyError, ValueError) as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-        except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
-        except BusinessException as err:
-            return err.error, err.status_code
