@@ -32,13 +32,3 @@ class Language(BaseModel):
             db.session.commit()
             return language
         return None
-
-    @staticmethod
-    def delete_language(language_id):
-        """Delete a language."""
-        language = Language.query.get(language_id)
-        if language:
-            db.session.delete(language)
-            db.session.commit()
-            return True
-        return False

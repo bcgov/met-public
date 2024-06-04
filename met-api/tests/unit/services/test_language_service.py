@@ -48,21 +48,3 @@ def test_update_language(session):
     )
 
     assert updated_language.name == 'Nihongo'
-
-
-def test_delete_language(session):
-    """Assert that a language can be deleted."""
-    language = factory_language_model(
-        {'name': 'Russian', 'code': 'ru', 'right_to_left': False}
-    )
-    session.add(language)
-    session.commit()
-
-    LanguageService.delete_language(language.id)
-    deleted_language = Language.query.get(language.id)
-
-    assert deleted_language is None
-
-    # Testing for invalid id
-    is_deleted = LanguageService.delete_language(99999)
-    assert is_deleted is False
