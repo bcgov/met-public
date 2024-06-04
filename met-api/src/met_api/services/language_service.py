@@ -32,11 +32,6 @@ class LanguageService:
         return updated_language
 
     @staticmethod
-    def delete_language(language_id):
-        """Delete language."""
-        return Language.delete_language(language_id)
-
-    @staticmethod
     def map_language_to_tenant(language_id: int, tenant_id: int):
         """Create an entry in the language tenant mapping table to associated a language with a tenant."""
         language_mapping = LanguageTenantMapping()

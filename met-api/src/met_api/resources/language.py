@@ -60,21 +60,6 @@ class LanguageResource(Resource):
         except ValidationError as err:
             return str(err.messages), HTTPStatus.BAD_REQUEST
 
-    @staticmethod
-    @_jwt.requires_auth
-    @cross_origin(origins=allowedorigins())
-    def delete(language_id):
-        """Delete a language."""
-        try:
-            success = LanguageService.delete_language(language_id)
-            if success:
-                return 'Successfully deleted language', HTTPStatus.NO_CONTENT
-            raise ValueError('Language not found')
-        except KeyError as err:
-            return str(err), HTTPStatus.BAD_REQUEST
-        except ValueError as err:
-            return str(err), HTTPStatus.NOT_FOUND
-
 
 @cors_preflight('GET, OPTIONS')
 @API.route('/tenant/<int:tenant_id>')
@@ -88,7 +73,7 @@ class TenantLanguages(Resource):
         try:
             languages = LanguageService.get_languages_by_tenant(tenant_id)
             return (
-                jsonify(LanguageSchema(many=True).dump(languages)),
+                LanguageSchema(many=True).dump(languages),
                 HTTPStatus.OK,
             )
         except (KeyError, ValueError) as err:
@@ -150,7 +135,7 @@ class Languages(Resource):
         try:
             languages = LanguageService.get_languages()
             return (
-                jsonify(LanguageSchema(many=True).dump(languages)),
+                LanguageSchema(many=True).dump(languages),
                 HTTPStatus.OK,
             )
         except (KeyError, ValueError) as err:
