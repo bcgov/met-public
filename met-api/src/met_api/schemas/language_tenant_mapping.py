@@ -12,5 +12,5 @@ class LanguageTenantMappingSchema(Schema):
         unknown = EXCLUDE
 
     id = fields.Int(data_key='id')
-    language_id = fields.Int(data_key="language_id")
-    tenant_id = fields.Int(data_key="tenant_id")
+    language_id = fields.Int(data_key='language_id')
+    tenant_id = fields.Int(data_key='tenant_id')

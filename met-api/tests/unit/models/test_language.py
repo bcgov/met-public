@@ -6,6 +6,7 @@ Test suite to ensure that the Language model routines are working as expected.
 from met_api.models.language import Language
 from tests.utilities.factory_utils import factory_language_model
 
+
 def test_get_language_by_id(session):
     """Assert that a language can be fetched by its ID."""
     language = factory_language_model(

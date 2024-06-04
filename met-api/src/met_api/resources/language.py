@@ -74,10 +74,11 @@ class LanguageResource(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
             return str(err), HTTPStatus.NOT_FOUND
-        
+
+
 @cors_preflight('GET, OPTIONS')
 @API.route('/tenant/<int:tenant_id>')
-class Languages(Resource):
+class TenantLanguages(Resource):
     """Resource for getting existing language-tenant mappings."""
 
     @staticmethod
@@ -96,7 +97,7 @@ class Languages(Resource):
 
 @cors_preflight('POST, OPTIONS')
 @API.route('/<int:language_id>/tenant/<int:tenant_id>')
-class Languages(Resource):
+class ManageLanguageMappings(Resource):
     """Resource for adding or removing language-tenant relationships."""
 
     @staticmethod
@@ -115,9 +116,10 @@ class Languages(Resource):
                 str(detail), HTTPStatus.INTERNAL_SERVER_ERROR
             ) from e
 
+
 @cors_preflight('DELETE, OPTIONS')
 @API.route('/mappings/<int:language_mapping_id>')
-class Languages(Resource):
+class DeleteLanguageMapping(Resource):
     """Resourse for removing language-tenant relationships."""
 
     @staticmethod
@@ -134,6 +136,7 @@ class Languages(Resource):
             return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
             return str(err), HTTPStatus.NOT_FOUND
+
 
 @cors_preflight('GET, POST, OPTIONS, PATCH, DELETE')
 @API.route('/')
