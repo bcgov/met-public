@@ -59,6 +59,7 @@ from .widget_poll import Poll
 from .poll_answers import PollAnswer
 from .poll_responses import PollResponse
 from .language import Language
+from .language_tenant_mapping import LanguageTenantMapping
 from .widget_translation import WidgetTranslation
 from .survey_translation import SurveyTranslation
 from .event_item_translation import EventItemTranslation

@@ -47,24 +47,6 @@ def test_get_languages(client, jwt, session):
     assert len(json_data) > 0
 
 
-def test_create_language(client, jwt, session, setup_admin_user_and_claims):
-    """Assert that a new language can be created using the POST API endpoint."""
-    _, claims = setup_admin_user_and_claims
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    data = {'name': 'Italian', 'code': 'it', 'right_to_left': False}
-
-    rv = client.post(
-        '/api/languages/',
-        data=json.dumps(data),
-        headers=headers,
-        content_type=ContentType.JSON.value,
-    )
-
-    assert rv.status_code == HTTPStatus.CREATED
-    json_data = rv.json
-    assert json_data['name'] == 'Italian'
-
-
 def test_update_language(client, jwt, session, setup_admin_user_and_claims):
     """Assert that a language can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims

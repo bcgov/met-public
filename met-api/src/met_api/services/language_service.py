@@ -1,12 +1,11 @@
 """Service for Language management."""
 
-from http import HTTPStatus
+from sqlalchemy.exc import SQLAlchemyError
 
-from sqlalchemy.exc import IntegrityError
-
-from met_api.exceptions.business_exception import BusinessException
 from met_api.models.language import Language
+from met_api.models.language_tenant_mapping import LanguageTenantMapping
 from met_api.schemas.language import LanguageSchema
+from met_api.schemas.language_tenant_mapping import LanguageTenantMappingSchema
 
 
 class LanguageService:
@@ -25,22 +24,6 @@ class LanguageService:
         return LanguageSchema(many=True).dump(languages_records)
 
     @staticmethod
-    def create_language(language_data):
-        """Create language."""
-        try:
-            return Language.create_language(language_data)
-        except IntegrityError as e:
-            # Catching language code already exists error
-            detail = (
-                str(e.orig).split('DETAIL: ')[1]
-                if 'DETAIL: ' in str(e.orig)
-                else 'Duplicate entry.'
-            )
-            raise BusinessException(
-                str(detail), HTTPStatus.INTERNAL_SERVER_ERROR
-            ) from e
-
-    @staticmethod
     def update_language(language_id, data: dict):
         """Update language partially."""
         updated_language = Language.update_language(language_id, data)
@@ -49,6 +32,21 @@ class LanguageService:
         return updated_language
 
     @staticmethod
-    def delete_language(language_id):
-        """Delete language."""
-        return Language.delete_language(language_id)
+    def map_language_to_tenant(language_id: int, tenant_id: int):
+        """Create an entry in the language tenant mapping table to associated a language with a tenant."""
+        language_mapping = LanguageTenantMapping()
+        try:
+            language_mapping.add_language_to_tenant(language_id, tenant_id)
+        except SQLAlchemyError as e:
+            raise ValueError('Error adding language to tenant.') from e
+        return LanguageTenantMappingSchema().dump(language_mapping)
+
+    @staticmethod
+    def remove_language_mapping_from_tenant(language_mapping_id: int):
+        """Remove the DB entry that maps the language to the tenant."""
+        return LanguageTenantMapping.remove_language_from_tenant(language_mapping_id)
+
+    @staticmethod
+    def get_languages_by_tenant(tenant_id: int):
+        """Get all languages associated with a given tenant."""
+        return LanguageTenantMapping.get_all_by_tenant_id(tenant_id)

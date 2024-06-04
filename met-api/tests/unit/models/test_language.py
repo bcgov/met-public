@@ -7,17 +7,6 @@ from met_api.models.language import Language
 from tests.utilities.factory_utils import factory_language_model
 
 
-def test_create_language(session):
-    """Assert that a language can be created."""
-    language_data = {'name': 'Spanish', 'code': 'es', 'right_to_left': False}
-    language = factory_language_model(language_data)
-    session.add(language)
-    session.commit()
-
-    assert language.id is not None
-    assert language.name == 'Spanish'
-
-
 def test_get_language_by_id(session):
     """Assert that a language can be fetched by its ID."""
     language = factory_language_model(
@@ -44,17 +33,3 @@ def test_update_language(session):
     updated_language = Language.query.get(language.id)
 
     assert updated_language.name == 'Deutsch'
-
-
-def test_delete_language(session):
-    """Assert that a language can be deleted."""
-    language = factory_language_model(
-        {'name': 'Italian', 'code': 'it', 'right_to_left': False}
-    )
-    session.add(language)
-    session.commit()
-
-    Language.delete_language(language.id)
-    deleted_language = Language.query.get(language.id)
-
-    assert deleted_language is None
