@@ -13,48 +13,32 @@ import {
     TableHeadRow,
     TableRow,
 } from 'components/common/Layout/Table';
-import { getAllTenants } from 'services/tenantService';
 
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Tenant } from 'models/tenant';
-import { Else, If, Then } from 'react-if';
-import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import { useNavigate } from 'react-router-dom';
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+import { Await, useNavigate, useRouteLoaderData } from 'react-router-dom';
 
 const TenantListingPage = () => {
-    const [tenants, setTenants] = React.useState<Tenant[]>([]);
-    const [loading, setLoading] = React.useState<boolean>(true);
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const circlePlusIcon = <FontAwesomeIcon icon={faPlus} />;
-    useEffect(() => {
-        const fetchTenants = () => {
-            getAllTenants()
-                .then((returnedTenants) => {
-                    setTenants(returnedTenants);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    dispatch(openNotification({ text: error.message, severity: 'error' }));
-                    setLoading(false);
-                });
-        };
-        fetchTenants();
-    }, []);
+    const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
     return (
         <ResponsiveContainer>
-            <BreadcrumbTrail
-                smallScreenOnly
-                crumbs={[{ name: 'Dashboard', link: '../home' }, { name: 'Tenant Admin' }]}
-            />
+            <AutoBreadcrumbs />
 
             <Header1>Tenant Admin</Header1>
             <Grid container spacing={0} direction="row" mb="0.5em">
                 <Grid item xs={12} sm={7} lg={9}>
-                    <Header2 decorated>Tenant Instances {!loading && `(${tenants.length})`}</Header2>
+                    <Header2 decorated>
+                        Tenant Instances{' '}
+                        <Suspense fallback={<span />}>
+                            <Await resolve={tenants}>
+                                {(resolvedTenants) => <span>({resolvedTenants.length})</span>}
+                            </Await>
+                        </Suspense>
+                    </Header2>
                 </Grid>
                 <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
                     <Button
@@ -88,48 +72,53 @@ const TenantListingPage = () => {
                         </TableHeadRow>
                     </TableHead>
                     <TableBody>
-                        <If condition={loading}>
-                            <Then>
-                                {[...Array(5)].map((_, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>
-                                            <Skeleton variant="text" width={240} />
-                                            <Skeleton variant="text" width={240} />
-                                        </TableCell>
-                                        <TableCell>
-                                            <Skeleton variant="text" width={480} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </Then>
-                            <Else>
-                                {tenants.map((tenant) => (
-                                    <TableRow
-                                        onClick={() => {
-                                            navigate(`/tenantadmin/${tenant.short_name}/detail`);
-                                        }}
-                                        onKeyDown={(event) => {
-                                            if (event.key === 'Enter' || event.key === ' ') {
-                                                event.preventDefault();
-                                                navigate(`/tenantadmin/${tenant.short_name}/detail`);
-                                            }
-                                        }}
-                                        key={tenant.name}
-                                        tabIndex={0}
-                                    >
-                                        <TableCell>
-                                            <BodyText bold style={{ marginBottom: '8px' }}>
-                                                {tenant.name}
-                                            </BodyText>
-                                            <BodyText size="small">{tenant.contact_name}</BodyText>
-                                        </TableCell>
-                                        <TableCell>
-                                            <BodyText size="small">{tenant.description}</BodyText>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </Else>
-                        </If>
+                        <Suspense
+                            fallback={[...Array(5)].map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <Skeleton variant="text" width={240} />
+                                        <Skeleton variant="text" width={240} />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton variant="text" width={480} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        >
+                            <Await resolve={tenants} errorElement={<p>Could not load tenants</p>}>
+                                {(resolvedTenants) => (
+                                    <>
+                                        {resolvedTenants.map((tenant: Tenant) => {
+                                            return (
+                                                <TableRow
+                                                    onClick={() => {
+                                                        navigate(`/tenantadmin/${tenant.short_name}/detail`);
+                                                    }}
+                                                    onKeyDown={(event) => {
+                                                        if (event.key === 'Enter' || event.key === ' ') {
+                                                            event.preventDefault();
+                                                            navigate(`/tenantadmin/${tenant.short_name}/detail`);
+                                                        }
+                                                    }}
+                                                    key={tenant.name}
+                                                    tabIndex={0}
+                                                >
+                                                    <TableCell>
+                                                        <BodyText bold style={{ marginBottom: '8px' }}>
+                                                            {tenant.name}
+                                                        </BodyText>
+                                                        <BodyText size="small">{tenant.contact_name}</BodyText>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <BodyText size="small">{tenant.description}</BodyText>
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </>
+                                )}
+                            </Await>
+                        </Suspense>
                     </TableBody>
                 </Table>
             </Box>

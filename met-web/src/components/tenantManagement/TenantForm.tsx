@@ -8,7 +8,7 @@ import { Tenant } from 'models/tenant';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
-import { getAllTenants } from 'services/tenantService';
+import { Await, useRouteLoaderData, useBlocker } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
@@ -27,14 +27,8 @@ export const TenantForm = ({
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url ?? '');
-    const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        getAllTenants().then((tenants) =>
-            setTenantShortNames(tenants.map((tenant) => tenant.short_name.toLowerCase())),
-        );
-    }, []);
+    const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
     const { handleSubmit, formState, control, reset, setValue, watch } = useForm<Tenant>({
         defaultValues: {
@@ -53,7 +47,34 @@ export const TenantForm = ({
         mode: 'onBlur',
         reValidateMode: 'onChange',
     });
-    const { isDirty, isValid, errors } = formState;
+    const { isDirty, isSubmitted, isValid, errors } = formState;
+
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isDirty && !isSubmitted && nextLocation.pathname !== currentLocation.pathname,
+    );
+
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: blocker.proceed,
+                        handleClose: blocker.reset,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        }
+    }, [blocker, dispatch]);
 
     const hasLogoUrl = watch('logo_url');
 
@@ -111,29 +132,6 @@ export const TenantForm = ({
             onSubmit(data);
         } catch (error) {
             console.error(error);
-        }
-    };
-
-    const handleCancelAttempt = () => {
-        if (isDirty) {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: onCancel,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        } else {
-            onCancel?.();
         }
     };
 
@@ -226,34 +224,43 @@ export const TenantForm = ({
                     />
                 </Detail>
                 <Detail>
-                    <Controller
-                        name="short_name"
-                        control={control}
-                        rules={{
-                            required: true,
-                            pattern: { value: /^[a-zA-Z0-9_-]+$/, message: 'Your input contains invalid symbols' },
-                            validate: (value) =>
-                                tenantShortNames.includes(value.toLowerCase()) &&
-                                value.toLowerCase() !== initialTenant?.short_name.toLowerCase()
-                                    ? 'This short name is already in use'
-                                    : true,
-                        }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required
-                                error={errors.short_name?.message}
-                                title="Tenant Short Name (URL)"
-                                instructions="Must be unique. Letters, underscores and dashes only are permitted."
-                                placeholder="shortname"
-                                startAdornment={
-                                    <BodyText bold sx={{ mr: '-8px' }}>
-                                        met.gov.bc.ca/
-                                    </BodyText>
-                                }
+                    <Await resolve={tenants}>
+                        {(resolvedTenants: Tenant[]) => (
+                            <Controller
+                                name="short_name"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9_-]+$/,
+                                        message: 'Your input contains invalid symbols',
+                                    },
+                                    validate: (value) =>
+                                        resolvedTenants
+                                            .map((tenant) => tenant.short_name)
+                                            .includes(value.toLowerCase()) &&
+                                        value.toLowerCase() !== initialTenant?.short_name.toLowerCase()
+                                            ? 'This short name is already in use'
+                                            : true,
+                                }}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        required
+                                        error={errors.short_name?.message}
+                                        title="Tenant Short Name (URL)"
+                                        instructions="Must be unique. Letters, underscores and dashes only are permitted."
+                                        placeholder="shortname"
+                                        startAdornment={
+                                            <BodyText bold sx={{ mr: '-8px' }}>
+                                                met.gov.bc.ca/
+                                            </BodyText>
+                                        }
+                                    />
+                                )}
                             />
                         )}
-                    />
+                    </Await>
                 </Detail>
                 <Detail>
                     <Controller
@@ -376,7 +383,7 @@ export const TenantForm = ({
                         {submitText}
                     </Button>
                     {onCancel && (
-                        <Button variant="secondary" onClick={handleCancelAttempt}>
+                        <Button variant="secondary" onClick={onCancel}>
                             {cancelText}
                         </Button>
                     )}

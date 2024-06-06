@@ -67,6 +67,7 @@ const DrawerBox = () => {
 };
 
 const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
+    if (!drawerWidth) return <></>;
     return (
         <>
             {isMediumScreen ? (
