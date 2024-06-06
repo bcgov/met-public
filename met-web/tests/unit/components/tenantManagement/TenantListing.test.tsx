@@ -7,7 +7,7 @@ import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantListingPage from '../../../../src/components/tenantManagement/Listing';
 import { USER_ROLES } from 'services/userService/constants';
-import { MemoryRouter, RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const mockTenantOne = {
     id: 1,

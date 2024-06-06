@@ -8,7 +8,6 @@ import * as reactRouterDom from 'react-router-dom';
 import TenantCreationPage from 'components/tenantManagement/Create';
 import { USER_ROLES } from 'services/userService/constants';
 import { RouterProvider, createMemoryRouter, useRouteLoaderData } from 'react-router-dom';
-import { act } from 'react-dom/test-utils';
 
 const mockTenant = {
     id: 1,
