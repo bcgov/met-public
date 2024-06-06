@@ -1,3 +1,9 @@
+## June 6, 2024
+
+- **Feature** Use createBrowserRouter insead of <BrowserRouter> in the App component [🎟️ DESENG-627](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-627)
+  - Updated the App component to use the more flexible createBrowserRouter function instead of the <BrowserRouter> component
+  - This enables the use of [data router](https://reactrouter.com/en/6.23.0/routers/picking-a-router) functionality and other advanced features in the future, most notably the Blocker component
+
 ## June 3, 2024
 
 - **Bugfix** Patch button styles (follow-up to [🎟️ DESENG-583](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-583))
@@ -7,6 +13,7 @@
 ## May 30, 2024
 
 - **Feature** Remove web components [🎟️ DESENG-616](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-616)
+
   - Removed web components and all code that references it
 
 - **Feature** Remove EAO process widget [🎟️ DESENG-626](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-626)
