@@ -4,6 +4,10 @@
   - Updated the App component to use the more flexible createBrowserRouter function instead of the <BrowserRouter> component
   - This enables the use of [data router](https://reactrouter.com/en/6.23.0/routers/picking-a-router) functionality and other advanced features in the future, most notably the Blocker component
   - Added the AutoBreadcrumbs component to the common components library, which will be used to generate breadcrumbs based on the current route
+  - Updated the Tenant Admin pages as a proof of concept
+    - Tenant Admin pages now use the AutoBreadcrumbs component to generate breadcrumbs based on the current route
+    - Tenant Admin pages use data loaders to fetch data from the API instead of relying on a state or context
+    - Tenant Admin pages use useBlocker() to prompt for confirmation from users navigating away from the page when they're in the middle of editing a form
 
 ## June 3, 2024
 
