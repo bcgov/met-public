@@ -7,11 +7,13 @@ const useTabletOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('
 // A container that decreases its padding on smaller screens
 export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     const theme = useTheme();
+    const isDesktopOrLarger = useDesktopOrLarger(theme);
+    const isTabletOrLarger = useTabletOrLarger(theme);
 
-    const useHorizontalPadding = () => {
-        if (useDesktopOrLarger(theme)) {
+    const horizontalPadding = () => {
+        if (isDesktopOrLarger) {
             return '2em';
-        } else if (useTabletOrLarger(theme)) {
+        } else if (isTabletOrLarger) {
             return '1.5em';
         } else {
             return '1em';
@@ -21,7 +23,7 @@ export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     return (
         <Box
             sx={{
-                padding: `1.5em ${useHorizontalPadding()}`,
+                padding: `1.5em ${horizontalPadding}`,
             }}
             {...props}
         >
