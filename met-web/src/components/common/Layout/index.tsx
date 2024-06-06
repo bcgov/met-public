@@ -1,16 +1,25 @@
 import React from 'react';
 import { Box, BoxProps, Theme, useMediaQuery, useTheme } from '@mui/material';
 
-const desktopOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('md'));
-const tabletOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('sm'));
+const useDesktopOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('md'));
+const useTabletOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('sm'));
 
 // A container that decreases its padding on smaller screens
 export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     const theme = useTheme();
-    const isDesktopOrLarger = desktopOrLarger(theme);
-    const isTabletOrLarger = tabletOrLarger(theme);
+    const isDesktopOrLarger = useDesktopOrLarger(theme);
+    const isTabletOrLarger = useTabletOrLarger(theme);
 
-    const horizontalPadding = isDesktopOrLarger ? '4.0em' : isTabletOrLarger ? '2.0em' : '1.0em';
+    let horizontalPadding;
+    if (isDesktopOrLarger) {
+        horizontalPadding = '4.0em';
+    } else {
+        if (isTabletOrLarger) {
+            horizontalPadding = '2.0em';
+        } else {
+            horizontalPadding = '1.0em';
+        }
+    }
 
     return (
         <Box

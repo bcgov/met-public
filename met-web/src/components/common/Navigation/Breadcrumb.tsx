@@ -58,6 +58,7 @@ export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ small
                 const crumb = handle.crumb?.(data);
                 return (
                     <Suspense
+                        key={match.pathname}
                         fallback={
                             <BodyText bold size="small">
                                 Loading...
