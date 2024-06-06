@@ -1,6 +1,6 @@
 ## June 6, 2024
 
-- **Feature** Use createBrowserRouter insead of <BrowserRouter> in the App component [🎟️ DESENG-627](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-627)
+- **Feature** Use createBrowserRouter insead of \<BrowserRouter> in the App component [🎟️ DESENG-627](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-627)
   - Updated the App component to use the more flexible createBrowserRouter function instead of the <BrowserRouter> component
   - This enables the use of [data router](https://reactrouter.com/en/6.23.0/routers/picking-a-router) functionality and other advanced features in the future, most notably the Blocker component
   - Added the AutoBreadcrumbs component to the common components library, which will be used to generate breadcrumbs based on the current route
