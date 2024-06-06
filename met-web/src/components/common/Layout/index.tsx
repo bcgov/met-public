@@ -8,7 +8,7 @@ const useTabletOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('
 export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     const theme = useTheme();
 
-    const horizontalPadding = () => {
+    const useHorizontalPadding = () => {
         if (useDesktopOrLarger(theme)) {
             return '2em';
         } else if (useTabletOrLarger(theme)) {
@@ -21,7 +21,7 @@ export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     return (
         <Box
             sx={{
-                padding: `1.5em ${horizontalPadding()}`,
+                padding: `1.5em ${useHorizontalPadding()}`,
             }}
             {...props}
         >
