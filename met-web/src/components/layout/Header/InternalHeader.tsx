@@ -41,7 +41,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
             >
                 <CssBaseline />
                 <Toolbar>
-                    <When condition={!isMediumScreen}>
+                    <When condition={!isMediumScreen && drawerWidth}>
                         <IconButton
                             color="info"
                             sx={{
@@ -103,14 +103,14 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {tenant.title}
+                            {tenant.name}
                         </HeaderTitleOld>
                     ) : (
                         <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
-                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                            sx={{ flexGrow: 1, cursor: 'pointer', textTransform: 'capitalize' }}
                         >
                             {tenant.short_name}
                         </HeaderTitleOld>
