@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, BoxProps, Theme, useMediaQuery, useTheme } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
 const useDesktopOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('md'));
 const useTabletOrLarger = (theme: Theme) => useMediaQuery(theme.breakpoints.up('sm'));
@@ -23,12 +24,23 @@ export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     return (
         <Box
             sx={{
-                padding: `1.5em ${horizontalPadding}`,
+                padding: `1.5em ${horizontalPadding()}`,
             }}
             {...props}
         >
             {props.children}
         </Box>
+    );
+};
+
+/**
+ * A route wrapper that adds a responsive container around its child routes.
+ */
+export const ResponsiveWrapper: React.FC = () => {
+    return (
+        <ResponsiveContainer>
+            <Outlet />
+        </ResponsiveContainer>
     );
 };
 

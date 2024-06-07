@@ -1,5 +1,5 @@
 import React from 'react';
-import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
+import '@bcgov/design-tokens/css-prefixed/variables.css'; // Variables will be within scope within PublicLayout and its children
 import { Outlet } from 'react-router-dom';
 import PublicHeader from '../layout/Header/PublicHeader';
 import { Notification } from 'components/common/notification';

@@ -1,5 +1,11 @@
 ## June 6, 2024
 
+- **Feature** Add a new engagemnt view page at `/gdx/new-look/[name]/[language]` [🎟️ DESENG-628](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-628)
+
+  - Added a new page to view engagements using the new look for MET
+  - The page is available at `/gdx/new-look/[name]/[language]`
+  - The page is a work in progress and will be updated in the future
+
 - **Feature** Use createBrowserRouter insead of \<BrowserRouter> in the App component [🎟️ DESENG-627](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-627)
   - Updated the App component to use the more flexible createBrowserRouter function instead of the <BrowserRouter> component
   - This enables the use of [data router](https://reactrouter.com/en/6.23.0/routers/picking-a-router) functionality and other advanced features in the future, most notably the Blocker component

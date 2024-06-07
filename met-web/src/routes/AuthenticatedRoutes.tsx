@@ -124,6 +124,7 @@ const AuthenticatedRoutes = () => {
                 <Route path=":userId/details" element={<UserProfile />} />
             </Route>
             <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="/not-found" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
         </>
     );
