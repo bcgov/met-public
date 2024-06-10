@@ -10,9 +10,8 @@ import { ENGAGEMENT_CROPPER_ASPECT_RATIO, ENGAGEMENT_UPLOADER_HEIGHT } from './c
 import RichTextEditor from 'components/common/RichTextEditor';
 import { getTextFromDraftJsContentState } from 'components/common/RichTextEditor/utils';
 import EngagementContentTabs from './EngagementContent/';
-import { TextField, TextInput } from 'components/common/Input';
+import { TextField, TextInput, Button } from 'components/common/Input';
 import { BodyText } from 'components/common/Typography';
-import { Button } from 'components/common/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalculator } from '@fortawesome/pro-regular-svg-icons';
 
