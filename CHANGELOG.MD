@@ -1,6 +1,6 @@
 ## June 6, 2024
 
-- **Feature** Add a new engagemnt view page at `/gdx/new-look/[name]/[language]` [🎟️ DESENG-628](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-628)
+- **Feature** Add a new engagement view page at `/gdx/new-look/[name]/[language]` [🎟️ DESENG-628](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-628)
 
   - Added a new page to view engagements using the new look for MET
   - The page is available at `/gdx/new-look/[name]/[language]`
