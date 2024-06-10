@@ -10,8 +10,10 @@ import ManageSubscription from '../components/engagement/view/widgets/Subscribe/
 import { FormCAC } from 'components/FormCAC';
 import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';
-import { Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
+import ViewEngagement from 'components/engagement/new/view';
+import { ResponsiveWrapper } from 'components/common/Layout';
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);
 const EngagementViewWrapper = withLanguageParam(EngagementView);
@@ -26,8 +28,11 @@ const UnauthenticatedRoutes = () => {
     return (
         <>
             <Route path="/" element={<Landing />} />
-            <Route path="/not-available" element={<NotAvailable />} />
             <Route path="/surveys/submit/:surveyId/:token/:language" element={<SurveySubmitWrapper />} />
+            <Route path="/new-look" element={<ResponsiveWrapper />}>
+                <Route index element={<Navigate to="/" />} />
+                <Route path=":slug/:language" element={<ViewEngagement />} />
+            </Route>
             <Route path="/engagements">
                 <Route path="create/form/:language" element={<RedirectLoginWrapper />} />
                 <Route path=":engagementId">
@@ -47,6 +52,8 @@ const UnauthenticatedRoutes = () => {
                 <Route path="cacform/:widgetId/:language" element={<FormCACWrapper />} />
                 <Route path=":language" element={<EngagementViewWrapper />} />
             </Route>
+            <Route path="/not-available" element={<NotAvailable />} />
+            <Route path="/not-found" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
         </>
     );

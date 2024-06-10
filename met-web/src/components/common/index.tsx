@@ -179,7 +179,7 @@ export const MobileToolbar = styled(Toolbar)(() => ({
 }));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
-    backgroundColor: Palette.primary.main,
+    backgroundColor: colors.button.default.shade,
     color: '#fff',
     lineHeight: '1.1rem',
     '&:hover': {
