@@ -1,11 +1,16 @@
+## June 10, 2024
+
+- **Feature** Add new fields for use in "new look" design [🎟️ DESENG-629](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-629)
+  - Added the fields `sponsor_name`, `cta_message`, and `cta_url` to the engagement model
+  - Added Sponsor Name, Call To Action, and CTA URL to the engagement form
+  - Added basic validation for the new fields
+
 ## June 6, 2024
 
 - **Feature** Add a new engagement view page [🎟️ DESENG-636](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-636)
-
   - Added a new page to view engagements using the new look for MET
   - The page is available at `/gdx/new-look/[name]/[language]`
   - The page is a work in progress and will be updated in the future
-
 - **Feature** Use createBrowserRouter insead of \<BrowserRouter> in the App component [🎟️ DESENG-627](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-627)
   - Updated the App component to use the more flexible createBrowserRouter function instead of the <BrowserRouter> component
   - This enables the use of [data router](https://reactrouter.com/en/6.23.0/routers/picking-a-router) functionality and other advanced features in the future, most notably the Blocker component
@@ -24,9 +29,7 @@
 ## May 30, 2024
 
 - **Feature** Remove web components [🎟️ DESENG-616](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-616)
-
   - Removed web components and all code that references it
-
 - **Feature** Remove EAO process widget [🎟️ DESENG-626](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-626)
   - Removed EAO process widget
   - Added migration file to remove EAO process widget attached to any existing engagement
@@ -34,21 +37,17 @@
 ## May 29, 2024
 
 - **Bugfix** Null in the public URL [🎟️ DESENG-625](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-625)
-
   - Removed language from URLs other than engagement/survey links
   - Fixed the issue of null appearing in public URLs
-
 - **Feature** MET split out tenant specific variables from locale files [🎟️ DESENG-612](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-612)
   - Replaced tenant based values with data from tenant detail API
 
 ## May 27, 2024
 
 - **Feature** MET translation file keys used on pages needing translation [🎟️ DESENG-611](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-611)
-
   - Removed Tenant based translations from langauge files
   - Set TODO statements to replace tenant related values from backend
   - Splitting translations based on language files and added a common translation file for items common across all languages
-
 - **Bugfix** Global Focus State (UXD) [🎟️ DESENG-583](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-583)
   - Worked on components to match the design system and support new colors
   - Implemented focus states across public pages and components
@@ -56,25 +55,19 @@
 ## May 23, 2024
 
 - **Feature** Finish tenant management UX [🎟️ DESENG-605](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-605), [🎟️ DESENG-606](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-606)
-
   - Added a new tenant detail page
   - Added a form for filling out tenant details
   - Added a new tenant creation page
   - Added a new tenant edit page
-
 - **Feature** Add design system components to common components
-
   - Added Table components, DetailsContainer, and Detail for layout
   - Reworked button components to match the design system and support new colors
   - Reworked modal components to match the design system
   - Reworked image upload component to match the design system
   - Added new form components that align with the design system
-
 - **Bugfix** Security issue with email verification [🎟️ DESENG-618](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-618)
-
   - Removed verification token from the response object
   - Updated the test to reflect the change
-
 - **Bugfix** Add try catch block around snowplow call [🎟️ DESENG-621](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-621)
   - Added a try catch block to all snowplow calls
 
@@ -102,10 +95,8 @@
 ## May 13, 2024
 
 - **Bugfix** Date shown on rejection email preview is incorrect [🎟️ DESENG-597](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-597)
-
   - Fixed the date formatting issue and using the end_date in the email preview
   - Updated unit tests
-
 - **Feature** Create role for metadata management [🎟️ DESENG-603](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-603)
   - Implemented a new role named "manage_metadata" within the Admin group to restrci access for metadata management
   - Updated the frontend to restrict access to the "metadata management" link in the menu for users without the newly added role
@@ -241,7 +232,6 @@
 ## April 04, 2024
 
 - **Feature** Engagement filtering - Add filtering by taxon [🎟️DESENG-445](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-445)
-
   - Added properties to metadata taxa to allow them to be marked as filterable.
   - Added a new file `filter_types.py` where additional filters can be added as subquery factory functions.
   - Added a new endpoint to the API to retrieve filterable taxa.
@@ -255,7 +245,6 @@
   - Updated the public-facing engagement list to allow filtering by metadata taxa. This makes use of the new API endpoint to retrieve filterable taxa.
   - Added a new filter "drawer" to the listing page to hold these and any future filter types.
   - (Out of scope, but related to UX work for this ticket) Fixed a display issue with the public engagements page where engagements would not take up the full width of their grid cell.
-
 - **Task**: Keycloak Unit Tests for New CSS API Integration [DESENG-508](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-508)
   - Updated Keycloak Unit Tests for New CSS API Integration.
 
@@ -502,13 +491,11 @@
 ## January 9, 2024
 
 - **Task** Improvements from Epic [🎟️DESENG-468](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-468)
-
   - Improvements to Survey Result Tracking analytics
   - New Rejection Email Template for Closed Engagements
   - Export Format for Proponent updated to be in excel format
   - Formio Version Update
   - Enable Survey Editing for Open Engagements
-
 - **Bug Fix**: Fixing timezone issue while publishing using met cron [🎟️DESENG-437](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-437)
 
 ## December 28, 2023
@@ -551,7 +538,6 @@
 ## November 6, 2023
 
 - **Feature**: Switch MET to use Keycloak SSO service [🎟️DESENG-408](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-408)
-
   - Switch all role-based checks on the API to use a single callback function (`current_app.config['JWT_ROLE_CALLBACK']`)
   - Added a configurable path `JWT_ROLE_CLAIM` to indicate where your SSO instance places role information in the JWT token. If your access token looks like:
     `{ ..., "realm_access": { "roles": [ "role1", "role2"]}}` you would set `JWT_ROLE_CLAIM=realm_access.roles`
@@ -559,7 +545,6 @@
   - Remove local Keycloak instances and configuration
   - Default to the "standard" realm for Keycloak
   - Use tenancy information from DB rather than Keycloak
-
 - **Feature**: .env var audit and cleanup [🎟️DESENG-414](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-414)
 
 ## October 26, 2023

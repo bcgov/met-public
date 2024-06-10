@@ -24,3 +24,5 @@ class EngagementTranslationSchema(Schema):
     upcoming_status_block_text = fields.Str(data_key='upcoming_status_block_text')
     open_status_block_text = fields.Str(data_key='open_status_block_text')
     closed_status_block_text = fields.Str(data_key='closed_status_block_text')
+    sponsor_name = fields.Str(data_key='sponsor_name')
+    cta_message = fields.Str(data_key='cta_message')

@@ -55,6 +55,9 @@ class Engagement(BaseModel):
     tenant = db.relationship('Tenant', backref='engagements')
     is_internal = db.Column(db.Boolean, nullable=False)
     consent_message = db.Column(JSON, unique=False, nullable=True)
+    sponsor_name = db.Column(db.String(50), nullable=True)
+    cta_message = db.Column(db.String(50), nullable=True)
+    cta_url = db.Column(db.String(500), nullable=True)
 
     @classmethod
     def get_engagements_paginated(
@@ -143,6 +146,9 @@ class Engagement(BaseModel):
             'is_internal': engagement.get('is_internal', record.is_internal),
             'consent_message': engagement.get(
                 'consent_message', record.consent_message),
+            'sponsor_name': engagement.get('sponsor_name', record.sponsor_name),
+            'cta_message': engagement.get('cta_message', record.cta_message),
+            'cta_url': engagement.get('cta_url', record.cta_url),
         }
         query.update(update_fields)
         db.session.commit()

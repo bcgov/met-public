@@ -10,7 +10,7 @@ import { SxProps, Theme } from '@mui/system';
 
 type TextInputProps = {
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: (value: string, name?: string) => void;
     placeholder?: string;
     disabled?: boolean;
 } & Omit<InputProps, 'value' | 'onChange' | 'placeholder' | 'disabled'>;
@@ -33,7 +33,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             disableUnderline
             type="text"
             value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value, e.target.name)}
             placeholder={placeholder}
             disabled={disabled}
             sx={{
@@ -122,13 +122,15 @@ export type TextFieldProps = {
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
-} & Omit<FormFieldProps, 'children'> &
-    Omit<TextInputProps, 'fullWidth' | 'error'>;
+    onChange: (value: string, name?: string) => void;
+} & Omit<FormFieldProps, 'children' | 'onChange'> &
+    Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
 
 export const TextField = ({
     title,
     instructions,
     error,
+    name,
     required,
     optional,
     clearable,
@@ -143,7 +145,8 @@ export const TextField = ({
     }, [textInputProps.value]);
 
     const handleSetValue = (newValue: string) => {
-        onChange?.(newValue) ?? setValue(newValue);
+        if (onChange === undefined) return setValue(newValue);
+        onChange?.(newValue, name);
     };
 
     const isError = !!error;
@@ -162,6 +165,7 @@ export const TextField = ({
                 fullWidth
                 error={isError}
                 value={value}
+                name={name}
                 required={required}
                 disabled={disabled}
                 endAdornment={clearable && value ? clearInputButton(() => handleSetValue('')) : undefined}
