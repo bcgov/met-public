@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Grid } from '@mui/material';
 import { SurveyBlock } from '../SurveyBlock';
-import { MetDescription, MetLabel } from 'components/common';
 import RichTextEditor from 'components/common/RichTextEditor';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
+import { BodyText } from 'components/common/Typography';
 
 const SummaryTabContent = () => {
     const { savedEngagement } = useContext(ActionContext);
@@ -42,9 +42,10 @@ const SummaryTabContent = () => {
             columnSpacing={2}
         >
             <Grid item xs={12}>
-                <MetLabel>Engagement - Page Content</MetLabel>
-
-                <MetDescription>This is the main content of the engagement page.</MetDescription>
+                <BodyText bold size="large">
+                    Engagement - Page Content
+                </BodyText>
+                <BodyText size="small">This is the main content of the engagement page.</BodyText>
 
                 <div style={{ position: 'relative' }}>
                     <RichTextEditor

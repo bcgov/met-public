@@ -140,6 +140,8 @@ class EngagementTranslationService:
         translation_data['content'] = summary_content.content
         translation_data['rich_content'] = summary_content.rich_content
         translation_data['consent_message'] = engagement.consent_message
+        translation_data['sponsor_name'] = engagement.sponsor_name
+        translation_data['cta_message'] = engagement.cta_message
 
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
         if engagement_slug:
