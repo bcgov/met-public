@@ -543,7 +543,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         if (hasErrors) {
             return;
         }
-        console.log('Engagement saving...');
 
         const engagement = isNewEngagement
             ? await handleCreateEngagementRequest({
@@ -558,10 +557,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                   status_block: surveyBlockList,
               });
 
-        console.log('Engagement saved:', engagement);
-
         if (!isNewEngagement) {
-            console.log('Updating engagement settings...');
             await updateEngagementSettings(sendReport);
             await updateSummaryContent();
             await updateCustomContent();
