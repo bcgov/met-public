@@ -79,13 +79,12 @@ const LanguageAdminPanel = () => {
                 <Autocomplete
                     style={{ marginTop: '5%', marginBottom: '5%', width: isSmallScreen ? '50%' : '100%' }}
                     multiple
-                    // Prevent users from clearing all languages with a button click.
-                    clearIcon={<span style={{ display: 'none' }}></span>}
+                    disableClearable={true}
                     options={languages}
                     getOptionLabel={(option) => option.name}
                     loading={isLoading}
                     value={selectedLanguages}
-                    onChange={(event, value) => handleLanguagesChange(value)}
+                    onChange={(_, value) => handleLanguagesChange(value)}
                     renderInput={(params) => <TextField {...params} variant="standard" label="Language" />}
                 />
             )}
