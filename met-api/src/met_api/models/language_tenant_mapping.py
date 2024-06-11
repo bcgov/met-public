@@ -3,6 +3,7 @@ from __future__ import annotations
 from sqlalchemy import UniqueConstraint
 
 from .base_model import BaseModel
+from .tenant import Tenant
 from .language import Language
 from .db import db
 
@@ -19,10 +20,13 @@ class LanguageTenantMapping(BaseModel):  # pylint: disable=too-few-public-method
     __table_args__ = (UniqueConstraint('language_id', 'tenant_id'),)
 
     @classmethod
-    def get_all_by_tenant_id(cls, tenant_id):
+    def get_all_by_tenant_short_name(cls, tenant_short_name):
         """Get all languages selected by a given tenant."""
+        tenant = Tenant.find_by_short_name(tenant_short_name)
+        if not tenant:
+            raise ValueError('Error finding tenant.', cls, tenant_short_name)
         language_mappings_query = db.session.query(LanguageTenantMapping.language_id)\
-            .filter_by(tenant_id=tenant_id)
+            .filter_by(tenant_id=tenant.id)
         return db.session.query(Language).filter(Language.id.in_(language_mappings_query)).all()
 
     @classmethod
@@ -34,11 +38,15 @@ class LanguageTenantMapping(BaseModel):  # pylint: disable=too-few-public-method
         return language_tenant_mapping
 
     @classmethod
-    def remove_language_from_tenant(cls, language_mapping_id):
+    def remove_language_from_tenant(cls, language_id, tenant_id):
         """Remove a language from the langage tenant mapping table."""
-        language_mapping = LanguageTenantMapping.query.get(language_mapping_id)
-        if language_mapping:
-            db.session.delete(language_mapping)
+        language_tenant_mapping_to_delete = db.session.\
+            query(LanguageTenantMapping).filter(
+                LanguageTenantMapping.language_id == language_id,
+                LanguageTenantMapping.tenant_id == tenant_id
+            ).one_or_none()
+        if language_tenant_mapping_to_delete:
+            db.session.delete(language_tenant_mapping_to_delete)
             db.session.commit()
             return True
         return False

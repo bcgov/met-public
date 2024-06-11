@@ -63,3 +63,4 @@ class Role(Enum):
     SUPER_ADMIN = 'super_admin'
     MANAGE_METADATA = 'manage_metadata'
     VIEW_LANGUAGES = 'view_languages'
+    EDIT_LANGUAGES = 'edit_languages'
