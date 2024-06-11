@@ -3,7 +3,6 @@
 Test suite to ensure that the LanguageService routines are working as expected.
 """
 
-from met_api.models.language import Language
 from met_api.services.language_service import LanguageService
 from tests.utilities.factory_utils import factory_language_model
 

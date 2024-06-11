@@ -5,7 +5,7 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request
+from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
@@ -61,68 +61,6 @@ class LanguageResource(Resource):
             return str(err.messages), HTTPStatus.BAD_REQUEST
 
 
-@cors_preflight('GET, OPTIONS')
-@API.route('/tenant/<int:tenant_id>')
-class TenantLanguages(Resource):
-    """Resource for getting existing language-tenant mappings."""
-
-    @staticmethod
-    @cross_origin(origins=allowedorigins())
-    def get(tenant_id):
-        """Fetch list of languages associated with a given tenant ID."""
-        try:
-            languages = LanguageService.get_languages_by_tenant(tenant_id)
-            return (
-                LanguageSchema(many=True).dump(languages),
-                HTTPStatus.OK,
-            )
-        except (KeyError, ValueError) as err:
-            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
-
-
-@cors_preflight('POST, OPTIONS')
-@API.route('/<int:language_id>/tenant/<int:tenant_id>')
-class ManageLanguageMappings(Resource):
-    """Resource for adding or removing language-tenant relationships."""
-
-    @staticmethod
-    def post(language_id, tenant_id):
-        """Create language-tenant mapping."""
-        try:
-            return LanguageService.map_language_to_tenant(language_id, tenant_id)
-        except IntegrityError as e:
-            # Catching language code already exists error
-            detail = (
-                str(e.orig).split('DETAIL: ')[1]
-                if 'DETAIL: ' in str(e.orig)
-                else 'Duplicate entry.'
-            )
-            raise BusinessException(
-                str(detail), HTTPStatus.INTERNAL_SERVER_ERROR
-            ) from e
-
-
-@cors_preflight('DELETE, OPTIONS')
-@API.route('/mappings/<int:language_mapping_id>')
-class DeleteLanguageMapping(Resource):
-    """Resourse for removing language-tenant relationships."""
-
-    @staticmethod
-    # @_jwt.requires_auth
-    # @cross_origin(origins=allowedorigins())
-    def delete(language_mapping_id):
-        """Remove a language mapping from a tenant."""
-        try:
-            success = LanguageService.remove_language_mapping_from_tenant(language_mapping_id)
-            if success:
-                return 'Successfully deleted language-tenant mapping', HTTPStatus.NO_CONTENT
-            raise ValueError('Language-tenant mapping not found')
-        except KeyError as err:
-            return str(err), HTTPStatus.BAD_REQUEST
-        except ValueError as err:
-            return str(err), HTTPStatus.NOT_FOUND
-
-
 @cors_preflight('GET, POST, OPTIONS, PATCH, DELETE')
 @API.route('/')
 class Languages(Resource):
@@ -140,3 +78,58 @@ class Languages(Resource):
             )
         except (KeyError, ValueError) as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('GET, OPTIONS')
+@API.route('/tenant/<tenant_short_name>')
+class TenantLanguages(Resource):
+    """Resource for getting existing language-tenant mappings."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    def get(tenant_short_name):
+        """Fetch list of languages associated with a given tenant short name."""
+        try:
+            languages = LanguageService.get_languages_by_tenant(tenant_short_name)
+            return (
+                LanguageSchema(many=True).dump(languages),
+                HTTPStatus.OK,
+            )
+        except (KeyError, ValueError) as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('POST, OPTIONS')
+@API.route('/<int:language_id>/tenant/<tenant_short_name>')
+class ManageLanguageMappings(Resource):
+    """Resource for adding or removing language-tenant relationships."""
+
+    @staticmethod
+    @_jwt.requires_auth
+    @cross_origin(origins=allowedorigins())
+    def post(language_id, tenant_short_name):
+        """Create language-tenant mapping."""
+        try:
+            return LanguageService.map_language_to_tenant(language_id, tenant_short_name)
+        except IntegrityError as e:
+            detail = (
+                str(e.orig).split('DETAIL: ')[1]
+                if 'DETAIL: ' in str(e.orig)
+                else 'Duplicate entry.'
+            )
+            raise BusinessException(
+                str(detail), HTTPStatus.INTERNAL_SERVER_ERROR
+            ) from e
+
+    @staticmethod
+    @_jwt.requires_auth
+    @cross_origin(origins=allowedorigins())
+    def delete(language_id, tenant_short_name):
+        """Remove a language mapping from a tenant."""
+        try:
+            LanguageService.remove_language_mapping_from_tenant(language_id, tenant_short_name)
+            return {'status': 'success', 'message': 'Tenant language deleted successfully'}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
+        except ValueError as err:
+            return str(err), HTTPStatus.NOT_FOUND

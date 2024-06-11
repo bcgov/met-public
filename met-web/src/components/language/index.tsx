@@ -12,7 +12,7 @@ const LanguageAdminPanel = () => {
     const [languages, setLanguages] = useState<Language[]>([]);
     const [selectedLanguages, setSelectedLanguages] = useState<Language[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [tenantId, setTenantId] = useState(sessionStorage.getItem('tenantId'));
+    const [tenantId] = useState(sessionStorage.getItem('tenantId'));
     const dispatch = useAppDispatch();
     const isSmallScreen = useMediaQuery('(min-width:700px)');
 
@@ -32,7 +32,7 @@ const LanguageAdminPanel = () => {
         }
     };
 
-    const handleLanguagesChange = async (event: any, newTenantLanguages: Language[]) => {
+    const handleLanguagesChange = async (newTenantLanguages: Language[]) => {
         setIsLoading(true);
 
         if (tenantId) {
@@ -85,7 +85,7 @@ const LanguageAdminPanel = () => {
                     getOptionLabel={(option) => option.name}
                     loading={isLoading}
                     value={selectedLanguages}
-                    onChange={(event, value) => handleLanguagesChange(event, value)}
+                    onChange={(event, value) => handleLanguagesChange(value)}
                     renderInput={(params) => <TextField {...params} variant="standard" label="Language" />}
                 />
             )}
