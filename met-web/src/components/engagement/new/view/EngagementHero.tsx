@@ -13,7 +13,7 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
     const dateFormat = 'MMM DD, YYYY';
     const isExternalCTA = engagement.cta_url?.startsWith('http');
     return (
-        <>
+        <section aria-label="Engagement Overview">
             <Box
                 sx={{
                     width: '100%',
@@ -47,7 +47,7 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                     </Grid>
                     <Grid item>
                         <BodyText bold size="small" sx={{ color: '#201F1E' }}>
-                            {dayjs(engagement.start_date).format(dateFormat)} to{' '}
+                            <time datetime="{engagement.start_date}">{dayjs(engagement.start_date).format(dateFormat)}</time> to{' '}
                             {dayjs(engagement.end_date).format(dateFormat)}
                         </BodyText>
                     </Grid>
