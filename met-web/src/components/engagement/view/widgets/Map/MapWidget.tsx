@@ -10,7 +10,8 @@ import { WidgetMap } from 'models/widgetMap';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
-import { IconButton, Link } from 'components/common/Input';
+import { IconButton } from 'components/common/Input';
+import { Link } from 'components/common/Navigation';
 import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 
 interface MapWidgetProps {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
 import { globalFocusVisible, colors } from '../../common';
-import { Link as RouterLink } from 'react-router-dom';
+import { LinkProps, Link as RouterLink } from 'react-router-dom';
 
 export const BodyText = ({
     bold,
@@ -39,40 +39,25 @@ export const BodyText = ({
     );
 };
 
-export const Link = ({
-    bold,
-    size = 'regular',
+export const EyebrowText = ({
     children,
     ...props
 }: {
-    bold?: boolean;
-    size?: 'small' | 'regular' | 'large';
-    to: string;
     children: React.ReactNode;
-}) => {
-    const fontSize = {
-        small: '14px',
-        regular: '16px',
-        large: '18px',
-    }[size];
-    const lineHeight = {
-        small: '1.375',
-        regular: '1.5',
-        large: '1.625',
-    }[size];
+} & TypographyProps) => {
     return (
-        <RouterLink
-            style={{
-                lineHeight,
-                fontSize,
-                textDecoration: 'none',
-                fontWeight: bold ? 700 : 400,
-                color: colors.type.regular.link,
-                ...globalFocusVisible,
-            }}
+        <Typography
+            variant="body1"
             {...props}
+            sx={{
+                fontSize: '24px',
+                lineHeight: 'normal',
+                fontWeight: 300,
+                color: colors.surface.gray[90],
+                ...props.sx,
+            }}
         >
             {children}
-        </RouterLink>
+        </Typography>
     );
 };

@@ -9,10 +9,11 @@ import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import Footer from 'components/layout/Footer';
 import DocumentTitle from 'DocumentTitle';
 import ScrollToTop from 'components/scrollToTop';
+import { WidthLimiter } from 'components/common/Layout';
 
 export const PublicLayout = () => {
     return (
-        <>
+        <WidthLimiter>
             <DocumentTitle />
             <PageViewTracker />
             <Notification />
@@ -22,6 +23,6 @@ export const PublicLayout = () => {
             <Outlet />
             <FeedbackModal />
             <Footer />
-        </>
+        </WidthLimiter>
     );
 };

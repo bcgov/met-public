@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { Grid, useMediaQuery, Theme } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import { LanguageContext } from 'components/common/LanguageContext';
@@ -13,6 +13,12 @@ import WidgetBlock from './widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { getAvailableTranslationLanguages } from 'services/engagementService';
 import { EngagementBanner } from './EngagementBanner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSparkles } from '@fortawesome/pro-regular-svg-icons';
+import { colors } from 'components/common';
+import { Link } from 'components/common/Navigation';
+import { getSlugByEngagementId } from 'services/engagementSlugService';
+import { Await } from 'react-router-dom';
 
 export const EngagementView = () => {
     const { state } = useLocation() as RouteState;
@@ -26,6 +32,7 @@ export const EngagementView = () => {
     const navigate = useNavigate();
     //Clear state on window refresh
     window.history.replaceState({}, document.title);
+    const engagementSlug = savedEngagement.id ? getSlugByEngagementId(savedEngagement.id) : undefined;
 
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
 
@@ -79,6 +86,17 @@ export const EngagementView = () => {
                 <Grid item xs={12}>
                     <EngagementBanner />
                 </Grid>
+                {!isLoggedIn && (
+                    <Grid item xs={12} sx={{ backgroundColor: colors.surface.gold[20], padding: '1em 4em' }}>
+                        <FontAwesomeIcon icon={faSparkles} style={{ marginRight: '0.5em' }} />
+                        There is a new look coming to the engagement page soon.{' '}
+                        <Suspense fallback={null}>
+                            <Await resolve={engagementSlug}>
+                                {(slug) => slug && <Link to={`/new-look/${slug.slug}/en`}>Preview it now?</Link>}
+                            </Await>
+                        </Suspense>
+                    </Grid>
+                )}
                 <Grid
                     container
                     item
