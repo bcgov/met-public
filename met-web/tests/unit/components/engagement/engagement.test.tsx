@@ -7,6 +7,7 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as engagementSlugService from 'services/engagementSlugService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
@@ -103,7 +104,7 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
@@ -111,9 +112,8 @@ describe('Engagement View page tests', () => {
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useLocation').mockReturnValue(mockLocationData);
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });
-    const getEngagementMock = jest
-        .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(draftEngagement));
+    jest.spyOn(engagementSlugService, 'getSlugByEngagementId').mockResolvedValue({ slug: 'slug' });
+    const getEngagementMock = jest.spyOn(engagementService, 'getEngagement').mockResolvedValue(draftEngagement);
 
     beforeEach(() => {
         setupEnv();
