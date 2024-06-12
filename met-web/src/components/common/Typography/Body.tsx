@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
-import { globalFocusVisible, colors } from '../../common';
-import { LinkProps, Link as RouterLink } from 'react-router-dom';
+import { colors } from '../../common';
 
 export const BodyText = ({
     bold,
