@@ -7,11 +7,16 @@ import { colors } from 'components/common';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
+import { faChevronRight, faExternalLink } from '@fortawesome/pro-regular-svg-icons';
 
 export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
     const dateFormat = 'MMM DD, YYYY';
+    const semanticDateFormat = 'YYYY-MM-DD';
     const isExternalCTA = engagement.cta_url?.startsWith('http');
+    const ctaButtonIcon = isExternalCTA ? faExternalLink : faChevronRight;
+    const startDate = dayjs(engagement.start_date);
+    const endDate = dayjs(engagement.end_date);
+
     return (
         <section aria-label="Engagement Overview">
             <Box
@@ -47,8 +52,11 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                     </Grid>
                     <Grid item>
                         <BodyText bold size="small" sx={{ color: '#201F1E' }}>
-                            <time datetime="{engagement.start_date}">{dayjs(engagement.start_date).format(dateFormat)}</time> to{' '}
-                            {dayjs(engagement.end_date).format(dateFormat)}
+                            <time dateTime={`${startDate.format(semanticDateFormat)}`}>
+                                {startDate.format(dateFormat)}
+                            </time>{' '}
+                            to{' '}
+                            <time dateTime={`${endDate.format(semanticDateFormat)}`}>{endDate.format(dateFormat)}</time>
                         </BodyText>
                     </Grid>
                 </Grid>
@@ -63,7 +71,7 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                 >
                     <Button
                         variant="primary"
-                        icon={<FontAwesomeIcon fontSize={24} icon={faChevronRight} />}
+                        icon={<FontAwesomeIcon fontSize={24} icon={ctaButtonIcon} />}
                         iconPosition="right"
                         sx={{ borderRadius: '8px' }}
                     >
@@ -71,6 +79,6 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                     </Button>
                 </a>
             </Box>
-        </>
+        </section>
     );
 };

@@ -13,26 +13,24 @@ export const ViewEngagement = () => {
     const { engagement } = useLoaderData() as { engagement: Engagement };
     return (
         <>
-            <header>
-                <Suspense
-                    fallback={
-                        <Skeleton
-                            variant="rectangular"
-                            sx={{
-                                width: '100%',
-                                height: {
-                                    xs: 'unset',
-                                    md: '840px',
-                                },
-                            }}
-                        />
-                    }
-                >
-                    <Await resolve={engagement}>
-                        {(resolvedEngagement: Engagement) => <EngagementHero engagement={resolvedEngagement} />}
-                    </Await>
-                </Suspense>
-            </header>
+            <Suspense
+                fallback={
+                    <Skeleton
+                        variant="rectangular"
+                        sx={{
+                            width: '100%',
+                            height: {
+                                xs: 'unset',
+                                md: '840px',
+                            },
+                        }}
+                    />
+                }
+            >
+                <Await resolve={engagement}>
+                    {(resolvedEngagement: Engagement) => <EngagementHero engagement={resolvedEngagement} />}
+                </Await>
+            </Suspense>
             <main>
                 <Box
                     sx={{
