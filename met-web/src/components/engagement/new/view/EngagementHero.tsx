@@ -63,21 +63,17 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                 <Header1 weight="thin" sx={{ color: colors.surface.gray[110], m: '40px 0' }}>
                     {engagement.name}
                 </Header1>
-                {/* tabIndex={-1} is used to force the button to receive focus instead of the anchor tag */}
-                <a
-                    href={engagement.cta_url || '#cta-section'}
-                    tabIndex={-1}
+                <Button
                     target={isExternalCTA ? '_blank' : undefined}
+                    href={engagement.cta_url || '#cta-section'}
+                    // target={isExternalCTA ? '_blank' : undefined}
+                    variant="primary"
+                    icon={<FontAwesomeIcon fontSize={24} icon={ctaButtonIcon} />}
+                    iconPosition="right"
+                    sx={{ borderRadius: '8px' }}
                 >
-                    <Button
-                        variant="primary"
-                        icon={<FontAwesomeIcon fontSize={24} icon={ctaButtonIcon} />}
-                        iconPosition="right"
-                        sx={{ borderRadius: '8px' }}
-                    >
-                        {engagement.cta_message || 'Learn more'}
-                    </Button>
-                </a>
+                    {engagement.cta_message || 'Learn more'}
+                </Button>
             </Box>
         </section>
     );
