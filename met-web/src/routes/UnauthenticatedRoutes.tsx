@@ -10,10 +10,11 @@ import ManageSubscription from '../components/engagement/view/widgets/Subscribe/
 import { FormCAC } from 'components/FormCAC';
 import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate, Params, Route, defer } from 'react-router-dom';
 import NotFound from './NotFound';
 import ViewEngagement from 'components/engagement/new/view';
-import { ResponsiveWrapper } from 'components/common/Layout';
+import { getEngagement } from 'services/engagementService';
+import { getEngagementIdBySlug } from 'services/engagementSlugService';
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);
 const EngagementViewWrapper = withLanguageParam(EngagementView);
@@ -29,9 +30,21 @@ const UnauthenticatedRoutes = () => {
         <>
             <Route path="/" element={<Landing />} />
             <Route path="/surveys/submit/:surveyId/:token/:language" element={<SurveySubmitWrapper />} />
-            <Route path="/new-look" element={<ResponsiveWrapper />}>
+            <Route path="/new-look">
                 <Route index element={<Navigate to="/" />} />
-                <Route path=":slug/:language" element={<ViewEngagement />} />
+                <Route
+                    path=":slug/:language"
+                    loader={async ({ params }: { params: Params<string> }) => {
+                        const { slug } = params;
+                        const engagement = getEngagementIdBySlug(slug ?? '').then((response) =>
+                            getEngagement(response.engagement_id),
+                        );
+                        return defer({ engagement, slug });
+                    }}
+                    errorElement={<NotFound />}
+                    element={<ViewEngagement />}
+                />
+                <Route path=":engagementId/view/:language" element={<EngagementViewWrapper />} />
             </Route>
             <Route path="/engagements">
                 <Route path="create/form/:language" element={<RedirectLoginWrapper />} />

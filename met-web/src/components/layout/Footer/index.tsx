@@ -12,7 +12,8 @@ import { Unless } from 'react-if';
 import { FOOTER_COLORS } from './constants';
 import { useAppTranslation } from 'hooks';
 import { getBaseUrl } from 'helper';
-import { IconButton, Link } from 'components/common/Input';
+import { IconButton } from 'components/common/Input';
+import { Link } from 'components/common/Navigation';
 
 const Footer = () => {
     const baseURL = getBaseUrl();

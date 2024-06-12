@@ -10,7 +10,15 @@ interface FocusableNavLinkProps extends MuiLinkProps {
     size?: 'small' | 'regular' | 'large';
 }
 
-export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regular', to, href, onClick, ...props }) => {
+export const Link: React.FC<FocusableNavLinkProps> = ({
+    children,
+    size = 'regular',
+    to,
+    href,
+    onClick,
+    color,
+    ...props
+}) => {
     const fontSize = {
         small: '14px',
         regular: '16px',
@@ -21,6 +29,7 @@ export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regula
         regular: '1.5',
         large: '1.625',
     }[size];
+    const textColor = color ?? colors.surface.blue[90];
     return (
         <MuiLink
             onClick={onClick}
@@ -28,9 +37,14 @@ export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regula
             to={to}
             href={href}
             sx={{
+                color: textColor,
+                textDecorationColor: textColor,
                 '&:focus-visible': {
                     outline: `2px solid ${colors.focus.regular.outer}`,
-                    outlineOffset: '4px',
+                    outlineOffset: '2px',
+                    boxShadow: '0px 0px 0px 2px white',
+                    padding: '4px',
+                    margin: '-4px',
                 },
                 outline: 'none',
                 outlineOffset: '2px',

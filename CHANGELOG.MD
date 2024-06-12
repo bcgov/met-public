@@ -1,3 +1,14 @@
+## June 11, 2024
+
+- **Feature** Add new header to "new look" engagement page [🎟️ DESENG-630](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-630)
+  - Added a new hero image to the new engagement page
+  - Added a header overlaying the hero image
+    - The header uses the sponsor name, CTA message, and CTA URL from DESENG-629, as well as the engagement title, dates, and status
+  - Added new engagement status chips for use in the header
+  - Added link from the old engagement page offering the option to preview the new engagement page
+  - Added global width limit to the public view to avoid display issues on very wide screens
+- **Task** De-duplicate link code and only use \<Link>s from the common/Navigation module
+
 ## June 10, 2024
 
 - **Feature** Add new fields for use in "new look" design [🎟️ DESENG-629](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-629)

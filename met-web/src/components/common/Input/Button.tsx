@@ -22,6 +22,7 @@ type ButtonProps = {
     iconPosition?: 'left' | 'right';
     disabled?: boolean;
     loading?: boolean;
+    target?: React.HTMLAttributeAnchorTarget;
 } & Omit<MuiButtonProps, 'size' | 'color' | 'variant'>; // Exclude conflicting props
 
 const sizeMap = {

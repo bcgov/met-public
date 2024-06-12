@@ -62,7 +62,7 @@ const NotFound = () => {
                     />
                 </Grid>
                 <Grid item xs={6} justifyContent="center" mb={4}>
-                    <MetHeader4 align="flex-start" bold>
+                    <MetHeader4 align="left" bold>
                         {translate('notFound.header.1')}
                     </MetHeader4>
                 </Grid>
