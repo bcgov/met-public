@@ -7,13 +7,11 @@ import { colors } from 'components/common';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faExternalLink } from '@fortawesome/pro-regular-svg-icons';
+import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 
 export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
     const dateFormat = 'MMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
-    const isExternalCTA = engagement.cta_url?.startsWith('http');
-    const ctaButtonIcon = isExternalCTA ? faExternalLink : faChevronRight;
     const startDate = dayjs(engagement.start_date);
     const endDate = dayjs(engagement.end_date);
 
@@ -64,11 +62,9 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                     {engagement.name}
                 </Header1>
                 <Button
-                    target={isExternalCTA ? '_blank' : undefined}
                     href={engagement.cta_url || '#cta-section'}
-                    // target={isExternalCTA ? '_blank' : undefined}
                     variant="primary"
-                    icon={<FontAwesomeIcon fontSize={24} icon={ctaButtonIcon} />}
+                    icon={<FontAwesomeIcon fontSize={24} icon={faChevronRight} />}
                     iconPosition="right"
                     sx={{ borderRadius: '8px' }}
                 >
