@@ -3,10 +3,12 @@ import { Grid } from '@mui/material';
 import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
-import { useAppTranslation } from 'hooks';
+import { useAppTranslation, useAppSelector } from 'hooks';
+import { TenantState } from 'reduxSlices/tenantSlice';
 
 export const NotAvailable = () => {
     const { t: translate } = useAppTranslation();
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
             <Grid item xs={12}>
@@ -41,10 +43,10 @@ export const NotAvailable = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1Old>{translate('landing.banner.header')}</MetHeader1Old>
+                                <MetHeader1Old>{tenant.title}</MetHeader1Old>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraphOld>{translate('landing.banner.description')}</MetParagraphOld>
+                                <MetParagraphOld>{tenant.description}</MetParagraphOld>
                             </Grid>
                         </Grid>
                     </Grid>

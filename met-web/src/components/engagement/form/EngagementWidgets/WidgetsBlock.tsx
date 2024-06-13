@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
-import { Divider, Grid, Skeleton } from '@mui/material';
+import { Grid, Skeleton } from '@mui/material';
 import { MetHeader2Old, MetPaper, MetTooltip, SecondaryButtonOld } from 'components/common';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
-import { If, Then, Else, When } from 'react-if';
+import { If, Then, Else } from 'react-if';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
-import { Widget, WidgetType } from 'models/widget';
+import { Widget } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { debounce } from 'lodash';
@@ -20,14 +20,9 @@ const WidgetsBlock = () => {
     const dispatch = useAppDispatch();
 
     const [sortableWidgets, setSortableWidgets] = useState<Widget[]>([]);
-    const [fixedWidgets, setFixedWidgets] = useState<Widget[]>([]);
 
     useEffect(() => {
-        const fixedWidgetTypes = [WidgetType.Phases];
-        const widgetsFixedList = widgets.filter((w) => fixedWidgetTypes.includes(w.widget_type_id));
-        const widgetsSortedList = widgets.filter((w) => !fixedWidgetTypes.includes(w.widget_type_id));
-        setFixedWidgets(widgetsFixedList);
-        setSortableWidgets(widgetsSortedList);
+        setSortableWidgets(widgets);
     }, [widgets]);
 
     const handleAddWidgetClick = () => {
@@ -35,8 +30,8 @@ const WidgetsBlock = () => {
     };
 
     const debounceUpdateWidgetsSorting = useRef(
-        debounce((wigetsToSort: Widget[]) => {
-            updateWidgetsSorting(wigetsToSort);
+        debounce((widgetsToSort: Widget[]) => {
+            updateWidgetsSorting(widgetsToSort);
         }, 800),
     ).current;
 
@@ -49,9 +44,7 @@ const WidgetsBlock = () => {
 
         setSortableWidgets(items);
 
-        const widgets = fixedWidgets.concat(items);
-
-        debounceUpdateWidgetsSorting(widgets);
+        debounceUpdateWidgetsSorting(items);
     };
 
     const removeWidget = (widgetId: number) => {
@@ -105,22 +98,6 @@ const WidgetsBlock = () => {
                                 </Grid>
                             </Then>
                             <Else>
-                                {fixedWidgets.map((widget: Widget) => {
-                                    return (
-                                        <Grid item xs={12} key={`Grid-${widget.widget_type_id}`}>
-                                            <WidgetCardSwitch
-                                                key={`${widget.widget_type_id}`}
-                                                widget={widget}
-                                                removeWidget={removeWidget}
-                                            />
-                                        </Grid>
-                                    );
-                                })}
-                                <When condition={fixedWidgets.length > 0 && sortableWidgets.length > 0}>
-                                    <Grid item xs={12}>
-                                        <Divider />
-                                    </Grid>
-                                </When>
                                 <Grid item xs={12}>
                                     <DragDropContext onDragEnd={moveWidget}>
                                         <MetDroppable droppableId="droppable">
@@ -130,19 +107,17 @@ const WidgetsBlock = () => {
                                                 alignItems={'flex-start'}
                                                 justifyContent="flex-start"
                                             >
-                                                {sortableWidgets.map((widget: Widget, index) => {
-                                                    return (
-                                                        <Grid item xs={12} key={`Grid-${widget.widget_type_id}`}>
-                                                            <MetDraggable draggableId={String(widget.id)} index={index}>
-                                                                <WidgetCardSwitch
-                                                                    key={`${widget.widget_type_id}`}
-                                                                    widget={widget}
-                                                                    removeWidget={removeWidget}
-                                                                />
-                                                            </MetDraggable>
-                                                        </Grid>
-                                                    );
-                                                })}
+                                                {sortableWidgets.map((widget: Widget, index) => (
+                                                    <Grid item xs={12} key={`Grid-${widget.widget_type_id}`}>
+                                                        <MetDraggable draggableId={String(widget.id)} index={index}>
+                                                            <WidgetCardSwitch
+                                                                key={`${widget.widget_type_id}`}
+                                                                widget={widget}
+                                                                removeWidget={removeWidget}
+                                                            />
+                                                        </MetDraggable>
+                                                    </Grid>
+                                                ))}
                                             </Grid>
                                         </MetDroppable>
                                     </DragDropContext>

@@ -36,7 +36,6 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
                             return (
                                 <StyledTreeItem
                                     nodeId={`${document.id}`}
-                                    innerDocument
                                     labelText={document.title}
                                     labelIcon={document.type === DOCUMENT_TYPE.FOLDER ? faFolder : faFileLines}
                                     labelUrl={document.url}

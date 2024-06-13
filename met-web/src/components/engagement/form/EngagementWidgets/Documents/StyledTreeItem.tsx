@@ -3,10 +3,11 @@ import { styled } from '@mui/material/styles';
 import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
 import { MetBodyOld } from 'components/common';
 import { If, Then, Else } from 'react-if';
-import { Link, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/pro-regular-svg-icons/faArrowUpRightFromSquare';
+import { Link } from 'components/common/Navigation';
 
 type DocumentTreeItemProps = TreeItemProps & {
     labelIcon?: IconProp;
@@ -20,7 +21,6 @@ type StyledTreeItemProps = TreeItemProps & {
     labelIcon?: IconProp;
     labelInfo?: string;
     labelText: string;
-    innerDocument?: boolean;
 };
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
@@ -73,26 +73,10 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                             {LabelIcon && (
                                 <FontAwesomeIcon icon={LabelIcon} style={{ fontSize: '20px', paddingRight: '8px' }} />
                             )}
-                            <Link
-                                sx={{
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                                target="_blank"
-                                href={`${labelUrl}`}
-                            >
+                            <Link target="_blank" href={`${labelUrl}`}>
                                 {labelText}
                             </Link>
-                            <Link
-                                sx={{
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                                target="_blank"
-                                href={`${labelUrl}`}
-                            >
+                            <Link target="_blank" href={`${labelUrl}`}>
                                 <FontAwesomeIcon
                                     icon={faArrowUpRightFromSquare}
                                     style={{ fontSize: '14px', padding: '5px' }}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
+import { Button } from 'components/common/Input';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme, IconButton } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
@@ -16,16 +16,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/pro-regular-svg-icons/faBars';
 import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
-import { useAppTranslation } from 'hooks';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from '../../../hooks';
+import { BodyText } from 'components/common/Typography';
 
 const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     const navigate = useNavigate();
-    const { t: translate } = useAppTranslation();
 
-    const logoUrl = translate('common.logoUrl');
+    const logoUrl = tenant.logoUrl;
     return (
         <>
             <AppBar
@@ -39,7 +41,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
             >
                 <CssBaseline />
                 <Toolbar>
-                    <When condition={!isMediumScreen}>
+                    <When condition={!isMediumScreen && drawerWidth}>
                         <IconButton
                             color="info"
                             sx={{
@@ -101,26 +103,22 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             }}
                             sx={{ flexGrow: 1, cursor: 'pointer' }}
                         >
-                            {translate('header.title')}
+                            {tenant.name}
                         </HeaderTitleOld>
                     ) : (
                         <HeaderTitleOld
                             onClick={() => {
                                 navigate('/home');
                             }}
-                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                            sx={{ flexGrow: 1, cursor: 'pointer', textTransform: 'capitalize' }}
                         >
-                            {translate('header.smallTitle')}
+                            {tenant.short_name}
                         </HeaderTitleOld>
                     )}
-                    <Button
-                        data-testid="button-header"
-                        sx={{
-                            color: Palette.internalHeader.color,
-                        }}
-                        onClick={() => UserService.doLogout()}
-                    >
-                        Logout
+                    <Button data-testid="button-header" variant="tertiary" onClick={() => UserService.doLogout()}>
+                        <BodyText bold size="large">
+                            Logout
+                        </BodyText>
                     </Button>
                 </Toolbar>
                 <EnvironmentBanner />

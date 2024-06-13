@@ -1,11 +1,12 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useAppTranslation } from 'hooks';
+import { TenantState } from 'reduxSlices/tenantSlice';
+import { useAppSelector } from './hooks';
 const DocumentTitle = () => {
-    const { t: translate } = useAppTranslation();
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
     return (
         <Helmet>
-            <title>{translate('header.title')}</title>
+            <title>{tenant.title}</title>
         </Helmet>
     );
 };

@@ -14,6 +14,7 @@ import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementContent, createDefaultEngagementContent } from 'models/engagementContent';
 import { getEngagementContent } from 'services/engagementContentService';
+import { TenantState } from 'reduxSlices/tenantSlice';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
@@ -63,6 +64,7 @@ export const ActionContext = createContext<EngagementContext>({
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
+    const { name: tenantName }: TenantState = useAppSelector((state) => state.tenant);
     const { engagementId } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -74,7 +76,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [tenantTaxa, setTenantTaxa] = useState<MetadataTaxon[]>([]);
-    const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
+    const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement(tenantName));
     const [isNewEngagement, setIsNewEngagement] = useState(!savedEngagement.id);
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();

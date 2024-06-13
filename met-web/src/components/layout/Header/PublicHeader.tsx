@@ -13,17 +13,18 @@ import { useNavigate } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
 import { LanguageContext } from 'components/common/LanguageContext';
+import { TenantState } from 'reduxSlices/tenantSlice';
 
 const PublicHeader = () => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const language = sessionStorage.getItem('languageId');
     const [imageError, setImageError] = useState(false);
     const navigate = useNavigate();
     const { t: translate } = useAppTranslation();
     const { engagementViewMounted, availableEngagementTranslations } = useContext(LanguageContext);
+    const tenant: TenantState = useAppSelector((state) => state.tenant);
 
-    const logoUrl = translate('common.logoUrl');
-    const headerTitle = translate('header.title');
+    const logoUrl = tenant.logoUrl;
+    const headerTitle = tenant.title;
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -54,7 +55,7 @@ const PublicHeader = () => {
                                     cursor: 'pointer',
                                 }}
                                 onClick={() => {
-                                    navigate(`/${language}`);
+                                    navigate(`/`);
                                 }}
                                 onError={(_e) => {
                                     setImageError(true);
@@ -72,7 +73,7 @@ const PublicHeader = () => {
                                 cursor: 'pointer',
                             }}
                             onClick={() => {
-                                navigate(`/${language}`);
+                                navigate(`/`);
                             }}
                             alt={translate('common.defaultBCText')}
                         />
@@ -80,7 +81,7 @@ const PublicHeader = () => {
                     <HeaderTitleOld
                         sx={{ flexGrow: 1, cursor: 'pointer' }}
                         onClick={() => {
-                            navigate(`/${language}`);
+                            navigate(`/`);
                         }}
                     >
                         {headerTitle}

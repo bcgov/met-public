@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
-import { Button as MuiButton, Input, InputProps, Box } from '@mui/material';
+import { Button as MuiButton, Input, InputProps, Box, TextField as MuiTextField } from '@mui/material';
+import { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField';
 import { colors, globalFocusVisible } from '..';
 import { FormField, FormFieldProps } from './FormField';
 import { BodyText } from '../Typography';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { SxProps, Theme } from '@mui/system';
 
 type TextInputProps = {
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: (value: string, name?: string) => void;
     placeholder?: string;
     disabled?: boolean;
 } & Omit<InputProps, 'value' | 'onChange' | 'placeholder' | 'disabled'>;
@@ -31,7 +33,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             disableUnderline
             type="text"
             value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value, e.target.name)}
             placeholder={placeholder}
             disabled={disabled}
             sx={{
@@ -120,13 +122,15 @@ export type TextFieldProps = {
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
-} & Omit<FormFieldProps, 'children'> &
-    Omit<TextInputProps, 'fullWidth' | 'error'>;
+    onChange: (value: string, name?: string) => void;
+} & Omit<FormFieldProps, 'children' | 'onChange'> &
+    Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
 
 export const TextField = ({
     title,
     instructions,
     error,
+    name,
     required,
     optional,
     clearable,
@@ -141,7 +145,8 @@ export const TextField = ({
     }, [textInputProps.value]);
 
     const handleSetValue = (newValue: string) => {
-        onChange?.(newValue) ?? setValue(newValue);
+        if (onChange === undefined) return setValue(newValue);
+        onChange?.(newValue, name);
     };
 
     const isError = !!error;
@@ -160,6 +165,7 @@ export const TextField = ({
                 fullWidth
                 error={isError}
                 value={value}
+                name={name}
                 required={required}
                 disabled={disabled}
                 endAdornment={clearable && value ? clearInputButton(() => handleSetValue('')) : undefined}
@@ -180,4 +186,51 @@ export const TextField = ({
 
 export const TextAreaField = ({ ...textFieldProps }: Omit<TextFieldProps, 'multiline' | 'minRows' | 'maxRows'>) => {
     return <TextField sx={{ height: 'unset' }} multiline minRows={4} maxRows={6} {...textFieldProps} />;
+};
+
+// Define a Custom MUI Textfield
+interface CustomTextFieldProps extends Omit<MuiTextFieldProps, 'variant'> {
+    customLabel?: string;
+    sx?: SxProps<Theme>;
+}
+
+export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }) => {
+    return (
+        <MuiTextField
+            {...props}
+            sx={{
+                '& .MuiOutlinedInput-root': {
+                    display: 'flex',
+                    height: '48px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    alignSelf: 'stretch',
+                    borderRadius: '8px',
+                    boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+                    caretColor: colors.surface.blue[90],
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderWidth: '1px', // Default outline
+                        borderColor: colors.surface.gray[80],
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderWidth: '2px', // 2px black outline on hover
+                        borderColor: 'black',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderWidth: '0px', // No outline when focused
+                        borderColor: 'transparent',
+                    },
+                    '&.Mui-focused': {
+                        boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
+                    },
+                    '&:has(:disabled) .MuiOutlinedInput-notchedOutline': {
+                        borderWidth: '1px', // Ensure outline for disabled state
+                        borderColor: colors.surface.gray[80],
+                    },
+                },
+                ...sx,
+            }}
+        />
+    );
 };

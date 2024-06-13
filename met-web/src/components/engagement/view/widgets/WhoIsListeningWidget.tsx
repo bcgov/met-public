@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper, MetHeader2Old, MetHeader3, MetBodyOld, MetSmallTextOld } from 'components/common';
-import { Grid, Avatar, Link, Skeleton, useTheme, Divider } from '@mui/material';
+import { Grid, Avatar, Skeleton, useTheme, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Contact } from 'models/contact';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { When } from 'react-if';
 import { useLazyGetContactQuery } from 'apiManager/apiSlices/contacts';
+import { Link } from 'components/common/Navigation';
 
 interface WhoIsListeningWidgetProps {
     widget: Widget;

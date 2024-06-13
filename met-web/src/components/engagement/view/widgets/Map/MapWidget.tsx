@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetPaper, MetHeader2Old, MetLabel } from 'components/common';
-import { Grid, Skeleton, Divider, Box, IconButton, Link, useMediaQuery, Theme } from '@mui/material';
+import { MetPaper, MetHeader2Old } from 'components/common';
+import { Grid, Skeleton, Divider, Box, useMediaQuery, Theme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import MetMap from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
+import { IconButton } from 'components/common/Input';
+import { Link } from 'components/common/Navigation';
+import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -110,13 +111,11 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                     </Grid>
                     <When condition={isLargeScreen}>
                         <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
-                            <Grid item>
-                                <IconButton onClick={() => setOpen(true)}>
-                                    <FontAwesomeIcon icon={faExpand} style={{ fontSize: '20px' }} />
-                                </IconButton>
+                            <Grid item paddingRight={'5px'}>
+                                <IconButton icon={faExpand} onClick={() => setOpen(true)} backgroundColor="none" />
                             </Grid>
                             <Grid item>
-                                <Link onClick={() => setOpen(true)} component={MetLabel} sx={{ cursor: 'pointer' }}>
+                                <Link onClick={() => setOpen(true)} tabIndex={0} onKeyPress={() => setOpen(true)}>
                                     View Expanded Map
                                 </Link>
                             </Grid>

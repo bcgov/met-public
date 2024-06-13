@@ -7,6 +7,11 @@ import { LandingContext } from 'components/landing/LandingContext';
 import * as reactRedux from 'react-redux';
 import { openEngagement, closedEngagement } from '../factory';
 
+const MOCK_TENANT = {
+    title: 'Mock Tenant',
+    description: 'Mock Tenant Description',
+};
+
 jest.mock('axios');
 
 jest.mock('components/common', () => ({
@@ -20,6 +25,10 @@ jest.mock('hooks', () => ({
     useAppTranslation: () => ({
         t: (key: string) => key, // return the key itself
     }),
+    useAppSelector: (callback: any) =>
+        callback({
+            tenant: MOCK_TENANT,
+        }),
 }));
 
 // mock enums to fix TS compiler issue when importing them
@@ -100,8 +109,8 @@ describe('Landing page tests', () => {
                     );
                 }),
             ).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.header')).toBeInTheDocument();
-            expect(screen.getByText('landing.banner.description')).toBeInTheDocument();
+            expect(screen.getByText(MOCK_TENANT.title)).toBeInTheDocument();
+            expect(screen.getByText(MOCK_TENANT.description)).toBeInTheDocument();
             expect(screen.getByText(openEngagement.name)).toBeInTheDocument();
             expect(screen.getByText(closedEngagement.name)).toBeInTheDocument();
         });

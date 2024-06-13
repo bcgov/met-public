@@ -7,6 +7,7 @@ import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
+import * as engagementSlugService from 'services/engagementSlugService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
@@ -45,14 +46,6 @@ const whoIsListeningWidget: Widget = {
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [widgetItem],
-};
-
-const engagementPhasesWidget: Widget = {
-    id: 2,
-    title: 'Engagement Phases',
-    widget_type_id: WidgetType.Phases,
-    engagement_id: 1,
-    items: [],
 };
 
 const mockLocationData = { state: { open: true }, pathname: '', search: '', hash: '', key: '' };
@@ -111,7 +104,7 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
-jest.mock('axios')
+jest.mock('axios');
 
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
@@ -119,9 +112,8 @@ describe('Engagement View page tests', () => {
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useLocation').mockReturnValue(mockLocationData);
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });
-    const getEngagementMock = jest
-        .spyOn(engagementService, 'getEngagement')
-        .mockReturnValue(Promise.resolve(draftEngagement));
+    jest.spyOn(engagementSlugService, 'getSlugByEngagementId').mockResolvedValue({ slug: 'slug' });
+    const getEngagementMock = jest.spyOn(engagementService, 'getEngagement').mockResolvedValue(draftEngagement);
 
     beforeEach(() => {
         setupEnv();
@@ -180,27 +172,5 @@ describe('Engagement View page tests', () => {
         expect(getEngagementMock).toHaveBeenCalledOnce();
         expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
         expect(mockContactRtkUnwrap).toHaveBeenCalledOnce();
-    });
-
-    test('Phases widget appears', async () => {
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([engagementPhasesWidget]));
-        const { container } = render(<EngagementView />);
-
-        await waitFor(() => {
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            expect(mockWidgetsRtkUnwrap).toHaveReturned();
-        });
-
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
-        expect(getEngagementMock).toHaveBeenCalledOnce();
-
-        const eaProcessAccordion = screen.getByTestId('eaProcessAccordion');
-        expect(eaProcessAccordion).toBeVisible();
     });
 });

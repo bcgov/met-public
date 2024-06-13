@@ -1,14 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Grid, Link as MuiLink, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-    CircularProgressWithLabel,
-    MetHeader1Old,
-    MetPaper,
-    MetDescription,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-} from 'components/common';
+import { Grid, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
+import { Link } from 'components/common/Navigation';
+import { Button } from 'components/common/Input/Button';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CircularProgressWithLabel, MetHeader1Old, MetPaper, MetDescription } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -44,7 +39,7 @@ const Dashboard = () => {
         if (isLoggedIn) {
             navigate(`${basePath}/comments/${dashboardType}`);
         } else {
-            navigate(`${languagePath}${basePath}/comments/${dashboardType}`);
+            navigate(`${basePath}/comments/${dashboardType}${languagePath}`);
         }
     };
 
@@ -86,14 +81,13 @@ const Dashboard = () => {
                     m={{ lg: '1em 8em 2em 3em', sm: '2em', xs: '0.5em' }}
                 >
                     <Grid container item xs={12} flexDirection="column">
-                        <Grid item xs={12} container justifyContent="flex-end">
-                            <MuiLink
-                                component={Link}
-                                to={isLoggedIn ? `${basePath}/view` : `${languagePath}${basePath}/view`}
+                        <Grid item xs={12} container justifyContent="flex-end" paddingBottom={'8px'}>
+                            <Link
+                                to={isLoggedIn ? `${basePath}/view` : `${basePath}/view${languagePath}`}
                                 data-testid="link-container"
                             >
                                 {translate('dashboard.link.0') + engagement.name + translate('dashboard.link.1')}
-                            </MuiLink>
+                            </Link>
                         </Grid>
                         <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
                             <Grid
@@ -118,20 +112,24 @@ const Dashboard = () => {
                                         justifyContent="flex-end"
                                     >
                                         <Stack direction="row" spacing={1}>
-                                            <PrimaryButtonOld
+                                            <Button
+                                                variant="primary"
+                                                size="small"
                                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                                 onClick={handleReadComments}
                                             >
                                                 {translate('dashboard.buttonText.readComments')}
-                                            </PrimaryButtonOld>
-                                            <SecondaryButtonOld
+                                            </Button>
+                                            <Button
+                                                variant="secondary"
+                                                size="small"
                                                 onClick={() => {
                                                     setIsPrinting(true);
                                                 }}
                                                 loading={isPrinting}
                                             >
                                                 {translate('dashboard.buttonText.exportToPDF')}
-                                            </SecondaryButtonOld>
+                                            </Button>
                                         </Stack>
                                     </Grid>
                                 </When>

@@ -1,12 +1,14 @@
-import React from 'react';
-import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
+import React, { useState } from 'react';
+import { Button as MuiButton, ButtonProps as MuiButtonProps, Stack, IconButton as MuiIconButton } from '@mui/material';
 import { globalFocusShadow, colors, elevations } from '../../common';
 import { isDarkColor } from 'utils';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { styled } from '@mui/system';
 
 const buttonStyles = {
     borderRadius: '16px',
     padding: '0 1.5rem',
-    marginBottom: '1.5rem',
     fontWeight: 500,
     fontSize: '16px',
 };
@@ -19,6 +21,8 @@ type ButtonProps = {
     icon?: React.ReactNode;
     iconPosition?: 'left' | 'right';
     disabled?: boolean;
+    loading?: boolean;
+    target?: React.HTMLAttributeAnchorTarget;
 } & Omit<MuiButtonProps, 'size' | 'color' | 'variant'>; // Exclude conflicting props
 
 const sizeMap = {
@@ -35,6 +39,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
     icon,
     iconPosition = 'left',
     disabled,
+    loading,
     ...buttonProps
 }) => {
     const height: string = sizeMap[size];
@@ -102,6 +107,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
     icon,
     iconPosition = 'left',
     disabled,
+    loading,
     ...buttonProps
 }) => {
     const height: string = sizeMap[size];
@@ -123,47 +129,47 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
             endIcon={icon && iconPosition === 'right' ? icon : undefined}
             sx={{
                 ...buttonStyles,
-                border: `2px solid ${borderColor}`,
                 height: height,
                 background: 'white',
                 color: textColor,
                 boxShadow: elevations.default,
+                border: `1px solid ${borderColor}`,
                 '&:focus': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.hover,
                     color: darkTextColor,
-                    border: `2px solid ${darkBorderColor}`,
-                },
-                '&:focus-visible': {
-                    backgroundColor: darkBackgroundColor,
-                    outline: `2px solid ${colors.focus.regular.outer}`,
-                    boxShadow: [globalFocusShadow, elevations.hover].join(','),
-                    color: darkTextColor,
-                    border: `2px solid ${darkBorderColor}`,
+                    border: `1px solid ${darkBorderColor}`,
                 },
                 '&:hover': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.hover,
                     color: darkTextColor,
-                    border: `2px solid ${darkBorderColor}`,
+                    border: `1px solid ${darkBorderColor}`,
                     '&:focus-visible': {
-                        boxShadow: [globalFocusShadow, elevations.hover].join(','),
+                        boxShadow: elevations.hover,
                     },
                 },
                 '&:active': {
                     backgroundColor: darkBackgroundColor,
                     boxShadow: elevations.pressed,
                     color: darkTextColor,
-                    border: `2px solid ${darkBorderColor}`,
+                    border: isCustom ? `1px solid ${customColor}` : `1px solid transparent`,
                     '&:focus-visible': {
-                        boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                        boxShadow: elevations.pressed,
                     },
+                },
+                '&:focus-visible': {
+                    backgroundColor: darkBackgroundColor,
+                    outline: `2px solid ${colors.focus.regular.outer}`,
+                    boxShadow: elevations.hover,
+                    color: darkTextColor,
+                    border: `none`,
                 },
                 '&:disabled': {
                     backgroundColor: 'white',
                     boxShadow: 'none',
                     color: colors.type.regular.disabled,
-                    border: `2px solid ${colors.type.regular.disabled}`,
+                    border: `1px solid ${colors.type.regular.disabled}`,
                 },
                 ...buttonProps.sx,
             }}
@@ -181,6 +187,7 @@ const TertiaryButton = ({
     icon,
     iconPosition = 'left',
     disabled,
+    loading,
     ...buttonProps
 }: ButtonProps) => {
     const height: string = sizeMap[size];
@@ -235,4 +242,53 @@ export const Button = ({
         default:
             return <PrimaryButton {...props} />;
     }
+};
+
+type IconButtonProps = {
+    icon: IconProp;
+    onClick?: () => void;
+    title?: string;
+    sx?: React.CSSProperties; // Add sx prop
+    backgroundColor?: string;
+};
+
+const StyledIconButton = styled(MuiIconButton)(() => ({
+    color: '#494949',
+    borderRadius: '50%', // Make it round
+    width: '40px', // Set width to maintain circle shape
+    height: '40px', // Set height to maintain circle shape
+}));
+
+export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx, backgroundColor }) => {
+    const [focused, setFocused] = useState(false);
+
+    return (
+        <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+                backgroundColor: backgroundColor ? backgroundColor : `${colors.focus.regular.inner}`,
+                cursor: 'pointer',
+                borderRadius: '50%',
+                boxShadow: focused ? `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}` : 'none',
+                '&:hover': {
+                    backgroundColor: '#F2F2F2',
+                },
+                '&:focus-visible': {
+                    backgroundColor: '#F2F2F2',
+                    outline: 'white 2px dashed', // Remove default outline
+                    outlineOffset: '2px',
+                },
+                ...sx,
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            tabIndex={focused ? 0 : -1} // Set tabIndex to -1 when not focused
+        >
+            <StyledIconButton onClick={onClick} title={title}>
+                <FontAwesomeIcon icon={icon} style={{ fontSize: '20px', color: '#494949' }} />
+            </StyledIconButton>
+        </Stack>
+    );
 };

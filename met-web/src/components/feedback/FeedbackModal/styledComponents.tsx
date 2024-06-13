@@ -1,5 +1,6 @@
 import { Button, Rating, styled } from '@mui/material';
 import { BaseTheme } from 'styles/Theme';
+import { colors } from '../../common';
 
 export const StyledRating = styled(Rating)(({ theme }) => ({
     '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
@@ -20,6 +21,11 @@ export const CommentTypeButton = styled(Button)(() => ({
     width: 135,
     height: '100%',
     ':focus': {
+        boxShadow: `0 0 0 2px ${colors.focus.regular.outer}`,
+        borderColor: `${colors.focus.regular.inner}`,
+    },
+    ':focus-visible': {
         borderColor: BaseTheme.palette.primary.dark,
+        boxShadow: `0 0 0 2px ${colors.focus.regular.inner}, 0 0 0 4px ${colors.focus.regular.outer}`,
     },
 }));

@@ -188,7 +188,10 @@ class EngagementService:
             scheduled_date=None,
             banner_filename=engagement_data.get('banner_filename', None),
             is_internal=engagement_data.get('is_internal', False),
-            consent_message=engagement_data.get('consent_message', None)
+            consent_message=engagement_data.get('consent_message', None),
+            sponsor_name=engagement_data.get('sponsor_name', None),
+            cta_message=engagement_data.get('cta_message', None),
+            cta_url=engagement_data.get('cta_url', None),
         )
         new_engagement.save()
         return new_engagement

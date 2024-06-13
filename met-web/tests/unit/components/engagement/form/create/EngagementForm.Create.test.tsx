@@ -128,7 +128,7 @@ describe('Engagement form page tests', () => {
         const createButton = getByTestId('save-engagement-button');
         fireEvent.click(createButton);
 
-        expect(container.querySelectorAll('.Mui-error').length).toBeGreaterThan(0);
+        expect(container.querySelectorAll('.engagement-form-error').length).toBeGreaterThan(0);
         expect(postEngagementMock).not.toHaveBeenCalled();
     });
 

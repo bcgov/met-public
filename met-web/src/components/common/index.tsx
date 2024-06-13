@@ -146,7 +146,8 @@ export const elevations = {
     // For use with CSS box-shadow property
     // Not complete in Figma yet
     none: '0px 0px transparent',
-    pressed: '0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 16px 0px rgba(0, 0, 0, 0.16) inset',
+    pressed:
+        '0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px 0px 1px 0px rgba(0, 0, 0, 0.60) inset, 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
     default:
         '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
     hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
@@ -178,7 +179,7 @@ export const MobileToolbar = styled(Toolbar)(() => ({
 }));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
-    backgroundColor: Palette.primary.main,
+    backgroundColor: colors.button.default.shade,
     color: '#fff',
     lineHeight: '1.1rem',
     '&:hover': {
