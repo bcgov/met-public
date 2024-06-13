@@ -8,9 +8,31 @@ import { Header1, BodyText } from 'components/common/Typography/';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
+export const addOrRemoveLanguage = async (
+    tenantId: string,
+    newTenantLanguages: Language[],
+    selectedLanguages: Language[],
+): Promise<string | void> => {
+    if (tenantId) {
+        if (newTenantLanguages.length > selectedLanguages.length) {
+            const addedLanguage = newTenantLanguages.filter((language) => !selectedLanguages.includes(language))[0];
+            const savedTenantLanguage = await postTenantLanguage(tenantId, addedLanguage.id);
+            if (savedTenantLanguage) {
+                return 'Added language to tenant.';
+            }
+        } else if (newTenantLanguages.length < selectedLanguages.length) {
+            const removedLanguage = selectedLanguages.filter((language) => !newTenantLanguages.includes(language))[0];
+            const response = await deleteTenantLanguage(tenantId, removedLanguage.id);
+            if (response.status === 'success') {
+                return 'Deleted language from tenant.';
+            }
+        }
+    }
+};
+
 const LanguageAdminPanel = () => {
     const [languages, setLanguages] = useState<Language[]>([]);
-    const [selectedLanguages, setSelectedLanguages] = useState<Language[]>([]);
+    const [existingTenantLanguages, setExistingTenantLanguages] = useState<Language[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [tenantId] = useState(sessionStorage.getItem('tenantId'));
     const dispatch = useAppDispatch();
@@ -24,55 +46,44 @@ const LanguageAdminPanel = () => {
         setIsLoading(false);
     };
 
-    const fetchTenantLanguages = async () => {
-        if (tenantId) {
-            const fetchedTenantLanguages = await getTenantLanguages(tenantId);
-            setSelectedLanguages(fetchedTenantLanguages);
-        } else {
-        }
+    const fetchTenantLanguages = async (tenantId: string) => {
+        const fetchedTenantLanguages = await getTenantLanguages(tenantId);
+        setExistingTenantLanguages(fetchedTenantLanguages);
     };
 
-    const handleLanguagesChange = async (newTenantLanguages: Language[]) => {
+    const handleLanguagesChange = async (newTenantLanguages: Language[]): Promise<void> => {
         setIsLoading(true);
-
-        if (tenantId) {
-            if (newTenantLanguages.length > selectedLanguages.length) {
-                const addedLanguage = newTenantLanguages.filter((language) => !selectedLanguages.includes(language))[0];
-                const savedTenantLanguage = await postTenantLanguage(tenantId, addedLanguage.id);
-                if (savedTenantLanguage) {
-                    dispatch(
-                        openNotification({
-                            severity: 'success',
-                            text: 'Added language to tenant.',
-                        }),
-                    );
-                }
-            } else if (newTenantLanguages.length < selectedLanguages.length) {
-                const removedLanguage = selectedLanguages.filter(
-                    (language) => !newTenantLanguages.includes(language),
-                )[0];
-                const response = await deleteTenantLanguage(tenantId, removedLanguage.id);
-                if (response.status === 'success') {
-                    dispatch(
-                        openNotification({
-                            severity: 'success',
-                            text: 'Deleted language from tenant.',
-                        }),
-                    );
-                }
-            }
-        }
-        setSelectedLanguages(newTenantLanguages);
-        setIsLoading(false);
+        if (!tenantId) return;
+        addOrRemoveLanguage(tenantId, newTenantLanguages, existingTenantLanguages)
+            .then((message: string | void) => {
+                setExistingTenantLanguages(newTenantLanguages);
+                dispatch(
+                    openNotification({
+                        severity: 'success',
+                        text: message ? message : '',
+                    }),
+                );
+            })
+            .catch((error) => {
+                console.error('Error adding/removing language. ', error);
+                dispatch(
+                    openNotification({
+                        severity: 'error',
+                        text: 'Error adding or removing language.',
+                    }),
+                );
+            })
+            .finally(() => setIsLoading(false));
     };
 
     useEffect(() => {
+        if (!tenantId) return;
         fetchAndSortLanguages();
-        fetchTenantLanguages();
+        fetchTenantLanguages(tenantId);
     }, []);
 
     return (
-        <main style={{ margin: '5%' }}>
+        <main style={{ margin: '5%' }} data-testid="language-admin-panel">
             <Header1>Languages</Header1>
             <BodyText>Select which languages are available for translations.</BodyText>
             {languages.length > 0 && (
@@ -83,7 +94,7 @@ const LanguageAdminPanel = () => {
                     options={languages}
                     getOptionLabel={(option) => option.name}
                     loading={isLoading}
-                    value={selectedLanguages}
+                    value={existingTenantLanguages}
                     onChange={(_, value) => handleLanguagesChange(value)}
                     renderInput={(params) => <TextField {...params} variant="standard" label="Language" />}
                 />
