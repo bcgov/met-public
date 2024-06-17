@@ -11,6 +11,7 @@ import { Case, Switch, Unless } from 'react-if';
 import EmailListSection from './EmailListSection';
 import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
+import { Header2 } from 'components/common/Typography';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <MetHeader2Old bold>{widget.title}</MetHeader2Old>
+                        <Header2>{widget.title}</Header2>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     {subscribeItems?.map((item, index) => {

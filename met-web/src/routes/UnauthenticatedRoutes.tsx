@@ -10,11 +10,9 @@ import ManageSubscription from '../components/engagement/view/widgets/Subscribe/
 import { FormCAC } from 'components/FormCAC';
 import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';
-import { Navigate, Params, Route, defer } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
-import ViewEngagement from 'components/engagement/new/view';
-import { getEngagement } from 'services/engagementService';
-import { getEngagementIdBySlug } from 'services/engagementSlugService';
+import ViewEngagement, { engagementLoader } from 'components/engagement/new/view';
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);
 const EngagementViewWrapper = withLanguageParam(EngagementView);
@@ -34,13 +32,7 @@ const UnauthenticatedRoutes = () => {
                 <Route index element={<Navigate to="/" />} />
                 <Route
                     path=":slug/:language"
-                    loader={async ({ params }: { params: Params<string> }) => {
-                        const { slug } = params;
-                        const engagement = getEngagementIdBySlug(slug ?? '').then((response) =>
-                            getEngagement(response.engagement_id),
-                        );
-                        return defer({ engagement, slug });
-                    }}
+                    loader={engagementLoader}
                     errorElement={<NotFound />}
                     element={<ViewEngagement />}
                 />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2Old } from 'components/common';
+import { MetPaper } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem } from 'models/document';
@@ -7,6 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
 import { useLazyGetDocumentsQuery } from 'apiManager/apiSlices/documents';
+import { Header2 } from 'components/common/Typography';
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -50,8 +51,8 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
         <>
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid item justifyContent="flex-start" alignItems="center" xs={12}>
-                    <MetHeader2Old bold>{widget.title}</MetHeader2Old>
-                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
+                    <Header2>{widget.title}</Header2>
+                    <Divider sx={{ borderWidth: 1 }} />
                 </Grid>
                 {documents.map((document: DocumentItem) => {
                     return (

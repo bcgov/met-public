@@ -9,20 +9,38 @@ import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import Footer from 'components/layout/Footer';
 import DocumentTitle from 'DocumentTitle';
 import ScrollToTop from 'components/scrollToTop';
-import { WidthLimiter } from 'components/common/Layout';
+import { Box } from '@mui/material';
+import { colors } from 'components/common';
 
 export const PublicLayout = () => {
     return (
-        <WidthLimiter>
-            <DocumentTitle />
-            <PageViewTracker />
-            <Notification />
-            <NotificationModal />
-            <PublicHeader />
-            <ScrollToTop />
-            <Outlet />
-            <FeedbackModal />
-            <Footer />
-        </WidthLimiter>
+        <Box
+            sx={{
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'transparent',
+                padding: 0,
+                margin: 0,
+            }}
+        >
+            <Box
+                sx={{
+                    maxWidth: '1926px',
+                    margin: '0 auto',
+                    background: colors.surface.white,
+                }}
+            >
+                <DocumentTitle />
+                <PageViewTracker />
+                <Notification />
+                <NotificationModal />
+                <PublicHeader />
+                <ScrollToTop />
+                <Outlet />
+                <FeedbackModal />
+                <Footer />
+            </Box>
+        </Box>
     );
 };

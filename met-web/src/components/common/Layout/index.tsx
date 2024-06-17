@@ -27,33 +27,5 @@ export const ResponsiveWrapper: React.FC = () => {
     );
 };
 
-export const WidthLimiter: React.FC<BoxProps & { innerProps?: BoxProps }> = ({ children, innerProps, ...props }) => {
-    return (
-        <Box
-            sx={{
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: 'transparent',
-                padding: 0,
-                margin: 0,
-                ...props.sx,
-            }}
-            {...props}
-        >
-            <Box
-                sx={{
-                    maxWidth: '1920px',
-                    margin: '0 auto',
-                    ...innerProps?.sx,
-                }}
-                {...innerProps}
-            >
-                {children}
-            </Box>
-        </Box>
-    );
-};
-
 export { Table, TableHead, TableHeadRow, TableHeadCell, TableBody, TableRow, TableCell, TableContainer } from './Table';
 export { DetailsContainer, Detail } from './Details';
