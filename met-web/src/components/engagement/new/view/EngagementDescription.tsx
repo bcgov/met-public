@@ -4,7 +4,7 @@ import { Link } from 'components/common/Navigation';
 import { Engagement } from 'models/engagement';
 import { Grid, Skeleton } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, useLoaderData, useParams } from 'react-router-dom';
+import { Await, useLoaderData } from 'react-router-dom';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,7 +13,6 @@ import { Widget } from 'models/widget';
 import { WidgetSwitch } from 'components/engagement/view/widgets/WidgetSwitch';
 
 export const EngagementDescription = ({ engagement }: { engagement: Engagement }) => {
-    const { slug, language } = useParams();
     const { widgets } = useLoaderData() as { widgets: Widget[] };
     return (
         <section id="cta-section">
