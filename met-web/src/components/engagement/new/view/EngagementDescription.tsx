@@ -14,7 +14,6 @@ import { WidgetSwitch } from 'components/engagement/view/widgets/WidgetSwitch';
 
 export const EngagementDescription = ({ engagement }: { engagement: Engagement }) => {
     const { slug, language } = useParams();
-    const oldLink = `/${slug}/${language}`;
     const { widgets } = useLoaderData() as { widgets: Widget[] };
     return (
         <section id="cta-section">
