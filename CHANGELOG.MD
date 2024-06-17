@@ -1,3 +1,6 @@
+## June 14, 2024
+- **Feature** Add language picker UI [🎟️ DESENG-623](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-623)
+
 ## June 11, 2024
 
 - **Feature** Add new header to "new look" engagement page [🎟️ DESENG-630](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-630)
