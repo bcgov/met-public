@@ -1,11 +1,8 @@
-import { BodyText } from 'components/common/Typography';
 import React, { Suspense } from 'react';
-import { Await, useLoaderData, useParams } from 'react-router-dom';
-import { Link } from 'components/common/Navigation';
+import { Await, useLoaderData } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
-import { Box, Grid, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import { EngagementHero } from './EngagementHero';
-import { colors } from 'components/common';
 import { EngagementDescription } from './EngagementDescription';
 
 export const ViewEngagement = () => {
