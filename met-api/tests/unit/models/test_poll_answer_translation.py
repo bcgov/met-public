@@ -9,18 +9,18 @@ from tests.utilities.factory_utils import factory_poll_answer_translation_model,
 
 def test_get_poll_answer_translation_by_answer_and_language(session):
     """Assert that translations for a poll answer can be fetched by answer and language."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Translated Answer',
         }
     )
     session.commit()
 
     translations = PollAnswerTranslation.get_by_answer_and_language(
-        answer.id, language.id
+        answer.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].answer_text == 'Translated Answer'
@@ -28,10 +28,10 @@ def test_get_poll_answer_translation_by_answer_and_language(session):
 
 def test_create_poll_answer_translation(session):
     """Assert that a poll answer translation can be created."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     translation_data = {
         'poll_answer_id': answer.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'answer_text': 'Réponse traduite',
     }
 
@@ -44,11 +44,11 @@ def test_create_poll_answer_translation(session):
 
 def test_update_poll_answer_translation(session):
     """Assert that a poll answer translation can be updated."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Translated Answer',
         }
     )
@@ -64,11 +64,11 @@ def test_update_poll_answer_translation(session):
 
 def test_delete_poll_answer_translation(session):
     """Assert that a poll answer translation can be deleted."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Translated Answer',
         }
     )

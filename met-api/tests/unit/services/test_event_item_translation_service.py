@@ -8,12 +8,12 @@ from tests.utilities.factory_utils import (
 
 def test_get_event_item_translation_by_id(session):
     """Assert that event item translation can be fetched by its ID."""
-    event_item, _, language = event_item_model_with_language()
+    event_item, _ = event_item_model_with_language()
     translation = factory_event_item_translation_model(
         {
             ** TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': event_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
@@ -27,18 +27,18 @@ def test_get_event_item_translation_by_id(session):
 
 def test_get_event_item_translation(session):
     """Assert that event item translations can be fetched by item and language."""
-    event_item, _, language = event_item_model_with_language()
+    event_item, _ = event_item_model_with_language()
     factory_event_item_translation_model(
         {
             ** TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': event_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
 
     translations = EventItemTranslationService.get_event_item_translation(
-        event_item.id, language.id
+        event_item.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].description == TestEventItemTranslationInfo.event_item_info1.value['description']
@@ -53,11 +53,11 @@ def test_create_event_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    event_item, event, language = event_item_model_with_language()
+    event_item, event = event_item_model_with_language()
     data = {
         ** TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
     }
 
@@ -79,11 +79,11 @@ def test_create_event_item_translation_with_authorization_pre_populate(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    event_item, event, language = event_item_model_with_language()
+    event_item, event = event_item_model_with_language()
     data = {
         ** TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': event_item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     # Setting preopulate true should return the event item description
@@ -105,12 +105,12 @@ def test_update_event_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    event_item, event, language = event_item_model_with_language()
+    event_item, event = event_item_model_with_language()
     translation = factory_event_item_translation_model(
         {
             ** TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': event_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Old Description',
         }
     )
@@ -134,12 +134,12 @@ def test_delete_event_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    event_item, event, language = event_item_model_with_language()
+    event_item, event = event_item_model_with_language()
     translation = factory_event_item_translation_model(
         {
             ** TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': event_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()

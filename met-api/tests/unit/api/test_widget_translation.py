@@ -28,7 +28,7 @@ from met_api.services.widget_translation_service import WidgetTranslationService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_language_model, factory_widget_model,
+    factory_auth_header, factory_engagement_model, factory_widget_model,
     factory_widget_translation_model)
 
 
@@ -42,9 +42,8 @@ def test_create_widget_translation(client, jwt, session, widget_translation_info
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     widget_translation_info['widget_id'] = widget.id
-    widget_translation_info['language_id'] = language.id
+    widget_translation_info['language_id'] = 49  # French ID from pre-populated database of languages
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
@@ -53,7 +52,7 @@ def test_create_widget_translation(client, jwt, session, widget_translation_info
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
+    rv = client.get(f'/api/widget/{widget.id}/translations/language/{49}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('widget_id') == widget.id
@@ -84,9 +83,8 @@ def test_get_widget_translation(client, jwt, session, widget_translation_info,
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     widget_translation_info['widget_id'] = widget.id
-    widget_translation_info['language_id'] = language.id
+    widget_translation_info['language_id'] = 49  # French ID from pre-populated database of languages
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post(f'/api/widget/{widget.id}/translations/',
@@ -94,14 +92,14 @@ def test_get_widget_translation(client, jwt, session, widget_translation_info,
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
 
-    rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
+    rv = client.get(f'/api/widget/{widget.id}/translations/language/{49}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     assert rv.json[0].get('widget_id') == widget.id
 
     with patch.object(WidgetTranslationService, 'get_translation_by_widget_id_and_language_id',
                       side_effect=ValueError('Test error')):
-        rv = client.get(f'/api/widget/{widget.id}/translations/language/{language.id}',
+        rv = client.get(f'/api/widget/{widget.id}/translations/language/{49}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -113,9 +111,8 @@ def test_delete_widget_translation(client, jwt, session, widget_translation_info
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     widget_translation_info['widget_id'] = widget.id
-    widget_translation_info['language_id'] = language.id
+    widget_translation_info['language_id'] = 49  # French ID from pre-populated database of languages
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     widget_translation = factory_widget_translation_model(widget_translation_info)
@@ -146,9 +143,8 @@ def test_patch_widget_translation(client, jwt, session, widget_translation_info,
     engagement = factory_engagement_model()
     TestWidgetInfo.widget1['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget1)
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     widget_translation_info['widget_id'] = widget.id
-    widget_translation_info['language_id'] = language.id
+    widget_translation_info['language_id'] = 49  # French ID from pre-populated database of languages
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     widget_translation = factory_widget_translation_model(widget_translation_info)

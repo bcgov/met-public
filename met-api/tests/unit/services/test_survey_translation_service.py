@@ -6,14 +6,13 @@ Test suite to ensure that the SurveyTranslationService routines are working as e
 from met_api.services.survey_translation_service import SurveyTranslationService
 from tests.utilities.factory_scenarios import TestJwtClaims
 from tests.utilities.factory_utils import (
-    factory_language_model, factory_staff_user_model, factory_survey_and_eng_model,
-    factory_survey_translation_and_engagement_model, factory_user_group_membership_model, patch_token_info,
-    set_global_tenant)
+    factory_staff_user_model, factory_survey_and_eng_model, factory_survey_translation_and_engagement_model,
+    factory_user_group_membership_model, patch_token_info, set_global_tenant)
 
 
 def test_get_survey_translation_by_id(session):
     """Assert that a survey translation can be fetched by ID."""
-    translation, _, _ = factory_survey_translation_and_engagement_model()
+    translation, _ = factory_survey_translation_and_engagement_model()
     session.add(translation)
     session.commit()
 
@@ -31,15 +30,12 @@ def test_create_survey_translation(session, monkeypatch):
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    language = factory_language_model()
-    session.add(language)
-    session.commit()
     survey, _ = factory_survey_and_eng_model()
 
     # Create translation with Prepoulate true
     translation_data = {
         'survey_id': survey.id,
-        'language_id': language.id,
+        'language_id': 49,
         'name': 'Survey in French',
         'form_json': '{"question": "Votre nom?"}',
     }
@@ -49,13 +45,10 @@ def test_create_survey_translation(session, monkeypatch):
     assert created_translation.id is not None
     assert created_translation.name == 'Survey in French'
 
-    language_data = {'name': 'Spanish', 'code': 'es', 'right_to_left': False}
-    language1 = factory_language_model(language_data)
-
     # Create translation with Prepoulate True
     translation_data2 = {
         'survey_id': survey.id,
-        'language_id': language1.id,
+        'language_id': 152,
     }
 
     created_translation = SurveyTranslationService.create_survey_translation(
@@ -72,7 +65,7 @@ def test_update_survey_translation(session, monkeypatch):
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
 
-    translation, _, _ = factory_survey_translation_and_engagement_model()
+    translation, _ = factory_survey_translation_and_engagement_model()
 
     updated_data = {'name': 'Updated Survey Translation'}
     updated_translation = SurveyTranslationService.update_survey_translation(
@@ -88,7 +81,7 @@ def test_delete_survey_translation(session, monkeypatch):
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    translation, _, _ = factory_survey_translation_and_engagement_model()
+    translation, _ = factory_survey_translation_and_engagement_model()
     session.add(translation)
     session.commit()
 

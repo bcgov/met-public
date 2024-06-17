@@ -9,12 +9,12 @@ from tests.utilities.factory_utils import (
 
 def test_get_timeline_event_translation_by_id(session):
     """Assert that subscribe item translation can be fetched by its ID."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     translation = factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
@@ -28,18 +28,18 @@ def test_get_timeline_event_translation_by_id(session):
 
 def test_get_timeline_event_translation_by_language(session):
     """Assert that subscribe item translations can be fetched by item and language."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
 
     translations = TimelineEventTranslationService.get_timeline_event_translation(
-        timeline_event.id, language.id
+        timeline_event.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].description == TestTimelineEventTranslationInfo.timeline_event_info1.value['description']
@@ -54,11 +54,11 @@ def test_create_timeline_event_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    timeline_event, widget_timeline, language = timeline_event_model_with_language()
+    timeline_event, widget_timeline = timeline_event_model_with_language()
     data = {
         **TestTimelineEventTranslationInfo.timeline_event_info1.value,
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
     }
 
@@ -80,10 +80,10 @@ def test_create_timeline_event_translation_with_authorization_with_prepopulate(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    timeline_event, widget_timeline, language = timeline_event_model_with_language()
+    timeline_event, widget_timeline = timeline_event_model_with_language()
     data = {
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     created_translation = (
@@ -104,12 +104,12 @@ def test_update_timeline_event_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    timeline_event, widget_timeline, language = timeline_event_model_with_language()
+    timeline_event, widget_timeline = timeline_event_model_with_language()
     translation = factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Old Description',
         }
     )
@@ -133,12 +133,12 @@ def test_delete_timeline_event_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    timeline_event, widget_timeline, language = timeline_event_model_with_language()
+    timeline_event, widget_timeline = timeline_event_model_with_language()
     translation = factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()

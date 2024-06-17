@@ -10,11 +10,11 @@ from tests.utilities.factory_utils import (
 def test_get_subscribe_item_translation(client, jwt, session):
     """Assert that a subscribe item translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    item, widget_subscribe, language = subscribe_item_model_with_language()
+    item, widget_subscribe = subscribe_item_model_with_language()
     subscribe_item_translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
         }
     )
@@ -35,11 +35,11 @@ def test_get_subscribe_item_translation(client, jwt, session):
 def test_get_subscribe_item_translation_by_language(client, jwt, session):
     """Assert that a subscribe item translation can be fetched by its language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    item, widget_subscribe, language = subscribe_item_model_with_language()
+    item, widget_subscribe = subscribe_item_model_with_language()
     subscribe_item_translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
         }
     )
@@ -47,7 +47,7 @@ def test_get_subscribe_item_translation_by_language(client, jwt, session):
     session.commit()
 
     rv = client.get(
-        f'/api/subscribe/{widget_subscribe.id}/translations/item/{item.id}/language/{language.id}',
+        f'/api/subscribe/{widget_subscribe.id}/translations/item/{item.id}/language/{49}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )
@@ -61,11 +61,11 @@ def test_patch_subscribe_item_translation(client, jwt, session, setup_admin_user
     """Assert that a subscribe item translation can be updated using PATCH."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, widget_subscribe, language = subscribe_item_model_with_language()
+    item, widget_subscribe = subscribe_item_model_with_language()
     subscribe_item_translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Old Translation',
         }
     )
@@ -88,11 +88,11 @@ def test_delete_subscribe_item_translation(client, jwt, session, setup_admin_use
     """Assert that a subscribe item translation can be deleted using DELETE."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, widget_subscribe, language = subscribe_item_model_with_language()
+    item, widget_subscribe = subscribe_item_model_with_language()
     subscribe_item_translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Translation to Delete',
         }
     )
@@ -111,11 +111,11 @@ def test_create_subscribe_item_translation(client, jwt, session, setup_admin_use
     """Assert that a new subscribe item translation can be created using POST."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, widget_subscribe, language = subscribe_item_model_with_language()
+    item, widget_subscribe = subscribe_item_model_with_language()
 
     data = {
         'subscribe_item_id': item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
         'pre_populate': False,
     }

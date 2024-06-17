@@ -12,12 +12,12 @@ from tests.utilities.factory_utils import (
 def test_get_engagement_content_translation(client, jwt, session):
     """Assert that an engagement content translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    content, language = engagement_content_model_with_language()
+    content = engagement_content_model_with_language()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
             'engagement_content_id': content.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.add(engagement_content_translation)
@@ -37,19 +37,19 @@ def test_get_engagement_content_translation(client, jwt, session):
 def test_get_engagement_content_translation_by_language(client, jwt, session):
     """Assert that engagement content translations can be fetched by content ID and Language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    content, language = engagement_content_model_with_language()
+    content = engagement_content_model_with_language()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
             'engagement_content_id': content.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.add(engagement_content_translation)
     session.commit()
 
     rv = client.get(
-        f'/api/engagement_content/{content.id}/translations/language/{language.id}',
+        f'/api/engagement_content/{content.id}/translations/language/{49}',
         headers=headers,
         content_type=ContentType.JSON.value
     )
@@ -63,14 +63,14 @@ def test_create_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that a new engagement content translation can be created using the POST API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content, language = engagement_content_model_with_language()
+    content = engagement_content_model_with_language()
 
     session.commit()
 
     data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': content.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'pre_populate': False
     }
 
@@ -90,12 +90,12 @@ def test_update_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that an engagement content translation can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content, language = engagement_content_model_with_language()
+    content = engagement_content_model_with_language()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
             'engagement_content_id': content.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
@@ -117,12 +117,12 @@ def test_delete_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that an engagement content translation can be deleted using the DELETE API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content, language = engagement_content_model_with_language()
+    content = engagement_content_model_with_language()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
             'engagement_content_id': content.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()

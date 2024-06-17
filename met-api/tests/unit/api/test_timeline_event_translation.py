@@ -10,11 +10,11 @@ from tests.utilities.factory_utils import (
 def test_get_timeline_event_translation(client, jwt, session):
     """Assert that a timeline event translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
             'time': '2021-01-01T00:00:00',
         }
@@ -37,11 +37,11 @@ def test_get_timeline_event_translation(client, jwt, session):
 def test_get_timeline_event_translation_by_language(client, jwt, session):
     """Assert that a timeline event translation can be fetched by its language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
             'time': '2021-01-01T00:00:00',
         }
@@ -51,7 +51,7 @@ def test_get_timeline_event_translation_by_language(client, jwt, session):
     session.commit()
 
     rv = client.get(
-        f'/api/timelines/{timeline.id}/translations/event/{timeline_event.id}/language/{language.id}',
+        f'/api/timelines/{timeline.id}/translations/event/{timeline_event.id}/language/{49}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )
@@ -65,11 +65,11 @@ def test_create_timeline_event_translation(client, jwt, session, setup_admin_use
     """Assert that a new timeline event translation can be created using POST."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
 
     data = {
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
         'time': '2021-01-01T00:00:00',
         'pre_populate': False,
@@ -91,11 +91,11 @@ def test_create_timeline_event_translation_with_prepopulate(client, jwt, session
     """Assert that a new timeline event translation can be created using POST."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
 
     data = {
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'pre_populate': True,
     }
 
@@ -115,12 +115,12 @@ def test_patch_timeline_event_translation(client, jwt, session, setup_admin_user
     """Assert that a timeline event translation can be updated using PATCH."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
     session.commit()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
             'time': '2021-01-01T00:00:00',
         }
@@ -146,11 +146,11 @@ def test_delete_timeline_event_translation(client, jwt, session, setup_admin_use
     """Assert that a timeline event translation can be deleted using DELETE."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    timeline_event, timeline, language = timeline_event_model_with_language()
+    timeline_event, timeline = timeline_event_model_with_language()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
             'time': '2021-01-01T00:00:00',
         }

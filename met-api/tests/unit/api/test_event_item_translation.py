@@ -11,12 +11,12 @@ from tests.utilities.factory_utils import (
 def test_get_event_item_translation(client, jwt, session):
     """Assert that an event item translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
     event_item_translation = factory_event_item_translation_model(
         {
             **TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
         }
     )
@@ -37,12 +37,12 @@ def test_get_event_item_translation(client, jwt, session):
 def test_get_event_item_translation_by_language(client, jwt, session):
     """Assert that an event item translation can be fetched by its langauge id."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
     event_item_translation = factory_event_item_translation_model(
         {
             **TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Test Translation',
         }
     )
@@ -50,7 +50,7 @@ def test_get_event_item_translation_by_language(client, jwt, session):
     session.commit()
 
     rv = client.get(
-        f'/api/events/{event.id}/translations/item/{item.id}/language/{language.id}',
+        f'/api/events/{event.id}/translations/item/{item.id}/language/{49}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )
@@ -66,12 +66,12 @@ def test_patch_event_item_translation(
     """Assert that an event item translation can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
     event_item_translation = factory_event_item_translation_model(
         {
             **TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Old Translation',
         }
     )
@@ -96,12 +96,12 @@ def test_delete_event_item_translation(
     """Assert that an event item translation can be deleted using the DELETE API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
     event_item_translation = factory_event_item_translation_model(
         {
             **TestEventItemTranslationInfo.event_item_info1.value,
             'event_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Translation to Delete',
         }
     )
@@ -122,12 +122,12 @@ def test_create_event_item_translation(
     """Assert that a new event item translation can be created using the POST API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
 
     data = {
         **TestEventItemTranslationInfo.event_item_info1.value,
         'event_item_id': item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
         'pre_populate': False,
     }
@@ -150,11 +150,11 @@ def test_create_event_item_translation_with_pre_populate(
     """Assert that a new event item translation can be created using the POST API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    item, event, language = event_item_model_with_language()
+    item, event = event_item_model_with_language()
 
     data = {
         'event_item_id': item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'pre_populate': True,
     }
 
