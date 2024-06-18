@@ -1,3 +1,10 @@
+## June 17, 2024
+
+- **Feature** Add engagement description to the engagement page [🎟️ DESENG-631](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-631)
+  - Display engagement description on the new engagement page
+  - Display first widget of the engagement beside the description
+  - Limit text editor to remove disruptive formatting options
+
 ## June 11, 2024
 
 - **Feature** Add new header to "new look" engagement page [🎟️ DESENG-630](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-630)

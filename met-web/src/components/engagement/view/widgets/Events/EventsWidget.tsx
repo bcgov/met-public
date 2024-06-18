@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2Old } from 'components/common';
+import { MetPaper } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
@@ -9,6 +9,7 @@ import { Switch, Case } from 'react-if';
 import { getEvents } from 'services/widgetService/EventService';
 import VirtualSession from './VirtualSession';
 import InPersonEvent from './InPersonEvent';
+import { Header2 } from 'components/common/Typography';
 
 interface EventsWidgetProps {
     widget: Widget;
@@ -44,9 +45,9 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2Old>
+                        <Header2>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2Old>
+                        </Header2>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -73,7 +74,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                 xs={12}
                 paddingBottom={0}
             >
-                <MetHeader2Old bold>{widget.title}</MetHeader2Old>
+                <Header2>{widget.title}</Header2>
                 <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
             </Grid>
             {events.map((event: Event) => {

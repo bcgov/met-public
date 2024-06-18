@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import TreeItem, { treeItemClasses, TreeItemProps } from '@mui/lab/TreeItem';
-import { MetBodyOld } from 'components/common';
+import { BodyText } from 'components/common/Typography';
 import { If, Then, Else } from 'react-if';
 import { Box } from '@mui/material';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -87,7 +87,7 @@ export function StyledTreeItem(props: StyledTreeItemProps & DocumentTreeItemProp
                             {LabelIcon && (
                                 <FontAwesomeIcon icon={LabelIcon} style={{ fontSize: '20px', paddingRight: '8px' }} />
                             )}
-                            <MetBodyOld bold>{labelText}</MetBodyOld>
+                            <BodyText bold>{labelText}</BodyText>
                         </Else>
                     </If>
                 </Box>

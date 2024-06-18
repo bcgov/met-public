@@ -64,6 +64,7 @@ export const EngagementHero = ({ engagement }: { engagement: Engagement }) => {
                 <Button
                     href={engagement.cta_url || '#cta-section'}
                     variant="primary"
+                    size="large"
                     icon={<FontAwesomeIcon fontSize={24} icon={faChevronRight} />}
                     iconPosition="right"
                     sx={{ borderRadius: '8px' }}

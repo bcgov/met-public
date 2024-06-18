@@ -1,7 +1,7 @@
 export const RichTextToolbarConfig = {
-    options: ['inline', 'fontSize', 'list'],
+    options: ['inline', 'list', 'history'],
     inline: {
-        options: ['bold', 'italic', 'underline'],
+        options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
     },
     list: { options: ['unordered', 'ordered'] },
 };
