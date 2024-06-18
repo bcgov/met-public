@@ -15,7 +15,7 @@ import { WidgetSwitch } from 'components/engagement/view/widgets/WidgetSwitch';
 export const EngagementDescription = ({ engagement }: { engagement: Engagement }) => {
     const { widgets } = useLoaderData() as { widgets: Widget[] };
     return (
-        <section id="cta-section">
+        <section id="cta-section" aria-labelledby="description-header">
             <Grid
                 container
                 justifyContent="space-between"
@@ -62,7 +62,7 @@ export const EngagementDescription = ({ engagement }: { engagement: Engagement }
                         minHeight: '120px',
                     }}
                 >
-                    <Header2 decorated weight="thin" sx={{ color: colors.surface.white }}>
+                    <Header2 decorated weight="thin" sx={{ color: colors.surface.white }} id="description-header">
                         Engagement Description
                     </Header2>
                     <BodyText
