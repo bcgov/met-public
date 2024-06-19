@@ -5,14 +5,13 @@ from http import HTTPStatus
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_language_model, factory_survey_and_eng_model,
-    factory_survey_translation_and_engagement_model)
+    factory_auth_header, factory_survey_and_eng_model, factory_survey_translation_and_engagement_model)
 
 
 def test_get_survey_translation(client, jwt, session):
     """Assert that a survey translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    survey_translation, survey, _ = (
+    survey_translation, survey = (
         factory_survey_translation_and_engagement_model()
     )
     session.add(survey_translation)
@@ -34,15 +33,13 @@ def test_create_survey_translation(client, jwt, session, setup_admin_user_and_cl
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     survey, eng = factory_survey_and_eng_model()
-    language = factory_language_model({'name': 'French', 'code': 'fr', 'right_to_left': False})
     session.add(eng)
     session.add(survey)
-    session.add(language)
     session.commit()
 
     data = {
         'survey_id': survey.id,
-        'language_id': language.id,
+        'language_id': 49,
         'name': 'New Translation',
         'form_json': {'question': 'Your name?'},
         'pre_populate': False,
@@ -64,7 +61,7 @@ def test_update_survey_translation(client, jwt, session, setup_admin_user_and_cl
     """Assert that a survey translation can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    survey_translation, survey, _ = (
+    survey_translation, survey = (
         factory_survey_translation_and_engagement_model()
     )
     session.add(survey_translation)
@@ -87,7 +84,7 @@ def test_delete_survey_translation(client, jwt, session, setup_admin_user_and_cl
     """Assert that a survey translation can be deleted using the DELETE API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    survey_translation, survey, _ = (
+    survey_translation, survey = (
         factory_survey_translation_and_engagement_model()
     )
     session.add(survey_translation)

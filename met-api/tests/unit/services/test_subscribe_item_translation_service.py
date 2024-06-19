@@ -9,12 +9,12 @@ from tests.utilities.factory_utils import (
 
 def test_get_subscribe_item_translation_by_id(session):
     """Assert that subscribe item translation can be fetched by its ID."""
-    subscribe_item, _, language = subscribe_item_model_with_language()
+    subscribe_item, _ = subscribe_item_model_with_language()
     translation = factory_subscribe_item_translation_model(
         {
             **TestSubscribeItemTranslationInfo.translate_info1.value,
             'subscribe_item_id': subscribe_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
@@ -28,18 +28,18 @@ def test_get_subscribe_item_translation_by_id(session):
 
 def test_get_subscribe_item_translation(session):
     """Assert that subscribe item translations can be fetched by item and language."""
-    subscribe_item, _, language = subscribe_item_model_with_language()
+    subscribe_item, _ = subscribe_item_model_with_language()
     factory_subscribe_item_translation_model(
         {
             **TestSubscribeItemTranslationInfo.translate_info1.value,
             'subscribe_item_id': subscribe_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
 
     translations = SubscribeItemTranslationService.get_subscribe_item_translation(
-        subscribe_item.id, language.id
+        subscribe_item.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].description == TestSubscribeItemTranslationInfo.translate_info1.value['description']
@@ -54,11 +54,11 @@ def test_create_subscribe_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
+    subscribe_item, widget_subscribe = subscribe_item_model_with_language()
     data = {
         **TestSubscribeItemTranslationInfo.translate_info1.value,
         'subscribe_item_id': subscribe_item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'New Translation',
     }
 
@@ -80,10 +80,10 @@ def test_create_subscribe_item_translation_with_authorization_with_prepopulate(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
+    subscribe_item, widget_subscribe = subscribe_item_model_with_language()
     data = {
         'subscribe_item_id': subscribe_item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     created_translation = (
@@ -104,12 +104,12 @@ def test_update_subscribe_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
+    subscribe_item, widget_subscribe = subscribe_item_model_with_language()
     translation = factory_subscribe_item_translation_model(
         {
             **TestSubscribeItemTranslationInfo.translate_info1.value,
             'subscribe_item_id': subscribe_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Old Description',
         }
     )
@@ -133,12 +133,12 @@ def test_delete_subscribe_item_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    subscribe_item, widget_subscribe, language = subscribe_item_model_with_language()
+    subscribe_item, widget_subscribe = subscribe_item_model_with_language()
     translation = factory_subscribe_item_translation_model(
         {
             **TestSubscribeItemTranslationInfo.translate_info1.value,
             'subscribe_item_id': subscribe_item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
     session.commit()
