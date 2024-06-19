@@ -4,11 +4,13 @@ import { colors } from '../../common';
 
 export const BodyText = ({
     bold,
+    thin,
     size = 'regular',
     children,
     ...props
 }: {
     bold?: boolean;
+    thin?: boolean;
     size?: 'small' | 'regular' | 'large';
     children: React.ReactNode;
 } & TypographyProps) => {
@@ -22,13 +24,22 @@ export const BodyText = ({
         regular: '24px',
         large: '24px',
     }[size];
+    const fontWeight = () => {
+        if (bold) {
+            return 700;
+        }
+        if (thin) {
+            return 300;
+        }
+        return 400;
+    };
     return (
         <Typography
             {...props}
             sx={{
                 fontSize,
                 lineHeight,
-                fontWeight: bold ? 700 : 400,
+                fontWeight: fontWeight(),
                 color: colors.type.regular.primary,
                 ...props.sx,
             }}

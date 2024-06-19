@@ -1,5 +1,12 @@
-## June 14, 2024
+## June 18, 2024
 - **Feature** Add language picker UI [🎟️ DESENG-623](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-623)
+
+## June 17, 2024
+
+- **Feature** Add engagement description to the engagement page [🎟️ DESENG-631](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-631)
+  - Display engagement description on the new engagement page
+  - Display first widget of the engagement beside the description
+  - Limit text editor to remove disruptive formatting options
 
 ## June 11, 2024
 

@@ -19,18 +19,7 @@ const RichTextEditor = ({
     error = false,
     helperText = '',
     toolbar = {
-        options: [
-            'inline',
-            'blockType',
-            'fontSize',
-            'list',
-            'colorPicker',
-            'link',
-            'embedded',
-            'emoji',
-            'image',
-            'history',
-        ],
+        options: ['inline', 'list', 'link', 'history'],
         inline: {
             options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
         },

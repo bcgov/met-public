@@ -248,7 +248,7 @@ const EngagementForm = () => {
                 <Grid item xs={12}>
                     <TextField
                         title="Call to Action URL"
-                        instructions="This where the main button on the engagement page will link to."
+                        instructions="This is where the main button on the engagement page will link to."
                         id="call-to-action-url"
                         data-testid="engagement-form/call-to-action-url"
                         name="cta_url"

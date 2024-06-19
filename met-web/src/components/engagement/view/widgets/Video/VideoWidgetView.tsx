@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2Old, MetParagraphOld, AspectRatioContainer, ReactPlayerWrapper } from 'components/common';
+import { MetPaper, AspectRatioContainer, ReactPlayerWrapper } from 'components/common';
 import { Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
+import { BodyText, Header2 } from 'components/common/Typography';
 
 interface VideoWidgetProps {
     widget: Widget;
@@ -51,9 +52,9 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2Old>
+                        <Header2>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2Old>
+                        </Header2>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="20em" />
@@ -68,7 +69,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em' }}>
+        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', width: '100%' }}>
             <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
                 <Grid
                     item
@@ -78,11 +79,11 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                     xs={12}
                     paddingBottom={0}
                 >
-                    <MetHeader2Old bold>{widget.title}</MetHeader2Old>
-                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
+                    <Header2>{widget.title}</Header2>
+                    <Divider sx={{ borderWidth: 1 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraphOld>{videoWidget.description}</MetParagraphOld>
+                    <BodyText>{videoWidget.description}</BodyText>
                 </Grid>
                 <Grid item xs={12}>
                     <AspectRatioContainer>
