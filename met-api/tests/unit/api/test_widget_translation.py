@@ -18,18 +18,17 @@ Test-Suite to ensure that the Widget Translation endpoint is working as expected
 """
 import json
 from http import HTTPStatus
-from marshmallow import ValidationError
 from unittest.mock import patch
 
 import pytest
 from faker import Faker
+from marshmallow import ValidationError
 
 from met_api.services.widget_translation_service import WidgetTranslationService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestWidgetInfo, TestWidgetTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_widget_model,
-    factory_widget_translation_model)
+    factory_auth_header, factory_engagement_model, factory_widget_model, factory_widget_translation_model)
 
 
 fake = Faker()

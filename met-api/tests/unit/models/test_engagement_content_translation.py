@@ -6,13 +6,12 @@ routines are working as expected.
 
 from met_api.models.engagement_content_translation import EngagementContentTranslation
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo
-from tests.utilities.factory_utils import (
-    engagement_content_model_with_language, factory_engagement_content_translation_model)
+from tests.utilities.factory_utils import factory_enagement_content_model, factory_engagement_content_translation_model
 
 
 def test_get_translations_by_content_and_language(session):
     """Translations for engagement content can be fetched by content and language."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
@@ -33,7 +32,7 @@ def test_get_translations_by_content_and_language(session):
 
 def test_create_engagement_content_translation(session):
     """Assert that an engagement content translation can be created."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
@@ -49,7 +48,7 @@ def test_create_engagement_content_translation(session):
 
 def test_update_engagement_content_translation(session):
     """Assert that an engagement content translation can be updated."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
@@ -69,7 +68,7 @@ def test_update_engagement_content_translation(session):
 
 def test_delete_engagement_content_translation(session):
     """Assert that an engagement content translation can be deleted."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,

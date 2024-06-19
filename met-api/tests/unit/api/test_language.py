@@ -6,7 +6,8 @@ from http import HTTPStatus
 
 from faker import Faker
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_utils import factory_auth_header
+from tests.utilities.factory_utils import factory_auth_header, factory_tenant_model
+from tests.utilities.factory_scenarios import TestTenantInfo
 
 fake = Faker()
 
@@ -45,9 +46,10 @@ def test_add_language_tenant_mapping(client, jwt, session, setup_admin_user_and_
     """Assert that a new language can be added to a tenant."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
+    tenant = factory_tenant_model(TestTenantInfo.tenant1)
 
     rv = client.post(
-        '/api/languages/42/tenant/gdx',
+        f'/api/languages/42/tenant/{tenant.short_name}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )
@@ -59,9 +61,10 @@ def test_delete_language_tenant_mapping(client, jwt, session, setup_admin_user_a
     """Assert that a language can be removed from a tenant."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
+    tenant = factory_tenant_model(TestTenantInfo.tenant1)
 
     rv = client.delete(
-        '/api/languages/42/tenant/gdx',
+        f'/api/languages/42/tenant/{tenant.short_name}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )

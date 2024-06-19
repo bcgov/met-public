@@ -6,13 +6,13 @@ from http import HTTPStatus
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo
 from tests.utilities.factory_utils import (
-    engagement_content_model_with_language, factory_auth_header, factory_engagement_content_translation_model)
+    factory_auth_header, factory_enagement_content_model, factory_engagement_content_translation_model)
 
 
 def test_get_engagement_content_translation(client, jwt, session):
     """Assert that an engagement content translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    content = engagement_content_model_with_language()
+    content = factory_enagement_content_model()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -37,7 +37,7 @@ def test_get_engagement_content_translation(client, jwt, session):
 def test_get_engagement_content_translation_by_language(client, jwt, session):
     """Assert that engagement content translations can be fetched by content ID and Language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    content = engagement_content_model_with_language()
+    content = factory_enagement_content_model()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -63,7 +63,7 @@ def test_create_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that a new engagement content translation can be created using the POST API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content = engagement_content_model_with_language()
+    content = factory_enagement_content_model()
 
     session.commit()
 
@@ -90,7 +90,7 @@ def test_update_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that an engagement content translation can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content = engagement_content_model_with_language()
+    content = factory_enagement_content_model()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -117,7 +117,7 @@ def test_delete_engagement_content_translation(client, jwt, session, setup_admin
     """Assert that an engagement content translation can be deleted using the DELETE API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    content = engagement_content_model_with_language()
+    content = factory_enagement_content_model()
     engagement_content_translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,

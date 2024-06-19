@@ -866,12 +866,6 @@ def factory_enagement_content_model(
     return engagement_content
 
 
-def engagement_content_model_with_language():
-    """Produce a engagement content model instance with language."""
-    content_model = factory_enagement_content_model()
-    return content_model
-
-
 def factory_engagement_content_translation_model(
     engagement_content_translation: dict = TestEngagementContentTranslationInfo.translation_info1,
 ):

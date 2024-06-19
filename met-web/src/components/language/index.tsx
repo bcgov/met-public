@@ -96,7 +96,14 @@ const LanguageAdminPanel = () => {
                     loading={isLoading}
                     value={existingTenantLanguages}
                     onChange={(_, value) => handleLanguagesChange(value)}
-                    renderInput={(params) => <TextField {...params} variant="standard" label="Language" />}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            aria-label="Press left and right arrow keys to review selected languages. Press delete to deselect a language. Type to narrow the list of available languages options."
+                            variant="standard"
+                            label="Selected languages"
+                        />
+                    )}
                 />
             )}
         </main>

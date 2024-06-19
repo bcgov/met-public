@@ -1,5 +1,5 @@
 """
-Merge albembic revisions that:
+Merge alembic revisions that:
 - Add sponsor_name and cta_message to engagement and engagement_translation
 - Add the list of supported languages and create a table to map them to tenants when selected
 

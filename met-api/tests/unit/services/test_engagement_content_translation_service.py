@@ -3,13 +3,13 @@
 from met_api.services.engagement_content_translation_service import EngagementContentTranslationService
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo, TestJwtClaims
 from tests.utilities.factory_utils import (
-    engagement_content_model_with_language, factory_engagement_content_translation_model, factory_staff_user_model,
+    factory_enagement_content_model, factory_engagement_content_translation_model, factory_staff_user_model,
     factory_user_group_membership_model, patch_token_info, set_global_tenant)
 
 
 def test_get_engagement_content_translation_by_id(session):
     """Assert that engagement content translation can be fetched by its ID."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -26,7 +26,7 @@ def test_get_engagement_content_translation_by_id(session):
 
 def test_get_translations_by_content_and_language(session):
     """Assert that engagement content translations can be fetched by content and language."""
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -51,7 +51,7 @@ def test_create_engagement_content_translation_without_prepopulate(session, monk
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
@@ -70,7 +70,7 @@ def test_create_engagement_content_translation_with_prepopulate(session, monkeyp
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
@@ -89,7 +89,7 @@ def test_update_engagement_content_translation_with_authorization(session, monke
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
@@ -113,7 +113,7 @@ def test_delete_engagement_content_translation_with_authorization(session, monke
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    engagement_content = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation = factory_engagement_content_translation_model(
         {
             **TestEngagementContentTranslationInfo.translation_info1.value,
