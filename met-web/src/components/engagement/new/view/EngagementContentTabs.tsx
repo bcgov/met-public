@@ -1,4 +1,4 @@
-import React, { Suspense, SyntheticEvent, useEffect, useState } from 'react';
+import React, { Suspense, SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { Tab, Skeleton, Box } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Await, useLoaderData } from 'react-router-dom';
@@ -21,39 +21,27 @@ export const EngagementContentTabs = () => {
 
     const panelContents = Promise.all([content, contentSummary]);
 
-    const tabListRef = React.createRef<HTMLButtonElement>();
+    const tabListRef = useCallback((node: HTMLButtonElement) => {
+        if (!node) return;
+        const scroller = node.getElementsByClassName('MuiTabs-scroller')[0];
+        scroller.addEventListener('scroll', () => checkFade(node)); // check when scrolling
+        const resizeObserver = new ResizeObserver(() => checkFade(node));
+        resizeObserver.observe(scroller); // check when window resizes
+        checkFade(node); // initial check when attaching the ref
+    }, []);
 
-    const checkFade = () => {
-        if (!tabListRef.current) return;
-        const scroller = tabListRef.current.getElementsByClassName('MuiTabs-scroller')[0];
+    const checkFade = (node: HTMLButtonElement) => {
+        if (!node) return;
+        const scroller = node.getElementsByClassName('MuiTabs-scroller')[0];
         const scrollPosition = scroller.scrollLeft; // distance from left edge
         const maxScroll = scroller.scrollWidth - scroller.clientWidth; // distance from right edge
         const fadeMargin = 64; // pixels
         if (maxScroll - scrollPosition < fadeMargin) {
-            tabListRef?.current?.classList.remove('fade-right');
+            node.classList.remove('fade-right');
         } else {
-            tabListRef?.current?.classList.add('fade-right');
+            node.classList.add('fade-right');
         }
     };
-
-    const attachFade = () => {
-        if (tabListRef.current) {
-            const scroller = tabListRef.current.getElementsByClassName('MuiTabs-scroller')[0];
-            scroller.addEventListener('scroll', checkFade); // check when scrolling
-            const resizeObserver = new ResizeObserver(checkFade);
-            resizeObserver.observe(scroller); // check when window resizes
-            checkFade(); // initial check when attaching
-            return () => {
-                // cleanup
-                scroller.removeEventListener('scroll', checkFade);
-                resizeObserver.disconnect();
-            };
-        } else {
-            setTimeout(attachFade, 100); // try again in 100ms
-        }
-    };
-
-    useEffect(attachFade, [tabListRef]);
 
     return (
         <section id="content-tabs" aria-label="Engagement content tabs">
