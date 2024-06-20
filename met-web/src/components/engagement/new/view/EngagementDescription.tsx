@@ -25,7 +25,7 @@ export const EngagementDescription = ({ engagement }: { engagement: Engagement }
                     background: colors.surface.blue[90],
                     color: colors.surface.white,
                     borderRadius: '0px 24px 0px 0px' /* upper right corner */,
-                    padding: { xs: '43px 16px 75px 16px', md: '32px 5vw 88px 5vw', lg: '32px 156px 88px 156px' },
+                    padding: { xs: '43px 16px 24px 16px', md: '32px 5vw 40px 5vw', lg: '32px 156px 40px 156px' },
                     marginTop: '-56px',
                     zIndex: 10,
                     position: 'relative',
@@ -41,7 +41,7 @@ export const EngagementDescription = ({ engagement }: { engagement: Engagement }
                         marginBottom: { xs: '24px', md: '48px' },
                     }}
                 >
-                    <Grid item component={Link} to={'/'} alignItems="center" display="flex">
+                    <Grid item container component={Link} to={'/'} alignItems="center" display="flex">
                         <FontAwesomeIcon
                             icon={faArrowLeftLong}
                             color={colors.surface.white}
@@ -60,6 +60,7 @@ export const EngagementDescription = ({ engagement }: { engagement: Engagement }
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: '120px',
+                        marginBottom: '48px',
                     }}
                 >
                     <Header2 decorated weight="thin" sx={{ color: colors.surface.white }}>
@@ -88,6 +89,7 @@ export const EngagementDescription = ({ engagement }: { engagement: Engagement }
                         width: { xs: '100%', md: '47.5%' },
                         display: 'flex',
                         minHeight: '360px',
+                        marginBottom: '48px',
                     }}
                 >
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
