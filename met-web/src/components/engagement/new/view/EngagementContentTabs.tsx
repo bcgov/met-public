@@ -6,7 +6,6 @@ import { EngagementContent } from 'models/engagementContent';
 import { EngagementSummaryContent } from 'models/engagementSummaryContent';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
-import { combinePromises } from 'utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 
@@ -20,7 +19,7 @@ export const EngagementContentTabs = () => {
         setSelectedTab(newValue);
     };
 
-    const panelContents = combinePromises({ content, contentSummary });
+    const panelContents = Promise.all([content, contentSummary]);
 
     const tabListRef = React.createRef<HTMLButtonElement>();
 
@@ -102,7 +101,6 @@ export const EngagementContentTabs = () => {
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 height: '6px',
-                                                // backgroundColor: 'transparent',
                                                 backgroundColor: colors.surface.blue[90],
                                             },
                                             '& .MuiTabs-scroller': {
@@ -152,14 +150,14 @@ export const EngagementContentTabs = () => {
                     </Box>
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '120px' }} />}>
                         <Await resolve={panelContents}>
-                            {(resolvedPanelContents: {
-                                content: EngagementContent[];
-                                contentSummary: EngagementSummaryContent[][];
-                            }) =>
-                                resolvedPanelContents.contentSummary.map((summary, index) => (
+                            {([content, contentSummary]: [
+                                content: EngagementContent[],
+                                contentSummary: EngagementSummaryContent[][],
+                            ]) =>
+                                contentSummary.map((summary, index) => (
                                     <TabPanel key={summary[0].id} value={index.toString()} sx={{ padding: '24px 0px' }}>
                                         <Header2 decorated weight="thin">
-                                            {resolvedPanelContents.content[index].title}
+                                            {content[index].title}
                                         </Header2>
                                         {summary.map((content, index) => (
                                             <Editor
