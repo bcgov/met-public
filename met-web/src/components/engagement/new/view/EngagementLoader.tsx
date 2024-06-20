@@ -8,14 +8,14 @@ import { getEngagementIdBySlug } from 'services/engagementSlugService';
 import { getSummaryContent } from 'services/engagementSummaryService';
 import { getWidgets } from 'services/widgetService';
 
-const castCustomContentToSummaryContent = (customContent: EngagementCustomContent): EngagementSummaryContent => {
-    return {
-        id: customContent.id,
-        content: customContent.custom_text_content,
-        rich_content: customContent.custom_json_content,
-        engagement_id: customContent.engagement_id,
-        engagement_content_id: customContent.engagement_content_id,
-    };
+const castCustomContentToSummaryContent = (customContent: EngagementCustomContent[]): EngagementSummaryContent[] => {
+    return customContent.map((custom) => ({
+        id: custom.id,
+        content: custom.custom_text_content,
+        rich_content: custom.custom_json_content,
+        engagement_id: custom.engagement_id,
+        engagement_content_id: custom.engagement_content_id,
+    }));
 };
 
 export const engagementLoader = async ({ params }: { params: Params<string> }) => {
@@ -28,9 +28,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
             response.map((content) => {
                 return content.content_type === 'Summary'
                     ? getSummaryContent(content.id)
-                    : getCustomContent(content.id).then((customContent) =>
-                          customContent.map((custom) => castCustomContentToSummaryContent(custom)),
-                      );
+                    : getCustomContent(content.id).then(castCustomContentToSummaryContent);
             }),
         ),
     );

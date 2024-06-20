@@ -163,6 +163,7 @@ export const EngagementContentTabs = () => {
                                         </Header2>
                                         {summary.map((content, index) => (
                                             <Editor
+                                                key={content.id}
                                                 editorState={getEditorStateFromRaw(content.rich_content)}
                                                 readOnly={true}
                                                 toolbarHidden
