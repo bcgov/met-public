@@ -10,18 +10,18 @@ from tests.utilities.factory_utils import factory_timeline_event_translation_mod
 
 def test_get_by_event_and_language(session):
     """Assert translations for a timeline event can be fetched by event and language."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     timeline_event_translation_data = {
         **TestTimelineEventTranslationInfo.timeline_event_info1.value,
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     factory_timeline_event_translation_model(timeline_event_translation_data)
     session.commit()
 
     translations = TimelineEventTranslation.get_by_event_and_language(
-        timeline_event.id, language.id
+        timeline_event.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert (
@@ -34,11 +34,11 @@ def test_get_by_event_and_language(session):
 
 def test_create_timeline_event_translation(session):
     """Assert that a timeline event translation can be created."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     timeline_event_translation_data = {
         **TestTimelineEventTranslationInfo.timeline_event_info1.value,
         'timeline_event_id': timeline_event.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     translation = TimelineEventTranslation.create_timeline_event_translation(
@@ -55,12 +55,12 @@ def test_create_timeline_event_translation(session):
 
 def test_update_timeline_event_translation(session):
     """Assert that a timeline event translation can be updated."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
 
@@ -77,12 +77,12 @@ def test_update_timeline_event_translation(session):
 
 def test_delete_timeline_event_translation(session):
     """Assert that a timeline event translation can be deleted."""
-    timeline_event, _, language = timeline_event_model_with_language()
+    timeline_event, _ = timeline_event_model_with_language()
     timeline_event_translation = factory_timeline_event_translation_model(
         {
             **TestTimelineEventTranslationInfo.timeline_event_info1.value,
             'timeline_event_id': timeline_event.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
         }
     )
 

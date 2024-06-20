@@ -29,7 +29,7 @@ from met_api.services.engagement_translation_service import EngagementTranslatio
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestEngagementTranslationInfo
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_engagement_translation_model, factory_language_model)
+    factory_auth_header, factory_engagement_model, factory_engagement_translation_model)
 
 
 fake = Faker()
@@ -46,16 +46,15 @@ def test_create_engagement_translation(client, jwt, session, engagement_translat
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     engagement_id = rv.json.get('id')
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     engagement_translation_info['engagement_id'] = engagement_id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49  # French ID from pre-populated database of languages.
 
     rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                      data=json.dumps(engagement_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
-    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
+    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{49}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('engagement_id') == engagement_id
@@ -100,29 +99,28 @@ def test_get_engagement_translation(client, jwt, session, engagement_translation
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
     engagement_id = rv.json.get('id')
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     engagement_translation_info['engagement_id'] = engagement_id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49  # French ID from pre-populated database of languages.
 
     rv = client.post(f'/api/engagement/{engagement_id}/translations/',
                      data=json.dumps(engagement_translation_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
 
-    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
+    rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{49}',
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('engagement_id') == engagement_id
 
     with patch.object(EngagementTranslationService, 'get_translation_by_engagement_and_language',
                       side_effect=ValueError('Test error')):
-        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
+        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{49}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
     with patch.object(EngagementTranslationService, 'get_translation_by_engagement_and_language',
                       side_effect=KeyError('Test error')):
-        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{language.id}',
+        rv = client.get(f'/api/engagement/{engagement_id}/translations/language/{49}',
                         headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -132,9 +130,8 @@ def test_delete_engagement_translation(client, jwt, session, engagement_translat
                                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement translation can be deleted."""
     engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49  # French ID from pre-populated database of languages.
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement_translation = factory_engagement_translation_model(engagement_translation_info)
@@ -163,9 +160,8 @@ def test_patch_engagement_translation(client, jwt, session, engagement_translati
                                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement translation can be PATCHed."""
     engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49  # French ID from pre-populated database of languages.
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement_translation = factory_engagement_translation_model(engagement_translation_info)
@@ -200,9 +196,8 @@ def test_get_engagement_translation_by_id(client, jwt, session, engagement_trans
                                           setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement translation can be fetched by id."""
     engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'FR', 'right_to_left': False})
     engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49
     user, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     engagement_translation = factory_engagement_translation_model(engagement_translation_info)
@@ -231,7 +226,6 @@ def test_get_available_engagement_translation_languages(client, jwt, session,
                                                         engagement_translation_info):  # pylint:disable=unused-argument
     """Assert that an engagement with a no translations returns no languages available."""
     engagement = factory_engagement_model()
-    language = factory_language_model({'name': 'French', 'code': 'fr', 'right_to_left': False})
 
     query_url = f'/api/engagement/{engagement.id}/translations/languages'
 
@@ -241,7 +235,7 @@ def test_get_available_engagement_translation_languages(client, jwt, session,
     assert json_data == []
 
     engagement_translation_info['engagement_id'] = engagement.id
-    engagement_translation_info['language_id'] = language.id
+    engagement_translation_info['language_id'] = 49
     factory_engagement_translation_model(engagement_translation_info)
 
     """Assert that an engagement with a French translation returns

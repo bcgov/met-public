@@ -4,6 +4,10 @@
   - Added a new tabbed content view to the new engagement page
   - Tabs are pulled from the engagement's summary and custom content sections (to be revisited when redoing authoring flow)
 
+## June 18, 2024
+
+- **Feature** Add language picker UI [🎟️ DESENG-623](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-623)
+
 ## June 17, 2024
 
 - **Feature** Add engagement description to the engagement page [🎟️ DESENG-631](https://apps.itsm.gov.bc.ca/jira/browse/DESENG-631)
