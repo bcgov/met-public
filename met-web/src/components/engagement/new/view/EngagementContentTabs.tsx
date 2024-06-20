@@ -1,4 +1,4 @@
-import React, { Suspense, SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, SyntheticEvent, useCallback, useState } from 'react';
 import { Tab, Skeleton, Box } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Await, useLoaderData } from 'react-router-dom';
