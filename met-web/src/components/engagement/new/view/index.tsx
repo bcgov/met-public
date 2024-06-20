@@ -4,6 +4,7 @@ import { Engagement } from 'models/engagement';
 import { Skeleton } from '@mui/material';
 import { EngagementHero } from './EngagementHero';
 import { EngagementDescription } from './EngagementDescription';
+import { EngagementContentTabs } from './EngagementContentTabs';
 
 export const ViewEngagement = () => {
     const { engagement } = useLoaderData() as { engagement: Engagement };
@@ -32,6 +33,7 @@ export const ViewEngagement = () => {
                     {(resolvedEngagement: Engagement) => <EngagementDescription engagement={resolvedEngagement} />}
                 </Await>
             </Suspense>
+            <EngagementContentTabs />
         </main>
     );
 };

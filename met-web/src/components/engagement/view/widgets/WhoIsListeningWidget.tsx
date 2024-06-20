@@ -50,18 +50,18 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     if (isLoading) {
         return (
-            <MetPaper elevation={1} sx={{ padding: '1em' }}>
-                <Grid container justifyContent="flex-start" spacing={3}>
+            <MetPaper elevation={1} sx={{ padding: '1em', width: '100%' }}>
+                <Grid container justifyContent="flex-start" spacing={3} width="100%">
                     <Grid item xs={12}>
-                        <Header2>
-                            <Skeleton variant="rectangular" />
-                        </Header2>
+                        <Skeleton>
+                            <Header2>Who is Listening</Header2>
+                        </Skeleton>
                     </Grid>
                     <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
+                        <Skeleton variant="rectangular" height="10em" width="100%" />
                     </Grid>
                     <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
+                        <Skeleton variant="rectangular" height="10em" width="100%" />
                     </Grid>
                 </Grid>
             </MetPaper>
