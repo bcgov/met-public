@@ -4,10 +4,10 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Await, useLoaderData } from 'react-router-dom';
 import { EngagementContent } from 'models/engagementContent';
 import { EngagementSummaryContent } from 'models/engagementSummaryContent';
-import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
+import { RichTextArea } from 'components/common/Input/RichTextArea';
 
 export const EngagementContentTabs = () => {
     const { content, contentSummary } = useLoaderData() as {
@@ -136,7 +136,7 @@ export const EngagementContentTabs = () => {
                             </Await>
                         </Suspense>
                     </Box>
-                    <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '120px' }} />}>
+                    <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '174px' }} />}>
                         <Await resolve={panelContents}>
                             {([content, contentSummary]: [
                                 content: EngagementContent[],
@@ -148,7 +148,7 @@ export const EngagementContentTabs = () => {
                                             {content[index].title}
                                         </Header2>
                                         {summary.map((content, index) => (
-                                            <Editor
+                                            <RichTextArea
                                                 key={content.id}
                                                 editorState={getEditorStateFromRaw(content.rich_content)}
                                                 readOnly={true}

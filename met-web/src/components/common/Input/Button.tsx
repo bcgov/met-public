@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Button as MuiButton, ButtonProps as MuiButtonProps, Stack, IconButton as MuiIconButton } from '@mui/material';
+import {
+    Button as MuiButton,
+    ButtonProps as MuiButtonProps,
+    Stack,
+    IconButton as MuiIconButton,
+    useTheme,
+} from '@mui/material';
 import { globalFocusShadow, colors, elevations } from '../../common';
 import { isDarkColor } from 'utils';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -42,12 +48,25 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
     loading,
     ...buttonProps
 }) => {
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
     const height: string = sizeMap[size];
+    if (color === 'default' && isDarkMode) {
+        color = '#ffffff';
+    }
     const customColor = colors.button[color as keyof typeof colors.button]?.shade ?? color;
     const bgColor = customColor;
     const darkBgColor = `color-mix(in srgb, ${bgColor}, black 20%)`;
     // Use inverted text color for dark backgrounds
-    const textColors = isDarkColor(bgColor, 0.4) ? colors.type.inverted : colors.type.regular;
+    const textColor = () => {
+        if (isDarkMode && color === '#ffffff') {
+            return colors.surface.blue[90];
+        }
+        if (isDarkColor(bgColor, 0.4)) {
+            return colors.type.inverted.primary;
+        }
+        return colors.type.regular.primary;
+    };
 
     return (
         <MuiButton
@@ -62,7 +81,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
                 boxShadow: elevations.default,
                 height: height,
                 background: bgColor,
-                color: textColors.primary,
+                color: textColor(),
                 '&:focus': {
                     backgroundColor: darkBgColor,
                     boxShadow: elevations.hover,

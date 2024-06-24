@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip as MuiChip } from '@mui/material';
+import { Chip as MuiChip, Skeleton } from '@mui/material';
 import { colors } from '..';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
@@ -75,3 +75,7 @@ export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, 
         />
     );
 };
+
+export const StatusChipSkeleton = () => (
+    <Skeleton variant="rectangular" sx={{ width: '64px', height: '28px', borderRadius: '24px' }} />
+);

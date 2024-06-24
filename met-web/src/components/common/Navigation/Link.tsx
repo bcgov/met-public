@@ -29,7 +29,7 @@ export const Link: React.FC<FocusableNavLinkProps> = ({
         regular: '1.5',
         large: '1.625',
     }[size];
-    const textColor = color ?? colors.surface.blue[90];
+    const textColor = color ?? undefined;
     return (
         <MuiLink
             onClick={onClick}
