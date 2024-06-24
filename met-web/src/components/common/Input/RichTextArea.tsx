@@ -3,28 +3,28 @@ import { ContentBlock, ContentState, Editor, EditorProps } from 'react-draft-wys
 import { Link } from '../Navigation';
 import { Header2 } from '../Typography';
 
+const LinkRenderer = ({
+    children,
+    contentState,
+    entityKey,
+}: {
+    children: React.ReactNode;
+    contentState: ContentState;
+    entityKey: string;
+}) => {
+    const { url } = contentState.getEntity(entityKey).getData();
+    return <Link to={url}>{children}</Link>;
+};
+
+const Header2Renderer = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Header2 decorated weight="thin">
+            {children}
+        </Header2>
+    );
+};
+
 export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
-    const LinkRenderer = ({
-        children,
-        contentState,
-        entityKey,
-    }: {
-        children: React.ReactNode;
-        contentState: ContentState;
-        entityKey: string;
-    }) => {
-        const { url } = contentState.getEntity(entityKey).getData();
-        return <Link to={url}>{children}</Link>;
-    };
-
-    const Header2Renderer = ({ children }: { children: React.ReactNode }) => {
-        return (
-            <Header2 decorated weight="thin">
-                {children}
-            </Header2>
-        );
-    };
-
     return (
         <Editor
             customDecorators={[
