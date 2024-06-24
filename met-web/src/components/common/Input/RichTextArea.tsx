@@ -4,6 +4,27 @@ import { Link } from '../Navigation';
 import { Header2 } from '../Typography';
 
 export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
+    const LinkRenderer = ({
+        children,
+        contentState,
+        entityKey,
+    }: {
+        children: React.ReactNode;
+        contentState: ContentState;
+        entityKey: string;
+    }) => {
+        const { url } = contentState.getEntity(entityKey).getData();
+        return <Link to={url}>{children}</Link>;
+    };
+
+    const Header2Renderer = ({ children }: { children: React.ReactNode }) => {
+        return (
+            <Header2 decorated weight="thin">
+                {children}
+            </Header2>
+        );
+    };
+
     return (
         <Editor
             customDecorators={[
@@ -19,18 +40,7 @@ export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
                             return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
                         }, callback);
                     },
-                    component: ({
-                        contentState,
-                        entityKey,
-                        children,
-                    }: {
-                        contentState: ContentState;
-                        entityKey: string;
-                        children: React.ReactNode;
-                    }) => {
-                        const { url } = contentState.getEntity(entityKey).getData();
-                        return <Link to={url}>{children}</Link>;
-                    },
+                    component: LinkRenderer,
                 },
                 {
                     // Find all blocks with h2 style and render them using the Header2 component
@@ -41,13 +51,7 @@ export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
                             callback(contentBlock.getDepth(), contentBlock.getDepth() + contentBlock.getLength());
                         }
                     },
-                    component: ({ children }: { children: React.ReactNode }) => {
-                        return (
-                            <Header2 decorated weight="thin">
-                                {children}
-                            </Header2>
-                        );
-                    },
+                    component: Header2Renderer,
                 },
                 ...(customDecorators || []),
             ]}

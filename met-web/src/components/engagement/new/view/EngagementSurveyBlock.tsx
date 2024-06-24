@@ -39,10 +39,10 @@ export const EngagementSurveyBlock = () => {
     const { language } = useParams();
 
     const [currentPanel, setCurrentPanel] = React.useState('email');
-    const [isEmailModalOpen, setEmailModalOpen] = React.useState(false);
+    const [isEmailModalOpen, setIsEmailModalOpen] = React.useState(false);
     const handleOpenEmailModal = () => {
         setCurrentPanel('email');
-        setEmailModalOpen(true);
+        setIsEmailModalOpen(true);
         try {
             window.snowplow('trackPageView', 'Verify Email Modal');
         } catch (error) {
@@ -51,7 +51,7 @@ export const EngagementSurveyBlock = () => {
     };
     const handleCloseEmailModal = () => {
         setCurrentPanel('email');
-        setEmailModalOpen(false);
+        setIsEmailModalOpen(false);
     };
 
     return (
