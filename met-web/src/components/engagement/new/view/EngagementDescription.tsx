@@ -71,15 +71,7 @@ export const EngagementDescription = () => {
                         <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
                             <Await resolve={engagement}>
                                 {(engagement: Engagement) => (
-                                    <BodyText
-                                        sx={{
-                                            '& .rdw-link-decorator-icon': { display: 'none' },
-                                            // '& a': {
-                                            //     color: colors.surface.white,
-                                            //     textDecoration: 'underline',
-                                            // },
-                                        }}
-                                    >
+                                    <BodyText>
                                         <RichTextArea
                                             toolbarHidden
                                             readOnly

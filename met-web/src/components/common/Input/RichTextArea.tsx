@@ -45,7 +45,6 @@ export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
                 {
                     // Find all blocks with h2 style and render them using the Header2 component
                     strategy: (contentBlock: ContentBlock, callback: (start: number, end: number) => void) => {
-                        console.log(contentBlock);
                         if (!contentBlock) return;
                         if (contentBlock.getType() === 'header-two') {
                             callback(contentBlock.getDepth(), contentBlock.getDepth() + contentBlock.getLength());
