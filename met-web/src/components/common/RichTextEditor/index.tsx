@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
+import { RichTextArea as Editor } from '../Input/RichTextArea';
 import { FormControl, FormHelperText } from '@mui/material';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './RichEditorStyles.css';
@@ -19,10 +19,11 @@ const RichTextEditor = ({
     error = false,
     helperText = '',
     toolbar = {
-        options: ['inline', 'list', 'link', 'history'],
+        options: ['inline', 'list', 'link', 'blockType', 'history'],
         inline: {
             options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
         },
+        blockType: { options: ['Normal', 'H2', 'H3', 'Blockquote'] },
         list: { options: ['unordered', 'ordered'] },
     },
 }) => {

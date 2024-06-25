@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
 
-const fontWeight = (weight: string) => {
+const fontWeight = (weight?: string | number) => {
     switch (weight) {
         case 'bold':
             return 700;
@@ -10,13 +10,13 @@ const fontWeight = (weight: string) => {
         case 'thin':
             return 200;
         default:
-            return 700;
+            return weight;
     }
 };
 
 export const Header1 = ({
     children,
-    weight = 'bold',
+    weight,
     ...props
 }: {
     children: React.ReactNode;
@@ -44,7 +44,7 @@ export const Header1 = ({
 export const Header2 = ({
     children,
     decorated = false,
-    weight = 'bold',
+    weight,
     ...props
 }: {
     children: React.ReactNode;
@@ -61,7 +61,6 @@ export const Header2 = ({
                 marginBottom: '1.5rem',
                 marginTop: '0.5rem',
                 fontWeight: fontWeight(weight),
-                color: '#292929',
                 ...(decorated && {
                     '&::before': {
                         backgroundColor: '#FCBA19',

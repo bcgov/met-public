@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button as MuiButton, Input, InputProps, Box, TextField as MuiTextField } from '@mui/material';
+import { Button as MuiButton, Input, InputProps, Box, TextField as MuiTextField, useTheme } from '@mui/material';
 import { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField';
 import { colors, globalFocusVisible } from '..';
 import { FormField, FormFieldProps } from './FormField';
@@ -195,6 +195,7 @@ interface CustomTextFieldProps extends Omit<MuiTextFieldProps, 'variant'> {
 }
 
 export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }) => {
+    const theme = useTheme();
     return (
         <MuiTextField
             {...props}
@@ -215,7 +216,7 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
                         borderWidth: '2px', // 2px black outline on hover
-                        borderColor: 'black',
+                        borderColor: theme.palette.text.primary,
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderWidth: '0px', // No outline when focused

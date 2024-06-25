@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
-import { colors } from '../../common';
 
 export const BodyText = ({
     bold,
@@ -40,7 +39,6 @@ export const BodyText = ({
                 fontSize,
                 lineHeight,
                 fontWeight: fontWeight(),
-                color: colors.type.regular.primary,
                 ...props.sx,
             }}
         >
@@ -63,7 +61,6 @@ export const EyebrowText = ({
                 fontSize: '24px',
                 lineHeight: 'normal',
                 fontWeight: 300,
-                color: colors.surface.gray[90],
                 ...props.sx,
             }}
         >

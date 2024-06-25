@@ -1,8 +1,9 @@
 export const RichTextToolbarConfig = {
-    options: ['inline', 'list', 'history'],
+    options: ['inline', 'list', 'blockType', 'history'],
     inline: {
         options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
     },
+    blockType: { options: ['Normal', 'H2', 'H3', 'Blockquote'] },
     list: { options: ['unordered', 'ordered'] },
 };
 

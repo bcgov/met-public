@@ -72,6 +72,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
         height: 23,
         width: 23,
         backgroundColor: 'var(--bcds-surface-background-white)',
+        color: 'transparent',
     };
 
     const renderIcon = (status: EventStatus) => {
