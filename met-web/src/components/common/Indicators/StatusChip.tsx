@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip as MuiChip, Skeleton } from '@mui/material';
+import { Chip as MuiChip, Skeleton, useTheme } from '@mui/material';
 import { colors } from '..';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
@@ -24,8 +24,10 @@ export const getStatusFromStatusId = (statusId: SubmissionStatus): StatusText =>
     }
 };
 
-export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, statusId: status, invert }) => {
+export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, statusId: status }) => {
     const statusText = getStatusFromStatusId(status);
+    const theme = useTheme();
+    const invert = theme.palette.mode === 'dark';
     return (
         <MuiChip
             label={customLabel || statusText}
@@ -37,21 +39,23 @@ export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, 
                 alignItems: 'center',
                 gap: '10px',
                 flexShrink: 0,
-                borderWidth: '1px',
+                border: '2px solid',
                 borderColor: 'transparent',
                 borderRadius: '24px',
+                boxSizing: 'border-box',
                 '&>.MuiChip-label': {
                     padding: '4px 16px',
                     fontSize: '14px',
                     fontWeight: 700,
                     lineHeight: '16px',
+                    position: 'relative',
+                    bottom: '1px',
                 },
                 '&.status-chip-open': {
                     backgroundColor: colors.surface.blue[80],
                     color: colors.type.inverted.primary,
                     '&.status-chip-invert': {
                         backgroundColor: 'transparent',
-                        borderWidth: '2px',
                         borderColor: colors.surface.white,
                     },
                 },

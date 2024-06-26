@@ -26,7 +26,7 @@ const RedirectLoginWrapper = withLanguageParam(RedirectLogin);
 const UnauthenticatedRoutes = () => {
     return (
         <>
-            <Route path="/" element={<Landing />} />
+            <Route index element={<Landing />} />
             <Route path="/surveys/submit/:surveyId/:token/:language" element={<SurveySubmitWrapper />} />
             <Route path="/new-look">
                 <Route index element={<Navigate to="/" />} />

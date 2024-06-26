@@ -1,3 +1,4 @@
+import { Contrast } from '@mui/icons-material';
 import { PaletteMode, createTheme } from '@mui/material';
 export const colors = {
     type: {
@@ -289,8 +290,9 @@ export const DarkPalette = {
     mode: 'dark' as PaletteMode,
     primary: {
         main: colors.surface.white,
-        light: colors.surface.blue[10],
-        dark: colors.surface.blue[20],
+        light: colors.surface.blue[90],
+        dark: colors.surface.blue[100],
+        contrastText: colors.type.inverted.primary,
     },
     secondary: {
         main: colors.surface.gold.bc,
@@ -299,7 +301,7 @@ export const DarkPalette = {
     },
     background: {
         default: colors.surface.blue[90],
-        paper: colors.surface.gray[110],
+        paper: colors.surface.blue[90],
     },
     hover: {
         light: colors.surface.blue[10],
@@ -321,7 +323,7 @@ export const DarkTheme = createTheme({
         MuiPaper: {
             styleOverrides: {
                 root: {
-                    backgroundColor: colors.surface.gray[110],
+                    backgroundColor: DarkPalette.background.paper,
                 },
             },
         },

@@ -1,11 +1,12 @@
 import React, { useContext, useMemo } from 'react';
 import { LandingContext } from './LandingContext';
-import { SwipeableDrawer, IconButton, Typography, Stack, Button, Grid, useTheme, useMediaQuery } from '@mui/material';
+import { SwipeableDrawer, IconButton, Typography, Stack, Grid, useTheme, useMediaQuery } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { MetadataFilterChip } from './MetadataFilterChip';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
+import { Button } from 'components/common/Input';
 
 const FilterDrawer = () => {
     const { searchFilters, setSearchFilters, setPage, metadataFilters, clearFilters, drawerOpened, setDrawerOpened } =
@@ -59,7 +60,7 @@ const FilterDrawer = () => {
             PaperProps={{
                 sx: {
                     width: isSmallScreen ? '100%' : '50%',
-                    background: theme.palette.primary.main,
+                    background: theme.palette.background.default,
                     color: 'white',
                     padding: '3em',
                 },
@@ -139,10 +140,9 @@ const FilterDrawer = () => {
 
             <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-end">
                 <Button
-                    variant="contained"
+                    variant="primary"
                     aria-label={translate('landing.filters.aria.applyFilters')}
                     sx={{
-                        height: 48,
                         mt: 4,
                         mr: 2,
                         width: '200px',
@@ -162,9 +162,8 @@ const FilterDrawer = () => {
                 </Button>
 
                 <Button
-                    variant="text"
+                    variant="tertiary"
                     sx={{
-                        height: 48,
                         mt: 2,
                         width: '200px',
                         color: 'white',
@@ -177,7 +176,8 @@ const FilterDrawer = () => {
                         },
                     }}
                     onClick={clearFilters}
-                    endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
+                    icon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
+                    iconPosition="right"
                 >
                     {translate('landing.filters.clear')}
                 </Button>

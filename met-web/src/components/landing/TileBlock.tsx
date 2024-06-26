@@ -16,14 +16,26 @@ const TileBlock = () => {
             <Grid
                 container
                 direction="row"
-                alignItems={'flex-start'}
-                justifyContent="flex-start"
-                columnSpacing={2}
+                justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                columnSpacing={5}
                 rowSpacing={4}
                 item
                 xs={10}
             >
-                <RepeatedGrid times={4} item xs={12} sm={6} md={4} lg={3}>
+                <RepeatedGrid
+                    times={8}
+                    item
+                    container
+                    xs={12}
+                    md={6}
+                    lg={4}
+                    xl={3}
+                    sx={{
+                        flexBasis: '320px',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
                     <TileSkeleton />
                 </RepeatedGrid>
             </Grid>
@@ -34,9 +46,9 @@ const TileBlock = () => {
             <Grid
                 container
                 direction="row"
-                alignItems={'flex-start'}
-                justifyContent="flex-start"
-                columnSpacing={2}
+                justifyContent={'space-between'}
+                alignItems="flex-start"
+                columnSpacing={{ xs: 0, sm: 2 }}
                 rowSpacing={4}
                 item
                 xs={10}
@@ -49,27 +61,29 @@ const TileBlock = () => {
         <Grid
             container
             direction="row"
-            justifyContent={'flex-start'}
-            alignItems="flex-start"
-            columnSpacing={2}
+            justifyContent={{ xs: 'center', sm: 'flex-start' }}
+            columnSpacing={5}
             rowSpacing={4}
             item
             xs={10}
         >
-            {engagements.map((engagement) => {
+            {engagements.map((engagement, index) => {
                 return (
                     <Grid
                         key={`Grid-${engagement.id}`}
                         item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        lg={3}
                         container
-                        justifyContent={{ xs: 'center', sm: 'flex-start' }}
-                        alignItems={{ xs: 'center', sm: 'flex-start' }}
+                        xs={12}
+                        md={6}
+                        lg={4}
+                        xl={3}
+                        sx={{
+                            flexBasis: '320px',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
                     >
-                        <Grid item xs={12}>
+                        <Grid item width="320px">
                             <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                         </Grid>
                     </Grid>
