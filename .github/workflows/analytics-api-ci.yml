@@ -49,6 +49,11 @@ jobs:
           make flake8
   testing:
     needs: setup-job
+
+    strategy:
+      matrix:
+        python-version: [3.12]
+
     env:
       FLASK_ENV: "testing"
       DATABASE_TEST_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -69,7 +74,7 @@ jobs:
       USE_TEST_KEYCLOAK_DOCKER: "YES"
 
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
-      
+
     runs-on: ubuntu-20.04
 
     services:
@@ -103,14 +108,14 @@ jobs:
         run: |
           echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           flags: analyticsapi
           name: codecov-analytics-api
-          fail_ci_if_error: true   
-          verbose: true 
+          fail_ci_if_error: true
+          verbose: true
           override_branch: ${{env.CODECOV_BRANCH}}
           token: ${{ secrets.CODECOV_TOKEN }}
 
