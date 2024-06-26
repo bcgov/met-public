@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardMedia, CardActionArea, ThemeProvider } from '@mui/material';
+import { Box, Grid, Card, CardContent, CardMedia, CardActionArea, ThemeProvider } from '@mui/material';
 import { Engagement } from 'models/engagement';
-import { Box, Grid } from '@mui/material';
 import { getEngagement } from 'services/engagementService';
 import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/common/Indicators/StatusChip';

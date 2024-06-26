@@ -1,4 +1,3 @@
-import { Contrast } from '@mui/icons-material';
 import { PaletteMode, createTheme } from '@mui/material';
 export const colors = {
     type: {

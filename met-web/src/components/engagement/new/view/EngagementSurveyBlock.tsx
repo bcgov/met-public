@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Button } from 'components/common/Input';
 import { Box, Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, Link, useLoaderData, useParams } from 'react-router-dom';
+import { Await, Link, LinkProps, useLoaderData, useParams } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { getStatusFromStatusId } from 'components/common/Indicators/StatusChip';
@@ -30,6 +30,10 @@ const gridContainerStyles = {
     },
     flexDirection: { xs: 'column', md: 'row' },
 };
+
+const LinkRenderer: React.ElementType<any> = ({ href, ...props }: Omit<LinkProps, 'to'> & { href: string }) => (
+    <Link to={href} {...props} />
+);
 
 export const EngagementSurveyBlock = () => {
     const { engagement, widgets } = useLoaderData() as { engagement: Promise<Engagement>; widgets: Promise<Widget[]> };
@@ -149,11 +153,7 @@ export const EngagementSurveyBlock = () => {
                                                             ? `/engagements/${engagement.id}/dashboard/public`
                                                             : `/engagements/${engagement.id}/dashboard/public/${language}`
                                                     }
-                                                    LinkComponent={({ children, href, ...props }) => (
-                                                        <Link to={href} {...props}>
-                                                            {children}
-                                                        </Link>
-                                                    )}
+                                                    LinkComponent={LinkRenderer}
                                                 >
                                                     {translate('buttonText.viewFeedback')}
                                                 </Button>

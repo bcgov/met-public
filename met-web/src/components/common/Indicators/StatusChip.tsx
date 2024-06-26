@@ -5,7 +5,6 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 
 export interface ChipProps {
     label?: string;
-    invert?: boolean;
     statusId: SubmissionStatus;
 }
 
