@@ -31,9 +31,7 @@ const gridContainerStyles = {
     flexDirection: { xs: 'column', md: 'row' },
 };
 
-const LinkRenderer: React.ElementType<any> = ({ href, ...props }: Omit<LinkProps, 'to'> & { href: string }) => (
-    <Link to={href} {...props} />
-);
+const LinkRenderer = ({ href, ...props }: Omit<LinkProps, 'to'> & { href: string }) => <Link to={href} {...props} />;
 
 export const EngagementSurveyBlock = () => {
     const { engagement, widgets } = useLoaderData() as { engagement: Promise<Engagement>; widgets: Promise<Widget[]> };
