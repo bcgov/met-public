@@ -52,5 +52,5 @@ threadloop==1.0.2
 thrift==0.20.0
 tornado==6.4
 typing_extensions==4.11.0
-urllib3==2.2.1
+urllib3==2.2.2
 -e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api
