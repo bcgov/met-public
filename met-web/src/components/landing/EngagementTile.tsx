@@ -86,7 +86,6 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const { name, banner_url } = loadedEngagement;
 
     return (
-        // <Link sx={{ textDecoration: 'none' }} tabIndex={-1}>
         <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
             <Card
                 className={isActive ? 'active' : ''}
@@ -200,7 +199,6 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                 </CardActionArea>
             </Card>
         </ThemeProvider>
-        // </Link>
     );
 };
 
