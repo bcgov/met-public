@@ -45,15 +45,18 @@ export const Header2 = ({
     children,
     decorated = false,
     weight,
+    component,
     ...props
 }: {
     children: React.ReactNode;
     decorated?: boolean;
     weight?: 'bold' | 'regular' | 'thin';
+    component?: React.ElementType;
 } & TypographyProps) => {
     return (
         <Typography
             variant="h2"
+            component={component || 'h2'}
             {...props}
             sx={{
                 lineHeight: '1.5',

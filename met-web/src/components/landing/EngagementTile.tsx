@@ -8,12 +8,12 @@ import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { getBaseUrl } from 'helper';
 import { useAppTranslation } from 'hooks';
-import { Link } from 'components/common/Navigation';
-import { BodyText, EyebrowText } from 'components/common/Typography';
+import { BodyText, Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/pro-regular-svg-icons';
-import { colors, elevations, globalFocusVisible } from 'components/common';
+import { colors, elevations, globalFocusShadow } from 'components/common';
 import { BaseTheme, DarkTheme } from 'styles/Theme';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -80,16 +80,47 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     }
 
     if (!loadedEngagement) {
-        return <EyebrowText>{translate('landingPage.tile.error')}</EyebrowText>;
+        return <BodyText size="large">{translate('landingPage.tile.error')}</BodyText>;
     }
 
     const { name, banner_url } = loadedEngagement;
 
     return (
-        <Link to={engagementUrl} sx={{ textDecoration: 'none' }} tabIndex={-1}>
-            <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
-                <Card
-                    tabIndex={0}
+        // <Link sx={{ textDecoration: 'none' }} tabIndex={-1}>
+        <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
+            <Card
+                className={isActive ? 'active' : ''}
+                sx={{
+                    borderRadius: '24px',
+                    width: '320px',
+                    cursor: 'pointer',
+                    '&:hover, &:has(:hover)': {
+                        boxShadow: elevations.hover,
+                        background: colors.surface.blue[90],
+                    },
+                    '&:focus, &:has(:focus)': {
+                        boxShadow: elevations.hover,
+                        background: colors.surface.blue[90],
+                    },
+                    '&:focus-visible, &:has(:focus-visible)': {
+                        boxShadow: [globalFocusShadow, elevations.hover].join(','),
+                        '& .MuiCardMedia-root': {
+                            borderRadius: '24px 24px 0px 0px',
+                            boxShadow: globalFocusShadow,
+                        },
+                        outline: `2px solid ${colors.focus.regular.outer}`,
+                        background: colors.surface.blue[90],
+                    },
+                    '&.active': {
+                        boxShadow: elevations.pressed,
+                        '&:focus-visible, &:has(:focus-visible)': {
+                            boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                        },
+                        background: colors.surface.blue[100],
+                    },
+                }}
+            >
+                <CardActionArea
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => {
                         setIsHovered(false);
@@ -99,85 +130,77 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     onBlur={() => setIsFocused(false)}
                     onMouseDown={() => setIsActive(true)}
                     onMouseUp={() => setIsActive(false)}
-                    className={isActive ? 'active' : ''}
+                    LinkComponent={RouterLinkRenderer}
+                    href={engagementUrl}
                     sx={{
-                        borderRadius: '24px',
-                        width: '320px',
-                        cursor: 'pointer',
-                        '&:hover': {
-                            boxShadow: elevations.hover,
-                            background: colors.surface.blue[90],
-                        },
-                        '&.active': {
-                            boxShadow: elevations.pressed,
-                            background: colors.surface.blue[100],
-                        },
-                        '&:focus': {
-                            boxShadow: elevations.hover,
-                            background: colors.surface.blue[90],
-                        },
                         '&:focus-visible': {
-                            boxShadow: globalFocusVisible + elevations.hover,
-                            background: colors.surface.blue[90],
+                            // focus visible styling is applied by the parent Card component
+                            border: 'none',
+                            outline: 'none',
+                            boxShadow: 'none',
+                            padding: 'unset',
+                            margin: 'unset',
                         },
                     }}
                 >
-                    <CardActionArea tabIndex={-1}>
-                        {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} title={name} />}
-                        <CardContent sx={{ height: '260px', p: '40px 32px' }}>
-                            <Box
+                    {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
+                    <CardContent sx={{ height: '260px', p: '40px 32px' }}>
+                        <Box
+                            sx={{
+                                height: '96px',
+                                mb: '32px',
+                                width: '100%',
+                                display: 'flex',
+                            }}
+                        >
+                            <Header2
+                                weight="thin"
+                                component="p"
                                 sx={{
-                                    height: '96px',
-                                    mb: '32px',
-                                    width: '100%',
-                                    display: 'flex',
+                                    // Required for multi-line text truncation
+                                    // https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
+                                    // Works on: Chrome, Firefox, Safari, Opera, Edge
+                                    // On unsupported browsers, displays as 3 lines with no ellipsis
+                                    flexGrow: 1,
+                                    display: '-webkit-box',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    '-webkit-line-clamp': '3',
+                                    '-webkit-box-orient': 'vertical',
+                                    m: 0,
+                                    lineHeight: 'normal',
                                 }}
                             >
-                                <EyebrowText
-                                    sx={{
-                                        // Required for multi-line text truncation
-                                        // https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
-                                        // Works on: Chrome, Firefox, Safari, Opera, Edge
-                                        // On unsupported browsers, displays as 3 lines with no ellipsis
-                                        flexGrow: 1,
-                                        display: '-webkit-box',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        '-webkit-line-clamp': '3',
-                                        '-webkit-box-orient': 'vertical',
-                                    }}
-                                >
-                                    {name}
-                                    <FontAwesomeIcon
-                                        style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
-                                        icon={faArrowRight}
-                                    />
-                                </EyebrowText>
-                            </Box>
-
-                            <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
-                                <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
-                                    <EngagementStatusChip statusId={loadedEngagement.submission_status} />
-                                </Grid>
-                                <Grid item xs container flexDirection="column">
-                                    <BodyText bold size="small" sx={{ lineHeight: 1 }}>
-                                        <time dateTime={`${startDate.format(semanticDateFormat)}`}>
-                                            {startDate.format(dateFormat)}
-                                        </time>{' '}
-                                        to
-                                    </BodyText>
-                                    <BodyText bold size="small" sx={{ lineHeight: 2 }}>
-                                        <time dateTime={`${endDate.format(semanticDateFormat)}`}>
-                                            {endDate.format(dateFormat)}
-                                        </time>
-                                    </BodyText>
-                                </Grid>
+                                {name}
+                                <FontAwesomeIcon
+                                    style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
+                                    icon={faArrowRight}
+                                />
+                            </Header2>
+                        </Box>
+                        <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
+                            <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
+                                <EngagementStatusChip statusId={loadedEngagement.submission_status} />
                             </Grid>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            </ThemeProvider>
-        </Link>
+                            <Grid item xs container flexDirection="column">
+                                <BodyText bold size="small" sx={{ lineHeight: 1 }}>
+                                    <time dateTime={`${startDate.format(semanticDateFormat)}`}>
+                                        {startDate.format(dateFormat)}
+                                    </time>{' '}
+                                    to
+                                </BodyText>
+                                <BodyText bold size="small" sx={{ lineHeight: 2 }}>
+                                    <time dateTime={`${endDate.format(semanticDateFormat)}`}>
+                                        {endDate.format(dateFormat)}
+                                    </time>
+                                </BodyText>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        </ThemeProvider>
+        // </Link>
     );
 };
 
