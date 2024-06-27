@@ -12,8 +12,8 @@ export interface TenantState {
     contact_name: string;
     description: string;
     short_name: string;
-    logo_description: string;
-    logo_credit: string;
+    hero_image_description: string;
+    hero_image_credit: string;
 }
 const initialState: TenantState = {
     id: '',
@@ -27,8 +27,8 @@ const initialState: TenantState = {
     contact_name: '',
     description: '',
     short_name: '',
-    logo_description: '',
-    logo_credit: '',
+    hero_image_description: '',
+    hero_image_credit: '',
 };
 
 export const userSlice = createSlice({
@@ -49,8 +49,8 @@ export const userSlice = createSlice({
             state.contact_name = action.payload.contact_name;
             state.description = action.payload.description;
             state.short_name = action.payload.short_name;
-            state.logo_description = action.payload.logo_description;
-            state.logo_credit = action.payload.logo_credit;
+            state.hero_image_description = action.payload.hero_image_description;
+            state.hero_image_credit = action.payload.hero_image_credit;
         },
     },
 });

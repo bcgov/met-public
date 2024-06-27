@@ -52,8 +52,8 @@ def test_create_tenant(client, jwt, session, tenant_info, setup_super_admin_user
     """Assert that a tenant can be POSTed."""
     _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    # remove logo_url from tenant_info
-    tenant_info.pop('logo_url')
+    # remove header image url from tenant_info
+    tenant_info.pop('header_image_url')
     rv = client.post('/api/tenants/', data=json.dumps(tenant_info),
                      headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.CREATED

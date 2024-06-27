@@ -68,15 +68,15 @@ const App = () => {
                 saveTenant({
                     id: _basename,
                     name: tenant.name,
-                    logoUrl: tenant.logo_url ?? '',
+                    logoUrl: tenant.hero_image_url ?? '',
                     basename: appBaseName,
                     title: tenant.title,
                     contact_email: tenant.contact_email ?? '',
                     contact_name: tenant.contact_name ?? '',
                     description: tenant.description ?? '',
                     short_name: tenant.short_name,
-                    logo_description: tenant.logo_description ?? '',
-                    logo_credit: tenant.logo_credit ?? '',
+                    hero_image_description: tenant.hero_image_description ?? '',
+                    hero_image_credit: tenant.hero_image_credit ?? '',
                 }),
             );
         } catch {

@@ -20,7 +20,7 @@ const LandingComponent = () => {
                 <FilterDrawer />
             </ThemeProvider>
             <Grid item xs={12}>
-                <Banner height="330px" imageUrl={LandingPageBanner}>
+                <Banner height="330px" imageUrl={tenant.logoUrl || LandingPageBanner}>
                     <Grid
                         container
                         direction="row"

@@ -163,7 +163,7 @@ class TestTenantInfo(dict, Enum):
         'contact_email': fake.email(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
-        'logo_url': None,
+        'hero_image_url': None,
     }
     tenant2 = {
         'short_name': 'EMLI',
@@ -172,7 +172,7 @@ class TestTenantInfo(dict, Enum):
         'contact_email': fake.email(),
         'description': fake.text(max_nb_chars=300),
         'title': fake.text(max_nb_chars=20),
-        'logo_url': None,
+        'hero_image_url': None,
     }
 
 

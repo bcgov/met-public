@@ -13,9 +13,9 @@
         "contact_email": "john.doe@gov.bc.ca",
         "title": "Modern Engagement",
         "description": "Responsible for digital experience projects.",
-        "logo_url": "https://example.com/logo.png",
-        "logo_credit": "Logo by Example",
-        "logo_description": "Official logo of the Government Digital Experience."
+        "hero_image_url": "https://example.com/logo.png",
+        "hero_image_credit": "Logo by Example",
+        "hero_image_description": "Official logo of the Government Digital Experience."
       }
     ],
     "required": ["short_name", "contact_name", "contact_email", "title"],
@@ -69,22 +69,22 @@
         "description": "A brief description of the tenant.",
         "examples": ["Responsible for digital experience projects."]
       },
-      "logo_url": {
-        "$id": "#/properties/logo_url",
+      "hero_image_url": {
+        "$id": "#/properties/hero_image_url",
         "type": "string",
         "title": "Logo URL",
         "description": "URL to the tenant's logo.",
         "examples": ["https://example.com/logo.png"]
       },
-      "logo_credit": {
-        "$id": "#/properties/logo_credit",
+      "hero_image_credit": {
+        "$id": "#/properties/hero_image_credit",
         "type": "string",
         "title": "Logo Credit",
         "description": "Credit for the logo image.",
         "examples": ["Logo by Example"]
       },
-      "logo_description": {
-        "$id": "#/properties/logo_description",
+      "hero_image_description": {
+        "$id": "#/properties/hero_image_description",
         "type": "string",
         "title": "Logo Description",
         "description": "Description of the logo image.",

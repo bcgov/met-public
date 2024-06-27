@@ -26,7 +26,7 @@ export const TenantForm = ({
     cancelText?: string;
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url ?? '');
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.hero_image_url ?? '');
     const dispatch = useAppDispatch();
     const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
@@ -39,9 +39,9 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         },
         mode: 'onBlur',
@@ -76,7 +76,7 @@ export const TenantForm = ({
         }
     }, [blocker, dispatch]);
 
-    const hasLogoUrl = watch('logo_url');
+    const hasLogoUrl = watch('hero_image_url');
 
     useEffect(() => {
         reset({
@@ -87,26 +87,26 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         });
-        setSavedBannerImageFileName(initialTenant?.logo_url ?? '');
-        setValue('logo_url', initialTenant?.logo_url ?? '');
+        setSavedBannerImageFileName(initialTenant?.hero_image_url ?? '');
+        setValue('hero_image_url', initialTenant?.hero_image_url ?? '');
     }, [initialTenant, reset]);
 
     const handleAddHeroImage = (files: File[]) => {
         if (files.length > 0) {
             setBannerImage(files[0]);
             setSavedBannerImageFileName(files[0].name);
-            setValue('logo_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+            setValue('hero_image_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
             return;
         }
 
         setBannerImage(null);
         setSavedBannerImageFileName('');
-        setValue('logo_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+        setValue('hero_image_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     };
 
     const handleUploadHeroImage = async () => {
@@ -124,10 +124,10 @@ export const TenantForm = ({
 
     const onFormSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
-            data.logo_url = await handleUploadHeroImage();
-            if (!data.logo_url) {
-                data.logo_credit = '';
-                data.logo_description = '';
+            data.hero_image_url = await handleUploadHeroImage();
+            if (!data.hero_image_url) {
+                data.hero_image_credit = '';
+                data.hero_image_description = '';
             }
             onSubmit(data);
         } catch (error) {
@@ -336,13 +336,13 @@ export const TenantForm = ({
                         />
                     </Box>
                     <Controller
-                        name="logo_credit"
+                        name="hero_image_credit"
                         control={control}
                         rules={{ maxLength: { value: 60, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_credit?.message}
+                                error={errors.hero_image_credit?.message}
                                 disabled={!hasLogoUrl}
                                 optional
                                 clearable
@@ -357,13 +357,13 @@ export const TenantForm = ({
                         )}
                     />
                     <Controller
-                        name="logo_description"
+                        name="hero_image_description"
                         control={control}
                         rules={{ maxLength: { value: 80, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_description?.message}
+                                error={errors.hero_image_description?.message}
                                 disabled={!hasLogoUrl}
                                 optional
                                 clearable

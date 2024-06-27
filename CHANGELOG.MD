@@ -1,3 +1,9 @@
+## June 27, 2024
+
+- **Bugfix** Fix tenant landing page [🎟️ DESENG-635](https://citz-gdx.atlassian.net/browse/DESENG-635)
+  - Fixed an issue where the tenant's uploaded banner would appear in the position of the BC Logo instead of the banner
+  - Renamed columns within the DB and app to more accurately describe their purpose
+
 ## June 26, 2024
 
 - **Feature** Redesigned Engagement Cards & added Suggested Engagements to the engagement page [🎟️ DESENG-634](https://citz-gdx.atlassian.net/browse/DESENG-634)
