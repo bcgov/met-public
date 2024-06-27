@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Button } from 'components/common/Input';
 import { Box, Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, Link, LinkProps, useLoaderData, useParams } from 'react-router-dom';
+import { Await, useLoaderData, useParams } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { getStatusFromStatusId } from 'components/common/Indicators/StatusChip';
@@ -16,6 +16,7 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'components/engagement/view/EmailModal';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 const gridContainerStyles = {
     width: '100%',
@@ -30,8 +31,6 @@ const gridContainerStyles = {
     },
     flexDirection: { xs: 'column', md: 'row' },
 };
-
-const LinkRenderer = ({ href, ...props }: Omit<LinkProps, 'to'> & { href: string }) => <Link to={href} {...props} />;
 
 export const EngagementSurveyBlock = () => {
     const { engagement, widgets } = useLoaderData() as { engagement: Promise<Engagement>; widgets: Promise<Widget[]> };
@@ -151,7 +150,7 @@ export const EngagementSurveyBlock = () => {
                                                             ? `/engagements/${engagement.id}/dashboard/public`
                                                             : `/engagements/${engagement.id}/dashboard/public/${language}`
                                                     }
-                                                    LinkComponent={LinkRenderer}
+                                                    LinkComponent={RouterLinkRenderer}
                                                 >
                                                     {translate('buttonText.viewFeedback')}
                                                 </Button>

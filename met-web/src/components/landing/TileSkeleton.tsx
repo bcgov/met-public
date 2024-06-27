@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Grid, Skeleton } from '@mui/material';
-import { EyebrowText, BodyText } from 'components/common/Typography';
+import { Header2, BodyText } from 'components/common/Typography';
 import { StatusChipSkeleton } from 'components/common/Indicators/StatusChip';
 import { colors } from 'styles/Theme';
 
@@ -10,16 +10,20 @@ export const TileSkeleton = () => {
             <CardActionArea>
                 <Skeleton height="172px" variant="rectangular" sx={{ bgcolor: colors.surface.blue[30] }} />
                 <CardContent sx={{ height: '260px', p: '40px 32px' }}>
-                    <EyebrowText
+                    <Header2
+                        weight="thin"
+                        component="p"
                         sx={{
                             height: '96px',
                             mb: '32px',
+                            m: 0,
+                            lineHeight: 'normal',
                         }}
                     >
                         <Skeleton variant="text" />
                         <Skeleton variant="text" />
                         <Skeleton variant="text" />
-                    </EyebrowText>
+                    </Header2>
                     <Grid container flexDirection="row" alignItems="center" columnSpacing={2}>
                         <Grid item xs="auto">
                             <StatusChipSkeleton />

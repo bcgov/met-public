@@ -13,8 +13,8 @@ export const ViewEngagement = () => {
                 <EngagementDescription />
                 <EngagementContentTabs />
                 <EngagementSurveyBlock />
+                <SuggestedEngagements />
             </main>
-            <SuggestedEngagements />
         </>
     );
 };
