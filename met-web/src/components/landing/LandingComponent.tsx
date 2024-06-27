@@ -1,7 +1,6 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, ThemeProvider } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
-import { MetHeader1Old, MetParagraphOld } from 'components/common';
 import TileBlock from './TileBlock';
 import { Container } from '@mui/system';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
@@ -9,13 +8,17 @@ import FilterBlock from './FilterBlock';
 import FilterDrawer from './FilterDrawer';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { useAppSelector } from '../../hooks';
+import { BodyText, Header1 } from 'components/common/Typography';
+import { DarkTheme } from 'styles/Theme';
 
 const LandingComponent = () => {
     const tenant: TenantState = useAppSelector((state) => state.tenant);
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
-            <FilterDrawer />
+            <ThemeProvider theme={DarkTheme}>
+                <FilterDrawer />
+            </ThemeProvider>
             <Grid item xs={12}>
                 <Banner height="330px" imageUrl={LandingPageBanner}>
                     <Grid
@@ -49,17 +52,17 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetHeader1Old>{tenant.title}</MetHeader1Old>
+                                <Header1 sx={{ mt: 0 }}>{tenant.title}</Header1>
                             </Grid>
                             <Grid item xs={12}>
-                                <MetParagraphOld>{tenant.description}</MetParagraphOld>
+                                <BodyText>{tenant.description}</BodyText>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Banner>
             </Grid>
 
-            <Container maxWidth={false} sx={{ maxWidth: '1700px' }}>
+            <Container maxWidth={false} sx={{ maxWidth: '1800px' }}>
                 <Grid container item xs={12} direction="row" justifyContent="center" alignItems="center" rowSpacing={3}>
                     <FilterBlock />
                     <TileBlock />

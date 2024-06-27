@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as MuiLink, LinkProps as MuiLinkProps } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { LinkProps, NavLink } from 'react-router-dom';
 import { colors } from '..';
 
 interface FocusableNavLinkProps extends MuiLinkProps {
@@ -59,3 +59,8 @@ export const Link: React.FC<FocusableNavLinkProps> = ({
         </MuiLink>
     );
 };
+
+/* Adapter for elements expecting Mui's Link component, allowing them to use react-router's Link component */
+export const RouterLinkRenderer = ({ href, ...props }: Omit<LinkProps, 'to'> & { href: string }) => (
+    <Link to={href} {...props} />
+);

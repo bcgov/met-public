@@ -1,3 +1,12 @@
+## June 26, 2024
+
+- **Feature** Redesigned Engagement Cards & added Suggested Engagements to the engagement page [🎟️ DESENG-634](https://citz-gdx.atlassian.net/browse/DESENG-634)
+  - Redesigned the engagement cards to match the new design system
+  - Added a new section to the engagement page to display suggested engagements
+  - Engagement cards now take you to the "new look" route
+  - Tweaks to the engagement list page layout
+  - Minor tweaks to the engagement view page layout
+
 ## June 24, 2024
 
 - **Feature** Add a new survey block to the engagement page [🎟️ DESENG-633](https://citz-gdx.atlassian.net/browse/DESENG-633)

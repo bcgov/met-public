@@ -82,26 +82,29 @@ export const EngagementDescription = () => {
                             </Await>
                         </Suspense>
                     </Grid>
-                    <Grid
-                        item
-                        sx={{
-                            width: { xs: '100%', md: '47.5%' },
-                            display: 'flex',
-                            minHeight: '360px',
-                            marginBottom: '48px',
-                        }}
-                    >
-                        <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
-                            <ThemeProvider theme={BaseTheme}>
-                                <Await resolve={widgets}>
-                                    {(resolvedWidgets: Widget[]) => {
-                                        const widget = resolvedWidgets?.[0];
-                                        return widget && <WidgetSwitch widget={widget} />;
-                                    }}
-                                </Await>
-                            </ThemeProvider>
-                        </Suspense>
-                    </Grid>
+                    <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
+                        <ThemeProvider theme={BaseTheme}>
+                            <Await resolve={widgets}>
+                                {(resolvedWidgets: Widget[]) => {
+                                    const widget = resolvedWidgets?.[0];
+                                    if (widget)
+                                        return (
+                                            <Grid
+                                                item
+                                                sx={{
+                                                    width: { xs: '100%', md: '47.5%' },
+                                                    display: 'flex',
+                                                    minHeight: '360px',
+                                                    marginBottom: '48px',
+                                                }}
+                                            >
+                                                <WidgetSwitch widget={widget} />;
+                                            </Grid>
+                                        );
+                                }}
+                            </Await>
+                        </ThemeProvider>
+                    </Suspense>
                 </Grid>
             </ThemeProvider>
         </section>

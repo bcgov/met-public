@@ -16,6 +16,7 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'components/engagement/view/EmailModal';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 const gridContainerStyles = {
     width: '100%',
@@ -104,7 +105,7 @@ export const EngagementSurveyBlock = () => {
                                     item
                                     sx={{
                                         width: { xs: '100%', md: '47.5%' },
-                                        display: 'flex',
+                                        display: statusBlock?.block_text ? 'flex' : 'none',
                                         flexDirection: 'column',
                                         minHeight: '120px',
                                         marginBottom: '48px',
@@ -116,12 +117,14 @@ export const EngagementSurveyBlock = () => {
                                             toolbarHidden
                                             editorState={getEditorStateFromRaw(statusBlock?.block_text ?? '')}
                                         />
-                                        <EmailModal
-                                            engagement={engagement}
-                                            defaultPanel={currentPanel}
-                                            open={isEmailModalOpen}
-                                            handleClose={() => handleCloseEmailModal()}
-                                        />
+                                        <ThemeProvider theme={BaseTheme}>
+                                            <EmailModal
+                                                engagement={engagement}
+                                                defaultPanel={currentPanel}
+                                                open={isEmailModalOpen}
+                                                handleClose={() => handleCloseEmailModal()}
+                                            />
+                                        </ThemeProvider>
                                         <Switch>
                                             <Case condition={engagement.submission_status === SubmissionStatus.Open}>
                                                 <Button
@@ -136,26 +139,21 @@ export const EngagementSurveyBlock = () => {
                                                 </Button>
                                             </Case>
                                             <Case condition={engagement.submission_status === SubmissionStatus.Closed}>
-                                                <Grid
-                                                    item
-                                                    container
-                                                    direction={{ xs: 'column', sm: 'row' }}
-                                                    xs={12}
-                                                    justifyContent="flex-end"
+                                                <Button
+                                                    sx={{ mt: '40px' }}
+                                                    variant="primary"
+                                                    size="large"
+                                                    icon={<FontAwesomeIcon fontSize={24} icon={faChevronRight} />}
+                                                    iconPosition="right"
+                                                    href={
+                                                        isLoggedIn
+                                                            ? `/engagements/${engagement.id}/dashboard/public`
+                                                            : `/engagements/${engagement.id}/dashboard/public/${language}`
+                                                    }
+                                                    LinkComponent={RouterLinkRenderer}
                                                 >
-                                                    <Button
-                                                        variant="primary"
-                                                        size="small"
-                                                        data-testid="SurveyBlock/view-feedback-button"
-                                                        href={
-                                                            isLoggedIn
-                                                                ? `/engagements/${engagement.id}/dashboard/public`
-                                                                : `/engagements/${engagement.id}/dashboard/public/${language}`
-                                                        }
-                                                    >
-                                                        {translate('buttonText.viewFeedback')}
-                                                    </Button>
-                                                </Grid>
+                                                    {translate('buttonText.viewFeedback')}
+                                                </Button>
                                             </Case>
                                         </Switch>
                                     </Box>
@@ -164,7 +162,7 @@ export const EngagementSurveyBlock = () => {
                                     item
                                     sx={{
                                         width: { xs: '100%', md: '47.5%' },
-                                        display: 'flex',
+                                        display: widget ? 'flex' : 'none',
                                         minHeight: '360px',
                                         marginBottom: '48px',
                                     }}

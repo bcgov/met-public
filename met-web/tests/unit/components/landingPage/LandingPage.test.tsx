@@ -6,6 +6,7 @@ import { setupEnv } from '../setEnvVars';
 import { LandingContext } from 'components/landing/LandingContext';
 import * as reactRedux from 'react-redux';
 import { openEngagement, closedEngagement } from '../factory';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const MOCK_TENANT = {
     title: 'Mock Tenant',
@@ -74,27 +75,36 @@ describe('Landing page tests', () => {
 
     test('LandingComponent is rendered correctly with engagements listed', async () => {
         render(
-            <LandingContext.Provider
-                value={{
-                    searchFilters: {
-                        name: '',
-                        status: [],
-                        metadata: [],
+            <RouterProvider
+                router={createMemoryRouter([
+                    {
+                        path: '/',
+                        element: (
+                            <LandingContext.Provider
+                                value={{
+                                    searchFilters: {
+                                        name: '',
+                                        status: [],
+                                        metadata: [],
+                                    },
+                                    metadataFilters: [],
+                                    clearFilters: jest.fn(),
+                                    drawerOpened: false,
+                                    setDrawerOpened: jest.fn(),
+                                    setSearchFilters: jest.fn(),
+                                    setPage: jest.fn(),
+                                    page: 1,
+                                    engagements: [openEngagement, closedEngagement],
+                                    loadingEngagements: false,
+                                    totalEngagements: 0,
+                                }}
+                            >
+                                <LandingComponent />
+                            </LandingContext.Provider>
+                        ),
                     },
-                    metadataFilters: [],
-                    clearFilters: jest.fn(),
-                    drawerOpened: false,
-                    setDrawerOpened: jest.fn(),
-                    setSearchFilters: jest.fn(),
-                    setPage: jest.fn(),
-                    page: 1,
-                    engagements: [openEngagement, closedEngagement],
-                    loadingEngagements: false,
-                    totalEngagements: 0,
-                }}
-            >
-                <LandingComponent />
-            </LandingContext.Provider>,
+                ])}
+            />,
         );
 
         await waitFor(() => {
@@ -120,27 +130,36 @@ describe('Landing page tests', () => {
         const setSearchFiltersMock = jest.fn();
 
         render(
-            <LandingContext.Provider
-                value={{
-                    searchFilters: {
-                        name: '',
-                        status: [],
-                        metadata: [],
+            <RouterProvider
+                router={createMemoryRouter([
+                    {
+                        path: '/',
+                        element: (
+                            <LandingContext.Provider
+                                value={{
+                                    searchFilters: {
+                                        name: '',
+                                        status: [],
+                                        metadata: [],
+                                    },
+                                    metadataFilters: [],
+                                    clearFilters: jest.fn(),
+                                    drawerOpened: false,
+                                    setDrawerOpened: jest.fn(),
+                                    setSearchFilters: setSearchFiltersMock,
+                                    setPage: jest.fn(),
+                                    page: 1,
+                                    engagements: [openEngagement, closedEngagement],
+                                    loadingEngagements: false,
+                                    totalEngagements: 0,
+                                }}
+                            >
+                                <LandingComponent />
+                            </LandingContext.Provider>
+                        ),
                     },
-                    metadataFilters: [],
-                    clearFilters: jest.fn(),
-                    drawerOpened: false,
-                    setDrawerOpened: jest.fn(),
-                    setSearchFilters: setSearchFiltersMock,
-                    setPage: jest.fn(),
-                    page: 1,
-                    engagements: [],
-                    loadingEngagements: false,
-                    totalEngagements: 0,
-                }}
-            >
-                <LandingComponent />
-            </LandingContext.Provider>,
+                ])}
+            />,
         );
 
         const searchInput = screen.getByPlaceholderText('landing.filters.searchPlaceholder');
@@ -155,27 +174,36 @@ describe('Landing page tests', () => {
         const setSearchFiltersMock = jest.fn();
 
         render(
-            <LandingContext.Provider
-                value={{
-                    searchFilters: {
-                        name: '',
-                        status: [],
-                        metadata: [],
+            <RouterProvider
+                router={createMemoryRouter([
+                    {
+                        path: '/',
+                        element: (
+                            <LandingContext.Provider
+                                value={{
+                                    searchFilters: {
+                                        name: '',
+                                        status: [],
+                                        metadata: [],
+                                    },
+                                    metadataFilters: [],
+                                    clearFilters: jest.fn(),
+                                    drawerOpened: false,
+                                    setDrawerOpened: jest.fn(),
+                                    setSearchFilters: setSearchFiltersMock,
+                                    setPage: jest.fn(),
+                                    page: 1,
+                                    engagements: [openEngagement, closedEngagement],
+                                    loadingEngagements: false,
+                                    totalEngagements: 0,
+                                }}
+                            >
+                                <LandingComponent />
+                            </LandingContext.Provider>
+                        ),
                     },
-                    metadataFilters: [],
-                    clearFilters: jest.fn(),
-                    drawerOpened: false,
-                    setDrawerOpened: jest.fn(),
-                    setSearchFilters: setSearchFiltersMock,
-                    setPage: jest.fn(),
-                    page: 1,
-                    engagements: [],
-                    loadingEngagements: false,
-                    totalEngagements: 0,
-                }}
-            >
-                <LandingComponent />
-            </LandingContext.Provider>,
+                ])}
+            />,
         );
 
         // Find all elements with role "button"
@@ -202,27 +230,36 @@ describe('Landing page tests', () => {
         const setDrawerOpenedMock = jest.fn();
 
         render(
-            <LandingContext.Provider
-                value={{
-                    searchFilters: {
-                        name: '',
-                        status: [],
-                        metadata: [],
+            <RouterProvider
+                router={createMemoryRouter([
+                    {
+                        path: '/',
+                        element: (
+                            <LandingContext.Provider
+                                value={{
+                                    searchFilters: {
+                                        name: '',
+                                        status: [],
+                                        metadata: [],
+                                    },
+                                    metadataFilters: [],
+                                    clearFilters: jest.fn(),
+                                    drawerOpened: false,
+                                    setDrawerOpened: setDrawerOpenedMock,
+                                    setSearchFilters: jest.fn(),
+                                    setPage: jest.fn(),
+                                    page: 1,
+                                    engagements: [],
+                                    loadingEngagements: false,
+                                    totalEngagements: 0,
+                                }}
+                            >
+                                <LandingComponent />
+                            </LandingContext.Provider>
+                        ),
                     },
-                    metadataFilters: [],
-                    clearFilters: jest.fn(),
-                    drawerOpened: false,
-                    setDrawerOpened: setDrawerOpenedMock,
-                    setSearchFilters: jest.fn(),
-                    setPage: jest.fn(),
-                    page: 1,
-                    engagements: [],
-                    loadingEngagements: false,
-                    totalEngagements: 0,
-                }}
-            >
-                <LandingComponent />
-            </LandingContext.Provider>,
+                ])}
+            />,
         );
 
         const filterButton = screen.getByText('landing.filters.drawer.openButton');
@@ -246,27 +283,36 @@ describe('Landing page tests', () => {
         const setDrawerOpenedMock = jest.fn();
 
         render(
-            <LandingContext.Provider
-                value={{
-                    searchFilters: {
-                        name: '',
-                        status: [],
-                        metadata: [],
+            <RouterProvider
+                router={createMemoryRouter([
+                    {
+                        path: '/',
+                        element: (
+                            <LandingContext.Provider
+                                value={{
+                                    searchFilters: {
+                                        name: '',
+                                        status: [],
+                                        metadata: [],
+                                    },
+                                    metadataFilters: [],
+                                    clearFilters: jest.fn(),
+                                    drawerOpened: false,
+                                    setDrawerOpened: setDrawerOpenedMock,
+                                    setSearchFilters: jest.fn(),
+                                    setPage: jest.fn(),
+                                    page: 1,
+                                    engagements: [],
+                                    loadingEngagements: false,
+                                    totalEngagements: 0,
+                                }}
+                            >
+                                <LandingComponent />
+                            </LandingContext.Provider>
+                        ),
                     },
-                    metadataFilters: [],
-                    clearFilters: jest.fn(),
-                    drawerOpened: false,
-                    setDrawerOpened: setDrawerOpenedMock,
-                    setSearchFilters: jest.fn(),
-                    setPage: jest.fn(),
-                    page: 1,
-                    engagements: [],
-                    loadingEngagements: false,
-                    totalEngagements: 0,
-                }}
-            >
-                <LandingComponent />
-            </LandingContext.Provider>,
+                ])}
+            />,
         );
 
         expect(screen.getByTestId('NoResultsHeader')).toBeInTheDocument();
