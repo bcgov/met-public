@@ -26,9 +26,9 @@ export const SuggestedEngagements = () => {
     );
 
     return (
-        <section id="suggested-engagements" aria-labelledby="suggested-engagements-header">
+        <section id="suggested-engagements" aria-label="Suggested Engagements">
             <Box sx={{ padding: { xs: '64px 16px 24px 16px', md: '64px 5vw 40px 5vw', lg: '64px 156px 40px 156px' } }}>
-                <Header2 weight="thin" sx={{ mb: '10px' }} decorated id="suggested-engagements-header">
+                <Header2 weight="thin" sx={{ mb: '10px' }} decorated>
                     You may also be interested in
                 </Header2>
                 <Grid
