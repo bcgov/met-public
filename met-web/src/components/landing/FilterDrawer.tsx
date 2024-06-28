@@ -51,6 +51,7 @@ const FilterDrawer = () => {
     return (
         <SwipeableDrawer
             aria-label="Filter Engagements"
+            aria-expanded={drawerOpened}
             anchor="left"
             ModalProps={{
                 keepMounted: true, // Better open performance on mobile

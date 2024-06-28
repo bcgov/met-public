@@ -9,6 +9,7 @@ import FilterBlock from './FilterBlock';
 import FilterDrawer from './FilterDrawer';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { useAppSelector } from '../../hooks';
+import { Header2 } from 'components/common/Typography';
 
 const LandingComponent = () => {
     const tenant: TenantState = useAppSelector((state) => state.tenant);
@@ -60,7 +61,17 @@ const LandingComponent = () => {
             </Grid>
 
             <Container maxWidth={false} sx={{ maxWidth: '1700px' }}>
-                <Grid container item xs={12} direction="row" justifyContent="center" alignItems="center" rowSpacing={3}>
+                <Grid
+                    container
+                    component="section"
+                    item
+                    xs={12}
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    rowSpacing={3}
+                    aria-label="Browse Engagements"
+                >
                     <FilterBlock />
                     <TileBlock />
                 </Grid>
