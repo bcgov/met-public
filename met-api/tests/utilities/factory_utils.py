@@ -191,7 +191,7 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
         contact_email=tenant_info.get('contact_email'),
         description=tenant_info.get('description'),
         title=tenant_info.get('title'),
-        logo_url=tenant_info.get('logo_url'),
+        hero_image_url=tenant_info.get('hero_image_url'),
     )
     tenant.save()
     return tenant
