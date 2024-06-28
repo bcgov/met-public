@@ -94,7 +94,7 @@ const FilterBlock = () => {
                 <Grid item xl={6} lg={8} md={10} sm={8} xs={12}>
                     <MetLabel paddingBottom={'3px'}>{translate('landing.filters.search')}</MetLabel>
                     <CustomTextField
-                        aria-label="Search box for filtering engagements. Type or select filters to narrow results automatically."
+                        aria-label="Search box for filtering engagements. Search by title or select filters to narrow results automatically."
                         tabIndex={0}
                         fullWidth
                         placeholder={translate('landing.filters.searchPlaceholder')}

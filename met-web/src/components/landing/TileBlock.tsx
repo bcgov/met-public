@@ -58,6 +58,7 @@ const TileBlock = () => {
                 xs={10}
             >
                 <NoResult />
+                <ul tabIndex={0} aria-label="Engagements list. No results."></ul>
             </Grid>
         );
     }
@@ -76,6 +77,7 @@ const TileBlock = () => {
                 {engagements.map((engagement, index) => {
                     return (
                         <Grid
+                            component="ul"
                             item
                             container
                             xs={12}
@@ -86,9 +88,10 @@ const TileBlock = () => {
                                 flexBasis: '320px',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                listStyleType: 'none',
                             }}
                         >
-                            <Grid item width="320px">
+                            <Grid item width="320px" component="li">
                                 <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                             </Grid>
                         </Grid>
