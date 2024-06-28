@@ -1,13 +1,20 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, SuspenseProps } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantDetail from '../../../../src/components/tenantManagement/Detail';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+
+global['Request'] = jest.fn().mockImplementation(() => ({
+    signal: {
+        removeEventListener: () => {},
+        addEventListener: () => {},
+    },
+}));
 
 const mockTenant = {
     id: 1,
@@ -17,12 +24,20 @@ const mockTenant = {
     contact_name: 'Contact One',
     short_name: 'tenantone',
     contact_email: 'contactone@example.com',
-    logo_url: 'https://example.com/logo.png',
-    logo_credit: 'Photographer One',
-    logo_description: 'Logo Description One',
+    hero_image_url: 'https://example.com/logo.png',
+    hero_image_credit: 'Photographer One',
+    hero_image_description: 'Logo Description One',
 };
 
 jest.mock('axios');
+
+jest.mock('react', () => ({
+    //this makes the suspense component render its children immediately
+    ...jest.requireActual('react'),
+    Suspense: jest.fn(({ children, fallback }: { children: ReactNode; fallback: ReactNode }) => {
+        return children;
+    }),
+}));
 
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
@@ -59,10 +74,12 @@ jest.mock('react-router-dom', () => ({
         return { tenantId: mockTenant.short_name };
     }),
     useNavigate: jest.fn(),
+    useRouteLoaderData: jest.fn(() => ({
+        tenant: mockTenant,
+    })),
 }));
 
 jest.mock('services/tenantService', () => ({
-    getTenant: jest.fn(),
     deleteTenant: jest.fn(),
 }));
 
@@ -77,10 +94,21 @@ jest.mock('services/notificationModalService/notificationModalSlice', () => ({
     }),
 }));
 
-// Mocking BreadcrumbTrail component
+// Mocking AutoBreadcrumbs component
 jest.mock('components/common/Navigation/Breadcrumb', () => ({
-    BreadcrumbTrail: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    AutoBreadcrumbs: () => <div>Breadcrumbs</div>,
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/tenantadmin/:tenantId/detail',
+            element: <TenantDetail />,
+            id: 'tenant',
+        },
+    ],
+    { initialEntries: ['/tenantadmin/1/detail'] },
+);
 
 describe('Tenant Detail Page tests', () => {
     const dispatch = jest.fn();
@@ -90,18 +118,10 @@ describe('Tenant Detail Page tests', () => {
         jest.clearAllMocks();
         jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
-        jest.spyOn(tenantService, 'getTenant').mockResolvedValue(mockTenant);
     });
 
     test('Tenant detail is rendered', async () => {
-        render(
-            <MemoryRouter initialEntries={['/tenantadmin/1/detail']}>
-                <Routes>
-                    <Route path="/tenantadmin/:tenantId/detail" element={<TenantDetail />} />
-                </Routes>
-            </MemoryRouter>,
-        );
-
+        render(<RouterProvider router={router} />);
         await waitFor(() => {
             const tenantNames = screen.getAllByText('Tenant One');
             expect(tenantNames).toHaveLength(2);
@@ -117,30 +137,8 @@ describe('Tenant Detail Page tests', () => {
         });
     });
 
-    test('Loading state is rendered initially', () => {
-        jest.spyOn(tenantService, 'getTenant').mockReturnValue(new Promise(() => {})); // Mock unresolved promise
-
-        render(
-            <MemoryRouter initialEntries={['/tenantadmin/1/detail']}>
-                <Routes>
-                    <Route path="/tenantadmin/:tenantId/detail" element={<TenantDetail />} />
-                </Routes>
-            </MemoryRouter>,
-        );
-
-        const loadingTexts = screen.getAllByText('Loading...');
-        expect(loadingTexts.length).toBeGreaterThan(0);
-    });
-
     test('Delete popup works as expected', async () => {
-        render(
-            <MemoryRouter initialEntries={['/tenantadmin/1/detail']}>
-                <Routes>
-                    <Route path="/tenantadmin/:tenantId/detail" element={<TenantDetail />} />
-                </Routes>
-            </MemoryRouter>,
-        );
-
+        render(<RouterProvider router={router} />);
         await waitFor(() => {
             screen.getByText('Delete Tenant Instance').click();
         });
@@ -151,5 +149,15 @@ describe('Tenant Detail Page tests', () => {
             // Test that the deleteTenant function was called
             expect(tenantService.deleteTenant).toHaveBeenCalledTimes(1);
         });
+    });
+
+    test('Loading state is rendered', () => {
+        // Re-mock the Suspense component to render the fallback prop
+        jest.spyOn(React, 'Suspense').mockImplementation((props: SuspenseProps) => {
+            return props.fallback as JSX.Element;
+        });
+        render(<RouterProvider router={router} />);
+        const loadingTexts = screen.getAllByText('Loading...');
+        expect(loadingTexts.length).toBeGreaterThan(0);
     });
 });

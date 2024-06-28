@@ -40,7 +40,7 @@ from met_api.models.engagement_translation import EngagementTranslation as Engag
 from met_api.models.event_item import EventItem as EventItemModel
 from met_api.models.event_item_translation import EventItemTranslation as EventItemTranslationModel
 from met_api.models.feedback import Feedback as FeedbackModel
-from met_api.models.language import Language as LanguageModel
+from met_api.models.language_tenant_mapping import LanguageTenantMapping as LanguageTenantMappingModel
 from met_api.models.membership import Membership as MembershipModel
 from met_api.models.participant import Participant as ParticipantModel
 from met_api.models.poll_answer_translation import PollAnswerTranslation as PollAnswerTranslationModel
@@ -72,7 +72,7 @@ from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from tests.utilities.factory_scenarios import (
     TestCommentInfo, TestEngagementContentInfo, TestEngagementContentTranslationInfo, TestEngagementInfo,
     TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
-    TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestLanguageInfo, TestParticipantInfo,
+    TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo,
     TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
     TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
     TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
@@ -191,7 +191,7 @@ def factory_tenant_model(tenant_info: dict = TestTenantInfo.tenant1):
         contact_email=tenant_info.get('contact_email'),
         description=tenant_info.get('description'),
         title=tenant_info.get('title'),
-        logo_url=tenant_info.get('logo_url'),
+        hero_image_url=tenant_info.get('hero_image_url'),
     )
     tenant.save()
     return tenant
@@ -577,15 +577,14 @@ def factory_widget_map_model(widget_map: dict = TestWidgetMap.map1):
     return widget_map
 
 
-def factory_language_model(lang_info: dict = TestLanguageInfo.language1):
-    """Produce a Language model."""
-    language_model = LanguageModel(
-        name=lang_info.get('name'),
-        code=lang_info.get('code'),
-        right_to_left=lang_info.get('right_to_left'),
+def factory_language_tenant_mapping_model(language_tenant_mapping: dict):
+    """Produce a tenant-language mapping model."""
+    language_tenant_mapping_model = LanguageTenantMappingModel(
+        language_id=language_tenant_mapping.get('language_id'),
+        tenant_id=language_tenant_mapping.get('tenant_id'),
     )
-    language_model.save()
-    return language_model
+    language_tenant_mapping_model.save()
+    return language_tenant_mapping_model
 
 
 def factory_widget_translation_model(
@@ -618,17 +617,16 @@ def factory_survey_translation_model(
 
 def factory_survey_translation_and_engagement_model():
     """Produce a translation model along with survey and language."""
-    survey, eng = factory_survey_and_eng_model()
-    lang = factory_language_model()
+    survey, _ = factory_survey_and_eng_model()
 
     translation = SurveyTranslationModel(
         survey_id=survey.id,
-        language_id=lang.id,
+        language_id=49,  # French language ID from pre-populated DB.
         name=TestSurveyTranslationInfo.survey_translation1.get('name'),
         form_json=TestSurveyTranslationInfo.survey_translation1.get('form_json'),
     )
     translation.save()
-    return translation, survey, lang
+    return translation, survey
 
 
 def factory_poll_answer_translation_model(
@@ -650,8 +648,7 @@ def poll_answer_model_with_poll_enagement():
     widget_model = factory_widget_model({'engagement_id': engagement.id})
     poll_model = factory_poll_model(widget_model)
     answer = factory_poll_answer_model(poll_model)
-    language = factory_language_model({'code': 'en', 'name': 'English'})
-    return answer, poll_model, language
+    return answer, poll_model
 
 
 def factory_widget_subscribe_model(widget_model=None):
@@ -715,8 +712,7 @@ def factory_subscribe_item_model_with_enagement():
     widget_model = factory_widget_model({'engagement_id': engagement.id})
     widget_subscribe = factory_widget_subscribe_model(widget_model)
     subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
-    language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return subscribe_item_model, language_model
+    return subscribe_item_model
 
 
 def factory_widget_event_model(widget_model=None):
@@ -771,8 +767,7 @@ def event_item_model_with_language():
     widget_model = factory_widget_model({'engagement_id': engagement.id})
     widget_event = factory_widget_event_model(widget_model)
     event_item_model = factory_event_item_model(widget_event)
-    language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return event_item_model, widget_event, language_model
+    return event_item_model, widget_event
 
 
 def factory_event_item_translation_model(
@@ -811,8 +806,7 @@ def timeline_event_model_with_language():
             'engagement_id': engagement.id,
         }
     )
-    language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return timeline_event, widget_timeline, language_model
+    return timeline_event, widget_timeline
 
 
 def factory_timeline_event_translation_model(
@@ -835,8 +829,7 @@ def subscribe_item_model_with_language():
     widget_model = factory_widget_model({'engagement_id': engagement.id})
     widget_subscribe = factory_widget_subscribe_model(widget_model)
     subscribe_item_model = factory_subscribe_item_model(widget_subscribe)
-    language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return subscribe_item_model, widget_subscribe, language_model
+    return subscribe_item_model, widget_subscribe
 
 
 def factory_engagement_translation_model(
@@ -871,13 +864,6 @@ def factory_enagement_content_model(
     )
     engagement_content.save()
     return engagement_content
-
-
-def engagement_content_model_with_language():
-    """Produce a engagement content model instance with language."""
-    content_model = factory_enagement_content_model()
-    language_model = factory_language_model({'code': 'en', 'name': 'English'})
-    return content_model, language_model
 
 
 def factory_engagement_content_translation_model(

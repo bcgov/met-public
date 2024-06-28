@@ -31,6 +31,9 @@ interface EngagementFormData {
     content: string;
     is_internal: boolean;
     consent_message: string;
+    sponsor_name: string;
+    cta_message: string;
+    cta_url: string;
 }
 
 interface EngagementSettingsFormData {
@@ -49,6 +52,9 @@ const initialEngagementFormData = {
     content: '',
     is_internal: false,
     consent_message: '',
+    sponsor_name: '',
+    cta_message: '',
+    cta_url: '',
 };
 
 const initialEngagementSettingsFormData = {
@@ -234,6 +240,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         content: savedEngagement.content || '',
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
+        sponsor_name: savedEngagement.sponsor_name,
+        cta_message: savedEngagement.cta_message,
+        cta_url: savedEngagement.cta_url,
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState('');

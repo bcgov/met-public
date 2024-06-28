@@ -6,24 +6,23 @@ routines are working as expected.
 
 from met_api.models.engagement_content_translation import EngagementContentTranslation
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo
-from tests.utilities.factory_utils import (
-    engagement_content_model_with_language, factory_engagement_content_translation_model)
+from tests.utilities.factory_utils import factory_enagement_content_model, factory_engagement_content_translation_model
 
 
 def test_get_translations_by_content_and_language(session):
     """Translations for engagement content can be fetched by content and language."""
-    engagement_content, language = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     factory_engagement_content_translation_model(translation_data)
     session.commit()
 
     translations = EngagementContentTranslation.get_translations_by_content_and_language(
-        engagement_content.id, language.id
+        engagement_content.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert (
@@ -33,11 +32,11 @@ def test_get_translations_by_content_and_language(session):
 
 def test_create_engagement_content_translation(session):
     """Assert that an engagement content translation can be created."""
-    engagement_content, language = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     translation = EngagementContentTranslation.create_engagement_content_translation(translation_data)
@@ -49,11 +48,11 @@ def test_create_engagement_content_translation(session):
 
 def test_update_engagement_content_translation(session):
     """Assert that an engagement content translation can be updated."""
-    engagement_content, language = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     translation = factory_engagement_content_translation_model(translation_data)
@@ -69,11 +68,11 @@ def test_update_engagement_content_translation(session):
 
 def test_delete_engagement_content_translation(session):
     """Assert that an engagement content translation can be deleted."""
-    engagement_content, language = engagement_content_model_with_language()
+    engagement_content = factory_enagement_content_model()
     translation_data = {
         **TestEngagementContentTranslationInfo.translation_info1.value,
         'engagement_content_id': engagement_content.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
     }
 
     translation = factory_engagement_content_translation_model(translation_data)

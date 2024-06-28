@@ -11,11 +11,11 @@ from tests.utilities.factory_utils import (
 def test_get_poll_answer_translation(client, jwt, session):
     """Assert that a poll answer translation can be fetched by its ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     poll_answer_translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )
@@ -36,11 +36,11 @@ def test_get_poll_answer_translation(client, jwt, session):
 def test_get_poll_answer_translation_by_langauge_id(client, jwt, session):
     """Assert that a poll answer translation can be fetched by its ID and Language ID."""
     headers = factory_auth_header(jwt=jwt, claims={})
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     poll_answer_translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )
@@ -48,7 +48,7 @@ def test_get_poll_answer_translation_by_langauge_id(client, jwt, session):
     session.commit()
 
     rv = client.get(
-        f'/api/polls/{poll.id}/translations/answer/{answer.id}/language/{language.id}',
+        f'/api/polls/{poll.id}/translations/answer/{answer.id}/language/{49}',
         headers=headers,
         content_type=ContentType.JSON.value,
     )
@@ -64,13 +64,13 @@ def test_create_poll_answer_translation(
     """Assert that a new poll answer translation can be created using the POST API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
 
     session.commit()
 
     data = {
         'poll_answer_id': answer.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'answer_text': 'New Answer Translation',
         'pre_populate': False,
     }
@@ -93,11 +93,11 @@ def test_update_poll_answer_translation(
     """Assert that a poll answer translation can be updated using the PATCH API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     poll_answer_translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )
@@ -122,11 +122,11 @@ def test_delete_poll_answer_translation(
     """Assert that a poll answer translation can be deleted using the DELETE API endpoint."""
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     poll_answer_translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )

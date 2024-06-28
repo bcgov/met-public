@@ -202,6 +202,11 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id`,
         RECORD_RESPONSE: `${AppConfig.apiUrl}/widgets/widget_id/polls/poll_id/responses`,
     },
+    Languages: {
+        GET: `${AppConfig.apiUrl}/languages/`,
+        GET_TENANT_LANGUAGES: `${AppConfig.apiUrl}/languages/tenant/tenant_id`,
+        CREATE_OR_DELETE_TENANT_MAPPING: `${AppConfig.apiUrl}/languages/language_id/tenant/tenant_id`,
+    },
 };
 
 export default Endpoints;

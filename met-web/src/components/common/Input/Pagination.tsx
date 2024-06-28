@@ -2,12 +2,11 @@ import React from 'react';
 import { Pagination as MuiPagination, PaginationItem, PaginationProps } from '@mui/material';
 import { styled } from '@mui/system';
 import { colors, elevations, globalFocusShadow } from '../../common';
-import { isDarkColor } from 'utils';
 
 const PrimaryButtonStyles = {
     boxShadow: elevations.default,
     backgroundColor: colors.button.default.shade,
-    color: isDarkColor(colors.button.default.shade, 0.4) ? colors.type.inverted.primary : colors.type.regular.primary,
+    color: colors.type.inverted.primary,
     '&:focus': {
         backgroundColor: `color-mix(in srgb, ${colors.button.default.shade}, black 20%)`,
         boxShadow: elevations.hover,
@@ -76,7 +75,6 @@ const SecondaryButtonStyles = {
         backgroundColor: 'white',
         boxShadow: 'none',
         color: colors.type.regular.disabled,
-        border: `2px solid ${colors.type.regular.disabled}`,
     },
 };
 

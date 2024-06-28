@@ -1,1 +1,11 @@
-Generic single-database configuration.
+# Migrations 
+
+Uses alembic, SQL Alchemy, and flask-migrate to perform DB migrations.
+
+To create a new revision:
+
+`alembic revision -m "description of revision"`
+
+## Languages
+
+The list of languages in `versions/c656f3f82334_add_languages_and_tenant_mapping.py` has been taken from [https://www.w3schools.com/tags/ref_language_codes.asp](https://www.w3schools.com/tags/ref_language_codes.asp) and modified slightly to remove duplicate or multiple language codes per language.

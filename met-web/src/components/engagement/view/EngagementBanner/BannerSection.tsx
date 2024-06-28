@@ -14,7 +14,7 @@ export interface EngagementBannerProps {
 }
 export const BannerSection = ({ isEngagementLoading, savedEngagement, surveyButton }: EngagementBannerProps) => {
     if (isEngagementLoading || !savedEngagement) {
-        return <Skeleton variant="rectangular" width="100%" height="35em" />;
+        return <Skeleton variant="rectangular" width="100%" height="480px" />;
     }
 
     return (

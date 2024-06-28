@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button as MuiButton, Input, InputProps, Box, TextField as MuiTextField } from '@mui/material';
+import { Button as MuiButton, Input, InputProps, Box, TextField as MuiTextField, useTheme } from '@mui/material';
 import { TextFieldProps as MuiTextFieldProps } from '@mui/material/TextField';
 import { colors, globalFocusVisible } from '..';
 import { FormField, FormFieldProps } from './FormField';
@@ -10,7 +10,7 @@ import { SxProps, Theme } from '@mui/system';
 
 type TextInputProps = {
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: (value: string, name?: string) => void;
     placeholder?: string;
     disabled?: boolean;
 } & Omit<InputProps, 'value' | 'onChange' | 'placeholder' | 'disabled'>;
@@ -33,7 +33,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             disableUnderline
             type="text"
             value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            onChange={(e) => onChange?.(e.target.value, e.target.name)}
             placeholder={placeholder}
             disabled={disabled}
             sx={{
@@ -122,13 +122,15 @@ export type TextFieldProps = {
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
-} & Omit<FormFieldProps, 'children'> &
-    Omit<TextInputProps, 'fullWidth' | 'error'>;
+    onChange: (value: string, name?: string) => void;
+} & Omit<FormFieldProps, 'children' | 'onChange'> &
+    Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
 
 export const TextField = ({
     title,
     instructions,
     error,
+    name,
     required,
     optional,
     clearable,
@@ -143,7 +145,8 @@ export const TextField = ({
     }, [textInputProps.value]);
 
     const handleSetValue = (newValue: string) => {
-        onChange?.(newValue) ?? setValue(newValue);
+        if (onChange === undefined) return setValue(newValue);
+        onChange?.(newValue, name);
     };
 
     const isError = !!error;
@@ -162,6 +165,7 @@ export const TextField = ({
                 fullWidth
                 error={isError}
                 value={value}
+                name={name}
                 required={required}
                 disabled={disabled}
                 endAdornment={clearable && value ? clearInputButton(() => handleSetValue('')) : undefined}
@@ -191,6 +195,7 @@ interface CustomTextFieldProps extends Omit<MuiTextFieldProps, 'variant'> {
 }
 
 export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }) => {
+    const theme = useTheme();
     return (
         <MuiTextField
             {...props}
@@ -211,7 +216,7 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
                         borderWidth: '2px', // 2px black outline on hover
-                        borderColor: 'black',
+                        borderColor: theme.palette.text.primary,
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                         borderWidth: '0px', // No outline when focused

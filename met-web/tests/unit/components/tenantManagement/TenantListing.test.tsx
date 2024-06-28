@@ -7,7 +7,7 @@ import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantListingPage from '../../../../src/components/tenantManagement/Listing';
 import { USER_ROLES } from 'services/userService/constants';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const mockTenantOne = {
     id: 1,
@@ -58,6 +58,9 @@ jest.mock('react-router-dom', () => ({
     useLocation: jest.fn(() => ({
         search: '',
     })),
+    useRouteLoaderData: jest.fn(() => ({
+        tenants: [mockTenantOne, mockTenantTwo],
+    })),
 }));
 
 describe('Tenant Listing Page tests', () => {
@@ -71,11 +74,17 @@ describe('Tenant Listing Page tests', () => {
     });
 
     test('Tenant table is rendered', async () => {
-        render(
-            <MemoryRouter>
-                <TenantListingPage />
-            </MemoryRouter>,
+        const router = createMemoryRouter(
+            [
+                {
+                    path: '/tenantadmin/:tenantId/detail',
+                    element: <TenantListingPage />,
+                    id: 'tenant',
+                },
+            ],
+            { initialEntries: ['/tenantadmin/1/detail'] },
         );
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Tenant One')).toBeVisible();

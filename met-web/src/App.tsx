@@ -1,24 +1,22 @@
 import React, { useEffect, useState, useContext } from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+    Route,
+    BrowserRouter as Router,
+    RouterProvider,
+    Routes,
+    createBrowserRouter,
+    createRoutesFromElements,
+} from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from './hooks';
-import { MidScreenLoader, MobileToolbar } from './components/common';
-import { Box, Container, useMediaQuery, Theme } from '@mui/material';
-import InternalHeader from './components/layout/Header/InternalHeader';
-import PublicHeader from './components/layout/Header/PublicHeader';
+import { MidScreenLoader } from './components/common';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
-import { Notification } from 'components/common/notification';
-import PageViewTracker from 'routes/PageViewTracker';
-import { NotificationModal } from 'components/common/modal';
-import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { AppConfig } from 'config';
 import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
 import NotFound from 'routes/NotFound';
-import Footer from 'components/layout/Footer';
-import { ZIndex } from 'styles/Theme';
 import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
 import { LanguageState } from 'reduxSlices/languageSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -27,6 +25,8 @@ import DocumentTitle from 'DocumentTitle';
 import { Languages } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
+import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
+import { PublicLayout } from 'components/appLayouts/PublicLayout';
 
 interface Translations {
     [languageId: string]: { [key: string]: string };
@@ -34,7 +34,6 @@ interface Translations {
 
 const App = () => {
     const drawerWidth = 280;
-    const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
@@ -69,15 +68,15 @@ const App = () => {
                 saveTenant({
                     id: _basename,
                     name: tenant.name,
-                    logoUrl: tenant.logo_url ?? '',
+                    heroImageUrl: tenant.hero_image_url ?? '',
                     basename: appBaseName,
                     title: tenant.title,
                     contact_email: tenant.contact_email ?? '',
                     contact_name: tenant.contact_name ?? '',
                     description: tenant.description ?? '',
                     short_name: tenant.short_name,
-                    logo_description: tenant.logo_description ?? '',
-                    logo_credit: tenant.logo_credit ?? '',
+                    hero_image_description: tenant.hero_image_description ?? '',
+                    hero_image_credit: tenant.hero_image_credit ?? '',
                 }),
             );
         } catch {
@@ -203,79 +202,49 @@ const App = () => {
     }
 
     if (!isAuthenticated) {
-        return (
-            <Router basename={tenant.basename}>
-                <DocumentTitle />
-                <PageViewTracker />
-                <Notification />
-                <NotificationModal />
-                <header>
-                    <PublicHeader />
-                </header>
-                <main>
-                    <UnauthenticatedRoutes />
-                </main>
-                <section>
-                    <FeedbackModal />
-                </section>
-                <footer>
-                    <Footer />
-                </footer>
-            </Router>
+        const router = createBrowserRouter(
+            [
+                {
+                    element: <PublicLayout />,
+                    children: createRoutesFromElements(UnauthenticatedRoutes()),
+                },
+            ],
+            { basename: `/${basename}` },
         );
+        return <RouterProvider router={router} />;
     }
 
     if (roles.length === 0) {
-        return (
-            <Router basename={tenant.basename}>
-                <DocumentTitle />
-                <PublicHeader />
-                <Container>
-                    <NoAccess />
-                </Container>
-                <FeedbackModal />
-                <Footer />
-            </Router>
+        const router = createBrowserRouter(
+            [
+                {
+                    element: <AuthenticatedLayout drawerWidth={0} />,
+                    children: [
+                        {
+                            path: '*',
+                            element: <NoAccess />,
+                        },
+                    ],
+                },
+            ],
+            { basename: `/${basename}` },
         );
+        return <RouterProvider router={router} />;
     }
 
-    if (!isMediumScreen) {
-        return (
-            <Router basename={tenant.basename}>
-                <DocumentTitle />
-                <InternalHeader />
-                <Container sx={{ padding: { xs: 0, sm: 0, md: 0 } }}>
-                    <MobileToolbar />
-                    <AuthenticatedRoutes />
-                    <FeedbackModal />
-                    <Footer />
-                </Container>
-            </Router>
-        );
-    }
-
-    return (
-        <Router basename={tenant.basename}>
-            <DocumentTitle />
-            <Box sx={{ display: 'flex' }}>
-                <InternalHeader drawerWidth={drawerWidth} />
-                <Notification />
-                <NotificationModal />
-                <Box component="main" sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, marginTop: '80px' }}>
-                    <AuthenticatedRoutes />
-                    <FeedbackModal />
-                </Box>
-            </Box>
-            <Box
-                sx={{
-                    backgroundColor: 'var(--bcds-surface-background-white)',
-                    zIndex: ZIndex.footer,
-                    position: 'relative',
-                }}
-            >
-                <Footer />
-            </Box>
-        </Router>
+    const router = createBrowserRouter(
+        [
+            {
+                element: <AuthenticatedLayout drawerWidth={drawerWidth} />,
+                children: createRoutesFromElements(AuthenticatedRoutes()),
+                handle: {
+                    crumb: () => ({ name: 'Dashboard', link: '/home' }),
+                },
+            },
+        ],
+        { basename: `/${basename}` },
     );
+
+    return <RouterProvider router={router} />;
 };
 export default App;

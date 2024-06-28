@@ -1,3 +1,4 @@
+import { Engagement } from 'models/engagement';
 import React from 'react';
 
 export interface BannerProps {
@@ -17,6 +18,7 @@ export interface EmailModalProps {
     handleClose: () => void;
     updateEmail?: (email: string) => void;
     updateModal?: (open: boolean) => void;
+    engagement?: Engagement;
 }
 
 export interface EmailPanelProps {

@@ -26,6 +26,9 @@ export interface Engagement {
     status_block: EngagementStatusBlock[];
     is_internal: boolean;
     consent_message: string;
+    sponsor_name: string;
+    cta_message: string;
+    cta_url: string;
 }
 
 export interface Status {
@@ -62,7 +65,7 @@ export interface EngagementSettings {
     send_report: boolean;
 }
 
-export const createDefaultEngagement = (): Engagement => {
+export const createDefaultEngagement = (sponsorName?: string): Engagement => {
     return {
         id: 0,
         name: '',
@@ -93,6 +96,9 @@ export const createDefaultEngagement = (): Engagement => {
         status_block: [],
         is_internal: false,
         consent_message: '',
+        sponsor_name: sponsorName ?? '',
+        cta_message: 'Provide Feedback',
+        cta_url: '',
     };
 };
 

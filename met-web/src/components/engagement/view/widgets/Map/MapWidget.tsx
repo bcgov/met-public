@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetPaper, MetHeader2Old } from 'components/common';
+import { MetPaper } from 'components/common';
 import { Grid, Skeleton, Divider, Box, useMediaQuery, Theme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
@@ -10,8 +10,10 @@ import { WidgetMap } from 'models/widgetMap';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
-import { IconButton, Link } from 'components/common/Input';
+import { IconButton } from 'components/common/Input';
+import { Link } from 'components/common/Navigation';
 import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
+import { Header2 } from 'components/common/Typography';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -57,9 +59,9 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2Old>
+                        <Header2>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2Old>
+                        </Header2>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="10em" />
@@ -88,7 +90,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                         xs={12}
                         paddingBottom={0}
                     >
-                        <MetHeader2Old bold>{widget.title}</MetHeader2Old>
+                        <Header2>{widget.title}</Header2>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     <Grid item xs={12}>

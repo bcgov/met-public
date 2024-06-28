@@ -16,11 +16,12 @@ import { EmailVerificationType } from 'models/emailVerification';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { LanguageState } from 'reduxSlices/languageSlice';
 
-const EmailModal = ({ defaultPanel, open, handleClose }: EmailModalProps) => {
+const EmailModal = ({ defaultPanel, open, handleClose, engagement }: EmailModalProps) => {
     const dispatch = useAppDispatch();
     const [formIndex, setFormIndex] = useState(defaultPanel);
     const [email, setEmail] = useState('');
-    const { savedEngagement } = useContext(ActionContext);
+    const { savedEngagement: engagementFromContext } = useContext(ActionContext);
+    const savedEngagement = engagement || engagementFromContext;
     const [isSaving, setSaving] = useState(false);
     const language: LanguageState = useAppSelector((state) => state.language);
 

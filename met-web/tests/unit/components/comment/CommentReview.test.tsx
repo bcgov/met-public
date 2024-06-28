@@ -106,6 +106,9 @@ describe('CommentReview Component', () => {
             status_block: [],
             is_internal: false,
             consent_message: '',
+            sponsor_name: '',
+            cta_message: 'Provide Feedback',
+            cta_url: '',
         },
     };
 

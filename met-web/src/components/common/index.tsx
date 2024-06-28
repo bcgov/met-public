@@ -17,136 +17,19 @@ import { SxProps, styled } from '@mui/system';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
-import { Palette } from 'styles/Theme';
+import { Palette, colors } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
 import ReactPlayer from 'react-player';
-
-export const colors = {
-    type: {
-        regular: {
-            primary: '#292929',
-            secondary: '#464341',
-            link: '#1A5A96',
-            disabled: '#A19F9D',
-        },
-        inverted: {
-            primary: '#FFFFFF',
-            secondary: '#EDEBE9',
-            link: '#D8EBFF',
-            disabled: '#A19F9D',
-        },
-    },
-    button: {
-        default: {
-            shade: '#12508F',
-            icon: '#12508F',
-            tint: '#FFF8E8',
-        },
-        success: {
-            shade: '#42814A',
-            icon: '#42814A',
-            tint: '#F6FFF8',
-        },
-        warning: {
-            shade: '#FCBA19',
-            icon: '#C08C07',
-            tint: '#FFECBE',
-        },
-        danger: {
-            shade: '#CE3E39',
-            icon: '#CE3E39',
-            tint: '#F4E1E2',
-        },
-        error: {
-            shade: '#CE3E39',
-            icon: '#CE3E39',
-            tint: '#F4E1E2',
-        },
-    },
-    focus: {
-        regular: {
-            outer: '#2E5DD7',
-            inner: '#FFFFFF',
-        },
-    },
-    surface: {
-        gray: {
-            10: '#FAF9F8',
-            20: '#F3F2F1',
-            30: '#EDEBE9',
-            40: '#E1DFDD',
-            50: '#D2D0CE',
-            60: '#C8C6C4',
-            70: '#A19F9D',
-            80: '#7A7876',
-            90: '#3B3A39',
-            100: '#323130',
-            110: '#201F1E',
-        },
-        blue: {
-            10: '#F1F8FF',
-            20: '#D8EBFF',
-            30: '#C0DFFF',
-            40: '#A7D2FF',
-            50: '#8EC6FF',
-            60: '#76BAFF',
-            70: '#4E97E0',
-            80: '#2B71B8',
-            90: '#12508F',
-            100: '#053662',
-            bc: '#053662',
-        },
-        gold: {
-            10: '#FFF8E8',
-            20: '#FFECBE',
-            30: '#FFE095',
-            40: '#FFD46C',
-            50: '#FFC843',
-            60: '#FCBA19',
-            bc: '#FCBA19',
-            70: '#D39706',
-            80: '#AA7900',
-            90: '#825C00',
-            100: '#593F00',
-        },
-        white: '#FFFFFF',
-    },
-    notification: {
-        default: {
-            shade: '#12508F',
-            icon: '#12508F',
-            tint: '#FFF8E8',
-        },
-        success: {
-            shade: '#42814A',
-            icon: '#42814A',
-            tint: '#F6FFF8',
-        },
-        warning: {
-            shade: '#FCBA19',
-            icon: '#C08C07',
-            tint: '#FFECBE',
-        },
-        danger: {
-            shade: '#CE3E39',
-            icon: '#CE3E39',
-            tint: '#F4E1E2',
-        },
-        error: {
-            shade: '#CE3E39',
-            icon: '#CE3E39',
-            tint: '#F4E1E2',
-        },
-    },
-};
+export { colors };
 
 export const elevations = {
     // For use with CSS box-shadow property
     // Not complete in Figma yet
     none: '0px 0px transparent',
-    pressed: '0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 16px 0px rgba(0, 0, 0, 0.16) inset',
+    pressed:
+        '0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px 0px 1px 0px rgba(0, 0, 0, 0.60) inset, 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
     default:
         '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
     hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
@@ -178,7 +61,7 @@ export const MobileToolbar = styled(Toolbar)(() => ({
 }));
 
 const StyledPrimaryButton = styled(LoadingButton)(() => ({
-    backgroundColor: Palette.primary.main,
+    backgroundColor: colors.button.default.shade,
     color: '#fff',
     lineHeight: '1.1rem',
     '&:hover': {
@@ -311,8 +194,9 @@ export const MetToggleButton = ({ value, children, ...rest }: MetToggleButtonPro
     </StyledToggleButton>
 );
 
-const StyledPaper = styled(MuiPaper)(() => ({
-    border: '1px solid #cdcdcd',
+const StyledPaper = styled(MuiPaper)(({ theme }) => ({
+    border: '1px solid',
+    borderColor: theme.palette.mode === 'dark' ? colors.surface.gray[100] : colors.surface.gray[60],
     borderRadius: '5px',
     boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
@@ -655,7 +539,7 @@ export const MetDisclaimer = ({
             sx={{
                 borderLeft: 8,
                 borderColor: '#003366',
-                backgroundColor: '#F2F2F2',
+                backgroundColor: '#aaaaaa22',
             }}
         >
             <Typography

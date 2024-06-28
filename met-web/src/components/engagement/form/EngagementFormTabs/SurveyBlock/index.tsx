@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ActionContext } from '../../ActionContext';
 import { Grid } from '@mui/material';
-import { MetHeader4, MetPaper, MetSurvey, MetTooltip, SecondaryButtonOld } from 'components/common';
+import { MetPaper, MetSurvey, MetTooltip } from 'components/common';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -9,6 +9,8 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { unlinkSurvey } from 'services/surveyService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import SurveyTextTabs from './SurveyTextTabs';
+import { BodyText } from 'components/common/Typography';
+import { Button } from 'components/common/Input';
 
 export const SurveyBlock = () => {
     const { savedEngagement, fetchEngagement } = useContext(ActionContext);
@@ -82,9 +84,9 @@ export const SurveyBlock = () => {
 
     return (
         <>
-            <MetHeader4 bold sx={{ marginBottom: '2px' }}>
+            <BodyText size="large" bold sx={{ marginBottom: '0.5em' }}>
                 Survey Block
-            </MetHeader4>
+            </BodyText>
             <MetPaper>
                 <Grid
                     container
@@ -102,12 +104,13 @@ export const SurveyBlock = () => {
                             title={!savedEngagement.id ? 'Please save the engagement before adding a survey.' : ''}
                         >
                             <span>
-                                <SecondaryButtonOld
+                                <Button
+                                    variant="secondary"
                                     onClick={handleAddSurvey}
                                     disabled={!savedEngagement.id || savedEngagement.surveys.length > 0}
                                 >
                                     Add Survey
-                                </SecondaryButtonOld>
+                                </Button>
                             </span>
                         </MetTooltip>
                     </Grid>

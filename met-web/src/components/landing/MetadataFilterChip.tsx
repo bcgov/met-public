@@ -24,7 +24,11 @@ export const MetadataFilterChip = ({
                 .replace('{0}', name)
                 .replace('{1}', selectionHint)}
             color="default"
-            avatar={selected ? <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px' }} /> : undefined}
+            avatar={
+                selected ? (
+                    <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px', color: theme.palette.primary.light }} />
+                ) : undefined
+            }
             variant={selected ? 'filled' : 'outlined'}
             onClick={onClick}
             sx={{
@@ -36,7 +40,7 @@ export const MetadataFilterChip = ({
                 borderColor: selected ? '#053662' : '#D8EAFD',
                 borderRadius: '2em',
                 backgroundColor: selected ? '#D8EAFD' : 'transparent',
-                color: selected ? theme.palette.primary.main : 'white',
+                color: selected ? theme.palette.primary.light : 'white',
                 fontSize: '16px',
                 '&.MuiChip-clickable:hover': {
                     backgroundColor: selected ? '#F1F8FE' : '#1E5189',

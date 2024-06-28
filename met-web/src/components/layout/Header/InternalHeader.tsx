@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
+import { Button } from 'components/common/Input';
 import UserService from 'services/userService';
 import { useMediaQuery, Theme, IconButton } from '@mui/material';
 import SideNav from '../SideNav/SideNav';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Palette } from 'styles/Theme';
 import EnvironmentBanner from './EnvironmentBanner';
-import { HeaderTitleOld } from 'components/common';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,15 +17,14 @@ import { HeaderProps } from './types';
 import { useNavigate } from 'react-router-dom';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { useAppSelector } from '../../../hooks';
+import { BodyText, Header1 } from 'components/common/Typography';
 
 const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
     const isMediumScreen: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [open, setOpen] = useState(false);
-    const [imageError, setImageError] = useState(false);
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     const navigate = useNavigate();
 
-    const logoUrl = tenant.logoUrl;
     return (
         <>
             <AppBar
@@ -40,7 +38,7 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
             >
                 <CssBaseline />
                 <Toolbar>
-                    <When condition={!isMediumScreen}>
+                    <When condition={!isMediumScreen && drawerWidth}>
                         <IconButton
                             color="info"
                             sx={{
@@ -53,75 +51,42 @@ const InternalHeader = ({ drawerWidth = 280 }: HeaderProps) => {
                             <FontAwesomeIcon icon={faBars} style={{ fontSize: '20px' }} />
                         </IconButton>
                     </When>
-                    <When condition={logoUrl && !imageError}>
-                        <Box
-                            sx={{
-                                backgroundImage: logoUrl,
-                                height: '5em',
-                                width: { xs: '7em', md: '15em' },
-                                marginRight: { xs: '1em', md: '3em' },
-                            }}
-                        >
-                            <img
-                                src={logoUrl}
-                                alt="Site Logo"
-                                style={{
-                                    objectFit: 'cover',
-                                    height: '5em',
-                                    width: '100%',
-                                    cursor: 'pointer',
-                                }}
-                                onClick={() => {
-                                    navigate('/home');
-                                }}
-                                onError={(_e) => {
-                                    setImageError(true);
-                                }}
-                            />
-                        </Box>
-                    </When>
-                    <When condition={!logoUrl || imageError}>
-                        <Box
-                            component={BCLogo}
-                            sx={{
-                                cursor: 'pointer',
-                                height: '5em',
-                                width: { xs: '7em', md: '15em' },
-                                marginRight: { xs: '1em', md: '3em' },
-                            }}
-                            onClick={() => {
-                                navigate('/home');
-                            }}
-                            alt="British Columbia Logo"
-                        />
-                    </When>
+                    <Box
+                        component={BCLogo}
+                        sx={{
+                            cursor: 'pointer',
+                            height: '5em',
+                            width: { xs: '7em', md: '15em' },
+                            marginRight: { xs: '1em', md: '3em' },
+                        }}
+                        onClick={() => {
+                            navigate('/home');
+                        }}
+                        alt="British Columbia Logo"
+                    />
                     {isMediumScreen ? (
-                        <HeaderTitleOld
+                        <Header1
                             onClick={() => {
                                 navigate('/home');
                             }}
-                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                            sx={{ flexGrow: 1, cursor: 'pointer', margin: 0 }}
                         >
-                            {tenant.title}
-                        </HeaderTitleOld>
+                            {tenant.name}
+                        </Header1>
                     ) : (
-                        <HeaderTitleOld
+                        <Header1
                             onClick={() => {
                                 navigate('/home');
                             }}
-                            sx={{ flexGrow: 1, cursor: 'pointer' }}
+                            sx={{ flexGrow: 1, cursor: 'pointer', textTransform: 'capitalize', margin: 0 }}
                         >
                             {tenant.short_name}
-                        </HeaderTitleOld>
+                        </Header1>
                     )}
-                    <Button
-                        data-testid="button-header"
-                        sx={{
-                            color: Palette.internalHeader.color,
-                        }}
-                        onClick={() => UserService.doLogout()}
-                    >
-                        Logout
+                    <Button data-testid="button-header" variant="tertiary" onClick={() => UserService.doLogout()}>
+                        <BodyText bold size="large">
+                            Logout
+                        </BodyText>
                     </Button>
                 </Toolbar>
                 <EnvironmentBanner />

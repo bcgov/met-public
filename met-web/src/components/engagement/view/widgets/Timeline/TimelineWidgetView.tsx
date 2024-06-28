@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper, MetHeader2Old, MetParagraphOld, MetHeader4 } from 'components/common';
+import { MetPaper } from 'components/common';
 import { Avatar, Grid, Skeleton, Divider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
@@ -7,10 +7,11 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { TimelineWidget, TimelineEvent } from 'models/timelineWidget';
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
-import { faCircle } from '@fortawesome/pro-solid-svg-icons/faCircle';
+import { faCircleCheck } from '@fortawesome/pro-solid-svg-icons/faCircleCheck';
+import { faCircleHalf } from '@fortawesome/pro-solid-svg-icons/faCircleHalf';
 import { Palette } from 'styles/Theme';
 import { EventStatus } from 'models/timelineWidget';
+import { BodyText, Header2 } from 'components/common/Typography';
 
 interface TimelineWidgetProps {
     widget: Widget;
@@ -71,6 +72,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
         height: 23,
         width: 23,
         backgroundColor: 'var(--bcds-surface-background-white)',
+        color: 'transparent',
     };
 
     const renderIcon = (status: EventStatus) => {
@@ -83,7 +85,16 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             [EventStatus.InProgress]: (
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
-                        <FontAwesomeIcon icon={faCircle} style={{ fontSize: '20px', color: Palette.action.active }} />
+                        <FontAwesomeIcon
+                            icon={faCircleHalf}
+                            rotation={90}
+                            style={{
+                                fontSize: '20px',
+                                color: Palette.action.active,
+                                stroke: Palette.action.active,
+                                strokeWidth: 3,
+                            }}
+                        />
                     </Avatar>
                 </Avatar>
             ),
@@ -91,7 +102,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                 <Avatar sx={commonAvatarStyles}>
                     <Avatar sx={commonWhiteAvatarStyles}>
                         <FontAwesomeIcon
-                            icon={faCheck}
+                            icon={faCircleCheck}
                             style={{
                                 fontSize: '20px',
                                 color: Palette.action.active,
@@ -114,14 +125,16 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                     {renderIcon(tEvent.status)}
                 </Grid>
                 <Grid item xs={11} sx={{ paddingLeft: '10px' }}>
-                    <MetHeader4 bold>{tEvent.description}</MetHeader4>
-                    <MetParagraphOld
+                    <BodyText size="large" thin>
+                        {tEvent.description}
+                    </BodyText>
+                    <BodyText
                         style={{
                             paddingBottom: index + 1 === timelineWidget.events.length ? '0' : '20px',
                         }}
                     >
                         {tEvent.time}
-                    </MetParagraphOld>
+                    </BodyText>
                 </Grid>
             </Grid>
         );
@@ -132,9 +145,9 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
             <MetPaper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid item xs={12}>
-                        <MetHeader2Old>
+                        <Header2>
                             <Skeleton variant="rectangular" />
-                        </MetHeader2Old>
+                        </Header2>
                     </Grid>
                     <Grid item xs={12}>
                         <Skeleton variant="rectangular" height="20em" />
@@ -149,7 +162,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
     }
 
     return (
-        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em' }}>
+        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', width: '100%' }}>
             <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
                 <Grid
                     item
@@ -159,11 +172,11 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                     xs={12}
                     paddingBottom={0}
                 >
-                    <MetHeader2Old bold>{timelineWidget.title}</MetHeader2Old>
-                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
+                    <Header2>{timelineWidget.title}</Header2>
+                    <Divider sx={{ borderWidth: 1 }} />
                 </Grid>
                 <Grid item xs={12}>
-                    <MetParagraphOld>{timelineWidget.description}</MetParagraphOld>
+                    <BodyText>{timelineWidget.description}</BodyText>
                 </Grid>
                 <Grid item xs={12}>
                     {timelineWidget &&

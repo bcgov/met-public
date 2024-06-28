@@ -71,7 +71,7 @@
         "react-map-gl": "^7.0.21",
         "react-player": "^2.12.0",
         "react-redux": "^7.2.8",
-        "react-router-dom": "^6.10.0",
+        "react-router-dom": "^6.23.1",
         "react-scripts": "^5.0.1",
         "react-svg": "^15.0.1",
         "recharts": "^2.4.3",
@@ -84,7 +84,6 @@
     "scripts": {
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
-        "build-wc": "react-app-rewired build --wc-build",
         "test": "jest",
         "eject": "react-scripts eject",
         "lint": "eslint \"src/**/*.{ts,tsx}\"",

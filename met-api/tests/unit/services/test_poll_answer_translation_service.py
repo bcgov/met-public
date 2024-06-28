@@ -12,11 +12,11 @@ from tests.utilities.factory_utils import (
 
 def test_get_poll_answer_translation_by_id(session):
     """Assert that poll answer translation can be fetched by its ID."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )
@@ -31,18 +31,18 @@ def test_get_poll_answer_translation_by_id(session):
 
 def test_get_poll_answer_translation(session):
     """Assert that poll answer translations can be fetched by answer and language."""
-    answer, _, language = poll_answer_model_with_poll_enagement()
+    answer, _ = poll_answer_model_with_poll_enagement()
     factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Test Translation',
         }
     )
     session.commit()
 
     translations = PollAnswerTranslationService.get_poll_answer_translation(
-        answer.id, language.id
+        answer.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].answer_text == 'Test Translation'
@@ -57,10 +57,10 @@ def test_create_poll_answer_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     data = {
         'poll_answer_id': answer.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'answer_text': 'New Translated Answer',
     }
 
@@ -82,11 +82,11 @@ def test_create_poll_answer_translation_with_authorization_with_prepopulate(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
 
     data = {
         'poll_answer_id': answer.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'pre_populate': True,
     }
 
@@ -108,11 +108,11 @@ def test_update_poll_answer_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Old Translation',
         }
     )
@@ -136,11 +136,11 @@ def test_delete_poll_answer_translation_with_authorization(
     set_global_tenant()
     user = factory_staff_user_model(external_id=TestJwtClaims.staff_admin_role['sub'])
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    answer, poll, language = poll_answer_model_with_poll_enagement()
+    answer, poll = poll_answer_model_with_poll_enagement()
     translation = factory_poll_answer_translation_model(
         {
             'poll_answer_id': answer.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'answer_text': 'Translation to Delete',
         }
     )

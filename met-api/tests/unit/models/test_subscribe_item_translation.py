@@ -7,10 +7,10 @@ from tests.utilities.factory_utils import (
 
 def test_create_subscribe_item_translation(session):
     """Assert that a subscribe item translation can be created."""
-    item, language = factory_subscribe_item_model_with_enagement()
+    item = factory_subscribe_item_model_with_enagement()
     translation_data = {
         'subscribe_item_id': item.id,
-        'language_id': language.id,
+        'language_id': 49,  # French lang ID from pre-populated DB.
         'description': 'Description traduite',
     }
 
@@ -23,18 +23,18 @@ def test_create_subscribe_item_translation(session):
 
 def test_get_subscribe_item_translation_by_item_and_language(session):
     """Assert that translations for a subscribe item can be fetched by item and language."""
-    item, language = factory_subscribe_item_model_with_enagement()
+    item = factory_subscribe_item_model_with_enagement()
     factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Translated Description',
         }
     )
     session.commit()
 
     translations = SubscribeItemTranslation.get_by_item_and_language(
-        item.id, language.id
+        item.id, 49  # French lang ID from pre-populated DB.
     )
     assert len(translations) == 1
     assert translations[0].description == 'Translated Description'
@@ -42,11 +42,11 @@ def test_get_subscribe_item_translation_by_item_and_language(session):
 
 def test_update_subscribe_item_translation(session):
     """Assert that a subscribe item translation can be updated."""
-    item, language = factory_subscribe_item_model_with_enagement()
+    item = factory_subscribe_item_model_with_enagement()
     translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Translated Description',
         }
     )
@@ -62,11 +62,11 @@ def test_update_subscribe_item_translation(session):
 
 def test_delete_subscribe_item_translation(session):
     """Assert that a subscribe item translation can be deleted."""
-    item, language = factory_subscribe_item_model_with_enagement()
+    item = factory_subscribe_item_model_with_enagement()
     translation = factory_subscribe_item_translation_model(
         {
             'subscribe_item_id': item.id,
-            'language_id': language.id,
+            'language_id': 49,  # French lang ID from pre-populated DB.
             'description': 'Translated Description',
         }
     )

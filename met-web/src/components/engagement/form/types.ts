@@ -43,6 +43,9 @@ export interface EngagementForm {
     content: string;
     rich_content: string;
     status_block: EngagementStatusBlock[];
+    sponsor_name: string;
+    cta_message: string;
+    cta_url: string;
 }
 
 export interface EngagementFormUpdate {
@@ -54,6 +57,9 @@ export interface EngagementFormUpdate {
     is_internal?: boolean;
     status_block?: EngagementStatusBlock[];
     consent_message?: string;
+    sponsor_name?: string;
+    cta_message?: string;
+    cta_url?: string;
 }
 
 export type EngagementParams = {

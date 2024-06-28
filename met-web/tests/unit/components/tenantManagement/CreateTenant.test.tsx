@@ -4,8 +4,10 @@ import '@testing-library/jest-dom';
 import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
+import * as reactRouterDom from 'react-router-dom';
 import TenantCreationPage from 'components/tenantManagement/Create';
 import { USER_ROLES } from 'services/userService/constants';
+import { RouterProvider, createMemoryRouter, useRouteLoaderData } from 'react-router-dom';
 
 const mockTenant = {
     id: 1,
@@ -15,10 +17,25 @@ const mockTenant = {
     contact_name: 'Contact One',
     short_name: 'tenantone',
     contact_email: 'contactone@example.com',
-    logo_url: 'https://example.com/logo.png',
-    logo_credit: 'Photographer One',
-    logo_description: 'Logo Description One',
+    hero_image_url: 'https://example.com/logo.png',
+    hero_image_credit: 'Photographer One',
+    hero_image_description: 'Logo Description One',
 };
+
+global['Request'] = jest.fn().mockImplementation(() => ({
+    signal: {
+        removeEventListener: () => {},
+        addEventListener: () => {},
+    },
+}));
+
+jest.mock('react', () => ({
+    //this makes the suspense component render its children immediately
+    ...jest.requireActual('react'),
+    Suspense: jest.fn(({ children, fallback }: { children: ReactNode; fallback: ReactNode }) => {
+        return children;
+    }),
+}));
 
 jest.mock('axios');
 
@@ -53,16 +70,30 @@ jest.mock('react-redux', () => ({
 
 const navigate = jest.fn();
 
+let shouldBlockNavigation: any;
+const blockerReset = jest.fn();
+const blockerProceed = jest.fn();
+const blocker = {
+    state: 'unblocked',
+    reset: blockerReset,
+    proceed: blockerProceed,
+};
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useParams: jest.fn(() => {
         return { tenantShortName: mockTenant.short_name };
     }),
     useNavigate: jest.fn(() => navigate),
+    useRouteLoaderData: jest.fn(() => ({
+        tenants: [mockTenant],
+    })),
+    useBlocker: jest.fn((fn) => {
+        shouldBlockNavigation = fn;
+        return blocker;
+    }),
 }));
 
 jest.mock('services/tenantService', () => ({
-    getAllTenants: jest.fn(),
     createTenant: jest.fn(),
 }));
 
@@ -77,12 +108,23 @@ jest.mock('services/notificationModalService/notificationModalSlice', () => ({
     }),
 }));
 
-// Mocking BreadcrumbTrail component
+// Mocking AutoBreadcrumbs component
 jest.mock('components/common/Navigation/Breadcrumb', () => ({
-    BreadcrumbTrail: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+    AutoBreadcrumbs: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
-describe('Tenant Detail Page tests', () => {
+const router = createMemoryRouter(
+    [
+        {
+            path: '/tenantadmin/create',
+            element: <TenantCreationPage />,
+            id: 'tenant',
+        },
+    ],
+    { initialEntries: ['/tenantadmin/create'] },
+);
+
+describe('Tenant Creation Page tests', () => {
     const dispatch = jest.fn();
 
     const editField = async (placeholder: string, value: string) => {
@@ -97,9 +139,7 @@ describe('Tenant Detail Page tests', () => {
         jest.clearAllMocks();
         jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
-        jest.spyOn(tenantService, 'getAllTenants').mockResolvedValue([mockTenant]);
-        jest.spyOn(tenantService, 'createTenant').mockResolvedValue(mockTenant);
-        render(<TenantCreationPage />);
+        render(<RouterProvider router={router} />);
     });
 
     test('Tenant creation page is rendered', async () => {
@@ -110,7 +150,7 @@ describe('Tenant Detail Page tests', () => {
         });
 
         // The page should be fetching the tenant data to validate the short name
-        expect(tenantService.getAllTenants).toHaveBeenCalledTimes(1);
+        expect(useRouteLoaderData).toHaveBeenCalledWith('tenant-admin');
 
         // Check that the form isn't pre-filled
         await waitFor(() => {
@@ -181,22 +221,52 @@ describe('Tenant Detail Page tests', () => {
     test('Cancel button navigates back to tenant listing page', async () => {
         await waitFor(() => {
             fireEvent.click(screen.getByText('Cancel'));
-            expect(navigate).toHaveBeenCalledTimes(1);
-            expect(navigate).toHaveBeenCalledWith(`../tenantadmin`);
+            expect(
+                shouldBlockNavigation({
+                    nextLocation: { pathname: '/tenantadmin' },
+                    currentLocation: { pathname: '/tenantadmin/1/detail' },
+                }),
+                // Navigation should not be blocked since the form is untouched
+            ).toBe(false);
+            expect(navigate).toHaveBeenNthCalledWith(1, '/tenantadmin');
         });
     });
 
     test('User is prompted for confirmation when navigating with unsaved changes', async () => {
+        editField('Name', 'New Name');
+        fireEvent.click(screen.getByText('Cancel'));
         await waitFor(() => {
-            editField('Name', 'New Name');
-            fireEvent.click(screen.getByText('Cancel'));
+            expect(navigate).toHaveBeenNthCalledWith(1, '/tenantadmin');
         });
+        // navigate() is a mock fn, so we have to simulate the blocker ourselves
+        expect(
+            shouldBlockNavigation({
+                nextLocation: { pathname: '/tenantadmin' },
+                currentLocation: { pathname: '/tenantadmin/1/detail' },
+            }),
+            // Navigation should be blocked since the form is dirty and the path is different
+        ).toBe(true);
+        const blocker = {
+            state: 'blocked' as const,
+            location: {
+                pathname: '/tenantadmin',
+                state: { from: '/tenantadmin/1/detail' },
+                search: '',
+                hash: '',
+                key: 'foo',
+            },
+            proceed: blockerProceed,
+            reset: blockerReset,
+        };
+        jest.spyOn(reactRouterDom, 'useBlocker').mockReturnValue(blocker);
+        render(<RouterProvider router={router} />);
         await waitFor(() => {
             expect(capturedNotification).toBeDefined();
             expect(capturedNotification.data.header).toBe('Unsaved Changes');
             expect(capturedNotification.data.handleConfirm).toBeDefined();
         });
         capturedNotification.data.handleConfirm();
+        expect(blockerProceed).toHaveBeenCalledTimes(1);
         expect(navigate).toHaveBeenCalledTimes(1);
     });
 
@@ -217,9 +287,9 @@ describe('Tenant Detail Page tests', () => {
                 contact_name: 'New Full Name',
                 contact_email: 'contactone@example.com',
                 short_name: 'newname',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             };
             expect(tenantService.createTenant).toHaveBeenCalledWith(updatedTenant);
         });

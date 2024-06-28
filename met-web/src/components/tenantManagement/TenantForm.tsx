@@ -8,7 +8,7 @@ import { Tenant } from 'models/tenant';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
-import { getAllTenants } from 'services/tenantService';
+import { Await, useRouteLoaderData, useBlocker } from 'react-router-dom';
 import { useAppDispatch } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
@@ -26,15 +26,9 @@ export const TenantForm = ({
     cancelText?: string;
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url ?? '');
-    const [tenantShortNames, setTenantShortNames] = useState<string[]>([]);
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.hero_image_url ?? '');
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        getAllTenants().then((tenants) =>
-            setTenantShortNames(tenants.map((tenant) => tenant.short_name.toLowerCase())),
-        );
-    }, []);
+    const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
     const { handleSubmit, formState, control, reset, setValue, watch } = useForm<Tenant>({
         defaultValues: {
@@ -45,17 +39,44 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         },
         mode: 'onBlur',
         reValidateMode: 'onChange',
     });
-    const { isDirty, isValid, errors } = formState;
+    const { isDirty, isSubmitted, isValid, errors } = formState;
 
-    const hasLogoUrl = watch('logo_url');
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isDirty && !isSubmitted && nextLocation.pathname !== currentLocation.pathname,
+    );
+
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: blocker.proceed,
+                        handleClose: blocker.reset,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        }
+    }, [blocker, dispatch]);
+
+    const hasheroImageUrl = watch('hero_image_url');
 
     useEffect(() => {
         reset({
@@ -66,26 +87,26 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         });
-        setSavedBannerImageFileName(initialTenant?.logo_url ?? '');
-        setValue('logo_url', initialTenant?.logo_url ?? '');
+        setSavedBannerImageFileName(initialTenant?.hero_image_url ?? '');
+        setValue('hero_image_url', initialTenant?.hero_image_url ?? '');
     }, [initialTenant, reset]);
 
     const handleAddHeroImage = (files: File[]) => {
         if (files.length > 0) {
             setBannerImage(files[0]);
             setSavedBannerImageFileName(files[0].name);
-            setValue('logo_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+            setValue('hero_image_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
             return;
         }
 
         setBannerImage(null);
         setSavedBannerImageFileName('');
-        setValue('logo_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+        setValue('hero_image_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     };
 
     const handleUploadHeroImage = async () => {
@@ -103,37 +124,14 @@ export const TenantForm = ({
 
     const onFormSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
-            data.logo_url = await handleUploadHeroImage();
-            if (!data.logo_url) {
-                data.logo_credit = '';
-                data.logo_description = '';
+            data.hero_image_url = await handleUploadHeroImage();
+            if (!data.hero_image_url) {
+                data.hero_image_credit = '';
+                data.hero_image_description = '';
             }
             onSubmit(data);
         } catch (error) {
             console.error(error);
-        }
-    };
-
-    const handleCancelAttempt = () => {
-        if (isDirty) {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: onCancel,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        } else {
-            onCancel?.();
         }
     };
 
@@ -226,34 +224,43 @@ export const TenantForm = ({
                     />
                 </Detail>
                 <Detail>
-                    <Controller
-                        name="short_name"
-                        control={control}
-                        rules={{
-                            required: true,
-                            pattern: { value: /^[a-zA-Z0-9_-]+$/, message: 'Your input contains invalid symbols' },
-                            validate: (value) =>
-                                tenantShortNames.includes(value.toLowerCase()) &&
-                                value.toLowerCase() !== initialTenant?.short_name.toLowerCase()
-                                    ? 'This short name is already in use'
-                                    : true,
-                        }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required
-                                error={errors.short_name?.message}
-                                title="Tenant Short Name (URL)"
-                                instructions="Must be unique. Letters, underscores and dashes only are permitted."
-                                placeholder="shortname"
-                                startAdornment={
-                                    <BodyText bold sx={{ mr: '-8px' }}>
-                                        met.gov.bc.ca/
-                                    </BodyText>
-                                }
+                    <Await resolve={tenants}>
+                        {(resolvedTenants: Tenant[]) => (
+                            <Controller
+                                name="short_name"
+                                control={control}
+                                rules={{
+                                    required: true,
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9_-]+$/,
+                                        message: 'Your input contains invalid symbols',
+                                    },
+                                    validate: (value) =>
+                                        resolvedTenants
+                                            .map((tenant) => tenant.short_name)
+                                            .includes(value.toLowerCase()) &&
+                                        value.toLowerCase() !== initialTenant?.short_name.toLowerCase()
+                                            ? 'This short name is already in use'
+                                            : true,
+                                }}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        required
+                                        error={errors.short_name?.message}
+                                        title="Tenant Short Name (URL)"
+                                        instructions="Must be unique. Letters, underscores and dashes only are permitted."
+                                        placeholder="shortname"
+                                        startAdornment={
+                                            <BodyText bold sx={{ mr: '-8px' }}>
+                                                met.gov.bc.ca/
+                                            </BodyText>
+                                        }
+                                    />
+                                )}
                             />
                         )}
-                    />
+                    </Await>
                 </Detail>
                 <Detail>
                     <Controller
@@ -329,14 +336,14 @@ export const TenantForm = ({
                         />
                     </Box>
                     <Controller
-                        name="logo_credit"
+                        name="hero_image_credit"
                         control={control}
                         rules={{ maxLength: { value: 60, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_credit?.message}
-                                disabled={!hasLogoUrl}
+                                error={errors.hero_image_credit?.message}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter
@@ -350,14 +357,14 @@ export const TenantForm = ({
                         )}
                     />
                     <Controller
-                        name="logo_description"
+                        name="hero_image_description"
                         control={control}
                         rules={{ maxLength: { value: 80, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_description?.message}
-                                disabled={!hasLogoUrl}
+                                error={errors.hero_image_description?.message}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter
@@ -376,7 +383,7 @@ export const TenantForm = ({
                         {submitText}
                     </Button>
                     {onCancel && (
-                        <Button variant="secondary" onClick={handleCancelAttempt}>
+                        <Button variant="secondary" onClick={onCancel}>
                             {cancelText}
                         </Button>
                     )}

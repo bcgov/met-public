@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import { Box, Grid, Card, CardContent, CardMedia, CardActionArea, ThemeProvider } from '@mui/material';
 import { Engagement } from 'models/engagement';
-import { Box, Stack } from '@mui/material';
-import { MetBodyOld, MetHeader4, MetLabel, MetParagraphOld } from 'components/common';
 import { getEngagement } from 'services/engagementService';
-import { If, Then, When } from 'react-if';
 import dayjs from 'dayjs';
-import { EngagementStatusChip } from 'components/engagement/status';
-import { SubmissionStatus } from 'constants/engagementStatus';
+import { EngagementStatusChip } from 'components/common/Indicators/StatusChip';
 import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { getBaseUrl } from 'helper';
 import { useAppTranslation } from 'hooks';
-import { Button } from 'components/common/Input/Button';
+import { BodyText, Header2 } from 'components/common/Typography';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/pro-regular-svg-icons';
+import { colors, elevations, globalFocusShadow } from 'components/common';
+import { BaseTheme, DarkTheme } from 'styles/Theme';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 interface EngagementTileProps {
     passedEngagement?: Engagement;
@@ -26,9 +24,15 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const [loadedEngagement, setLoadedEngagement] = useState<Engagement | null>(passedEngagement || null);
     const [isLoadingEngagement, setIsLoadingEngagement] = useState(true);
     const [slug, setSlug] = useState('');
-    const dateFormat = 'MMM DD, YYYY';
+    const [isHovered, setIsHovered] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const [isActive, setIsActive] = useState(false);
+    const startDate = dayjs(loadedEngagement?.start_date);
+    const endDate = dayjs(loadedEngagement?.end_date);
+    const dateFormat = 'MMMM DD, YYYY';
+    const semanticDateFormat = 'YYYY-MM-DD';
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = `/${slug}`;
+    const engagementPath = `/new-look/${slug}`;
     const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
 
     const loadEngagement = async () => {
@@ -76,103 +80,125 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     }
 
     if (!loadedEngagement) {
-        return <MetLabel>{translate('landingPage.tile.error')}</MetLabel>;
+        return <BodyText size="large">{translate('landingPage.tile.error')}</BodyText>;
     }
 
-    const { name, end_date, start_date, description, banner_url, submission_status } = loadedEngagement;
-    const EngagementDate = `${dayjs(start_date).format(dateFormat)} to ${dayjs(end_date).format(dateFormat)}`;
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        window.location.href = engagementUrl;
-    };
+    const { name, banner_url } = loadedEngagement;
 
     return (
-        <Card
-            aria-label={'Engagement Card of ' + name}
-            sx={{
-                maxWidth: 345,
-                '&:hover': {
-                    backgroundColor: 'var(--bcds-surface-secondary-hover)',
+        <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
+            <Card
+                className={isActive ? 'active' : ''}
+                sx={{
+                    borderRadius: '24px',
+                    width: '320px',
                     cursor: 'pointer',
-                },
-            }}
-            tabIndex={0}
-            role="article"
-            onClick={() => {
-                window.location.href = engagementUrl;
-            }}
-            onKeyPress={(event) => {
-                if (event.key === 'Enter') {
-                    window.location.href = engagementUrl;
-                }
-            }}
-        >
-            <When condition={Boolean(banner_url)}>
-                <CardMedia sx={{ height: 140 }} image={banner_url} role="img" title={name} aria-label={name} />
-            </When>
-            <CardContent>
-                <Box sx={{ minHeight: 200 }}>
-                    <div
-                        style={{
-                            fontSize: '1.3em',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        {name}
-                    </div>
-                    <MetParagraphOld
-                        sx={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            display: '-webkit-box',
-                            WebkitLineClamp: '6',
-                            WebkitBoxOrient: 'vertical',
-                        }}
-                        mt="0.5em"
-                    >
-                        {description}
-                    </MetParagraphOld>
-                </Box>
-                <MetBodyOld bold mt="1em" aria-label="Period of engagement is from">
-                    {EngagementDate}
-                </MetBodyOld>
-                <Stack direction="row" alignItems={'center'} spacing={1} mt="0.5em">
-                    <MetBodyOld bold>{translate('landingPage.tile.status')}</MetBodyOld>
-                    <EngagementStatusChip submissionStatus={submission_status} />
-                </Stack>
-            </CardContent>
-            <CardActions>
-                <If condition={submission_status === SubmissionStatus.Open}>
-                    <Then>
-                        <Button
-                            variant="primary"
-                            fullWidth
-                            onClick={handleClick as () => void}
-                            aria-label={translate('buttonText.shareYourThoughts')}
-                        >
-                            {translate('buttonText.shareYourThoughts')}
-                        </Button>
-                    </Then>
-                </If>
-                <If
-                    condition={
-                        submission_status === SubmissionStatus.Closed || submission_status === SubmissionStatus.Upcoming
-                    }
+                    '&:hover, &:has(:hover)': {
+                        boxShadow: elevations.hover,
+                        background: colors.surface.blue[90],
+                    },
+                    '&:focus, &:has(:focus)': {
+                        boxShadow: elevations.hover,
+                        background: colors.surface.blue[90],
+                    },
+                    '&:focus-visible, &:has(:focus-visible)': {
+                        boxShadow: [globalFocusShadow, elevations.hover].join(','),
+                        '& .MuiCardMedia-root': {
+                            borderRadius: '24px 24px 0px 0px',
+                            boxShadow: globalFocusShadow,
+                        },
+                        outline: `2px solid ${colors.focus.regular.outer}`,
+                        background: colors.surface.blue[90],
+                    },
+                    '&.active': {
+                        boxShadow: elevations.pressed,
+                        '&:focus-visible, &:has(:focus-visible)': {
+                            boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                        },
+                        background: colors.surface.blue[100],
+                    },
+                }}
+            >
+                <CardActionArea
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => {
+                        setIsHovered(false);
+                        setIsActive(false);
+                    }}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onMouseDown={() => setIsActive(true)}
+                    onMouseUp={() => setIsActive(false)}
+                    LinkComponent={RouterLinkRenderer}
+                    href={engagementUrl}
+                    sx={{
+                        '&:focus-visible': {
+                            // focus visible styling is applied by the parent Card component
+                            border: 'none',
+                            outline: 'none',
+                            boxShadow: 'none',
+                            padding: 'unset',
+                            margin: 'unset',
+                        },
+                    }}
                 >
-                    <Then>
-                        <Button
-                            variant="secondary"
-                            fullWidth
-                            onClick={handleClick as () => void}
-                            aria-label={translate('buttonText.viewEngagement')}
+                    {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
+                    <CardContent sx={{ height: '260px', p: '40px 32px' }}>
+                        <Box
+                            sx={{
+                                height: '96px',
+                                mb: '32px',
+                                width: '100%',
+                                display: 'flex',
+                            }}
                         >
-                            {translate('buttonText.viewEngagement')}
-                        </Button>
-                    </Then>
-                </If>
-            </CardActions>
-        </Card>
+                            <Header2
+                                weight="thin"
+                                component="p"
+                                sx={{
+                                    // Required for multi-line text truncation
+                                    // https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
+                                    // Works on: Chrome, Firefox, Safari, Opera, Edge
+                                    // On unsupported browsers, displays as 3 lines with no ellipsis
+                                    flexGrow: 1,
+                                    display: '-webkit-box',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    '-webkit-line-clamp': '3',
+                                    '-webkit-box-orient': 'vertical',
+                                    m: 0,
+                                    lineHeight: 'normal',
+                                }}
+                            >
+                                {name}
+                                <FontAwesomeIcon
+                                    style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
+                                    icon={faArrowRight}
+                                />
+                            </Header2>
+                        </Box>
+                        <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
+                            <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
+                                <EngagementStatusChip statusId={loadedEngagement.submission_status} />
+                            </Grid>
+                            <Grid item xs container flexDirection="column">
+                                <BodyText bold size="small" sx={{ lineHeight: 1 }}>
+                                    <time dateTime={`${startDate.format(semanticDateFormat)}`}>
+                                        {startDate.format(dateFormat)}
+                                    </time>{' '}
+                                    to
+                                </BodyText>
+                                <BodyText bold size="small" sx={{ lineHeight: 2 }}>
+                                    <time dateTime={`${endDate.format(semanticDateFormat)}`}>
+                                        {endDate.format(dateFormat)}
+                                    </time>
+                                </BodyText>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        </ThemeProvider>
     );
 };
 

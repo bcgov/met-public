@@ -40,7 +40,7 @@ erDiagram
         string status_name
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -51,35 +51,35 @@ erDiagram
         string name
         string description
         string title
-        string logo_url
+        string hero_image_url
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    tenant only one to zero or more engagement : has    
+    tenant only one to zero or more engagement : has
     widget {
         integer id PK
         integer widget_type_id FK
         integer engagement_id FK
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer sort_index
         string title
     }
-    engagement only one to zero or more widget : has  
+    engagement only one to zero or more widget : has
     widget_type {
         integer id PK
         string name UK
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    widget only one to one widget_type : has  
+    widget only one to one widget_type : has
     widget_events {
         integer id PK
         string title
@@ -87,22 +87,22 @@ erDiagram
         integer sort_index
         integer widget_id FK "The id from widget"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    widget only one to zero or more widget_events : has 
+    widget only one to zero or more widget_events : has
     widget_item {
         integer id PK
         integer widget_data_id
         integer widget_id FK "The id from widget"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer sort_index
     }
-    widget only one to zero or more widget_item : has 
+    widget only one to zero or more widget_item : has
     widget_map {
         integer id PK
         double longitude
@@ -110,14 +110,14 @@ erDiagram
         integer engagement_id FK "The id from engagement"
         integer widget_id FK "The id from widget"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         string marker_label
         string geojson
         string file_name
     }
-    widget only one to zero or more widget_map : has 
+    widget only one to zero or more widget_map : has
     widget_video {
         integer id PK
         integer widget_id FK "The id from widget"
@@ -125,11 +125,11 @@ erDiagram
         string video_url
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    widget only one to zero or more widget_video : has 
+    widget only one to zero or more widget_video : has
     widget_timeline {
         integer id PK
         integer widget_id FK "The id from widget"
@@ -137,11 +137,11 @@ erDiagram
         string title
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    widget only one to zero or more widget_timeline : has 
+    widget only one to zero or more widget_timeline : has
     timeline_event {
         integer id PK
         integer widget_id FK "The id from widget"
@@ -152,11 +152,11 @@ erDiagram
         enum status
         integer position
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    widget only one to zero or more timeline_event : has 
+    widget only one to zero or more timeline_event : has
     widget_documents {
         integer id PK
         string title
@@ -166,7 +166,7 @@ erDiagram
         integer sort_index
         integer widget_id FK "The id from widget"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         boolean is_uploaded
@@ -177,7 +177,7 @@ erDiagram
         string status_name
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -185,7 +185,7 @@ erDiagram
         integer id PK
         boolean is_subscribed
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer engagement_id
@@ -198,11 +198,11 @@ erDiagram
         jsonb submission_json
         integer survey_id FK "The id from survey"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         string reviewed_by
-        timestamp review_date 
+        timestamp review_date
         integer comment_status_id FK "The id from comment_status"
         boolean has_personal_info
         boolean has_profanity
@@ -212,7 +212,7 @@ erDiagram
         boolean has_personal_info
         integer participant_id FK "The id from participant"
     }
-    survey only one to zero or more submission : has  
+    survey only one to zero or more submission : has
     staff_users {
         integer id PK
         string first_name
@@ -225,12 +225,12 @@ erDiagram
         integer status_id FK "The id from user_status"
         integer tenant_id FK "The id from tenant"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    tenant only one to zero or more staff_users : has 
-    staff_users only one to one user_status : has 
+    tenant only one to zero or more staff_users : has
+    staff_users only one to one user_status : has
     staff_note {
         integer id PK
         string note
@@ -238,7 +238,7 @@ erDiagram
         integer survey_id FK "The id from survey"
         integer submission_id FK "The id from submission"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -252,16 +252,16 @@ erDiagram
         string question
         boolean display
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
-    survey only one to zero or one report_setting : has  
+    survey only one to zero or one report_setting : has
     participant {
         integer id PK
         string email_address
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -270,7 +270,7 @@ erDiagram
         string status_name
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -281,7 +281,7 @@ erDiagram
         integer user_id FK "The id from staff_users"
         type type
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer tenant_id FK "The id from tenant"
@@ -293,7 +293,7 @@ erDiagram
         string name
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -303,7 +303,7 @@ erDiagram
         string hash_code UK
         string extension
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -316,7 +316,7 @@ erDiagram
         string submission_path
         type source
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer tenant_id FK "The id from tenant"
@@ -334,7 +334,7 @@ erDiagram
         integer sort_index
         integer widget_events_id FK "The id from widget_events"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -345,7 +345,7 @@ erDiagram
         type survey_status
         json block_text
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -355,7 +355,7 @@ erDiagram
         integer engagement_id FK "The id from engagement"
         string slug
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -364,7 +364,7 @@ erDiagram
         integer engagement_id PK, FK "The id from engagement"
         boolean send_report
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -374,7 +374,7 @@ erDiagram
         string project_id
         jsonb project_metadata
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -385,7 +385,7 @@ erDiagram
         integer survey_id FK "The id from survey"
         boolean is_active
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer submission_id FK "The id from submission"
@@ -401,7 +401,7 @@ erDiagram
         string action
         type notification_status
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -416,7 +416,7 @@ erDiagram
         string avatar_filename
         integer tenant_id FK "The id from tenant"
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -426,7 +426,7 @@ erDiagram
         string status_name UK
         string description
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
     }
@@ -438,10 +438,11 @@ erDiagram
         integer submission_id FK "The id from submission"
         string component_id
         timestamp created_date
-        timestamp updated_date        
+        timestamp updated_date
         string created_by
         string updated_by
         integer participant_id FK "The id from participant"
     }
     comment only one to one comment_status : has
     submission only one to zero or many comment : has
+```
