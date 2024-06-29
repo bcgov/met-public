@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
 import { RepeatedGrid } from 'components/common';
 import { TileSkeleton } from './TileSkeleton';
 import EngagementTile from './EngagementTile';
 import { LandingContext } from './LandingContext';
-import { PAGE_SIZE } from './constants';
 import NoResult from 'routes/NoResults';
-import { Pagination } from 'components/common/Input';
+import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
 
 const TileBlock = () => {
-    const { engagements, loadingEngagements, totalEngagements, page, setPage } = useContext(LandingContext);
+    const { engagements, loadingEngagements, totalEngagements } = useContext(LandingContext);
+    const [ariaStatusMessage, setAriaStatusMessage] = useState(`Results updated. ${totalEngagements} results`);
+
+    useEffect(() => {
+        setAriaStatusMessage(`${totalEngagements} results`);
+    }, [totalEngagements]);
 
     if (loadingEngagements) {
         return (
@@ -54,63 +58,47 @@ const TileBlock = () => {
                 xs={10}
             >
                 <NoResult />
+                <ul tabIndex={0} aria-label="Engagements list. No results."></ul>
             </Grid>
         );
     }
     return (
-        <Grid
-            container
-            direction="row"
-            justifyContent={{ xs: 'center', sm: 'flex-start' }}
-            columnSpacing={5}
-            rowSpacing={4}
-            item
-            xs={10}
-        >
-            {engagements.map((engagement, index) => {
-                return (
-                    <Grid
-                        key={`Grid-${engagement.id}`}
-                        item
-                        container
-                        xs={12}
-                        md={6}
-                        lg={4}
-                        xl={3}
-                        sx={{
-                            flexBasis: '320px',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Grid item width="320px">
-                            <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
-                        </Grid>
-                    </Grid>
-                );
-            })}
+        <LiveAnnouncer>
+            <LiveMessage message={ariaStatusMessage} aria-live="assertive" />
             <Grid
-                item
-                xs={12}
                 container
                 direction="row"
-                alignItems={'center'}
-                justifyContent="center"
-                marginBottom="2em"
+                justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                columnSpacing={5}
+                rowSpacing={4}
+                item
+                xs={10}
             >
-                <Grid item>
-                    <Pagination
-                        defaultPage={1}
-                        page={page}
-                        count={Math.ceil(totalEngagements / PAGE_SIZE)}
-                        color="primary"
-                        showFirstButton
-                        showLastButton
-                        onChange={(_, pageNumber) => setPage(pageNumber)}
-                    />
-                </Grid>
+                {engagements.map((engagement, index) => {
+                    return (
+                        <Grid
+                            component="ul"
+                            item
+                            container
+                            xs={12}
+                            md={6}
+                            lg={4}
+                            xl={3}
+                            sx={{
+                                flexBasis: '320px',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                listStyleType: 'none',
+                            }}
+                        >
+                            <Grid item width="320px" component="li">
+                                <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
+                            </Grid>
+                        </Grid>
+                    );
+                })}
             </Grid>
-        </Grid>
+        </LiveAnnouncer>
     );
 };
 

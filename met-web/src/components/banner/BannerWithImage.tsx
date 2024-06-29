@@ -22,6 +22,7 @@ const BannerWithImage = ({ height, imageUrl, children }: BannerProps) => {
             >
                 <img
                     src={imageUrl}
+                    alt="Banner Image"
                     style={{
                         objectFit: 'cover',
                         height: height ? height : '38em',

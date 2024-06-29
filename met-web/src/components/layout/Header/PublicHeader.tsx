@@ -25,7 +25,7 @@ const PublicHeader = () => {
     const headerTitle = tenant.title;
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1 }} aria-label="Public Header">
             <AppBar
                 position="static"
                 sx={{
@@ -57,7 +57,12 @@ const PublicHeader = () => {
                         {headerTitle}
                     </Header1>
                     <When condition={isLoggedIn}>
-                        <Button color="inherit" onClick={() => UserService.doLogout()}>
+                        <Button
+                            role="button"
+                            color="inherit"
+                            onClick={() => UserService.doLogout()}
+                            aria-label={translate('common.logoutAreaLabel')}
+                        >
                             {translate('common.logout')}
                         </Button>
                     </When>

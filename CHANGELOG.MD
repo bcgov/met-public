@@ -1,3 +1,6 @@
+## June 28, 2024
+- **Task** Improve screen reader support for home/engagement search page [DESENG-617](https://citz-gdx.atlassian.net/browse/DESENG-617)
+
 ## June 27, 2024
 
 - **Bugfix** Fix tenant landing page [🎟️ DESENG-635](https://citz-gdx.atlassian.net/browse/DESENG-635)
