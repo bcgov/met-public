@@ -15,7 +15,7 @@ import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input/Button';
 import { colors } from '../common';
 import { CustomTextField, CommonSelect } from 'components/common/Input';
-import { If, Then } from 'react-if';
+import { When } from 'react-if';
 
 const FilterBlock = () => {
     const { searchFilters, setSearchFilters, setPage, clearFilters, page, setDrawerOpened } =
@@ -48,10 +48,6 @@ const FilterBlock = () => {
         setDidMount(true);
         return () => setDidMount(false);
     }, []);
-
-    useEffect(() => {
-        console.log('search', searchFilters);
-    }, [searchFilters]);
 
     useEffect(() => {
         if (didMount) {
@@ -205,28 +201,26 @@ const FilterBlock = () => {
                             />
                         )),
                     )}
-                    <If condition={searchFilters.status.length || searchFilters.metadata.length}>
-                        <Then>
-                            <MuiButton
-                                variant="text"
-                                onClick={clearFilters}
-                                sx={{
-                                    fontWeight: 'normal',
-                                    height: 48,
-                                    fontSize: '15px',
-                                    borderRadius: '2em',
-                                    p: 2,
-                                    '&:focus, &:focus-visible': {
-                                        backgroundColor: `${colors.focus.regular.inner}`,
-                                        boxShadow: `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}`,
-                                    },
-                                }}
-                                endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
-                            >
-                                {translate('landing.filters.clear')}
-                            </MuiButton>
-                        </Then>
-                    </If>
+                    <When condition={searchFilters.status.length || searchFilters.metadata.length}>
+                        <MuiButton
+                            variant="text"
+                            onClick={clearFilters}
+                            sx={{
+                                fontWeight: 'normal',
+                                height: 48,
+                                fontSize: '15px',
+                                borderRadius: '2em',
+                                p: 2,
+                                '&:focus, &:focus-visible': {
+                                    backgroundColor: `${colors.focus.regular.inner}`,
+                                    boxShadow: `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}`,
+                                },
+                            }}
+                            endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
+                        >
+                            {translate('landing.filters.clear')}
+                        </MuiButton>
+                    </When>
                 </Stack>
             </Grid>
         </Grid>

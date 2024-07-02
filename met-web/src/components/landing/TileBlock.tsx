@@ -6,9 +6,11 @@ import EngagementTile from './EngagementTile';
 import { LandingContext } from './LandingContext';
 import NoResult from 'routes/NoResults';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
+import { Pagination } from 'components/common/Input';
+import { PAGE_SIZE } from './constants';
 
 const TileBlock = () => {
-    const { engagements, loadingEngagements, totalEngagements } = useContext(LandingContext);
+    const { engagements, loadingEngagements, page, setPage, totalEngagements } = useContext(LandingContext);
     const [ariaStatusMessage, setAriaStatusMessage] = useState(`Results updated. ${totalEngagements} results`);
 
     useEffect(() => {
@@ -58,7 +60,7 @@ const TileBlock = () => {
                 xs={10}
             >
                 <NoResult />
-                <ul tabIndex={0} aria-label="Engagements list. No results."></ul>
+                <ul aria-label="Engagements list. No results."></ul>
             </Grid>
         );
     }
@@ -67,6 +69,8 @@ const TileBlock = () => {
             <LiveMessage message={ariaStatusMessage} aria-live="assertive" />
             <Grid
                 container
+                component="ul"
+                aria-label={`Engagements list. ${totalEngagements} results.`}
                 direction="row"
                 justifyContent={{ xs: 'center', sm: 'flex-start' }}
                 columnSpacing={5}
@@ -74,12 +78,13 @@ const TileBlock = () => {
                 item
                 xs={10}
             >
-                {engagements.map((engagement, index) => {
+                {engagements.map((engagement) => {
                     return (
                         <Grid
-                            component="ul"
+                            component="li"
                             item
                             container
+                            key={engagement.id}
                             xs={12}
                             md={6}
                             lg={4}
@@ -91,12 +96,33 @@ const TileBlock = () => {
                                 listStyleType: 'none',
                             }}
                         >
-                            <Grid item width="320px" component="li">
+                            <Grid item width="320px">
                                 <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                             </Grid>
                         </Grid>
                     );
                 })}
+                <Grid
+                    item
+                    xs={12}
+                    container
+                    direction="row"
+                    alignItems={'center'}
+                    justifyContent="center"
+                    marginBottom="2em"
+                >
+                    <Grid item>
+                        <Pagination
+                            defaultPage={1}
+                            page={page}
+                            count={Math.ceil(totalEngagements / PAGE_SIZE)}
+                            color="primary"
+                            showFirstButton
+                            showLastButton
+                            onChange={(_, pageNumber) => setPage(pageNumber)}
+                        />
+                    </Grid>
+                </Grid>
             </Grid>
         </LiveAnnouncer>
     );
