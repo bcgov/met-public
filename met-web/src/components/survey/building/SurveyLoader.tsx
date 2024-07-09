@@ -1,9 +1,8 @@
-import { EmailVerification } from 'models/emailVerification';
 import { Params, defer } from 'react-router-dom';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getEngagement } from 'services/engagementService';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
-import { getSubmission, getSubmissionByToken } from 'services/submissionService';
+import { getSubmissionByToken } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
 import { fetchSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 

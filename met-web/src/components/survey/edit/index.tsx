@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import SurveySubmitWrapped from './FormWrapped';
 import { Await, useLoaderData } from 'react-router-dom';
-import { Survey } from 'models/survey';
 import { EmailVerification } from 'models/emailVerification';
 import { Skeleton } from '@mui/material';
 import { Engagement } from 'models/engagement';

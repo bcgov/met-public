@@ -15,6 +15,7 @@ import { Engagement } from 'models/engagement';
 import { updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { updatedDiff } from 'deep-object-diff';
 
 const SettingsFormPage = () => {
     const { survey, slug, engagement } = useRouteLoaderData('survey') as {
@@ -29,12 +30,8 @@ const SettingsFormPage = () => {
                 <MetHeader3 bold>Report Settings</MetHeader3>
             </Grid>
             <Grid item xs={12}>
-                <MetPaper
-                    sx={{
-                        padding: '3rem',
-                    }}
-                >
-                    <Suspense fallback={settingsFormSkeleton}>
+                <MetPaper sx={{ padding: '3rem' }}>
+                    <Suspense fallback={SettingsFormSkeleton}>
                         <Await resolve={Promise.all([survey, slug, engagement])}>
                             <SettingsForm />
                         </Await>
@@ -68,12 +65,15 @@ const SettingsForm = () => {
 
     const handleSaveSettings = async () => {
         const surveyReportSettings = await reportSettings; // Should resolve immediately
-        const updatedSettings = surveyReportSettings.map((setting) => {
+        const currentSettings = surveyReportSettings.map((setting) => {
             return {
                 ...setting,
                 display: displayedSettings[setting.id],
             };
         });
+        const diff = updatedDiff(surveyReportSettings, currentSettings);
+        const diffKeys = Object.keys(diff);
+        const updatedSettings = diffKeys.map((key) => currentSettings[Number(key)]);
 
         if (!surveyReportSettings.length) {
             handleNavigateOnSave();
@@ -200,7 +200,7 @@ const SettingsForm = () => {
     );
 };
 
-const settingsFormSkeleton = (
+const SettingsFormSkeleton = (
     <Grid container spacing={2}>
         <Grid item xs={6}>
             <FormField title="Link to Public Dashboard Report">

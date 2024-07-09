@@ -10,7 +10,6 @@ import { BodyText } from 'components/common/Typography';
 interface PromiseResult<T> {
     status: 'fulfilled' | 'rejected';
     value?: T;
-    reason?: any;
 }
 
 export const InvalidTokenModal = () => {

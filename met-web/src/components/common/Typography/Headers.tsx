@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
-import { Palette } from 'styles/Theme';
 
 const fontWeight = (weight?: string | number) => {
     switch (weight) {

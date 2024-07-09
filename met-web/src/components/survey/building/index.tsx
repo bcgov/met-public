@@ -29,7 +29,7 @@ import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
 import { AutoSaveSnackBar } from './AutoSaveSnackBar';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { Button } from 'components/common/Input';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -63,7 +63,7 @@ export const FormBuilderPage = () => {
 
     const {
         control,
-        formState: { isSubmitting, isSubmitted, isDirty },
+        formState: { isSubmitting, isDirty },
         handleSubmit,
         reset,
         watch,
@@ -116,7 +116,7 @@ export const FormBuilderPage = () => {
     const autoSaveForm = async (formDef: FormBuilderData) => {
         try {
             await handleSubmit(async (data: Omit<SurveyForm, 'form_json'>) => {
-                const { form_json, ...result } = await putSurvey({
+                const result = await putSurvey({
                     ...data,
                     form_json: formDef,
                 });

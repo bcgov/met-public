@@ -117,7 +117,6 @@ export const SurveyForm = () => {
             spacing={1}
             padding={'2em 2em 1em 2em'}
         >
-            {isChanged && JSON.stringify(submissionData)}
             <Grid item xs={12}>
                 <FormSubmit
                     savedForm={survey.form_json}
