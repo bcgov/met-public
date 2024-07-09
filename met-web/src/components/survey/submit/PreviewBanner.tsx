@@ -8,16 +8,13 @@ import { Header1 } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
 import { Survey } from 'models/survey';
 
-export const PreviewBanner = () => {
+const Banner = (survey: Survey) => {
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { survey } = useRouteLoaderData('survey') as { survey: Promise<Survey> };
-
     if (!isLoggedIn || !survey) {
         return null;
     }
-
-    const Banner = (survey: Survey) => (
+    return (
         <Box sx={{ backgroundColor: 'secondary.light' }}>
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <Grid item xs={12}>
@@ -35,6 +32,10 @@ export const PreviewBanner = () => {
             </Grid>
         </Box>
     );
+};
+
+export const PreviewBanner = () => {
+    const { survey } = useRouteLoaderData('survey') as { survey: Promise<Survey> };
 
     return (
         <Suspense fallback={<Skeleton variant="rectangular" height="10em" width="100%" />}>

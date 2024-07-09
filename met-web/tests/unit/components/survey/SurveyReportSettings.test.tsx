@@ -97,7 +97,7 @@ describe('Survey report settings tests', () => {
     });
 
     test('View survey report settings page', async () => {
-        const { container } = render(<RouterProvider router={router} />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(
             () => {
