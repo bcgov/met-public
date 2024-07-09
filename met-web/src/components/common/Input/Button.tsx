@@ -307,7 +307,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx
             onBlur={() => setFocused(false)}
             tabIndex={focused ? 0 : -1} // Set tabIndex to -1 when not focused
         >
-            <StyledIconButton onClick={onClick} title={title}>
+            <StyledIconButton onClick={onClick} title={title} aria-label={title}>
                 <FontAwesomeIcon icon={icon} style={{ fontSize: '20px', color: '#494949' }} />
             </StyledIconButton>
         </Stack>

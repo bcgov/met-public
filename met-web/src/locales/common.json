@@ -96,6 +96,8 @@
     },
     "common": {
         "logout": "Logout",
+        "headerTitleAreaLabel" : "Header Title Area",
+        "logoutAreaLabel": "Logout Button",
         "defaultBCText": "British Columbia Logo",
         "defaultText" : "Site Logo"
     }

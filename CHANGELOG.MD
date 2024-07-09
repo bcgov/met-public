@@ -6,6 +6,9 @@
   - Restructure survey pages to use \<Suspense> / \<Await> for data loading
   - Add useBlocker() call to the survey authoring and survey submission pages to prevent users from navigating away from the page while in the middle of creating or submitting a survey
 
+## June 28, 2024
+- **Task** Improve screen reader support for home/engagement search page [DESENG-617](https://citz-gdx.atlassian.net/browse/DESENG-617)
+
 ## June 27, 2024
 
 - **Bugfix** Fix tenant landing page [🎟️ DESENG-635](https://citz-gdx.atlassian.net/browse/DESENG-635)

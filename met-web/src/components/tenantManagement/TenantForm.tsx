@@ -76,7 +76,7 @@ export const TenantForm = ({
         }
     }, [blocker, dispatch]);
 
-    const hasLogoUrl = watch('hero_image_url');
+    const hasheroImageUrl = watch('hero_image_url');
 
     useEffect(() => {
         reset({
@@ -343,7 +343,7 @@ export const TenantForm = ({
                             <TextField
                                 {...field}
                                 error={errors.hero_image_credit?.message}
-                                disabled={!hasLogoUrl}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter
@@ -364,7 +364,7 @@ export const TenantForm = ({
                             <TextField
                                 {...field}
                                 error={errors.hero_image_description?.message}
-                                disabled={!hasLogoUrl}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter

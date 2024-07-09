@@ -68,7 +68,7 @@ const App = () => {
                 saveTenant({
                     id: _basename,
                     name: tenant.name,
-                    logoUrl: tenant.hero_image_url ?? '',
+                    heroImageUrl: tenant.hero_image_url ?? '',
                     basename: appBaseName,
                     title: tenant.title,
                     contact_email: tenant.contact_email ?? '',
