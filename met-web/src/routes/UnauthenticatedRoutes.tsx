@@ -36,12 +36,7 @@ const UnauthenticatedRoutes = () => {
             />
             <Route path="/new-look">
                 <Route index element={<Navigate to="/" />} />
-                <Route
-                    path=":slug/:language"
-                    loader={engagementLoader}
-                    errorElement={<NotFound />}
-                    element={<ViewEngagement />}
-                />
+                <Route path=":slug/:language" loader={engagementLoader} element={<ViewEngagement />} />
                 <Route path=":engagementId/view/:language" element={<EngagementViewWrapper />} />
             </Route>
             <Route path="/engagements">
