@@ -59,7 +59,7 @@ export const SurveyForm = () => {
                     data: { survey_id: survey.id, engagement_id: survey.engagement_id },
                 });
             } catch (error) {
-                console.log('Survey submit notification snowplow error:', error);
+                console.log('Error while firing snowplow event for survey submission:', error);
             }
             dispatch(
                 openNotification({
