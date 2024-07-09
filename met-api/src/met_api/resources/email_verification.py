@@ -38,7 +38,7 @@ class EmailVerification(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     def get(token):
-        """Fetch a email verification matching the provided token."""
+        """Fetch an email verification matching the provided token."""
         try:
             email_verification = EmailVerificationService().get_active(token)
             if email_verification:
@@ -54,7 +54,7 @@ class EmailVerification(Resource):
     # @TRACER.trace()
     @cross_origin(origins=allowedorigins())
     def put(token):
-        """Fetch a email verification matching the provided token."""
+        """Update an email verification matching the provided token."""
         try:
             email_verification = EmailVerificationService().verify(token, None, None, None)
             if email_verification:
@@ -69,7 +69,7 @@ class EmailVerification(Resource):
 @cors_preflight('POST, OPTIONS')
 @API.route('/')
 class EmailVerifications(Resource):
-    """Resource for managing email verifications."""
+    """Resource for managing email verifications for survey submissions."""
 
     @staticmethod
     # @TRACER.trace()
@@ -80,6 +80,8 @@ class EmailVerifications(Resource):
             requestjson = request.get_json()
             email_verification = EmailVerificationSchema().load(requestjson)
             created_email_verification = EmailVerificationService().create(email_verification)
+            # don't return the verification token when creating a new email verification
+            created_email_verification.pop('verification_token')
             return created_email_verification, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -90,7 +92,7 @@ class EmailVerifications(Resource):
 @cors_preflight('POST, OPTIONS')
 @API.route('/<string:subscription_type>/subscribe')
 class SubscribeEmailVerifications(Resource):
-    """Resource for managing email verifications."""
+    """Resource for managing email verifications for subscriptions."""
 
     @staticmethod
     # @TRACER.trace()
@@ -101,6 +103,8 @@ class SubscribeEmailVerifications(Resource):
             requestjson = request.get_json()
             email_verification = EmailVerificationSchema().load(requestjson)
             created_email_verification = EmailVerificationService().create(email_verification, subscription_type)
+            # don't return the verification token when creating a new email verification
+            created_email_verification.pop('verification_token')
             return created_email_verification, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR

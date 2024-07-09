@@ -1,4 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Suspense } from 'react';
+import { useBlocker, useNavigate, useAsyncValue, useRouteLoaderData, Await, useRevalidator } from 'react-router-dom';
+import { Survey } from 'models/survey';
+import FormBuilderSkeleton from './FormBuilderSkeleton';
+import { Engagement } from 'models/engagement';
 import {
     Grid,
     Stack,
@@ -9,71 +13,96 @@ import {
     FormGroup,
     FormControlLabel,
     Tooltip,
+    Avatar,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleQuestion } from '@fortawesome/pro-solid-svg-icons/faCircleQuestion';
-import { faPencilSlash } from '@fortawesome/pro-regular-svg-icons/faPencilSlash';
-import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
-import { useNavigate, useParams } from 'react-router-dom';
 import FormBuilder from 'components/Form/FormBuilder';
-import { SurveyParams } from '../types';
-import { getSurvey, putSurvey } from 'services/surveyService';
-import { Survey } from 'models/survey';
+import { putSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetHeader3, MetPageGridContainer, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
-import FormBuilderSkeleton from './FormBuilderSkeleton';
+import { MetHeader3, MetPageGridContainer, MetTooltip } from 'components/common';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { getEngagement } from 'services/engagementService';
-import { Engagement } from 'models/engagement';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { Palette } from 'styles/Theme';
+import { Palette, colors } from 'styles/Theme';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
 import { AutoSaveSnackBar } from './AutoSaveSnackBar';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
+import { Button } from 'components/common/Input';
+import { Controller, useForm } from 'react-hook-form';
+import {
+    faCircleQuestion,
+    faPen,
+    faPenSlash,
+    faCloudArrowUp,
+    faCloudCheck,
+    faCloudXmark,
+} from '@fortawesome/pro-regular-svg-icons';
+import { Else, If, Then } from 'react-if';
 
 interface SurveyForm {
     id: string;
-    form_json: unknown;
+    form_json: FormBuilderData;
     name: string;
     is_hidden?: boolean;
     is_template?: boolean;
 }
 
-const SurveyFormBuilder = () => {
+export const FormBuilderPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { surveyId } = useParams<SurveyParams>();
+    const revalidator = useRevalidator();
 
-    const [savedSurvey, setSavedSurvey] = useState<Survey | null>(null);
-    const [formData, setFormData] = useState<(unknown & { components: unknown[] }) | null>(null);
+    const [survey, engagement] = useAsyncValue() as [Survey, Engagement];
+    const [formDefinition, setFormDefinition] = useState(survey.form_json);
+    const [isFormDirty, setIsFormDirty] = useState(false);
+    const [hasChanged, setHasChanged] = useState(false);
+    const [saveError, setSaveError] = useState(false);
 
-    const [loading, setLoading] = useState(true);
-    const [isNameFocused, setIsNamedFocused] = useState(false);
-    const [name, setName] = useState(savedSurvey ? savedSurvey.name : '');
-    const [isSaving, setIsSaving] = useState(false);
-    const [savedEngagement, setSavedEngagement] = useState<Engagement | null>(null);
+    const {
+        control,
+        formState: { isSubmitting, isSubmitted, isDirty },
+        handleSubmit,
+        reset,
+        watch,
+    } = useForm<Omit<SurveyForm, 'form_json'>>({
+        defaultValues: {
+            id: survey.id.toString(),
+            name: survey.name,
+            is_hidden: survey.is_hidden,
+            is_template: survey.is_template,
+        },
+    });
 
-    const [formDefinition, setFormDefinition] = useState<FormBuilderData>({ display: 'form', components: [] });
-    const isMultiPage = formDefinition.display === 'wizard';
-    const hasEngagement = Boolean(savedSurvey?.engagement_id);
-    const isEngagementDraft = savedEngagement?.status_id === EngagementStatus.Draft;
+    useEffect(() => {
+        const subscription = watch((value, { name, type }) => {
+            // Auto save form when any field changes
+            if (type === 'change') {
+                setHasChanged(true);
+                debounceAutoSaveForm(formDefinition);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
+
+    const name = watch('name');
+    const hasUnsavedWork = (isDirty || isFormDirty) && !isSubmitting;
+
+    const isMultiPage = formDefinition?.display === 'wizard';
+
+    const hasEngagement = Boolean(survey?.engagement_id);
+    const isEngagementDraft = engagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
-    const [isHiddenSurvey, setIsHiddenSurvey] = useState(savedSurvey ? savedSurvey.is_hidden : false);
-    const [isTemplateSurvey, setIsTemplateSurvey] = useState(savedSurvey ? savedSurvey.is_template : false);
 
+    const [isEditingName, setIsEditingName] = useState(false);
     const [autoSaveNotificationOpen, setAutoSaveNotificationOpen] = useState(false);
-    const AUTO_SAVE_INTERVAL = 5000;
+
+    const AUTO_SAVE_INTERVAL = 5 * 1000;
 
     useEffect(() => {
-        loadSurvey();
-    }, []);
-
-    useEffect(() => {
-        if (savedEngagement && hasPublishedEngagement) {
+        if (hasPublishedEngagement) {
             dispatch(
                 openNotification({
                     severity: 'warning',
@@ -81,131 +110,65 @@ const SurveyFormBuilder = () => {
                 }),
             );
         }
-    }, [savedEngagement]);
+    }, [hasPublishedEngagement, dispatch]);
 
-    const loadSurvey = async () => {
-        if (isNaN(Number(surveyId))) {
-            navigate('/surveys');
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'The survey id passed was erroneous',
-                }),
-            );
+    const debounceAutoSaveForm = useRef(debounce((data) => autoSaveForm(data), AUTO_SAVE_INTERVAL)).current;
+    const autoSaveForm = async (formDef: FormBuilderData) => {
+        try {
+            await handleSubmit(async (data: Omit<SurveyForm, 'form_json'>) => {
+                const { form_json, ...result } = await putSurvey({
+                    ...data,
+                    form_json: formDef,
+                });
+                reset(result as Omit<SurveyForm, 'form_json' | 'id'>);
+                setAutoSaveNotificationOpen(true);
+                setIsFormDirty(false);
+            })();
+            setSaveError(false);
+        } catch (error) {
+            setSaveError(true);
+        }
+    };
+
+    const hasMounted = useRef(false);
+
+    const onEditorChange = (form: FormBuilderData) => {
+        if (!hasMounted.current) {
+            // Skip the first call to onEditorChange - it's the initial form load;
+            // we don't want to send it back to the server right away
+            hasMounted.current = true;
             return;
         }
-        try {
-            const loadedSurvey = await getSurvey(Number(surveyId));
-            setSavedSurvey(loadedSurvey);
-            setFormDefinition(loadedSurvey?.form_json || { display: 'form', components: [] });
-            setName(loadedSurvey.name);
-            setIsHiddenSurvey(loadedSurvey.is_hidden);
-            setIsTemplateSurvey(loadedSurvey.is_template);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while loading saved survey',
-                }),
-            );
-            navigate('/surveys');
-        }
-    };
+        setIsFormDirty(true);
+        setFormDefinition(form);
 
-    useEffect(() => {
-        if (savedSurvey) {
-            loadEngagement();
-        }
-    }, [savedSurvey]);
-
-    const loadEngagement = async () => {
-        if (!savedSurvey?.engagement_id) {
-            setLoading(false);
-            return;
-        }
-
-        try {
-            const loadedEngagement = await getEngagement(Number(savedSurvey.engagement_id));
-            setSavedEngagement(loadedEngagement);
-            setLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while loading saved engagement data',
-                }),
-            );
-            navigate('/survey/listing');
-        }
-    };
-
-    const debounceAutoSaveForm = useRef(
-        debounce((newChanges: SurveyForm) => {
-            autoSaveForm(newChanges);
-        }, AUTO_SAVE_INTERVAL),
-    ).current;
-
-    const doDebounceSaveForm = (form: FormBuilderData) => {
-        debounceAutoSaveForm({
-            id: String(surveyId),
-            form_json: form,
-            name: name,
-        });
-    };
-
-    const handleFormChange = (form: FormBuilderData) => {
         if (!form.components) {
             return;
         }
-        setFormData(form);
-        doDebounceSaveForm(form);
+        setHasChanged(true);
+        debounceAutoSaveForm(form);
     };
 
-    const autoSaveForm = async (newForm: SurveyForm) => {
+    const formSubmitHandler = async (data: Omit<SurveyForm, 'form_json'>) => {
         try {
-            await putSurvey(newForm);
-            setAutoSaveNotificationOpen(true);
+            if (hasUnsavedWork) {
+                await putSurvey({
+                    ...data,
+                    id: survey.id.toString(),
+                    form_json: formDefinition,
+                });
+                dispatch(
+                    openNotification({
+                        severity: 'success',
+                        text: survey.engagement?.id
+                            ? `Survey was successfully added to engagement`
+                            : 'The survey was successfully built',
+                    }),
+                );
+            }
+            if (hasChanged) revalidator.revalidate();
+            navigate(`/surveys/${survey.id}/report`);
         } catch (error) {
-            return;
-        }
-    };
-
-    const doSaveForm = async () => {
-        await putSurvey({
-            id: String(surveyId),
-            form_json: formData,
-            name: name,
-            is_hidden: isHiddenSurvey,
-            is_template: isTemplateSurvey,
-        });
-    };
-
-    const handleSaveForm = async () => {
-        if (!savedSurvey) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Unable to build survey, please reload',
-                }),
-            );
-            return;
-        }
-
-        try {
-            setIsSaving(true);
-            await doSaveForm();
-            dispatch(
-                openNotification({
-                    severity: 'success',
-                    text: savedSurvey.engagement?.id
-                        ? `Survey was successfully added to engagement`
-                        : 'The survey was successfully built',
-                }),
-            );
-
-            navigate(`/surveys/${savedSurvey.id}/report`);
-        } catch (error) {
-            setIsSaving(false);
             if (axios.isAxiosError(error)) {
                 dispatch(
                     openNotification({
@@ -224,9 +187,31 @@ const SurveyFormBuilder = () => {
         }
     };
 
-    if (loading) {
-        return <FormBuilderSkeleton />;
-    }
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) => hasUnsavedWork && nextLocation.pathname !== currentLocation.pathname,
+    );
+
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: blocker.proceed,
+                        handleClose: blocker.reset,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        }
+    }, [blocker, dispatch]);
 
     return (
         <MetPageGridContainer
@@ -240,12 +225,35 @@ const SurveyFormBuilder = () => {
         >
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="flex-start" alignItems="center">
-                    {!isNameFocused ? (
-                        <>
-                            <MetHeader3
-                                sx={{ p: 0.5 }}
+                    <If condition={isEditingName}>
+                        <Then>
+                            <Controller
+                                name="name"
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        autoFocus
+                                        onBlur={() => {
+                                            setIsEditingName(false);
+                                        }}
+                                    />
+                                )}
+                            />
+                            <IconButton
                                 onClick={() => {
-                                    setIsNamedFocused(true);
+                                    setIsEditingName(!isEditingName);
+                                }}
+                                color="inherit"
+                            >
+                                <FontAwesomeIcon icon={faPenSlash} style={{ fontSize: '20px' }} />
+                            </IconButton>
+                        </Then>
+                        <Else>
+                            <MetHeader3
+                                sx={{ p: 0.5, cursor: 'pointer' }}
+                                onClick={() => {
+                                    setIsEditingName(true);
                                 }}
                             >
                                 {name}
@@ -253,36 +261,25 @@ const SurveyFormBuilder = () => {
                             <IconButton
                                 size="small"
                                 onClick={() => {
-                                    setIsNamedFocused(!isNameFocused);
+                                    setIsEditingName(!isEditingName);
                                 }}
                                 color="inherit"
                             >
                                 <FontAwesomeIcon icon={faPen} style={{ fontSize: '1rem' }} />
                             </IconButton>
-                        </>
-                    ) : (
-                        <>
-                            <TextField autoFocus value={name} onChange={(event) => setName(event.target.value)} />
-                            <IconButton
-                                onClick={() => {
-                                    setIsNamedFocused(!isNameFocused);
-                                }}
-                                color="inherit"
-                            >
-                                <FontAwesomeIcon icon={faPencilSlash} style={{ fontSize: '20px' }} />
-                            </IconButton>
-                        </>
-                    )}
+                        </Else>
+                    </If>
+                    <SaveStatusIndicator hasUnsavedWork={hasUnsavedWork} saveError={saveError} />
                 </Stack>
                 <Divider />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item>
                 <FormGroup>
                     <FormControlLabel
                         control={
                             <Switch
                                 checked={isMultiPage}
-                                onChange={(e) => {
+                                onChange={() => {
                                     dispatch(
                                         openNotificationModal({
                                             open: true,
@@ -305,7 +302,7 @@ const SurveyFormBuilder = () => {
                                                     },
                                                 ],
                                                 handleConfirm: () => {
-                                                    setFormDefinition({
+                                                    onEditorChange({
                                                         display: isMultiPage ? 'form' : 'wizard',
                                                         components: [],
                                                     });
@@ -322,7 +319,7 @@ const SurveyFormBuilder = () => {
                 </FormGroup>
             </Grid>
             <Grid item xs={12}>
-                <FormBuilder handleFormChange={handleFormChange} savedForm={formDefinition} />
+                <FormBuilder handleFormChange={onEditorChange} savedForm={formDefinition} />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row">
@@ -330,16 +327,12 @@ const SurveyFormBuilder = () => {
                         <FormControlLabel
                             control={
                                 <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
-                                    <Switch
-                                        checked={isTemplateSurvey}
-                                        disabled={Boolean(savedSurvey?.engagement_id)}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                setIsTemplateSurvey(true);
-                                                return;
-                                            }
-                                            setIsTemplateSurvey(false);
-                                        }}
+                                    <Controller
+                                        name="is_template"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Switch disabled={hasEngagement} checked={field.value} {...field} />
+                                        )}
                                     />
                                 </PermissionsGate>
                             }
@@ -371,16 +364,10 @@ const SurveyFormBuilder = () => {
                         <FormControlLabel
                             control={
                                 <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
-                                    <Switch
-                                        checked={isHiddenSurvey}
-                                        disabled={Boolean(savedSurvey?.engagement_id)}
-                                        onChange={(e) => {
-                                            if (e.target.checked) {
-                                                setIsHiddenSurvey(true);
-                                                return;
-                                            }
-                                            setIsHiddenSurvey(false);
-                                        }}
+                                    <Controller
+                                        name="is_hidden"
+                                        control={control}
+                                        render={({ field }) => <Switch checked={field.value} {...field} />}
                                     />
                                 </PermissionsGate>
                             }
@@ -410,10 +397,12 @@ const SurveyFormBuilder = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <PrimaryButtonOld disabled={!formData} loading={isSaving} onClick={handleSaveForm}>
-                        {'Report Settings'}
-                    </PrimaryButtonOld>
-                    <SecondaryButtonOld onClick={() => navigate('/surveys')}>Cancel</SecondaryButtonOld>
+                    <Button variant="primary" disabled={!formDefinition} onClick={handleSubmit(formSubmitHandler)}>
+                        Report Settings
+                    </Button>
+                    <Button variant="secondary" href="/surveys">
+                        Cancel
+                    </Button>
                 </Stack>
             </Grid>
             <AutoSaveSnackBar
@@ -423,6 +412,65 @@ const SurveyFormBuilder = () => {
                 }}
             />
         </MetPageGridContainer>
+    );
+};
+
+const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: boolean; saveError: boolean }) => {
+    const saveStatusData = () => {
+        if (saveError)
+            return {
+                icon: faCloudXmark,
+                color: colors.notification.error.icon,
+                tint: colors.notification.error.tint,
+                text: 'Error saving',
+            };
+        if (hasUnsavedWork)
+            return {
+                icon: faCloudArrowUp,
+                color: colors.notification.warning.icon,
+                tint: colors.notification.warning.tint,
+                text: 'Saving...',
+            };
+        return {
+            icon: faCloudCheck,
+            color: colors.notification.success.icon,
+            tint: colors.notification.success.tint,
+            text: 'Saved',
+        };
+    };
+    const { icon, color, tint, text } = saveStatusData();
+    return (
+        <MetTooltip title={text}>
+            <Avatar
+                sizes="small"
+                sx={{
+                    fontSize: '16px',
+                    width: 24,
+                    height: 24,
+                    background: tint,
+                    color: color,
+                }}
+            >
+                <FontAwesomeIcon icon={icon} />
+            </Avatar>
+        </MetTooltip>
+    );
+};
+
+const SurveyFormBuilder = () => {
+    const { survey: surveyPromise, engagement: engagementPromise } = useRouteLoaderData('survey') as {
+        survey: Promise<Survey>;
+        engagement: Promise<Engagement>;
+    };
+
+    const surveyDataPromise = Promise.all([surveyPromise, engagementPromise]);
+
+    return (
+        <Suspense fallback={<FormBuilderSkeleton />}>
+            <Await resolve={surveyDataPromise}>
+                <FormBuilderPage />
+            </Await>
+        </Suspense>
     );
 };
 

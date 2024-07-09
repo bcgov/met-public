@@ -1,16 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Checkbox } from '@mui/material';
 import { HeadCell } from 'components/common/Table/types';
 import MetTable from 'components/common/Table';
 import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
-import { ReportSettingsContext } from './ReportSettingsContext';
-import { updatedDiff } from 'deep-object-diff';
+import { useAsyncValue } from 'react-router-dom';
 
-const SettingsTable = () => {
-    const { surveyReportSettings, searchFilter, savingSettings, handleSaveSettings, tableLoading } =
-        useContext(ReportSettingsContext);
-    const [displayedMap, setDisplayedMap] = useState<{ [key: number]: boolean }>({});
+const SettingsTable = ({
+    displayedMap,
+    setDisplayedMap,
+    searchTerm,
+}: {
+    displayedMap: { [key: number]: boolean };
+    setDisplayedMap: React.Dispatch<
+        React.SetStateAction<{
+            [key: number]: boolean;
+        }>
+    >;
+    searchTerm: string;
+}) => {
+    const surveyReportSettings = useAsyncValue() as SurveyReportSetting[];
 
     useEffect(() => {
         const map = surveyReportSettings.reduce((acc, curr) => {
@@ -19,23 +28,6 @@ const SettingsTable = () => {
         }, {} as { [key: number]: boolean });
         setDisplayedMap(map);
     }, [surveyReportSettings]);
-
-    useEffect(() => {
-        if (!savingSettings) {
-            return;
-        }
-        const updatedSettings = surveyReportSettings.map((setting) => {
-            return {
-                ...setting,
-                display: displayedMap[setting.id],
-            };
-        });
-        const diff = updatedDiff(surveyReportSettings, updatedSettings);
-        const diffKeys = Object.keys(diff);
-        const updatedDiffSettings = diffKeys.map((key) => updatedSettings[Number(key)]);
-
-        handleSaveSettings(updatedDiffSettings);
-    }, [savingSettings]);
 
     const headCells: HeadCell<SurveyReportSetting>[] = [
         {
@@ -76,8 +68,8 @@ const SettingsTable = () => {
     ];
 
     return (
-        <ClientSidePagination rows={surveyReportSettings} searchFilter={searchFilter}>
-            {(props) => <MetTable {...props} headCells={headCells} loading={tableLoading} />}
+        <ClientSidePagination rows={surveyReportSettings} searchFilter={{ key: 'question', value: searchTerm }}>
+            {(props) => <MetTable {...props} headCells={headCells} />}
         </ClientSidePagination>
     );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
+import { Palette } from 'styles/Theme';
 
 const fontWeight = (weight?: string | number) => {
     switch (weight) {
@@ -35,7 +36,6 @@ export const Header1 = ({
                 marginBottom: '2rem',
                 marginTop: '1.5rem',
                 fontWeight: fontWeight(weight),
-                color: '#292929',
                 ...props.sx,
             }}
         >

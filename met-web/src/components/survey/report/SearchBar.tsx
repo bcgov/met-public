@@ -1,40 +1,47 @@
-import React, { useContext } from 'react';
-import { Stack, TextField } from '@mui/material';
-import { PrimaryButtonOld } from 'components/common';
+import React, { useState } from 'react';
+import { InputAdornment, Stack } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
-import { ReportSettingsContext } from './ReportSettingsContext';
+import { Button, TextField } from 'components/common/Input';
 
-const SearchBar = () => {
-    const { searchFilter, setSearchFilter } = useContext(ReportSettingsContext);
-    const [searchText, setSearchText] = React.useState<string>('');
-
+const SearchBar = ({
+    searchTerm,
+    setSearchTerm,
+}: {
+    searchTerm: string;
+    setSearchTerm: (searchTerm: string) => void;
+}) => {
+    const [searchValue, setSearchValue] = useState(searchTerm);
     return (
         <>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="flex-end">
                 <TextField
                     id="engagement-name"
-                    variant="outlined"
-                    label="Search by name"
-                    fullWidth
+                    title="Search by name"
                     name="searchText"
-                    value={searchText}
-                    onChange={(e) => {
-                        setSearchText(e.target.value);
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    onKeyDown={(e) => {
+                        if (e.key !== 'Enter') return;
+                        setSearchTerm(searchValue);
                     }}
                     size="small"
+                    endAdornment={
+                        <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
+                            <Button
+                                sx={{ borderRadius: '0 8px 8px 0px', marginRight: '-1rem' }}
+                                variant="primary"
+                                data-testid="survey/report/search-button"
+                                disableElevation
+                                onClick={() => {
+                                    setSearchTerm(searchValue);
+                                }}
+                            >
+                                <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                            </Button>
+                        </InputAdornment>
+                    }
                 />
-                <PrimaryButtonOld
-                    data-testid="survey/report/search-button"
-                    onClick={() => {
-                        setSearchFilter({
-                            ...searchFilter,
-                            value: searchText,
-                        });
-                    }}
-                >
-                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                </PrimaryButtonOld>
             </Stack>
         </>
     );

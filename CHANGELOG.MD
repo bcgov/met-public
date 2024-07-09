@@ -1,3 +1,11 @@
+## July 9, 2024
+
+- **Task** Add data router features to survey pages [DESENG-642](https://citz-gdx.atlassian.net/browse/DESENG-642)
+  - Remove "ActionContext" files and fetches to survey service
+  - Replace with SurveyLoader on the survey parent route that creates survey data promises
+  - Restructure survey pages to use \<Suspense> / \<Await> for data loading
+  - Add useBlocker() call to the survey authoring and survey submission pages to prevent users from navigating away from the page while in the middle of creating or submitting a survey
+
 ## June 27, 2024
 
 - **Bugfix** Fix tenant landing page [🎟️ DESENG-635](https://citz-gdx.atlassian.net/browse/DESENG-635)

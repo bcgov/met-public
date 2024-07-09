@@ -8,9 +8,13 @@ import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Button, CustomTextField } from 'components/common/Input';
+import { useAsyncValue } from 'react-router-dom';
+import { Engagement } from 'models/engagement';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
+    const loadedEngagement = useAsyncValue() as [Engagement] | undefined;
     const { savedEngagement } = useContext(ActionContext);
+    const engagement = loadedEngagement ? loadedEngagement[0] : savedEngagement;
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -79,7 +83,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 <Grid item xs={12}>
                     <MetDisclaimer>
                         <Editor
-                            editorState={getEditorStateFromRaw(savedEngagement.consent_message)}
+                            editorState={getEditorStateFromRaw(engagement.consent_message)}
                             readOnly={true}
                             toolbarHidden
                         />

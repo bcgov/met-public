@@ -1,29 +1,112 @@
-import React, { useContext, useState } from 'react';
-import { Skeleton, Grid, Stack } from '@mui/material';
-import { ActionContext } from './ActionContext';
+import React, { useEffect, useRef, useState } from 'react';
+import { Grid, Stack } from '@mui/material';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
-import { useAppSelector } from 'hooks';
-import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
-import { SurveyFormProps } from '../types';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { When } from 'react-if';
 import { useAppTranslation } from 'hooks';
+import { submitSurvey } from 'services/submissionService';
+import { useAsyncValue, useBlocker, useNavigate } from 'react-router-dom';
+import { EmailVerification } from 'models/emailVerification';
+import { Survey } from 'models/survey';
+import { Button } from 'components/common/Input';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
-export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
+export const SurveyForm = () => {
     const { t: translate } = useAppTranslation();
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { isSurveyLoading, savedSurvey, handleSubmit, isSubmitting } = useContext(ActionContext);
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
     const [submissionData, setSubmissionData] = useState<unknown>(null);
+
+    const initialSet = useRef(false); // Track if the initial state has been set
     const [isValid, setIsValid] = useState(false);
+    const [isChanged, setIsChanged] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [survey, verification, slug] = useAsyncValue() as [Survey, EmailVerification | null, { slug: string }];
+
+    const token = verification?.verification_token;
 
     const handleChange = (filledForm: FormSubmissionData) => {
+        if (!initialSet.current) {
+            console.log('setting initial state');
+            initialSet.current = true;
+        } else {
+            setIsChanged(true);
+        }
         setSubmissionData(filledForm.data);
         setIsValid(filledForm.isValid);
     };
 
-    if (isSurveyLoading) {
-        return <Skeleton variant="rectangular" height="50em" width="100%" />;
-    }
+    const navigateToEngagement = () => {
+        navigate(`/${slug.slug}/${languagePath}`);
+    };
+
+    const handleSubmit = async (submissionData: unknown) => {
+        setIsSubmitting(true);
+        try {
+            await submitSurvey({
+                survey_id: survey.id,
+                submission_json: submissionData,
+                verification_token: token ?? '',
+            });
+
+            try {
+                window.snowplow('trackSelfDescribingEvent', {
+                    schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
+                    data: { survey_id: survey.id, engagement_id: survey.engagement_id },
+                });
+            } catch (error) {
+                console.log('Survey submit notification snowplow error:', error);
+            }
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: translate('surveySubmit.surveySubmitNotification.success'),
+                }),
+            );
+            navigate(`/${slug.slug}/${languagePath}`, {
+                state: {
+                    open: true,
+                },
+            });
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: translate('surveySubmit.surveySubmitNotification.submissionError'),
+                }),
+            );
+        }
+    };
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) =>
+            isChanged && !isLoggedIn && !isSubmitting && nextLocation.pathname !== currentLocation.pathname,
+    );
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: blocker.proceed,
+                        handleClose: blocker.reset,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        }
+    }, [blocker, dispatch]);
 
     return (
         <Grid
@@ -34,14 +117,15 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
             spacing={1}
             padding={'2em 2em 1em 2em'}
         >
+            {isChanged && JSON.stringify(submissionData)}
             <Grid item xs={12}>
                 <FormSubmit
-                    savedForm={savedSurvey.form_json}
+                    savedForm={survey.form_json}
                     handleFormChange={handleChange}
                     handleFormSubmit={handleSubmit}
                 />
             </Grid>
-            <When condition={savedSurvey.form_json?.display === 'form'}>
+            <When condition={survey.form_json?.display === 'form'}>
                 <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack
                         direction={{ md: 'column-reverse', lg: 'row' }}
@@ -49,16 +133,16 @@ export const SurveyForm = ({ handleClose }: SurveyFormProps) => {
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButtonOld onClick={() => handleClose()}>
+                        <Button variant="secondary" onClick={() => navigateToEngagement()}>
                             {translate('surveySubmit.surveyForm.button.cancel')}
-                        </SecondaryButtonOld>
-                        <PrimaryButtonOld
-                            disabled={!isValid || isLoggedIn || isSubmitting}
+                        </Button>
+                        <Button
+                            variant="primary"
+                            disabled={!isValid || isLoggedIn}
                             onClick={() => handleSubmit(submissionData)}
-                            loading={isSubmitting}
                         >
                             {translate('surveySubmit.surveyForm.button.submit')}
-                        </PrimaryButtonOld>
+                        </Button>
                     </Stack>
                 </Grid>
             </When>

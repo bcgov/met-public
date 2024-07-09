@@ -1,46 +1,17 @@
-import React, { useContext } from 'react';
-import { Box, Grid, IconButton, Skeleton, Stack } from '@mui/material';
+import React from 'react';
 import { Banner } from 'components/banner/Banner';
-import { ActionContext } from './ActionContext';
-import ReplayIcon from '@mui/icons-material/Replay';
-import { MetHeader4 } from 'components/common';
 import EngagementInfoSection from 'components/engagement/view/EngagementInfoSection';
+import { Engagement } from 'models/engagement';
+import { useAsyncValue } from 'react-router-dom';
 
 export const SurveyBanner = () => {
-    const { isEngagementLoading, savedEngagement, loadEngagement } = useContext(ActionContext);
+    const engagement = useAsyncValue() as Engagement | undefined;
 
-    if (isEngagementLoading) {
-        return <Skeleton variant="rectangular" width="100%" height="38em" />;
-    }
-
-    if (!savedEngagement) {
-        return (
-            <Box
-                sx={{
-                    height: '10em',
-                    backgroundColor: 'rgba(242, 242, 242)',
-                }}
-            >
-                <Grid container direction="row" justifyContent="center" alignItems="center" height="100%">
-                    <Stack direction="column" alignItems="center">
-                        <MetHeader4>Could not load banner, press to try again</MetHeader4>
-                        <IconButton
-                            color="inherit"
-                            onClick={() => {
-                                if (loadEngagement) loadEngagement();
-                            }}
-                        >
-                            <ReplayIcon />
-                        </IconButton>
-                    </Stack>
-                </Grid>
-            </Box>
-        );
-    }
+    if (!engagement) return null;
 
     return (
-        <Banner imageUrl={savedEngagement.banner_url} height="480px">
-            <EngagementInfoSection savedEngagement={savedEngagement} />
+        <Banner imageUrl={engagement.banner_url} height="480px">
+            <EngagementInfoSection savedEngagement={engagement} />
         </Banner>
     );
 };

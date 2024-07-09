@@ -1,51 +1,44 @@
-import React, { useContext } from 'react';
-import { Box, Grid, Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { MetHeader1Old, SecondaryButtonOld } from 'components/common';
+import React, { Suspense } from 'react';
+import { Box, Grid, Skeleton, Stack } from '@mui/material';
+import { useNavigate, Await, useRouteLoaderData } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
-import { ActionContext } from './ActionContext';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
+import { Header1 } from 'components/common/Typography';
+import { Button } from 'components/common/Input';
+import { Survey } from 'models/survey';
 
 export const PreviewBanner = () => {
     const navigate = useNavigate();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { savedSurvey } = useContext(ActionContext);
+    const { survey } = useRouteLoaderData('survey') as { survey: Promise<Survey> };
 
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !survey) {
         return null;
     }
 
-    if (!savedSurvey) {
-        return null;
-    }
-
-    return (
-        <Box
-            sx={{
-                backgroundColor: 'secondary.light',
-            }}
-        >
+    const Banner = (survey: Survey) => (
+        <Box sx={{ backgroundColor: 'secondary.light' }}>
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <Grid item xs={12}>
-                    <MetHeader1Old sx={{ mb: 2 }}>Preview Survey</MetHeader1Old>
+                    <Header1 sx={{ mb: 2 }}>Preview Survey</Header1>
                 </Grid>
-                <Grid sx={{ pt: 2 }} item xs={12} container direction="row" justifyContent="flex-end" spacing={1}>
+                <Grid sx={{ pt: 2 }} item xs={12} container direction="row">
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">
                         <PermissionsGate scopes={[USER_ROLES.EDIT_ENGAGEMENT]} errorProps={{ disabled: true }}>
-                            <SecondaryButtonOld
-                                sx={{
-                                    backgroundColor: 'background.paper',
-                                    borderRadius: '4px',
-                                }}
-                                onClick={() => navigate(`/surveys/${savedSurvey.id}/build`)}
-                            >
+                            <Button variant="secondary" onClick={() => navigate(`/surveys/${survey.id}/build`)}>
                                 Edit Survey
-                            </SecondaryButtonOld>
+                            </Button>
                         </PermissionsGate>
                     </Stack>
                 </Grid>
             </Grid>
         </Box>
+    );
+
+    return (
+        <Suspense fallback={<Skeleton variant="rectangular" height="10em" width="100%" />}>
+            <Await resolve={survey}>{Banner}</Await>
+        </Suspense>
     );
 };
