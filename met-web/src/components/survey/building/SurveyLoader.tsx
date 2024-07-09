@@ -8,15 +8,17 @@ import { fetchSurveyReportSettings } from 'services/surveyService/reportSettings
 
 export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
     const { surveyId, token, language, engagementId, slug: urlSlug } = params;
-    if (isNaN(Number(surveyId)) && !engagementId && !urlSlug) throw new Error('Invalid survey ID');
+    if (isNaN(Number(surveyId)) && !isNaN(Number(engagementId)) && !urlSlug) throw new Error('Invalid survey ID');
     const verification = getEmailVerification(token ?? '').catch(() => null);
-    const survey = surveyId
-        ? getSurvey(Number(surveyId))
-        : engagementId
-        ? getEngagement(Number(engagementId)).then((response) => Promise.resolve(response.surveys[0]))
-        : getEngagementIdBySlug(urlSlug ?? '').then((response) =>
-              getEngagement(response.engagement_id).then((response) => Promise.resolve(response.surveys[0])),
-          );
+    const getSurveyPromise = () => {
+        if (!isNaN(Number(surveyId))) return getSurvey(Number(surveyId));
+        if (urlSlug)
+            return getEngagementIdBySlug(urlSlug ?? '').then((response) =>
+                getEngagement(response.engagement_id).then((response) => Promise.resolve(response.surveys[0])),
+            );
+        return getEngagement(Number(engagementId)).then((response) => Promise.resolve(response.surveys[0]));
+    };
+    const survey = getSurveyPromise();
 
     const submission = verification.then(
         (response) => response && getSubmissionByToken(response?.verification_token ?? ''),
