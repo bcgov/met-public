@@ -10,9 +10,9 @@ import {
     useMediaQuery,
     Theme,
 } from '@mui/material';
-import { MetParagraphOld, MetLabel } from 'components/common';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
-import { PrimaryButtonOld, SecondaryButtonOld } from '../../../common';
+import { Button } from 'components/common/Input';
+import { BodyText } from 'components/common/Typography';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
@@ -115,7 +115,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         >
             <Grid item xs={12} lg={2}>
                 <FormControl component="fieldset">
-                    <MetLabel>Status</MetLabel>
+                    <BodyText bold>Status</BodyText>
                     <FormGroup row={isMediumScreen}>
                         <FormControlLabel
                             control={
@@ -130,11 +130,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Draft]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Draft]}</BodyText>}
                         />
                         <FormControlLabel
                             control={
@@ -149,11 +145,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Scheduled]}</BodyText>}
                         />
                         <FormControlLabel
                             control={
@@ -168,11 +160,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Upcoming]}</BodyText>}
                         />
                         <FormControlLabel
                             control={
@@ -187,11 +175,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Open]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Open]}</BodyText>}
                         />
                         <FormControlLabel
                             control={
@@ -206,11 +190,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Closed]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Closed]}</BodyText>}
                         />
                         <FormControlLabel
                             control={
@@ -225,11 +205,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                                     }}
                                 />
                             }
-                            label={
-                                <MetParagraphOld>
-                                    {EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}
-                                </MetParagraphOld>
-                            }
+                            label={<BodyText>{EngagementDisplayStatus[EngagementDisplayStatus.Unpublished]}</BodyText>}
                         />
                     </FormGroup>
                 </FormControl>
@@ -256,7 +232,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                     spacing={2}
                 >
                     <Grid item xs={12} sm={6}>
-                        <MetLabel>Date Created - From</MetLabel>
+                        <BodyText bold>Date Created - From</BodyText>
                         <TextField
                             id="createdFrom-date"
                             data-testid="createdFrom-date"
@@ -272,7 +248,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <MetLabel>Date Created - To</MetLabel>
+                        <BodyText bold>Date Created - To</BodyText>
                         <TextField
                             id="createdTo-date"
                             data-testid="createdTo-date"
@@ -290,7 +266,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                        <MetLabel>Date Published - From</MetLabel>
+                        <BodyText bold>Date Published - From</BodyText>
                         <TextField
                             id="publishedFrom-date"
                             data-testid="publishedFrom-date"
@@ -306,7 +282,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <MetLabel>Date Published - To</MetLabel>
+                        <BodyText bold>Date Published - To</BodyText>
                         <TextField
                             id="createdTo-date"
                             data-testid="createdTo-date"
@@ -330,19 +306,22 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <SecondaryButtonOld
+                        <Button
+                            size="small"
                             data-testid="reset-filter-button"
                             onClick={() => handleResetSearchFilters()}
                         >
                             Reset All Filters
-                        </SecondaryButtonOld>
-                        <PrimaryButtonOld
+                        </Button>
+                        <Button
+                            size="small"
+                            variant="primary"
                             data-testid="search-button"
                             sx={{ marginLeft: 1 }}
                             onClick={() => handleSearch()}
                         >
                             Search
-                        </PrimaryButtonOld>
+                        </Button>
                     </Stack>
                 </Grid>
             </Grid>
