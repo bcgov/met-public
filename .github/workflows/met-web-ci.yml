@@ -8,7 +8,7 @@ on:
       - "met-web/**"
   push:
     branches:
-      - main    
+      - main
 
 defaults:
   run:
@@ -22,7 +22,7 @@ jobs:
     if: github.repository == 'bcgov/met-public'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: "true"
 
   linting:
@@ -34,9 +34,9 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -83,7 +83,7 @@ jobs:
         with:
           flags: metweb
           name: codecov-met-web
-          fail_ci_if_error: true    
+          fail_ci_if_error: true
           verbose: true
           override_branch: ${{env.CODECOV_BRANCH}}
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:

@@ -1,6 +1,5 @@
 name: MET CRON DEV CD
 
-
 on:
   push:
     branches:
@@ -13,7 +12,7 @@ on:
       environment:
         description: "Environment (dev/test/prod)"
         required: true
-        default: "dev"     
+        default: "dev"
 
 defaults:
   run:
@@ -30,7 +29,6 @@ env:
   OPENSHIFT_IMAGE_REGISTRY: ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
-
 jobs:
   met-cron-cd:
     runs-on: ubuntu-20.04
@@ -40,7 +38,7 @@ jobs:
       name: "dev"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Login Openshift
         shell: bash
