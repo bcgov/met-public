@@ -9,11 +9,6 @@ export interface FormBuilderForm {
     components: unknown[];
 }
 
-export interface InvalidTokenModalProps {
-    open: boolean;
-    handleClose: () => void;
-}
-
 export interface SurveyFormProps {
     handleClose: () => void;
 }

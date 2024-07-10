@@ -20,11 +20,12 @@ export const verifyEmailVerification = async (token: string): Promise<EmailVerif
         return Promise.reject('Invalid Token');
     }
     const url = replaceUrl(Endpoints.EmailVerification.UPDATE, 'verification_token', token);
-    const response = await http.PutRequest<EmailVerification>(url);
-    if (response.data) {
+    try {
+        const response = await http.PutRequest<EmailVerification>(url);
         return response.data;
+    } catch (err) {
+        return Promise.reject(err);
     }
-    return Promise.reject('Failed to fetch email verification');
 };
 
 interface CreateEmailVerification {

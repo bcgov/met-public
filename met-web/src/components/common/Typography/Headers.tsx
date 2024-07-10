@@ -35,7 +35,6 @@ export const Header1 = ({
                 marginBottom: '2rem',
                 marginTop: '1.5rem',
                 fontWeight: fontWeight(weight),
-                color: '#292929',
                 ...props.sx,
             }}
         >

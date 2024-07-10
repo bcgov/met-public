@@ -1,14 +1,89 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { Grid, Stack, TextField } from '@mui/material';
-import { ActionContext } from './ActionContext';
-import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { SurveyFormProps } from '../types';
-import { useAppTranslation } from 'hooks';
+import { useAppDispatch, useAppTranslation } from 'hooks';
+import { updateSubmission } from 'services/submissionService';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useAsyncValue, useBlocker, useNavigate } from 'react-router-dom';
+import { Engagement } from 'models/engagement';
+import { SurveySubmission } from 'models/surveySubmission';
+import { EmailVerification } from 'models/emailVerification';
+import { Button } from 'components/common/Input';
+import { BodyText } from 'components/common/Typography';
+import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
     const { t: translate } = useAppTranslation();
-    const { handleSubmit, isSubmitting, submission, setSubmission } = useContext(ActionContext);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [verification, , engagement, initialSubmission] = useAsyncValue() as [
+        EmailVerification,
+        unknown,
+        Engagement,
+        SurveySubmission,
+    ];
+
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
+
+    const [submission, setSubmission] = useState<SurveySubmission>(initialSubmission);
+
+    const isChanged = JSON.stringify(initialSubmission) !== JSON.stringify(submission);
+
+    const blocker = useBlocker(
+        ({ currentLocation, nextLocation }) => isChanged && nextLocation.pathname !== currentLocation.pathname,
+    );
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            dispatch(
+                openNotificationModal({
+                    open: true,
+                    data: {
+                        style: 'warning',
+                        header: 'Unsaved Changes',
+                        subHeader:
+                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
+                        subText: [],
+                        confirmButtonText: 'Leave',
+                        cancelButtonText: 'Stay',
+                        handleConfirm: blocker.proceed,
+                        handleClose: blocker.reset,
+                    },
+                    type: 'confirm',
+                }),
+            );
+        }
+    }, [blocker, dispatch]);
+
+    const token = verification?.verification_token;
+
+    const handleSubmit = async () => {
+        try {
+            if (!token) throw new Error('Token not found');
+            await updateSubmission(token, {
+                comments: submission?.comments ?? [],
+            });
+
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: translate('surveyEdit.surveyEditNotification.success'),
+                }),
+            );
+            navigate(`/engagements/${engagement?.id}/view/${languagePath}`, {
+                state: {
+                    open: true,
+                },
+            });
+        } catch (error) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: translate('surveyEdit.surveyEditNotification.updateSurveyError'),
+                }),
+            );
+        }
+    };
 
     const handleChange = (value: string, commentIndex: number) => {
         if (!submission) {
@@ -16,7 +91,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
         }
 
         const updatedSubmission = cloneDeep(submission);
-        updatedSubmission.comments[commentIndex].text = value;
+        if (updatedSubmission.comments?.[commentIndex]) updatedSubmission.comments[commentIndex].text = value;
         setSubmission(updatedSubmission);
     };
 
@@ -30,10 +105,10 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             mt={2}
             p={'0 2em 2em 2em'}
         >
-            {submission?.comments.map((comment, index) => {
+            {submission.comments?.map((comment, index) => {
                 return (
                     <Grid item xs={12} key={index}>
-                        <MetLabel>{comment.label}</MetLabel>
+                        <BodyText size="small">{comment.label}</BodyText>
                         <TextField
                             defaultValue={comment.text}
                             sx={{ width: '100%' }}
@@ -53,18 +128,17 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButtonOld onClick={() => handleClose()}>
+                    <Button variant="secondary" onClick={() => handleClose()}>
                         {translate('surveyEdit.editForm.button.cancel')}
-                    </SecondaryButtonOld>
-                    <PrimaryButtonOld
-                        disabled={isSubmitting}
+                    </Button>
+                    <Button
+                        variant="primary"
                         onClick={() => {
                             if (submission) handleSubmit();
                         }}
-                        loading={isSubmitting}
                     >
                         {translate('surveyEdit.editForm.button.submit')}
-                    </PrimaryButtonOld>
+                    </Button>
                 </Stack>
             </Grid>
         </Grid>

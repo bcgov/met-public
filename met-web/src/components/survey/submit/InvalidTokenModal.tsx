@@ -1,16 +1,37 @@
 import React from 'react';
 import { Grid, Modal } from '@mui/material';
-import { InvalidTokenModalProps } from '../types';
-import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
-import { useAppTranslation } from 'hooks';
+import { modalStyle } from 'components/common';
+import { useAppSelector, useAppTranslation } from 'hooks';
+import { useAsyncValue, useNavigate } from 'react-router-dom';
+import { EmailVerification } from 'models/emailVerification';
+import { Button } from 'components/common/Input';
+import { BodyText } from 'components/common/Typography';
 
-export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps) => {
+interface PromiseResult<T> {
+    status: 'fulfilled' | 'rejected';
+    value?: T;
+}
+
+export const InvalidTokenModal = () => {
     const { t: translate } = useAppTranslation();
+    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const navigate = useNavigate();
+    const [verificationResult, slugResult] = useAsyncValue() as [
+        PromiseResult<EmailVerification>,
+        PromiseResult<{ slug: string }>,
+    ];
+    const verification = verificationResult?.value;
+    const slug = slugResult.value?.slug ?? '';
+    const languagePath = `/${sessionStorage.getItem('languageId')}`;
+
+    const navigateToEngagement = () => {
+        navigate(`/${slug}/${languagePath}`);
+    };
 
     return (
         <Modal
-            open={open}
-            onClose={() => handleClose()}
+            open={!verification && !isLoggedIn}
+            onClose={navigateToEngagement}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -23,26 +44,26 @@ export const InvalidTokenModal = ({ open, handleClose }: InvalidTokenModalProps)
                 spacing={2}
             >
                 <Grid item xs={12}>
-                    <MetHeader1Old bold sx={{ mb: 2 }}>
+                    <BodyText bold sx={{ mb: 2 }}>
                         {translate('surveySubmit.inValidToken.header')}
-                    </MetHeader1Old>
+                    </BodyText>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBodyOld>{translate('surveySubmit.inValidToken.bodyLine1')}</MetBodyOld>
+                    <BodyText>{translate('surveySubmit.inValidToken.bodyLine1')}</BodyText>
                 </Grid>
                 <Grid item xs={12}>
-                    <MetBodyOld sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}>
-                        {translate('surveySubmit.inValidToken.reasons.0')}
-                        <br />
-                        {translate('surveySubmit.inValidToken.reasons.1')}
-                        <br />
-                        {translate('surveySubmit.inValidToken.reasons.2')}
-                    </MetBodyOld>
+                    <BodyText sx={{ p: '1em', borderLeft: 8, borderColor: '#003366', backgroundColor: '#F2F2F2' }}>
+                        <ul>
+                            <li>{translate('surveySubmit.inValidToken.reasons.0')}</li>
+                            <li>{translate('surveySubmit.inValidToken.reasons.1')}</li>
+                            <li>{translate('surveySubmit.inValidToken.reasons.2')}</li>
+                        </ul>
+                    </BodyText>
                 </Grid>
                 <Grid item container xs={12} justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
-                    <PrimaryButtonOld onClick={handleClose}>
+                    <Button variant="primary" onClick={navigateToEngagement}>
                         {translate('surveySubmit.inValidToken.button')}
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Modal>

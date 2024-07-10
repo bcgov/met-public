@@ -206,6 +206,7 @@ const App = () => {
             [
                 {
                     element: <PublicLayout />,
+                    errorElement: <NotFound />,
                     children: createRoutesFromElements(UnauthenticatedRoutes()),
                 },
             ],

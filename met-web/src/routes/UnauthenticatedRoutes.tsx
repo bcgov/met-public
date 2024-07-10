@@ -13,6 +13,7 @@ import withLanguageParam from './LanguageParam';
 import { Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
 import ViewEngagement, { engagementLoader } from 'components/engagement/new/view';
+import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);
 const EngagementViewWrapper = withLanguageParam(EngagementView);
@@ -27,15 +28,15 @@ const UnauthenticatedRoutes = () => {
     return (
         <>
             <Route index element={<Landing />} />
-            <Route path="/surveys/submit/:surveyId/:token/:language" element={<SurveySubmitWrapper />} />
+            <Route
+                path="/surveys/submit/:surveyId/:token/:language"
+                loader={SurveyLoader}
+                id="survey"
+                element={<SurveySubmitWrapper />}
+            />
             <Route path="/new-look">
                 <Route index element={<Navigate to="/" />} />
-                <Route
-                    path=":slug/:language"
-                    loader={engagementLoader}
-                    errorElement={<NotFound />}
-                    element={<ViewEngagement />}
-                />
+                <Route path=":slug/:language" loader={engagementLoader} element={<ViewEngagement />} />
                 <Route path=":engagementId/view/:language" element={<EngagementViewWrapper />} />
             </Route>
             <Route path="/engagements">
@@ -44,7 +45,7 @@ const UnauthenticatedRoutes = () => {
                     <Route path="view/:language" element={<EngagementViewWrapper />} />
                     <Route path="comments/:dashboardType/:language" element={<EngagementCommentsWrapper />} />
                     <Route path="dashboard/:dashboardType/:language" element={<PublicDashboardWrapper />} />
-                    <Route path="edit/:token/:language" element={<EditSurveyWrapper />} />
+                    <Route path="edit/:token/:language" loader={SurveyLoader} element={<EditSurveyWrapper />} />
                     <Route path=":subscriptionStatus/:scriptionKey/:language" element={<ManageSubscriptionWrapper />} />
                     <Route path="form/:language" element={<RedirectLoginWrapper />} />
                     <Route path="cacform/:widgetId/:language" element={<FormCACWrapper />} />
@@ -53,7 +54,7 @@ const UnauthenticatedRoutes = () => {
             <Route path=":slug">
                 <Route path="dashboard/:dashboardType/:language" element={<PublicDashboardWrapper />} />
                 <Route path="comments/:dashboardType/:language" element={<EngagementCommentsWrapper />} />
-                <Route path="edit/:token/:language" element={<EditSurveyWrapper />} />
+                <Route path="edit/:token/:language" loader={SurveyLoader} element={<EditSurveyWrapper />} />
                 <Route path="cacform/:widgetId/:language" element={<FormCACWrapper />} />
                 <Route path=":language" element={<EngagementViewWrapper />} />
             </Route>

@@ -30,6 +30,7 @@ import TenantDetail from 'components/tenantManagement/Detail';
 import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
+import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -39,9 +40,11 @@ const AuthenticatedRoutes = () => {
             <Route path="/surveys">
                 <Route index element={<SurveyListing />} />
                 <Route path="create" element={<CreateSurvey />} />
-                <Route path=":surveyId/build" element={<SurveyFormBuilder />} />
-                <Route path=":surveyId/submit" element={<SurveySubmit />} />
-                <Route path=":surveyId/report" element={<ReportSettings />} />
+                <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
+                    <Route path="build" element={<SurveyFormBuilder />} />
+                    <Route path="report" element={<ReportSettings />} />
+                    <Route path="submit" element={<SurveySubmit />} />
+                </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
                     <Route path=":surveyId/comments" element={<CommentReviewListing />} />
                     <Route path=":surveyId/comments/all" element={<CommentTextListing />} />

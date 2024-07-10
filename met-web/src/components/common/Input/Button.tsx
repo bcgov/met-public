@@ -11,6 +11,7 @@ import { isDarkColor } from 'utils';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '@mui/system';
+import { RouterLinkRenderer } from '../Navigation/Link';
 
 const buttonStyles = {
     borderRadius: '16px',
@@ -251,6 +252,7 @@ export const Button = ({
 }: ButtonProps & {
     variant?: 'primary' | 'secondary' | 'tertiary';
 }) => {
+    props.LinkComponent = props.LinkComponent || RouterLinkRenderer;
     switch (variant) {
         case 'primary':
             return <PrimaryButton {...props} />;
