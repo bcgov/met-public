@@ -1,3 +1,9 @@
+## July 10, 2024
+
+- **Feature** Add a skeleton page for the new engagement authoring wizard [🎟️ DESENG-654](https://citz-gdx.atlassian.net/browse/DESENG-654)
+  - Users are taken to the new page when pressing the "create engagement" button.
+  - This route will be updated in future tickets to include the full authoring wizard, and will eventually replace the old authoring flow.
+
 ## July 9, 2024
 
 - **Task** Add data router features to survey pages [DESENG-642](https://citz-gdx.atlassian.net/browse/DESENG-642)
@@ -7,6 +13,7 @@
   - Add useBlocker() call to the survey authoring and survey submission pages to prevent users from navigating away from the page while in the middle of creating or submitting a survey
 
 ## June 28, 2024
+
 - **Task** Improve screen reader support for home/engagement search page [DESENG-617](https://citz-gdx.atlassian.net/browse/DESENG-617)
 
 ## June 27, 2024

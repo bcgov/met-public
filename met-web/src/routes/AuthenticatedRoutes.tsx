@@ -31,6 +31,7 @@ import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
+import EngagementCreationWizard from 'components/engagement/new/create';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -40,6 +41,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/surveys">
                 <Route index element={<SurveyListing />} />
                 <Route path="create" element={<CreateSurvey />} />
+
                 <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
                     <Route path="build" element={<SurveyFormBuilder />} />
                     <Route path="report" element={<ReportSettings />} />
@@ -55,8 +57,9 @@ const AuthenticatedRoutes = () => {
             </Route>
             <Route path="/engagements">
                 <Route index element={<EngagementListing />} />
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
-                    <Route path="create/form" element={<EngagementForm />} />
+                <Route path="create" element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
+                    <Route path="form" element={<EngagementForm />} />
+                    <Route path="wizard" element={<EngagementCreationWizard />} />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                     <Route path=":engagementId/form" element={<EngagementForm />} />
