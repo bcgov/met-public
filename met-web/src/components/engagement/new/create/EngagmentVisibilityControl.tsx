@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import { Grid, FormControl, FormControlLabel, IconButton, Radio, RadioGroup } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 import { When } from 'react-if';
-import { TextField } from 'components/common/Input';
+import { TextField, Button } from 'components/common/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/pro-regular-svg-icons';
 import { BodyText } from 'components/common/Typography';
 import { getBaseUrl } from 'helper';
-import { Button } from 'components/common/Input';
 import { colors } from 'styles/Theme';
 import { Link } from 'components/common/Navigation';
 
@@ -32,7 +31,7 @@ const EngagementVisibilityControl = () => {
                 const newSlug = Array.from(value.name)
                     .map((value) => {
                         const stringValue = value as string;
-                        if (stringValue.match(/[a-zA-Z0-9]/)) {
+                        if (/[a-zA-Z0-9]/.exec(stringValue)) {
                             return stringValue;
                         }
                         return '-';

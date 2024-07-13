@@ -23,7 +23,7 @@ interface EngagementCreationData {
     slug: string;
 }
 
-const _TemporaryConstructionNotice = () => (
+const _TemporaryConstructionNotice = (
     <Box
         sx={{
             width: 'calc(100% - 16px)',
@@ -124,7 +124,7 @@ const EngagementCreationWizard = () => {
                                 2. How will you be gathering feedback for this engagement?
                             </BodyText>
                             <BodyText size="small">Select all that apply</BodyText>
-                            <_TemporaryConstructionNotice />
+                            {_TemporaryConstructionNotice}
                         </Detail>
                         <Detail>
                             <BodyText bold size="large">
@@ -144,7 +144,7 @@ const EngagementCreationWizard = () => {
                                 All engagements must be offered in English, but you may also add content in additional
                                 languages if you select multi-language.
                             </BodyText>
-                            <_TemporaryConstructionNotice />
+                            {_TemporaryConstructionNotice}
                         </Detail>
                         <Detail>
                             <BodyText bold size="large">
@@ -164,7 +164,7 @@ const EngagementCreationWizard = () => {
                                 In addition to yourself, please add the team members that you would like to have access
                                 to this engagement. You can only add individuals that already have a MET account.
                             </BodyText>
-                            <_TemporaryConstructionNotice />
+                            {_TemporaryConstructionNotice}
                         </Detail>
                         <Detail invisible sx={{ flexDirection: 'row', gap: '16px' }}>
                             <Button

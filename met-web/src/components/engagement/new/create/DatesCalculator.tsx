@@ -228,7 +228,7 @@ export const DatesCalculator = () => {
                 )}
                 <Grid item>
                     <Button onClick={() => setIsPickingDate(true)} icon={<FontAwesomeIcon icon={faCalendar} />}>
-                        {Boolean(numberOfDays) ? 'Change Dates' : 'Select Dates'}
+                        {numberOfDays ? 'Change Dates' : 'Select Dates'}
                     </Button>
                 </Grid>
             </When>
