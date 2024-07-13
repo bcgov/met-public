@@ -8,9 +8,8 @@ import { Tenant } from 'models/tenant';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
-import { Await, useRouteLoaderData, useBlocker } from 'react-router-dom';
-import { useAppDispatch } from 'hooks';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { Await, useRouteLoaderData } from 'react-router-dom';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export const TenantForm = ({
     initialTenant,
@@ -27,7 +26,6 @@ export const TenantForm = ({
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.hero_image_url ?? '');
-    const dispatch = useAppDispatch();
     const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
     const { handleSubmit, formState, control, reset, setValue, watch } = useForm<Tenant>({
@@ -48,33 +46,6 @@ export const TenantForm = ({
         reValidateMode: 'onChange',
     });
     const { isDirty, isSubmitted, isValid, errors } = formState;
-
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            isDirty && !isSubmitted && nextLocation.pathname !== currentLocation.pathname,
-    );
-
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: blocker.proceed,
-                        handleClose: blocker.reset,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        }
-    }, [blocker, dispatch]);
 
     const hasheroImageUrl = watch('hero_image_url');
 
@@ -146,6 +117,7 @@ export const TenantForm = ({
 
     return (
         <FormGroup onKeyDown={handleKeys}>
+            <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitted} />
             <DetailsContainer
                 sx={{
                     maxWidth: '1000px',

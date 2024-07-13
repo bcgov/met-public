@@ -134,7 +134,7 @@ export const Palette = {
         paper: colors.surface.white,
     },
     hover: {
-        light: colors.surface.blue[90],
+        light: colors.surface.blue[10],
     },
     text: {
         primary: colors.type.regular.primary,
@@ -199,6 +199,27 @@ export const BaseTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: Palette.background.paper,
+                },
+            },
+        },
+        MuiSelect: {
+            defaultProps: {
+                MenuProps: {
+                    sx: {
+                        '& .MuiMenu-list .MuiMenuItem-root:hover, .MuiMenu-list .MuiMenuItem-root.Mui-focusVisible': {
+                            backgroundColor: Palette.hover.light,
+                        },
+                        '& .MuiMenu-list .MuiMenuItem-root.Mui-selected': {
+                            backgroundColor: colors.surface.blue[30],
+                            '&:hover, &.Mui-focusVisible': {
+                                backgroundColor: colors.surface.blue[40],
+                            },
+                        },
+                        '& .MuiMenu-list .MuiMenuItem-root.Mui-disabled': {
+                            backgroundColor: colors.surface.gray[10],
+                            color: colors.type.regular.disabled,
+                        },
+                    },
                 },
             },
         },
@@ -303,7 +324,8 @@ export const DarkPalette = {
         paper: colors.surface.blue[90],
     },
     hover: {
-        light: colors.surface.blue[10],
+        light: colors.surface.blue[70],
+        dark: colors.surface.blue[100],
     },
     text: {
         primary: colors.type.inverted.primary,
@@ -317,12 +339,25 @@ export const DarkPalette = {
 };
 
 export const DarkTheme = createTheme({
+    ...BaseTheme,
     palette: DarkPalette,
     components: {
+        ...BaseTheme.components,
         MuiPaper: {
             styleOverrides: {
                 root: {
                     backgroundColor: DarkPalette.background.paper,
+                },
+            },
+        },
+        MuiSelect: {
+            defaultProps: {
+                MenuProps: {
+                    sx: {
+                        '&:hover': {
+                            backgroundColor: DarkPalette.hover.light,
+                        },
+                    },
                 },
             },
         },

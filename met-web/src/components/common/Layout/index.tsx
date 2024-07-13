@@ -6,10 +6,12 @@ import { Outlet } from 'react-router-dom';
 export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
     return (
         <Box
-            sx={{
-                padding: { xs: '1.5em 1em', md: '1.5em 1.5em', lg: '1.5em 2em' },
-            }}
             {...props}
+            sx={{
+                marginTop: '1em',
+                padding: { xs: '1.5em 1em', md: '1.5em 1.5em', lg: '1.5em 2em' },
+                ...props.sx,
+            }}
         >
             {props.children}
         </Box>

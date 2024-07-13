@@ -43,8 +43,6 @@ export const Link: React.FC<FocusableNavLinkProps> = ({
                     outline: `2px solid ${colors.focus.regular.outer}`,
                     outlineOffset: '2px',
                     boxShadow: '0px 0px 0px 2px white',
-                    padding: '4px',
-                    margin: '-4px',
                 },
                 outline: 'none',
                 outlineOffset: '2px',

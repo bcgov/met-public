@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Grid, Stack, TextField, Modal } from '@mui/material';
+import { Grid, Stack, Modal } from '@mui/material';
 import {
     modalStyle,
     PrimaryButtonOld,
@@ -148,10 +148,10 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                             <Grid data-testid={'desktop-datepicker'} item xs={6}>
                                 <MetLabel>Date</MetLabel>
                                 <DesktopDatePicker
-                                    inputFormat="MM/DD/YYYY"
+                                    // inputFormat="MM/DD/YYYY"
                                     value={scheduledDate}
                                     onChange={handleChange}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    // renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
                             <Grid data-testid={'time-picker'} item xs={6}>
@@ -159,7 +159,7 @@ const ScheduleModal = ({ reschedule, open, updateModal }: ScheduleModalProps) =>
                                 <TimePicker
                                     value={scheduledDate}
                                     onChange={handleChange}
-                                    renderInput={(params) => <TextField {...params} />}
+                                    // renderInput={(params) => <TextField {...params} />}
                                 />
                             </Grid>
                         </LocalizationProvider>

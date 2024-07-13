@@ -14,6 +14,7 @@ export interface PostEngagementRequest {
     rich_content: string;
     banner_filename?: string;
     status_block?: unknown[];
+    is_internal?: boolean;
 }
 
 export interface PutEngagementRequest {

@@ -181,9 +181,10 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
                 '&:focus-visible': {
                     backgroundColor: darkBackgroundColor,
                     outline: `2px solid ${colors.focus.regular.outer}`,
+                    outlineOffset: '0px',
                     boxShadow: elevations.hover,
                     color: darkTextColor,
-                    border: `none`,
+                    border: `1px solid transparent`,
                 },
                 '&:disabled': {
                     backgroundColor: 'white',

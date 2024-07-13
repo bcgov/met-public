@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress, TextField } from '@mui/material';
+import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress } from '@mui/material';
 import { MetPaper, MetLabel, SecondaryButtonOld, MetToggleButton } from 'components/common';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
@@ -184,9 +184,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
-                                        label="mm/dd/yyyy"
-                                        inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => (isExtraSmall ? <></> : <TextField {...params} />)}
+                                        label="From"
                                     />
                                 </Stack>
                             </Grid>
@@ -200,11 +198,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
                                     <MetLabel>{translate('dashboard.submissionTrend.filter.to')}</MetLabel>
                                     <DatePicker
-                                        value={fromDate}
+                                        value={toDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
-                                        label="mm/dd/yyyy"
-                                        inputFormat="MM/DD/YYYY"
-                                        renderInput={(params) => (isExtraSmall ? <></> : <TextField {...params} />)}
+                                        label="To"
                                     />
                                 </Stack>
                             </Grid>

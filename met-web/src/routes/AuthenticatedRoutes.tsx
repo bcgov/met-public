@@ -32,6 +32,7 @@ import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 import EngagementCreationWizard from 'components/engagement/new/create';
+import engagementCreateAction from 'components/engagement/new/create/engagmentCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -55,11 +56,20 @@ const AuthenticatedRoutes = () => {
                     <Route path=":surveyId/submissions/:submissionId/review" element={<CommentReview />} />
                 </Route>
             </Route>
-            <Route path="/engagements">
+            <Route path="/engagements" handle={{ crumb: () => ({ name: 'Engagements' }) }}>
                 <Route index element={<EngagementListing />} />
-                <Route path="create" element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
+                <Route
+                    path="create"
+                    action={engagementCreateAction}
+                    element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}
+                >
+                    <Route index element={<Navigate to="wizard" />} />
                     <Route path="form" element={<EngagementForm />} />
-                    <Route path="wizard" element={<EngagementCreationWizard />} />
+                    <Route
+                        path="wizard"
+                        handle={{ crumb: () => ({ name: 'New Engagement' }) }}
+                        element={<EngagementCreationWizard />}
+                    />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                     <Route path=":engagementId/form" element={<EngagementForm />} />
