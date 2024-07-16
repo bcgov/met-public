@@ -20,7 +20,7 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
             slug: formData.get('slug') as string,
         });
     } catch (e) {
-        console.error(e);
+        console.error('Error updating engagement slug', e);
     }
     return redirect(`/engagements/${engagement.id}/form`);
 };

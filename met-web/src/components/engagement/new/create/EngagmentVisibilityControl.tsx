@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Grid, FormControl, FormControlLabel, IconButton, Radio, RadioGroup } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
-import { When } from 'react-if';
+import { Unless, When } from 'react-if';
 import { TextField, Button } from 'components/common/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/pro-regular-svg-icons';
@@ -39,6 +39,7 @@ const EngagementVisibilityControl = () => {
                     .join('')
                     .toLowerCase();
                 setValue('slug', newSlug);
+                setCurrentSlug(newSlug);
             }
         });
         return () => subscription.unsubscribe();
@@ -66,8 +67,9 @@ const EngagementVisibilityControl = () => {
                     )}
                 />
             </FormControl>
-            <When condition={isInternal !== undefined}>
-                <When condition={!isEditing}>
+            {/* Hide the URL settings until the user has selected a visibility option */}
+            <Unless condition={isInternal == undefined}>
+                <Unless condition={isEditing}>
                     <Grid
                         container
                         spacing={2}
@@ -108,7 +110,7 @@ const EngagementVisibilityControl = () => {
                                 {formSlug || '???'}
                             </BodyText>
                         </Grid>
-                        <When condition={!isConfirmed}>
+                        <Unless condition={isConfirmed}>
                             <Grid item container spacing={2} flexDirection="row" alignItems="center">
                                 <Grid item>
                                     <Button variant="primary" onClick={() => setIsConfirmed(true)}>
@@ -128,15 +130,16 @@ const EngagementVisibilityControl = () => {
                                     </Link>
                                 </Grid>
                             </Grid>
-                        </When>
+                        </Unless>
                     </Grid>
-                </When>
+                </Unless>
 
                 <When condition={isEditing}>
                     <TextField
                         value={currentSlug}
                         onChange={setCurrentSlug}
                         title="Engagement URL"
+                        placeholder="engagement-title"
                         startAdornment={
                             <BodyText bold sx={{ textWrap: 'nowrap', mr: '-8px' }}>
                                 {siteUrl}/
@@ -171,7 +174,7 @@ const EngagementVisibilityControl = () => {
                         </Grid>
                     </Grid>
                 </When>
-            </When>
+            </Unless>
         </>
     );
 };
