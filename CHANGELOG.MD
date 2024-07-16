@@ -1,6 +1,6 @@
 ## July 16, 2024
 
-- **Feature** Add user management to engagement authoring wizard[🎟️ DESENG-656](https://citz-gdx.atlassian.net/browse/DESENG-656)
+- **Feature** Add user management to engagement authoring wizard [🎟️ DESENG-656](https://citz-gdx.atlassian.net/browse/DESENG-656)
   - Added new UI component to handle searching, selecting, and displaying users
   - Minor tweaks to existing wizard functionality
     - Minor backend change: don't throw error when setting an engagement's slug to its current value

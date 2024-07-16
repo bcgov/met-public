@@ -1,5 +1,4 @@
-import { Autocomplete, Avatar, Box, Grid, IconButton, Popper } from '@mui/material';
-import { TextField } from '@mui/material';
+import { Autocomplete, Avatar, Box, Grid, IconButton, PaperProps, Popper, PopperProps, TextField } from '@mui/material';
 import { textInputStyles } from 'components/common/Input/TextInput';
 import { User, USER_COMPOSITE_ROLE } from 'models/user';
 import React, { useEffect, useRef } from 'react';
@@ -84,16 +83,8 @@ export const UserManager = () => {
                 popupIcon={
                     <FontAwesomeIcon icon={faChevronDown} style={{ width: '16px', height: '16px', padding: '4px' }} />
                 }
-                PopperComponent={(props) => (
-                    <Popper
-                        {...props}
-                        keepMounted
-                        placement="bottom-end"
-                        disablePortal
-                        modifiers={[{ name: 'offset', options: { offset: [0, 8] } }]}
-                    />
-                )}
-                PaperComponent={(props) => <MetPaper {...props} children={props.children ?? []} />}
+                PopperComponent={SearchPopper}
+                PaperComponent={SearchPaper}
                 onChange={(_, newValue) => setResultUser(newValue)}
                 options={users ?? []}
                 loading={fetcher.state === 'loading'}
@@ -190,7 +181,7 @@ export const UserManager = () => {
                         </BodyText>
                     </Grid>
                     {selectedUsers.map((user) => (
-                        <Grid item container direction="row" spacing={2} alignItems={'center'}>
+                        <Grid item container key={user.id} direction="row" spacing={2} alignItems={'center'}>
                             <Grid item>
                                 <Avatar
                                     sx={{
@@ -220,3 +211,14 @@ export const UserManager = () => {
         </Box>
     );
 };
+
+const SearchPaper = (props: PaperProps) => <MetPaper {...props} children={props.children ?? []} />;
+const SearchPopper = (props: PopperProps) => (
+    <Popper
+        {...props}
+        keepMounted
+        placement="bottom-end"
+        disablePortal
+        modifiers={[{ name: 'offset', options: { offset: [0, 8] } }]}
+    />
+);

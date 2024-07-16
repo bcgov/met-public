@@ -1,7 +1,5 @@
 import { defer } from 'react-router-dom';
-import { getUserList } from 'services/userService/api';
-
-import { GetUserListParams } from 'services/userService/api';
+import { getUserList, GetUserListParams } from 'services/userService/api';
 
 export const userSearchLoader = ({ request }: { request: Request }) => {
     const url = new URL(request.url);
