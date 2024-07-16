@@ -15,6 +15,37 @@ type TextInputProps = {
     disabled?: boolean;
 } & Omit<InputProps, 'value' | 'onChange' | 'placeholder' | 'disabled'>;
 
+export const textInputStyles = {
+    display: 'flex',
+    height: '48px',
+    padding: '8px 16px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    alignSelf: 'stretch',
+    borderRadius: '8px',
+    caretColor: colors.surface.blue[90],
+    '&:hover': {
+        boxShadow: `0 0 0 2px ${colors.surface.gray[90]} inset`,
+        '&:has(:disabled)': {
+            boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+        },
+    },
+    '&.Mui-focused': {
+        boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
+        '&:has(:disabled)': {
+            // make sure disabled state doesn't override focus state
+            boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+        },
+    },
+    '&:has(:disabled)': {
+        background: colors.surface.gray[10],
+        color: colors.type.regular.secondary,
+        userSelect: 'none',
+        cursor: 'not-allowed',
+    },
+};
+
 export const TextInput: React.FC<TextInputProps> = ({
     id,
     value,
@@ -37,37 +68,10 @@ export const TextInput: React.FC<TextInputProps> = ({
             placeholder={placeholder}
             disabled={disabled}
             sx={{
-                display: 'flex',
-                height: '48px',
-                padding: '8px 16px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                alignSelf: 'stretch',
-                borderRadius: '8px',
+                ...textInputStyles,
                 boxShadow: error
                     ? `0 0 0 2px ${colors.notification.error.shade} inset`
                     : `0 0 0 1px ${colors.surface.gray[80]} inset`,
-                caretColor: colors.surface.blue[90],
-                '&:hover': {
-                    boxShadow: `0 0 0 2px ${colors.surface.gray[90]} inset`,
-                    '&:has(:disabled)': {
-                        boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
-                    },
-                },
-                '&.Mui-focused': {
-                    boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
-                    '&:has(:disabled)': {
-                        // make sure disabled state doesn't override focus state
-                        boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
-                    },
-                },
-                '&:has(:disabled)': {
-                    background: colors.surface.gray[10],
-                    color: colors.type.regular.secondary,
-                    userSelect: 'none',
-                    cursor: 'not-allowed',
-                },
                 ...sx,
             }}
             inputProps={{

@@ -1,6 +1,7 @@
 import { ActionFunction, redirect } from 'react-router-dom';
 import { postEngagement as createEngagement } from 'services/engagementService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
+import { addTeamMemberToEngagement } from 'services/membershipService';
 
 export const engagementCreateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
@@ -22,6 +23,13 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
     } catch (e) {
         console.error(e);
     }
+    formData
+        .get('users')
+        ?.toString()
+        .split(',')
+        .forEach(async (user_id) => {
+            await addTeamMemberToEngagement({ user_id, engagement_id: engagement.id });
+        });
     return redirect(`/engagements/${engagement.id}/form`);
 };
 

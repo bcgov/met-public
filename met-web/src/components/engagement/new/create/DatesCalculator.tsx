@@ -25,7 +25,7 @@ export const DatesCalculator = () => {
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
             if (name === 'start_date') {
-                setDisableDatesBefore(value.start_date.clone().add(1, 'day'));
+                setDisableDatesBefore(value.start_date.clone());
                 if (value.start_date.isAfter(value.end_date) || !value.end_date) {
                     reset({
                         ...value,
