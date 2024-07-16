@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { Grid, Stack, TextField } from '@mui/material';
 import { SurveyFormProps } from '../types';
 import { useAppDispatch, useAppTranslation } from 'hooks';
 import { updateSubmission } from 'services/submissionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAsyncValue, useBlocker, useNavigate } from 'react-router-dom';
+import { useAsyncValue, useNavigate } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { SurveySubmission } from 'models/surveySubmission';
 import { EmailVerification } from 'models/emailVerification';
 import { Button } from 'components/common/Input';
 import { BodyText } from 'components/common/Typography';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
     const { t: translate } = useAppTranslation();
@@ -29,31 +29,6 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
     const [submission, setSubmission] = useState<SurveySubmission>(initialSubmission);
 
     const isChanged = JSON.stringify(initialSubmission) !== JSON.stringify(submission);
-
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) => isChanged && nextLocation.pathname !== currentLocation.pathname,
-    );
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: blocker.proceed,
-                        handleClose: blocker.reset,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        }
-    }, [blocker, dispatch]);
 
     const token = verification?.verification_token;
 
@@ -105,6 +80,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             mt={2}
             p={'0 2em 2em 2em'}
         >
+            <UnsavedWorkConfirmation blockNavigationWhen={isChanged} />
             {submission.comments?.map((comment, index) => {
                 return (
                     <Grid item xs={12} key={index}>

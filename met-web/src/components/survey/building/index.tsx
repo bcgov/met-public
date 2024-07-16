@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react';
-import { useBlocker, useNavigate, useAsyncValue, useRouteLoaderData, Await, useRevalidator } from 'react-router-dom';
+import { useNavigate, useAsyncValue, useRouteLoaderData, Await, useRevalidator } from 'react-router-dom';
 import { Survey } from 'models/survey';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import { Engagement } from 'models/engagement';
@@ -41,6 +41,7 @@ import {
     faCloudXmark,
 } from '@fortawesome/pro-regular-svg-icons';
 import { Else, If, Then } from 'react-if';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 interface SurveyForm {
     id: string;
@@ -187,32 +188,6 @@ export const FormBuilderPage = () => {
         }
     };
 
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) => hasUnsavedWork && nextLocation.pathname !== currentLocation.pathname,
-    );
-
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: blocker.proceed,
-                        handleClose: blocker.reset,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        }
-    }, [blocker, dispatch]);
-
     return (
         <MetPageGridContainer
             container
@@ -223,6 +198,7 @@ export const FormBuilderPage = () => {
             xs={12}
             spacing={4}
         >
+            <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     <If condition={isEditingName}>

@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Grid, Stack } from '@mui/material';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
 import { useAppDispatch, useAppSelector, useAppTranslation } from 'hooks';
 import { When } from 'react-if';
 import { submitSurvey } from 'services/submissionService';
-import { useAsyncValue, useBlocker, useNavigate } from 'react-router-dom';
+import { useAsyncValue, useNavigate } from 'react-router-dom';
 import { EmailVerification } from 'models/emailVerification';
 import { Survey } from 'models/survey';
 import { Button } from 'components/common/Input';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export const SurveyForm = () => {
     const { t: translate } = useAppTranslation();
@@ -23,7 +23,6 @@ export const SurveyForm = () => {
     const initialSet = useRef(false); // Track if the initial state has been set
     const [isValid, setIsValid] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [survey, verification, slug] = useAsyncValue() as [Survey, EmailVerification | null, { slug: string }];
 
@@ -45,7 +44,6 @@ export const SurveyForm = () => {
     };
 
     const handleSubmit = async (submissionData: unknown) => {
-        setIsSubmitting(true);
         try {
             await submitSurvey({
                 survey_id: survey.id,
@@ -81,31 +79,6 @@ export const SurveyForm = () => {
             );
         }
     };
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            isChanged && !isLoggedIn && !isSubmitting && nextLocation.pathname !== currentLocation.pathname,
-    );
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: blocker.proceed,
-                        handleClose: blocker.reset,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        }
-    }, [blocker, dispatch]);
 
     return (
         <Grid
@@ -116,6 +89,7 @@ export const SurveyForm = () => {
             spacing={1}
             padding={'2em 2em 1em 2em'}
         >
+            <UnsavedWorkConfirmation blockNavigationWhen={isChanged && !isLoggedIn} />
             <Grid item xs={12}>
                 <FormSubmit
                     savedForm={survey.form_json}

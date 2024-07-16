@@ -1,3 +1,15 @@
+## July 11, 2024
+
+- **Feature** Add the existing engagement form fields to the engagement authoring wizard [🎟️ DESENG-655](https://citz-gdx.atlassian.net/browse/DESENG-655)
+  - Added fields for the existing data (engagement title, dates, internal/external, public slug)
+  - Create button is now enabled when all required fields are filled
+  - Users are redirected to the old form after creating a new engagement
+    - (clicking "edit" on an existing engagement also brings you to the old form, as usual)
+- Some extracurricular work:
+  - Created a reusable component to warn users when they're about to navigate away from the page while editing content
+  - Adjusted theming throughout the app to reduce the number of places where colors are defined
+  - Updated to the latest version of @mui/x-date-pickers and adjust existing components where necessary
+
 ## July 10, 2024
 
 - **Feature** Add a skeleton page for the new engagement authoring wizard [🎟️ DESENG-654](https://citz-gdx.atlassian.net/browse/DESENG-654)

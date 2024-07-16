@@ -101,13 +101,6 @@ jest.mock('services/notificationService/notificationSlice', () => ({
     openNotification: jest.fn(),
 }));
 
-let capturedNotification: any;
-jest.mock('services/notificationModalService/notificationModalSlice', () => ({
-    openNotificationModal: jest.fn((notification: any) => {
-        capturedNotification = notification;
-    }),
-}));
-
 // Mocking AutoBreadcrumbs component
 jest.mock('components/common/Navigation/Breadcrumb', () => ({
     AutoBreadcrumbs: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -261,13 +254,11 @@ describe('Tenant Creation Page tests', () => {
         jest.spyOn(reactRouterDom, 'useBlocker').mockReturnValue(blocker);
         render(<RouterProvider router={router} />);
         await waitFor(() => {
-            expect(capturedNotification).toBeDefined();
-            expect(capturedNotification.data.header).toBe('Unsaved Changes');
-            expect(capturedNotification.data.handleConfirm).toBeDefined();
+            expect(screen.getByText('Unsaved Changes')).toBeVisible();
+            fireEvent.click(screen.getByText('Leave'));
+            expect(blockerProceed).toHaveBeenCalledTimes(1);
+            expect(navigate).toHaveBeenCalledTimes(1);
         });
-        capturedNotification.data.handleConfirm();
-        expect(blockerProceed).toHaveBeenCalledTimes(1);
-        expect(navigate).toHaveBeenCalledTimes(1);
     });
 
     test('Create instance button calls createTenant action', async () => {

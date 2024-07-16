@@ -1,7 +1,6 @@
 import React from 'react';
 import { ListItemButton, ListItem } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { Palette } from '../../../styles/Theme';
 import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
 
@@ -65,14 +64,7 @@ const UserGuideNav = () => {
 
     return (
         <ListItem key="user-guide">
-            <ListItemButton
-                onClick={openHelpPage}
-                sx={{
-                    '&:hover': {
-                        backgroundColor: Palette.hover.light,
-                    },
-                }}
-            >
+            <ListItemButton onClick={openHelpPage}>
                 <MetHeader4 color="white">User Guide</MetHeader4>
             </ListItemButton>
         </ListItem>
