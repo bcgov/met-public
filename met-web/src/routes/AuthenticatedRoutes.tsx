@@ -1,9 +1,9 @@
 import React from 'react';
 import { Params, defer, Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
-import EngagementForm from '../components/engagement/form';
-import EngagementListing from '../components/engagement/listing';
-import EngagementView from '../components/engagement/view';
+import EngagementForm from '../components/engagement/form'; // TODO: Convert tenant calls to route loader
+import EngagementListing from '../components/engagement/listing'; // TODO: Convert tenant calls to route loader
+import EngagementView from '../components/engagement/view'; // TODO: Convert tenant calls to route loader
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
@@ -17,7 +17,7 @@ import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
 import UserManagementListing from 'components/userManagement/listing';
-import Dashboard from 'components/dashboard';
+import Dashboard from 'components/dashboard'; // TODO: Convert tenant calls to route loader
 import Unauthorized from './Unauthorized';
 import AuthGate from './AuthGate';
 import { USER_ROLES } from 'services/userService/constants';
@@ -30,12 +30,12 @@ import TenantDetail from 'components/tenantManagement/Detail';
 import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
+import { engagementLoader, engagementListLoader } from 'components/engagement/new/view';
 
 const AuthenticatedRoutes = () => {
     return (
         <>
             <Route path="/home" element={<Dashboard />} />
-            <Route path="/engagements" element={<EngagementListing />} />
             <Route path="/surveys">
                 <Route index element={<SurveyListing />} />
                 <Route path="create" element={<CreateSurvey />} />
@@ -50,21 +50,36 @@ const AuthenticatedRoutes = () => {
                     <Route path=":surveyId/submissions/:submissionId/review" element={<CommentReview />} />
                 </Route>
             </Route>
-            <Route path="/engagements">
-                <Route index element={<EngagementListing />} />
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
-                    <Route path="create/form" element={<EngagementForm />} />
-                </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <Route path=":engagementId/form" element={<EngagementForm />} />
-                </Route>
-                <Route path=":engagementId/view" element={<EngagementView />} />
-                <Route path=":slug" element={<EngagementView />} />
-                <Route path=":engagementId/comments/:dashboardType" element={<EngagementComments />} />
-                <Route path=":slug/dashboard/:dashboardType" element={<PublicDashboard />} />
-                <Route path=":engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
-                <Route path=":slug/comments/:dashboardType" element={<EngagementComments />} />
+            <Route element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
+                <Route path="engagements/create/form" id="create-engagement" element={<EngagementForm />} />
             </Route>
+            <Route
+                path="/engagements"
+                id="engagement-listing"
+                errorElement={<NotFound />}
+                loader={engagementListLoader}
+                handle={{
+                    crumb: () => ({ name: 'Engagements' }),
+                }}
+            >
+                <Route index element={<EngagementListing />} />
+                <Route
+                    path=":engagementId"
+                    id="single-engagement"
+                    errorElement={<NotFound />}
+                    loader={engagementLoader}
+                >
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                        <Route path="form" element={<EngagementForm />} />
+                    </Route>
+                    <Route path="view" element={<EngagementView />} />
+                    <Route path=":slug" element={<EngagementView />} />
+                </Route>
+            </Route>
+            <Route path=":engagementId/comments/:dashboardType" element={<EngagementComments />} />
+            <Route path=":slug/dashboard/:dashboardType" element={<PublicDashboard />} />
+            <Route path=":engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
+            <Route path=":slug/comments/:dashboardType" element={<EngagementComments />} />
             <Route path="/metadatamanagement" element={<MetadataManagement />} />
             <Route path="/languages" element={<Language />} />
             <Route

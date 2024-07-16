@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useMemo } from 'react';
-import { postEngagement, getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementMetadata, getMetadataTaxa } from '../../../services/engagementMetadataService';
+import { useRouteLoaderData } from 'react-router-dom';
+import { postEngagement, patchEngagement } from '../../../services/engagementService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EngagementContext, EngagementForm, EngagementFormUpdate, EngagementParams } from './types';
 import { createDefaultEngagement, Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
@@ -13,8 +13,8 @@ import { PatchEngagementRequest } from 'services/engagementService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementContent, createDefaultEngagementContent } from 'models/engagementContent';
-import { getEngagementContent } from 'services/engagementContentService';
 import { TenantState } from 'reduxSlices/tenantSlice';
+import { getEngagementContent } from 'services/engagementContentService';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
@@ -43,12 +43,6 @@ export const ActionContext = createContext<EngagementContext>({
     handleAddBannerImage: (_files: File[]) => {
         /* empty default method  */
     },
-    fetchEngagement: () => {
-        /* empty default method  */
-    },
-    fetchEngagementMetadata: () => {
-        /* empty default method  */
-    },
     loadingAuthorization: true,
     isNewEngagement: true,
     setIsNewEngagement: () => {
@@ -57,9 +51,6 @@ export const ActionContext = createContext<EngagementContext>({
     contentTabs: [createDefaultEngagementContent()],
     setContentTabs: () => {
         return;
-    },
-    fetchEngagementContents: async () => {
-        /* empty default method  */
     },
 });
 
@@ -83,59 +74,68 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
+    const noRouteLoaders = { engagement: 'engagement', content: 'content', metadata: 'metadata', taxa: 'taxa' };
+    const { engagement } = !isCreate
+        ? (useRouteLoaderData('single-engagement') as { engagement: Promise<Engagement> })
+        : noRouteLoaders;
+    const { content } = !isCreate
+        ? (useRouteLoaderData('single-engagement') as { content: Promise<EngagementContent[]> })
+        : noRouteLoaders;
+    const { metadata } = !isCreate
+        ? (useRouteLoaderData('single-engagement') as { metadata: Promise<EngagementMetadata[]> })
+        : noRouteLoaders;
+    const { taxa } = !isCreate
+        ? (useRouteLoaderData('single-engagement') as { taxa: Promise<MetadataTaxon[]> })
+        : noRouteLoaders;
 
-    const handleAddBannerImage = (files: File[]) => {
-        if (files.length > 0) {
-            setBannerImage(files[0]);
-            return;
-        }
-
-        setBannerImage(null);
-        setSavedBannerImageFileName('');
-    };
-
-    const fetchEngagement = async () => {
+    // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
+    useEffect(() => {
         if (!isCreate && isNaN(Number(engagementId))) {
             navigate('/');
         }
-
-        if (isCreate) {
+        if (isCreate && !engagementId) {
             setLoadingSavedEngagement(false);
             return;
         }
-
-        try {
-            const engagement = await getEngagement(Number(engagementId));
-            setEngagement(engagement);
-        } catch (err) {
-            console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement' }));
+        if (engagementId && 'string' !== typeof engagement) {
+            engagement.then((result) => {
+                setEngagement(result);
+                setLoadingSavedEngagement(false);
+            });
         }
+    }, [engagement]);
+
+    // Update states based on the loaded engagement.
+    const setEngagement = (engagement: Engagement) => {
+        setSavedEngagement(engagement);
+        setIsNewEngagement(!savedEngagement.id);
+        setSavedBannerImageFileName(engagement.banner_filename);
+
+        if (bannerImage) setBannerImage(null);
     };
 
-    const fetchEngagementMetadata = async () => {
+    // Load the engagement's content from the shared individual engagement loader and watch the content variable for any changes.
+    useEffect(() => {
+        if (engagementId && 'string' !== typeof content) {
+            if (isCreate) {
+                return;
+            }
+            content.then((result: EngagementContent[]) => {
+                setContentTabs(result);
+            });
+        }
+    }, [content]);
+
+    // Load the engagement's metadata and taxa from the shared individual engagement loader and watch the metadata and taxa variables for any changes.
+    useEffect(() => {
         if (isCreate) {
             return;
         }
-        try {
-            const engagementMetaData = await getEngagementMetadata(Number(engagementId));
-            setEngagementMetadata(engagementMetaData);
-            const taxaData = await getMetadataTaxa();
-            engagementMetadata.forEach((metadata) => {
-                const taxon = taxaData[metadata.taxon_id];
-                if (taxon) {
-                    if (taxon.entries === undefined) {
-                        taxon.entries = [];
-                    }
-                    taxon.entries.push(metadata);
-                }
-            });
-            setTenantTaxa(Object.values(taxaData));
-        } catch (err) {
-            console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Metadata' }));
+        if (!isCreate && 'string' !== typeof metadata && 'string' !== typeof taxa) {
+            metadata.then((result) => setEngagementMetadata(result));
+            taxa.then((result) => setTenantTaxa(Object.values(result)));
         }
-    };
+    }, [metadata, taxa]);
 
     const taxonMetadata = useMemo(() => {
         const taxonMetadataMap = new Map<number, string[]>();
@@ -148,26 +148,14 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         return taxonMetadataMap;
     }, [engagementMetadata]);
 
-    const fetchEngagementContents = async () => {
-        if (isCreate) {
+    const handleAddBannerImage = (files: File[]) => {
+        if (files.length > 0) {
+            setBannerImage(files[0]);
             return;
         }
 
-        try {
-            const engagementContents = await getEngagementContent(Number(engagementId));
-            setContentTabs(engagementContents);
-        } catch (err) {
-            console.log(err);
-            dispatch(openNotification({ severity: 'error', text: 'Error Fetching Engagement Contents' }));
-        }
-    };
-
-    const setEngagement = (engagement: Engagement) => {
-        setSavedEngagement({ ...engagement });
-        setIsNewEngagement(!savedEngagement.id);
-        setSavedBannerImageFileName(engagement.banner_filename);
-
-        if (bannerImage) setBannerImage(null);
+        setBannerImage(null);
+        setSavedBannerImageFileName('');
     };
 
     const verifyUserCanEdit = () => {
@@ -195,30 +183,18 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         setLoadingAuthorization(false);
     };
 
-    const loadData = async () => {
-        await fetchEngagement();
-        await fetchEngagementMetadata();
-        await fetchEngagementContents();
-        setLoadingSavedEngagement(false);
-    };
-
-    useEffect(() => {
-        loadData();
-    }, [engagementId]);
-
     useEffect(() => {
         verifyUserCanEdit();
     }, [savedEngagement, engagementId]);
 
-    const handleCreateEngagementRequest = async (engagement: EngagementForm): Promise<Engagement> => {
+    const handleCreateEngagementRequest = async (engagementForm: EngagementForm): Promise<Engagement> => {
         setSaving(true);
         try {
             const uploadedBannerImageFileName = await handleUploadBannerImage();
             const result = await postEngagement({
-                ...engagement,
+                ...engagementForm,
                 banner_filename: uploadedBannerImageFileName,
             });
-
             setEngagement(result);
             const engagementContents = await getEngagementContent(Number(result.id));
             setContentTabs(engagementContents);
@@ -296,8 +272,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 engagementId,
                 loadingSavedEngagement,
                 handleAddBannerImage,
-                fetchEngagement,
-                fetchEngagementMetadata,
                 setEngagementMetadata,
                 taxonMetadata,
                 loadingAuthorization,
@@ -305,7 +279,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 setIsNewEngagement,
                 contentTabs,
                 setContentTabs,
-                fetchEngagementContents,
             }}
         >
             {children}

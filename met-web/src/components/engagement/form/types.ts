@@ -17,14 +17,11 @@ export interface EngagementContext {
     engagementId: string | undefined;
     loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
-    fetchEngagement: () => void;
-    fetchEngagementMetadata: () => void;
     loadingAuthorization: boolean;
     isNewEngagement: boolean;
     setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
     contentTabs: EngagementContent[];
     setContentTabs: React.Dispatch<React.SetStateAction<EngagementContent[]>>;
-    fetchEngagementContents: () => void;
 }
 
 export interface Widget {

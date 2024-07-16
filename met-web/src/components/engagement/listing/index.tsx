@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { When } from 'react-if';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -11,16 +11,14 @@ import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircle
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Await, useRouteLoaderData, useRevalidator } from 'react-router-dom';
 import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Engagement } from 'models/engagement';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
-import { getEngagements } from 'services/engagementService';
 import Stack from '@mui/material/Stack';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
@@ -29,8 +27,45 @@ import { USER_ROLES } from 'services/userService/constants';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-import { updateURLWithPagination } from 'components/common/Table/utils';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+
+interface SearchFilter {
+    key?: string;
+    value?: string;
+}
+
+// Create a search, filter, and pagination string to pass values to the route.
+const updateURL = (
+    searchFilter: SearchFilter,
+    paginationOptions: PaginationOptions<Engagement>,
+    searchOptions: SearchOptions,
+) => {
+    const statusList: string = searchOptions.status_list.join('_').toString();
+    const url = new URL(window.location.href);
+    searchFilter?.value
+        ? url.searchParams.set('search_text', searchFilter.value)
+        : url.searchParams.delete('search_text');
+    paginationOptions?.page && url.searchParams.set('page', paginationOptions.page.toString());
+    paginationOptions?.size && url.searchParams.set('size', paginationOptions.size.toString());
+    paginationOptions?.sort_key &&
+        url.searchParams.set('sort_key', 'engagement.' + paginationOptions.sort_key.toString());
+    paginationOptions?.sort_order && url.searchParams.set('sort_order', paginationOptions.sort_order);
+    statusList ? url.searchParams.set('engagement_status', statusList) : url.searchParams.delete('engagement_status');
+    searchOptions?.created_from_date
+        ? url.searchParams.set('created_from_date', searchOptions.created_from_date)
+        : url.searchParams.delete('created_from_date');
+    searchOptions?.created_to_date
+        ? url.searchParams.set('created_to_date', searchOptions.created_to_date)
+        : url.searchParams.delete('created_to_date');
+    searchOptions?.published_from_date
+        ? url.searchParams.set('published_from_date', searchOptions.published_from_date)
+        : url.searchParams.delete('published_from_date');
+    searchOptions?.published_to_date
+        ? url.searchParams.set('published_to_date', searchOptions.published_to_date)
+        : url.searchParams.delete('published_to_date');
+    window.history.replaceState({}, '', url.toString());
+};
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
@@ -39,12 +74,12 @@ const EngagementListing = () => {
     const searchParams = new URLSearchParams(location.search);
     const pageFromURL = searchParams.get('page');
     const sizeFromURL = searchParams.get('size');
-    const [searchFilter, setSearchFilter] = useState({
+    const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         key: 'name',
         value: '',
     });
     const [searchText, setSearchText] = useState('');
-    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const { engagements } = useRouteLoaderData('engagement-listing') as { engagements: Engagement[] };
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
         page: Number(pageFromURL) || 1,
         size: Number(sizeFromURL) || 10,
@@ -53,8 +88,7 @@ const EngagementListing = () => {
         sort_order: 'desc',
     });
 
-    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
-    const [tableLoading, setTableLoading] = useState(true);
+    const [pageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
 
@@ -66,7 +100,7 @@ const EngagementListing = () => {
         published_to_date: '',
     });
 
-    const dispatch = useAppDispatch();
+    const revalidator = useRevalidator();
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
@@ -74,43 +108,10 @@ const EngagementListing = () => {
 
     const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
 
-    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
-
     useEffect(() => {
-        updateURLWithPagination(paginationOptions);
-        loadEngagements();
+        updateURL(searchFilter, paginationOptions, searchOptions);
+        revalidator.revalidate();
     }, [paginationOptions, searchFilter, searchOptions]);
-
-    const loadEngagements = async () => {
-        try {
-            setTableLoading(true);
-            const response = await getEngagements({
-                page,
-                size,
-                sort_key: nested_sort_key || sort_key,
-                sort_order,
-                search_text: searchFilter.value,
-                engagement_status: searchOptions.status_list,
-                created_from_date: searchOptions.created_from_date,
-                created_to_date: searchOptions.created_to_date,
-                published_from_date: searchOptions.published_from_date,
-                published_to_date: searchOptions.published_to_date,
-            });
-            setEngagements(response.items);
-            setPageInfo({
-                total: response.total,
-            });
-            setTableLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
-                }),
-            );
-            setTableLoading(false);
-        }
-    };
 
     const submissionHasBeenOpened = (engagement: Engagement) => {
         return [SubmissionStatus.Open, SubmissionStatus.Closed].includes(engagement.submission_status);
@@ -392,6 +393,7 @@ const EngagementListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
+            <AutoBreadcrumbs />
             <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -468,16 +470,24 @@ const EngagementListing = () => {
                 </Collapse>
             </Grid>
             <Grid item xs={12}>
-                <MetTable
-                    headCells={headCells}
-                    rows={engagements}
-                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
-                        setPaginationOptions(paginationOptions)
-                    }
-                    paginationOptions={paginationOptions}
-                    loading={tableLoading}
-                    pageInfo={pageInfo}
-                />
+                <Suspense fallback={<span />}>
+                    <Await resolve={engagements}>
+                        {(responseData) => {
+                            return (
+                                <MetTable
+                                    headCells={headCells}
+                                    rows={responseData.items}
+                                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
+                                        setPaginationOptions(paginationOptions)
+                                    }
+                                    paginationOptions={paginationOptions}
+                                    // loading={tableLoading}
+                                    pageInfo={{ ...pageInfo, total: responseData.total }}
+                                />
+                            );
+                        }}
+                    </Await>
+                </Suspense>
             </Grid>
         </MetPageGridContainer>
     );

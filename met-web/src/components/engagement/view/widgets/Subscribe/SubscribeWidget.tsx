@@ -15,7 +15,7 @@ import { Header2 } from 'components/common/Typography';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(ActionContext);
+    const { engagementWidgets } = useContext(ActionContext);
     const [open, setOpen] = useState(false);
     const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
     const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);
@@ -38,7 +38,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
 
     useEffect(() => {
         loadSubscribeItems();
-    }, [widgets]);
+    }, [engagementWidgets]);
 
     if (isLoadingSubscribeItems) {
         return (

@@ -17,7 +17,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { MetTooltip } from 'components/common';
 
 export const ContentTabs: React.FC = () => {
-    const { fetchEngagementContents, contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
+    const { contentTabs, setContentTabs, savedEngagement } = useContext(ActionContext);
     const { setIsEditMode, isSummaryContentsLoading } = useContext(EngagementContentContext);
     const [tabIndex, setTabIndex] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,7 +52,7 @@ export const ContentTabs: React.FC = () => {
             return;
         }
         await deleteEngagementContent(savedEngagement.id, tab_id);
-        await fetchEngagementContents();
+        // await fetchEngagementContents();
         setTabIndex(0);
 
         // Check if the deleted tab was a custom tab and reset customTabAdded state

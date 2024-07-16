@@ -1,7 +1,7 @@
 import SurveySubmit from 'components/survey/submit';
 import EditSurvey from 'components/survey/edit';
 import React from 'react';
-import EngagementView from '../components/engagement/view';
+import EngagementView from '../components/engagement/view'; // TODO: Convert tenant calls to route loader
 import NotAvailable from './NotAvailable';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
@@ -12,7 +12,7 @@ import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';
 import { Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
-import ViewEngagement, { engagementLoader } from 'components/engagement/new/view';
+import ViewEngagement, { engagementLoader } from 'components/engagement/new/view'; // TODO: Convert tenant calls to route loader
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);
 const EngagementViewWrapper = withLanguageParam(EngagementView);

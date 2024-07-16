@@ -22,3 +22,4 @@ export const ViewEngagement = () => {
 export default ViewEngagement;
 
 export { engagementLoader } from './EngagementLoader';
+export { engagementListLoader } from './EngagementListLoader';

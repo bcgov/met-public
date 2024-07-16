@@ -11,8 +11,8 @@ import { RichTextArea } from 'components/common/Input/RichTextArea';
 
 export const EngagementContentTabs = () => {
     const { content, contentSummary } = useLoaderData() as {
-        content: Promise<EngagementContent[]>;
-        contentSummary: Promise<EngagementSummaryContent[][]>;
+        content: Promise<EngagementContent>;
+        contentSummary: Promise<EngagementSummaryContent[]>;
     };
     const [selectedTab, setSelectedTab] = useState('0');
     const handleChange = (event: SyntheticEvent<Element, Event>, newValue: string) => {
@@ -140,24 +140,22 @@ export const EngagementContentTabs = () => {
                         <Await resolve={panelContents}>
                             {([content, contentSummary]: [
                                 content: EngagementContent[],
-                                contentSummary: EngagementSummaryContent[][],
-                            ]) =>
-                                contentSummary.map((summary, index) => (
-                                    <TabPanel key={summary[0].id} value={index.toString()} sx={{ padding: '24px 0px' }}>
+                                contentSummary: EngagementSummaryContent[],
+                            ]) => {
+                                return contentSummary.map((summary, index) => (
+                                    <TabPanel key={summary.id} value={index.toString()} sx={{ padding: '24px 0px' }}>
                                         <Header2 decorated weight="thin">
                                             {content[index].title}
                                         </Header2>
-                                        {summary.map((content, index) => (
-                                            <RichTextArea
-                                                key={content.id}
-                                                editorState={getEditorStateFromRaw(content.rich_content)}
-                                                readOnly={true}
-                                                toolbarHidden
-                                            />
-                                        ))}
+                                        <RichTextArea
+                                            key={summary.id}
+                                            editorState={getEditorStateFromRaw(summary.rich_content)}
+                                            readOnly={true}
+                                            toolbarHidden
+                                        />
                                     </TabPanel>
-                                ))
-                            }
+                                ));
+                            }}
                         </Await>
                     </Suspense>
                 </TabContext>
