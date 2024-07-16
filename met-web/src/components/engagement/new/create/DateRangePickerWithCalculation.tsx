@@ -14,7 +14,7 @@ import { Link } from 'components/common/Navigation';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
-export const DatesCalculator = () => {
+export const DateRangePickerWithCalculation = () => {
     const engagementForm = useFormContext();
     const { control, reset, watch, getValues, trigger } = engagementForm;
     const [isPickingDate, setIsPickingDate] = React.useState(false);

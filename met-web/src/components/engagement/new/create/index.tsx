@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faConstruction } from '@fortawesome/pro-regular-svg-icons';
 import { Dayjs } from 'dayjs';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { DatesCalculator } from './DatesCalculator';
+import { DateRangePickerWithCalculation } from './DateRangePickerWithCalculation';
 import { colors } from 'styles/Theme';
 import EngagementVisibilityControl from './EngagmentVisibilityControl';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
@@ -139,7 +139,7 @@ const EngagementCreationWizard = () => {
                                 Please select the dates your engagement will be open and closed for receiving feedback.
                                 (These dates are not related to when your engagement will be published.)
                             </BodyText>
-                            <DatesCalculator />
+                            <DateRangePickerWithCalculation />
                         </Detail>
                         <Detail>
                             <BodyText bold size="large">
