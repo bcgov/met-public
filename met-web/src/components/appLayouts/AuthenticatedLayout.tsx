@@ -11,6 +11,8 @@ import { ZIndex } from 'styles/Theme';
 import DocumentTitle from 'DocumentTitle';
 import ScrollToTop from 'components/scrollToTop';
 import FormioListener from 'components/FormioListener';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export const AuthenticatedLayout = ({ drawerWidth = 280 }: { drawerWidth?: number }) => {
     return (
@@ -23,7 +25,14 @@ export const AuthenticatedLayout = ({ drawerWidth = 280 }: { drawerWidth?: numbe
                 <Box component="main" sx={{ flexGrow: 1, marginTop: '80px' }}>
                     <ScrollToTop />
                     <FormioListener />
-                    <Outlet />
+                    <LocalizationProvider
+                        dateFormats={{
+                            keyboardDate: 'YYYY-MM-DD',
+                        }}
+                        dateAdapter={AdapterDayjs}
+                    >
+                        <Outlet />
+                    </LocalizationProvider>
                     <FeedbackModal />
                 </Box>
             </Box>

@@ -24,26 +24,6 @@ code {
   }  
 }
 
-/** Overriding Select Menu Dropdown color **/
-// Background white and on hover/focus, light grey
-.MuiMenuItem-root {
-  background-color: var(--bcds-surface-background-white);
-
-  &.Mui-selected {
-    background-color: var(--bcds-surface-brand-blue-20);
-    &:hover, &.Mui-focusVisible {
-      background-color: var(--bcds-surface-secondary-hover);
-    }
-  }
-
-  &.Mui-disabled, &.Mui-disabled:hover {
-    background-color: var(--bcds-surface-background-white);
-  }
-  // the focusVisible class is added when the item is focused by keyboard
-  &.Mui-focusVisible, &:hover {
-    background-color: var(--bcds-surface-secondary-hover);
-  }
-}
 
 /** Overriding Met table styles **/
 // set background color of tr to white

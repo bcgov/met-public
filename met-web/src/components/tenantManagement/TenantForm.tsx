@@ -8,9 +8,8 @@ import { Tenant } from 'models/tenant';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { saveObject } from 'services/objectStorageService';
 import { UploadGuidelines } from 'components/imageUpload/UploadGuidelines';
-import { Await, useRouteLoaderData, useBlocker } from 'react-router-dom';
-import { useAppDispatch } from 'hooks';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { Await, useRouteLoaderData } from 'react-router-dom';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export const TenantForm = ({
     initialTenant,
@@ -26,8 +25,7 @@ export const TenantForm = ({
     cancelText?: string;
 }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.logo_url ?? '');
-    const dispatch = useAppDispatch();
+    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(initialTenant?.hero_image_url ?? '');
     const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
 
     const { handleSubmit, formState, control, reset, setValue, watch } = useForm<Tenant>({
@@ -39,9 +37,9 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         },
         mode: 'onBlur',
@@ -49,34 +47,7 @@ export const TenantForm = ({
     });
     const { isDirty, isSubmitted, isValid, errors } = formState;
 
-    const blocker = useBlocker(
-        ({ currentLocation, nextLocation }) =>
-            isDirty && !isSubmitted && nextLocation.pathname !== currentLocation.pathname,
-    );
-
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            dispatch(
-                openNotificationModal({
-                    open: true,
-                    data: {
-                        style: 'warning',
-                        header: 'Unsaved Changes',
-                        subHeader:
-                            'If you leave this page, your changes will not be saved. Are you sure you want to leave this page?',
-                        subText: [],
-                        confirmButtonText: 'Leave',
-                        cancelButtonText: 'Stay',
-                        handleConfirm: blocker.proceed,
-                        handleClose: blocker.reset,
-                    },
-                    type: 'confirm',
-                }),
-            );
-        }
-    }, [blocker, dispatch]);
-
-    const hasLogoUrl = watch('logo_url');
+    const hasheroImageUrl = watch('hero_image_url');
 
     useEffect(() => {
         reset({
@@ -87,26 +58,26 @@ export const TenantForm = ({
                 short_name: '',
                 title: '',
                 description: '',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             }),
         });
-        setSavedBannerImageFileName(initialTenant?.logo_url ?? '');
-        setValue('logo_url', initialTenant?.logo_url ?? '');
+        setSavedBannerImageFileName(initialTenant?.hero_image_url ?? '');
+        setValue('hero_image_url', initialTenant?.hero_image_url ?? '');
     }, [initialTenant, reset]);
 
     const handleAddHeroImage = (files: File[]) => {
         if (files.length > 0) {
             setBannerImage(files[0]);
             setSavedBannerImageFileName(files[0].name);
-            setValue('logo_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+            setValue('hero_image_url', files[0].name, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
             return;
         }
 
         setBannerImage(null);
         setSavedBannerImageFileName('');
-        setValue('logo_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+        setValue('hero_image_url', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
     };
 
     const handleUploadHeroImage = async () => {
@@ -124,10 +95,10 @@ export const TenantForm = ({
 
     const onFormSubmit: SubmitHandler<Tenant> = async (data) => {
         try {
-            data.logo_url = await handleUploadHeroImage();
-            if (!data.logo_url) {
-                data.logo_credit = '';
-                data.logo_description = '';
+            data.hero_image_url = await handleUploadHeroImage();
+            if (!data.hero_image_url) {
+                data.hero_image_credit = '';
+                data.hero_image_description = '';
             }
             onSubmit(data);
         } catch (error) {
@@ -146,6 +117,7 @@ export const TenantForm = ({
 
     return (
         <FormGroup onKeyDown={handleKeys}>
+            <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitted} />
             <DetailsContainer
                 sx={{
                     maxWidth: '1000px',
@@ -336,14 +308,14 @@ export const TenantForm = ({
                         />
                     </Box>
                     <Controller
-                        name="logo_credit"
+                        name="hero_image_credit"
                         control={control}
                         rules={{ maxLength: { value: 60, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_credit?.message}
-                                disabled={!hasLogoUrl}
+                                error={errors.hero_image_credit?.message}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter
@@ -357,14 +329,14 @@ export const TenantForm = ({
                         )}
                     />
                     <Controller
-                        name="logo_description"
+                        name="hero_image_description"
                         control={control}
                         rules={{ maxLength: { value: 80, message: 'This input is too long!' } }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                error={errors.logo_description?.message}
-                                disabled={!hasLogoUrl}
+                                error={errors.hero_image_description?.message}
+                                disabled={!hasheroImageUrl}
                                 optional
                                 clearable
                                 counter

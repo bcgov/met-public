@@ -3,6 +3,7 @@ export interface EmailVerification {
     survey_id: number;
     type: EmailVerificationType;
     participant_id: number;
+    verification_token?: string;
 }
 
 export enum EmailVerificationType {

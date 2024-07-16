@@ -1,16 +1,16 @@
-import React, { useContext, useCallback } from 'react';
-import { Link as MuiLink, Skeleton } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link as MuiLink } from '@mui/material';
+import { Link, useAsyncValue, useNavigate } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
-import { ActionContext } from './ActionContext';
 import { When } from 'react-if';
 import { useDispatch } from 'react-redux';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { Engagement } from 'models/engagement';
 
 export const EngagementLink = () => {
     const dispatch = useDispatch();
-    const { savedEngagement, isEngagementLoading } = useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const engagement = useAsyncValue() as Engagement | null;
     const navigate = useNavigate();
 
     const handleNavigate = useCallback(
@@ -45,17 +45,9 @@ export const EngagementLink = () => {
         [dispatch, navigate],
     );
 
-    if (isEngagementLoading) {
-        return <Skeleton variant="rectangular" width="15em" height="1em" />;
-    }
-
-    if (!savedEngagement) {
-        return null;
-    }
-
     return (
         <>
-            <When condition={!savedEngagement.id}>
+            <When condition={!engagement}>
                 <MuiLink
                     component={Link}
                     to={`/surveys`}
@@ -64,7 +56,7 @@ export const EngagementLink = () => {
                         handleNavigate('/surveys');
                     }}
                 >
-                    {`<< Return to survey list`}
+                    &lt;&lt; Return to survey list
                 </MuiLink>
             </When>
         </>

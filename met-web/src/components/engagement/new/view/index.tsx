@@ -7,15 +7,13 @@ import { SuggestedEngagements } from './SuggestedEngagements';
 
 export const ViewEngagement = () => {
     return (
-        <>
-            <main>
-                <EngagementHero />
-                <EngagementDescription />
-                <EngagementContentTabs />
-                <EngagementSurveyBlock />
-                <SuggestedEngagements />
-            </main>
-        </>
+        <main>
+            <EngagementHero />
+            <EngagementDescription />
+            <EngagementContentTabs />
+            <EngagementSurveyBlock />
+            <SuggestedEngagements />
+        </main>
     );
 };
 

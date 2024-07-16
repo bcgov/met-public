@@ -16,9 +16,9 @@ const mockTenant = {
     contact_name: 'Contact One',
     short_name: 'tenantone',
     contact_email: 'contactone@example.com',
-    logo_url: 'https://example.com/logo.png',
-    logo_credit: 'Photographer One',
-    logo_description: 'Logo Description One',
+    hero_image_url: 'https://example.com/logo.png',
+    hero_image_credit: 'Photographer One',
+    hero_image_description: 'Logo Description One',
 };
 
 global['Request'] = jest.fn().mockImplementation(() => ({

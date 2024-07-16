@@ -1,30 +1,33 @@
-import React, { useContext } from 'react';
-import { Grid, Skeleton } from '@mui/material';
+import React, { Suspense } from 'react';
+import { Grid } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { EditForm } from './EditForm';
-import { ActionContext } from './ActionContext';
 import { MetPaper } from 'components/common';
-import { InvalidTokenModal } from './InvalidTokenModal';
-import { useNavigate, useParams } from 'react-router';
+import { InvalidTokenModal } from '../submit/InvalidTokenModal';
 import { When } from 'react-if';
 import EngagementInfoSection from 'components/engagement/view/EngagementInfoSection';
+import { Await, useAsyncValue, useNavigate } from 'react-router-dom';
+import { EmailVerification } from 'models/emailVerification';
+import { Engagement } from 'models/engagement';
+import { SurveySubmission } from 'models/surveySubmission';
 
 const FormWrapped = () => {
-    const { slug } = useParams();
-    const { isTokenValid, isLoading, savedEngagement, submission } = useContext(ActionContext);
     const navigate = useNavigate();
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = slug ? `${slug}/${languagePath}` : `engagements/${savedEngagement?.id}/view/${languagePath}`;
-
-    if (isLoading || !savedEngagement) {
-        return <Skeleton variant="rectangular" width="100%" height="38em" />;
-    }
+    const [verification, slug, engagement, submission] = useAsyncValue() as [
+        EmailVerification | null,
+        { slug: string },
+        Engagement,
+        SurveySubmission,
+    ];
+    const engagementPath = slug ? `${slug}/${languagePath}` : `engagements/${engagement?.id}/view/${languagePath}`;
+    const isTokenValid = !!verification;
 
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
             <Grid item xs={12}>
-                <Banner imageUrl={savedEngagement.banner_url}>
-                    <EngagementInfoSection savedEngagement={savedEngagement} />
+                <Banner imageUrl={engagement.banner_url}>
+                    <EngagementInfoSection savedEngagement={engagement} />
                 </Banner>
             </Grid>
             <Grid
@@ -47,12 +50,12 @@ const FormWrapped = () => {
                         </MetPaper>
                     </Grid>
                 </When>
-                <InvalidTokenModal
-                    open={!isTokenValid}
-                    handleClose={() => {
-                        navigate(engagementPath);
-                    }}
-                />
+
+                <Suspense>
+                    <Await resolve={Promise.allSettled([verification, slug])}>
+                        <InvalidTokenModal />
+                    </Await>
+                </Suspense>
             </Grid>
         </Grid>
     );

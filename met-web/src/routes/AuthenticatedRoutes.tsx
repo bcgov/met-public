@@ -31,6 +31,9 @@ import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { engagementLoader, engagementListLoader } from 'components/engagement/new/view';
+import { SurveyLoader } from 'components/survey/building/SurveyLoader';
+import EngagementCreationWizard from 'components/engagement/new/create';
+import engagementCreateAction from 'components/engagement/new/create/engagmentCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -39,9 +42,12 @@ const AuthenticatedRoutes = () => {
             <Route path="/surveys">
                 <Route index element={<SurveyListing />} />
                 <Route path="create" element={<CreateSurvey />} />
-                <Route path=":surveyId/build" element={<SurveyFormBuilder />} />
-                <Route path=":surveyId/submit" element={<SurveySubmit />} />
-                <Route path=":surveyId/report" element={<ReportSettings />} />
+
+                <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
+                    <Route path="build" element={<SurveyFormBuilder />} />
+                    <Route path="report" element={<ReportSettings />} />
+                    <Route path="submit" element={<SurveySubmit />} />
+                </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
                     <Route path=":surveyId/comments" element={<CommentReviewListing />} />
                     <Route path=":surveyId/comments/all" element={<CommentTextListing />} />
@@ -50,19 +56,22 @@ const AuthenticatedRoutes = () => {
                     <Route path=":surveyId/submissions/:submissionId/review" element={<CommentReview />} />
                 </Route>
             </Route>
-            <Route element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}>
-                <Route path="engagements/create/form" id="create-engagement" element={<EngagementForm />} />
-            </Route>
-            <Route
-                path="/engagements"
-                id="engagement-listing"
+            <Route path="/engagements" id="engagement-listing"
                 errorElement={<NotFound />}
-                loader={engagementListLoader}
-                handle={{
-                    crumb: () => ({ name: 'Engagements' }),
-                }}
-            >
+                loader={engagementListLoader} handle={{ crumb: () => ({ name: 'Engagements' }) }}>
                 <Route index element={<EngagementListing />} />
+                <Route
+                    path="create"
+                    action={engagementCreateAction}
+                    element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}
+                >
+                    <Route index element={<Navigate to="wizard" />} />
+                    <Route path="form" element={<EngagementForm />} />
+                    <Route
+                        path="wizard"
+                        handle={{ crumb: () => ({ name: 'New Engagement' }) }}
+                        element={<EngagementCreationWizard />}
+                    />
                 <Route
                     path=":engagementId"
                     id="single-engagement"

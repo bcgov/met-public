@@ -17,13 +17,16 @@ const fontWeight = (weight?: string | number) => {
 export const Header1 = ({
     children,
     weight,
+    component,
     ...props
 }: {
     children: React.ReactNode;
     weight?: 'bold' | 'regular' | 'thin';
+    component?: React.ElementType;
 } & TypographyProps) => {
     return (
         <Typography
+            component={component || 'h1'}
             variant="h1"
             {...props}
             sx={{
@@ -32,7 +35,6 @@ export const Header1 = ({
                 marginBottom: '2rem',
                 marginTop: '1.5rem',
                 fontWeight: fontWeight(weight),
-                color: '#292929',
                 ...props.sx,
             }}
         >

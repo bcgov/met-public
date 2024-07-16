@@ -1,8 +1,8 @@
 import React from 'react';
-import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider } from '@mui/material';
+import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider, ThemeProvider } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from './SideNavElements';
-import { Palette } from '../../../styles/Theme';
+import { DarkTheme, Palette } from '../../../styles/Theme';
 import { SideNavProps } from './types';
 import { MetHeader4 } from 'components/common';
 import { When, Unless } from 'react-if';
@@ -42,11 +42,6 @@ const DrawerBox = () => {
                         <ListItemButton
                             data-testid={`SideNav/${route.name}-button`}
                             onClick={() => navigate(route.path)}
-                            sx={{
-                                '&:hover': {
-                                    backgroundColor: Palette.hover.light,
-                                },
-                            }}
                         >
                             <When condition={currentBaseRoute === route.base}>
                                 <MetHeader4 color={Palette.secondary.main} bold>
@@ -69,7 +64,7 @@ const DrawerBox = () => {
 const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavProps) => {
     if (!drawerWidth) return <></>;
     return (
-        <>
+        <ThemeProvider theme={DarkTheme}>
             {isMediumScreen ? (
                 <Drawer
                     variant="permanent"
@@ -101,7 +96,7 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 280 }: SideNavPr
                     <DrawerBox />
                 </Drawer>
             )}
-        </>
+        </ThemeProvider>
     );
 };
 

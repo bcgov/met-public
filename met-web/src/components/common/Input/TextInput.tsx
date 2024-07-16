@@ -122,7 +122,7 @@ export type TextFieldProps = {
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
-    onChange: (value: string, name?: string) => void;
+    onChange?: (value: string, name?: string) => void;
 } & Omit<FormFieldProps, 'children' | 'onChange'> &
     Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
 

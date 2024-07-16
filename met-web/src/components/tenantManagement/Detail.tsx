@@ -303,23 +303,23 @@ const TenantDetail = () => {
                                                     alignSelf: 'stretch',
                                                     margin: '16px 0',
                                                     backgroundImage: `url(${
-                                                        resolvedTenant.logo_url || LandingPageBanner
+                                                        resolvedTenant.hero_image_url || LandingPageBanner
                                                     })`,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center',
                                                 }}
                                             />
                                         </Grid>
-                                        {resolvedTenant.logo_credit && (
+                                        {resolvedTenant.hero_image_credit && (
                                             <Grid item xs={12}>
                                                 <BodyText bold>Photo Credit</BodyText>
-                                                <BodyText>{resolvedTenant.logo_credit}</BodyText>
+                                                <BodyText>{resolvedTenant.hero_image_credit}</BodyText>
                                             </Grid>
                                         )}
-                                        {resolvedTenant.logo_description && (
+                                        {resolvedTenant.hero_image_description && (
                                             <Grid item xs={12}>
                                                 <BodyText bold>Description</BodyText>
-                                                <BodyText>{resolvedTenant.logo_description}</BodyText>
+                                                <BodyText>{resolvedTenant.hero_image_description}</BodyText>
                                             </Grid>
                                         )}
                                     </Grid>

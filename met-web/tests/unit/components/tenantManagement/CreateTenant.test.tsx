@@ -17,9 +17,9 @@ const mockTenant = {
     contact_name: 'Contact One',
     short_name: 'tenantone',
     contact_email: 'contactone@example.com',
-    logo_url: 'https://example.com/logo.png',
-    logo_credit: 'Photographer One',
-    logo_description: 'Logo Description One',
+    hero_image_url: 'https://example.com/logo.png',
+    hero_image_credit: 'Photographer One',
+    hero_image_description: 'Logo Description One',
 };
 
 global['Request'] = jest.fn().mockImplementation(() => ({
@@ -99,13 +99,6 @@ jest.mock('services/tenantService', () => ({
 
 jest.mock('services/notificationService/notificationSlice', () => ({
     openNotification: jest.fn(),
-}));
-
-let capturedNotification: any;
-jest.mock('services/notificationModalService/notificationModalSlice', () => ({
-    openNotificationModal: jest.fn((notification: any) => {
-        capturedNotification = notification;
-    }),
 }));
 
 // Mocking AutoBreadcrumbs component
@@ -261,13 +254,11 @@ describe('Tenant Creation Page tests', () => {
         jest.spyOn(reactRouterDom, 'useBlocker').mockReturnValue(blocker);
         render(<RouterProvider router={router} />);
         await waitFor(() => {
-            expect(capturedNotification).toBeDefined();
-            expect(capturedNotification.data.header).toBe('Unsaved Changes');
-            expect(capturedNotification.data.handleConfirm).toBeDefined();
+            expect(screen.getByText('Unsaved Changes')).toBeVisible();
+            fireEvent.click(screen.getByText('Leave'));
+            expect(blockerProceed).toHaveBeenCalledTimes(1);
+            expect(navigate).toHaveBeenCalledTimes(1);
         });
-        capturedNotification.data.handleConfirm();
-        expect(blockerProceed).toHaveBeenCalledTimes(1);
-        expect(navigate).toHaveBeenCalledTimes(1);
     });
 
     test('Create instance button calls createTenant action', async () => {
@@ -287,9 +278,9 @@ describe('Tenant Creation Page tests', () => {
                 contact_name: 'New Full Name',
                 contact_email: 'contactone@example.com',
                 short_name: 'newname',
-                logo_url: '',
-                logo_credit: '',
-                logo_description: '',
+                hero_image_url: '',
+                hero_image_credit: '',
+                hero_image_description: '',
             };
             expect(tenantService.createTenant).toHaveBeenCalledWith(updatedTenant);
         });

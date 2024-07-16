@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { When } from 'react-if';
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
@@ -12,7 +11,7 @@ import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
 import { Link, useNavigate, useLocation, Await, useRouteLoaderData, useRevalidator } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { MetPageGridContainer, MetTooltip } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -28,6 +27,8 @@ import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
+import { Button, TextInput } from 'components/common/Input';
+import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
 interface SearchFilter {
@@ -395,30 +396,44 @@ const EngagementListing = () => {
         >
             <AutoBreadcrumbs />
             <Grid item xs={12}>
-                <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
+                <Stack
+                    direction={{ xs: 'column', md: 'row' }}
+                    spacing={1}
+                    width="100%"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                >
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <TextField
+                        <TextInput
+                            title={''}
                             id="engagement-name"
                             data-testid="engagement/listing/searchField"
-                            variant="outlined"
-                            label="Search by name"
+                            placeholder="Search by name"
                             name="searchText"
                             value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
+                            sx={{ height: '40px', pr: 0 }}
+                            onChange={(value) => setSearchText(value)}
                             size="small"
+                            endAdornment={
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    data-testid="engagement/listing/searchButton"
+                                    onClick={() => handleSearchBarClick(searchText)}
+                                    sx={{ m: 0, borderRadius: '0px 8px 8px 0px' }}
+                                >
+                                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                                </Button>
+                            }
                         />
-                        <PrimaryButtonOld
-                            data-testid="engagement/listing/searchButton"
-                            onClick={() => handleSearchBarClick(searchText)}
-                        >
-                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                        </PrimaryButtonOld>
                         <When condition={!isMediumScreen}>
-                            <SecondaryButtonOld
+                            <Button
+                                size="small"
+                                sx={{ minWidth: '200px' }}
                                 data-testid="engagement/listing/advancedSearch"
                                 name="advancedSearch"
                                 onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-                                startIcon={
+                                icon={
                                     <FontAwesomeIcon
                                         icon={faChevronDown}
                                         style={{
@@ -430,37 +445,40 @@ const EngagementListing = () => {
                                 }
                             >
                                 Advanced Search
-                            </SecondaryButtonOld>
+                            </Button>
                         </When>
                     </Stack>
                     <When condition={isMediumScreen}>
-                        <SecondaryButtonOld
+                        <Button
+                            size="small"
+                            sx={{ width: '100%' }}
                             data-testid="engagement/listing/advancedSearch"
                             name="advancedSearch"
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-                        >
-                            {
+                            icon={
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
                                         fontSize: '12px',
                                         transition: 'transform 0.3s ease',
                                         transform: advancedSearchOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                        padding: '0px 10px',
                                     }}
                                 />
                             }
+                        >
                             Advanced Search
-                        </SecondaryButtonOld>
+                        </Button>
                     </When>
                     <PermissionsGate scopes={[USER_ROLES.CREATE_ENGAGEMENT]} errorProps={{ disabled: true }}>
-                        <PrimaryButtonOld
-                            component={Link}
-                            to="/engagements/create/form"
-                            data-testid="create-engagement-button-landingPage"
+                        <Button
+                            size="small"
+                            variant="primary"
+                            icon={<FontAwesomeIcon icon={faPlus} />}
+                            href="/engagements/create/wizard"
+                            sx={{ width: { xs: '100%', md: 'unset' } }}
                         >
-                            + Create Engagement
-                        </PrimaryButtonOld>
+                            Create Engagement
+                        </Button>
                     </PermissionsGate>
                 </Stack>
             </Grid>

@@ -15,6 +15,7 @@ import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input/Button';
 import { colors } from '../common';
 import { CustomTextField, CommonSelect } from 'components/common/Input';
+import { When } from 'react-if';
 
 const FilterBlock = () => {
     const { searchFilters, setSearchFilters, setPage, clearFilters, page, setDrawerOpened } =
@@ -89,6 +90,8 @@ const FilterBlock = () => {
                 <Grid item xl={6} lg={8} md={10} sm={8} xs={12}>
                     <MetLabel paddingBottom={'3px'}>{translate('landing.filters.search')}</MetLabel>
                     <CustomTextField
+                        aria-label="Search box for filtering engagements. Search by title or select filters to narrow results automatically."
+                        tabIndex={0}
                         fullWidth
                         placeholder={translate('landing.filters.searchPlaceholder')}
                         value={searchText}
@@ -161,6 +164,9 @@ const FilterBlock = () => {
                     <CommonSelect
                         value={selectedValue}
                         id="status-filter"
+                        aria-label={`Filtering by ${selectableStatuses.get(
+                            selectedValue,
+                        )}. Change this filter value by expanding to view all options.`}
                         onChange={(event) => {
                             const selectedValue = Number(event.target.value);
                             if (selectedValue === -1) {
@@ -195,24 +201,26 @@ const FilterBlock = () => {
                             />
                         )),
                     )}
-                    <MuiButton
-                        variant="text"
-                        onClick={clearFilters}
-                        sx={{
-                            fontWeight: 'normal',
-                            height: 48,
-                            fontSize: '15px',
-                            borderRadius: '2em',
-                            p: 2,
-                            '&:focus, &:focus-visible': {
-                                backgroundColor: `${colors.focus.regular.inner}`,
-                                boxShadow: `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}`,
-                            },
-                        }}
-                        endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
-                    >
-                        {translate('landing.filters.clear')}
-                    </MuiButton>
+                    <When condition={searchFilters.status.length || searchFilters.metadata.length}>
+                        <MuiButton
+                            variant="text"
+                            onClick={clearFilters}
+                            sx={{
+                                fontWeight: 'normal',
+                                height: 48,
+                                fontSize: '15px',
+                                borderRadius: '2em',
+                                p: 2,
+                                '&:focus, &:focus-visible': {
+                                    backgroundColor: `${colors.focus.regular.inner}`,
+                                    boxShadow: `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}`,
+                                },
+                            }}
+                            endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
+                        >
+                            {translate('landing.filters.clear')}
+                        </MuiButton>
+                    </When>
                 </Stack>
             </Grid>
         </Grid>

@@ -1,6 +1,5 @@
 import { GenericInputProps as TaxonInputProps } from '../../../../../metadataManagement/types';
-import { DatePicker, TimePicker, DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker, TimePicker, DateTimePicker } from '@mui/x-date-pickers';
 import React, { ReactElement, useState } from 'react';
 import {
     FormControlLabel,
@@ -13,6 +12,7 @@ import {
     AutocompleteRenderGetTagProps,
 } from '@mui/material';
 import { FieldError } from 'react-hook-form';
+import dayjs from 'dayjs';
 
 export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors, trigger }: TaxonInputProps) => {
     const [inputValue, setInputValue] = useState('');
@@ -150,13 +150,7 @@ export const inputFormats = {
     [PickerTypes.DATETIME]: 'yyyy-MM-dd hh:mm a',
 };
 
-export const TaxonPicker = ({
-    taxon,
-    field,
-    setValue,
-    errors,
-    pickerType,
-}: TaxonInputProps & { pickerType: string }) => {
+export const TaxonPicker = ({ taxon, field, errors, pickerType }: TaxonInputProps & { pickerType: string }) => {
     const PickerComponent = {
         [PickerTypes.DATE]: DatePicker,
         [PickerTypes.TIME]: TimePicker,
@@ -164,25 +158,24 @@ export const TaxonPicker = ({
     }[pickerType];
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <PickerComponent
-                {...field}
-                label={taxon.name}
-                inputFormat={inputFormats[pickerType]}
-                onChange={(e) => {
-                    setValue(taxon.id.toString(), e);
-                }}
-                PaperProps={{ sx: { background: '#eee' } }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        fullWidth
-                        variant="outlined"
-                        error={!!errors[taxon.id.toString()]}
-                        helperText={errors[taxon.id.toString()]?.message?.toString() ?? ''}
-                    />
-                )}
-            />
-        </LocalizationProvider>
+        <PickerComponent
+            {...field}
+            value={field.value && dayjs(field.value)}
+            onChange={(date) => {
+                field.onChange(date);
+            }}
+            label={taxon.name}
+            slotProps={{
+                desktopPaper: {
+                    sx: { background: '#eee' },
+                },
+                textField: {
+                    fullWidth: true,
+                    variant: 'outlined',
+                    error: !!errors[taxon.id.toString()],
+                    helperText: errors[taxon.id.toString()]?.message?.toString() ?? '',
+                },
+            }}
+        />
     );
 };

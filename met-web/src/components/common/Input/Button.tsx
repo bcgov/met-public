@@ -11,6 +11,7 @@ import { isDarkColor } from 'utils';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { styled } from '@mui/system';
+import { RouterLinkRenderer } from '../Navigation/Link';
 
 const buttonStyles = {
     borderRadius: '16px',
@@ -180,9 +181,10 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
                 '&:focus-visible': {
                     backgroundColor: darkBackgroundColor,
                     outline: `2px solid ${colors.focus.regular.outer}`,
+                    outlineOffset: '0px',
                     boxShadow: elevations.hover,
                     color: darkTextColor,
-                    border: `none`,
+                    border: `1px solid transparent`,
                 },
                 '&:disabled': {
                     backgroundColor: 'white',
@@ -251,6 +253,7 @@ export const Button = ({
 }: ButtonProps & {
     variant?: 'primary' | 'secondary' | 'tertiary';
 }) => {
+    props.LinkComponent = props.LinkComponent || RouterLinkRenderer;
     switch (variant) {
         case 'primary':
             return <PrimaryButton {...props} />;
@@ -305,7 +308,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx
             onBlur={() => setFocused(false)}
             tabIndex={focused ? 0 : -1} // Set tabIndex to -1 when not focused
         >
-            <StyledIconButton onClick={onClick} title={title}>
+            <StyledIconButton onClick={onClick} title={title} aria-label={title}>
                 <FontAwesomeIcon icon={icon} style={{ fontSize: '20px', color: '#494949' }} />
             </StyledIconButton>
         </Stack>

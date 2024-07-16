@@ -24,9 +24,9 @@ class Tenant(BaseModel):
     )
     description = db.Column(db.String(300))
     title = db.Column(db.String(30), nullable=False)
-    logo_url = db.Column(db.String(300), nullable=True)
-    logo_credit = db.Column(db.String(60), comment='Hero banner image credit', nullable=True)
-    logo_description = db.Column(db.String(80), comment='Hero banner image description', nullable=True)
+    hero_image_url = db.Column(db.String(300), nullable=True)
+    hero_image_credit = db.Column(db.String(60), comment='Hero banner image credit', nullable=True)
+    hero_image_description = db.Column(db.String(80), comment='Hero banner image description', nullable=True)
 
     @staticmethod
     def find_by_short_name(short_name: str) -> Tenant:

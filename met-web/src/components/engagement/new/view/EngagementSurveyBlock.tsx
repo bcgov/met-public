@@ -16,7 +16,6 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'components/engagement/view/EmailModal';
-import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 const gridContainerStyles = {
     width: '100%',
@@ -150,7 +149,6 @@ export const EngagementSurveyBlock = () => {
                                                             ? `/engagements/${engagement.id}/dashboard/public`
                                                             : `/engagements/${engagement.id}/dashboard/public/${language}`
                                                     }
-                                                    LinkComponent={RouterLinkRenderer}
                                                 >
                                                     {translate('buttonText.viewFeedback')}
                                                 </Button>

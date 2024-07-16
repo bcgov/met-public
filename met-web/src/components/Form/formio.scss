@@ -191,7 +191,7 @@ i.fa.fa-question-circle.text-muted {
 .nav-link {
     text-decoration: none;
 }
-.active {
+.active:not(.MuiLink-root, .MuiPaper-root) {
     background-color: #fff;
 }
 .active-tab {

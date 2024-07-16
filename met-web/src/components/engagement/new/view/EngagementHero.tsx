@@ -115,6 +115,7 @@ export const EngagementHero = () => {
                                 </Grid>
                                 <Button
                                     href={engagement.cta_url || '#cta-section'}
+                                    LinkComponent={'a'}
                                     variant="primary"
                                     size="large"
                                     icon={<FontAwesomeIcon fontSize={24} icon={faChevronRight} />}
