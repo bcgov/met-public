@@ -1,3 +1,8 @@
+## July 17, 2024
+
+- **Hotfix** Fix MET-web CI build errors [🎟️ DESENG-665](https://citz-gdx.atlassian.net/browse/DESENG-665)
+  - Update the `npm install` command in CI for the web app to use `--legacy-peer-deps`, resolving a dependency issue that was causing the build to fail
+
 ## July 11, 2024
 
 - **Feature** Add the existing engagement form fields to the engagement authoring wizard [🎟️ DESENG-655](https://citz-gdx.atlassian.net/browse/DESENG-655)

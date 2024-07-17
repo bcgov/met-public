@@ -19,7 +19,7 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY .npmrc ./
 
-RUN npm install --silent
+RUN npm install --legacy-peer-deps --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
 # create and set user permissions to app folder
