@@ -56,9 +56,13 @@ const AuthenticatedRoutes = () => {
                     <Route path=":surveyId/submissions/:submissionId/review" element={<CommentReview />} />
                 </Route>
             </Route>
-            <Route path="/engagements" id="engagement-listing"
+            <Route
+                path="/engagements"
+                id="engagement-listing"
                 errorElement={<NotFound />}
-                loader={engagementListLoader} handle={{ crumb: () => ({ name: 'Engagements' }) }}>
+                loader={engagementListLoader}
+                handle={{ crumb: () => ({ name: 'Engagements' }) }}
+            >
                 <Route index element={<EngagementListing />} />
                 <Route
                     path="create"
@@ -72,6 +76,7 @@ const AuthenticatedRoutes = () => {
                         handle={{ crumb: () => ({ name: 'New Engagement' }) }}
                         element={<EngagementCreationWizard />}
                     />
+                </Route>
                 <Route
                     path=":engagementId"
                     id="single-engagement"
