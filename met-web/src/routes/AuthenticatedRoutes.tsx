@@ -32,8 +32,9 @@ import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 import { WizardLoader } from 'components/engagement/new/create/WizardLoader';
+import { userSearchLoader } from 'components/userManagement/userSearchLoader';
 import EngagementCreationWizard from 'components/engagement/new/create';
-import engagementCreateAction from 'components/engagement/new/create/engagmentCreateAction';
+import engagementCreateAction from 'components/engagement/new/create/engagementCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -140,6 +141,7 @@ const AuthenticatedRoutes = () => {
             <Route path="/reporting" element={<UnderConstruction />} />
             <Route path="/usermanagement">
                 <Route index element={<UserManagementListing />} />
+                <Route path="search" element={<Navigate to="/usermanagement" />} loader={userSearchLoader} />
                 <Route path=":userId/details" element={<UserProfile />} />
             </Route>
             <Route path="/unauthorized" element={<Unauthorized />} />
