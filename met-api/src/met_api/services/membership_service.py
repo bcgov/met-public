@@ -13,7 +13,7 @@ from met_api.services import authorization
 from met_api.services.staff_user_service import StaffUserService
 from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.constants import CompositeRoles
-from met_api.utils.enums import CompositeRoleId, CompositeRoleNames, MembershipStatus
+from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from met_api.utils.roles import Role
 from met_api.utils.token_info import TokenInfo
 
@@ -57,8 +57,8 @@ class MembershipService:
 
         user_id = user_details.get('id')
 
-        roles = user_details.get('main_role')
-        if CompositeRoleNames.ADMIN.value in roles:
+        role = user_details.get('main_role')
+        if role == CompositeRoles.ADMIN.value:
             raise BusinessException(
                 error='This user is already a Administrator.',
                 status_code=HTTPStatus.CONFLICT.value)
@@ -86,8 +86,8 @@ class MembershipService:
         default_role = CompositeRoles.TEAM_MEMBER.name
         default_membership_type = MembershipType.TEAM_MEMBER
 
-        is_reviewer = CompositeRoles.REVIEWER.value in user_details.get('main_role')
-        is_team_member = CompositeRoles.TEAM_MEMBER.value in user_details.get('main_role')
+        is_reviewer = user_details.get('main_role') == CompositeRoles.REVIEWER.value
+        is_team_member = user_details.get('main_role') == CompositeRoles.TEAM_MEMBER.value
 
         if is_reviewer:
             # If the user is assigned to the REVIEWER role, set the role name and membership type accordingly

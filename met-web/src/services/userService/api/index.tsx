@@ -5,7 +5,7 @@ import { User } from 'models/user';
 import { replaceUrl } from 'helper';
 import { Engagement } from 'models/engagement';
 
-interface GetUserListParams {
+export interface GetUserListParams {
     page?: number;
     size?: number;
     sort_key?: string;

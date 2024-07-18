@@ -1,11 +1,20 @@
+## July 17, 2024
+
+- **Hotfix** Fix MET-web CI build errors [🎟️ DESENG-665](https://citz-gdx.atlassian.net/browse/DESENG-665)
+  - Update the `npm install` command in CI for the web app to use `--legacy-peer-deps`, resolving a dependency issue that was causing the build to fail
+
 ## July 16, 2024
 
+- **Feature** Add user management to engagement authoring wizard [🎟️ DESENG-656](https://citz-gdx.atlassian.net/browse/DESENG-656)
+  - Added new UI component to handle searching, selecting, and displaying users
+  - Minor tweaks to existing wizard functionality
+    - Minor backend change: don't throw error when setting an engagement's slug to its current value
 - **Feature** Rerouted engagement components to use useRouteLoaderData instead of making direct calls to services. [🎟️ DESENG-643](https://citz-gdx.atlassian.net/browse/DESENG-643)
   - Authorized engagement listing page is now working, complete with filter, search, and pagination
   - Authorized view engagement is fully working with widgets
   - Authorized edit engagement is fully working (including custom data)
   - Authorized create engagement is mostly working, with the exception of edit updates
-    - As discussed with Nat, users should be redirected to edit page once engagement is created
+    - TODO: Users should be redirected to edit page once engagement is created
   - Unauthorized homepage is working with engagements
 
 ## July 11, 2024
