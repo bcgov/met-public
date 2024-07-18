@@ -23,8 +23,8 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
     } catch (e) {
         console.error('Error updating engagement slug', e);
     }
-    formData.getAll('users').forEach(async (user_id) => {
-        await addTeamMemberToEngagement({ user_id: user_id.toString(), engagement_id: engagement.id });
+    formData.getAll('users').forEach((user_id) => {
+        addTeamMemberToEngagement({ user_id: user_id.toString(), engagement_id: engagement.id });
     });
     return redirect(`/engagements/${engagement.id}/form`);
 };
