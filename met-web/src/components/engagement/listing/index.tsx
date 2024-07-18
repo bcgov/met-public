@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { When } from 'react-if';
 import Grid from '@mui/material/Grid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,7 @@ import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircle
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
-import { Link, useNavigate, useLocation, Await, useRouteLoaderData, useRevalidator } from 'react-router-dom';
+import { Link, useNavigate, useFetcher, createSearchParams, useSearchParams } from 'react-router-dom';
 import { MetPageGridContainer, MetTooltip } from 'components/common';
 import { Engagement } from 'models/engagement';
 import { useAppSelector } from 'hooks';
@@ -30,78 +30,55 @@ import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+import { Page } from 'services/type';
+import { GetEngagementsParams } from 'services/engagementService';
 
 interface SearchFilter {
     key?: string;
     value?: string;
 }
 
-// Create a search, filter, and pagination string to pass values to the route.
-const updateURL = (
-    searchFilter: SearchFilter,
-    paginationOptions: PaginationOptions<Engagement>,
-    searchOptions: SearchOptions,
-) => {
-    const statusList: string = searchOptions.status_list.join('_').toString();
-    const url = new URL(window.location.href);
-    searchFilter?.value
-        ? url.searchParams.set('search_text', searchFilter.value)
-        : url.searchParams.delete('search_text');
-    paginationOptions?.page && url.searchParams.set('page', paginationOptions.page.toString());
-    paginationOptions?.size && url.searchParams.set('size', paginationOptions.size.toString());
-    paginationOptions?.sort_key &&
-        url.searchParams.set('sort_key', 'engagement.' + paginationOptions.sort_key.toString());
-    paginationOptions?.sort_order && url.searchParams.set('sort_order', paginationOptions.sort_order);
-    statusList ? url.searchParams.set('engagement_status', statusList) : url.searchParams.delete('engagement_status');
-    searchOptions?.created_from_date
-        ? url.searchParams.set('created_from_date', searchOptions.created_from_date)
-        : url.searchParams.delete('created_from_date');
-    searchOptions?.created_to_date
-        ? url.searchParams.set('created_to_date', searchOptions.created_to_date)
-        : url.searchParams.delete('created_to_date');
-    searchOptions?.published_from_date
-        ? url.searchParams.set('published_from_date', searchOptions.published_from_date)
-        : url.searchParams.delete('published_from_date');
-    searchOptions?.published_to_date
-        ? url.searchParams.set('published_to_date', searchOptions.published_to_date)
-        : url.searchParams.delete('published_to_date');
-    window.history.replaceState({}, '', url.toString());
-};
-
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const pageFromURL = searchParams.get('page');
-    const sizeFromURL = searchParams.get('size');
+    const [searchParams, setSearchParams] = useSearchParams();
     const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         key: 'name',
         value: '',
     });
-    const [searchText, setSearchText] = useState('');
-    const { engagements } = useRouteLoaderData('engagement-listing') as { engagements: Engagement[] };
+    const fetcher = useFetcher();
+    const fetcherData = fetcher.data as { engagements: Page<Engagement>; params: GetEngagementsParams } | undefined;
+    const engagementPage = fetcherData?.engagements;
+
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
-        page: Number(pageFromURL) || 1,
-        size: Number(sizeFromURL) || 10,
-        sort_key: 'created_date',
-        nested_sort_key: 'engagement.created_date',
-        sort_order: 'desc',
+        page: Number(searchParams.get('page')) || 1,
+        size: Number(searchParams.get('size')) || 10,
+        sort_key: (searchParams.get('sort_key')?.split('.')?.[1] as keyof Engagement) ?? 'created_date',
+        nested_sort_key: searchParams.get('sort_key') || 'engagement.created_date',
+        sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') ?? 'desc',
     });
 
     const [pageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
-    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+    const [searchText, setSearchText] = useState(searchParams.get('search_text') || '');
+    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(
+        // Default to open if any of the advanced search fields are set
+        Boolean(
+            searchParams.get('engagement_status')?.length ||
+                searchParams.get('created_from_date') ||
+                searchParams.get('created_to_date') ||
+                searchParams.get('published_from_date') ||
+                searchParams.get('published_to_date'),
+        ),
+    );
 
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({
-        status_list: [],
-        created_from_date: '',
-        created_to_date: '',
-        published_from_date: '',
-        published_to_date: '',
+        status_list: (searchParams.getAll('engagement_status') || []).map((status) => Number(status)),
+        created_from_date: searchParams.get('created_from_date') || '',
+        created_to_date: searchParams.get('created_to_date') || '',
+        published_from_date: searchParams.get('published_from_date') || '',
+        published_to_date: searchParams.get('published_to_date') || '',
     });
-
-    const revalidator = useRevalidator();
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
@@ -110,8 +87,29 @@ const EngagementListing = () => {
     const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
 
     useEffect(() => {
-        updateURL(searchFilter, paginationOptions, searchOptions);
-        revalidator.revalidate();
+        const searchData = {
+            page: paginationOptions.page.toString(),
+            size: paginationOptions.size.toString(),
+            sort_key: paginationOptions.nested_sort_key?.toString(),
+            sort_order: paginationOptions.sort_order as 'asc' | 'desc' | undefined,
+            search_text: searchFilter.value,
+            engagement_status: searchOptions.status_list.map((status) => status.toString()),
+            created_from_date: searchOptions.created_from_date || undefined,
+            created_to_date: searchOptions.created_to_date || undefined,
+            published_from_date: searchOptions.published_from_date || undefined,
+            published_to_date: searchOptions.published_to_date || undefined,
+        };
+        // Filter out properties with empty strings or undefined values
+        const filteredSearchData = Object.entries(searchData).reduce<Record<string, string | string[]>>(
+            (acc, [key, value]) => {
+                if (value) acc[key] = value;
+                return acc;
+            },
+            {}, // the empty initial accumulator
+        );
+        const searchParams = createSearchParams(filteredSearchData);
+        setSearchParams(searchParams);
+        fetcher.load(`/engagements/?${searchParams}`);
     }, [paginationOptions, searchFilter, searchOptions]);
 
     const submissionHasBeenOpened = (engagement: Engagement) => {
@@ -128,6 +126,7 @@ const EngagementListing = () => {
     const headCells: HeadCell<Engagement>[] = [
         {
             key: 'name',
+            nestedSortKey: 'engagement.name',
             numeric: false,
             disablePadding: true,
             label: 'Engagement Name',
@@ -149,6 +148,7 @@ const EngagementListing = () => {
         },
         {
             key: 'published_date',
+            nestedSortKey: 'engagement.published_date',
             numeric: true,
             disablePadding: true,
             label: 'Date Published',
@@ -162,6 +162,7 @@ const EngagementListing = () => {
         },
         {
             key: 'status_id',
+            nestedSortKey: 'engagement.status_id',
             numeric: true,
             disablePadding: false,
             label: 'Status',
@@ -406,6 +407,7 @@ const EngagementListing = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextInput
                             title={''}
+                            inputProps={{ 'aria-label': 'Search by name' }}
                             id="engagement-name"
                             data-testid="engagement/listing/searchField"
                             placeholder="Search by name"
@@ -413,6 +415,9 @@ const EngagementListing = () => {
                             value={searchText}
                             sx={{ height: '40px', pr: 0 }}
                             onChange={(value) => setSearchText(value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSearchBarClick(searchText);
+                            }}
                             size="small"
                             endAdornment={
                                 <Button
@@ -484,28 +489,18 @@ const EngagementListing = () => {
             </Grid>
             <Grid item xs={12} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
-                    <AdvancedSearch setFilterParams={setSearchOptions} />
+                    <AdvancedSearch filterParams={searchOptions} setFilterParams={setSearchOptions} />
                 </Collapse>
             </Grid>
             <Grid item xs={12}>
-                <Suspense fallback={<span />}>
-                    <Await resolve={engagements}>
-                        {(responseData) => {
-                            return (
-                                <MetTable
-                                    headCells={headCells}
-                                    rows={responseData.items}
-                                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
-                                        setPaginationOptions(paginationOptions)
-                                    }
-                                    paginationOptions={paginationOptions}
-                                    // loading={tableLoading}
-                                    pageInfo={{ ...pageInfo, total: responseData.total }}
-                                />
-                            );
-                        }}
-                    </Await>
-                </Suspense>
+                <MetTable
+                    headCells={headCells}
+                    rows={engagementPage?.items ?? []}
+                    handleChangePagination={setPaginationOptions}
+                    paginationOptions={paginationOptions}
+                    loading={fetcher.state === 'loading'}
+                    pageInfo={{ ...pageInfo, total: engagementPage?.total ?? 0 }}
+                />
             </Grid>
         </MetPageGridContainer>
     );
