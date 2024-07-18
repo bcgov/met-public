@@ -86,7 +86,7 @@ class EngagementSlugService:
         """Update an engagement slug."""
         cls._verify_engagement(engagement_id)
         existing_slug = EngagementSlugModel.find_by_slug(slug)
-        if existing_slug:
+        if existing_slug and existing_slug.engagement_id != engagement_id:
             raise ValueError(f'{slug} is already used by another engagement')
 
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)

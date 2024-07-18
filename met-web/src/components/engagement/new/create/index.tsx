@@ -11,9 +11,11 @@ import { Dayjs } from 'dayjs';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { DateRangePickerWithCalculation } from './DateRangePickerWithCalculation';
 import { colors } from 'styles/Theme';
-import EngagementVisibilityControl from './EngagmentVisibilityControl';
+import EngagementVisibilityControl from './EngagementVisibilityControl';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+import { UserManager } from './UserManager';
+import { User } from 'models/user';
 
 interface EngagementCreationData {
     name: string;
@@ -21,6 +23,7 @@ interface EngagementCreationData {
     end_date: Dayjs;
     is_internal: boolean;
     slug: string;
+    users: User[];
 }
 
 const _TemporaryConstructionNotice = (
@@ -54,6 +57,7 @@ const EngagementCreationWizard = () => {
             end_date: undefined,
             is_internal: undefined,
             slug: '',
+            users: [],
         },
         mode: 'onBlur',
     });
@@ -66,6 +70,7 @@ const EngagementCreationWizard = () => {
                 end_date: data.end_date.format('YYYY-MM-DD'),
                 is_internal: data.is_internal,
                 slug: data.slug,
+                users: data.users.map((u) => u.external_id),
             },
             {
                 method: 'post',
@@ -162,11 +167,11 @@ const EngagementCreationWizard = () => {
                             </BodyText>
                             <BodyText size="small">
                                 In addition to yourself, please add the team members that you would like to have access
-                                to this engagement. You can only add individuals that already have a MET account.
+                                to this engagement. You can only add individuals that have already signed into MET.
                             </BodyText>
-                            {_TemporaryConstructionNotice}
+                            <UserManager />
                         </Detail>
-                        <Detail invisible sx={{ flexDirection: 'row', gap: '16px' }}>
+                        <Detail invisible sx={{ flexDirection: 'row', gap: '16px', padding: { xs: 0, sm: '16px' } }}>
                             <Button
                                 sx={{ mr: '16px' }}
                                 disabled={!isValid || !isDirty || isSubmitting}

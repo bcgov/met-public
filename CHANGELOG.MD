@@ -3,6 +3,13 @@
 - **Hotfix** Fix MET-web CI build errors [🎟️ DESENG-665](https://citz-gdx.atlassian.net/browse/DESENG-665)
   - Update the `npm install` command in CI for the web app to use `--legacy-peer-deps`, resolving a dependency issue that was causing the build to fail
 
+## July 16, 2024
+
+- **Feature** Add user management to engagement authoring wizard [🎟️ DESENG-656](https://citz-gdx.atlassian.net/browse/DESENG-656)
+  - Added new UI component to handle searching, selecting, and displaying users
+  - Minor tweaks to existing wizard functionality
+    - Minor backend change: don't throw error when setting an engagement's slug to its current value
+
 ## July 11, 2024
 
 - **Feature** Add the existing engagement form fields to the engagement authoring wizard [🎟️ DESENG-655](https://citz-gdx.atlassian.net/browse/DESENG-655)

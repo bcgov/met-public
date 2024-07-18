@@ -43,7 +43,7 @@ const EngagementVisibilityControl = () => {
             }
         });
         return () => subscription.unsubscribe();
-    }, [watch]);
+    }, [watch, hasBeenEdited]);
     return (
         <>
             <FormControl>
@@ -113,7 +113,14 @@ const EngagementVisibilityControl = () => {
                         <Unless condition={isConfirmed}>
                             <Grid item container spacing={2} flexDirection="row" alignItems="center">
                                 <Grid item>
-                                    <Button variant="primary" onClick={() => setIsConfirmed(true)}>
+                                    <Button
+                                        variant="primary"
+                                        onClick={() => {
+                                            setIsConfirmed(true);
+                                            setHasBeenEdited(true);
+                                            setValue('slug', currentSlug);
+                                        }}
+                                    >
                                         Confirm
                                     </Button>
                                 </Grid>
