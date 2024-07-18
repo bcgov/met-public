@@ -74,10 +74,13 @@ export const UserManager = () => {
 
     return (
         <Box width="100%">
-            <BodyText bold size="small">
-                Add Team Members
-            </BodyText>
+            <label htmlFor="team-members">
+                <BodyText bold size="small">
+                    Add Team Members
+                </BodyText>
+            </label>
             <Autocomplete
+                id="team-members"
                 openOnFocus
                 value={resultUser}
                 popupIcon={
