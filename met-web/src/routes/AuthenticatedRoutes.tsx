@@ -33,7 +33,7 @@ import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
 import EngagementCreationWizard from 'components/engagement/new/create';
-import engagementCreateAction from 'components/engagement/new/create/engagmentCreateAction';
+import engagementCreateAction from 'components/engagement/new/create/engagementCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (

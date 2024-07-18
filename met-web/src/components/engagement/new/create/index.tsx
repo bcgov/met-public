@@ -11,7 +11,7 @@ import { Dayjs } from 'dayjs';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { DateRangePickerWithCalculation } from './DateRangePickerWithCalculation';
 import { colors } from 'styles/Theme';
-import EngagementVisibilityControl from './EngagmentVisibilityControl';
+import EngagementVisibilityControl from './EngagementVisibilityControl';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { UserManager } from './UserManager';
