@@ -61,7 +61,16 @@ const EngagementListing = () => {
     const [pageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
     const [searchText, setSearchText] = useState(searchParams.get('search_text') || '');
-    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(
+        // Default to open if any of the advanced search fields are set
+        Boolean(
+            searchParams.get('engagement_status')?.length ||
+                searchParams.get('created_from_date') ||
+                searchParams.get('created_to_date') ||
+                searchParams.get('published_from_date') ||
+                searchParams.get('published_to_date'),
+        ),
+    );
 
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({
         status_list: (searchParams.getAll('engagement_status') || []).map((status) => Number(status)),
