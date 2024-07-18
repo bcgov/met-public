@@ -48,7 +48,7 @@ const EngagementListing = () => {
     });
     const fetcher = useFetcher();
     const fetcherData = fetcher.data as { engagements: Page<Engagement>; params: GetEngagementsParams } | undefined;
-    const engagementPage = fetcherData ? fetcherData.engagements : undefined;
+    const engagementPage = fetcherData?.engagements;
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
         page: Number(searchParams.get('page')) || 1,
@@ -87,31 +87,29 @@ const EngagementListing = () => {
     const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
 
     useEffect(() => {
-        {
-            const searchData = {
-                page: paginationOptions.page.toString(),
-                size: paginationOptions.size.toString(),
-                sort_key: paginationOptions.nested_sort_key?.toString(),
-                sort_order: paginationOptions.sort_order as 'asc' | 'desc' | undefined,
-                search_text: searchFilter.value,
-                engagement_status: searchOptions.status_list.map((status) => status.toString()),
-                created_from_date: searchOptions.created_from_date || undefined,
-                created_to_date: searchOptions.created_to_date || undefined,
-                published_from_date: searchOptions.published_from_date || undefined,
-                published_to_date: searchOptions.published_to_date || undefined,
-            };
-            // Filter out properties with empty strings or undefined values
-            const filteredSearchData = Object.entries(searchData).reduce<Record<string, string | string[]>>(
-                (acc, [key, value]) => {
-                    if (value) acc[key] = value;
-                    return acc;
-                },
-                {}, // the empty initial accumulator
-            );
-            const searchParams = createSearchParams(filteredSearchData);
-            setSearchParams(searchParams);
-            fetcher.load(`/engagements/?${searchParams}`);
-        }
+        const searchData = {
+            page: paginationOptions.page.toString(),
+            size: paginationOptions.size.toString(),
+            sort_key: paginationOptions.nested_sort_key?.toString(),
+            sort_order: paginationOptions.sort_order as 'asc' | 'desc' | undefined,
+            search_text: searchFilter.value,
+            engagement_status: searchOptions.status_list.map((status) => status.toString()),
+            created_from_date: searchOptions.created_from_date || undefined,
+            created_to_date: searchOptions.created_to_date || undefined,
+            published_from_date: searchOptions.published_from_date || undefined,
+            published_to_date: searchOptions.published_to_date || undefined,
+        };
+        // Filter out properties with empty strings or undefined values
+        const filteredSearchData = Object.entries(searchData).reduce<Record<string, string | string[]>>(
+            (acc, [key, value]) => {
+                if (value) acc[key] = value;
+                return acc;
+            },
+            {}, // the empty initial accumulator
+        );
+        const searchParams = createSearchParams(filteredSearchData);
+        setSearchParams(searchParams);
+        fetcher.load(`/engagements/?${searchParams}`);
     }, [paginationOptions, searchFilter, searchOptions]);
 
     const submissionHasBeenOpened = (engagement: Engagement) => {
