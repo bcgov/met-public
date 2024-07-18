@@ -31,6 +31,7 @@ import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
+import { WizardLoader } from 'components/engagement/new/create/WizardLoader';
 import EngagementCreationWizard from 'components/engagement/new/create';
 import engagementCreateAction from 'components/engagement/new/create/engagmentCreateAction';
 
@@ -65,11 +66,13 @@ const AuthenticatedRoutes = () => {
                 >
                     <Route index element={<Navigate to="wizard" />} />
                     <Route path="form" element={<EngagementForm />} />
-                    <Route
-                        path="wizard"
-                        handle={{ crumb: () => ({ name: 'New Engagement' }) }}
-                        element={<EngagementCreationWizard />}
-                    />
+                    <Route loader={WizardLoader} id="wizard-loader">
+                        <Route
+                            path="wizard"
+                            handle={{ crumb: () => ({ name: 'New Engagement' }) }}
+                            element={<EngagementCreationWizard />}
+                        />
+                    </Route>
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                     <Route path=":engagementId/form" element={<EngagementForm />} />

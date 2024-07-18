@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { DetailsContainer, Detail, ResponsiveContainer } from 'components/common/Layout';
 import { BodyText, Header1, Header2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
 import ConfirmModal from 'components/common/Modals/ConfirmModal';
-import { Form, useNavigate, useFetcher } from 'react-router-dom';
-import { Box, Modal } from '@mui/material';
+import { Form, useNavigate, useFetcher, useRouteLoaderData, Await } from 'react-router-dom';
+import { Box, Modal, Checkbox, Grid } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faConstruction } from '@fortawesome/pro-regular-svg-icons';
 import { Dayjs } from 'dayjs';
@@ -14,6 +14,8 @@ import { colors } from 'styles/Theme';
 import EngagementVisibilityControl from './EngagmentVisibilityControl';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+import { Language } from 'models/language';
+import { MidScreenLoader } from 'components/common';
 
 interface EngagementCreationData {
     name: string;
@@ -46,6 +48,7 @@ const EngagementCreationWizard = () => {
     const [open, setOpen] = React.useState(true);
     const navigate = useNavigate();
     const fetcher = useFetcher();
+    const { languages } = useRouteLoaderData('wizard-loader') as { languages: Language[] };
 
     const engagementCreationForm = useForm<EngagementCreationData>({
         defaultValues: {
@@ -79,6 +82,32 @@ const EngagementCreationWizard = () => {
         handleSubmit,
         formState: { errors, isDirty, isValid, isSubmitting },
     } = engagementCreationForm;
+
+    const handleLanguageColumn = (languages: Language[], minIndex: number, maxIndex: number) => {
+        return languages.map((language: Language, index: number) => {
+            return (
+                minIndex <= index &&
+                maxIndex >= index && (
+                    <>
+                        <span>
+                            <Checkbox
+                                defaultChecked={'English' === language.name && true}
+                                disabled={'English' === language.name && true}
+                                value={language.code}
+                                sx={{ pl: 0 }}
+                            />
+                            {'English' === language.name
+                                ? language.name + ' (Required)'
+                                : true === language.right_to_left
+                                ? language.name.split('').reverse().join('')
+                                : language.name}
+                        </span>
+                        <br />
+                    </>
+                )
+            );
+        });
+    };
 
     return (
         <ResponsiveContainer>
@@ -144,7 +173,31 @@ const EngagementCreationWizard = () => {
                                 All engagements must be offered in English, but you may also add content in additional
                                 languages if you select multi-language.
                             </BodyText>
-                            {_TemporaryConstructionNotice}
+                            <Suspense fallback={<MidScreenLoader />}>
+                                <Grid container id="all-language-columns" direction="row">
+                                    <Grid id="language-column1" columns={12} lg={4} xs={12} direction="column">
+                                        <Await resolve={languages}>
+                                            {(languageResponse) => {
+                                                return handleLanguageColumn(languageResponse, 0, 4);
+                                            }}
+                                        </Await>
+                                    </Grid>
+                                    <Grid id="language-column2" columns={12} lg={4} xs={12} direction="column">
+                                        <Await resolve={languages}>
+                                            {(languageResponse) => {
+                                                return handleLanguageColumn(languageResponse, 5, 9);
+                                            }}
+                                        </Await>
+                                    </Grid>
+                                    <Grid id="language-column3" columns={12} lg={4} xs={12} direction="column">
+                                        <Await resolve={languages}>
+                                            {(languageResponse) => {
+                                                return handleLanguageColumn(languageResponse, 10, 14);
+                                            }}
+                                        </Await>
+                                    </Grid>
+                                </Grid>
+                            </Suspense>
                         </Detail>
                         <Detail>
                             <BodyText bold size="large">

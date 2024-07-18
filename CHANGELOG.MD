@@ -1,3 +1,9 @@
+## July 17, 2024
+
+- **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)
+  - Created loader for engagement creation wizard
+  - Created language selector field in engagement creation wizard
+
 ## July 11, 2024
 
 - **Feature** Add the existing engagement form fields to the engagement authoring wizard [🎟️ DESENG-655](https://citz-gdx.atlassian.net/browse/DESENG-655)
