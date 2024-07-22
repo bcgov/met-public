@@ -102,11 +102,14 @@ const EngagementCreationWizard = () => {
             }
         });
         // If column 1 has more values than column 2, they should be equal in length.
-        if (column1.length > column2.length) {
+        // Not applicable to lower numbers.
+        if (column1.length > column2.length && 7 < languages.length) {
             column2.push(column3[0]);
             column3.splice(0, 1);
         }
-        return (
+        return 0 === languages.length ? (
+            <span>No languages found. Please add at least one language to the current tenant.</span>
+        ) : (
             <Grid container id="all-language-columns" direction="row">
                 <Grid id="language-column1" columns={12} lg={4} xs={12} direction="column">
                     {handleLanguageEntries(column1)}
@@ -123,6 +126,9 @@ const EngagementCreationWizard = () => {
 
     const handleLanguageEntries = (languages: Language[]) => {
         return languages.map((language) => {
+            if (!language) {
+                return;
+            }
             return (
                 <>
                     <span>
