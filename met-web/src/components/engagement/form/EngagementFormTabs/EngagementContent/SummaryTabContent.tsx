@@ -28,7 +28,7 @@ const SummaryTabContent = () => {
     useEffect(() => {
         setInitialRichContent(richContent || savedEngagement.rich_content);
         setEditorDisabled(false);
-    }, []);
+    }, [savedEngagement, richContent]);
 
     return (
         <Grid
