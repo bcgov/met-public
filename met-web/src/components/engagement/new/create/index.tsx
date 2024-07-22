@@ -123,8 +123,9 @@ const EngagementCreationWizard = () => {
 
     const handleLanguageEntries = (languages: Language[]) => {
         return languages.map((language) => {
-            const languageWithDirection =
-                true === language.right_to_left ? language.name.split('').reverse().join('') : language.name;
+            const languageWithDirection = language.right_to_left
+                ? language.name.split('').reverse().join('')
+                : language.name;
             return (
                 <>
                     <span>
