@@ -1,5 +1,9 @@
 ## July 17, 2024
 
+- **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)
+  - Created loader for engagement creation wizard
+  - Created language selector field in engagement creation wizard
+
 - **Hotfix** Fix MET-web CI build errors [🎟️ DESENG-665](https://citz-gdx.atlassian.net/browse/DESENG-665)
   - Update the `npm install` command in CI for the web app to use `--legacy-peer-deps`, resolving a dependency issue that was causing the build to fail
 

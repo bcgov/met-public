@@ -31,6 +31,7 @@ import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
+import { languageLoader } from 'components/engagement/new/create/languageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
 import EngagementCreationWizard from 'components/engagement/new/create';
 import engagementCreateAction from 'components/engagement/new/create/engagementCreateAction';
@@ -70,6 +71,7 @@ const AuthenticatedRoutes = () => {
                         path="wizard"
                         handle={{ crumb: () => ({ name: 'New Engagement' }) }}
                         element={<EngagementCreationWizard />}
+                        loader={languageLoader}
                     />
                 </Route>
                 <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
