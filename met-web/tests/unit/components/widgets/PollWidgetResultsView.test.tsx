@@ -107,7 +107,6 @@ describe('Poll Widget tests', () => {
         await waitFor(() => {
             expect(screen.getByText('Poll - Results')).toBeVisible();
         });
-        // fireEvent.click(screen.getByTestId('widget/edit'));
         await waitFor(() => expect(screen.getByText('Test Poll')).toBeInTheDocument());
     }
 

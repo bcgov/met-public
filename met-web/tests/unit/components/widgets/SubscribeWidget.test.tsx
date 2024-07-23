@@ -7,7 +7,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, subscribeWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
-import { createMemoryRouter, RouterProvider, useLoaderData, useRouteLoaderData } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');

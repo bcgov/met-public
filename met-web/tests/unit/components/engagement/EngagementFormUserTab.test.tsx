@@ -135,7 +135,7 @@ describe('Engagement form page tests', () => {
             },
         );
 
-        const { container } = render(<RouterProvider router={router} />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue(draftEngagement.name)).toBeInTheDocument();

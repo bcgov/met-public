@@ -12,7 +12,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
 import { USER_ROLES } from 'services/userService/constants';
-import { createMemoryRouter, RouterProvider, useFetcher } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 window.Request = jest.fn();
 
@@ -96,11 +96,11 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
-var mockFetcherData = {
+let mockFetcherData = {
     engagements: { items: [mockEngagementOne, mockEngagementTwo], total: 2 },
 };
 
-var mockFetcher = {
+let mockFetcher = {
     load: jest.fn(),
     data: mockFetcherData,
     state: 'idle',

@@ -17,7 +17,7 @@ import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { CONTENT_TYPE, createDefaultEngagementContent } from 'models/engagementContent';
+import { createDefaultEngagementContent } from 'models/engagementContent';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
