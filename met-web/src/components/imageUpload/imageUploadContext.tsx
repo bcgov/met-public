@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 export interface ImageUploadContextState {
     cropModalOpen: boolean;
@@ -66,6 +66,10 @@ export const ImageUploadContextProvider = ({
 
     const [existingImageUrl, setExistingImageURL] = useState(savedImageUrl);
     const [imgAfterCrop, setImgAfterCrop] = useState('');
+
+    useEffect(() => {
+        setExistingImageURL(savedImageUrl);
+    }, [savedImageUrl]);
 
     return (
         <ImageUploadContext.Provider

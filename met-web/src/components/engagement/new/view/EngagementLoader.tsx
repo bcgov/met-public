@@ -52,7 +52,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
     const customContent = content.then((response) =>
         Promise.all(
             response.map((content) => {
-                return content.content_type === 'Custom' && getCustomContent(content.id).then((result) => result[0]);
+                if (content.content_type === 'Custom') return getCustomContent(content.id).then((result) => result[0]);
             }),
         ),
     );

@@ -277,6 +277,26 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
     const [teamMembersLoading, setTeamMembersLoading] = useState(false);
 
+    useEffect(() => {
+        if (savedEngagement.id) {
+            setEngagementFormData({
+                name: savedEngagement.name || '',
+                start_date: savedEngagement.start_date,
+                end_date: savedEngagement.end_date,
+                description: savedEngagement.description || '',
+                content: savedEngagement.content || '',
+                is_internal: savedEngagement.is_internal || false,
+                consent_message: savedEngagement.consent_message || '',
+                sponsor_name: savedEngagement.sponsor_name,
+                cta_message: savedEngagement.cta_message,
+                cta_url: savedEngagement.cta_url,
+            });
+            setRichDescription(savedEngagement?.rich_description || '');
+            setRichConsentMessage(savedEngagement?.consent_message || '');
+            setRichContent(savedEngagement?.rich_content || '');
+        }
+    }, [savedEngagement]);
+
     const loadTeamMembers = async () => {
         try {
             setTeamMembersLoading(true);

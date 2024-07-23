@@ -15,7 +15,6 @@ export interface EngagementContext {
     savedEngagement: Engagement;
     engagementMetadata: EngagementMetadata[];
     engagementId: string | undefined;
-    loadingSavedEngagement: boolean;
     handleAddBannerImage: (_files: File[]) => void;
     loadingAuthorization: boolean;
     isNewEngagement: boolean;

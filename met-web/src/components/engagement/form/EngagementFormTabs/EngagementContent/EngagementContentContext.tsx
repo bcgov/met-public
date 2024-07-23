@@ -30,7 +30,6 @@ export const EngagementContentContext = createContext<EngagementContentProps>({
     },
 });
 
-const CREATE = 'create';
 export const EngagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const { contentTabs, savedEngagement } = useContext(ActionContext);
     const {
@@ -47,14 +46,13 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
     const [isEditMode, setIsEditMode] = useState(false);
     const summaryItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
     const customItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.CUSTOM);
-    const isCreate = window.location.pathname.includes(CREATE);
-    const noLoaderData = { contentSummary: 'contentSummary', customContent: 'customContent' };
-    const { contentSummary } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { contentSummary: Promise<EngagementSummaryContent[]> })
-        : noLoaderData;
-    const { customContent } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { customContent: Promise<EngagementCustomContent[]> })
-        : noLoaderData;
+    const routeLoaderData = useRouteLoaderData('single-engagement') as
+        | {
+              contentSummary: Promise<EngagementSummaryContent[]>;
+              customContent: Promise<EngagementCustomContent[]>;
+          }
+        | undefined;
+    const { contentSummary, customContent } = routeLoaderData ?? {};
 
     // Load the engagement's summary from the shared individual engagement loader and watch the summary item variable for any changes.
     useEffect(() => {
@@ -62,7 +60,7 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
             setIsSummaryContentsLoading(false);
             return;
         }
-        if (savedEngagement && 'string' !== typeof contentSummary) {
+        if (savedEngagement && contentSummary) {
             contentSummary.then((result: EngagementSummaryContent[]) => {
                 setEngagementSummaryContent(result[0]);
                 setRichContent(result[0].rich_content);
@@ -73,11 +71,11 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
                 setIsSummaryContentsLoading(false);
             });
         }
-    }, [summaryItem]);
+    }, [summaryItem, contentSummary, savedEngagement]);
 
     // Load the engagement's custom content from the shared individual engagement loader and watch the customItem variable for any changes.
     useEffect(() => {
-        if (savedEngagement && 'string' !== typeof customContent) {
+        if (savedEngagement && customContent) {
             customContent.then((result: EngagementCustomContent[]) => {
                 if (!savedEngagement.id || !customItem) {
                     setIsCustomContentsLoading(false);
@@ -89,7 +87,7 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
                 setIsCustomContentsLoading(false);
             });
         }
-    }, [customItem]);
+    }, [customItem, customContent, savedEngagement]);
 
     return (
         <EngagementContentContext.Provider

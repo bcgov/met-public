@@ -39,7 +39,6 @@ export const ActionContext = createContext<EngagementContext>({
     savedEngagement: createDefaultEngagement(),
     engagementMetadata: [],
     engagementId: CREATE,
-    loadingSavedEngagement: true,
     handleAddBannerImage: (_files: File[]) => {
         /* empty default method  */
     },
@@ -63,7 +62,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
     const [isSaving, setSaving] = useState(false);
-    const [loadingSavedEngagement, setLoadingSavedEngagement] = useState(true);
     const [loadingAuthorization, setLoadingAuthorization] = useState(true);
 
     const [tenantTaxa, setTenantTaxa] = useState<MetadataTaxon[]>([]);
@@ -74,19 +72,16 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
-    const noRouteLoaders = { engagement: 'engagement', content: 'content', metadata: 'metadata', taxa: 'taxa' };
-    const { engagement } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { engagement: Promise<Engagement> })
-        : noRouteLoaders;
-    const { content } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { content: Promise<EngagementContent[]> })
-        : noRouteLoaders;
-    const { metadata } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { metadata: Promise<EngagementMetadata[]> })
-        : noRouteLoaders;
-    const { taxa } = !isCreate
-        ? (useRouteLoaderData('single-engagement') as { taxa: Promise<MetadataTaxon[]> })
-        : noRouteLoaders;
+    const routeLoaderData = useRouteLoaderData('single-engagement') as
+        | {
+              engagement: Promise<Engagement>;
+              content: Promise<EngagementContent[]>;
+              metadata: Promise<EngagementMetadata[]>;
+              taxa: Promise<MetadataTaxon[]>;
+          }
+        | undefined;
+
+    const { engagement, content, metadata, taxa } = routeLoaderData || {};
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -94,13 +89,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             navigate('/');
         }
         if (isCreate && !engagementId) {
-            setLoadingSavedEngagement(false);
             return;
         }
-        if (engagementId && 'string' !== typeof engagement) {
+        if (engagementId && engagement) {
             engagement.then((result) => {
                 setEngagement(result);
-                setLoadingSavedEngagement(false);
             });
         }
     }, [engagement]);
@@ -116,11 +109,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     // Load the engagement's content from the shared individual engagement loader and watch the content variable for any changes.
     useEffect(() => {
-        if (engagementId && 'string' !== typeof content) {
+        if (engagementId && content) {
             if (isCreate) {
                 return;
             }
-            content.then((result: EngagementContent[]) => {
+            content?.then((result: EngagementContent[]) => {
                 setContentTabs(result);
             });
         }
@@ -131,9 +124,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         if (isCreate) {
             return;
         }
-        if (!isCreate && 'string' !== typeof metadata && 'string' !== typeof taxa) {
-            metadata.then((result) => setEngagementMetadata(result));
-            taxa.then((result) => setTenantTaxa(Object.values(result)));
+        if (!isCreate && metadata && taxa) {
+            metadata?.then((result) => setEngagementMetadata(result));
+            taxa?.then((result) => setTenantTaxa(Object.values(result)));
         }
     }, [metadata, taxa]);
 
@@ -200,6 +193,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
             setContentTabs(engagementContents);
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been created' }));
             setSaving(false);
+            navigate(`/engagements/${result.id}/form`);
             return Promise.resolve(result);
         } catch (error) {
             dispatch(
@@ -270,7 +264,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 savedEngagement,
                 engagementMetadata,
                 engagementId,
-                loadingSavedEngagement,
                 handleAddBannerImage,
                 setEngagementMetadata,
                 taxonMetadata,
