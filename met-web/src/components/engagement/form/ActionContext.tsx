@@ -85,7 +85,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
-        console.log('isCreate', isCreate, 'engagementId', engagementId);
         if (!isCreate && isNaN(Number(engagementId))) {
             navigate('/');
         }
@@ -101,7 +100,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     // Update states based on the loaded engagement.
     const setEngagement = (engagement: Engagement) => {
-        console.log('setEngagement', engagement);
         setSavedEngagement(engagement);
         setIsNewEngagement(!savedEngagement.id);
         setSavedBannerImageFileName(engagement.banner_filename);

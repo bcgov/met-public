@@ -82,7 +82,6 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
                     return;
                 }
                 setEngagementCustomContent(result);
-                console.log(result);
                 setCustomTextContent(result[1].custom_text_content);
                 setCustomJsonContent(result[1].custom_json_content);
                 setIsCustomContentsLoading(false);
