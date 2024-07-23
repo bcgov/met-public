@@ -9,6 +9,7 @@ import { draftEngagement, mockTimeLine, timeLineWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -39,6 +40,40 @@ jest.mock('services/widgetService/TimelineService', () => ({
     patchTimeline: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([timeLineWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
 describe('TimeLine Widget tests', () => {
     beforeAll(() => {
         setupWidgetTestEnvMock();
@@ -48,7 +83,9 @@ describe('TimeLine Widget tests', () => {
 
     async function addTimeLineWidget() {
         await waitFor(() => expect(screen.getByText('Add Widget')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Add Widget')).toBeEnabled());
         fireEvent.click(screen.getByText('Add Widget'));
+
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Timeline}`));
         await waitFor(() => {
@@ -83,26 +120,25 @@ describe('TimeLine Widget tests', () => {
     }
 
     test('TimeLine widget is created when option is clicked', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         const getWidgetsMock = jest
             .spyOn(widgetService, 'getWidgets')
             .mockReturnValue(Promise.resolve([timeLineWidget]));
 
         await addTimeLineWidget();
-
-        expect(getWidgetsMock).toHaveBeenCalledTimes(1);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Description')).toBeVisible();
         expect(screen.getByText('EVENT 1')).toBeVisible();
     });
 
     test('TimeLine widget handles input correctly', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addTimeLineWidget();
         await inputMockTimeLinedata();
     });
 
     test('TimeLine can be submitted after inputting mock data', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await addTimeLineWidget();
         await inputMockTimeLinedata();

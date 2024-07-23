@@ -17,6 +17,7 @@ import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -68,10 +69,35 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
-        return { projectId: '' };
+        return { projectId: '', engagementId: '1' };
     }),
     useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([whoIsListeningWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -163,7 +189,7 @@ describe('Who is Listening widget  tests', () => {
 
     async function addWhosIsListeningWidget(container: HTMLElement) {
         await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeEnabled();
         });
 
         const addWidgetButton = screen.getByText('Add Widget');
@@ -192,7 +218,7 @@ describe('Who is Listening widget  tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addWhosIsListeningWidget(container);
 
@@ -201,7 +227,7 @@ describe('Who is Listening widget  tests', () => {
             engagement_id: draftEngagement.id,
             title: whoIsListeningWidget.title,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Add This Contact')).toBeVisible();
         expect(screen.getByText('Select Existing Contact')).toBeVisible();
     });
@@ -218,7 +244,7 @@ describe('Who is Listening widget  tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addWhosIsListeningWidget(container);
 

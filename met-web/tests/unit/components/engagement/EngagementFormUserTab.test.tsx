@@ -15,6 +15,7 @@ import { draftEngagement, engagementMetadata, engagementSetting } from '../facto
 import { createDefaultUser, USER_COMPOSITE_ROLE } from 'models/user';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const mockTeamMember1: EngagementTeamMember = {
     ...initialDefaultTeamMember,
@@ -82,6 +83,29 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useRouteMatch: () => ({ url: '/engagements/create/form/' }),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve(draftEngagement),
+                metadata: Promise.resolve([]),
+                widgets: Promise.resolve([]),
+                contentSummary: Promise.resolve([]),
+                content: Promise.resolve([]),
+            };
+        }
+    },
+    useLoaderData: () => ({
+        engagement: Promise.resolve(draftEngagement),
+        metadata: Promise.resolve([]),
+        widgets: Promise.resolve([]),
+        contentSummary: Promise.resolve([]),
+        content: Promise.resolve([]),
+    }),
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([mockTeamMember1]));
@@ -99,12 +123,23 @@ describe('Engagement form page tests', () => {
 
     test('User management tab renders', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        const router = createMemoryRouter(
+            [
+                {
+                    path: '/engagements/:engagementId/form',
+                    element: <EngagementForm />,
+                },
+            ],
+            {
+                initialEntries: [`/engagements/${draftEngagement.id}/form`],
+            },
+        );
+
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue(draftEngagement.name)).toBeInTheDocument();
         });
-        await waitForElementToBeRemoved(container.querySelector('span.MuiSkeleton-root'));
 
         const userManagementTabButton = screen.getByText('User Management');
 

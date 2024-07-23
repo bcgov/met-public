@@ -12,6 +12,9 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter, RouterProvider, useFetcher } from 'react-router-dom';
+
+window.Request = jest.fn();
 
 const mockSurvey = {
     ...createDefaultSurvey(),
@@ -93,12 +96,22 @@ jest.mock('components/permissionsGate', () => ({
     },
 }));
 
+var mockFetcherData = {
+    engagements: { items: [mockEngagementOne, mockEngagementTwo], total: 2 },
+};
+
+var mockFetcher = {
+    load: jest.fn(),
+    data: mockFetcherData,
+    state: 'idle',
+};
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: jest.fn(),
     useLocation: jest.fn(() => ({
         search: '',
     })),
+    useFetcher: jest.fn(() => mockFetcher),
 }));
 
 jest.mock('react-redux', () => ({
@@ -111,7 +124,19 @@ jest.mock('react-redux', () => ({
     }),
 }));
 
-describe('Engagement form page tests', () => {
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/',
+            element: <EngagementListing />,
+        },
+    ],
+    {
+        initialEntries: ['/engagements/'],
+    },
+);
+
+describe('Engagement listing page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getEngagementMock = jest.spyOn(engagementService, 'getEngagements');
@@ -121,13 +146,10 @@ describe('Engagement form page tests', () => {
     });
 
     test('Engagement table is rendered and engagements are fetched', async () => {
-        getEngagementMock.mockReturnValue(
-            Promise.resolve({
-                items: [mockEngagementOne, mockEngagementTwo],
-                total: 2,
-            }),
-        );
-        render(<EngagementListing />);
+        mockFetcherData = {
+            engagements: { items: [mockEngagementOne, mockEngagementTwo], total: 2 },
+        };
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
@@ -141,14 +163,11 @@ describe('Engagement form page tests', () => {
         expect(screen.getByText('Create Engagement', { exact: false })).toBeInTheDocument();
     });
 
-    test('Search filter works and fetchs engagements with the search text as a param', async () => {
-        getEngagementMock.mockReturnValue(
-            Promise.resolve({
-                items: [mockEngagementOne],
-                total: 1,
-            }),
-        );
-        const { container } = render(<EngagementListing />);
+    test('Search filter works and fetches engagements with the search text as a param', async () => {
+        mockFetcherData = {
+            engagements: { items: [mockEngagementOne], total: 1 },
+        };
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
@@ -161,29 +180,17 @@ describe('Engagement form page tests', () => {
         fireEvent.click(screen.getByTestId('engagement/listing/searchButton'));
 
         await waitFor(() => {
-            expect(getEngagementMock).lastCalledWith({
-                page: 1,
-                size: 10,
-                sort_key: 'engagement.created_date',
-                sort_order: 'desc',
-                search_text: 'Engagement One',
-                engagement_status: [],
-                created_from_date: '',
-                created_to_date: '',
-                published_from_date: '',
-                published_to_date: '',
-            });
+            expect(mockFetcher.load).toHaveBeenLastCalledWith(
+                '/engagements/?page=1&size=10&sort_key=engagement.created_date&sort_order=desc&search_text=Engagement+One',
+            );
         });
     });
 
     test('Advanced Search filter works and fetches engagements with the selected status as a param', async () => {
-        getEngagementMock.mockReturnValue(
-            Promise.resolve({
-                items: [mockEngagementOne],
-                total: 1,
-            }),
-        );
-        const { getByTestId } = render(<EngagementListing />);
+        mockFetcherData = {
+            engagements: { items: [mockEngagementOne], total: 1 },
+        };
+        const { getByTestId } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Engagement One')).toBeInTheDocument();
@@ -196,20 +203,10 @@ describe('Engagement form page tests', () => {
         expect(checkbox).toHaveProperty('checked', true);
 
         fireEvent.click(screen.getByTestId('search-button'));
-
         await waitFor(() => {
-            expect(getEngagementMock).lastCalledWith({
-                page: 1,
-                size: 10,
-                sort_key: 'engagement.created_date',
-                sort_order: 'desc',
-                search_text: '',
-                engagement_status: [1],
-                created_from_date: '',
-                created_to_date: '',
-                published_from_date: '',
-                published_to_date: '',
-            });
+            expect(mockFetcher.load).toHaveBeenLastCalledWith(
+                '/engagements/?page=1&size=10&sort_key=engagement.created_date&sort_order=desc&engagement_status=1',
+            );
         });
     });
 });

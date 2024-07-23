@@ -111,7 +111,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     // Load the engagement's summary from the shared individual engagement loader and watch the summary variable for any changes.
     useEffect(() => {
         contentSummary.then((result: EngagementSummaryContent[]) => {
-            if (!engagementId && slug) {
+            if ((!engagementId && slug) || !result.length) {
                 return;
             }
             const selectedEngagement = result[0];
