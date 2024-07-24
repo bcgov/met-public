@@ -10,16 +10,14 @@ import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircle
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useFetcher, createSearchParams, useSearchParams } from 'react-router-dom';
 import { MetPageGridContainer, MetTooltip } from 'components/common';
 import { Engagement } from 'models/engagement';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
-import { getEngagements } from 'services/engagementService';
 import Stack from '@mui/material/Stack';
-import { openNotification } from 'services/notificationService/notificationSlice';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
@@ -28,46 +26,58 @@ import { USER_ROLES } from 'services/userService/constants';
 import { ApprovedIcon, NewIcon, NFRIcon, RejectedIcon } from './Icons';
 import { CommentStatus } from 'constants/commentStatus';
 import { ActionsDropDown } from './ActionsDropDown';
-import { updateURLWithPagination } from 'components/common/Table/utils';
 import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+import { Page } from 'services/type';
+
+interface SearchFilter {
+    key?: string;
+    value?: string;
+}
 
 const EngagementListing = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const navigate = useNavigate();
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const pageFromURL = searchParams.get('page');
-    const sizeFromURL = searchParams.get('size');
-    const [searchFilter, setSearchFilter] = useState({
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchFilter, setSearchFilter] = useState<SearchFilter>({
         key: 'name',
         value: '',
     });
-    const [searchText, setSearchText] = useState('');
-    const [engagements, setEngagements] = useState<Engagement[]>([]);
+    const fetcher = useFetcher();
+    const fetcherData = fetcher.data as { engagements: Page<Engagement> } | undefined;
+    const engagementPage = fetcherData?.engagements;
+
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
-        page: Number(pageFromURL) || 1,
-        size: Number(sizeFromURL) || 10,
-        sort_key: 'created_date',
-        nested_sort_key: 'engagement.created_date',
-        sort_order: 'desc',
+        page: Number(searchParams.get('page')) || 1,
+        size: Number(searchParams.get('size')) || 10,
+        sort_key: (searchParams.get('sort_key')?.split('.')?.[1] as keyof Engagement) ?? 'created_date',
+        nested_sort_key: searchParams.get('sort_key') || 'engagement.created_date',
+        sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') ?? 'desc',
     });
 
-    const [pageInfo, setPageInfo] = useState<PageInfo>(createDefaultPageInfo());
-    const [tableLoading, setTableLoading] = useState(true);
+    const [pageInfo] = useState<PageInfo>(createDefaultPageInfo());
 
-    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+    const [searchText, setSearchText] = useState(searchParams.get('search_text') || '');
+    const [advancedSearchOpen, setAdvancedSearchOpen] = useState(
+        // Default to open if any of the advanced search fields are set
+        Boolean(
+            searchParams.get('engagement_status')?.length ||
+                searchParams.get('created_from_date') ||
+                searchParams.get('created_to_date') ||
+                searchParams.get('published_from_date') ||
+                searchParams.get('published_to_date'),
+        ),
+    );
 
     const [searchOptions, setSearchOptions] = useState<SearchOptions>({
-        status_list: [],
-        created_from_date: '',
-        created_to_date: '',
-        published_from_date: '',
-        published_to_date: '',
+        status_list: (searchParams.getAll('engagement_status') || []).map((status) => Number(status)),
+        created_from_date: searchParams.get('created_from_date') || '',
+        created_to_date: searchParams.get('created_to_date') || '',
+        published_from_date: searchParams.get('published_from_date') || '',
+        published_to_date: searchParams.get('published_to_date') || '',
     });
-
-    const dispatch = useAppDispatch();
 
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
 
@@ -75,43 +85,31 @@ const EngagementListing = () => {
 
     const canViewAllCommentStatus = roles.includes(USER_ROLES.SHOW_ALL_COMMENT_STATUS);
 
-    const { page, size, sort_key, nested_sort_key, sort_order } = paginationOptions;
-
     useEffect(() => {
-        updateURLWithPagination(paginationOptions);
-        loadEngagements();
+        const searchData = {
+            page: paginationOptions.page.toString(),
+            size: paginationOptions.size.toString(),
+            sort_key: paginationOptions.nested_sort_key?.toString(),
+            sort_order: paginationOptions.sort_order as 'asc' | 'desc' | undefined,
+            search_text: searchFilter.value,
+            engagement_status: searchOptions.status_list.map((status) => status.toString()),
+            created_from_date: searchOptions.created_from_date || undefined,
+            created_to_date: searchOptions.created_to_date || undefined,
+            published_from_date: searchOptions.published_from_date || undefined,
+            published_to_date: searchOptions.published_to_date || undefined,
+        };
+        // Filter out properties with empty strings or undefined values
+        const filteredSearchData = Object.entries(searchData).reduce<Record<string, string | string[]>>(
+            (acc, [key, value]) => {
+                if (value) acc[key] = value;
+                return acc;
+            },
+            {}, // the empty initial accumulator
+        );
+        const searchParams = createSearchParams(filteredSearchData);
+        setSearchParams(searchParams);
+        fetcher.load(`/engagements/?${searchParams}`);
     }, [paginationOptions, searchFilter, searchOptions]);
-
-    const loadEngagements = async () => {
-        try {
-            setTableLoading(true);
-            const response = await getEngagements({
-                page,
-                size,
-                sort_key: nested_sort_key || sort_key,
-                sort_order,
-                search_text: searchFilter.value,
-                engagement_status: searchOptions.status_list,
-                created_from_date: searchOptions.created_from_date,
-                created_to_date: searchOptions.created_to_date,
-                published_from_date: searchOptions.published_from_date,
-                published_to_date: searchOptions.published_to_date,
-            });
-            setEngagements(response.items);
-            setPageInfo({
-                total: response.total,
-            });
-            setTableLoading(false);
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while trying to fetch engagements, please refresh the page or try again at a later time',
-                }),
-            );
-            setTableLoading(false);
-        }
-    };
 
     const submissionHasBeenOpened = (engagement: Engagement) => {
         return [SubmissionStatus.Open, SubmissionStatus.Closed].includes(engagement.submission_status);
@@ -127,6 +125,7 @@ const EngagementListing = () => {
     const headCells: HeadCell<Engagement>[] = [
         {
             key: 'name',
+            nestedSortKey: 'engagement.name',
             numeric: false,
             disablePadding: true,
             label: 'Engagement Name',
@@ -148,6 +147,7 @@ const EngagementListing = () => {
         },
         {
             key: 'published_date',
+            nestedSortKey: 'engagement.published_date',
             numeric: true,
             disablePadding: true,
             label: 'Date Published',
@@ -161,6 +161,7 @@ const EngagementListing = () => {
         },
         {
             key: 'status_id',
+            nestedSortKey: 'engagement.status_id',
             numeric: true,
             disablePadding: false,
             label: 'Status',
@@ -393,6 +394,7 @@ const EngagementListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
+            <AutoBreadcrumbs />
             <Grid item xs={12}>
                 <Stack
                     direction={{ xs: 'column', md: 'row' }}
@@ -404,6 +406,7 @@ const EngagementListing = () => {
                     <Stack direction="row" spacing={1} alignItems="center">
                         <TextInput
                             title={''}
+                            inputProps={{ 'aria-label': 'Search by name' }}
                             id="engagement-name"
                             data-testid="engagement/listing/searchField"
                             placeholder="Search by name"
@@ -411,6 +414,9 @@ const EngagementListing = () => {
                             value={searchText}
                             sx={{ height: '40px', pr: 0 }}
                             onChange={(value) => setSearchText(value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSearchBarClick(searchText);
+                            }}
                             size="small"
                             endAdornment={
                                 <Button
@@ -482,19 +488,17 @@ const EngagementListing = () => {
             </Grid>
             <Grid item xs={12} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
-                    <AdvancedSearch setFilterParams={setSearchOptions} />
+                    <AdvancedSearch filterParams={searchOptions} setFilterParams={setSearchOptions} />
                 </Collapse>
             </Grid>
             <Grid item xs={12}>
                 <MetTable
                     headCells={headCells}
-                    rows={engagements}
-                    handleChangePagination={(paginationOptions: PaginationOptions<Engagement>) =>
-                        setPaginationOptions(paginationOptions)
-                    }
+                    rows={engagementPage?.items ?? []}
+                    handleChangePagination={setPaginationOptions}
                     paginationOptions={paginationOptions}
-                    loading={tableLoading}
-                    pageInfo={pageInfo}
+                    loading={fetcher.state === 'loading'}
+                    pageInfo={{ ...pageInfo, total: engagementPage?.total ?? 0 }}
                 />
             </Grid>
         </MetPageGridContainer>

@@ -42,7 +42,7 @@ class EngagementSummaryContentService:
         """Update engagement summary content."""
         summary_content_list: EngagementSummaryModel = EngagementSummaryModel.get_summary_content(content_id)
         if not summary_content_list:
-            raise KeyError('Engagement summary content ' + content_id + ' does not exist')
+            raise KeyError('Engagement summary content ' + str(content_id) + ' does not exist')
 
         summary_content = summary_content_list[0]
         eng_id = summary_content.engagement_id

@@ -13,7 +13,7 @@ import { BodyText } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
 
 export const SurveyBlock = () => {
-    const { savedEngagement, fetchEngagement } = useContext(ActionContext);
+    const { savedEngagement } = useContext(ActionContext);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -46,7 +46,6 @@ export const SurveyBlock = () => {
                     text: `Survey "${surveyName}" successfuly removed from this engagement`,
                 }),
             );
-            fetchEngagement();
         } catch (error) {
             console.log(error);
             dispatch(

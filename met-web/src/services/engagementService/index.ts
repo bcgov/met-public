@@ -15,7 +15,7 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
     return engagements;
 };
 
-interface GetEngagementsParams {
+export interface GetEngagementsParams {
     page?: number;
     size?: number;
     sort_key?: string;

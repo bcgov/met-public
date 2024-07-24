@@ -11,6 +11,7 @@ import * as engagementSlugService from 'services/engagementSlugService';
 import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -106,6 +107,41 @@ jest.mock('components/permissionsGate', () => ({
 
 jest.mock('axios');
 
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/',
+            element: <EngagementView />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/`],
+    },
+);
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useRouteMatch: () => ({ url: '/engagements/create/form/' }),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve(draftEngagement),
+                metadata: Promise.resolve([]),
+                widgets: Promise.resolve([whoIsListeningWidget]),
+                contentSummary: Promise.resolve([]),
+                content: Promise.resolve([]),
+            };
+        }
+    },
+    useLoaderData: () => ({
+        engagement: Promise.resolve(draftEngagement),
+        metadata: Promise.resolve([]),
+        widgets: Promise.resolve([whoIsListeningWidget]),
+        contentSummary: Promise.resolve([]),
+        content: Promise.resolve([]),
+    }),
+}));
+
 describe('Engagement View page tests', () => {
     jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -126,28 +162,18 @@ describe('Engagement View page tests', () => {
                 surveys: surveys,
             }),
         );
-        render(<EngagementView />);
+        render(<RouterProvider router={router} />);
         await waitFor(() => {
             expect(screen.getByTestId(`engagement-content`)).toBeVisible();
         });
-
-        expect(getEngagementMock).toHaveBeenCalledOnce();
     });
 
     test('Widget block appears', async () => {
-        getEngagementMock.mockReturnValueOnce(
-            Promise.resolve({
-                ...draftEngagement,
-                surveys: surveys,
-            }),
-        );
-        render(<EngagementView />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByTestId(`widget-block`)).toBeVisible();
         });
-
-        expect(getEngagementMock).toHaveBeenCalledOnce();
     });
 
     test('Who is listening widget appears', async () => {
@@ -159,7 +185,7 @@ describe('Engagement View page tests', () => {
         );
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         mockContactRtkUnwrap.mockReturnValueOnce(Promise.resolve(mockContact));
-        const { container } = render(<EngagementView />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
@@ -168,9 +194,5 @@ describe('Engagement View page tests', () => {
 
         expect(screen.getByText(mockContact.name)).toBeVisible();
         expect(screen.getByText(mockContact.email)).toBeVisible();
-
-        expect(getEngagementMock).toHaveBeenCalledOnce();
-        expect(mockWidgetsRtkUnwrap).toHaveBeenCalledOnce();
-        expect(mockContactRtkUnwrap).toHaveBeenCalledOnce();
     });
 });

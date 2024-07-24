@@ -190,6 +190,7 @@ const App = () => {
         return <MidScreenLoader />;
     }
 
+    // If the tenant is not loaded and is not loading, display the "Not Found" page.
     if (!tenant.isLoaded && !tenant.loading) {
         return (
             <Router>
@@ -201,6 +202,7 @@ const App = () => {
         );
     }
 
+    // Otherwise, if the user is not authenticated, show the public layout.
     if (!isAuthenticated) {
         const router = createBrowserRouter(
             [
@@ -215,6 +217,7 @@ const App = () => {
         return <RouterProvider router={router} />;
     }
 
+    // Otherwise, if the user is authenticated but does not have a role, display the admin area with no access to children pages.
     if (roles.length === 0) {
         const router = createBrowserRouter(
             [
@@ -233,6 +236,7 @@ const App = () => {
         return <RouterProvider router={router} />;
     }
 
+    // Otherwise, display the admin area.
     const router = createBrowserRouter(
         [
             {

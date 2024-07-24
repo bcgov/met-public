@@ -17,6 +17,8 @@ import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import assert from 'assert';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createDefaultEngagementContent } from 'models/engagementContent';
 
 const engagementId = 1;
 const survey: Survey = {
@@ -71,10 +73,36 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
-        return { projectId: '' };
+        return { projectId: '', engagementId: '1' };
     }),
     useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                    surveys,
+                }),
+                widgets: Promise.resolve([]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([createDefaultEngagementContent()]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
 
 // Mocking window.location.pathname in Jest
 Object.defineProperty(window, 'location', {
@@ -88,7 +116,7 @@ describe('Engagement form page tests', () => {
     const openNotificationModalMock = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());
-    const useParamsMock = jest.spyOn(reactRouter, 'useParams');
+    const useParamsMock = jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')
         .mockReturnValue(Promise.resolve([engagementMetadata]));
@@ -114,7 +142,7 @@ describe('Engagement form page tests', () => {
 
     test('Engagement form tabs and their titles should be populated correctly', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Engagement Content')).toBeInTheDocument();
@@ -127,15 +155,13 @@ describe('Engagement form page tests', () => {
 
     test('Engagement form with saved engagement should display saved info', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, getByText, getByDisplayValue } = render(<EngagementForm />);
+        const { getByTestId, getByText, getByDisplayValue } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
 
         await waitFor(() => {
-            expect(getEngagementMock).toHaveBeenCalledOnce();
-            expect(getEngagementMetadataMock).toHaveBeenCalledOnce();
             expect(getByTestId('save-engagement-button')).toBeVisible();
             expect(getByDisplayValue('2022-09-01')).toBeInTheDocument();
             expect(getByDisplayValue('2022-09-30')).toBeInTheDocument();
@@ -145,15 +171,19 @@ describe('Engagement form page tests', () => {
 
     test('Save engagement button should trigger patch call', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
         });
         const updateButton = screen.getByTestId('save-engagement-button');
+        await waitFor(() => {
+            expect(updateButton).toBeEnabled();
+        });
 
         const nameInput = container.querySelector('input[name="name"]');
         assert(nameInput, 'Unable to find engagement name input');
+        fireEvent.input(nameInput, { target: { value: 'Engagement Test updated' } });
         fireEvent.change(nameInput, { target: { value: 'Engagement Test updated' } });
         fireEvent.click(updateButton);
 
@@ -165,7 +195,7 @@ describe('Engagement form page tests', () => {
 
     test('Modal with warning appears when removing survey', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, getByDisplayValue } = render(<EngagementForm />);
+        const { getByTestId, getByDisplayValue } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -189,7 +219,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        const { getByText, getByDisplayValue } = render(<EngagementForm />);
+        const { getByText, getByDisplayValue } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -209,7 +239,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -233,7 +263,7 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();

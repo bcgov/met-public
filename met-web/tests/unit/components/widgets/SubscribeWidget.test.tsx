@@ -7,6 +7,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, subscribeWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -36,6 +37,37 @@ jest.mock('services/subscriptionService', () => ({
     postSubscribeForm: jest.fn(),
 }));
 
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useRouteMatch: () => ({ url: '/engagements/create/form/' }),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve(draftEngagement),
+                widgets: Promise.resolve([subscribeWidget]),
+                metadata: Promise.resolve([]),
+            };
+        }
+    },
+    useLoaderData: () => ({
+        engagement: Promise.resolve(draftEngagement),
+        widgets: Promise.resolve([subscribeWidget]),
+        metadata: Promise.resolve([]),
+    }),
+}));
+
 describe('Subscribe Widget tests', () => {
     beforeAll(() => {
         setupWidgetTestEnvMock();
@@ -45,6 +77,7 @@ describe('Subscribe Widget tests', () => {
 
     async function addSubscribeWidget() {
         await waitFor(() => expect(screen.getByText('Add Widget')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Add Widget')).toBeEnabled());
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Subscribe}`));
@@ -99,7 +132,7 @@ describe('Subscribe Widget tests', () => {
     }
 
     test('Subscribe widget is created when option is clicked', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         const getWidgetsMock = jest
             .spyOn(widgetService, 'getWidgets')
             .mockReturnValue(Promise.resolve([subscribeWidget]));
@@ -112,14 +145,14 @@ describe('Subscribe Widget tests', () => {
     });
 
     test('Subscribe widget Email List handles input correctly', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addSubscribeWidget();
         await selectEmailList();
         await inputMockSubscribeData();
     });
 
     test('Subscribe widget Form sign up handles input correctly', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addSubscribeWidget();
         await selectFormSignUp();
         await inputMockSubscribeData();

@@ -4,7 +4,7 @@ import { ActionContext } from '../ActionContext';
 import { WidgetSwitch } from './WidgetSwitch';
 
 const WidgetBlock = () => {
-    const { widgets, isWidgetsLoading } = useContext(ActionContext);
+    const { engagementWidgets, isWidgetsLoading } = useContext(ActionContext);
 
     if (isWidgetsLoading) {
         return <Skeleton variant="rectangular" height={'30em'} />;
@@ -12,7 +12,7 @@ const WidgetBlock = () => {
 
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={0} rowSpacing={2}>
-            {widgets.map((widget) => {
+            {engagementWidgets.map((widget) => {
                 return (
                     <Grid key={`grid-widget-${widget.id}`} item xs={12}>
                         <WidgetSwitch widget={widget} />

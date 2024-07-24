@@ -130,7 +130,6 @@ describe('Survey report settings tests', () => {
         fireEvent.change(searchField, { target: { value: surveyReportSettingOne.question } });
         fireEvent.click(screen.getByTestId('survey/report/search-button'));
 
-        screen.debug(undefined, 99999999);
         const table = container.querySelector('table');
         const tableBody = container.querySelector('tbody');
         assert(table, 'Unable to find table');

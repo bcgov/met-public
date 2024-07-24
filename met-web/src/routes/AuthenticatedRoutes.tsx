@@ -30,6 +30,7 @@ import TenantDetail from 'components/tenantManagement/Detail';
 import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { getAllTenants, getTenant } from 'services/tenantService';
+import { engagementLoader, engagementListLoader } from 'components/engagement/new/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 import { languageLoader } from 'components/engagement/new/create/languageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
@@ -40,7 +41,6 @@ const AuthenticatedRoutes = () => {
     return (
         <>
             <Route path="/home" element={<Dashboard />} />
-            <Route path="/engagements" element={<EngagementListing />} />
             <Route path="/surveys">
                 <Route index element={<SurveyListing />} />
                 <Route path="create" element={<CreateSurvey />} />
@@ -49,16 +49,22 @@ const AuthenticatedRoutes = () => {
                     <Route path="build" element={<SurveyFormBuilder />} />
                     <Route path="report" element={<ReportSettings />} />
                     <Route path="submit" element={<SurveySubmit />} />
-                </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
-                    <Route path=":surveyId/comments" element={<CommentReviewListing />} />
-                    <Route path=":surveyId/comments/all" element={<CommentTextListing />} />
-                </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
-                    <Route path=":surveyId/submissions/:submissionId/review" element={<CommentReview />} />
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
+                        <Route path="comments" element={<CommentReviewListing />} />
+                        <Route path="comments/all" element={<CommentTextListing />} />
+                    </Route>
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
+                        <Route path="submissions/:submissionId/review" element={<CommentReview />} />
+                    </Route>
                 </Route>
             </Route>
-            <Route path="/engagements" handle={{ crumb: () => ({ name: 'Engagements' }) }}>
+            <Route
+                path="/engagements"
+                id="engagement-listing"
+                errorElement={<NotFound />}
+                loader={engagementListLoader}
+                handle={{ crumb: () => ({ name: 'Engagements' }) }}
+            >
                 <Route index element={<EngagementListing />} />
                 <Route
                     path="create"
@@ -74,15 +80,24 @@ const AuthenticatedRoutes = () => {
                         loader={languageLoader}
                     />
                 </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <Route path=":engagementId/form" element={<EngagementForm />} />
+                <Route
+                    path=":engagementId"
+                    id="single-engagement"
+                    errorElement={<NotFound />}
+                    loader={engagementLoader}
+                >
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                        <Route path="form" element={<EngagementForm />} />
+                    </Route>
+                    <Route path="view" element={<EngagementView />} />
+                    <Route path="comments/:dashboardType" element={<EngagementComments />} />
+                    <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>
-                <Route path=":engagementId/view" element={<EngagementView />} />
-                <Route path=":slug" element={<EngagementView />} />
-                <Route path=":engagementId/comments/:dashboardType" element={<EngagementComments />} />
-                <Route path=":slug/dashboard/:dashboardType" element={<PublicDashboard />} />
-                <Route path=":engagementId/dashboard/:dashboardType" element={<PublicDashboard />} />
-                <Route path=":slug/comments/:dashboardType" element={<EngagementComments />} />
+                <Route path=":slug">
+                    <Route index element={<EngagementView />} />
+                    <Route path="comments/:dashboardType" element={<EngagementComments />} />
+                    <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
+                </Route>
             </Route>
             <Route path="/metadatamanagement" element={<MetadataManagement />} />
             <Route path="/languages" element={<Language />} />
