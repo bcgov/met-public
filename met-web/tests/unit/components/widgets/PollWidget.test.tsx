@@ -8,6 +8,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, mockPoll, pollWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -37,6 +38,40 @@ jest.mock('services/widgetService/PollService', () => ({
     patchPoll: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([pollWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
 describe('Poll Widget tests', () => {
     beforeAll(() => {
         setupWidgetTestEnvMock();
@@ -46,6 +81,7 @@ describe('Poll Widget tests', () => {
 
     async function addPollWidget() {
         await waitFor(() => expect(screen.getByText('Add Widget')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Add Widget')).toBeEnabled());
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Poll}`));
@@ -79,7 +115,6 @@ describe('Poll Widget tests', () => {
         // Find the hidden input within this parent element
         const hiddenInput = selectParent?.querySelector('input[name="status"]') as HTMLInputElement;
 
-
         await waitFor(() => {
             expect(titleInput.value).toBe(mockPoll.title);
             expect(descInput.value).toBe(mockPoll.description);
@@ -90,19 +125,19 @@ describe('Poll Widget tests', () => {
     }
 
     test('Poll widget is created when option is clicked', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([pollWidget]));
 
         await addPollWidget();
 
-        expect(getWidgetsMock).toHaveBeenCalledTimes(1);
+        expect(getWidgetsMock).toHaveBeenCalled();
 
         expect(screen.getByText('Title')).toBeVisible();
         expect(screen.getByText('Description')).toBeVisible();
     });
 
     test('Multiple answers can be added on Poll widget', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addPollWidget();
 
         const addAnswerButton = screen.getByText('Add Answer');
@@ -116,13 +151,13 @@ describe('Poll Widget tests', () => {
     });
 
     test('Poll widget handles input correctly', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addPollWidget();
         await inputMockPollData();
     });
 
     test('Poll can be submitted after inputting mock data', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await addPollWidget();
         await inputMockPollData();

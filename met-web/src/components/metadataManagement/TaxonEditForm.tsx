@@ -177,7 +177,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
             filter_type: data.filter_type === 'none' ? null : data.filter_type,
             include_freeform: data.include_freeform,
         };
-        console.log(updatedTaxon);
         updateMetadataTaxon(updatedTaxon);
     };
 

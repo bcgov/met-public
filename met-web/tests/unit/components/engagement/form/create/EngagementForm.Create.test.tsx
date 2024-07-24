@@ -12,6 +12,7 @@ import * as engagementSettingService from 'services/engagementSettingService';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter } from 'react-router-dom';
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -49,10 +50,35 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
-        return { projectId: 'test project id' };
+        return { projectId: '' };
     }),
     useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/create/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/create/form/`],
+    },
+);
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),

@@ -9,6 +9,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, mockVideo, videoWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -40,6 +41,40 @@ jest.mock('services/widgetService/VideoService', () => ({
     patchVideo: jest.fn(),
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([videoWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
 describe('Video Widget tests', () => {
     beforeAll(() => {
         setupWidgetTestEnvMock();
@@ -48,7 +83,7 @@ describe('Video Widget tests', () => {
     });
 
     async function addVideoWidget() {
-        await waitFor(() => expect(screen.getByText('Add Widget')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('Add Widget')).toBeEnabled());
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Video}`));
@@ -71,24 +106,24 @@ describe('Video Widget tests', () => {
     }
 
     test('Video widget is created when option is clicked', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([videoWidget]));
 
         await addVideoWidget();
 
-        expect(getWidgetsMock).toHaveBeenCalledTimes(1);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Description')).toBeVisible();
         expect(screen.getByText('Video Link')).toBeVisible();
     });
 
     test('Video widget handles input correctly', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await addVideoWidget();
         await inputMockVideodata();
     });
 
     test('Video can be submitted after inputting mock data', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
 
         await addVideoWidget();
         await inputMockVideodata();

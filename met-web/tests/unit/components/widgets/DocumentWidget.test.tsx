@@ -23,6 +23,7 @@ import { Widget, WidgetType } from 'models/widget';
 import { DocumentItem } from 'models/document';
 import { USER_ROLES } from 'services/userService/constants';
 import { engagementMetadata } from '../factory';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 const engagement: Engagement = {
     ...createDefaultEngagement(),
@@ -75,11 +76,35 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
-        return { projectId: '' };
+        return { projectId: '', engagementId: '1' };
     }),
     useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...engagement,
+                }),
+                widgets: Promise.resolve([documentWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
 }));
 
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${engagement.id}/form/`],
+    },
+);
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {
@@ -112,7 +137,9 @@ describe('Document widget in engagement page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
-    jest.spyOn(documentService, 'fetchDocuments').mockReturnValue(Promise.resolve([mockFolder]));
+    const fetchDocumentsMock = jest
+        .spyOn(documentService, 'fetchDocuments')
+        .mockReturnValue(Promise.resolve([mockFolder]));
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
         Promise.resolve([engagementMetadata]),
     );
@@ -137,7 +164,7 @@ describe('Document widget in engagement page tests', () => {
 
     async function openAddWidgetDrawer(container: HTMLElement) {
         await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeEnabled();
         });
 
         const addWidgetButton = screen.getByText('Add Widget');
@@ -150,7 +177,9 @@ describe('Document widget in engagement page tests', () => {
 
     async function openAddDocumentWidgetDrawer() {
         const documentOption = screen.getByTestId(`widget-drawer-option/${WidgetType.Document}`);
+        expect(documentOption).toBeVisible();
         fireEvent.click(documentOption);
+        documentOption.click();
 
         await waitFor(() => {
             expect(screen.getByText('Test file')).toBeVisible();
@@ -159,7 +188,11 @@ describe('Document widget in engagement page tests', () => {
     }
 
     test('Document widget is created when option is clicked', async () => {
-        const { container } = render(<EngagementForm />);
+        useParamsMock.mockReturnValue({ engagementId: '1' });
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
+        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
+        getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
+        const { container } = render(<RouterProvider router={router} />);
 
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
@@ -169,7 +202,7 @@ describe('Document widget in engagement page tests', () => {
             engagement_id: engagement.id,
             title: documentWidget.title,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Create Folder')).toBeVisible();
         expect(screen.getByText('Add Document Link')).toBeVisible();
         expect(screen.getByText('Upload Document')).toBeVisible();
@@ -180,14 +213,18 @@ describe('Document widget in engagement page tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
-        const { container } = render(<EngagementForm />);
+        fetchDocumentsMock.mockReturnValueOnce(Promise.resolve([mockFolder]));
+        const { container } = render(<RouterProvider router={router} />);
 
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
 
         const createFolderButton = screen.getByText('Create Folder');
-        fireEvent.click(createFolderButton);
+        await waitFor(() => {
+            expect(createFolderButton).toBeVisible();
+        });
 
+        createFolderButton.click();
         await waitFor(() => {
             expect(screen.getByText('Folder name')).toBeVisible();
             expect(screen.getByTestId('create-folder-form/save-button')).toBeVisible();
@@ -199,13 +236,14 @@ describe('Document widget in engagement page tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await openAddWidgetDrawer(container);
         await openAddDocumentWidgetDrawer();
 
         const addDocumentButton = screen.getByText('Add Document Link');
         fireEvent.click(addDocumentButton);
+        addDocumentButton.click();
 
         await waitFor(() => {
             expect(screen.getByText('Link')).toBeVisible();

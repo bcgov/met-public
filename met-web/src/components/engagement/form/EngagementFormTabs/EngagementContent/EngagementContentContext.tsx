@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CONTENT_TYPE } from 'models/engagementContent';
-import { getSummaryContent } from 'services/engagementSummaryService';
-import { getCustomContent } from 'services/engagementCustomService';
 import { ActionContext } from '../../ActionContext';
 import { EngagementTabsContext } from '../EngagementTabsContext';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
+import { useRouteLoaderData } from 'react-router-dom';
+import { EngagementSummaryContent } from 'models/engagementSummaryContent';
+import { EngagementCustomContent } from 'models/engagementCustomContent';
 
 export interface EngagementContentProps {
     isSummaryContentsLoading: boolean;
@@ -32,7 +31,6 @@ export const EngagementContentContext = createContext<EngagementContentProps>({
 });
 
 export const EngagementContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const dispatch = useAppDispatch();
     const { contentTabs, savedEngagement } = useContext(ActionContext);
     const {
         setRichContent,
@@ -48,69 +46,48 @@ export const EngagementContextProvider = ({ children }: { children: JSX.Element 
     const [isEditMode, setIsEditMode] = useState(false);
     const summaryItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
     const customItem = contentTabs.find((item) => item.content_type === CONTENT_TYPE.CUSTOM);
+    const routeLoaderData = useRouteLoaderData('single-engagement') as
+        | {
+              contentSummary: Promise<EngagementSummaryContent[]>;
+              customContent: Promise<EngagementCustomContent[]>;
+          }
+        | undefined;
+    const { contentSummary, customContent } = routeLoaderData ?? {};
 
-    const fetchEngagementSummaryContent = async () => {
+    // Load the engagement's summary from the shared individual engagement loader and watch the summary item variable for any changes.
+    useEffect(() => {
         if (!savedEngagement.id || !summaryItem) {
             setIsSummaryContentsLoading(false);
             return;
         }
-        try {
-            const result = await getSummaryContent(summaryItem.id);
-            setEngagementSummaryContent(result[0]);
-            setRichContent(result[0].rich_content);
-            setEngagementFormData({
-                ...engagementFormData,
-                content: result[0].content,
+        if (savedEngagement && contentSummary) {
+            contentSummary.then((result: EngagementSummaryContent[]) => {
+                setEngagementSummaryContent(result[0]);
+                setRichContent(result[0].rich_content);
+                setEngagementFormData({
+                    ...engagementFormData,
+                    content: result[0].content,
+                });
+                setIsSummaryContentsLoading(false);
             });
-            setIsSummaryContentsLoading(false);
-        } catch (error) {
-            setIsSummaryContentsLoading(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching engagement summary content',
-                }),
-            );
         }
-    };
+    }, [summaryItem, contentSummary, savedEngagement]);
 
-    const fetchEngagementCustomContent = async () => {
-        if (!savedEngagement.id || !customItem) {
-            setIsCustomContentsLoading(false);
-            return;
-        }
-        try {
-            const result = await getCustomContent(customItem.id);
-            setEngagementCustomContent(result[0]);
-            setCustomTextContent(result[0].custom_text_content);
-            setCustomJsonContent(result[0].custom_json_content);
-            setIsCustomContentsLoading(false);
-        } catch (error) {
-            setIsCustomContentsLoading(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching engagement custom content',
-                }),
-            );
-        }
-    };
-
+    // Load the engagement's custom content from the shared individual engagement loader and watch the customItem variable for any changes.
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchEngagementSummaryContent();
-        };
-
-        fetchData();
-    }, [summaryItem]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            await fetchEngagementCustomContent();
-        };
-
-        fetchData();
-    }, [customItem]);
+        if (savedEngagement && customContent) {
+            customContent.then((result: EngagementCustomContent[]) => {
+                if (!savedEngagement.id || !customItem) {
+                    setIsCustomContentsLoading(false);
+                    return;
+                }
+                setEngagementCustomContent(result);
+                setCustomTextContent(result[1].custom_text_content);
+                setCustomJsonContent(result[1].custom_json_content);
+                setIsCustomContentsLoading(false);
+            });
+        }
+    }, [customItem, customContent, savedEngagement]);
 
     return (
         <EngagementContentContext.Provider

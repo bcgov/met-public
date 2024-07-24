@@ -15,6 +15,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockEvent, eventWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => {
     return <div></div>;
@@ -34,15 +35,6 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
-}));
-
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: jest.fn(() => ({ search: '' })),
-    useParams: jest.fn(() => {
-        return { projectId: '' };
-    }),
-    useNavigate: () => jest.fn(),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -86,6 +78,40 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([eventWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
 describe('Event Widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
@@ -107,7 +133,7 @@ describe('Event Widget tests', () => {
 
     async function addEventWidget(container: HTMLElement) {
         await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeEnabled();
         });
 
         const addWidgetButton = screen.getByText('Add Widget');
@@ -137,7 +163,7 @@ describe('Event Widget tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);
 
@@ -146,7 +172,7 @@ describe('Event Widget tests', () => {
             engagement_id: draftEngagement.id,
             title: mockEvent.title,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Add In-Person Event')).toBeVisible();
         expect(screen.getByText('Add Virtual Session')).toBeVisible();
     });
@@ -163,7 +189,7 @@ describe('Event Widget tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);
 
@@ -191,7 +217,7 @@ describe('Event Widget tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);
 

@@ -13,24 +13,23 @@ import {
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { Button } from 'components/common/Input';
 import { BodyText } from 'components/common/Typography';
-import dayjs from 'dayjs';
-import { formatToUTC } from 'components/common/dateHelper';
 import { SearchOptions } from './SearchTypes';
 
 interface filterParams {
+    filterParams: SearchOptions;
     setFilterParams: (newsearchOptions: SearchOptions) => void;
 }
 
-const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
+const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams }) => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
     const initialStatusFilters = {
-        [EngagementDisplayStatus.Draft]: false,
-        [EngagementDisplayStatus.Scheduled]: false,
-        [EngagementDisplayStatus.Upcoming]: false,
-        [EngagementDisplayStatus.Open]: false,
-        [EngagementDisplayStatus.Closed]: false,
-        [EngagementDisplayStatus.Unpublished]: false,
+        [EngagementDisplayStatus.Draft]: filterParams.status_list?.includes(EngagementDisplayStatus.Draft),
+        [EngagementDisplayStatus.Scheduled]: filterParams.status_list?.includes(EngagementDisplayStatus.Scheduled),
+        [EngagementDisplayStatus.Upcoming]: filterParams.status_list?.includes(EngagementDisplayStatus.Upcoming),
+        [EngagementDisplayStatus.Open]: filterParams.status_list?.includes(EngagementDisplayStatus.Open),
+        [EngagementDisplayStatus.Closed]: filterParams.status_list?.includes(EngagementDisplayStatus.Closed),
+        [EngagementDisplayStatus.Unpublished]: filterParams.status_list?.includes(EngagementDisplayStatus.Unpublished),
     };
     const [statusFilters, setStatusFilters] = useState(initialStatusFilters);
 
@@ -42,10 +41,10 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
     };
 
     const [dateFilter, setDateFilter] = useState({
-        createdFromDate: '',
-        createdToDate: '',
-        publishedFromDate: '',
-        publishedToDate: '',
+        createdFromDate: filterParams.created_from_date,
+        createdToDate: filterParams.created_to_date,
+        publishedFromDate: filterParams.published_from_date,
+        publishedToDate: filterParams.published_to_date,
     });
     const { createdFromDate, createdToDate, publishedFromDate, publishedToDate } = dateFilter;
 
@@ -63,14 +62,6 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
         1) start dates to utc format 
         2) end dates to end of day and then to utc format
         */
-        const fCreatedFromDate = createdFromDate ? formatToUTC(createdFromDate) : createdFromDate;
-        const fCreatedToDate = createdToDate
-            ? formatToUTC(dayjs(createdToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
-            : createdToDate;
-        const fPublishedFromDate = publishedFromDate ? formatToUTC(publishedFromDate) : publishedFromDate;
-        const fPublishedToDate = publishedToDate
-            ? formatToUTC(dayjs(publishedToDate).endOf('day').format('YYYY-MM-DD HH:mm:ss'))
-            : publishedToDate;
 
         const selectedStatusList = Object.entries(statusFilters)
             .filter(([, value]) => value)
@@ -78,10 +69,10 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
 
         setFilterParams({
             status_list: selectedStatusList,
-            created_from_date: fCreatedFromDate,
-            created_to_date: fCreatedToDate,
-            published_from_date: fPublishedFromDate,
-            published_to_date: fPublishedToDate,
+            created_from_date: createdFromDate,
+            created_to_date: createdToDate,
+            published_from_date: publishedFromDate,
+            published_to_date: publishedToDate,
         });
     };
 
@@ -284,18 +275,18 @@ const AdvancedSearch: React.FC<filterParams> = ({ setFilterParams }) => {
                     <Grid item xs={12} sm={6}>
                         <BodyText bold>Date Published - To</BodyText>
                         <TextField
-                            id="createdTo-date"
-                            data-testid="createdTo-date"
+                            id="publishedTo-date"
+                            data-testid="publishedTo-date"
                             type="date"
                             label=" "
                             InputLabelProps={{
                                 shrink: false,
                             }}
                             fullWidth
-                            name="createdToDate"
-                            value={createdToDate}
+                            name="publishedToDate"
+                            value={publishedToDate}
                             onChange={handleDateFilterChange}
-                            InputProps={{ inputProps: { min: createdFromDate || null } }}
+                            InputProps={{ inputProps: { min: publishedFromDate || null } }}
                         />
                     </Grid>
                 </Grid>

@@ -1,18 +1,15 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getEngagement, patchEngagement } from '../../../services/engagementService';
-import { getEngagementContent } from 'services/engagementContentService';
-import { getSummaryContent } from 'services/engagementSummaryService';
+import { useNavigate, useParams, useRouteLoaderData, useRevalidator } from 'react-router-dom';
+import { patchEngagement } from '../../../services/engagementService';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
-import { EngagementContent, CONTENT_TYPE } from 'models/engagementContent';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Widget } from 'models/widget';
-import { useLazyGetWidgetsQuery } from 'apiManager/apiSlices/widgets';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
+import { EngagementSummaryContent } from 'models/engagementSummaryContent';
 
 interface EngagementSchedule {
     id: number;
@@ -31,7 +28,7 @@ export interface EngagementViewContext {
     isWidgetsLoading: boolean;
     scheduleEngagement: (_engagement: EngagementSchedule) => Promise<Engagement>;
     unpublishEngagement: ({ id, status_id }: UnpublishEngagementParams) => Promise<void>;
-    widgets: Widget[];
+    engagementWidgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
     content: string;
@@ -54,7 +51,7 @@ export const ActionContext = createContext<EngagementViewContext>({
     savedEngagement: createDefaultEngagement(),
     isEngagementLoading: true,
     isWidgetsLoading: true,
-    widgets: [],
+    engagementWidgets: [],
     mockStatus: SubmissionStatus.Upcoming,
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
@@ -67,18 +64,62 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const { engagementId: engagementIdParam, token, slug } = useParams<EngagementParams>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const revalidator = useRevalidator();
     const [engagementId, setEngagementId] = useState<number | null>(
         engagementIdParam ? Number(engagementIdParam) : null,
     );
     const [savedEngagement, setSavedEngagement] = useState<Engagement>(createDefaultEngagement());
     const [mockStatus, setMockStatus] = useState(savedEngagement.submission_status);
-    const [widgets, setWidgets] = useState<Widget[]>([]);
+    const [engagementWidgets, setEngagementWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [content, setContent] = useState('');
     const [richContent, setRichContent] = useState('');
 
-    const [getWidgetsTrigger] = useLazyGetWidgetsQuery();
+    const { engagement } = useRouteLoaderData('single-engagement') as { engagement: Promise<Engagement> };
+    const { contentSummary } = useRouteLoaderData('single-engagement') as {
+        contentSummary: Promise<EngagementSummaryContent[]>;
+    };
+    const { widgets } = useRouteLoaderData('single-engagement') as { widgets: Promise<Widget[]> };
+
+    // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
+    useEffect(() => {
+        engagement.then((result) => {
+            if (!engagementId && slug) {
+                return;
+            }
+            if (isNaN(Number(engagementId))) {
+                navigate('/not-found');
+                return;
+            }
+            setSavedEngagement(result);
+            setEngagementLoading(false);
+        });
+    }, [engagement]);
+
+    // Load the widgets from the shared individual engagement loader and watch the engagement variable for any changes.
+    useEffect(() => {
+        if (!engagementId && slug) {
+            return;
+        }
+        widgets.then((result) => {
+            setEngagementWidgets(result);
+            setIsWidgetsLoading(false);
+        });
+    }, [widgets]);
+
+    // Load the engagement's summary from the shared individual engagement loader and watch the summary variable for any changes.
+    useEffect(() => {
+        contentSummary.then((result: EngagementSummaryContent[]) => {
+            if ((!engagementId && slug) || !result.length) {
+                return;
+            }
+            const selectedEngagement = result[0];
+            setContent(selectedEngagement.content);
+            setRichContent(selectedEngagement.rich_content);
+            setEngagementLoading(false);
+        });
+    }, [contentSummary]);
 
     useEffect(() => {
         verifySubscribeToken();
@@ -117,8 +158,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const scheduleEngagement = async (engagement: EngagementSchedule): Promise<Engagement> => {
         try {
             const updateResult = await patchEngagement(engagement);
-            const getResult = await getEngagement(Number(engagementId));
-            setSavedEngagement({ ...getResult });
+            revalidator.revalidate();
             setEngagementLoading(false);
             dispatch(openNotification({ severity: 'success', text: 'Engagement Updated Successfully' }));
             return Promise.resolve(updateResult);
@@ -135,7 +175,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 status_id,
             });
             setEngagementLoading(true);
-            fetchEngagement();
+            revalidator.revalidate();
+            setEngagementLoading(false);
             dispatch(openNotification({ severity: 'success', text: 'Engagement unpublished successfully' }));
             return Promise.resolve();
         } catch (error) {
@@ -146,74 +187,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     const updateMockStatus = (status: SubmissionStatus) => {
         setMockStatus(status);
-    };
-
-    const fetchEngagement = async () => {
-        if (!engagementId && slug) {
-            return;
-        }
-        if (isNaN(Number(engagementId))) {
-            navigate('/not-found');
-            return;
-        }
-        try {
-            const result = await getEngagement(Number(engagementId));
-            setSavedEngagement({ ...result });
-        } catch (error) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Engagement information',
-                }),
-            );
-        }
-    };
-
-    const fetchWidgets = async () => {
-        if (!savedEngagement.id) {
-            return;
-        }
-        try {
-            const result = await getWidgetsTrigger(Number(engagementId), true).unwrap();
-            setWidgets(result);
-            setIsWidgetsLoading(false);
-        } catch (error) {
-            setIsWidgetsLoading(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Engagement wdigets',
-                }),
-            );
-        }
-    };
-
-    const fetchContents = async () => {
-        if (!savedEngagement.id) {
-            return;
-        }
-        try {
-            //TODO needs to changed along with the changes for tabs for public page
-            const engagementContents = await getEngagementContent(Number(engagementId));
-            const summaryItemId = await getSummaryItemId(engagementContents);
-            const summaryContent = await getSummaryContent(summaryItemId);
-            setContent(summaryContent[0].content);
-            setRichContent(summaryContent[0].rich_content);
-            setEngagementLoading(false);
-        } catch (error) {
-            setEngagementLoading(false);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Engagement contents',
-                }),
-            );
-        }
-    };
-
-    const getSummaryItemId = async (tabs: EngagementContent[]) => {
-        const summaryItem = tabs.find((item) => item.content_type === CONTENT_TYPE.SUMMARY);
-        return summaryItem?.id || 0; // Return null if summary item is not found
     };
 
     const handleFetchEngagementIdBySlug = async () => {
@@ -232,22 +205,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         handleFetchEngagementIdBySlug();
     }, [slug]);
 
-    useEffect(() => {
-        fetchEngagement();
-    }, [engagementId]);
-
-    useEffect(() => {
-        fetchWidgets();
-        fetchContents();
-    }, [savedEngagement]);
-
     return (
         <ActionContext.Provider
             value={{
                 savedEngagement,
                 isEngagementLoading,
                 scheduleEngagement,
-                widgets,
+                engagementWidgets,
                 isWidgetsLoading,
                 updateMockStatus,
                 mockStatus,

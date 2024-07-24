@@ -41,7 +41,7 @@ const EngagementForm = () => {
         const initialDescription = getTextFromDraftJsContentState(richDescription || savedEngagement.rich_description);
         setInitialRichDescription(richDescription || savedEngagement.rich_description);
         setDescriptionCharCount(initialDescription.length);
-    }, []);
+    }, [savedEngagement]);
 
     useEffect(() => {
         setIsNewEngagement(!savedEngagement.id || savedEngagement.id === 0);

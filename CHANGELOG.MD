@@ -13,6 +13,13 @@
   - Added new UI component to handle searching, selecting, and displaying users
   - Minor tweaks to existing wizard functionality
     - Minor backend change: don't throw error when setting an engagement's slug to its current value
+- **Feature** Rerouted engagement components to use useRouteLoaderData instead of making direct calls to services. [🎟️ DESENG-643](https://citz-gdx.atlassian.net/browse/DESENG-643)
+  - Authorized engagement listing page is now working, complete with filter, search, and pagination
+  - Authorized view engagement is fully working with widgets
+  - Authorized edit engagement is fully working (including custom data)
+  - Authorized create engagement is mostly working, with the exception of edit updates
+    - TODO: Users should be redirected to edit page once engagement is created
+  - Unauthorized homepage is working with engagements
 
 ## July 11, 2024
 

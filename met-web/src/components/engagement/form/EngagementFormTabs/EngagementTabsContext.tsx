@@ -130,8 +130,8 @@ export interface EngagementTabsContextState {
     setSlug: React.Dispatch<React.SetStateAction<EngagementSettingsSlugData>>;
     engagementSummaryContent: EngagementSummaryContent;
     setEngagementSummaryContent: React.Dispatch<React.SetStateAction<EngagementSummaryContent>>;
-    engagementCustomContent: EngagementCustomContent;
-    setEngagementCustomContent: React.Dispatch<React.SetStateAction<EngagementCustomContent>>;
+    engagementCustomContent: EngagementCustomContent[];
+    setEngagementCustomContent: React.Dispatch<React.SetStateAction<EngagementCustomContent[]>>;
     customTextContent: string;
     setCustomTextContent: React.Dispatch<React.SetStateAction<string>>;
     customJsonContent: string;
@@ -209,7 +209,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
     setEngagementSummaryContent: () => {
         /* empty default method  */
     },
-    engagementCustomContent: initialEngagementCustomContent,
+    engagementCustomContent: [initialEngagementCustomContent],
     setEngagementCustomContent: () => {
         /* empty default method  */
     },
@@ -252,8 +252,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [engagementSummaryContent, setEngagementSummaryContent] = useState<EngagementSummaryContent>(
         initialEngagementSummaryContent,
     );
-    const [engagementCustomContent, setEngagementCustomContent] =
-        useState<EngagementCustomContent>(initialEngagementCustomContent);
+    const [engagementCustomContent, setEngagementCustomContent] = useState<EngagementCustomContent[]>([
+        initialEngagementCustomContent,
+    ]);
     const [engagementFormError, setEngagementFormError] = useState<EngagementFormError>(initialFormError);
     const metadataFormRef = useRef<HTMLFormElement>(null);
 
@@ -275,6 +276,26 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
     const [teamMembers, setTeamMembers] = useState<EngagementTeamMember[]>([]);
     const [addTeamMemberOpen, setAddTeamMemberOpen] = useState(false);
     const [teamMembersLoading, setTeamMembersLoading] = useState(false);
+
+    useEffect(() => {
+        if (savedEngagement.id) {
+            setEngagementFormData({
+                name: savedEngagement.name || '',
+                start_date: savedEngagement.start_date,
+                end_date: savedEngagement.end_date,
+                description: savedEngagement.description || '',
+                content: savedEngagement.content || '',
+                is_internal: savedEngagement.is_internal || false,
+                consent_message: savedEngagement.consent_message || '',
+                sponsor_name: savedEngagement.sponsor_name,
+                cta_message: savedEngagement.cta_message,
+                cta_url: savedEngagement.cta_url,
+            });
+            setRichDescription(savedEngagement?.rich_description || '');
+            setRichConsentMessage(savedEngagement?.consent_message || '');
+            setRichContent(savedEngagement?.rich_content || '');
+        }
+    }, [savedEngagement]);
 
     const loadTeamMembers = async () => {
         try {
@@ -375,7 +396,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                     rich_content: richContent,
                 },
             ) as PatchSummaryContentRequest;
-
             if (Object.keys(updatedSummaryContent).length === 0) {
                 setSaving(false);
                 return;
@@ -405,24 +425,23 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         try {
             const updatedCustomContent = updatedDiff(
                 {
-                    custom_text_content: engagementCustomContent.custom_text_content,
-                    custom_json_content: engagementCustomContent.custom_json_content,
+                    custom_text_content: engagementCustomContent[1].custom_text_content,
+                    custom_json_content: engagementCustomContent[1].custom_json_content,
                 },
                 {
                     custom_text_content: customTextContent,
                     custom_json_content: customJsonContent,
                 },
             ) as PatchCustomContentRequest;
-
             if (Object.keys(updatedCustomContent).length === 0) {
                 setSaving(false);
                 return;
             }
             const result = await patchCustomContent(
-                engagementCustomContent.engagement_content_id,
+                engagementCustomContent[1].engagement_content_id,
                 updatedCustomContent,
             );
-            setEngagementCustomContent(result);
+            setEngagementCustomContent([result]);
             setCustomJsonContent(result.custom_json_content);
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
@@ -564,7 +583,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             await handleSaveSlug(slug);
             await handleSaveEngagementMetadata();
         }
-
         return engagement;
     };
 
