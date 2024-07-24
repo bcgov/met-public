@@ -78,7 +78,15 @@ const UserGuideNav = () => {
                 },
             }}
         >
-            <ListItemButton onClick={openHelpPage}>
+            <ListItemButton
+                onClick={openHelpPage}
+                disableRipple
+                sx={{
+                    '&:hover, &:active, &:focus': {
+                        backgroundColor: 'transparent',
+                    },
+                }}
+            >
                 <FontAwesomeIcon
                     icon={faBookOpen}
                     style={{

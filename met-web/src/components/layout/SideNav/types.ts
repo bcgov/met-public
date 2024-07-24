@@ -14,12 +14,8 @@ export interface DrawerBoxProps {
 
 export interface IconAssignments {
     [k: string]: IconDefinition;
-    Home: IconDefinition;
-    Engagements: IconDefinition;
-    Surveys: IconDefinition;
-    Metadata: IconDefinition;
-    Languages: IconDefinition;
-    'User Admin': IconDefinition;
-    'Tenant Admin': IconDefinition;
-    'MET Feedback': IconDefinition;
+}
+
+export interface CloseButtonProps {
+    setOpen: (open: boolean) => void;
 }

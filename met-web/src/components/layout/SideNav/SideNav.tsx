@@ -1,9 +1,9 @@
 import React from 'react';
-import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider, ThemeProvider } from '@mui/material';
+import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes, Route } from './SideNavElements';
-import { DarkTheme, Palette, colors } from '../../../styles/Theme';
-import { SideNavProps, DrawerBoxProps, IconAssignments } from './types';
+import { Palette, colors } from '../../../styles/Theme';
+import { SideNavProps, DrawerBoxProps, CloseButtonProps, IconAssignments } from './types';
 import { MetHeader4 } from 'components/common';
 import { When, Unless } from 'react-if';
 import { useAppSelector } from 'hooks';
@@ -20,6 +20,41 @@ import { faMessagePen } from '@fortawesome/pro-regular-svg-icons/faMessagePen';
 import { faLinkSlash } from '@fortawesome/pro-regular-svg-icons/faLinkSlash';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
 import { faArrowLeft } from '@fortawesome/pro-solid-svg-icons/faArrowLeft';
+
+const CloseButton = ({ setOpen }: CloseButtonProps) => {
+    return (
+        <>
+            <ListItem
+                key={'closeMenu'}
+                sx={{
+                    backgroundColor: Palette.background.default,
+                    '&:hover, &:focus': {
+                        filter: 'brightness(96%)',
+                    },
+                    '&:active': {
+                        filter: 'brightness(92%)',
+                    },
+                }}
+            >
+                <ListItemButton
+                    onClick={() => setOpen(false)}
+                    disableRipple
+                    sx={{
+                        justifyContent: 'flex-end',
+                        color: Palette.text.primary,
+                        '&:hover, &:active, &:focus': {
+                            backgroundColor: 'transparent',
+                        },
+                    }}
+                >
+                    <FontAwesomeIcon icon={faArrowLeft} style={{ paddingRight: '0.75rem' }} />
+                    Close Menu
+                </ListItemButton>
+            </ListItem>
+            <Divider sx={{ backgroundColor: colors.surface.gray[30] }} />
+        </>
+    );
+};
 
 const DrawerBox = ({ isMediumScreen, setOpen }: DrawerBoxProps) => {
     const navigate = useNavigate();
@@ -60,6 +95,12 @@ const DrawerBox = ({ isMediumScreen, setOpen }: DrawerBoxProps) => {
                     }}
                 >
                     <ListItemButton
+                        disableRipple
+                        sx={{
+                            '&:hover, &:active, &:focus': {
+                                backgroundColor: 'transparent',
+                            },
+                        }}
                         data-testid={`SideNav/${route.name}-button`}
                         onClick={() => {
                             navigate(route.path);
@@ -117,39 +158,6 @@ const DrawerBox = ({ isMediumScreen, setOpen }: DrawerBoxProps) => {
         return <FontAwesomeIcon icon={iconAssignments[route.name]} style={fontAwesomeStyles} />;
     };
 
-    const CloseButton = () => {
-        return (
-            <>
-                <ListItem
-                    key={'closeMenu'}
-                    sx={{
-                        minHeight: '50px',
-                        backgroundColor: Palette.background.default,
-                        '&:hover, &:focus': {
-                            filter: 'brightness(96%)',
-                        },
-                        '&:active': {
-                            filter: 'brightness(92%)',
-                        },
-                    }}
-                >
-                    <ListItemButton
-                        onClick={() => setOpen(false)}
-                        sx={{
-                            justifyContent: 'flex-end',
-                            color: Palette.text.primary,
-                            verticalAlign: 'middle',
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faArrowLeft} style={{ paddingRight: '0.75rem' }} />
-                        Close Menu
-                    </ListItemButton>
-                </ListItem>
-                <Divider sx={{ backgroundColor: colors.surface.gray[30] }} />
-            </>
-        );
-    };
-
     return (
         <Box
             sx={{
@@ -163,7 +171,7 @@ const DrawerBox = ({ isMediumScreen, setOpen }: DrawerBoxProps) => {
             }}
         >
             <List sx={{ pt: '0', pb: '0' }}>
-                {!isMediumScreen && <CloseButton />}
+                {!isMediumScreen && <CloseButton setOpen={setOpen} />}
                 {filteredRoutes.map((route) => (
                     <>
                         <When condition={currentBaseRoute === route.base}>{handleListItems(route, 'selected')}</When>
@@ -178,7 +186,7 @@ const DrawerBox = ({ isMediumScreen, setOpen }: DrawerBoxProps) => {
 const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavProps) => {
     if (!drawerWidth) return <></>;
     return (
-        <ThemeProvider theme={DarkTheme}>
+        <>
             {isMediumScreen ? (
                 <Drawer
                     variant="permanent"
@@ -216,7 +224,7 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavPr
                     <DrawerBox isMediumScreen={isMediumScreen} setOpen={setOpen} />
                 </Drawer>
             )}
-        </ThemeProvider>
+        </>
     );
 };
 
