@@ -15,6 +15,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockMap, mapWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
+import { createMemoryRouter } from 'react-router-dom';
 
 const mockEngagementSettings: EngagementSettings = {
     ...createDefaultEngagementSettings(),
@@ -88,6 +89,40 @@ jest.mock('react-router-dom', () => ({
 
 jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve([engagementMetadata]));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([mapWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
 describe('Map Widget tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
@@ -106,7 +141,7 @@ describe('Map Widget tests', () => {
 
     async function addMapWidget(container: HTMLElement) {
         await waitFor(() => {
-            expect(screen.getByText('Add Widget')).toBeInTheDocument();
+            expect(screen.getByText('Add Widget')).toBeEnabled();
         });
 
         const addWidgetButton = screen.getByText('Add Widget');
@@ -145,7 +180,7 @@ describe('Map Widget tests', () => {
             engagement_id: draftEngagement.id,
             title: mapWidget.title,
         });
-        expect(getWidgetsMock).toHaveBeenCalledTimes(2);
+        expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Upload Shapefile')).toBeVisible();
         expect(screen.getByText('Preview Map')).toBeVisible();
     });

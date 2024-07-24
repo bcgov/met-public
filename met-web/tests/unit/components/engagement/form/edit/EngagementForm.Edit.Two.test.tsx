@@ -14,8 +14,10 @@ import * as teamMemberService from 'services/membershipService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { WidgetType } from 'models/widget';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata, engagementContentData } from '../../../factory';
+import { draftEngagement, engagementMetadata } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createDefaultEngagementContent } from 'models/engagementContent';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -81,6 +83,39 @@ Object.defineProperty(window, 'location', {
     },
 });
 
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useRouteMatch: () => ({ url: '/engagements/1/form/' }),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve(draftEngagement),
+                widgets: Promise.resolve([]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([createDefaultEngagementContent()]),
+            };
+        }
+    },
+    useLoaderData: () => ({
+        engagement: Promise.resolve(draftEngagement),
+        widgets: Promise.resolve([]),
+        metadata: Promise.resolve([]),
+        content: Promise.resolve([createDefaultEngagementContent()]),
+    }),
+}));
+
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const openNotificationModalMock = jest
@@ -95,7 +130,7 @@ describe('Engagement form page tests', () => {
     );
     jest.spyOn(engagementMetadataService, 'getMetadataTaxa').mockReturnValue(Promise.resolve([]));
     jest.spyOn(engagementContentService, 'postEngagementContent').mockReturnValue(
-        Promise.resolve(engagementContentData),
+        Promise.resolve(createDefaultEngagementContent()),
     );
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     const getEngagementMock = jest
@@ -123,7 +158,7 @@ describe('Engagement form page tests', () => {
             }),
         );
 
-        const { getByTestId, getByText } = render(<EngagementForm />);
+        const { getByTestId, getByText } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -150,11 +185,11 @@ describe('Engagement form page tests', () => {
                 surveys: surveys,
             }),
         );
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root'));
+            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
         });
 
         expect(screen.getByText('Add Widget')).toBeVisible();
@@ -170,7 +205,7 @@ describe('Engagement form page tests', () => {
             }),
         );
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -189,7 +224,7 @@ describe('Engagement form page tests', () => {
 
     test('Day Calculator Modal appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<EngagementForm />);
+        const { getByTestId, container, getByText } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -219,7 +254,7 @@ describe('Engagement form page tests', () => {
 
     test('Day Calculator Modal Day Zero Calculation', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -244,7 +279,7 @@ describe('Engagement form page tests', () => {
 
     test('Day Calculator Modal Start Date Calculation', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -269,7 +304,7 @@ describe('Engagement form page tests', () => {
 
     test('Day Calculator Modal End Date Calculation', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -294,7 +329,7 @@ describe('Engagement form page tests', () => {
 
     test('Engagement summary tab appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<EngagementForm />);
+        const { getByTestId, container, getByText } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
@@ -310,11 +345,12 @@ describe('Engagement form page tests', () => {
 
     test('Add new custom tab Modal appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<EngagementForm />);
+        const { getByTestId, container, getByText } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+            expect(getByTestId('add-tab-menu')).toBeEnabled();
         });
 
         const addNewTabButton = getByTestId('add-tab-menu');
@@ -322,6 +358,7 @@ describe('Engagement form page tests', () => {
 
         await waitFor(() => {
             expect(getByTestId('add-new-custom-tab')).toBeVisible();
+            expect(getByTestId('add-new-custom-tab')).toBeEnabled();
         });
 
         const addNewCustomTab = getByTestId('add-new-custom-tab');
@@ -336,15 +373,16 @@ describe('Engagement form page tests', () => {
 
     test('Edit tab Modal appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<EngagementForm />);
+        const { getByTestId, container, getByText } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
+            expect(getByTestId('edit-tab-details')).toBeVisible();
         });
 
-        const addNewTabButton = getByTestId('edit-tab-details');
-        fireEvent.click(addNewTabButton);
+        const editTabDetailsButton = getByTestId('edit-tab-details');
+        fireEvent.click(editTabDetailsButton);
 
         await waitFor(() => {
             expect(getByTestId('update-tab-button')).toBeVisible();
@@ -355,7 +393,7 @@ describe('Engagement form page tests', () => {
     test('Test cannot create tab with empty fields', async () => {
         const handleCreateTab = jest.fn();
         useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container } = render(<EngagementForm />);
+        const { getByTestId, container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();

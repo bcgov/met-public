@@ -7,6 +7,7 @@ import * as pollService from 'services/widgetService/PollService';
 import { draftEngagement, pollWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -29,6 +30,40 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
+
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useLocation: jest.fn(() => ({ search: '' })),
+    useParams: jest.fn(() => {
+        return { projectId: '', engagementId: '1' };
+    }),
+    useNavigate: () => jest.fn(),
+    useRouteLoaderData: (routeId: string) => {
+        if (routeId === 'single-engagement') {
+            return {
+                engagement: Promise.resolve({
+                    ...draftEngagement,
+                }),
+                widgets: Promise.resolve([pollWidget]),
+                metadata: Promise.resolve([]),
+                content: Promise.resolve([]),
+                taxa: Promise.resolve([]),
+            };
+        }
+    },
+}));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/engagements/:engagementId/form/',
+            element: <EngagementForm />,
+        },
+    ],
+    {
+        initialEntries: [`/engagements/${draftEngagement.id}/form/`],
+    },
+);
 
 describe('Poll Widget tests', () => {
     const mockPoll = {
@@ -68,19 +103,22 @@ describe('Poll Widget tests', () => {
     async function renderPollWidgetView() {
         await waitFor(() => expect(screen.getByText('Results')).toBeInTheDocument());
         fireEvent.click(screen.getByText('Results'));
-        expect(screen.getByText('Poll')).toBeVisible();
+        screen.getByText('Results').click();
+        await waitFor(() => {
+            expect(screen.getByText('Poll - Results')).toBeVisible();
+        });
         await waitFor(() => expect(screen.getByText('Test Poll')).toBeInTheDocument());
     }
 
     test('Poll widget results is rendered', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await renderPollWidgetView();
         expect(screen.getByText(mockPollResult.description)).toBeVisible();
         expect(screen.getByText('Total Votes: 4')).toBeVisible();
     });
 
     test('Poll widget answer options and its percentage is rendered', async () => {
-        render(<EngagementForm />);
+        render(<RouterProvider router={router} />);
         await renderPollWidgetView();
         expect(screen.getByText(mockPollResult.answers[0].answer_text)).toBeVisible();
         expect(screen.getByText(mockPollResult.answers[1].answer_text)).toBeVisible();

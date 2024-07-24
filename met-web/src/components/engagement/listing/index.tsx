@@ -47,7 +47,7 @@ const EngagementListing = () => {
         value: '',
     });
     const fetcher = useFetcher();
-    const fetcherData = fetcher.data as { engagements: Page<Engagement>; params: GetEngagementsParams } | undefined;
+    const fetcherData = fetcher.data as { engagements: Page<Engagement> } | undefined;
     const engagementPage = fetcherData?.engagements;
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({

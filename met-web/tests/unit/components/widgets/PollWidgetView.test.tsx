@@ -5,6 +5,7 @@ import PollWidgetView from 'components/engagement/view/widgets/Poll/PollWidgetVi
 import * as widgetService from 'services/widgetService/PollService';
 import * as notificationService from 'services/notificationService/notificationSlice';
 import * as reactRedux from 'react-redux';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 // Mock for useDispatch
 jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
@@ -58,13 +59,23 @@ describe('PollWidgetView Component Tests', () => {
         ],
     };
 
+    const router = createMemoryRouter(
+        [
+            {
+                path: '/polls/:id',
+                element: <PollWidgetView widget={widget} />,
+            },
+        ],
+        { initialEntries: ['/polls/1'] },
+    );
+
     beforeEach(() => {
         jest.spyOn(widgetService, 'fetchPollWidgets').mockReturnValue(Promise.resolve([mockPoll]));
     });
 
     test('renders poll details on successful data fetch', async () => {
         await act(async () => {
-            render(<PollWidgetView widget={widget} />);
+            render(<RouterProvider router={router} />);
         });
 
         await waitFor(() => {
@@ -78,7 +89,7 @@ describe('PollWidgetView Component Tests', () => {
     test('displays error notification on fetch failure', async () => {
         jest.spyOn(widgetService, 'fetchPollWidgets').mockRejectedValue(new Error('Fetch Error'));
         await act(async () => {
-            render(<PollWidgetView widget={widget} />);
+            render(<RouterProvider router={router} />);
         });
 
         await waitFor(() => {
@@ -92,7 +103,7 @@ describe('PollWidgetView Component Tests', () => {
     test('submits poll response and displays success message', async () => {
         jest.spyOn(widgetService, 'postPollResponse').mockResolvedValue({ selected_answer_id: '1' });
         await act(async () => {
-            render(<PollWidgetView widget={widget} />);
+            render(<RouterProvider router={router} />);
         });
 
         const optionRadioButton = screen.getByLabelText(mockPoll.answers[0].answer_text);
@@ -112,7 +123,7 @@ describe('PollWidgetView Component Tests', () => {
             response: { status: 400 },
         });
         await act(async () => {
-            render(<PollWidgetView widget={widget} />);
+            render(<RouterProvider router={router} />);
         });
 
         const optionRadioButton = screen.getByLabelText(mockPoll.answers[0].answer_text);
