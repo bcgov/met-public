@@ -31,7 +31,6 @@ import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { Page } from 'services/type';
-import { GetEngagementsParams } from 'services/engagementService';
 
 interface SearchFilter {
     key?: string;

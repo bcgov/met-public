@@ -205,14 +205,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         handleFetchEngagementIdBySlug();
     }, [slug]);
 
-    useEffect(() => {
-        // revalidator.revalidate();
-    }, [engagementId]);
-
-    useEffect(() => {
-        // revalidator.revalidate();
-    }, [savedEngagement]);
-
     return (
         <ActionContext.Provider
             value={{

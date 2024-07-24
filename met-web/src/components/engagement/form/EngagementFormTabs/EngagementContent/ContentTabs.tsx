@@ -52,7 +52,6 @@ export const ContentTabs: React.FC = () => {
             return;
         }
         await deleteEngagementContent(savedEngagement.id, tab_id);
-        // await fetchEngagementContents();
         setTabIndex(0);
 
         // Check if the deleted tab was a custom tab and reset customTabAdded state

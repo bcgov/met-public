@@ -1,9 +1,9 @@
 import React from 'react';
 import { Params, defer, Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
-import EngagementForm from '../components/engagement/form'; // TODO: Convert tenant calls to route loader
-import EngagementListing from '../components/engagement/listing'; // TODO: Convert tenant calls to route loader
-import EngagementView from '../components/engagement/view'; // TODO: Convert tenant calls to route loader
+import EngagementForm from '../components/engagement/form';
+import EngagementListing from '../components/engagement/listing';
+import EngagementView from '../components/engagement/view';
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
@@ -17,7 +17,7 @@ import EngagementComments from '../components/engagement/dashboard/comment';
 import UnderConstruction from './UnderConstruction';
 import FeedbackListing from 'components/feedback/listing';
 import UserManagementListing from 'components/userManagement/listing';
-import Dashboard from 'components/dashboard'; // TODO: Convert tenant calls to route loader
+import Dashboard from 'components/dashboard';
 import Unauthorized from './Unauthorized';
 import AuthGate from './AuthGate';
 import { USER_ROLES } from 'services/userService/constants';

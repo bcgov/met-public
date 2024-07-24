@@ -139,7 +139,6 @@ const router = createMemoryRouter(
 describe('Engagement listing page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
-    const getEngagementMock = jest.spyOn(engagementService, 'getEngagements');
 
     beforeEach(() => {
         setupEnv();
