@@ -1,6 +1,6 @@
 import { USER_ROLES } from 'services/userService/constants';
 
-interface Route {
+export interface Route {
     name: string;
     path: string;
     base: string;
@@ -25,25 +25,11 @@ export const Routes: Route[] = [
         allowedRoles: [],
     },
     {
-        name: 'Metadata Management',
+        name: 'Metadata',
         path: '/metadatamanagement',
         base: '/metadatamanagement',
         authenticated: true,
         allowedRoles: [USER_ROLES.MANAGE_METADATA],
-    },
-    {
-        name: 'User Management',
-        path: '/usermanagement',
-        base: 'usermanagement',
-        authenticated: true,
-        allowedRoles: [USER_ROLES.VIEW_USERS],
-    },
-    {
-        name: 'Feedback Tool',
-        path: '/feedback',
-        base: 'feedback',
-        authenticated: true,
-        allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
     },
     {
         name: 'Languages',
@@ -53,10 +39,24 @@ export const Routes: Route[] = [
         allowedRoles: [USER_ROLES.VIEW_LANGUAGES],
     },
     {
+        name: 'User Admin',
+        path: '/usermanagement',
+        base: 'usermanagement',
+        authenticated: true,
+        allowedRoles: [USER_ROLES.VIEW_USERS],
+    },
+    {
         name: 'Tenant Admin',
         path: '/tenantadmin',
         base: 'tenantadmin',
         authenticated: true,
         allowedRoles: [USER_ROLES.SUPER_ADMIN],
+    },
+    {
+        name: 'MET Feedback',
+        path: '/feedback',
+        base: 'feedback',
+        authenticated: true,
+        allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
     },
 ];

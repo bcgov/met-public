@@ -33,7 +33,7 @@ interface Translations {
 }
 
 const App = () => {
-    const drawerWidth = 280;
+    const drawerWidth = 300;
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
