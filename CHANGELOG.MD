@@ -1,3 +1,9 @@
+## July 25, 2024
+
+- **Feature** New admin navigation [🎟️ DESENG-661](https://citz-gdx.atlassian.net/browse/DESENG-661)
+  - Implemented new admin navigation design for desktop and mobile viewports.
+  - Implemented additional accessibility for admin navigation
+
 ## July 17, 2024
 
 - **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)

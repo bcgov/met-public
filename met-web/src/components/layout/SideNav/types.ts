@@ -4,3 +4,12 @@ export interface SideNavProps {
     drawerWidth: number;
     setOpen: (open: boolean) => void;
 }
+
+export interface DrawerBoxProps {
+    isMediumScreenOrLarger: boolean;
+    setOpen: (open: boolean) => void;
+}
+
+export interface CloseButtonProps {
+    setOpen: (open: boolean) => void;
+}
