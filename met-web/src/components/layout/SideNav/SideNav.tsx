@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes, Route } from './SideNavElements';
 import { Palette, colors } from '../../../styles/Theme';
 import { SideNavProps, DrawerBoxProps, CloseButtonProps } from './types';
-import { MetHeader4 } from 'components/common';
 import { When, Unless } from 'react-if';
 import { useAppSelector } from 'hooks';
 import UserGuideNav from './UserGuideNav';
@@ -110,7 +109,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                             icon={route.icon ?? faLinkSlash}
                         />
 
-                        <MetHeader4
+                        <span
                             style={{
                                 color: 'selected' === itemType ? Palette.primary.light : Palette.text.primary,
                                 fontWeight: 'selected' === itemType ? 'bold' : '500',
@@ -123,7 +122,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                                     <FontAwesomeIcon icon={faCheck} />
                                 </span>
                             </When>
-                        </MetHeader4>
+                        </span>
                     </ListItemButton>
                 </ListItem>
                 <Divider sx={{ backgroundColor: colors.surface.gray[30] }} />

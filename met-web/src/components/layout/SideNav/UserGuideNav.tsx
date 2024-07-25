@@ -1,7 +1,6 @@
 import React from 'react';
 import { ListItemButton, ListItem } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
 import { Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -59,11 +58,11 @@ const UserGuideNav = () => {
     const openHelpPage = () => {
         const key = handleSimilarityScore();
         if (!key) {
-            window.open(HELP_URL, '_blank', 'noopener');
+            window.location.href = HELP_URL;
             return;
         }
         const helpPagePath = key ? helpPaths[key] : HELP_URL;
-        window.open(helpPagePath, '_blank', 'noopener');
+        window.location.href = helpPagePath;
     };
 
     return (
@@ -88,7 +87,7 @@ const UserGuideNav = () => {
                         width: '1.1rem',
                     }}
                 />
-                <MetHeader4
+                <span
                     color={Palette.text.primary}
                     style={{
                         color: Palette.text.primary,
@@ -97,7 +96,7 @@ const UserGuideNav = () => {
                     }}
                 >
                     User Guide
-                </MetHeader4>
+                </span>
             </ListItemButton>
         </ListItem>
     );
