@@ -1,5 +1,3 @@
-import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-
 export interface SideNavProps {
     open: boolean;
     isMediumScreen: boolean;
@@ -8,12 +6,8 @@ export interface SideNavProps {
 }
 
 export interface DrawerBoxProps {
-    isMediumScreen: boolean;
+    isMediumScreenOrLarger: boolean;
     setOpen: (open: boolean) => void;
-}
-
-export interface IconAssignments {
-    [k: string]: IconDefinition;
 }
 
 export interface CloseButtonProps {

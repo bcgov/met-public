@@ -3,7 +3,7 @@ import { ListItemButton, ListItem } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
-import { Palette } from 'styles/Theme';
+import { colors, Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/pro-regular-svg-icons/faBookOpen';
 
@@ -69,12 +69,16 @@ const UserGuideNav = () => {
         <ListItem
             key="user-guide"
             sx={{
+                padding: 0,
                 backgroundColor: Palette.background.default,
                 '&:hover, &:focus': {
                     filter: 'brightness(96%)',
                 },
                 '&:active': {
                     filter: 'brightness(92%)',
+                },
+                '&:has(.MuiButtonBase-root:focus-visible)': {
+                    boxShadow: `inset 0px 0px 0px 2px ${colors.focus.regular.outer}`,
                 },
             }}
         >
@@ -85,6 +89,8 @@ const UserGuideNav = () => {
                     '&:hover, &:active, &:focus': {
                         backgroundColor: 'transparent',
                     },
+                    padding: 2,
+                    pl: 4,
                 }}
             >
                 <FontAwesomeIcon
