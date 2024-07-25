@@ -3,7 +3,7 @@ import { ListItemButton, ListItem } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { MetHeader4 } from 'components/common';
 import { levenshteinDistance } from 'helper';
-import { colors, Palette } from 'styles/Theme';
+import { Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/pro-regular-svg-icons/faBookOpen';
 import { routeItemStyle } from './SideNav';
