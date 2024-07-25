@@ -85,6 +85,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                     }}
                 >
                     <ListItemButton
+                        component="a"
                         disableRipple
                         sx={{
                             '&:hover, &:active, &:focus': {
@@ -118,7 +119,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                         >
                             {route.name}
                             <When condition={currentBaseRoute === route.base}>
-                                <span style={{ position: 'absolute', right: '1rem' }}>
+                                <span style={{ position: 'absolute', right: '2rem' }}>
                                     <FontAwesomeIcon icon={faCheck} />
                                 </span>
                             </When>
@@ -135,6 +136,8 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
 
     return (
         <Box
+            component="nav"
+            aria-labelledby="Editor navigation"
             sx={{
                 mr: isMediumScreenOrLarger ? '1.25rem' : '0',
                 overflow: 'auto',

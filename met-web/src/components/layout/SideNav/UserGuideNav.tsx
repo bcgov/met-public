@@ -68,6 +68,7 @@ const UserGuideNav = () => {
     return (
         <ListItem key="user-guide" sx={routeItemStyle}>
             <ListItemButton
+                component="a"
                 onClick={openHelpPage}
                 disableRipple
                 sx={{
