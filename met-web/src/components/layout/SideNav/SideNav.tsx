@@ -13,25 +13,36 @@ import { faLinkSlash } from '@fortawesome/pro-regular-svg-icons/faLinkSlash';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
 import { faArrowLeft } from '@fortawesome/pro-solid-svg-icons/faArrowLeft';
 
+export const routeItemStyle = {
+    padding: 0,
+    backgroundColor: Palette.background.default,
+    '&:hover, &:focus': {
+        filter: 'brightness(96%)',
+    },
+    '&:active': {
+        filter: 'brightness(92%)',
+    },
+    '&:has(.MuiButtonBase-root:focus-visible)': {
+        boxShadow: `inset 0px 0px 0px 2px ${colors.focus.regular.outer}`,
+    },
+    '&:first-of-type': {
+        borderTopRightRadius: '16px', //round outline to match border radius of parent
+    },
+    '&:last-of-type': {
+        borderBottomRightRadius: '16px',
+    },
+};
+
 const CloseButton = ({ setOpen }: CloseButtonProps) => {
     return (
         <>
-            <ListItem
-                key={'closeMenu'}
-                sx={{
-                    backgroundColor: Palette.background.default,
-                    '&:hover, &:focus': {
-                        filter: 'brightness(96%)',
-                    },
-                    '&:active': {
-                        filter: 'brightness(92%)',
-                    },
-                }}
-            >
+            <ListItem key={'closeMenu'} sx={routeItemStyle}>
                 <ListItemButton
                     onClick={() => setOpen(false)}
                     disableRipple
                     sx={{
+                        padding: 2,
+                        pr: 4,
                         justifyContent: 'flex-end',
                         color: Palette.text.primary,
                         '&:hover, &:active, &:focus': {
@@ -70,17 +81,8 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 <ListItem
                     key={route.name}
                     sx={{
-                        padding: 0, // Make the entire list item clickable
+                        ...routeItemStyle,
                         backgroundColor: 'selected' === itemType ? colors.surface.blue[10] : Palette.background.default,
-                        '&:hover, &:focus': {
-                            filter: 'brightness(96%)',
-                        },
-                        '&:active': {
-                            filter: 'brightness(92%)',
-                        },
-                        '&:has(.MuiButtonBase-root:focus-visible)': {
-                            boxShadow: `inset 0px 0px 0px 2px ${colors.focus.regular.outer}`,
-                        },
                     }}
                 >
                     <ListItemButton
