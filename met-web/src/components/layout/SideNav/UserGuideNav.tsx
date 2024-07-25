@@ -6,6 +6,7 @@ import { levenshteinDistance } from 'helper';
 import { Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/pro-regular-svg-icons/faBookOpen';
+import { routeItemStyle } from './SideNav';
 
 const THRESHOLD_SIMILARITY_SCORE = 10;
 const HELP_URL = 'https://bcgov.github.io/met-guide';
@@ -66,18 +67,7 @@ const UserGuideNav = () => {
     };
 
     return (
-        <ListItem
-            key="user-guide"
-            sx={{
-                backgroundColor: Palette.background.default,
-                '&:hover, &:focus': {
-                    filter: 'brightness(96%)',
-                },
-                '&:active': {
-                    filter: 'brightness(92%)',
-                },
-            }}
-        >
+        <ListItem key="user-guide" sx={routeItemStyle}>
             <ListItemButton
                 onClick={openHelpPage}
                 disableRipple
@@ -85,6 +75,8 @@ const UserGuideNav = () => {
                     '&:hover, &:active, &:focus': {
                         backgroundColor: 'transparent',
                     },
+                    padding: 2,
+                    pl: 4,
                 }}
             >
                 <FontAwesomeIcon

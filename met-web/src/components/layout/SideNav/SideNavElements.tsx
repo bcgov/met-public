@@ -1,21 +1,34 @@
 import { USER_ROLES } from 'services/userService/constants';
-
+import { IconDefinition } from '@fortawesome/fontawesome-common-types';
+import {
+    faHouse,
+    faPeopleArrows,
+    faSquarePollHorizontal,
+    faTags,
+    faGlobe,
+    faUserGear,
+    faHouseUser,
+    faMessagePen,
+} from '@fortawesome/pro-regular-svg-icons';
 export interface Route {
     name: string;
     path: string;
     base: string;
     authenticated: boolean;
     allowedRoles: string[];
+    icon?: IconDefinition;
+    customComponent?: React.ReactNode;
 }
 
 export const Routes: Route[] = [
-    { name: 'Home', path: '/home', base: '/', authenticated: false, allowedRoles: [] },
+    { name: 'Home', path: '/home', base: '/', authenticated: false, allowedRoles: [], icon: faHouse },
     {
         name: 'Engagements',
         path: '/engagements',
         base: '/engagements',
         authenticated: false,
         allowedRoles: [],
+        icon: faPeopleArrows,
     },
     {
         name: 'Surveys',
@@ -23,6 +36,7 @@ export const Routes: Route[] = [
         base: '/surveys',
         authenticated: false,
         allowedRoles: [],
+        icon: faSquarePollHorizontal,
     },
     {
         name: 'Metadata',
@@ -30,6 +44,7 @@ export const Routes: Route[] = [
         base: '/metadatamanagement',
         authenticated: true,
         allowedRoles: [USER_ROLES.MANAGE_METADATA],
+        icon: faTags,
     },
     {
         name: 'Languages',
@@ -37,6 +52,7 @@ export const Routes: Route[] = [
         base: 'languages',
         authenticated: true,
         allowedRoles: [USER_ROLES.VIEW_LANGUAGES],
+        icon: faGlobe,
     },
     {
         name: 'User Admin',
@@ -44,6 +60,7 @@ export const Routes: Route[] = [
         base: 'usermanagement',
         authenticated: true,
         allowedRoles: [USER_ROLES.VIEW_USERS],
+        icon: faUserGear,
     },
     {
         name: 'Tenant Admin',
@@ -51,6 +68,7 @@ export const Routes: Route[] = [
         base: 'tenantadmin',
         authenticated: true,
         allowedRoles: [USER_ROLES.SUPER_ADMIN],
+        icon: faHouseUser,
     },
     {
         name: 'MET Feedback',
@@ -58,5 +76,6 @@ export const Routes: Route[] = [
         base: 'feedback',
         authenticated: true,
         allowedRoles: [USER_ROLES.VIEW_FEEDBACKS],
+        icon: faMessagePen,
     },
 ];
