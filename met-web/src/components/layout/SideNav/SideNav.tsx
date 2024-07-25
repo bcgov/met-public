@@ -137,7 +137,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
     return (
         <Box
             component="nav"
-            aria-labelledby="Administration navigation"
+            aria-label="Administration navigation"
             sx={{
                 mr: isMediumScreenOrLarger ? '1.25rem' : '0',
                 overflow: 'auto',
