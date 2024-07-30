@@ -36,7 +36,7 @@ export const DropdownMenu = ({
     popperProps,
     ...props
 }: {
-    name: string;
+    name?: string;
     buttonContent?: ({ isOpen }: { isOpen: boolean }) => React.ReactNode;
     buttonProps?: ButtonBaseProps;
     popperProps?: Partial<PopperProps>;
