@@ -355,7 +355,6 @@ const TenantButtonContent = ({ isOpen }: { isOpen: boolean }) => {
 };
 
 const UserMenu = () => {
-    const currentUser = useAppSelector((state) => state.user.userDetail.user);
     const userGreeting = useRef<HTMLDivElement>(null);
 
     return (
