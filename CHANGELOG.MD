@@ -1,3 +1,8 @@
+## July 30, 2024
+
+- **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
+  - Added a new API endpoint to fetch a list of a user's tenants, required for the new header
+
 ## July 25, 2024
 
 - **Feature** New admin navigation [🎟️ DESENG-661](https://citz-gdx.atlassian.net/browse/DESENG-661)
@@ -7,6 +12,7 @@
 ## July 17, 2024
 
 - **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)
+
   - Created loader for engagement creation wizard
   - Created language selector field in engagement creation wizard
 
