@@ -14,7 +14,7 @@ class UserGroupMembershipService:
         user_roles = []
 
         # Get the group membership for the user
-        user_membership = UserGroupMembership.get_group_by_user_id(external_id, tenant_id)
+        user_membership = UserGroupMembership.get_group_by_user_and_tenant_id(external_id, tenant_id)
 
         # Get all role mappings for the groups
         if user_membership:
@@ -35,8 +35,13 @@ class UserGroupMembershipService:
     def get_user_group_within_tenant(cls, external_id, tenant_id):
         """Get the group to which a user belongs based on their external ID."""
         # Get the group membership for the user
-        user_memberships = UserGroupMembership.get_group_by_user_id(external_id, tenant_id)
+        user_memberships = UserGroupMembership.get_group_by_user_and_tenant_id(external_id, tenant_id)
         return user_memberships.groups.name if user_memberships else None
+    
+    @classmethod
+    def get_user_memberships(cls, external_id: str):
+        """Get all group memberships for a user based on their external ID."""
+        return UserGroupMembership.get_groups_by_user_id(external_id)
 
     @staticmethod
     def assign_composite_role_to_user(membership_data):
