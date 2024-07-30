@@ -104,7 +104,7 @@ export const DropdownMenu = ({
                         padding: '2px',
                         borderRadius: '16px',
                         minWidth: 'fit-content',
-                        width: buttonRef.current && buttonRef.current.offsetWidth,
+                        width: buttonRef.current?.offsetWidth,
                         ...popperProps?.sx,
                     }}
                 >

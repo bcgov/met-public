@@ -115,7 +115,7 @@ const InternalHeader = () => {
                             }}
                         />
                         <BodyText thin sx={{ color: colors.surface.blue[80], userSelect: 'none' }}>
-                            engage
+                            engage{/*no space*/}
                             <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
                         </BodyText>
                         <Unless condition={isMediumScreenOrLarger || !canNavigate}>
@@ -234,27 +234,6 @@ const TenantSelector = ({
         );
     }
 
-    const TenantButtonContent = ({ isOpen }: { isOpen: boolean }) => (
-        <Grid container data-testid="tenant-switcher-button" direction="row" alignItems="center" spacing={1}>
-            <Grid item sx={{ flex: '1 1 auto' }}>
-                <BodyText
-                    sx={{
-                        userSelect: 'none',
-                        textTransform: 'capitalize',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                    }}
-                >
-                    {currentTenant.name}
-                </BodyText>
-            </Grid>
-            <Grid item hidden={noOtherTenants} sx={{ flex: '0 0 auto' }}>
-                <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
-            </Grid>
-        </Grid>
-    );
-
     const tenantList = tenants.map((tenant) => (
         <MenuItem
             key={tenant.short_name}
@@ -339,12 +318,39 @@ const TenantSelector = ({
             popperProps={{
                 placement: 'bottom-start',
                 sx: {
-                    width: tenantDropdownButton.current && tenantDropdownButton.current.offsetWidth,
+                    width: tenantDropdownButton.current?.offsetWidth,
                 },
             }}
         >
             {tenantList}
         </DropdownMenu>
+    );
+};
+
+const TenantButtonContent = ({ isOpen }: { isOpen: boolean }) => {
+    const currentTenant = useAppSelector((state) => state.tenant);
+    const noOtherTenants = !(useAsyncValue() as Tenant[]).some(
+        (tenant) => tenant.short_name !== currentTenant.short_name,
+    );
+    return (
+        <Grid container data-testid="tenant-switcher-button" direction="row" alignItems="center" spacing={1}>
+            <Grid item sx={{ flex: '1 1 auto' }}>
+                <BodyText
+                    sx={{
+                        userSelect: 'none',
+                        textTransform: 'capitalize',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                    }}
+                >
+                    {currentTenant.name}
+                </BodyText>
+            </Grid>
+            <Grid item hidden={noOtherTenants} sx={{ flex: '0 0 auto' }}>
+                <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
+            </Grid>
+        </Grid>
     );
 };
 
@@ -355,36 +361,7 @@ const UserMenu = () => {
     return (
         <DropdownMenu
             name="Account Menu"
-            buttonContent={({ isOpen }) => (
-                <Grid container direction="row" alignItems="center" spacing={1} data-testid="user-menu-button">
-                    <Grid item>
-                        <Avatar
-                            sx={{
-                                backgroundColor: colors.surface.blue[10],
-                                height: 32,
-                                width: 32,
-                                fontSize: '16px',
-                            }}
-                        >
-                            {currentUser?.first_name[0]}
-                            {currentUser?.last_name[0]}
-                        </Avatar>
-                    </Grid>
-                    <Grid item ref={userGreeting} sx={{ textAlign: 'left' }}>
-                        <BodyText size="small" sx={{ userSelect: 'none' }}>
-                            Hello {currentUser?.first_name}
-                        </BodyText>
-                        <BodyText sx={{ fontSize: '10px', lineHeight: 1 }}>
-                            {currentUser?.roles.includes(USER_ROLES.SUPER_ADMIN)
-                                ? 'Super Admin'
-                                : currentUser?.main_role ?? 'User'}
-                        </BodyText>
-                    </Grid>
-                    <Grid item>
-                        <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
-                    </Grid>
-                </Grid>
-            )}
+            buttonContent={UserButtonContent}
             buttonProps={{
                 sx: {
                     marginLeft: 'auto' /* float to the right */,
@@ -409,6 +386,40 @@ const UserMenu = () => {
                 Logout
             </MenuItem>
         </DropdownMenu>
+    );
+};
+
+const UserButtonContent = ({ isOpen }: { isOpen: boolean }) => {
+    const currentUser = useAppSelector((state) => state.user.userDetail.user);
+    return (
+        <Grid container direction="row" alignItems="center" spacing={1}>
+            <Grid item>
+                <Avatar
+                    sx={{
+                        backgroundColor: colors.surface.blue[10],
+                        height: 32,
+                        width: 32,
+                        fontSize: '16px',
+                    }}
+                >
+                    {currentUser?.first_name[0]}
+                    {currentUser?.last_name[0]}
+                </Avatar>
+            </Grid>
+            <Grid item>
+                <BodyText size="small" sx={{ userSelect: 'none' }}>
+                    Hello {currentUser?.first_name}
+                </BodyText>
+                <BodyText sx={{ fontSize: '10px', lineHeight: 1 }}>
+                    {currentUser?.roles.includes(USER_ROLES.SUPER_ADMIN)
+                        ? 'Super Admin'
+                        : currentUser?.main_role ?? 'User'}
+                </BodyText>
+            </Grid>
+            <Grid item>
+                <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
+            </Grid>
+        </Grid>
     );
 };
 
