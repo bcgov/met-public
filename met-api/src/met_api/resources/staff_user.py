@@ -19,14 +19,18 @@ from flask import current_app, g, jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import jwt as _jwt
+from met_api.auth import jwt as _jwt, auth
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.staff_user import StaffUserSchema
+from met_api.schemas.tenant import TenantSchema
+from met_api.services import authorization
 from met_api.services.membership_service import MembershipService
 from met_api.services.staff_user_membership_service import StaffUserMembershipService
 from met_api.services.staff_user_service import StaffUserService
+from met_api.services.tenant_service import TenantService
+from met_api.services.user_group_membership_service import UserGroupMembershipService
 from met_api.utils.roles import Role
 from met_api.utils.tenant_validator import require_role
 from met_api.utils.token_info import TokenInfo
@@ -52,7 +56,9 @@ class StaffUsers(Resource):
             user_data = TokenInfo.get_user_data()
             user = StaffUserService().create_or_update_user(user_data)
             user.roles = current_app.config['JWT_ROLE_CALLBACK'](g.jwt_oidc_token_info)
-            return StaffUserSchema().dump(user), HTTPStatus.OK
+            user_info = StaffUserSchema().dump(user)
+            StaffUserService.attach_roles([user_info])
+            return user_info, HTTPStatus.OK
         except KeyError as err:
             return str(err), HTTPStatus.BAD_REQUEST
         except ValueError as err:
@@ -174,5 +180,37 @@ class EngagementMemberships(Resource):
             members = MembershipService.get_engagements_by_user(user_id)
             engagement_schema = EngagementSchema(exclude=['surveys', 'rich_content', 'rich_description'], many=True)
             return jsonify(engagement_schema.dump(members, many=True)), HTTPStatus.OK
+        except BusinessException as err:
+            return {'message': err.error}, err.status_code
+
+@cors_preflight('GET,OPTIONS')
+@API.route('/<user_id>/tenants')
+class UserTenants(Resource):
+    """Fetches tenants for a given user."""
+
+    @staticmethod
+    @cross_origin(origins=allowedorigins())
+    @auth.requires_auth
+    def get(user_id):
+        """Get tenant details by user id."""
+        if(user_id == 'me'):
+            user_data = TokenInfo.get_user_data()
+            user_id = user_data.get('external_id')
+            print("User ID: ", user_id)
+            user_roles = current_app.config['JWT_ROLE_CALLBACK'](g.jwt_oidc_token_info)
+            if Role.SUPER_ADMIN.value in user_roles:
+                return TenantService.get_all(), HTTPStatus.OK
+        else:
+            authorization.check_auth(
+                one_of_roles=(
+                    Role.VIEW_USERS.value,
+                ),
+                user_id=user_id
+            )
+            
+        try:
+            members = UserGroupMembershipService.get_user_memberships(user_id)
+            tenants = TenantSchema().dumps([member.tenant for member in members], many=True)
+            return tenants, HTTPStatus.OK
         except BusinessException as err:
             return {'message': err.error}, err.status_code
