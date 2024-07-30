@@ -2,6 +2,10 @@
 
 - **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
   - Added a new API endpoint to fetch a list of a user's tenants, required for the new header
+  - Redesigned the admin header to match the new design system
+  - Added a new dropdown to the header to allow users to switch between tenants
+  - Added a user menu, which for now only contains a logout button
+  - Added a "drawer" view for the tenant switcher and user menu on mobile
 
 ## July 25, 2024
 

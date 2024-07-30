@@ -14,15 +14,15 @@ import FormioListener from 'components/FormioListener';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-export const AuthenticatedLayout = ({ drawerWidth = 280 }: { drawerWidth?: number }) => {
+export const AuthenticatedLayout = () => {
     return (
         <>
             <DocumentTitle />
             <Box sx={{ display: 'flex' }}>
-                <InternalHeader drawerWidth={drawerWidth} />
+                <InternalHeader />
                 <Notification />
                 <NotificationModal />
-                <Box component="main" sx={{ flexGrow: 1, marginTop: '80px' }}>
+                <Box component="main" sx={{ flexGrow: 1, marginTop: { xs: '3.5em', md: '6.5em' } }}>
                     <ScrollToTop />
                     <FormioListener />
                     <LocalizationProvider

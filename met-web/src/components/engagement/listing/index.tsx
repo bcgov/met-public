@@ -394,7 +394,9 @@ const EngagementListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <AutoBreadcrumbs />
+            <Grid item>
+                <AutoBreadcrumbs />
+            </Grid>
             <Grid item xs={12}>
                 <Stack
                     direction={{ xs: 'column', md: 'row' }}
