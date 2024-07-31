@@ -17,6 +17,8 @@ import { VideoWidget } from 'models/videoWidget';
 import { TimelineWidget, TimelineEvent, EventStatus } from 'models/timelineWidget';
 import { Tenant } from 'models/tenant';
 import { EngagementContent } from 'models/engagementContent';
+import { UserState } from 'services/userService/types';
+import { USER_ROLES } from 'services/userService/constants';
 
 const tenant: Tenant = {
     name: 'Tenant 1',
@@ -289,6 +291,32 @@ const engagementContentData: EngagementContent = {
     is_internal: true,
 };
 
+const staffUserState: Partial<UserState> = {
+    userDetail: {
+        user: {
+            first_name: 'Test',
+            last_name: 'User',
+            main_role: USER_ROLES.VIEW_ENGAGEMENT,
+            roles: [USER_ROLES.VIEW_ENGAGEMENT, USER_ROLES.MANAGE_METADATA, USER_ROLES.VIEW_USERS],
+            composite_roles: [USER_ROLES.VIEW_ENGAGEMENT],
+            contact_number: '1234567890',
+            email_address: 'blah@example.com',
+            id: 123,
+            created_date: '2021-01-01T00:00:00.000Z',
+            description: 'Test User',
+            external_id: '123',
+            status_id: 1,
+            updated_date: '2021-01-01T00:00:00.000Z',
+            username: 'testuser',
+        },
+    },
+    authentication: {
+        loading: false,
+        authenticated: true,
+    },
+    roles: [USER_ROLES.VIEW_ENGAGEMENT, USER_ROLES.MANAGE_METADATA, USER_ROLES.VIEW_USERS],
+};
+
 export {
     tenant,
     draftEngagement,
@@ -313,4 +341,5 @@ export {
     mockTimeLine,
     subscribeWidget,
     engagementContentData,
+    staffUserState,
 };

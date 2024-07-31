@@ -1,16 +1,32 @@
 import React from 'react';
-import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    ListItemButton,
+    List,
+    ListItem,
+    Box,
+    Drawer,
+    Toolbar,
+    Divider,
+    SwipeableDrawer,
+    Grid,
+    Avatar,
+    ThemeProvider,
+} from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { Routes, Route } from './SideNavElements';
-import { Palette, colors, ZIndex } from '../../../styles/Theme';
-import { SideNavProps, DrawerBoxProps, CloseButtonProps } from './types';
-import { When, Unless } from 'react-if';
+import { DarkTheme, Palette, colors, ZIndex } from '../../../styles/Theme';
+import { SideNavProps, DrawerBoxProps } from './types';
+import { When } from 'react-if';
 import { useAppSelector } from 'hooks';
 import UserGuideNav from './UserGuideNav';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkSlash } from '@fortawesome/pro-regular-svg-icons/faLinkSlash';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
-import { faArrowLeft } from '@fortawesome/pro-solid-svg-icons/faArrowLeft';
+import { Link } from 'components/common/Navigation';
+import { BodyText } from 'components/common/Typography';
+import { USER_ROLES } from 'services/userService/constants';
+import UserService from 'services/userService';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export const routeItemStyle = {
     padding: 0,
@@ -32,34 +48,7 @@ export const routeItemStyle = {
     },
 };
 
-const CloseButton = ({ setOpen }: CloseButtonProps) => {
-    return (
-        <>
-            <ListItem key={'closeMenu'} sx={routeItemStyle}>
-                <ListItemButton
-                    onClick={() => setOpen(false)}
-                    disableRipple
-                    sx={{
-                        padding: 2,
-                        pr: 4,
-                        justifyContent: 'flex-end',
-                        color: Palette.text.primary,
-                        '&:hover, &:active, &:focus': {
-                            backgroundColor: 'transparent',
-                        },
-                    }}
-                >
-                    <FontAwesomeIcon icon={faArrowLeft} style={{ paddingRight: '0.75rem' }} />
-                    Close Menu
-                </ListItemButton>
-            </ListItem>
-            <Divider sx={{ backgroundColor: colors.surface.gray[30] }} />
-        </>
-    );
-};
-
 const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
-    const navigate = useNavigate();
     const location = useLocation();
     const permissions = useAppSelector((state) => state.user.roles);
 
@@ -85,7 +74,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                     }}
                 >
                     <ListItemButton
-                        component="a"
+                        component={Link}
                         disableRipple
                         sx={{
                             '&:hover, &:active, &:focus': {
@@ -95,8 +84,8 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                             pl: 4,
                         }}
                         data-testid={`SideNav/${route.name}-button`}
+                        to={route.path}
                         onClick={() => {
-                            navigate(route.path);
                             setOpen(false);
                         }}
                     >
@@ -149,10 +138,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 zIndex: ZIndex.sideNav,
             }}
         >
-            <List sx={{ pt: '0', pb: '0' }}>
-                <Unless condition={isMediumScreenOrLarger}>
-                    <CloseButton setOpen={setOpen} />
-                </Unless>
+            <List sx={{ pt: { xs: 4, md: 0 }, pb: '0' }}>
                 {allowedRoutes.map((route) =>
                     renderListItem(route, currentBaseRoute === route.base ? 'selected' : 'other'),
                 )}
@@ -161,15 +147,18 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
     );
 };
 
-const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavProps) => {
-    if (!drawerWidth) return <></>;
+const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
+    const currentUser = useAppSelector((state) => state.user.userDetail.user);
     if (isMediumScreen)
         return (
             <Drawer
+                ModalProps={{
+                    hideBackdrop: true,
+                }}
                 PaperProps={{
                     sx: {
                         border: 'none',
-                        width: drawerWidth,
+                        width: '300px',
                         boxSizing: 'border-box',
                         background: 'transparent',
                         height: '43.75rem',
@@ -180,7 +169,7 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavPr
                 variant="permanent"
                 sx={{
                     height: '100vh',
-                    width: drawerWidth,
+                    width: '300px',
                     flexShrink: 0,
                 }}
             >
@@ -189,19 +178,65 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavPr
             </Drawer>
         );
     return (
-        <Drawer
-            PaperProps={{ sx: { width: '100%' } }}
+        <SwipeableDrawer
+            PaperProps={{
+                sx: { width: '100%', height: '100%', minHeight: 'calc(100vh)', background: colors.surface.blue[90] },
+            }}
             sx={{
                 mt: '80px',
-                width: '100%',
+                zIndex: (theme) => theme.zIndex.drawer + 3, // render above feedback button
             }}
+            onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            anchor={'left'}
+            anchor={'top'}
             open={open}
-            hideBackdrop={!open}
+            disableEnforceFocus
+            disablePortal
         >
-            <DrawerBox isMediumScreenOrLarger={isMediumScreen} setOpen={setOpen} />
-        </Drawer>
+            <Box>
+                <DrawerBox isMediumScreenOrLarger={isMediumScreen} setOpen={setOpen} />
+                <ThemeProvider theme={DarkTheme}>
+                    <Grid
+                        m={2}
+                        container
+                        sx={{ width: 'calc(100% - 16px) ' }}
+                        direction="row"
+                        alignItems="center"
+                        spacing={1}
+                    >
+                        <Grid item>
+                            <Avatar
+                                sx={{
+                                    backgroundColor: colors.surface.blue[10],
+                                    height: 32,
+                                    width: 32,
+                                    fontSize: '16px',
+                                }}
+                            >
+                                {currentUser?.first_name[0]}
+                                {currentUser?.last_name[0]}
+                            </Avatar>
+                        </Grid>
+                        <Grid item sx={{ textAlign: 'left' }}>
+                            <BodyText size="small" sx={{ userSelect: 'none' }}>
+                                Hello {currentUser?.first_name}
+                            </BodyText>
+                            <BodyText sx={{ fontSize: '10px', lineHeight: 1 }}>
+                                {currentUser?.roles.includes(USER_ROLES.SUPER_ADMIN)
+                                    ? 'Super Admin'
+                                    : currentUser?.main_role ?? 'User'}
+                            </BodyText>
+                        </Grid>
+                        <Grid item sx={{ marginLeft: 'auto', marginRight: '32px' }}>
+                            <Link onClick={UserService.doLogout} to={'#'}>
+                                Logout
+                                <FontAwesomeIcon style={{ marginLeft: '4px' }} icon={faArrowRight} />
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </ThemeProvider>
+            </Box>
+        </SwipeableDrawer>
     );
 };
 
