@@ -21,6 +21,12 @@ Take note of the previous date in the changelog when committing. If the current 
 
 ## Pull Requests
 
+In the PR description field, be sure to include:
+
+- A link to the ticket describing the work
+- Description of the changes (if you made any changes that weren't captured in the Jira ticket, be sure to list them here)
+- The linked ticket for updating the user guide, if applicable. When functionality changes, we'll want to be sure to update the user guide for MET. Create a separate ticket for this and link it, if necessary. Otherwise, you can just write "N/A"
+
 If a high volume of changes is to be submitted as a PR, we ask that the work be segmented into multiple PRs. A common threshold is that a PR should contain 20 changed files at most. Of course it also depends on the complexity of the changes but we ask that work be broken up into smaller logical chunks whenver possible. 
 
 ### Examples
@@ -51,14 +57,38 @@ Conditions for whether to Approve or Request Changes for a PR can come with a lo
 Examples of when to Request Changes
 - Logging functions are left in that aren't required or needed later (with exceptions for error logging, i.e. console.error, etc.)
 - Commented-code is left in that isn't needed later
+- Unsafe function calls like `eval()`
 - Widespread incorrect syntax use (using snake case for many variables in JS when it's not required)
 - Significant amount of repeition in code that can be condensed without much issue (code isn't DRY) *
 - Unnecessary function calls, overly verbose code *
 
+## Style Guide
+
+- Avoid using CSS directly. Instead, style through Material UI theming or with CSS-in-JS
+
 ## Common Components/Utilities
+
+### MET API
 
 - `@transational`: Database method decorator. If there is an exception during execution, the entire DB session will be safely rolled back to a point in time just before the decorated function was called. If not, the session will be saved, unless autocommit is set to False. This helps replace most session management boilerplate.
 - `authorization.check_auth`: Checks a user for one or more roles and for the correct engagement.
 - `schema_utils.validate`: The most commonly used method for validating request data in resources. This method takes the request JSON data and compares it to a JSON file that acts as a schema for incoming requests of that type.
+
+### MET Web
+
+- Be sure to make use of shared components found under `src/components/common`. Below is a non-exhaustive list of common app components:
+   - `PrimaryButton`, `SecondaryButton`, `TertiaryButton`: Buttons that come with built-in MET theming and functionality
+   - `RichTextArea`: A WYSIWYG editor used app-wide. It will dynamically render out links and h2s as React components.
+   - `Header1`, `Header2`: MET-styled h1, h2 components.
+   - `ResponsiveContainer`: A container that decreases its padding on smaller screens.
+   - `ResponsiveWrapper`: A route wrapper that adds a responsive container around its child routes.
+   - `Pagination`: Provides a pagination UI - a wrapper around Material UI's pagination.
+   - `EngagementStatusChip`: A wrapper around MUI's Chip that's styled for MET.
+   - `FileUpload`: A file uploader component.
+   - `MetTable`, `Table`, `TableHead`, `TableCell`, etc.: Complete table components that are wrappers around MUI tables, styled for MET.
+   - `ConfirmModal`, `EmailModal`, `UpdateModal`: Common, reusable modal window types.
+   - `AutoBreadcrumbs`: Automatically generates breadcrumbs based on the `handle.crumb` function of the current route and its parents.
+   - `Link`: A wrapper around MUI's Link, styled for MET.
+   - `UnsavedWorkConfirmation`: Uses a route [blocker](https://reactrouter.com/en/main/hooks/use-blocker) to display a ConfirmModal so that the user doesn't lose any unsaved work on their current page.
 
 
