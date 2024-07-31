@@ -1,3 +1,7 @@
+## July 30, 2024
+- **Task** Update Contributing guide, pull request template [🎟️ DESENG-651](https://citz-gdx.atlassian.net/browse/DESENG-651)
+
+
 ## July 25, 2024
 
 - **Feature** New admin navigation [🎟️ DESENG-661](https://citz-gdx.atlassian.net/browse/DESENG-661)
