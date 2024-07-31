@@ -37,7 +37,7 @@ class UserGroupMembershipService:
         # Get the group membership for the user
         user_memberships = UserGroupMembership.get_group_by_user_and_tenant_id(external_id, tenant_id)
         return user_memberships.groups.name if user_memberships else None
-    
+
     @classmethod
     def get_user_memberships(cls, external_id: str):
         """Get all group memberships for a user based on their external ID."""

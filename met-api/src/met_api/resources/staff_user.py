@@ -193,7 +193,7 @@ class UserTenants(Resource):
     @auth.requires_auth
     def get(user_id):
         """Get tenant details by user id."""
-        if(user_id == 'me'):
+        if user_id == 'me':
             user_data = TokenInfo.get_user_data()
             user_id = user_data.get('external_id')
             print("User ID: ", user_id)
@@ -207,7 +207,7 @@ class UserTenants(Resource):
                 ),
                 user_id=user_id
             )
-            
+
         try:
             members = UserGroupMembershipService.get_user_memberships(user_id)
             tenants = TenantSchema().dumps([member.tenant for member in members], many=True)

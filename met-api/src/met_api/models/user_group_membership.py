@@ -7,7 +7,6 @@ from __future__ import annotations
 from flask import g
 from sqlalchemy import PrimaryKeyConstraint
 
-from met_api.models import tenant
 from .base_model import BaseModel
 from .db import db
 
@@ -36,7 +35,7 @@ class UserGroupMembership(BaseModel):  # pylint: disable=too-few-public-methods,
         return db.session.query(UserGroupMembership).filter(
             UserGroupMembership.staff_user_external_id == external_id,
             UserGroupMembership.tenant_id == tenant_id).first()
-    
+
     @classmethod
     def get_groups_by_user_id(cls, external_id):
         """Get groups by user id."""
