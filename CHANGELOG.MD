@@ -7,6 +7,8 @@
   - Added a user menu, which for now only contains a logout button
   - Added a "drawer" view for the tenant switcher and user menu on mobile
 
+- **Task** Update Contributing guide, pull request template [🎟️ DESENG-651](https://citz-gdx.atlassian.net/browse/DESENG-651)
+
 ## July 25, 2024
 
 - **Feature** New admin navigation [🎟️ DESENG-661](https://citz-gdx.atlassian.net/browse/DESENG-661)
