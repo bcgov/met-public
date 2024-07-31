@@ -8,8 +8,7 @@ export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
         <Box
             {...props}
             sx={{
-                marginTop: '1em',
-                padding: { xs: '1.5em 1em', md: '1.5em 1.5em', lg: '1.5em 2em' },
+                padding: { xs: '2em 1em', md: '2em 1.5em', lg: '2em 3em' },
                 ...props.sx,
             }}
         >

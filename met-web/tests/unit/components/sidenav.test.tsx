@@ -6,8 +6,8 @@ import ProviderShell from './ProviderShell';
 import { setupEnv } from './setEnvVars';
 import { Routes } from '../../../src/components/layout/SideNav/SideNavElements';
 import { USER_ROLES } from 'services/userService/constants';
-
-const drawerWidth = 280;
+import { UserState } from 'services/userService/types';
+import { staffUserState } from './factory';
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
     ...jest.requireActual('@reduxjs/toolkit/query/react'),
@@ -16,26 +16,33 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
 
 jest.mock('axios');
 
-jest.mock('react-redux', () => ({
-    ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return [
-            USER_ROLES.VIEW_ENGAGEMENT,
-            USER_ROLES.VIEW_ASSIGNED_ENGAGEMENTS,
-            USER_ROLES.VIEW_SURVEYS,
-            USER_ROLES.VIEW_USERS,
-            USER_ROLES.VIEW_FEEDBACKS,
-            USER_ROLES.SUPER_ADMIN,
-            USER_ROLES.MANAGE_METADATA,
-            USER_ROLES.VIEW_LANGUAGES,
-        ];
+jest.mock('hooks', () => ({
+    useAppTranslation: () => ({
+        t: (key: string) => key, // return the key itself (i.e. no translation)
     }),
+    useAppSelector: (callback: any) =>
+        callback({
+            user: {
+                ...staffUserState,
+                roles: [
+                    USER_ROLES.VIEW_ENGAGEMENT,
+                    USER_ROLES.VIEW_ASSIGNED_ENGAGEMENTS,
+                    USER_ROLES.VIEW_SURVEYS,
+                    USER_ROLES.VIEW_USERS,
+                    USER_ROLES.VIEW_FEEDBACKS,
+                    USER_ROLES.SUPER_ADMIN,
+                    USER_ROLES.MANAGE_METADATA,
+                    USER_ROLES.VIEW_LANGUAGES,
+                ],
+            } as UserState,
+        }),
 }));
+
 test('Load SideNav', async () => {
     setupEnv();
     render(
         <ProviderShell>
-            <SideNav setOpen={() => void 0} isMediumScreen={false} open={true} drawerWidth={drawerWidth} />
+            <SideNav setOpen={() => void 0} isMediumScreen={false} open={true} />
         </ProviderShell>,
     );
 
