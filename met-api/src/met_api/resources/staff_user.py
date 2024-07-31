@@ -19,7 +19,8 @@ from flask import current_app, g, jsonify, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
-from met_api.auth import jwt as _jwt, auth
+from met_api.auth import auth
+from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.pagination_options import PaginationOptions
 from met_api.schemas.engagement import EngagementSchema
@@ -183,6 +184,7 @@ class EngagementMemberships(Resource):
         except BusinessException as err:
             return {'message': err.error}, err.status_code
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/<user_id>/tenants')
 class UserTenants(Resource):
@@ -196,7 +198,7 @@ class UserTenants(Resource):
         if user_id == 'me':
             user_data = TokenInfo.get_user_data()
             user_id = user_data.get('external_id')
-            print("User ID: ", user_id)
+            print('User ID: ', user_id)
             user_roles = current_app.config['JWT_ROLE_CALLBACK'](g.jwt_oidc_token_info)
             if Role.SUPER_ADMIN.value in user_roles:
                 return TenantService.get_all(), HTTPStatus.OK

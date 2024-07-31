@@ -391,7 +391,7 @@ const UserMenu = () => {
 const UserButtonContent = ({ isOpen }: { isOpen: boolean }) => {
     const currentUser = useAppSelector((state) => state.user.userDetail.user);
     return (
-        <Grid container direction="row" alignItems="center" spacing={1}>
+        <Grid container data-testid="user-menu-button" direction="row" alignItems="center" spacing={1}>
             <Grid item>
                 <Avatar
                     sx={{
