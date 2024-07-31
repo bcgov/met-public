@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from flask import g
 from sqlalchemy import PrimaryKeyConstraint
+
 from .base_model import BaseModel
 from .db import db
 
@@ -21,6 +22,7 @@ class UserGroupMembership(BaseModel):  # pylint: disable=too-few-public-methods,
     tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'), primary_key=True, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False)
 
+    tenant = db.relationship('Tenant', backref='user_group_memberships')
     groups = db.relationship('UserGroup', backref='user_group_membership')
 
     __table_args__ = (
@@ -28,11 +30,17 @@ class UserGroupMembership(BaseModel):  # pylint: disable=too-few-public-methods,
     )
 
     @classmethod
-    def get_group_by_user_id(cls, external_id, tenant_id):
+    def get_group_by_user_and_tenant_id(cls, external_id, tenant_id):
         """Get group by user id."""
         return db.session.query(UserGroupMembership).filter(
             UserGroupMembership.staff_user_external_id == external_id,
             UserGroupMembership.tenant_id == tenant_id).first()
+
+    @classmethod
+    def get_groups_by_user_id(cls, external_id):
+        """Get groups by user id."""
+        return db.session.query(UserGroupMembership).filter(
+            UserGroupMembership.staff_user_external_id == external_id).all()
 
     @classmethod
     def create_user_group_membership(cls, membership_data: dict) -> UserGroupMembership:

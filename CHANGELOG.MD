@@ -1,6 +1,13 @@
 ## July 30, 2024
-- **Task** Update Contributing guide, pull request template [🎟️ DESENG-651](https://citz-gdx.atlassian.net/browse/DESENG-651)
 
+- **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
+  - Added a new API endpoint to fetch a list of a user's tenants, required for the new header
+  - Redesigned the admin header to match the new design system
+  - Added a new dropdown to the header to allow users to switch between tenants
+  - Added a user menu, which for now only contains a logout button
+  - Added a "drawer" view for the tenant switcher and user menu on mobile
+
+- **Task** Update Contributing guide, pull request template [🎟️ DESENG-651](https://citz-gdx.atlassian.net/browse/DESENG-651)
 
 ## July 25, 2024
 
@@ -11,6 +18,7 @@
 ## July 17, 2024
 
 - **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)
+
   - Created loader for engagement creation wizard
   - Created language selector field in engagement creation wizard
 

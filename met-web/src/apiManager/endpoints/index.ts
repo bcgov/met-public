@@ -174,8 +174,9 @@ const Endpoints = {
     },
     Tenants: {
         CREATE: `${AppConfig.apiUrl}/tenants/`,
-        GET_LIST: `${AppConfig.apiUrl}/tenants/`,
         GET: `${AppConfig.apiUrl}/tenants/tenant_id`,
+        GET_LIST: `${AppConfig.apiUrl}/tenants/`,
+        GET_OWN: `${AppConfig.apiUrl}/user/me/tenants`,
         UPDATE: `${AppConfig.apiUrl}/tenants/tenant_id`,
         DELETE: `${AppConfig.apiUrl}/tenants/tenant_id`,
     },

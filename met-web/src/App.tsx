@@ -27,13 +27,13 @@ import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
 import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
 import { PublicLayout } from 'components/appLayouts/PublicLayout';
+import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
 
 interface Translations {
     [languageId: string]: { [key: string]: string };
 }
 
 const App = () => {
-    const drawerWidth = 300;
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
@@ -186,7 +186,7 @@ const App = () => {
         loadTranslation();
     }, [language.id, translations]);
 
-    if (authenticationLoading || tenant.loading) {
+    if (authenticationLoading || tenant.loading || !tenant.short_name) {
         return <MidScreenLoader />;
     }
 
@@ -222,13 +222,15 @@ const App = () => {
         const router = createBrowserRouter(
             [
                 {
-                    element: <AuthenticatedLayout drawerWidth={0} />,
+                    element: <AuthenticatedLayout />,
                     children: [
                         {
                             path: '*',
                             element: <NoAccess />,
                         },
                     ],
+                    loader: authenticatedRootLoader,
+                    id: 'authenticated-root',
                 },
             ],
             { basename: `/${basename}` },
@@ -240,11 +242,13 @@ const App = () => {
     const router = createBrowserRouter(
         [
             {
-                element: <AuthenticatedLayout drawerWidth={drawerWidth} />,
+                element: <AuthenticatedLayout />,
                 children: createRoutesFromElements(AuthenticatedRoutes()),
                 handle: {
                     crumb: () => ({ name: 'Dashboard', link: '/home' }),
                 },
+                id: 'authenticated-root',
+                loader: authenticatedRootLoader,
             },
         ],
         { basename: `/${basename}` },
