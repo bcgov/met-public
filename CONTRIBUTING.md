@@ -77,7 +77,7 @@ Examples of when to Request Changes
 ### MET Web
 
 - Be sure to make use of shared components found under `src/components/common`. Below is a non-exhaustive list of common app components:
-   - `PrimaryButton`, `SecondaryButton`, `TertiaryButton`: Buttons that come with built-in MET theming and functionality
+   - `Button`: A versatile button with different style types that are complimentary of MET styling. Choose a particular button style with: `variant=<"primary"|"secondary"|"tertiary"|undefined>`
    - `RichTextArea`: A WYSIWYG editor used app-wide. It will dynamically render out links and h2s as React components.
    - `Header1`, `Header2`: MET-styled h1, h2 components.
    - `ResponsiveContainer`: A container that decreases its padding on smaller screens.
