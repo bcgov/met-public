@@ -28,8 +28,16 @@ export const dropdownMenuStyles = {
     },
 };
 
+export const ToggleNav = ({ isNav, children }: { isNav?: boolean; children: React.ReactNode }) => {
+    if (isNav) {
+        return <nav>{children}</nav>;
+    }
+    return <>{children}</>;
+};
+
 export const DropdownMenu = ({
     name,
+    forNavigation,
     buttonContent,
     buttonProps,
     children,
@@ -37,6 +45,7 @@ export const DropdownMenu = ({
     ...props
 }: {
     name?: string;
+    forNavigation?: boolean;
     buttonContent?: ({ isOpen }: { isOpen: boolean }) => React.ReactNode;
     buttonProps?: ButtonBaseProps;
     popperProps?: Partial<PopperProps>;
@@ -108,18 +117,20 @@ export const DropdownMenu = ({
                         ...popperProps?.sx,
                     }}
                 >
-                    <TrapFocus open={open}>
-                        <MenuList
-                            sx={{ minWidth: 'fit-content' }}
-                            aria-label={name || 'Dropdown Menu'}
-                            tabIndex={-1}
-                            aria-expanded={open}
-                            autoFocusItem
-                            {...props}
-                        >
-                            {children}
-                        </MenuList>
-                    </TrapFocus>
+                    <ToggleNav isNav={forNavigation}>
+                        <TrapFocus open={open}>
+                            <MenuList
+                                sx={{ minWidth: 'fit-content' }}
+                                aria-label={name || 'Dropdown Menu'}
+                                tabIndex={-1}
+                                aria-expanded={open}
+                                autoFocusItem
+                                {...props}
+                            >
+                                {children}
+                            </MenuList>
+                        </TrapFocus>
+                    </ToggleNav>
                 </Popper>
             </ClickAwayListener>
         </>

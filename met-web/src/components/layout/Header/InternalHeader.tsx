@@ -269,6 +269,8 @@ const TenantSelector = ({
                     <TenantButtonContent isOpen={tenantDrawerOpen} />
                 </ButtonBase>
                 <Drawer
+                    disableEnforceFocus
+                    disablePortal
                     anchor="top"
                     open={tenantDrawerOpen}
                     onClose={() => {
@@ -284,22 +286,27 @@ const TenantSelector = ({
                         },
                     }}
                 >
-                    <MenuList
-                        sx={{
-                            mt: 0,
-                            '& .MuiMenuItem-root': {
-                                marginBottom: '1rem',
-                                '&:first-of-type': {
-                                    paddingTop: '4px',
+                    <nav>
+                        <MenuList
+                            autoFocusItem
+                            aria-label="Tenant Switcher"
+                            role="navigation"
+                            sx={{
+                                mt: 0,
+                                '& .MuiMenuItem-root': {
+                                    marginBottom: '1rem',
+                                    '&:first-of-type': {
+                                        marginTop: '-4px',
+                                    },
+                                    '&:last-of-type': {
+                                        marginBottom: 0,
+                                    },
                                 },
-                                '&:last-of-type': {
-                                    marginBottom: 0,
-                                },
-                            },
-                        }}
-                    >
-                        {tenantList}
-                    </MenuList>
+                            }}
+                        >
+                            {tenantList}
+                        </MenuList>
+                    </nav>
                 </Drawer>
             </>
         );
@@ -307,6 +314,7 @@ const TenantSelector = ({
 
     return (
         <DropdownMenu
+            forNavigation
             name="Tenant Switcher"
             buttonContent={TenantButtonContent}
             buttonProps={{
