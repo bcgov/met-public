@@ -1,3 +1,9 @@
+## July 31, 2024
+
+- **Feature** New footer (public and admin) [🎟️ DESENG-662](https://citz-gdx.atlassian.net/browse/DESENG-662)
+  - Implemented new footer design for desktop and mobile viewports.
+  - Addressed some issues with z-index between footer and side nav.
+
 ## July 25, 2024
 
 - **Feature** New admin navigation [🎟️ DESENG-661](https://citz-gdx.atlassian.net/browse/DESENG-661)

@@ -22,14 +22,18 @@
         "connectWithUs": "CONNECT WITH US",
         "moreInfo": "MORE INFO",
         "home": "Home",
-        "accessibility": "Accessibility",
+        "accessibility": "Accessibility & Inclusion",
         "aboutGov": "About gov.bc.ca",
         "copyright": "Copyright",
         "disclaimer": "Disclaimer",
         "login": "Admin Login",
         "privacy": "Privacy",
         "copyrightNotice": "© 2023 Government of British Columbia",
-        "defaultLogo": "British Columbia Logo"
+        "defaultLogo": "British Columbia Logo",
+        "serviceCentres": "Service Centres",
+        "contactInformation": "Contact Information",
+        "aboutEngageBC": "About engageBC",
+        "statement": "We are committed to providing accessible and inclusive digital experiences and help in 120 languages including TDD to British Columbians."
     },
     "feedback": {
         "websiteFeedback": "Website Feedback",

@@ -116,6 +116,10 @@ export const colors = {
             tint: '#F4E1E2',
         },
     },
+    acknowledgement: {
+        border: '#fcba19',
+        background: '#292929',
+    },
 };
 
 export const Palette = {
@@ -169,6 +173,11 @@ export const Palette = {
     },
     icons: {
         surveyReady: colors.notification.success.shade,
+    },
+    acknowledgement: {
+        font: colors.surface.gray[10],
+        background: colors.acknowledgement.background,
+        border: colors.acknowledgement.border,
     },
 };
 
@@ -437,5 +446,7 @@ export const DarkTheme = createTheme({
 });
 
 export const ZIndex = {
-    footer: BaseTheme.zIndex.drawer + 1,
+    feedback: '1002',
+    sideNav: '1001',
+    footer: '1000',
 };

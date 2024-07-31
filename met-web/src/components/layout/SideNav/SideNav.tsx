@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItemButton, List, ListItem, Box, Drawer, Toolbar, Divider } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes, Route } from './SideNavElements';
-import { Palette, colors } from '../../../styles/Theme';
+import { Palette, colors, ZIndex } from '../../../styles/Theme';
 import { SideNavProps, DrawerBoxProps, CloseButtonProps } from './types';
 import { When, Unless } from 'react-if';
 import { useAppSelector } from 'hooks';
@@ -146,6 +146,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 borderBottomRightRadius: '16px',
                 boxShadow: '0 5px 10px rgba(0, 0, 0, 0.4)',
                 mt: '5.625rem',
+                zIndex: ZIndex.sideNav,
             }}
         >
             <List sx={{ pt: '0', pb: '0' }}>
@@ -170,9 +171,11 @@ const SideNav = ({ open, setOpen, isMediumScreen, drawerWidth = 300 }: SideNavPr
                         border: 'none',
                         width: drawerWidth,
                         boxSizing: 'border-box',
-                        backgroundColor: Palette.background.default,
+                        background: 'transparent',
+                        height: '43.75rem',
                     },
                 }}
+                hideBackdrop
                 elevation={0}
                 variant="permanent"
                 sx={{
