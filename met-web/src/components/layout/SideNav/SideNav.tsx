@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { Routes, Route } from './SideNavElements';
-import { DarkTheme, Palette, colors } from '../../../styles/Theme';
+import { DarkTheme, Palette, colors, ZIndex } from '../../../styles/Theme';
 import { SideNavProps, DrawerBoxProps } from './types';
 import { When } from 'react-if';
 import { useAppSelector } from 'hooks';
@@ -135,6 +135,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 borderBottomRightRadius: '16px',
                 boxShadow: '0 5px 10px rgba(0, 0, 0, 0.4)',
                 mt: '5.625rem',
+                zIndex: ZIndex.sideNav,
             }}
         >
             <List sx={{ pt: { xs: 4, md: 0 }, pb: '0' }}>
@@ -159,9 +160,11 @@ const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
                         border: 'none',
                         width: '300px',
                         boxSizing: 'border-box',
-                        backgroundColor: Palette.background.default,
+                        background: 'transparent',
+                        height: '43.75rem',
                     },
                 }}
+                hideBackdrop
                 elevation={0}
                 variant="permanent"
                 sx={{
