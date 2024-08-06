@@ -1,6 +1,13 @@
+## August 6, 2024
+
+- **Hotfix** Fix styling issues with the new admin header - 🎟️ HOTFIX
+  - Fixed an issue where page widths above 100% were causing the header to become misaligned
+  - Fixed a z-index issue with the tenant selector on mobile
+
 ## July 30, 2024
 
 - **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
+
   - Added a new API endpoint to fetch a list of a user's tenants, required for the new header
   - Redesigned the admin header to match the new design system
   - Added a new dropdown to the header to allow users to switch between tenants
