@@ -22,7 +22,10 @@ export const AuthenticatedLayout = () => {
                 <InternalHeader />
                 <Notification />
                 <NotificationModal />
-                <Box component="main" sx={{ flexGrow: 1, marginTop: { xs: '3.5em', md: '6.5em' } }}>
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, marginTop: { xs: '3.5em', md: '6.5em' }, width: '100%', overflowX: 'auto' }}
+                >
                     <ScrollToTop />
                     <FormioListener />
                     <LocalizationProvider

@@ -72,6 +72,7 @@ const InternalHeader = () => {
                     },
                 }}
             >
+                <CssBaseline />
                 <AppBar
                     position="fixed"
                     sx={{
@@ -86,7 +87,6 @@ const InternalHeader = () => {
                     }}
                     data-testid="appbar-header"
                 >
-                    <CssBaseline />
                     <Toolbar
                         sx={{
                             height: '4em',
@@ -132,10 +132,11 @@ const InternalHeader = () => {
                                             transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
                                             transition: 'transform 0.3s',
                                             position: isMobileScreen ? 'relative' : undefined,
-                                            left: isMobileScreen ? '6px' : undefined,
+                                            right: isMobileScreen ? '6px' : undefined,
                                         }}
                                     />
                                 }
+                                iconPosition="right"
                                 sx={{
                                     marginLeft: 'auto',
                                     minWidth: 'unset',
@@ -269,8 +270,6 @@ const TenantSelector = ({
                     <TenantButtonContent isOpen={tenantDrawerOpen} />
                 </ButtonBase>
                 <Drawer
-                    disableEnforceFocus
-                    disablePortal
                     anchor="top"
                     open={tenantDrawerOpen}
                     onClose={() => {
