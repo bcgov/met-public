@@ -136,6 +136,7 @@ const InternalHeader = () => {
                                         }}
                                     />
                                 }
+                                iconPosition="right"
                                 sx={{
                                     marginLeft: 'auto',
                                     minWidth: 'unset',
