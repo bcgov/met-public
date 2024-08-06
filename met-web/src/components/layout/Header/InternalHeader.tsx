@@ -132,7 +132,7 @@ const InternalHeader = () => {
                                             transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
                                             transition: 'transform 0.3s',
                                             position: isMobileScreen ? 'relative' : undefined,
-                                            left: isMobileScreen ? '6px' : undefined,
+                                            right: isMobileScreen ? '6px' : undefined,
                                         }}
                                     />
                                 }
