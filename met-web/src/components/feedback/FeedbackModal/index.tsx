@@ -15,10 +15,10 @@ import { createFeedback } from 'services/feedbackService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
 import { customRatings, commentTypes } from './constants';
-import { ZIndex } from 'styles/Theme';
 import { useAppTranslation } from 'hooks';
 import { Button, IconButton, CustomTextField } from 'components/common/Input';
 import { useTheme } from '@mui/material/styles';
+import { ZIndex } from 'styles/Theme';
 
 export const FeedbackModal = () => {
     const { t: translate } = useAppTranslation();
@@ -94,8 +94,8 @@ export const FeedbackModal = () => {
                     bottom: bottomSpacing,
                     right: rightSpacing,
                     transform: 'rotate(-90deg)',
-                    zIndex: ZIndex.footer + 1,
                     transformOrigin: 'bottom right',
+                    zIndex: ZIndex.feedback,
                 }}
             >
                 <FontAwesomeIcon

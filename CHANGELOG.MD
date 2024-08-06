@@ -4,6 +4,12 @@
   - Fixed an issue where page widths above 100% were causing the header to become misaligned
   - Fixed a z-index issue with the tenant selector on mobile
 
+## July 31, 2024
+
+- **Feature** New footer (public and admin) [🎟️ DESENG-662](https://citz-gdx.atlassian.net/browse/DESENG-662)
+  - Implemented new footer design for desktop and mobile viewports.
+  - Addressed some issues with z-index between footer and side nav.
+
 ## July 30, 2024
 
 - **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
