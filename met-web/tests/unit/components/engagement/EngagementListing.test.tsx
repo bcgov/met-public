@@ -179,7 +179,7 @@ describe('Engagement listing page tests', () => {
 
         await waitFor(() => {
             expect(mockFetcher.load).toHaveBeenLastCalledWith(
-                '/engagements/?page=1&size=10&sort_key=engagement.created_date&sort_order=desc&search_text=Engagement+One',
+                '/engagements/search?page=1&size=10&sort_key=engagement.created_date&sort_order=desc&search_text=Engagement+One',
             );
         });
     });
