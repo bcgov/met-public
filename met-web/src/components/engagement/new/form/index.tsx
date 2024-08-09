@@ -1,5 +1,5 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import { BodyText, Header1, Header2 } from 'components/common/Typography';
+import React, { Suspense, useState } from 'react';
+import { Header1, Header2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
 import { Form, useLoaderData, Await } from 'react-router-dom';
 import { Box, Skeleton } from '@mui/material';
@@ -54,6 +54,8 @@ const EngagementForm = ({
         formState: { errors, isDirty, isValid, isSubmitting, touchedFields },
     } = engagementForm;
 
+    const [nameHasBeenEdited, setNameHasBeenEdited] = useState(false);
+
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ maxWidth: '788px' }}>
@@ -75,22 +77,21 @@ const EngagementForm = ({
                     name="name"
                     rules={{ required: 'Engagement title is required' }}
                     render={({ field }) => {
-                        const [hasBeenEdited, setHasBeenEdited] = useState(false);
                         return (
                             <FormStep
                                 step={1}
                                 completed={Boolean(field.value)}
-                                completing={touchedFields.name && hasBeenEdited}
+                                completing={touchedFields.name && nameHasBeenEdited}
                                 question="What is the title of your engagement?"
                                 details="Titles should succinctly describe what your engagement is about in 60 characters or less."
                             >
                                 <TextField
                                     {...field}
-                                    error={hasBeenEdited ? errors.name?.message : undefined}
+                                    error={nameHasBeenEdited ? errors.name?.message : undefined}
                                     counter
                                     maxLength={50}
                                     onChange={(value) => {
-                                        setHasBeenEdited((current) => Boolean(value) || current);
+                                        setNameHasBeenEdited((current) => Boolean(value) || current);
                                         field.onChange(value);
                                     }}
                                     placeholder="Engagement title"

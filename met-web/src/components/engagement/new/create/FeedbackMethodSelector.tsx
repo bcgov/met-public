@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { EngagementConfigurationData } from '../form';

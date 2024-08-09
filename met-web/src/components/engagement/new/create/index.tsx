@@ -4,7 +4,6 @@ import { useFetcher, createSearchParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '../form';
-import { BodyText } from 'components/common/Typography';
 
 const EngagementCreationWizard = () => {
     const fetcher = useFetcher();

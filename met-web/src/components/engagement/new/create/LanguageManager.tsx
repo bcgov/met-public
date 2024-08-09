@@ -24,7 +24,6 @@ export const LanguageManager = () => {
     );
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const [resultLanguage, setResultLanguage] = React.useState<Language | null>(null);
 
     useEffect(() => {
         // Don't do anything if language multiplicity has not been indicated

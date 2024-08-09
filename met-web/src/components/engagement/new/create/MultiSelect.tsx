@@ -1,6 +1,16 @@
-import React, { HTMLAttributes, MouseEventHandler, ReactFragment, SyntheticEvent, useEffect } from 'react';
-import { Autocomplete, AutocompleteProps, PaperProps, Popper, PopperProps, TextField } from '@mui/material';
-import { Box, BoxProps, Grid, IconButton } from '@mui/material';
+import React, { HTMLAttributes, useId, ReactFragment, SyntheticEvent } from 'react';
+import {
+    Autocomplete,
+    AutocompleteProps,
+    Box,
+    BoxProps,
+    Grid,
+    IconButton,
+    PaperProps,
+    Popper,
+    PopperProps,
+    TextField,
+} from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown, faPlus, faXmark } from '@fortawesome/pro-regular-svg-icons';
 import { colors } from 'styles/Theme';
@@ -9,7 +19,7 @@ import { When } from 'react-if';
 import { Button } from 'components/common/Input';
 import { MetPaper } from 'components/common';
 import { OutlineBox } from 'components/common/Layout';
-import { useId } from 'react';
+
 import {
     AutocompleteChangeReason,
     AutocompleteRenderInputParams,
@@ -29,7 +39,11 @@ interface MultiSelectProps<T> extends AutocompleteProps<T, false, false, false> 
     ) => ReactFragment | JSX.Element;
     getOptionLabel: (option: T) => string;
     isOptionEqualToValue: (option: T, value: T) => boolean;
-    renderOption: (props: HTMLAttributes<HTMLLIElement>, option: T, state: AutocompleteRenderOptionState) => any;
+    renderOption: (
+        props: HTMLAttributes<HTMLLIElement>,
+        option: T,
+        state: AutocompleteRenderOptionState,
+    ) => ReactFragment | JSX.Element;
     renderInput: (params: AutocompleteRenderInputParams) => JSX.Element;
     options: readonly T[];
     selectLabel: string;
