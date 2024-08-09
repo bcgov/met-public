@@ -134,7 +134,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px',
                 boxShadow: '0 5px 10px rgba(0, 0, 0, 0.4)',
-                mt: '5.625rem',
+                mt: isMediumScreenOrLarger ? '8.5rem' : '5.625rem',
                 zIndex: ZIndex.sideNav,
             }}
         >
@@ -161,7 +161,7 @@ const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
                         width: '300px',
                         boxSizing: 'border-box',
                         background: 'transparent',
-                        height: '43.75rem',
+                        height: '48.75rem',
                     },
                 }}
                 hideBackdrop
