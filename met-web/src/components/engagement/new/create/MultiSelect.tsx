@@ -189,7 +189,7 @@ const MultiSelect = <T,>({
                                 <Grid item>
                                     {renderSelectedOption?.({}, option, { selected: false, inputValue: searchTerm })}
                                 </Grid>
-                                <Grid item marginLeft="auto" hidden={getOptionRequired?.(option) !== true}>
+                                <Grid item marginLeft="auto" hidden={getOptionRequired?.(option) === true}>
                                     <IconButton
                                         sx={{ height: '16px', width: '16px' }}
                                         onClick={(e) => handleRemoveOption(e, option)}
