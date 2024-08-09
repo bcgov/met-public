@@ -62,7 +62,7 @@ export const LanguageManager = () => {
                 <SystemMessage status="warning">
                     Under construction - this setting currently has no effect
                 </SystemMessage>
-                <MultiSelect
+                <MultiSelect<Language>
                     containerProps={{ sx: { mt: 2 } }}
                     onChange={(_, language, reason) => {
                         if (reason === 'removeOption' && language) {
