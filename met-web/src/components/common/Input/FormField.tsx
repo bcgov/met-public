@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 export type FormFieldProps = {
-    title: string;
+    title?: string;
     disabled?: boolean;
     instructions?: string;
     required?: boolean;
@@ -26,20 +26,20 @@ export const FormField = ({
     ...gridProps
 }: FormFieldProps) => {
     return (
-        <label style={{ width: '100%' }}>
+        <label style={{ width: '100%', display: 'block' }}>
             <Grid
                 className="met-input-form-field"
                 container
                 spacing={0}
                 direction="column"
                 {...gridProps}
-                sx={{ opacity: disabled ? '0.5' : '1' }}
+                sx={{ opacity: disabled ? '0.5' : '1', ...gridProps.sx }}
             >
                 <Grid item xs={12}>
-                    <BodyText bold size="large">
+                    <BodyText bold size="large" className="met-input-form-field-title">
                         {title}
-                        {required && <span title="(Required)">*</span>}
-                        {optional && <span style={{ fontWeight: '400' }}> (Optional)</span>}
+                        {required && title && <span title="(Required)">*</span>}
+                        {optional && title && <span style={{ fontWeight: '400' }}> (Optional)</span>}
                     </BodyText>
                 </Grid>
                 <Grid item xs={12} sx={{ mb: '8px' }}>

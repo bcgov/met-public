@@ -129,14 +129,16 @@ const InternalHeader = () => {
                                         icon={sideNavOpen ? faClose : faBars}
                                         fontSize={20}
                                         style={{
+                                            width: '20px',
                                             transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
                                             transition: 'transform 0.3s',
                                             position: isMobileScreen ? 'relative' : undefined,
-                                            right: isMobileScreen ? '6px' : undefined,
+                                            right: isMobileScreen && sideNavOpen ? '6px' : undefined,
+                                            left: isMobileScreen && !sideNavOpen ? '6px' : undefined,
                                         }}
                                     />
                                 }
-                                iconPosition="right"
+                                iconPosition={sideNavOpen ? 'right' : 'left'}
                                 sx={{
                                     marginLeft: 'auto',
                                     minWidth: 'unset',
