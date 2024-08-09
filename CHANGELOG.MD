@@ -1,3 +1,12 @@
+## August 8, 2024
+
+- **Feature** Implement UX designs for engagement creation wizard [🎟️ DESENG-663](https://citz-gdx.atlassian.net/browse/DESENG-663)
+  - Implemented the new design for the engagement creation wizard
+  - Added a new "Step" component to handle the wizard's steps
+  - Added a new "SystemMessage" component to display system messages
+  - Made engagement configuration form reusable for an edit engagement flow
+  - Added a new "EngagementWizard" component to handle the entire wizard
+
 ## August 6, 2024
 
 - **Hotfix** Fix styling issues with the new admin header - 🎟️ HOTFIX
