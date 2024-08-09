@@ -14,7 +14,11 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
     smallScreenOnly,
 }) => {
     return (
-        <Breadcrumbs aria-label="breadcrumb" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
+        <Breadcrumbs
+            aria-label="breadcrumb"
+            component="nav"
+            sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}
+        >
             {crumbs.map((crumb, index) =>
                 crumb.link ? (
                     <Link size="small" key={crumb.name} to={crumb.link}>
@@ -47,7 +51,7 @@ interface UIMatchWithCrumb
 export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ smallScreenOnly }) => {
     const matches = (useMatches() as UIMatchWithCrumb[]).filter((match) => match.handle?.crumb);
     return (
-        <Breadcrumbs aria-label="breadcrumb" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
+        <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
             {matches.map((match, index) => {
                 const data = match.data as unknown;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
