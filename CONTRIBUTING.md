@@ -92,3 +92,6 @@ Examples of when to Request Changes
   - `Link`: A wrapper around MUI's Link, styled for MET.
   - `UnsavedWorkConfirmation`: Uses a route [blocker](https://reactrouter.com/en/main/hooks/use-blocker) to display a ConfirmModal so that the user doesn't lose any unsaved work on their current page.
   - `OutlineBox`: A styled box that displays a rounded outline around its children.
+  - `StatusIcon`: A simple component that displays a status icon based on the status string passed to it.
+  - `FormStep`: A wrapper around a form component that accepts a completion criteria and displays the user's progress. Accepts a `step` prop that is a number (from 1 to 9) that represents the current step in the form. This will be rendered as an icon with a checkmark if the step is complete, and a number if it's the current step or if it's incomplete.
+  - `SystemMessage`: An informational message that can be displayed to the user. Accepts a `type` prop that can be "error", "warning", "info", or "success", which affects the display of the message.
