@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { useLoaderData, Await } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';

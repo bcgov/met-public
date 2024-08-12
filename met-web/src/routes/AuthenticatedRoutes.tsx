@@ -32,12 +32,12 @@ import Language from 'components/language';
 import { Tenant } from 'models/tenant';
 import { Engagement } from 'models/engagement';
 import { getAllTenants, getTenant } from 'services/tenantService';
-import { engagementLoader, engagementListLoader } from 'components/engagement/new/view';
+import { engagementLoader, engagementListLoader } from 'components/engagement/public/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
-import { languageLoader } from 'components/engagement/new/create/languageLoader';
+import { languageLoader } from 'components/engagement/admin/create/languageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
-import EngagementCreationWizard from 'components/engagement/new/create';
-import engagementCreateAction from 'components/engagement/new/create/engagementCreateAction';
+import EngagementCreationWizard from 'components/engagement/admin/create';
+import engagementCreateAction from 'components/engagement/admin/create/engagementCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (

@@ -9,7 +9,7 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
 import { Widget } from 'models/widget';
-import { WidgetSwitch } from 'components/engagement/view/widgets/WidgetSwitch';
+import { WidgetSwitch } from 'components/engagement/old-view/widgets/WidgetSwitch';
 import { BaseTheme, DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 
