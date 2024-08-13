@@ -108,7 +108,7 @@ const EngagementListing = () => {
         );
         const searchParams = createSearchParams(filteredSearchData);
         setSearchParams(searchParams);
-        fetcher.load(`/engagements/?${searchParams}`);
+        fetcher.load(`/engagements/search?${searchParams}`);
     }, [paginationOptions, searchFilter, searchOptions]);
 
     const submissionHasBeenOpened = (engagement: Engagement) => {

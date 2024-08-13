@@ -92,7 +92,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                         <FontAwesomeIcon
                             style={{
                                 fontSize: '1.1rem',
-                                color: 'selected' === itemType ? Palette.primary.light : Palette.text.primary,
+                                color: 'selected' === itemType ? Palette.primary.main : Palette.text.primary,
                                 paddingRight: '0.75rem',
                                 width: '1.1rem',
                             }}
@@ -101,7 +101,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
 
                         <span
                             style={{
-                                color: 'selected' === itemType ? Palette.primary.light : Palette.text.primary,
+                                color: 'selected' === itemType ? Palette.primary.main : Palette.text.primary,
                                 fontWeight: 'selected' === itemType ? 'bold' : '500',
                                 fontSize: '1rem',
                             }}

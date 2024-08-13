@@ -90,10 +90,15 @@ export const colors = {
         white: '#FFFFFF',
     },
     notification: {
+        info: {
+            shade: '#12508F',
+            icon: '#12508F',
+            tint: '#F1F8FF',
+        },
         default: {
             shade: '#12508F',
             icon: '#12508F',
-            tint: '#FFF8E8',
+            tint: '#F1F8FF',
         },
         success: {
             shade: '#42814A',
@@ -124,8 +129,8 @@ export const colors = {
 
 export const Palette = {
     primary: {
-        main: colors.surface.blue[100],
-        light: colors.surface.blue[90],
+        main: colors.surface.blue[90],
+        light: colors.surface.blue[80],
         dark: colors.surface.blue[100],
     },
     secondary: {

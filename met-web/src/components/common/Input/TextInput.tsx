@@ -47,7 +47,6 @@ export const textInputStyles = {
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
-    id,
     value,
     onChange,
     placeholder,
@@ -77,7 +76,6 @@ export const TextInput: React.FC<TextInputProps> = ({
             inputProps={{
                 error: error,
                 ...inputProps,
-                'aria-describedby': id,
                 sx: {
                     fontSize: '16px',
                     lineHeight: '24px',
@@ -126,6 +124,7 @@ export type TextFieldProps = {
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
+    formFieldProps?: Partial<FormFieldProps>;
     onChange?: (value: string, name?: string) => void;
 } & Omit<FormFieldProps, 'children' | 'onChange'> &
     Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
@@ -140,6 +139,7 @@ export const TextField = ({
     clearable,
     onChange,
     disabled,
+    formFieldProps,
     ...textInputProps
 }: TextFieldProps) => {
     const [value, setValue] = React.useState(textInputProps.value || '');
@@ -151,6 +151,7 @@ export const TextField = ({
     const handleSetValue = (newValue: string) => {
         if (onChange === undefined) return setValue(newValue);
         onChange?.(newValue, name);
+        return setValue(newValue);
     };
 
     const isError = !!error;
@@ -164,6 +165,7 @@ export const TextField = ({
             required={required}
             optional={optional}
             error={error}
+            {...formFieldProps}
         >
             <TextInput
                 fullWidth

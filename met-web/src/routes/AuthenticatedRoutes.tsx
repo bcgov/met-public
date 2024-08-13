@@ -64,10 +64,10 @@ const AuthenticatedRoutes = () => {
                 path="/engagements"
                 id="engagement-listing"
                 errorElement={<NotFound />}
-                loader={engagementListLoader}
                 handle={{ crumb: () => ({ name: 'Engagements' }) }}
             >
                 <Route index element={<EngagementListing />} />
+                <Route path="search" element={<Navigate to="/engagements" />} loader={engagementListLoader} />
                 <Route
                     path="create"
                     action={engagementCreateAction}
