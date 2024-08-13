@@ -101,7 +101,7 @@ export const FormStep = ({
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 pb="16px"
-                role={isGroup ? 'group' : undefined}
+                component={isGroup ? 'fieldset' : undefined}
                 aria-labelledby={titleId + ' ' + instructionsId}
             >
                 <Grid item xs={12}>
