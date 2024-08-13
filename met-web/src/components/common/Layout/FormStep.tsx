@@ -103,6 +103,7 @@ export const FormStep = ({
                 pb="16px"
                 component={isGroup ? 'fieldset' : 'div'}
                 aria-labelledby={titleId + ' ' + instructionsId}
+                sx={{ border: 'none' }}
             >
                 <Grid item xs={12}>
                     <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>
