@@ -70,8 +70,7 @@ const EngagementVisibilityControl = () => {
                                     setIsConfirmed(false);
                                     field.onChange({ target: { value: e.target.value === 'true' } });
                                 }}
-                                aria-label="is_internal"
-                                name="is_internal"
+                                aria-label="Visibility"
                             >
                                 <FormControlLabel value={false} control={<Radio />} label="Public (unrestricted)" />
                                 <FormControlLabel value={true} control={<Radio />} label="BC Gov (IDIR restricted)" />
