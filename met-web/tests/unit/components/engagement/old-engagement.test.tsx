@@ -1,7 +1,7 @@
 import { render, waitFor, screen } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
-import EngagementView from 'components/engagement/view';
+import EngagementView from 'components/engagement/old-view';
 import { Contact } from 'models/contact';
 import { setupEnv } from '../setEnvVars';
 import * as reactRedux from 'react-redux';
