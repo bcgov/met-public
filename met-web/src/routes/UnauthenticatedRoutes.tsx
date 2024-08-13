@@ -1,18 +1,18 @@
 import SurveySubmit from 'components/survey/submit';
 import EditSurvey from 'components/survey/edit';
 import React from 'react';
-import EngagementView from '../components/engagement/view';
+import EngagementView from '../components/engagement/old-view';
 import NotAvailable from './NotAvailable';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
 import Landing from 'components/landing';
-import ManageSubscription from '../components/engagement/view/widgets/Subscribe/ManageSubscription';
+import ManageSubscription from '../components/engagement/old-view/widgets/Subscribe/ManageSubscription';
 import { FormCAC } from 'components/FormCAC';
 import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';
 import { Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
-import ViewEngagement, { engagementLoader } from 'components/engagement/new/view';
+import ViewEngagement, { engagementLoader } from 'components/engagement/public/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
 
 const ManageSubscriptionWrapper = withLanguageParam(ManageSubscription);

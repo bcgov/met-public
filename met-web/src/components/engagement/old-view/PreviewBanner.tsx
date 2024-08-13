@@ -11,7 +11,7 @@ import { faSquareQuestion } from '@fortawesome/pro-regular-svg-icons/faSquareQue
 import { faFileSlash } from '@fortawesome/pro-regular-svg-icons/faFileSlash';
 import { faFileCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faFileCircleExclamation';
 import IconButton from '@mui/material/IconButton';
-import ScheduleModal from 'components/engagement/view/ScheduleModal';
+import ScheduleModal from 'components/engagement/old-view/ScheduleModal';
 import { formatDate } from 'components/common/dateHelper';
 import { When } from 'react-if';
 import { PermissionsGate } from 'components/permissionsGate';

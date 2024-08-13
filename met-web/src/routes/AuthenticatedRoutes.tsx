@@ -3,7 +3,8 @@ import { Params, defer, Navigate, Route } from 'react-router-dom';
 import NotFound from './NotFound';
 import EngagementForm from '../components/engagement/form';
 import EngagementListing from '../components/engagement/listing';
-import EngagementView from '../components/engagement/view';
+import { Engagement as OldEngagementView } from '../components/engagement/old-view';
+import { AdminEngagementView } from 'components/engagement/admin/view';
 import SurveyListing from 'components/survey/listing';
 import CreateSurvey from 'components/survey/create';
 import SurveyFormBuilder from 'components/survey/building';
@@ -29,13 +30,14 @@ import TenantEditPage from 'components/tenantManagement/Edit';
 import TenantDetail from 'components/tenantManagement/Detail';
 import Language from 'components/language';
 import { Tenant } from 'models/tenant';
+import { Engagement } from 'models/engagement';
 import { getAllTenants, getTenant } from 'services/tenantService';
-import { engagementLoader, engagementListLoader } from 'components/engagement/new/view';
+import { engagementLoader, engagementListLoader } from 'components/engagement/public/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
-import { languageLoader } from 'components/engagement/new/create/languageLoader';
+import { languageLoader } from 'components/engagement/admin/create/languageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
-import EngagementCreationWizard from 'components/engagement/new/create';
-import engagementCreateAction from 'components/engagement/new/create/engagementCreateAction';
+import EngagementCreationWizard from 'components/engagement/admin/create';
+import engagementCreateAction from 'components/engagement/admin/create/engagementCreateAction';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -89,12 +91,27 @@ const AuthenticatedRoutes = () => {
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
                     </Route>
-                    <Route path="view" element={<EngagementView />} />
+                    <Route path="old-view" element={<OldEngagementView />} />
+                    <Route
+                        path="view"
+                        loader={engagementLoader}
+                        handle={{
+                            crumb: async (data: { engagement: Promise<Engagement> }) => {
+                                return data.engagement.then((engagement) => {
+                                    return {
+                                        link: `/engagements/${engagement.id}/view`,
+                                        name: engagement.name,
+                                    };
+                                });
+                            },
+                        }}
+                        element={<AdminEngagementView />}
+                    />
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>
                 <Route path=":slug">
-                    <Route index element={<EngagementView />} />
+                    <Route index element={<OldEngagementView />} />
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>

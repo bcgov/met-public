@@ -9,13 +9,13 @@ import { getStatusFromStatusId } from 'components/common/Indicators/StatusChip';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Widget } from 'models/widget';
-import { WidgetSwitch } from 'components/engagement/view/widgets/WidgetSwitch';
+import { WidgetSwitch } from 'components/engagement/old-view/widgets/WidgetSwitch';
 import { BaseTheme, DarkTheme } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import EmailModal from 'components/engagement/view/EmailModal';
+import EmailModal from 'components/engagement/old-view/EmailModal';
 
 const gridContainerStyles = {
     width: '100%',

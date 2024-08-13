@@ -1,5 +1,8 @@
 ## August 8, 2024
 
+- **Feature** New engagement details page [🎟️ DESENG-666](https://citz-gdx.atlassian.net/browse/DESENG-666)
+- Old engagement details page still available under "old-view" route
+
 - **Feature** Implement UX designs for engagement creation wizard [🎟️ DESENG-663](https://citz-gdx.atlassian.net/browse/DESENG-663)
   - Implemented the new design for the engagement creation wizard
   - Added a new "Step" component to handle the wizard's steps

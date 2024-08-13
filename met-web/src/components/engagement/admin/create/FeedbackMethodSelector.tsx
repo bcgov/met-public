@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
-import { EngagementConfigurationData } from '../form';
+import { EngagementConfigurationData } from './form';
 import { useFormContext } from 'react-hook-form';
 
 export const FeedbackMethodSelector = () => {
