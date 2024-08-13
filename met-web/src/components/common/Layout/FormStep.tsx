@@ -16,7 +16,7 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { colors } from 'styles/Theme';
 import { BodyText, Header2 } from '../Typography';
 
-export const circleNumberIcons = [
+const circleNumberIcons = [
     faCircle1,
     faCircle2,
     faCircle3,
