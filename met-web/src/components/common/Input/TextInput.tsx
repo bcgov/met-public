@@ -47,7 +47,6 @@ export const textInputStyles = {
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
-    id,
     value,
     onChange,
     placeholder,
@@ -77,7 +76,6 @@ export const TextInput: React.FC<TextInputProps> = ({
             inputProps={{
                 error: error,
                 ...inputProps,
-                'aria-describedby': id,
                 sx: {
                     fontSize: '16px',
                     lineHeight: '24px',

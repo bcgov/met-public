@@ -27,7 +27,7 @@ import {
 } from '@mui/material/Autocomplete';
 import { textInputStyles } from 'components/common/Input/TextInput';
 
-interface MultiSelectProps<T> extends AutocompleteProps<T, false, false, false> {
+interface OptionalMultiSelectProps<T> extends AutocompleteProps<T, false, false, false> {
     onChange: (e: SyntheticEvent<Element, Event>, value: T | null, reason?: AutocompleteChangeReason) => void;
     onInputChange?: (e: SyntheticEvent<Element, Event>, value: string) => void;
     selectedOptions?: T[];
@@ -46,14 +46,17 @@ interface MultiSelectProps<T> extends AutocompleteProps<T, false, false, false> 
     ) => ReactFragment | JSX.Element;
     renderInput: (params: AutocompleteRenderInputParams) => JSX.Element;
     options: readonly T[];
+    searchPlaceholder?: string;
+    containerProps: BoxProps;
+}
+
+interface MultiSelectProps<T> extends Partial<OptionalMultiSelectProps<T>> {
     selectLabel: string;
     buttonLabel: string;
     selectedLabel: {
         singular: string;
         plural: string;
     };
-    searchPlaceholder?: string;
-    containerProps: BoxProps;
 }
 
 const MultiSelect = <T,>({
@@ -68,13 +71,13 @@ const MultiSelect = <T,>({
     getOptionRequired,
     value,
     isOptionEqualToValue = (option, value) => option === value,
-    selectLabel = 'Add Options',
-    buttonLabel = 'Add',
-    selectedLabel = { singular: 'Selected Option', plural: 'Selected Options' },
+    selectLabel,
+    buttonLabel,
+    selectedLabel,
     containerProps,
     searchPlaceholder,
     ...props
-}: Partial<MultiSelectProps<T>>) => {
+}: MultiSelectProps<T>) => {
     const defaultRenderInput = (params: AutocompleteRenderInputParams) => {
         return (
             <TextField
@@ -169,6 +172,7 @@ const MultiSelect = <T,>({
                     variant="primary"
                     icon={<FontAwesomeIcon icon={faPlus} />}
                     onClick={handleAddOption}
+                    aria-label={`Add ${currentOption ? getOptionLabel?.(currentOption) : 'option'}`}
                 >
                     {buttonLabel}
                 </Button>
@@ -193,6 +197,7 @@ const MultiSelect = <T,>({
                                     <IconButton
                                         sx={{ height: '16px', width: '16px' }}
                                         onClick={(e) => handleRemoveOption(e, option)}
+                                        aria-label={`Remove ${getOptionLabel?.(option)}`}
                                     >
                                         <FontAwesomeIcon fontSize={16} icon={faXmark} />
                                     </IconButton>

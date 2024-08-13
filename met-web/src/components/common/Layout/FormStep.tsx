@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { Box, Grid } from '@mui/material';
 import {
     faCircle1,
@@ -34,6 +34,8 @@ export const FormStep = ({
     completed,
     question,
     details,
+    labelFor,
+    isGroup,
     children,
 }: {
     step: number;
@@ -41,10 +43,14 @@ export const FormStep = ({
     completed?: boolean;
     question?: string;
     details?: string;
+    labelFor?: string;
+    isGroup?: boolean;
     children?: React.ReactNode;
 }) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const activityColor = completed || completing || isFocused ? colors.surface.blue[90] : colors.surface.gray[70];
+    const titleId = useId();
+    const instructionsId = useId();
 
     return (
         <Grid
@@ -88,13 +94,30 @@ export const FormStep = ({
                     />
                 </Grid>
             </Grid>
-            <Grid item container xs justifyContent="flex-start" alignItems="flex-start" pb="16px">
+            <Grid
+                item
+                container
+                xs
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                pb="16px"
+                role={isGroup ? 'group' : undefined}
+                aria-labelledby={titleId + ' ' + instructionsId}
+            >
                 <Grid item xs={12}>
-                    <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>{question}</Header2>
+                    <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>
+                        <label htmlFor={isGroup ? undefined : labelFor} id={titleId}>
+                            {question}
+                        </label>
+                    </Header2>
                 </Grid>
                 {details && (
                     <Grid item sx={{ marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
-                        <BodyText size="small">{details}</BodyText>
+                        <BodyText size="small">
+                            <label htmlFor={isGroup ? undefined : labelFor} id={instructionsId}>
+                                {details}
+                            </label>
+                        </BodyText>
                     </Grid>
                 )}
                 <Grid item xs={12}>

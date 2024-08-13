@@ -84,8 +84,10 @@ const EngagementForm = ({
                                 completing={touchedFields.name && nameHasBeenEdited}
                                 question="What is the title of your engagement?"
                                 details="Titles should succinctly describe what your engagement is about in 60 characters or less."
+                                labelFor="name"
                             >
                                 <TextField
+                                    id="name"
                                     {...field}
                                     error={nameHasBeenEdited ? errors.name?.message : undefined}
                                     counter
@@ -105,6 +107,7 @@ const EngagementForm = ({
                     completed={watch('feedback_methods').length > 0}
                     question="How will your engagement be gathering feedback?"
                     details="Select all that apply. These are the ways in which you will be collecting feedback from your participants. For example, you may choose to collect feedback through surveys, polls, or discussion forums."
+                    isGroup
                 >
                     <FeedbackMethodSelector />
                 </FormStep>
@@ -114,6 +117,7 @@ const EngagementForm = ({
                     completing={Boolean(touchedFields.start_date) && Boolean(touchedFields.end_date)}
                     question="When will your engagement be open for receiving feedback?"
                     details="Please select the dates your engagement will be open and closed for receiving feedback. (These dates are not related to when your engagement will be published.)"
+                    isGroup
                 >
                     <DateRangePickerWithCalculation />
                 </FormStep>
@@ -122,6 +126,7 @@ const EngagementForm = ({
                     completed={watch('languages').some((l) => l.code)}
                     question="Will your engagement be offered in multiple languages?"
                     details="All engagements must be offered in English, but you may also add content in additional languages. If you select multi-language, you must include French."
+                    isGroup
                 >
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
                         <Await resolve={languages}>
@@ -137,6 +142,7 @@ const EngagementForm = ({
                     completing={Boolean(touchedFields.is_internal)}
                     question="Who should be able to access your published engagement?"
                     details="If you select BC Gov, your engagement will only be accessible by BC Gov employees who have an IDIR."
+                    isGroup
                 >
                     <EngagementVisibilityControl />
                 </FormStep>
@@ -145,6 +151,7 @@ const EngagementForm = ({
                     completed={watch('users').some((u) => u)}
                     question="Who would you like to add to this engagement?"
                     details="In addition to yourself, please add the team members that you would like to have access to this engagement. You can only add individuals that have already signed into MET."
+                    isGroup
                 >
                     <UserManager />
                 </FormStep>
