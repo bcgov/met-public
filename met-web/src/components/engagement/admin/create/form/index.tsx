@@ -5,17 +5,17 @@ import { Form, useLoaderData, Await } from 'react-router-dom';
 import { Box, Skeleton } from '@mui/material';
 import { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
-import { DateRangePickerWithCalculation } from '../create/DateRangePickerWithCalculation';
-import EngagementVisibilityControl from '../create/EngagementVisibilityControl';
+import EngagementVisibilityControl from '../EngagementVisibilityControl';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
-import { Language } from 'models/language';
-import { UserManager } from '../create/UserManager';
+import { FeedbackMethodSelector } from '../FeedbackMethodSelector';
+import { DateRangePickerWithCalculation } from '../DateRangePickerWithCalculation';
+import { LanguageManager } from '../LanguageManager';
+import { UserManager } from '../UserManager';
 import { User } from 'models/user';
+import { Language } from 'models/language';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { Link } from 'components/common/Navigation';
 import { FormStep } from 'components/common/Layout/FormStep';
-import { LanguageManager } from '../create/LanguageManager';
-import { FeedbackMethodSelector } from '../create/FeedbackMethodSelector';
 
 export interface EngagementConfigurationData {
     // 1. Title

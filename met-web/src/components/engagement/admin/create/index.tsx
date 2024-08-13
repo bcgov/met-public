@@ -3,7 +3,7 @@ import { ResponsiveContainer } from 'components/common/Layout';
 import { useFetcher, createSearchParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
-import EngagementForm, { EngagementConfigurationData } from '../form';
+import EngagementForm, { EngagementConfigurationData } from './form';
 
 const EngagementCreationWizard = () => {
     const fetcher = useFetcher();
