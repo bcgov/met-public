@@ -1,3 +1,8 @@
+## August 8, 2024
+
+- **Feature** New engagement details page [🎟️ DESENG-666](https://citz-gdx.atlassian.net/browse/DESENG-666)
+- Old engagement details page still available under "old-view" route
+
 ## August 6, 2024
 
 - **Hotfix** Fix styling issues with the new admin header - 🎟️ HOTFIX

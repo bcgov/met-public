@@ -5,7 +5,7 @@ import { EngagementContentTabs } from './EngagementContentTabs';
 import { EngagementSurveyBlock } from './EngagementSurveyBlock';
 import { SuggestedEngagements } from './SuggestedEngagements';
 
-export const ViewEngagement = () => {
+export const PublicEngagementView = () => {
     return (
         <main>
             <EngagementHero />
@@ -17,7 +17,7 @@ export const ViewEngagement = () => {
     );
 };
 
-export default ViewEngagement;
+export default PublicEngagementView;
 
 export { engagementLoader } from './EngagementLoader';
 export { engagementListLoader } from './EngagementListLoader';
