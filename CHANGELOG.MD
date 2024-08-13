@@ -1,3 +1,6 @@
+## August 13, 2024
+- **Task** Fix dagster etl error in "dev" environment [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+
 ## August 8, 2024
 
 - **Feature** New engagement details page [🎟️ DESENG-666](https://citz-gdx.atlassian.net/browse/DESENG-666)
