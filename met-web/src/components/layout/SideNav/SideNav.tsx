@@ -27,6 +27,7 @@ import { BodyText } from 'components/common/Typography';
 import { USER_ROLES } from 'services/userService/constants';
 import UserService from 'services/userService';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { generateUniqueKey } from 'utils';
 
 export const routeItemStyle = {
     padding: 0,
@@ -67,7 +68,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                     <Divider sx={{ backgroundColor: Palette.primary.light, height: '0.2rem' }} />
                 </When>
                 <ListItem
-                    key={route.name}
+                    key={generateUniqueKey()}
                     sx={{
                         ...routeItemStyle,
                         backgroundColor: 'selected' === itemType ? colors.surface.blue[10] : Palette.background.default,
