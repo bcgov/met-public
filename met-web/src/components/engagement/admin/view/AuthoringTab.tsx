@@ -98,8 +98,8 @@ export const AuthoringTab = () => {
     const defaultFeedbackMethods = getAuthoringValues(defaultAuthoringValue, feedbackTitles, true, 1000);
 
     // Set useStates. When data is imported, it will be set with setSectionValues and setFeedbackMethods.
-    const [sectionValues, setSectionValues] = useState(defaultSectionValues);
-    const [feedbackMethods, setFeedbackMethods] = useState(defaultFeedbackMethods);
+    const [sectionValues] = useState(defaultSectionValues);
+    const [feedbackMethods] = useState(defaultFeedbackMethods);
     const [requiredSectionsCompleted, setRequiredSectionsCompleted] = useState(false);
     const [feedbackCompleted, setFeedbackCompleted] = useState(false);
 
