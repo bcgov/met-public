@@ -1,3 +1,6 @@
+## August 15, 2024
+- **Feature** New engagement authoring view tab [🎟️ DESENG-674](https://citz-gdx.atlassian.net/browse/DESENG-674)
+
 ## August 13, 2024
 - **Task** Fix dagster etl error in "dev" environment [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 
