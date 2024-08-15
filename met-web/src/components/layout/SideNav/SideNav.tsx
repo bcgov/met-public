@@ -27,7 +27,6 @@ import { BodyText } from 'components/common/Typography';
 import { USER_ROLES } from 'services/userService/constants';
 import UserService from 'services/userService';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import { generateUniqueKey } from 'utils';
 
 export const routeItemStyle = {
     padding: 0,
@@ -61,14 +60,14 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
         return !route.authenticated || route.allowedRoles.some((role) => permissions.includes(role));
     });
 
-    const renderListItem = (route: Route, itemType: string) => {
+    const renderListItem = (route: Route, itemType: string, key: number) => {
         return (
             <>
                 <When condition={'Tenant Admin' === route.name}>
                     <Divider sx={{ backgroundColor: Palette.primary.light, height: '0.2rem' }} />
                 </When>
                 <ListItem
-                    key={generateUniqueKey()}
+                    key={key}
                     sx={{
                         ...routeItemStyle,
                         backgroundColor: 'selected' === itemType ? colors.surface.blue[10] : Palette.background.default,
@@ -140,8 +139,8 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
             }}
         >
             <List sx={{ pt: { xs: 4, md: 0 }, pb: '0' }}>
-                {allowedRoutes.map((route) =>
-                    renderListItem(route, currentBaseRoute === route.base ? 'selected' : 'other'),
+                {allowedRoutes.map((route, index) =>
+                    renderListItem(route, currentBaseRoute === route.base ? 'selected' : 'other', index),
                 )}
             </List>
         </Box>

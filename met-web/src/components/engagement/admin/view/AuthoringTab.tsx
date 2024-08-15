@@ -8,7 +8,6 @@ import { MetLabel, MetHeader3 } from 'components/common';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { When } from 'react-if';
 import { Grid, Link } from '@mui/material';
-import { generateUniqueKey } from 'utils';
 import { colors } from 'styles/Theme';
 
 const StatusCircle = (props: StatusCircleProps) => {
@@ -74,17 +73,29 @@ export const AuthoringTab = () => {
     const optionalSectionTitles = ['View Results', 'Subscribe', 'More Engagements'];
     const feedbackTitles = ['Survey', '3rd Party Feedback Method Link'];
     const defaultAuthoringValue: AuthoringValue = {
+        id: 0,
         title: '',
         link: '#',
         required: false,
         completed: false,
     };
-    const getAuthoringValues = (defaultValues: AuthoringValue, titles: string[], required: boolean): AuthoringValue[] =>
-        titles.map((title) => ({ ...defaultValues, title: title, required: required }));
+    const getAuthoringValues = (
+        defaultValues: AuthoringValue,
+        titles: string[],
+        required: boolean,
+        idOffset = 0,
+    ): AuthoringValue[] => {
+        return titles.map((title, index) => ({
+            ...defaultValues,
+            title: title,
+            required: required,
+            id: index + idOffset,
+        }));
+    };
     const mandatorySectionValues = getAuthoringValues(defaultAuthoringValue, mandatorySectionTitles, true);
-    const optionalSectionValues = getAuthoringValues(defaultAuthoringValue, optionalSectionTitles, false);
+    const optionalSectionValues = getAuthoringValues(defaultAuthoringValue, optionalSectionTitles, false, 100);
     const defaultSectionValues = [...mandatorySectionValues, ...optionalSectionValues];
-    const defaultFeedbackMethods = getAuthoringValues(defaultAuthoringValue, feedbackTitles, true);
+    const defaultFeedbackMethods = getAuthoringValues(defaultAuthoringValue, feedbackTitles, true, 1000);
 
     // Set useStates. When data is imported, it will be set with setSectionValues and setFeedbackMethods.
     const [sectionValues, setSectionValues] = useState(defaultSectionValues);
@@ -167,13 +178,13 @@ export const AuthoringTab = () => {
                 <Grid item xs={12} md={6}>
                     <MetLabel sx={metLabelStyles}>Required Sections</MetLabel>
                     {sectionValues.map(
-                        (section) => section.required && <AuthoringButton key={generateUniqueKey()} item={section} />,
+                        (section) => section.required && <AuthoringButton key={section.id} item={section} />,
                     )}
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <MetLabel sx={metLabelStyles}>Optional Sections</MetLabel>
                     {sectionValues.map(
-                        (section) => !section.required && <AuthoringButton key={generateUniqueKey()} item={section} />,
+                        (section) => !section.required && <AuthoringButton key={section.id} item={section} />,
                     )}
                 </Grid>
             </Grid>
@@ -188,7 +199,7 @@ export const AuthoringTab = () => {
                 <MetLabel sx={metLabelStyles}>Feedback Methods</MetLabel>
                 <Grid item xs={12} sx={{ width: '100%' }}>
                     {feedbackMethods.map((method) => (
-                        <AuthoringButton item={method} key={generateUniqueKey()} />
+                        <AuthoringButton item={method} key={method.id} />
                     ))}
                 </Grid>
             </Grid>

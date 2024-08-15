@@ -1,4 +1,5 @@
 export interface AuthoringValue {
+    id: number;
     title: string;
     link: string;
     required: boolean;

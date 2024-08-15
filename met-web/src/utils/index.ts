@@ -81,11 +81,3 @@ export const isDarkColor = (color: string, sensitivity = 0.5) => {
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     return luminance < sensitivity;
 };
-
-export const generateUniqueKey = () => {
-    const randomSingleDigit = Math.random() * 10;
-    const randomDoubleDigit = Math.random() * 100;
-    const randomTripleDigit = Math.random() * 1000;
-    const now = Date.now();
-    return now + randomTripleDigit + randomDoubleDigit + randomSingleDigit;
-};
