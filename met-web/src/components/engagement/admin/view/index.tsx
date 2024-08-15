@@ -44,6 +44,7 @@ export const AdminEngagementView = () => {
             </Suspense>
             <TabContext value={currentTab}>
                 <TabList
+                    component="nav"
                     variant="scrollable"
                     onChange={(e, newValue) => setCurrentTab(newValue)}
                     aria-label="Admin Engagement View Tabs"
