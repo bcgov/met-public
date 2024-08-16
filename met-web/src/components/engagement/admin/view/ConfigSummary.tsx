@@ -226,8 +226,8 @@ const TeamMemberList = () => {
 const TeamMemberListSkeleton = () => {
     return (
         <>
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Grid item container spacing={2} alignItems="center">
+            {[1, 2, 3].map((value) => (
+                <Grid item container spacing={2} alignItems="center" key={value}>
                     <Grid item>
                         <Skeleton variant="circular" width={32} height={32} />
                     </Grid>
