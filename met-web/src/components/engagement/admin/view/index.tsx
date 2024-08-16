@@ -106,7 +106,7 @@ export const AdminEngagementView = () => {
                         </Await>
                     </TabPanel>
                 </Suspense>
-                <TabPanel value={EngagementViewTabs.author} style={{ paddingLeft: '0', paddingRight: '0' }}>
+                <TabPanel value={EngagementViewTabs.author}>
                     <Await resolve={engagement}>
                         <AuthoringTab />
                     </Await>
