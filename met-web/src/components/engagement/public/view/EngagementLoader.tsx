@@ -8,19 +8,38 @@ import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagemen
 import { getSummaryContent } from 'services/engagementSummaryService';
 import { getWidgets } from 'services/widgetService';
 import { getEngagementMetadata, getMetadataTaxa } from 'services/engagementMetadataService';
+import { Engagement, EngagementMetadata } from 'models/engagement';
+import { Widget } from 'models/widget';
+import { EngagementContent } from 'models/engagementContent';
+import { TaxonType } from 'components/metadataManagement/types';
+import { getTeamMembers } from 'services/membershipService';
+import { EngagementTeamMember } from 'models/engagementTeamMember';
+
+export type EngagementLoaderData = {
+    engagement: Promise<Engagement>;
+    slug: Promise<string>;
+    widgets: Promise<Widget[]>;
+    content: Promise<EngagementContent[]>;
+    contentSummary: Promise<EngagementSummaryContent[]>;
+    metadata: Promise<EngagementMetadata[]>;
+    taxa: Promise<TaxonType[]>;
+    customContent: Promise<EngagementCustomContent[]>;
+    teamMembers: Promise<EngagementTeamMember[]>;
+};
 
 export const engagementLoader = async ({ params }: { params: Params<string> }) => {
-    let { slug } = params;
-    const { engagementId } = params;
-    if (!slug && engagementId) {
-        const response = await getSlugByEngagementId(Number(engagementId));
-        slug = response.slug;
-    }
-    const engagement = getEngagementIdBySlug(slug ?? '').then((response) => getEngagement(response.engagement_id));
+    const { slug: slugParam, engagementId } = params;
+    const slug = slugParam
+        ? Promise.resolve(slugParam)
+        : getSlugByEngagementId(Number(engagementId)).then((response) => response.slug);
+    const engagement = slugParam
+        ? getEngagementIdBySlug(slugParam).then((response) => getEngagement(response.engagement_id))
+        : getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
     const content = engagement.then((response) => getEngagementContent(response.id));
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
+    const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }));
 
     const metadata = engagementMetadata.then((metaResponse) => {
         taxaData.then((taxaResponse) => {
@@ -75,5 +94,15 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         return finishedContent;
     };
 
-    return defer({ engagement, slug, widgets, content, contentSummary, metadata, taxa, customContent });
+    return defer({
+        engagement,
+        slug,
+        widgets,
+        content,
+        contentSummary,
+        metadata,
+        taxa,
+        customContent,
+        teamMembers,
+    });
 };

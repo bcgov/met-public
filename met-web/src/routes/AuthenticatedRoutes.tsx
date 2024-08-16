@@ -34,10 +34,12 @@ import { Engagement } from 'models/engagement';
 import { getAllTenants, getTenant } from 'services/tenantService';
 import { engagementLoader, engagementListLoader } from 'components/engagement/public/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
-import { languageLoader } from 'components/engagement/admin/create/languageLoader';
+import { languageLoader } from 'components/engagement/admin/config/LanguageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
-import EngagementCreationWizard from 'components/engagement/admin/create';
-import engagementCreateAction from 'components/engagement/admin/create/engagementCreateAction';
+import EngagementCreationWizard from 'components/engagement/admin/config/wizard/CreationWizard';
+import engagementCreateAction from 'components/engagement/admin/config/EngagementCreateAction';
+import EngagementConfigurationWizard from 'components/engagement/admin/config/wizard/ConfigWizard';
+import engagementUpdateAction from 'components/engagement/admin/config/EngagementUpdateAction';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -79,7 +81,6 @@ const AuthenticatedRoutes = () => {
                         path="wizard"
                         handle={{ crumb: () => ({ name: 'New Engagement' }) }}
                         element={<EngagementCreationWizard />}
-                        loader={languageLoader}
                     />
                 </Route>
                 <Route
@@ -87,26 +88,32 @@ const AuthenticatedRoutes = () => {
                     id="single-engagement"
                     errorElement={<NotFound />}
                     loader={engagementLoader}
+                    handle={{
+                        crumb: async (data: { engagement: Promise<Engagement> }) => {
+                            return data.engagement.then((engagement) => {
+                                return {
+                                    link: `/engagements/${engagement.id}/view`,
+                                    name: engagement.name,
+                                };
+                            });
+                        },
+                    }}
                 >
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
+                        <Route
+                            path="config"
+                            element={<EngagementConfigurationWizard />}
+                            action={engagementUpdateAction}
+                            handle={{
+                                crumb: () => ({
+                                    name: 'Configure',
+                                }),
+                            }}
+                        />
                     </Route>
                     <Route path="old-view" element={<OldEngagementView />} />
-                    <Route
-                        path="view"
-                        loader={engagementLoader}
-                        handle={{
-                            crumb: async (data: { engagement: Promise<Engagement> }) => {
-                                return data.engagement.then((engagement) => {
-                                    return {
-                                        link: `/engagements/${engagement.id}/view`,
-                                        name: engagement.name,
-                                    };
-                                });
-                            },
-                        }}
-                        element={<AdminEngagementView />}
-                    />
+                    <Route path="view" element={<AdminEngagementView />} />
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>
@@ -117,7 +124,7 @@ const AuthenticatedRoutes = () => {
                 </Route>
             </Route>
             <Route path="/metadatamanagement" element={<MetadataManagement />} />
-            <Route path="/languages" element={<Language />} />
+            <Route path="/languages" element={<Language />} loader={languageLoader} />
             <Route
                 id="tenant-admin"
                 path="/tenantadmin"

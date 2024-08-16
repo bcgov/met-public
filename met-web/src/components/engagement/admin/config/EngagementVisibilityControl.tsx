@@ -21,11 +21,11 @@ const EngagementVisibilityControl = () => {
     const isInternal = watch('is_internal');
     const formSlug = watch('slug');
     const isConfirmed = watch('_visibilityConfirmed');
-    const setIsConfirmed = (value: boolean) => setValue('_visibilityConfirmed', value);
+    const setIsConfirmed = (value: boolean) => setValue('_visibilityConfirmed', value, { shouldDirty: true });
 
     const [isEditing, setIsEditing] = React.useState(false);
     const [currentSlug, setCurrentSlug] = React.useState(formSlug);
-    const [hasBeenEdited, setHasBeenEdited] = React.useState(false);
+    const [hasBeenEdited, setHasBeenEdited] = React.useState(isConfirmed);
 
     useEffect(() => {
         const subscription = watch((value, { name, type }) => {
@@ -41,7 +41,7 @@ const EngagementVisibilityControl = () => {
                     })
                     .join('')
                     .toLowerCase();
-                setValue('slug', newSlug);
+                setValue('slug', newSlug, { shouldDirty: true });
                 setCurrentSlug(newSlug);
             }
         });
@@ -125,7 +125,7 @@ const EngagementVisibilityControl = () => {
                                             onClick={() => {
                                                 setIsConfirmed(true);
                                                 setHasBeenEdited(true);
-                                                setValue('slug', currentSlug);
+                                                setValue('slug', currentSlug, { shouldDirty: true });
                                             }}
                                         >
                                             Confirm
@@ -178,7 +178,7 @@ const EngagementVisibilityControl = () => {
                                 disabled={!currentSlug}
                                 variant="primary"
                                 onClick={() => {
-                                    setValue('slug', currentSlug);
+                                    setValue('slug', currentSlug, { shouldDirty: true });
                                     setHasBeenEdited(true);
                                     setIsConfirmed(true);
                                     setIsEditing(false);

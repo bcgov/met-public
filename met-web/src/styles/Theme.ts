@@ -128,6 +128,8 @@ export const colors = {
 };
 
 export const Palette = {
+    ...colors.surface,
+    notification: colors.notification,
     primary: {
         main: colors.surface.blue[90],
         light: colors.surface.blue[80],
@@ -147,12 +149,17 @@ export const Palette = {
     },
     text: {
         primary: colors.type.regular.primary,
+        secondary: colors.type.regular.secondary,
     },
     action: {
         active: colors.type.regular.link,
     },
     info: {
         main: colors.surface.gray[90],
+    },
+    focus: {
+        outer: colors.focus.regular.outer,
+        inner: colors.focus.regular.inner,
     },
     internalHeader: {
         backgroundColor: colors.surface.white,
@@ -187,27 +194,7 @@ export const Palette = {
 };
 
 export const BaseTheme = createTheme({
-    palette: {
-        primary: {
-            main: Palette.primary.main,
-            light: Palette.primary.light,
-            dark: Palette.primary.dark,
-        },
-        secondary: {
-            main: Palette.secondary.main,
-            dark: Palette.secondary.dark,
-            light: Palette.secondary.light,
-        },
-        text: {
-            primary: Palette.text.primary,
-        },
-        action: {
-            active: Palette.action.active,
-        },
-        info: {
-            main: Palette.info.main,
-        },
-    },
+    palette: Palette,
     components: {
         MuiPaper: {
             styleOverrides: {
@@ -322,6 +309,8 @@ export const BaseTheme = createTheme({
 
 export const DarkPalette = {
     mode: 'dark' as PaletteMode,
+    ...colors.surface,
+    notification: colors.notification,
     primary: {
         main: colors.surface.white,
         light: colors.surface.blue[90],
@@ -343,6 +332,7 @@ export const DarkPalette = {
     },
     text: {
         primary: colors.type.inverted.primary,
+        secondary: colors.type.inverted.secondary,
     },
     action: {
         active: colors.type.inverted.link,
