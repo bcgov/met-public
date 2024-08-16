@@ -42,12 +42,11 @@ export const engagementUpdateAction: ActionFunction = async ({ request, params }
                     // If the user was previously deactivated, reinstate them
                     reinstateMembership(engagementId, member.user_id);
                 }
-            } else {
-                if (!isUserInForm) {
-                    // If the user was previously active but is not in the form, revoke their membership
-                    revokeMembership(engagementId, member.user_id);
-                }
+            } else if (!isUserInForm) {
+                // If the user was previously active but is not in the form, revoke their membership
+                revokeMembership(engagementId, member.user_id);
             }
+
             // Remove all known users from the set so we can add new members in the next step
             usersSet.delete(String(member.user.external_id));
         }

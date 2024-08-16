@@ -23,7 +23,6 @@ export const LanguageManager = () => {
     const engagementForm = useFormContext();
     const { setValue, watch } = engagementForm;
     const selectedLanguages = watch('languages') as Language[];
-    // const [isSingleLanguage, setIsSingleLanguage] = React.useState<boolean | null>(null);
     const fetcher = useFetcher();
     const fetcherData = fetcher.data as { languages: Language[] } | undefined;
     const { languages: availableLanguages } = fetcherData ?? { languages: [] };
