@@ -227,7 +227,7 @@ const TeamMemberListSkeleton = () => {
     return (
         <>
             {Array.from({ length: 3 }).map((_, index) => (
-                <Grid item container spacing={2} alignItems="center" key={`static-${index}`}>
+                <Grid item container spacing={2} alignItems="center">
                     <Grid item>
                         <Skeleton variant="circular" width={32} height={32} />
                     </Grid>
