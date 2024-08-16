@@ -6,6 +6,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { Tab } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { ConfigSummary } from './ConfigSummary';
+import { AuthoringTab } from './AuthoringTab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { EngagementLoaderData } from 'components/engagement/public/view';
 
@@ -47,6 +48,7 @@ export const AdminEngagementView = () => {
             </Suspense>
             <TabContext value={currentTab}>
                 <TabList
+                    component="nav"
                     variant="scrollable"
                     onChange={(e, newValue) => setCurrentTab(newValue)}
                     aria-label="Admin Engagement View Tabs"
@@ -63,35 +65,23 @@ export const AdminEngagementView = () => {
                             key={key}
                             value={value}
                             label={value}
-                            disableFocusRipple
                             sx={{
                                 display: 'flex',
+                                height: '48px',
+                                padding: '0px 24px 0px 18px',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                height: '48px',
-                                padding: '4px 24px 2px 18px',
-                                fontSize: '14px',
                                 borderRadius: '0px 16px 0px 0px',
-                                borderBottom: '2px solid',
-                                borderBottomColor: 'gray.60',
-                                boxShadow:
-                                    '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
+                                borderBottom: '1px solid',
+                                borderColor: 'gray.60',
                                 backgroundColor: 'gray.10',
                                 color: 'text.secondary',
-                                fontWeight: 'normal',
+                                boxShadow:
+                                    '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
                                 '&.Mui-selected': {
                                     backgroundColor: 'primary.main',
                                     borderColor: 'primary.main',
                                     color: 'white',
-                                    fontWeight: 'bold',
-                                },
-                                outlineOffset: '-4px',
-                                '&:focus-visible': {
-                                    outline: `2px solid`,
-                                    outlineColor: 'focus.inner',
-                                    border: '4px solid',
-                                    borderColor: 'focus.outer',
-                                    padding: '0px 20px 0px 14px',
                                 },
                             }}
                         />
@@ -104,6 +94,11 @@ export const AdminEngagementView = () => {
                         </Await>
                     </TabPanel>
                 </Suspense>
+                <TabPanel value={EngagementViewTabs.author} style={{ paddingLeft: '0', paddingRight: '0' }}>
+                    <Await resolve={engagement}>
+                        <AuthoringTab />
+                    </Await>
+                </TabPanel>
             </TabContext>
         </ResponsiveContainer>
     );

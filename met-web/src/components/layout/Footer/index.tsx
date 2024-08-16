@@ -177,7 +177,7 @@ const Footer = () => {
                             {translate('footer.serviceCentres')}
                             <LinkArrow />
                         </Link>
-                        <Grid container xs={12}>
+                        <Grid container sx={{ flexBasis: { xs: 'auto', md: '100%' } }}>
                             <Stack direction="row" spacing={2} alignSelf={'flex-end'}>
                                 <SocialLinkIcon iconLink="#" fontAwesomeIcon={faXTwitter} />
                                 <SocialLinkIcon iconLink="#" fontAwesomeIcon={faInstagram} />
