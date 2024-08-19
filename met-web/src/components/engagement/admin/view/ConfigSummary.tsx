@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engagementTeamMember';
 import { Button } from 'components/common/Input';
 import { faPen } from '@fortawesome/pro-regular-svg-icons';
+import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
 
 export const ConfigSummary = () => {
     const siteUrl = getBaseUrl();
@@ -44,37 +45,41 @@ export const ConfigSummary = () => {
                                 </BodyText>
                             </Grid>
                             <Grid item>
-                                <Tooltip arrow open={tooltipOpen} title="Copied!" placement="top">
-                                    <IconButton
-                                        size="small"
-                                        sx={{
-                                            backgroundColor: 'primary.light',
-                                            color: 'white',
-                                            width: '32px',
-                                            height: '32px',
-                                            '&:hover': {
-                                                backgroundColor: 'primary.main',
-                                            },
-                                            ...globalFocusVisible,
-                                            display: 'inline-block',
-                                            marginRight: '0.5rem',
-                                        }}
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(`${siteUrl}/${slug}`);
-                                            setTooltipOpen(true);
-                                        }}
-                                    >
-                                        <FontAwesomeIcon
-                                            fontSize={16}
-                                            icon={faCopy}
-                                            style={{ position: 'relative', bottom: '4px' }}
-                                        />
-                                    </IconButton>
-                                </Tooltip>
-                                <BodyText sx={{ display: 'inline' }}>
-                                    <span style={{ fontWeight: 'bold' }}>{siteUrl}/</span>
-                                    {slug}
-                                </BodyText>
+                                <LiveAnnouncer>
+                                    <LiveMessage aria-live="assertive" message={tooltipOpen ? 'Copied!' : ''} />
+                                    <Tooltip arrow open={tooltipOpen} title="Copied!" placement="top">
+                                        <IconButton
+                                            size="small"
+                                            sx={{
+                                                backgroundColor: 'primary.light',
+                                                color: 'white',
+                                                width: '32px',
+                                                height: '32px',
+                                                '&:hover': {
+                                                    backgroundColor: 'primary.main',
+                                                },
+                                                ...globalFocusVisible,
+                                                display: 'inline-block',
+                                                marginRight: '0.5rem',
+                                            }}
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(`${siteUrl}/${slug}`);
+                                                setTooltipOpen(true);
+                                            }}
+                                            aria-label="Press enter to copy engagement URL to clipboard"
+                                        >
+                                            <FontAwesomeIcon
+                                                fontSize={16}
+                                                icon={faCopy}
+                                                style={{ position: 'relative', bottom: '4px' }}
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <BodyText sx={{ display: 'inline' }}>
+                                        <span style={{ fontWeight: 'bold' }}>{siteUrl}/</span>
+                                        {slug}
+                                    </BodyText>
+                                </LiveAnnouncer>
                             </Grid>
                         </Grid>
                     </OutlineBox>

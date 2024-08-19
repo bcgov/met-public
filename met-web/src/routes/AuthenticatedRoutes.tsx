@@ -99,6 +99,7 @@ const AuthenticatedRoutes = () => {
                         },
                     }}
                 >
+                    <Route index element={<Navigate to="view" />} />
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
                         <Route
