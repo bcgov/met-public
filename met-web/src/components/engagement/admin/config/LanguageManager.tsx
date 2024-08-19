@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, FormControlLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
 import { textInputStyles } from 'components/common/Input/TextInput';
-import { useAsyncValue } from 'react-router-dom';
+import { useFetcher } from 'react-router-dom';
 import { BodyText } from 'components/common/Typography';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,50 +13,57 @@ import MultiSelect from './MultiSelect';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 
 export const LanguageManager = () => {
+    const SINGLE_LANGUAGE = [{ code: 'en', name: 'English' }] as Language[];
+    const REQUIRED_LANGUAGES = [
+        { code: 'en', name: 'English' },
+        { code: 'fr', name: 'French' },
+    ] as Language[];
+    const requiredLanguageCodes = REQUIRED_LANGUAGES.map((l) => l.code);
+
     const engagementForm = useFormContext();
     const { setValue, watch } = engagementForm;
     const selectedLanguages = watch('languages') as Language[];
-    const [isSingleLanguage, setIsSingleLanguage] = React.useState<boolean | null>(null);
-    const requiredLanguages = isSingleLanguage !== false ? ['en'] : ['en', 'fr'];
-    const availableLanguages = useAsyncValue() as Language[];
-    const requiredLanguagesAvailable = requiredLanguages.filter((l) =>
-        availableLanguages.map((l) => l.code).includes(l),
-    );
+    const fetcher = useFetcher();
+    const fetcherData = fetcher.data as { languages: Language[] } | undefined;
+    const { languages: availableLanguages } = fetcherData ?? { languages: [] };
 
     const [searchTerm, setSearchTerm] = React.useState('');
 
+    const determineSingleLanguage = (languages: Language[]) => {
+        if (languages.length === 0) return null;
+        if (languages.length === 1) return true;
+        return false;
+    };
+    const isSingleLanguage = determineSingleLanguage(selectedLanguages);
+
     useEffect(() => {
-        // Don't do anything if language multiplicity has not been indicated
-        if (isSingleLanguage === null) return;
+        fetcher.load('/languages/');
+    }, []);
 
-        // If it's english only, remove any other languages
-        if (isSingleLanguage) {
-            setValue('languages', [{ code: 'en', name: 'English' }]);
-            return;
-        }
-        // If the required languages are not included, add them
-        if (requiredLanguagesAvailable.length) {
-            const languagesToAdd = availableLanguages.filter(
-                (l) =>
-                    requiredLanguagesAvailable.includes(l.code) &&
-                    !watch('languages')
-                        .map((l: Language) => l.code)
-                        .includes(l.code),
-            );
-            setValue('languages', [...watch('languages'), ...languagesToAdd]);
-        }
-    }, [watch, isSingleLanguage]);
-
+    if (!fetcherData) return null;
     return (
         <Box width="100%">
             <RadioGroup
-                onChange={(e) => setIsSingleLanguage(e.target.value === 'true')}
+                onChange={(e) => {
+                    if (e.target.value === 'single') {
+                        setValue('languages', SINGLE_LANGUAGE, { shouldDirty: true });
+                    }
+                    if (e.target.value === 'multi') {
+                        const optionalLanguages = selectedLanguages.filter(
+                            (l) => !requiredLanguageCodes.includes(l.code),
+                        );
+                        setValue('languages', [...REQUIRED_LANGUAGES, ...optionalLanguages], {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        });
+                    }
+                }}
                 aria-label="Select Engagement's Language Type"
                 name="languageType"
-                value={isSingleLanguage}
+                value={isSingleLanguage && (isSingleLanguage ? 'single' : 'multi')}
             >
-                <FormControlLabel value={true} control={<Radio />} label="English Only" />
-                <FormControlLabel value={false} control={<Radio />} label="Multi-language" />
+                <FormControlLabel value={'single'} control={<Radio />} label="English Only" />
+                <FormControlLabel value={'multi'} control={<Radio />} label="Multi-language" />
             </RadioGroup>
             <When condition={isSingleLanguage === false}>
                 <SystemMessage status="warning">
@@ -68,11 +75,15 @@ export const LanguageManager = () => {
                         if (reason === 'removeOption' && language) {
                             setValue(
                                 'languages',
-                                selectedLanguages.filter((l) => l.code !== language.code),
+                                selectedLanguages.filter((l) => l.code !== language.code, {
+                                    shouldDirty: true,
+                                }),
                             );
                         }
                         if (reason === 'selectOption' && language) {
-                            setValue('languages', [...selectedLanguages, language]);
+                            setValue('languages', [...selectedLanguages, language], {
+                                shouldDirty: true,
+                            });
                         }
                     }}
                     options={availableLanguages ?? []}
@@ -98,9 +109,9 @@ export const LanguageManager = () => {
                         return (
                             <Grid container direction="row" spacing={1} alignItems="center">
                                 <Grid item>
-                                    <BodyText bold={requiredLanguagesAvailable.includes(option.code)}>
+                                    <BodyText bold={requiredLanguageCodes.includes(option.code)}>
                                         {`${option.name}`}
-                                        {requiredLanguagesAvailable.includes(option.code) && ' (Default)'}
+                                        {requiredLanguageCodes.includes(option.code) && ' (Default)'}
                                     </BodyText>
                                 </Grid>
                             </Grid>
@@ -142,7 +153,7 @@ export const LanguageManager = () => {
                     selectedLabel={{ singular: 'Language Added', plural: 'Languages Added' }}
                     searchPlaceholder="Select Language"
                     getOptionDisabled={(option) => selectedLanguages.filter((l) => l.code === option.code).length > 0}
-                    getOptionRequired={(option) => requiredLanguagesAvailable.includes(option.code)}
+                    getOptionRequired={(option) => requiredLanguageCodes.includes(option.code)}
                 />
             </When>
         </Box>

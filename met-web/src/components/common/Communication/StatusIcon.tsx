@@ -26,24 +26,24 @@ type IconWeight = 'solid' | 'regular' | 'light';
 export const StatusIcon = ({
     status,
     color,
-    weight = 'solid',
+    weight = 'regular',
     ...props
 }: {
-    status: 'success' | 'warning' | 'error' | 'info';
+    status: 'success' | 'warning' | 'danger' | 'info';
     color?: string;
     weight?: IconWeight;
 } & Partial<FontAwesomeIconProps>) => {
     let iconMap = {
         success: faCheckCircle,
         warning: faExclamationTriangle,
-        error: faExclamationCircle,
+        danger: faExclamationCircle,
         info: faInfoCircle,
     };
     if (weight === 'regular') {
         iconMap = {
             success: faCheckCircleRegular,
             warning: faExclamationTriangleRegular,
-            error: faExclamationCircleRegular,
+            danger: faExclamationCircleRegular,
             info: faInfoCircleRegular,
         };
     }
@@ -51,7 +51,7 @@ export const StatusIcon = ({
         iconMap = {
             success: faCheckCircleLight,
             warning: faExclamationTriangleLight,
-            error: faExclamationCircleLight,
+            danger: faExclamationCircleLight,
             info: faInfoCircleLight,
         };
     }

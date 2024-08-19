@@ -1,7 +1,17 @@
 ## August 15, 2024
+
+- **Feature** Add engagement configuration summary [🎟️ DESENG-667](https://citz-gdx.atlassian.net/browse/DESENG-667)
+
+  - Added a tabbed layout to the new engagement view page
+  - Added a new "Configuration" tab to display the engagement's configuration details
+    - The other tabs are blank for now, but will be filled in future tickets
+  - The configuration tab allows navigating back to the engagement configuration page
+  - Improvements to how engagements and related resources are fetched and saved
+
 - **Feature** New engagement authoring view tab [🎟️ DESENG-674](https://citz-gdx.atlassian.net/browse/DESENG-674)
 
 ## August 13, 2024
+
 - **Task** Fix dagster etl error in "dev" environment [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 
 ## August 8, 2024

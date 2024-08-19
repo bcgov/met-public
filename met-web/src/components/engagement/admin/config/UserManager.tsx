@@ -47,7 +47,7 @@ export const UserManager = () => {
 
     const handleAddUser = (user: User) => {
         if (!selectedUsers.filter((u) => u.id === user.id).length) {
-            setValue('users', [...selectedUsers, user]);
+            setValue('users', [...selectedUsers, user], { shouldDirty: true });
         }
     };
 
@@ -55,6 +55,7 @@ export const UserManager = () => {
         setValue(
             'users',
             selectedUsers.filter((u) => u !== user),
+            { shouldDirty: true },
         );
     };
 

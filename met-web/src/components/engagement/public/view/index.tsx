@@ -20,4 +20,5 @@ export const PublicEngagementView = () => {
 export default PublicEngagementView;
 
 export { engagementLoader } from './EngagementLoader';
+export type { EngagementLoaderData } from './EngagementLoader';
 export { engagementListLoader } from './EngagementListLoader';

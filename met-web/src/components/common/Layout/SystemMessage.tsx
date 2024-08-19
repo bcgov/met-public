@@ -14,7 +14,7 @@ export const SystemMessage = ({
     children,
     ...props
 }: {
-    status: 'success' | 'warning' | 'error' | 'info';
+    status: 'success' | 'warning' | 'danger' | 'info';
     onDismiss?: () => void;
     color?: string;
     coloredBackground?: boolean;
@@ -30,7 +30,7 @@ export const SystemMessage = ({
                 maxWidth: { xs: '100%', md: '700px' },
                 borderRadius: '8px',
                 backgroundColor: coloredBackground ? colors.notification[status].tint : 'transparent',
-                color: 'type.primary',
+                color: 'text.primary',
                 padding: '0.8rem 1rem',
                 paddingLeft: { xs: '0.5rem', md: '1rem' },
                 border: `1px solid ${colors.notification[status].shade}`,

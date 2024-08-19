@@ -3,7 +3,10 @@ import { ResponsiveContainer } from 'components/common/Layout';
 import { useFetcher, createSearchParams } from 'react-router-dom';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
-import EngagementForm, { EngagementConfigurationData } from './form';
+import EngagementForm, { EngagementConfigurationData } from '.';
+import { Header1, Header2 } from 'components/common/Typography';
+import { SystemMessage } from 'components/common/Layout/SystemMessage';
+import { Link } from 'components/common/Navigation';
 
 const EngagementCreationWizard = () => {
     const fetcher = useFetcher();
@@ -47,6 +50,17 @@ const EngagementCreationWizard = () => {
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
+            <Header1 sx={{ mb: 0 }}>New Engagement</Header1>
+            <Header2 weight="thin">Create a new engagement in six easy configuration steps.</Header2>
+            <SystemMessage status="info">
+                You will be able to modify the configuration of your engagement later in the case the parameters of your
+                engagement change. If you prefer, you can use{' '}
+                <Link size="small" to="../form">
+                    the old form
+                </Link>
+                .
+            </SystemMessage>
+            <br />
             <FormProvider {...engagementCreationForm}>
                 <EngagementForm isNewEngagement onSubmit={onSubmit} />
             </FormProvider>

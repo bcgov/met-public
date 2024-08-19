@@ -1,8 +1,8 @@
-import React, { Suspense, useState } from 'react';
-import { Header1, Header2 } from 'components/common/Typography';
+import React, { useState } from 'react';
+import { Header2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
-import { Form, useLoaderData, Await } from 'react-router-dom';
-import { Box, Skeleton } from '@mui/material';
+import { Form } from 'react-router-dom';
+import { Box } from '@mui/material';
 import { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 import EngagementVisibilityControl from '../EngagementVisibilityControl';
@@ -13,8 +13,6 @@ import { LanguageManager } from '../LanguageManager';
 import { UserManager } from '../UserManager';
 import { User } from 'models/user';
 import { Language } from 'models/language';
-import { SystemMessage } from 'components/common/Layout/SystemMessage';
-import { Link } from 'components/common/Navigation';
 import { FormStep } from 'components/common/Layout/FormStep';
 
 export interface EngagementConfigurationData {
@@ -43,8 +41,6 @@ const EngagementForm = ({
     onSubmit: (data: EngagementConfigurationData) => void;
     isNewEngagement?: boolean;
 }) => {
-    const { languages } = useLoaderData() as { languages: Language[] };
-
     const engagementForm = useFormContext<EngagementConfigurationData>();
 
     const {
@@ -59,18 +55,7 @@ const EngagementForm = ({
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ maxWidth: '788px' }}>
-                <Header1 sx={{ mb: 0 }}>New Engagement</Header1>
-                <Header2 weight="thin">Create a new engagement in six easy configuration steps.</Header2>
-                <SystemMessage status="info">
-                    You will be able to modify the configuration of your engagement later in the case the parameters of
-                    your engagement change. If you prefer, you can use{' '}
-                    <Link size="small" to="../form">
-                        the old form
-                    </Link>
-                    .
-                </SystemMessage>
-                <br />
-                <Header2 decorated>Configure Engagement</Header2>
+                <Header2 decorated>{isNewEngagement ? 'Configure Engagement' : 'Edit Configuration'}</Header2>
                 <br />
                 <Controller
                     control={control}
@@ -128,11 +113,7 @@ const EngagementForm = ({
                     details="All engagements must be offered in English, but you may also add content in additional languages. If you select multi-language, you must include French."
                     isGroup
                 >
-                    <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
-                        <Await resolve={languages}>
-                            <LanguageManager />
-                        </Await>
-                    </Suspense>
+                    <LanguageManager />
                 </FormStep>
                 <FormStep
                     step={5}
@@ -171,7 +152,7 @@ const EngagementForm = ({
                 >
                     {isNewEngagement ? 'Create Engagement' : 'Save Changes'}
                 </Button>
-                <Button href="/engagements">Cancel</Button>
+                <Button href={isNewEngagement ? '/engagements' : '../view'}>Cancel</Button>
             </Box>
             <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
         </Form>
