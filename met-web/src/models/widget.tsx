@@ -11,6 +11,7 @@ export interface Widget {
     engagement_id: number;
     items: WidgetItem[];
     title: string;
+    location: WidgetLocation;
 }
 
 export enum WidgetType {
@@ -23,4 +24,8 @@ export enum WidgetType {
     CACForm = 8,
     Timeline = 9,
     Poll = 10,
+}
+
+export enum WidgetLocation {
+    engagementAuthoring = 1,
 }

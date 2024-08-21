@@ -9,6 +9,7 @@ import { postDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
+import { WidgetLocation } from 'models/widget';
 
 const CreateFolderForm = () => {
     const { loadDocuments, handleAddFileDrawerOpen, setUploadFileDrawerOpen } = useContext(DocumentsContext);
@@ -48,6 +49,7 @@ const CreateFolderForm = () => {
                 title: folderName,
                 widget_id: widget.id,
                 type: DOCUMENT_TYPE.FOLDER,
+                location: widget.location in WidgetLocation ? widget.location : null,
             });
             await loadDocuments();
             setCreatingFolder(false);

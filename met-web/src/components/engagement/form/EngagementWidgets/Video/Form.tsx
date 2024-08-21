@@ -13,6 +13,7 @@ import { VideoContext } from './VideoContext';
 import { patchVideo, postVideo } from 'services/widgetService/VideoService';
 import { updatedDiff } from 'deep-object-diff';
 import { WidgetTitle } from '../WidgetTitle';
+import { WidgetLocation } from 'models/widget';
 
 const schema = yup
     .object({
@@ -61,6 +62,7 @@ const Form = () => {
             engagement_id: widget.engagement_id,
             video_url: videoUrl,
             description: description,
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new video was successfully added' }));
     };

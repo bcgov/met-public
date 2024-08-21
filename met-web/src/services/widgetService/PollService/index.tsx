@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
 import { PollWidget, PollAnswer, PollResponse, PollResultResponse } from 'models/pollWidget';
+import { WidgetLocation } from 'models/widget';
 
 interface PostPollRequest {
     widget_id: number;
@@ -10,6 +11,7 @@ interface PostPollRequest {
     description: string;
     answers: PollAnswer[];
     status: string;
+    location: WidgetLocation | null;
 }
 
 interface PostPollResponse {

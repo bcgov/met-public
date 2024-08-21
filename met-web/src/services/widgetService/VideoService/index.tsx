@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
 import { VideoWidget } from 'models/videoWidget';
+import { WidgetLocation } from 'models/widget';
 
 export const fetchVideoWidgets = async (widget_id: number): Promise<VideoWidget[]> => {
     try {
@@ -18,6 +19,7 @@ interface PostVideoRequest {
     engagement_id: number;
     video_url: string;
     description: string;
+    location: WidgetLocation | null;
 }
 
 export const postVideo = async (widget_id: number, data: PostVideoRequest): Promise<VideoWidget> => {

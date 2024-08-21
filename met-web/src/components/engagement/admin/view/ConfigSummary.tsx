@@ -15,6 +15,8 @@ import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engag
 import { Button } from 'components/common/Input';
 import { faPen } from '@fortawesome/pro-regular-svg-icons';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
+import { WidgetPicker } from 'components/engagement/admin/create/widgets';
+import { WidgetLocation } from 'models/widget';
 
 export const ConfigSummary = () => {
     const siteUrl = getBaseUrl();
@@ -178,6 +180,10 @@ export const ConfigSummary = () => {
                         </Grid>
                     </OutlineBox>
                 </Grid>
+                <Grid item>
+                    <WidgetPicker location={WidgetLocation.engagementAuthoring} />
+                </Grid>
+
                 <Grid item sx={{ pt: '40px' }}>
                     <Button href="../config" variant="secondary" icon={<FontAwesomeIcon icon={faPen} />}>
                         Edit Configuration
