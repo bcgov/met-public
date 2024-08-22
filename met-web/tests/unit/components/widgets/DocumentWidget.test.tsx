@@ -68,6 +68,7 @@ const documentWidget: Widget = {
     widget_type_id: WidgetType.Document,
     engagement_id: 1,
     items: [],
+    location: 1,
 };
 
 jest.mock('axios');

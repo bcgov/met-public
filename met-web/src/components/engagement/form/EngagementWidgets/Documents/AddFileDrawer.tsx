@@ -15,6 +15,7 @@ import ControlledSelect from 'components/common/ControlledInputComponents/Contro
 import { postDocument, patchDocument, PatchDocumentRequest } from 'services/widgetService/DocumentService';
 import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
 import { updatedDiff } from 'deep-object-diff';
+import { WidgetLocation } from 'models/widget';
 
 const schema = yup
     .object({
@@ -91,6 +92,7 @@ const AddFileDrawer = () => {
             url: data.link,
             widget_id: widget.id,
             type: 'file',
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(
             openNotification({

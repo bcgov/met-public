@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl, replaceAllInURL } from 'helper';
 import { Event, EventTypeLabel } from 'models/event';
+import { WidgetLocation } from 'models/widget';
 
 export const getEvents = async (widget_id: number): Promise<Event[]> => {
     try {
@@ -26,6 +27,7 @@ interface PostEventProps {
         url?: string;
         url_label?: string;
     }[];
+    location: WidgetLocation | null;
 }
 export const postEvent = async (widget_id: number, data: PostEventProps): Promise<Event> => {
     try {

@@ -18,6 +18,8 @@ export interface WidgetDrawerContextProps {
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
     updateWidgetsSorting: (widgets: Widget[]) => void;
+    widgetLocation: number;
+    setWidgetLocation: (widgetLocation: number) => void;
 }
 
 export type EngagementParams = {
@@ -45,6 +47,10 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     updateWidgetsSorting: (widgets: Widget[]) => {
         /* empty default method  */
     },
+    widgetLocation: 0,
+    setWidgetLocation: (widgetLocation: number) => {
+        /* empty default method  */
+    },
 });
 
 export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -56,6 +62,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
     const [removeWidget] = useDeleteWidgetMutation();
     const [sortWidgets] = useSortWidgetsMutation();
+    const [widgetLocation, setWidgetLocation] = useState(0);
 
     const deleteWidget = async (widgetId: number) => {
         try {
@@ -116,6 +123,8 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
                 handleWidgetDrawerTabValueChange,
                 isWidgetsLoading,
                 loadWidgets,
+                widgetLocation,
+                setWidgetLocation,
             }}
         >
             {children}

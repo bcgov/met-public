@@ -53,6 +53,7 @@ const whoIsListeningWidget: Widget = {
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [contactWidgetItem],
+    location: 1,
 };
 
 const mockEngagementSettings: EngagementSettings = {
@@ -226,6 +227,7 @@ describe('Who is Listening widget  tests', () => {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: draftEngagement.id,
             title: whoIsListeningWidget.title,
+            location: 0,
         });
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Add This Contact')).toBeVisible();

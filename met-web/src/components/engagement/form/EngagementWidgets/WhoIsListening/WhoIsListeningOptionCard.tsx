@@ -6,7 +6,7 @@ import { WidgetTabValues } from '../type';
 import { ActionContext } from '../../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { WidgetType } from 'models/widget';
+import { WidgetType, WidgetLocation } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserGroupSimple } from '@fortawesome/pro-regular-svg-icons/faUserGroupSimple';
@@ -16,7 +16,7 @@ import { optionCardStyle } from '../constants';
 const Title = 'Who is Listening';
 const WhoIsListeningOptionCard = () => {
     const { savedEngagement } = useContext(ActionContext);
-    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange } = useContext(WidgetDrawerContext);
+    const { widgets, loadWidgets, handleWidgetDrawerTabValueChange, widgetLocation } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [createWidget] = useCreateWidgetMutation();
     const [isCreatingWidget, setIsCreatingWidget] = useState(false);
@@ -34,6 +34,7 @@ const WhoIsListeningOptionCard = () => {
                 widget_type_id: WidgetType.WhoIsListening,
                 engagement_id: savedEngagement.id,
                 title: Title,
+                location: widgetLocation in WidgetLocation ? widgetLocation : 0,
             });
             await loadWidgets();
             dispatch(
