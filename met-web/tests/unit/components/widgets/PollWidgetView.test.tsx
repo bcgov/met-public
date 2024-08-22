@@ -44,6 +44,7 @@ describe('PollWidgetView Component Tests', () => {
         widget_type_id: 10,
         engagement_id: 1,
         items: [],
+        location: 1,
     };
 
     const mockPoll = {
