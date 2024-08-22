@@ -6,13 +6,12 @@ import { WidgetTabValues } from '../type';
 import { ActionContext } from '../../ActionContext';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch } from 'hooks';
-import { WidgetType } from 'models/widget';
+import { WidgetType, WidgetLocation } from 'models/widget';
 import { Else, If, Then } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserGroupSimple } from '@fortawesome/pro-regular-svg-icons/faUserGroupSimple';
 import { useCreateWidgetMutation } from 'apiManager/apiSlices/widgets';
 import { optionCardStyle } from '../constants';
-import { WidgetLocation } from 'models/widget';
 
 const Title = 'Who is Listening';
 const WhoIsListeningOptionCard = () => {

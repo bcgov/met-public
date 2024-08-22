@@ -23,6 +23,7 @@ export const WidgetPickerButton = ({ location }: { location: WidgetLocation }) =
             openNotificationModal({
                 open: true,
                 data: {
+                    style: 'warning',
                     header: 'Remove Widget',
                     subText: [
                         { text: 'You will be removing this widget from the engagement.' },

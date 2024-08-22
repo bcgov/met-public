@@ -7,9 +7,8 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { WidgetType } from 'models/widget';
+import { WidgetType, WidgetLocation } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
-import { WidgetLocation } from 'models/widget';
 
 const CreateFolderForm = () => {
     const { loadDocuments, handleAddFileDrawerOpen, setUploadFileDrawerOpen } = useContext(DocumentsContext);
