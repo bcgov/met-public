@@ -10,6 +10,7 @@ import { TimelineContext } from './TimelineContext';
 import { patchTimeline, postTimeline } from 'services/widgetService/TimelineService';
 import { WidgetTitle } from '../WidgetTitle';
 import { TimelineEvent } from 'models/timelineWidget';
+import { WidgetLocation } from 'models/widget';
 
 interface DetailsForm {
     title: string;
@@ -81,6 +82,7 @@ const Form = () => {
             title: title,
             description: description,
             events: events,
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new timeline was successfully added' }));
     };

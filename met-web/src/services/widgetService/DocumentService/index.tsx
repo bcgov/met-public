@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import { DocumentItem, DocumentType } from 'models/document';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
+import { WidgetLocation } from 'models/widget';
 
 export const fetchDocuments = async (widget_id: number): Promise<DocumentItem[]> => {
     try {
@@ -20,6 +21,7 @@ interface PostDocumentRequest {
     url?: string;
     type: DocumentType;
     is_uploaded?: boolean;
+    location: WidgetLocation | null;
 }
 export const postDocument = async (widget_id: number, data: PostDocumentRequest): Promise<DocumentItem> => {
     try {

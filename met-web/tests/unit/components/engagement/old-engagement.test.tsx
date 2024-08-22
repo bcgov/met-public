@@ -49,6 +49,7 @@ const whoIsListeningWidget: Widget = {
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [widgetItem],
+    location: 1,
 };
 
 const mockLocationData = { state: { open: true }, pathname: '', search: '', hash: '', key: '' };

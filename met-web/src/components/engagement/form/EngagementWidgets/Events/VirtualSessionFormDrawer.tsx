@@ -17,6 +17,7 @@ import { formatToUTC, formatDate } from 'components/common/dateHelper';
 import { formEventDates } from './utils';
 import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
+import { WidgetLocation } from 'models/widget';
 
 dayjs.extend(tz);
 
@@ -108,6 +109,7 @@ const VirtualSessionFormDrawer = () => {
                         end_date: formatToUTC(dateTo),
                     },
                 ],
+                location: widget.location in WidgetLocation ? widget.location : null,
             });
 
             setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);

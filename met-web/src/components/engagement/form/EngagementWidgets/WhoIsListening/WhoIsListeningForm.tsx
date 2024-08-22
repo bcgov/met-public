@@ -19,8 +19,8 @@ const WhoIsListeningForm = () => {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
     const [createWidgetItems] = useCreateWidgetItemsMutation();
-
     const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
+
     useEffect(() => {
         const savedContacts = widget.items
             .map((widget_item) => {

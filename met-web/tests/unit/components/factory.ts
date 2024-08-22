@@ -141,6 +141,7 @@ const eventWidget: Widget = {
     widget_type_id: WidgetType.Events,
     engagement_id: 1,
     items: [eventWidgetItem],
+    location: 1,
 };
 
 const mapWidgetItem: WidgetItem = {
@@ -156,6 +157,7 @@ const mapWidget: Widget = {
     widget_type_id: WidgetType.Map,
     engagement_id: 1,
     items: [mapWidgetItem],
+    location: 1,
 };
 
 const mockMap: WidgetMap = {
@@ -182,6 +184,7 @@ const pollWidget: Widget = {
     widget_type_id: WidgetType.Poll,
     engagement_id: 1,
     items: [],
+    location: 1,
 };
 
 const videoWidget: Widget = {
@@ -190,6 +193,7 @@ const videoWidget: Widget = {
     widget_type_id: WidgetType.Video,
     engagement_id: 1,
     items: [],
+    location: 1,
 };
 
 const subscribeWidget: Widget = {
@@ -198,6 +202,7 @@ const subscribeWidget: Widget = {
     widget_type_id: WidgetType.Subscribe,
     engagement_id: 1,
     items: [],
+    location: 1,
 };
 
 const timeLineWidget: Widget = {
@@ -206,6 +211,7 @@ const timeLineWidget: Widget = {
     widget_type_id: WidgetType.Timeline,
     engagement_id: 1,
     items: [],
+    location: 1,
 };
 
 const mockPollAnswer1: PollAnswer = {

@@ -7,7 +7,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { postDocument } from 'services/widgetService/DocumentService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
-import { WidgetType } from 'models/widget';
+import { WidgetType, WidgetLocation } from 'models/widget';
 import { DOCUMENT_TYPE } from 'models/document';
 
 const CreateFolderForm = () => {
@@ -48,6 +48,7 @@ const CreateFolderForm = () => {
                 title: folderName,
                 widget_id: widget.id,
                 type: DOCUMENT_TYPE.FOLDER,
+                location: widget.location in WidgetLocation ? widget.location : null,
             });
             await loadDocuments();
             setCreatingFolder(false);

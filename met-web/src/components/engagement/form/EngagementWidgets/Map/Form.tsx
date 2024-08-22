@@ -27,6 +27,7 @@ import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark'
 import { When } from 'react-if';
 import * as turf from '@turf/turf';
 import { WidgetTitle } from '../WidgetTitle';
+import { WidgetLocation } from 'models/widget';
 
 const schema = yup
     .object({
@@ -98,6 +99,7 @@ const Form = () => {
             longitude: longitude,
             latitude: latitude,
             file: shapefile,
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new map was successfully added' }));
     };

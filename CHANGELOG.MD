@@ -1,3 +1,7 @@
+## August 21, 2024
+
+- **Feature** Reusable widget component [🎟️ DESENG-675](https://citz-gdx.atlassian.net/browse/DESENG-675)
+
 ## August 15, 2024
 
 - **Feature** Add engagement configuration summary [🎟️ DESENG-667](https://citz-gdx.atlassian.net/browse/DESENG-667)

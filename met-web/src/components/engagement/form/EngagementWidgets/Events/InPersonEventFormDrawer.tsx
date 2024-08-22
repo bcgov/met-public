@@ -18,6 +18,7 @@ import { formEventDates } from './utils';
 import dayjs from 'dayjs';
 import tz from 'dayjs/plugin/timezone';
 import { updatedDiff } from 'deep-object-diff';
+import { WidgetLocation } from 'models/widget';
 
 dayjs.extend(tz);
 
@@ -113,6 +114,7 @@ const InPersonEventFormDrawer = () => {
                         end_date: formatToUTC(dateTo),
                     },
                 ],
+                location: widget.location in WidgetLocation ? widget.location : null,
             });
 
             setEvents((prevWidgetEvents: Event[]) => [...prevWidgetEvents, createdWidgetEvent]);

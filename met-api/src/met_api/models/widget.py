@@ -29,6 +29,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
     title = db.Column(db.String(100), comment='Custom title for the widget.')
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
     sort_index = db.Column(db.Integer, nullable=False, default=1)
+    location = db.Column(db.Integer, nullable=False)
 
     @classmethod
     def get_widget_by_id(cls, widget_id):
@@ -67,6 +68,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
             created_by=widget.get('created_by', None),
             updated_by=widget.get('updated_by', None),
             title=widget.get('title', None),
+            location=widget.get('location', None),
         )
 
     @classmethod
