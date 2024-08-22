@@ -1,6 +1,6 @@
-dagster
-dagit
-dagster-docker
+dagster==1.7.15
+dagit==1.7.15
+dagster-docker==0.23.15
 Flask-Cors==3.0.10
 Flask-Migrate==2.7.0
 Flask-Moment==1.0.5
