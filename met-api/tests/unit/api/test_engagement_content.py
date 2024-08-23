@@ -142,6 +142,7 @@ def test_create_engagement_content_sort(client, jwt, session,
     assert engagement_contents[1].get('title') == 'Summary'
     assert engagement_contents[0].get('title') == 'Custom'
 
+
 def test_create_engagement_content_sort_invalid(client, jwt, session,
                                                 setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a engagement content sort error handling is done."""

@@ -198,7 +198,7 @@ class EngagementService:
     def create_default_engagement_content(eng_id):
         """Create default engagement content for the given engagement ID."""
         default_engagement_content = {
-            'title': "Summary",
+            'title': 'Summary',
             'engagement_id': eng_id
         }
         try:

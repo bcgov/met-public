@@ -882,17 +882,17 @@ class TestEngagementContentInfo(dict, Enum):
         'title': 'Summary',
         'is_internal': False,
         'text_content': fake.text(max_nb_chars=20),
-        'json_content': "{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-            \"type\":\"unstyled\",\"depth\":0,\
-            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"
+        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+            "type":"unstyled","depth":0,\
+            "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
     content2 = {
         'title': 'Custom',
         'is_internal': False,
         'text_content': fake.text(max_nb_chars=20),
-        'json_content': "{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-            \"type\":\"unstyled\",\"depth\":0,\
-            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"
+        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+            "type":"unstyled","depth":0,\
+            "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
 
 
