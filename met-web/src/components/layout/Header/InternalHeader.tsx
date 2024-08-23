@@ -23,15 +23,16 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useAsyncValue, useRouteLoaderData } from 'react-router-dom';
+import { Await, useAsyncValue, useRouteLoaderData, useLocation } from 'react-router-dom';
 import { Tenant } from 'models/tenant';
-import { When, Unless } from 'react-if';
+import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
 import TrapFocus from '@mui/base/TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
+import AuthoringSideNav from '../../engagement/admin/create/authoring/AuthoringSideNav';
 
 const InternalHeader = () => {
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -58,6 +59,7 @@ const InternalHeader = () => {
         }
     }, [isMediumScreenOrLarger, sideNavOpen]);
 
+    const location = useLocation();
     const { myTenants } = useRouteLoaderData('authenticated-root') as { myTenants: Tenant[] };
 
     const sidePadding = { xs: '0 1em', md: '0 1.5em 0 2em', lg: '0 3em 0 2em' };
@@ -195,12 +197,27 @@ const InternalHeader = () => {
                     </Collapse>
                 </AppBar>
                 <When condition={canNavigate}>
-                    <SideNav
-                        open={sideNavOpen}
-                        setOpen={setSideNavOpen}
-                        data-testid="sidenav-header"
-                        isMediumScreen={isMediumScreenOrLarger}
-                    />
+                    <If condition={'authoring' === location.pathname.split('/')[3]}>
+                        <Then>
+                            <>
+                                <AuthoringSideNav
+                                    open={sideNavOpen}
+                                    setOpen={setSideNavOpen}
+                                    data-testid="authoringnav-header"
+                                    isMediumScreen={isMediumScreenOrLarger}
+                                    engagementId={location.pathname.split('/')[2]}
+                                />
+                            </>
+                        </Then>
+                        <Else>
+                            <SideNav
+                                open={sideNavOpen}
+                                setOpen={setSideNavOpen}
+                                data-testid="sidenav-header"
+                                isMediumScreen={isMediumScreenOrLarger}
+                            />
+                        </Else>
+                    </If>
                 </When>
             </Box>
         </TrapFocus>

@@ -9,15 +9,18 @@ import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { When } from 'react-if';
 import { Grid, Link } from '@mui/material';
 import { colors } from 'styles/Theme';
+import { getDefaultAuthoringTabValues } from './AuthoringTabElements';
 
-const StatusCircle = (props: StatusCircleProps) => {
+export const StatusCircle = (props: StatusCircleProps) => {
     const statusCircleStyles = {
         width: '6px',
         height: '6px',
         borderRadius: '50%',
         backgroundColor: props.required ? colors.notification.danger.icon : colors.surface.gray[70],
         marginLeft: '0.3rem',
-        marginTop: '-1rem',
+        display: 'inline-block',
+        bottom: '0.5rem',
+        position: 'relative' as const,
     };
     return <span style={statusCircleStyles}> </span>;
 };
@@ -68,38 +71,9 @@ const AuthoringButton = (props: AuthoringButtonProps) => {
 };
 
 export const AuthoringTab = () => {
-    // Set default values
-    const mandatorySectionTitles = ['Hero Banner', 'Summary', 'Details', 'Provide Feedback'];
-    const optionalSectionTitles = ['View Results', 'Subscribe', 'More Engagements'];
-    const feedbackTitles = ['Survey', '3rd Party Feedback Method Link'];
-    const defaultAuthoringValue: AuthoringValue = {
-        id: 0,
-        title: '',
-        link: '#',
-        required: false,
-        completed: false,
-    };
-    const getAuthoringValues = (
-        defaultValues: AuthoringValue,
-        titles: string[],
-        required: boolean,
-        idOffset = 0,
-    ): AuthoringValue[] => {
-        return titles.map((title, index) => ({
-            ...defaultValues,
-            title: title,
-            required: required,
-            id: index + idOffset,
-        }));
-    };
-    const mandatorySectionValues = getAuthoringValues(defaultAuthoringValue, mandatorySectionTitles, true);
-    const optionalSectionValues = getAuthoringValues(defaultAuthoringValue, optionalSectionTitles, false, 100);
-    const defaultSectionValues = [...mandatorySectionValues, ...optionalSectionValues];
-    const defaultFeedbackMethods = getAuthoringValues(defaultAuthoringValue, feedbackTitles, true, 1000);
-
     // Set useStates. When data is imported, it will be set with setSectionValues and setFeedbackMethods.
-    const [sectionValues] = useState(defaultSectionValues);
-    const [feedbackMethods] = useState(defaultFeedbackMethods);
+    const [sectionValues] = useState(getDefaultAuthoringTabValues('sections'));
+    const [feedbackMethods] = useState(getDefaultAuthoringTabValues('feedback'));
     const [requiredSectionsCompleted, setRequiredSectionsCompleted] = useState(false);
     const [feedbackCompleted, setFeedbackCompleted] = useState(false);
 

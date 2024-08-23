@@ -1,3 +1,10 @@
+## August 23, 2024
+- **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
+  - Implemented authoring side nav
+  - Implemented authoring bottom nav
+  - Implemented authoring section context
+  - Still working on skeletons
+
 ## August 15, 2024
 - **Feature** New engagement authoring view tab [🎟️ DESENG-674](https://citz-gdx.atlassian.net/browse/DESENG-674)
 

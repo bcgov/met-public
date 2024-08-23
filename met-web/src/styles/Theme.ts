@@ -366,13 +366,23 @@ export const DarkTheme = createTheme({
         },
         MuiSelect: {
             defaultProps: {
-                MenuProps: {
-                    sx: {
-                        '&:hover': {
-                            backgroundColor: DarkPalette.hover.light,
-                        },
-                    },
-                },
+                // MenuProps: {
+                //     sx: {
+                //         '& .MuiMenu-list .MuiMenuItem-root:hover, .MuiMenu-list .MuiMenuItem-root.Mui-focusVisible': {
+                //             backgroundColor: DarkPalette.hover.light,
+                //         },
+                //         '& .MuiMenu-list .MuiMenuItem-root.Mui-selected': {
+                //             backgroundColor: colors.surface.blue[30],
+                //             '&:hover, &.Mui-focusVisible': {
+                //                 backgroundColor: colors.surface.blue[40],
+                //             },
+                //         },
+                //         '& .MuiMenu-list .MuiMenuItem-root.Mui-disabled': {
+                //             backgroundColor: colors.surface.gray[10],
+                //             color: colors.type.regular.disabled,
+                //         },
+                //     },
+                // },
             },
         },
         MuiButton: {

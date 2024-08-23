@@ -38,6 +38,9 @@ import { languageLoader } from 'components/engagement/admin/create/languageLoade
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
 import EngagementCreationWizard from 'components/engagement/admin/create';
 import engagementCreateAction from 'components/engagement/admin/create/engagementCreateAction';
+import AuthoringBanner from 'components/engagement/admin/create/authoring/AuthoringBanner';
+import { engagementUpdateAction } from 'components/engagement/admin/create/authoring/engagementUpdateAction';
+import { AuthoringContext } from 'components/engagement/admin/create/authoring/AuthoringContext';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -90,6 +93,17 @@ const AuthenticatedRoutes = () => {
                 >
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
+                        <Route path="authoring" errorElement={<NotFound />}>
+                            <Route element={<AuthoringContext />} action={engagementUpdateAction}>
+                                <Route path="banner" element={<AuthoringBanner />} />
+                                {/* <Route path="summary" element={<AuthoringSummary />} />
+								<Route path="details" element={<AuthoringDetails />} />
+								<Route path="feedback" element={<AuthoringFeedback />} />
+								<Route path="results" element={<AuthoringResults />} />
+								<Route path="subscribe" element={<AuthoringSubscribe />} />
+								<Route path="more" element={<AuthoringMore />} /> */}
+                            </Route>
+                        </Route>
                     </Route>
                     <Route path="old-view" element={<OldEngagementView />} />
                     <Route
