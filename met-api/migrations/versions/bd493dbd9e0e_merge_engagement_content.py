@@ -1,4 +1,4 @@
-"""empty message
+"""Merge the engagement_summary_content and engagement_custom_content tables into the engagement_content table
 
 Revision ID: bd493dbd9e0e
 Revises: 901a6724bca2
@@ -109,4 +109,4 @@ def downgrade():
 
     # Re-add the content_type and icon_name columns
     op.add_column('engagement_content', sa.Column('icon_name', sa.Text(), autoincrement=False, nullable=True))
-    op.add_column('engagement_content', sa.Column('content_type', postgresql.ENUM('Summary', 'Custom', name='engagementcontenttype'), autoincrement=False, nullable=False))
+    op.add_column('engagement_content', sa.Column('content_type', postgresql.ENUM('Summary', 'Custom', name='engagementcontenttype'), autoincrement=False))
