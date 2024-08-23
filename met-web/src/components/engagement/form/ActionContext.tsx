@@ -82,7 +82,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         if (isCreate && !engagementId) {
             return;
         }
-        if (engagementId && engagement) {
+        if (engagementId) {
             engagement.then((result) => {
                 setEngagement(result);
             });
@@ -100,7 +100,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
     // Load the engagement's content from the shared individual engagement loader and watch the content variable for any changes.
     useEffect(() => {
-        if (engagementId && content) {
+        if (engagementId) {
             if (isCreate) {
                 return;
             }
@@ -115,7 +115,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
         if (isCreate) {
             return;
         }
-        if (!isCreate && metadata && taxa) {
+        if (!isCreate) {
             metadata?.then((result) => setEngagementMetadata(result));
             taxa?.then((result) => setTenantTaxa(Object.values(result)));
         }
