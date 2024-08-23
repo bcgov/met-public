@@ -157,7 +157,7 @@ class EngagementService:
         EngagementService.validate_fields(request_json)
         eng_model = EngagementService._create_engagement_model(request_json)
 
-        eng_content = EngagementService.create_default_engagement_content(eng_model.id)
+        EngagementService.create_default_engagement_content(eng_model.id)
         EngagementService.create_default_content(eng_model.id, request_json)
 
         if request_json.get('status_block'):
