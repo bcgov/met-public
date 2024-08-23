@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
-import { EngagementConfigurationData } from './form';
+import { EngagementConfigurationData } from './wizard';
 import { useFormContext } from 'react-hook-form';
 
 export const FeedbackMethodSelector = () => {
@@ -26,6 +26,7 @@ export const FeedbackMethodSelector = () => {
                             checked
                                 ? [...watch('feedback_methods'), 'survey']
                                 : watch('feedback_methods').filter((m) => m !== 'survey'),
+                            { shouldDirty: true },
                         );
                     }}
                 />
@@ -40,6 +41,7 @@ export const FeedbackMethodSelector = () => {
                             checked
                                 ? [...watch('feedback_methods'), '3rd_party']
                                 : watch('feedback_methods').filter((m) => m !== '3rd_party'),
+                            { shouldDirty: true },
                         );
                     }}
                 />

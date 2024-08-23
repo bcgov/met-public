@@ -24,6 +24,7 @@ import { DOCUMENT_TYPE, DocumentItem } from 'models/document';
 import { saveObject } from 'services/objectStorageService';
 import FileUpload from 'components/common/FileUpload';
 import { If, Then, Else } from 'react-if';
+import { WidgetLocation } from 'models/widget';
 
 const schema = yup
     .object({
@@ -94,6 +95,7 @@ const UploadFileDrawer = () => {
             widget_id: widget.id,
             type: 'file',
             is_uploaded: true,
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(
             openNotification({

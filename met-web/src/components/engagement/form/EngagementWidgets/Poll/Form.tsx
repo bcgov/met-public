@@ -16,6 +16,7 @@ import { PollStatus } from 'constants/engagementStatus';
 import Alert from '@mui/material/Alert';
 import usePollWidgetState from './PollWidget.hook';
 import PollAnswerForm from './PollAnswerForm';
+import { WidgetLocation } from 'models/widget';
 
 interface DetailsForm {
     title: string;
@@ -79,6 +80,7 @@ const Form = () => {
             description: description,
             answers: answers,
             status: status,
+            location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new Poll was successfully added' }));
     };

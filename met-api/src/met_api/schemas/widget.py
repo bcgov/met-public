@@ -23,3 +23,4 @@ class WidgetSchema(Schema):
     updated_date = fields.Str(data_key='updated_date')
     sort_index = fields.Int(data_key='sort_index')
     items = fields.List(fields.Nested(WidgetItemSchema))
+    location = fields.Int(data_key='location')

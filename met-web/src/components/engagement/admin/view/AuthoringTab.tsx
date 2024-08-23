@@ -133,7 +133,7 @@ export const AuthoringTab = () => {
             <Header2 decorated>Authoring</Header2>
             <MetHeader3 style={metHeaderStyles}>Page Section Authoring</MetHeader3>
             <When condition={!requiredSectionsCompleted}>
-                <SystemMessage sx={systemMessageStyles} status="error">
+                <SystemMessage sx={systemMessageStyles} status="danger">
                     There are incomplete or missing sections of required content in your engagement. Please complete all
                     required content in all of the languages included in your engagement.
                 </SystemMessage>
@@ -165,7 +165,7 @@ export const AuthoringTab = () => {
             <Grid container direction="column" id="feedback-container" sx={{ ...anchorContainerStyles }}>
                 <MetHeader3 style={metHeaderStyles}>Feedback Configuration</MetHeader3>
                 <When condition={!feedbackCompleted}>
-                    <SystemMessage sx={systemMessageStyles} status="error">
+                    <SystemMessage sx={systemMessageStyles} status="danger">
                         There are feedback methods included in your engagement that are incomplete. Please complete
                         configuration for all of the feedback methods included in your engagement.
                     </SystemMessage>

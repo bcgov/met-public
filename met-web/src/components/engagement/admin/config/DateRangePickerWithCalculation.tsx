@@ -44,11 +44,15 @@ export const DateRangePickerWithCalculation = () => {
             if (name === 'end_date') {
                 trigger('end_date');
             }
-            if (!value?.end_date) return;
-            setNumberOfDays(value.end_date.clone().add(1, 'second').diff(value.start_date, 'days'));
         });
         return () => subscription.unsubscribe();
     }, [watch]);
+
+    useEffect(() => {
+        if (startDate && endDate) {
+            setNumberOfDays(endDate.clone().add(1, 'second').diff(startDate, 'days'));
+        }
+    }, [startDate, endDate]);
 
     const getDayStyle = (props: PickersDayProps<Dayjs | null>) => {
         const standardStyle = {

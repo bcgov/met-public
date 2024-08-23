@@ -3,6 +3,7 @@ import { WidgetMap } from 'models/widgetMap';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { GeoJSON } from 'geojson';
+import { WidgetLocation } from 'models/widget';
 
 export const fetchMaps = async (widget_id: number): Promise<WidgetMap[]> => {
     try {
@@ -21,6 +22,7 @@ interface PostMapRequest {
     latitude: number;
     marker_label?: string;
     file?: File;
+    location: WidgetLocation | null;
 }
 
 export const postMap = async (widget_id: number, data: PostMapRequest): Promise<WidgetMap> => {

@@ -38,4 +38,5 @@ export interface PatchEngagementRequest {
     rich_description?: string;
     banner_filename?: string;
     status_block?: unknown[];
+    is_internal?: boolean;
 }

@@ -2,6 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceAllInURL, replaceUrl } from 'helper';
 import { TimelineWidget, TimelineEvent } from 'models/timelineWidget';
+import { WidgetLocation } from 'models/widget';
 
 interface PostTimelineRequest {
     widget_id: number;
@@ -9,6 +10,7 @@ interface PostTimelineRequest {
     title: string;
     description: string;
     events: TimelineEvent[];
+    location: WidgetLocation | null;
 }
 
 interface PatchTimelineRequest {

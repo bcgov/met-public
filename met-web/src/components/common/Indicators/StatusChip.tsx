@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chip as MuiChip, Skeleton, useTheme } from '@mui/material';
+import { ChipProps as MuiChipProps, Chip as MuiChip, Skeleton, useTheme } from '@mui/material';
 import { colors } from '..';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
@@ -23,12 +23,17 @@ export const getStatusFromStatusId = (statusId: SubmissionStatus): StatusText =>
     }
 };
 
-export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, statusId: status }) => {
+export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> = ({
+    label: customLabel,
+    statusId: status,
+    ...props
+}) => {
     const statusText = getStatusFromStatusId(status);
     const theme = useTheme();
     const invert = theme.palette.mode === 'dark';
     return (
         <MuiChip
+            {...props}
             label={customLabel || statusText}
             className={`status-chip status-chip-${statusText.toLowerCase()} ${invert ? 'status-chip-invert' : ''}`}
             sx={{
@@ -74,6 +79,7 @@ export const EngagementStatusChip: React.FC<ChipProps> = ({ label: customLabel, 
                     borderColor: colors.surface.gray[100],
                     color: colors.surface.gray[40],
                 },
+                ...props.sx,
             }}
         />
     );
