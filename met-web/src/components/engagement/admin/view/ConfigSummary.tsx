@@ -179,7 +179,7 @@ export const ConfigSummary = () => {
                     </OutlineBox>
                 </Grid>
                 <Grid item sx={{ pt: '40px' }}>
-                    <Button href="../config" variant="secondary" icon={<FontAwesomeIcon icon={faPen} />}>
+                    <Button href="../config/edit" variant="secondary" icon={<FontAwesomeIcon icon={faPen} />}>
                         Edit Configuration
                     </Button>
                 </Grid>

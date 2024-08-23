@@ -40,6 +40,8 @@ import EngagementCreationWizard from 'components/engagement/admin/config/wizard/
 import engagementCreateAction from 'components/engagement/admin/config/EngagementCreateAction';
 import EngagementConfigurationWizard from 'components/engagement/admin/config/wizard/ConfigWizard';
 import engagementUpdateAction from 'components/engagement/admin/config/EngagementUpdateAction';
+import { ConfigSummary as ConfigTab } from 'components/engagement/admin/view/ConfigSummary';
+import { AuthoringTab } from 'components/engagement/admin/view/AuthoringTab';
 import AuthoringBanner from 'components/engagement/admin/create/authoring/AuthoringBanner';
 import { engagementAuthoringUpdateAction } from 'components/engagement/admin/create/authoring/engagementAuthoringUpdateAction';
 import { AuthoringContext } from 'components/engagement/admin/create/authoring/AuthoringContext';
@@ -114,7 +116,7 @@ const AuthenticatedRoutes = () => {
                             crumb: async (data: { engagement: Promise<Engagement> }) => {
                                 return data.engagement.then((engagement) => {
                                     return {
-                                        link: `/engagements/${engagement.id}/view`,
+                                        link: `/engagements/${engagement.id}/details/config`,
                                         name: engagement.name,
                                     };
                                 });
@@ -122,22 +124,28 @@ const AuthenticatedRoutes = () => {
                         }}
                         element={<AdminEngagementView />}
                     />
-                    <Route index element={<Navigate to="view" />} />
-                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                        <Route path="form" element={<EngagementForm />} />
+                    <Route index element={<Navigate to="details/config" />} />
+                    <Route path="details">
+                        <Route index element={<Navigate to="config" />} />
+                        {/* Wraps the tabs with the engagement title and TabContext */}
+                        <Route element={<AdminEngagementView />}>
+                            <Route path="config" element={<ConfigTab />} />
+                            <Route path="author" element={<AuthoringTab />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
                         <Route
-                            path="config"
+                            path="config/edit"
                             element={<EngagementConfigurationWizard />}
                             action={engagementUpdateAction}
                             handle={{
-                                crumb: () => ({
-                                    name: 'Configure',
-                                }),
+                                crumb: () => ({ name: 'Configure' }),
                             }}
                         />
                     </Route>
-                    <Route path="old-view" element={<OldEngagementView />} />
-                    <Route path="view" element={<AdminEngagementView />} />
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                        <Route path="form" element={<EngagementForm />} />
+                    </Route>
+                    <Route path="view" element={<OldEngagementView />} />
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>
