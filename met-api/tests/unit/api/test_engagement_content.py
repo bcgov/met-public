@@ -116,8 +116,6 @@ def test_create_engagement_content_sort(client, jwt, session,
     assert rv.status_code == 200
     assert len(rv.json) == 2, 'Two Contents Should exist.'
     engagement_contents = rv.json
-    summary_content = None
-    custom_content = None
     assert engagement_contents[0].get('title') == 'Summary'
     assert engagement_contents[1].get('title') == 'Custom'
 

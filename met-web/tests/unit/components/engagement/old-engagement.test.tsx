@@ -12,7 +12,6 @@ import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { EngagementLoaderData } from 'components/engagement/public/view';
 import { EngagementContent } from 'models/engagementContent';
 
 const survey: Survey = {
