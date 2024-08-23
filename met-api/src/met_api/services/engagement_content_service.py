@@ -1,13 +1,10 @@
 """Service for engagement content management."""
 from http import HTTPStatus
-from flask import current_app
 
-from met_api.constants.engagement_content_type import EngagementContentType
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
 from met_api.models.engagement_content import EngagementContent as EngagementContentModel
 from met_api.schemas.engagement_content import EngagementContentSchema
-from met_api.services.engagement_custom_content_service import EngagementCustomContentService
 from met_api.services import authorization
 from met_api.utils.roles import Role
 
@@ -27,20 +24,13 @@ class EngagementContentService:
             )
         content_data['id'] = engagement_content_record.id
         content_data['title'] = engagement_content_record.title
-        if engagement_content_record.content_type == EngagementContentType.Custom.name:
-            custom_content_records = EngagementCustomContentService.get_custom_content(engagement_content_id)
-            if custom_content_records:
-                custom_record = custom_content_records[0]
-                content_data['title'] = custom_record.get('title')
-                content_data['custom_text_content'] = custom_record.get('custom_text_content')
-                content_data['custom_json_content'] = custom_record.get('custom_json_content')
         return content_data
 
     @staticmethod
     def get_contents_by_engagement_id(engagement_id):
-        """Get contents by engagement id."""
+        """Get content by engagement id."""
         engagement_content_schema = EngagementContentSchema(many=True)
-        engagement_content_records = EngagementContentModel.get_contents_by_engagement_id(engagement_id)
+        engagement_content_records = EngagementContentModel.find_by_engagement_id(engagement_id)
         engagement_contents = engagement_content_schema.dump(engagement_content_records)
         return engagement_contents
 
@@ -63,30 +53,13 @@ class EngagementContentService:
         created_content = EngagementContentService._create_content(engagement_id, engagement_content_data)
         created_content.commit()
 
-        if engagement_content_data.get('content_type') == EngagementContentType.Custom.name:
-            EngagementContentService.create_default_custom_content(engagement_id, created_content.id)
-
         return EngagementContentSchema().dump(created_content)
-
-    @staticmethod
-    def create_default_custom_content(eng_id: int, eng_content_id: int):
-        """Create default engagement custom content."""
-        default_summary_content = {
-            'engagement_id': eng_id
-        }
-        try:
-            EngagementCustomContentService.create_custom_content(eng_content_id, default_summary_content)
-        except Exception as exc:  # noqa: B902
-            current_app.logger.error('Failed to create default engagement summary content', exc)
-            raise BusinessException(
-                error='Failed to create default engagement summary content.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
 
     @staticmethod
     def _find_higest_sort_index(engagement_id):
         # find the highest sort order of the engagement content
         sort_index = 0
-        contents = EngagementContentModel.get_contents_by_engagement_id(engagement_id)
+        contents = EngagementContentModel.find_by_engagement_id(engagement_id)
         if contents:
             # Find the largest in the existing engagement contents
             sort_index = max(content.sort_index for content in contents)
@@ -97,8 +70,8 @@ class EngagementContentService:
         engagement_content_model: EngagementContentModel = EngagementContentModel()
         engagement_content_model.engagement_id = engagement_id
         engagement_content_model.title = engagement_content_data.get('title')
-        engagement_content_model.icon_name = engagement_content_data.get('icon_name')
-        engagement_content_model.content_type = EngagementContentType[engagement_content_data.get('content_type')]
+        engagement_content_model.text_content = engagement_content_data.get('text_content')
+        engagement_content_model.json_content = engagement_content_data.get('json_content')
         engagement_content_model.sort_index = engagement_content_data.get('sort_index')
         engagement_content_model.is_internal = engagement_content_data.get('is_internal', False)
         engagement_content_model.flush()
@@ -122,12 +95,12 @@ class EngagementContentService:
         } for index, engagement_content in enumerate(engagement_contents)
         ]
 
-        EngagementContentModel.update_engagement_contents(engagement_content_sort_mappings)
+        EngagementContentModel.bulk_update_engagement_content(engagement_content_sort_mappings)
 
     @staticmethod
     def _validate_engagement_content_ids(engagement_id, engagement_contents):
         """Validate if engagement content ids belong to the engagement."""
-        eng_contents = EngagementContentModel.get_contents_by_engagement_id(engagement_id)
+        eng_contents = EngagementContentModel.find_by_engagement_id(engagement_id)
         content_ids = [content.id for content in eng_contents]
         input_content_ids = [engagement_content.get('id') for engagement_content in engagement_contents]
         if len(set(content_ids) - set(input_content_ids)) > 0:

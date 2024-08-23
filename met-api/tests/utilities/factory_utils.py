@@ -857,8 +857,8 @@ def factory_enagement_content_model(
 
     engagement_content = EngagementContentModel(
         title=engagement_content.get('title'),
-        icon_name=engagement_content.get('icon_name'),
-        content_type=engagement_content.get('content_type'),
+        text_content=engagement_content.get('text_content'),
+        json_content=engagement_content.get('json_content'),
         engagement_id=engagement_id,
         is_internal=engagement_content.get('is_internal', False),
     )

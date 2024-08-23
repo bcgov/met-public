@@ -14,6 +14,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementContent, createDefaultEngagementContent } from 'models/engagementContent';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { getEngagementContent } from 'services/engagementContentService';
+import { EngagementLoaderData } from '../public/view';
 
 const CREATE = 'create';
 export const ActionContext = createContext<EngagementContext>({
@@ -71,16 +72,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
-    const routeLoaderData = useRouteLoaderData('single-engagement') as
-        | {
-              engagement: Promise<Engagement>;
-              content: Promise<EngagementContent[]>;
-              metadata: Promise<EngagementMetadata[]>;
-              taxa: Promise<MetadataTaxon[]>;
-          }
-        | undefined;
-
-    const { engagement, content, metadata, taxa } = routeLoaderData || {};
+    const { engagement, content, metadata, taxa } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -116,7 +108,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 setContentTabs(result);
             });
         }
-    }, [content]);
+    }, [content, engagementId]);
 
     // Load the engagement's metadata and taxa from the shared individual engagement loader and watch the metadata and taxa variables for any changes.
     useEffect(() => {

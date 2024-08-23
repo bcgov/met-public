@@ -11,9 +11,6 @@ import sqlalchemy as sa
 from sqlalchemy import text
 from sqlalchemy.dialects import postgresql
 
-from met_api.constants.engagement_content_type import EngagementContentType
-from met_api.utils.enums import ContentTitle
-
 # revision identifiers, used by Alembic.
 revision = 'e2625b0d07ab'
 down_revision = '37176ea4708d'
@@ -90,9 +87,9 @@ def upgrade():
                 """
             ),
             {
-                'title': ContentTitle.DEFAULT.value,
-                'icon_name': ContentTitle.DEFAULT_ICON.value,
-                'content_type': EngagementContentType(1).name,
+                'title': "Summary",
+                'icon_name': "n/a",
+                'content_type': "n/a",
                 'engagement_id': eng_id,
             },
         )

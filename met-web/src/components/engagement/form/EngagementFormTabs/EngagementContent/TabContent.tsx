@@ -5,19 +5,20 @@ import RichTextEditor from 'components/common/RichTextEditor';
 import { EngagementTabsContext } from '../EngagementTabsContext';
 import { ActionContext } from '../../ActionContext';
 import { BodyText } from 'components/common/Typography';
+import { Unless, When } from 'react-if';
 
-const SummaryTabContent = () => {
-    const { savedEngagement } = useContext(ActionContext);
+const TabContent = ({ index }: { index: number }) => {
+    const { savedEngagement, contentTabs, setContentTabs } = useContext(ActionContext);
     const [initialRichContent, setInitialRichContent] = useState('');
     const [editorDisabled, setEditorDisabled] = useState(false);
 
-    const { engagementFormData, setEngagementFormData, richContent, setRichContent } =
-        useContext(EngagementTabsContext);
+    const { richContent, setRichContent } = useContext(EngagementTabsContext);
 
     const handleContentChange = (rawText: string) => {
-        setEngagementFormData({
-            ...engagementFormData,
-            content: rawText,
+        setContentTabs((prevTabs) => {
+            const newTabs = [...prevTabs];
+            newTabs[index].json_content = rawText;
+            return newTabs;
         });
     };
 
@@ -42,10 +43,18 @@ const SummaryTabContent = () => {
             columnSpacing={2}
         >
             <Grid item xs={12}>
-                <BodyText bold size="large">
-                    Engagement - Page Content
-                </BodyText>
-                <BodyText size="small">This is the main content of the engagement page.</BodyText>
+                <When condition={index === 0}>
+                    <BodyText bold size="large">
+                        Engagement - Page Content
+                    </BodyText>
+                    <BodyText size="small">This is the main content of the engagement page.</BodyText>
+                </When>
+                <Unless condition={index === 0}>
+                    <BodyText bold size="large">
+                        Additional Tab {index} - {contentTabs[index].title}
+                    </BodyText>
+                    <BodyText size="small">Additional content for the engagement page.</BodyText>
+                </Unless>
 
                 <div style={{ position: 'relative' }}>
                     <RichTextEditor
@@ -69,11 +78,13 @@ const SummaryTabContent = () => {
                     )}
                 </div>
             </Grid>
-            <Grid item xs={12}>
-                <SurveyBlock />
-            </Grid>
+            <When condition={index === 0}>
+                <Grid item xs={12}>
+                    <SurveyBlock />
+                </Grid>
+            </When>
         </Grid>
     );
 };
 
-export default SummaryTabContent;
+export default TabContent;

@@ -12,6 +12,8 @@ import { Widget, WidgetItem, WidgetType } from 'models/widget';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { EngagementLoaderData } from 'components/engagement/public/view';
+import { EngagementContent } from 'models/engagementContent';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -128,18 +130,22 @@ jest.mock('react-router-dom', () => ({
                 engagement: Promise.resolve(draftEngagement),
                 metadata: Promise.resolve([]),
                 widgets: Promise.resolve([whoIsListeningWidget]),
-                contentSummary: Promise.resolve([]),
-                content: Promise.resolve([]),
+                content: Promise.resolve([
+                    {
+                        id: 1,
+                        title: 'title',
+                        text_content: 'text content',
+                        json_content:
+                            '{"blocks":[{"key":"fclgj","text":"Rich Content Sample","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                        engagement_id: 1,
+                        content: 'content',
+                        sort_index: 1,
+                        is_internal: false,
+                    } as EngagementContent,
+                ]),
             };
         }
     },
-    useLoaderData: () => ({
-        engagement: Promise.resolve(draftEngagement),
-        metadata: Promise.resolve([]),
-        widgets: Promise.resolve([whoIsListeningWidget]),
-        contentSummary: Promise.resolve([]),
-        content: Promise.resolve([]),
-    }),
 }));
 
 describe('Engagement View page tests', () => {
@@ -186,7 +192,7 @@ describe('Engagement View page tests', () => {
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         mockContactRtkUnwrap.mockReturnValueOnce(Promise.resolve(mockContact));
         const { container } = render(<RouterProvider router={router} />);
-
+        screen.debug(undefined, 10000);
         await waitFor(() => {
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
             expect(screen.getByText('Who is Listening')).toBeVisible();

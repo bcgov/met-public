@@ -92,7 +92,6 @@ jest.mock('react-router-dom', () => ({
                 engagement: Promise.resolve(draftEngagement),
                 metadata: Promise.resolve([]),
                 widgets: Promise.resolve([]),
-                contentSummary: Promise.resolve([]),
                 content: Promise.resolve([]),
             };
         }
@@ -101,7 +100,6 @@ jest.mock('react-router-dom', () => ({
         engagement: Promise.resolve(draftEngagement),
         metadata: Promise.resolve([]),
         widgets: Promise.resolve([]),
-        contentSummary: Promise.resolve([]),
         content: Promise.resolve([]),
     }),
 }));

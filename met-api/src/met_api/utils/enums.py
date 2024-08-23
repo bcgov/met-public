@@ -102,10 +102,3 @@ class UserStatus(IntEnum):
 
     ACTIVE = 1
     INACTIVE = 2
-
-
-class ContentTitle(Enum):
-    """User status."""
-
-    DEFAULT = 'Summary'
-    DEFAULT_ICON = 'SummarizeIcon'

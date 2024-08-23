@@ -367,7 +367,6 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(getByTestId('add-tab-button')).toBeVisible();
             expect(getByText('Tab Title:')).toBeInTheDocument();
-            expect(getByText('Tab Icon:')).toBeInTheDocument();
         });
     });
 
