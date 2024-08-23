@@ -158,7 +158,7 @@ class EngagementService:
         eng_model = EngagementService._create_engagement_model(request_json)
 
         eng_content = EngagementService.create_default_engagement_content(eng_model.id)
-        EngagementService.create_default_content(eng_model.id, eng_content['id'], request_json)
+        EngagementService.create_default_content(eng_model.id, request_json)
 
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
@@ -212,7 +212,7 @@ class EngagementService:
         return eng_content
 
     @staticmethod
-    def create_default_content(eng_id: int, eng_content_id: int, content_data: dict):
+    def create_default_content(eng_id: int, content_data: dict):
         """Create default summary content for the engagement."""
         default_summary_content = {
             'title': 'Summary',
