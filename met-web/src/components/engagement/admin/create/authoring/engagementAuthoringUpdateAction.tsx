@@ -7,7 +7,7 @@ import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 
-export const engagementUpdateAction: ActionFunction = async ({ request }) => {
+export const engagementAuthoringUpdateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
     const errors = [];
     const requestType = formData.get('request_type') as string;
@@ -101,5 +101,3 @@ export const engagementUpdateAction: ActionFunction = async ({ request }) => {
         });
     }
 };
-
-export default engagementUpdateAction;

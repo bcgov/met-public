@@ -1,5 +1,5 @@
 import React from 'react';
-import { useOutletContext, Form, useLocation } from 'react-router-dom';
+import { useOutletContext, Form, useParams } from 'react-router-dom';
 import AuthoringBottomNav from './AuthoringBottomNav';
 import { EngagementUpdateData } from './AuthoringContext';
 import { useFormContext } from 'react-hook-form';
@@ -9,8 +9,7 @@ import { AuthoringContextType } from './types';
 
 const AuthoringBanner = () => {
     const { onSubmit }: AuthoringContextType = useOutletContext();
-    const locationArray = useLocation().pathname.split('/');
-    const engagementId = locationArray[2];
+    const { engagementId } = useParams() as { engagementId: string };
 
     const {
         handleSubmit,

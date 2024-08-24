@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dayjs } from 'dayjs';
 import { FormProvider, useForm } from 'react-hook-form';
-import { createSearchParams, useFetcher, Outlet, useLocation } from 'react-router-dom';
+import { createSearchParams, useFetcher, Outlet } from 'react-router-dom';
 
 export interface EngagementUpdateData {
     id: number;
@@ -24,7 +24,8 @@ export interface EngagementUpdateData {
 
 export const AuthoringContext = () => {
     const fetcher = useFetcher();
-    const locationArray = useLocation().pathname.split('/');
+    const locationArray = window.location.href.split('/');
+    const slug = locationArray[locationArray.length - 1];
     const engagementUpdateForm = useForm<EngagementUpdateData>({
         defaultValues: {
             id: 0,
@@ -69,7 +70,7 @@ export const AuthoringContext = () => {
             }),
             {
                 method: 'post',
-                action: `/engagements/${data.id}/authoring/${locationArray[2]}`,
+                action: `/engagements/${data.id}/authoring/${slug}`,
             },
         );
     };

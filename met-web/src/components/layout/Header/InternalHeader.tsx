@@ -23,7 +23,7 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useAsyncValue, useRouteLoaderData, useLocation } from 'react-router-dom';
+import { Await, useAsyncValue, useRouteLoaderData, useParams } from 'react-router-dom';
 import { Tenant } from 'models/tenant';
 import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';
@@ -33,6 +33,7 @@ import TrapFocus from '@mui/base/TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
 import AuthoringSideNav from '../../engagement/admin/create/authoring/AuthoringSideNav';
+import { getAuthoringRoutes } from '../../engagement/admin/create/authoring/AuthoringNavElements';
 
 const InternalHeader = () => {
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -59,7 +60,19 @@ const InternalHeader = () => {
         }
     }, [isMediumScreenOrLarger, sideNavOpen]);
 
-    const location = useLocation();
+    // Get the authoring nav elements and current route so we can check their last two slugs against the current route's last two slugs.
+    // This will be used to determine which sidenav menu is displayed.
+    const pathname = window.location.href;
+    const { engagementId } = useParams() as { engagementId: string };
+    const currentAuthoringSlug = pathname.split('/').slice(-2).join('/');
+    const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant).map((route) => {
+        // skip the "Engagement Home" link
+        if ('Engagement Home' !== route.name) {
+            const pathArray = route.path.split('/');
+            return pathArray.slice(-2).join('/');
+        }
+    });
+
     const { myTenants } = useRouteLoaderData('authenticated-root') as { myTenants: Tenant[] };
 
     const sidePadding = { xs: '0 1em', md: '0 1.5em 0 2em', lg: '0 3em 0 2em' };
@@ -197,7 +210,7 @@ const InternalHeader = () => {
                     </Collapse>
                 </AppBar>
                 <When condition={canNavigate}>
-                    <If condition={'authoring' === location.pathname.split('/')[3]}>
+                    <If condition={authoringRoutes.includes(currentAuthoringSlug)}>
                         <Then>
                             <>
                                 <AuthoringSideNav
@@ -205,7 +218,7 @@ const InternalHeader = () => {
                                     setOpen={setSideNavOpen}
                                     data-testid="authoringnav-header"
                                     isMediumScreen={isMediumScreenOrLarger}
-                                    engagementId={location.pathname.split('/')[2]}
+                                    engagementId={engagementId}
                                 />
                             </>
                         </Then>

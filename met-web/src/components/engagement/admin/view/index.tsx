@@ -14,7 +14,7 @@ export const AdminEngagementView = () => {
 
     const EngagementViewTabs = {
         config: 'Configuration',
-        author: 'Authoring',
+        authoring: 'Authoring',
         activity: 'Activity',
         results: 'Results',
         publish: 'Publishing',

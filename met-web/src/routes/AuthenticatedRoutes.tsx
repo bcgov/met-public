@@ -96,17 +96,6 @@ const AuthenticatedRoutes = () => {
                 >
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
-                        <Route path="authoring" errorElement={<NotFound />}>
-                            <Route element={<AuthoringContext />} action={engagementUpdateAction}>
-                                <Route path="banner" element={<AuthoringBanner />} />
-                                {/* <Route path="summary" element={<AuthoringSummary />} />
-								<Route path="details" element={<AuthoringDetails />} />
-								<Route path="feedback" element={<AuthoringFeedback />} />
-								<Route path="results" element={<AuthoringResults />} />
-								<Route path="subscribe" element={<AuthoringSubscribe />} />
-								<Route path="more" element={<AuthoringMore />} /> */}
-                            </Route>
-                        </Route>
                     </Route>
                     <Route path="old-view" element={<OldEngagementView />} />
                     <Route
@@ -130,22 +119,32 @@ const AuthenticatedRoutes = () => {
                         {/* Wraps the tabs with the engagement title and TabContext */}
                         <Route element={<AdminEngagementView />}>
                             <Route path="config" element={<ConfigTab />} />
-                            <Route path="author" element={<AuthoringTab />} />
-                            <Route path="*" element={<NotFound />} />
+                            <Route path="authoring" element={<AuthoringTab />}></Route>
                         </Route>
-                        <Route
-                            path="config/edit"
-                            element={<EngagementConfigurationWizard />}
-                            action={engagementUpdateAction}
-                            handle={{
-                                crumb: () => ({ name: 'Configure' }),
-                            }}
-                        />
+                        <Route path="authoring" element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                            <Route element={<AuthoringContext />} action={engagementAuthoringUpdateAction}>
+                                <Route path="banner" element={<AuthoringBanner />} />
+                                {/* <Route path="summary" element={<AuthoringSummary />} />
+									<Route path="details" element={<AuthoringDetails />} />
+									<Route path="feedback" element={<AuthoringFeedback />} />
+									<Route path="results" element={<AuthoringResults />} />
+									<Route path="subscribe" element={<AuthoringSubscribe />} />
+									<Route path="more" element={<AuthoringMore />} /> */}
+                            </Route>
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
                     </Route>
+                    <Route
+                        path="config/edit"
+                        element={<EngagementConfigurationWizard />}
+                        action={engagementUpdateAction}
+                        handle={{
+                            crumb: () => ({ name: 'Configure' }),
+                        }}
+                    />
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
                     </Route>
-                    <Route path="view" element={<OldEngagementView />} />
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>

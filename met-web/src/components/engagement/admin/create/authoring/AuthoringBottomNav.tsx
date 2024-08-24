@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react';
-import { Await, useAsyncValue, useLocation } from 'react-router-dom';
+import { Await, useAsyncValue, useParams } from 'react-router-dom';
 import { AppBar, Theme, ThemeProvider, Box, useMediaQuery, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Palette, colors, DarkTheme, BaseTheme } from 'styles/Theme';
 import { When, Unless } from 'react-if';
@@ -28,16 +28,14 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
 
     const tenant = useAppSelector((state) => state.tenant);
-    const locationArray = useLocation().pathname.split('/');
-    const pageSlug = locationArray[locationArray.length - 1];
-    const engagementId = locationArray[2];
+    const { engagementId, slug } = useParams() as { engagementId: string; slug: string };
 
     const languages = getTenantLanguages(tenant.id); // todo: Using tenant language list until language data is integrated with the engagement.
     const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
 
     const getPageValue = () => {
         const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant);
-        return authoringRoutes.find((route) => route.path.includes(pageSlug))?.name;
+        return authoringRoutes.find((route) => route.path.includes(slug))?.name;
     };
 
     const getLanguageValue = (currentLanguage: string, allLanguages: Language[]) => {
