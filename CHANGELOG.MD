@@ -1,3 +1,16 @@
+## August 27, 2024
+
+- **Task** Upgrade to Node v20
+  - Upgraded deployment / CI configs to reference Node v20
+
+## August 22, 2024
+
+- **Task** Merge engagement summary content and custom content [🎟️ DESENG-676](https://citz-gdx.atlassian.net/browse/DESENG-676)
+  - Combine the text and rich content fields from redundant types SummaryContent and CustomContent and store them in
+    the existing EngagementContent table
+  - Update the API to handle the new content structure
+  - Todo: Update the frontend to properly leverage the new content structure and allow editing of the simplified content type
+
 ## August 21, 2024
 
 - **Feature** Reusable widget component [🎟️ DESENG-675](https://citz-gdx.atlassian.net/browse/DESENG-675)
