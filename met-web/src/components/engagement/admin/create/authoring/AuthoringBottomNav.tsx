@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useMemo } from 'react';
 import { Await, useAsyncValue, useParams } from 'react-router-dom';
 import { AppBar, Theme, ThemeProvider, Box, useMediaQuery, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Palette, colors, DarkTheme, BaseTheme } from 'styles/Theme';
@@ -15,12 +15,7 @@ import { getTenantLanguages } from 'services/languageService';
 import { Language } from 'models/language';
 import { StatusCircle } from '../../view/AuthoringTab';
 import pagePreview from 'assets/images/pagePreview.png';
-
-interface AuthoringBottomNavProps {
-    isDirty: boolean;
-    isValid: boolean;
-    isSubmitting: boolean;
-}
+import { AuthoringBottomNavProps, LanguageSelectorProps } from './types';
 
 const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
     const { isDirty, isValid, isSubmitting } = props;
@@ -28,9 +23,12 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
 
     const tenant = useAppSelector((state) => state.tenant);
-    const { engagementId, slug } = useParams() as { engagementId: string; slug: string };
+    const { engagementId } = useParams() as { engagementId: string };
+    const location = window.location.href;
+    const locationArray = location.split('/');
+    const slug = locationArray[locationArray.length - 1];
 
-    const languages = getTenantLanguages(tenant.id); // todo: Using tenant language list until language data is integrated with the engagement.
+    const languages = useMemo(() => getTenantLanguages(tenant.id), [tenant.id]); // todo: Using tenant language list until language data is integrated with the engagement.
     const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
 
     const getPageValue = () => {
@@ -38,66 +36,8 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
         return authoringRoutes.find((route) => route.path.includes(slug))?.name;
     };
 
-    const getLanguageValue = (currentLanguage: string, allLanguages: Language[]) => {
-        return allLanguages.find((language) => language.code === currentLanguage)?.name;
-    };
-
-    const handleSelectChange = (event: SelectChangeEvent<string>) => {
-        const newLanguageCode = event.target.value;
-        setCurrentLanguage(newLanguageCode);
-    };
-
-    const Selector = () => {
-        const languages = useAsyncValue() as Language[];
-        return (
-            <Select
-                MenuProps={{ sx: { zIndex: 2000 } }}
-                sx={{
-                    height: '2.6rem',
-                    borderRadius: '8px',
-                    width: '9.375rem',
-                    backgroundColor: colors.surface.gray[10],
-                    border: 'none',
-                    color: Palette.text.primary,
-                    fontSize: '0.9rem',
-                    cursor: 'pointer',
-                    '& .MuiSelect-icon': {
-                        color: Palette.text.primary,
-                    },
-                }}
-                renderValue={(value) => {
-                    const completed = false; // todo: Replace with real "completed" boolean value once it is available.
-                    return (
-                        <span>
-                            <When condition={completed}>
-                                <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faCheck} />
-                            </When>
-                            {languages.find((language) => language.code === value)?.name}
-                            <Unless condition={completed}>
-                                <StatusCircle required={true} />
-                            </Unless>
-                        </span>
-                    );
-                }}
-                value={currentLanguage}
-                onChange={handleSelectChange}
-            >
-                {languages.map((language, index) => {
-                    const completed = false; // todo: Replace with the real "completed" boolean values once they are available.
-                    return (
-                        <MenuItem value={language.code} key={index}>
-                            <When condition={completed}>
-                                <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faCheck} />
-                            </When>
-                            {language.name}
-                            <Unless condition={completed}>
-                                <StatusCircle required={true} />
-                            </Unless>
-                        </MenuItem>
-                    );
-                })}
-            </Select>
-        );
+    const getLanguageValue = (currentLanguage: string, languages: Language[]) => {
+        return languages.find((language) => language.code === currentLanguage)?.name;
     };
 
     const buttonStyles = {
@@ -170,7 +110,10 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                         <ThemeProvider theme={BaseTheme}>
                             <Suspense>
                                 <Await resolve={languages}>
-                                    <Selector />
+                                    <LanguageSelector
+                                        currentLanguage={currentLanguage}
+                                        setCurrentLanguage={setCurrentLanguage}
+                                    />
                                 </Await>
                             </Suspense>
                         </ThemeProvider>
@@ -206,6 +149,62 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                 </ThemeProvider>
             </Box>
         </AppBar>
+    );
+};
+
+const LanguageSelector = ({ currentLanguage, setCurrentLanguage }: LanguageSelectorProps) => {
+    const languages = useAsyncValue() as Language[];
+    const handleSelectChange = (event: SelectChangeEvent<string>) => {
+        const newLanguageCode = event.target.value;
+        setCurrentLanguage(newLanguageCode);
+    };
+    return (
+        <Select
+            value={currentLanguage}
+            onChange={handleSelectChange}
+            sx={{
+                height: '2.6rem',
+                borderRadius: '8px',
+                width: '9.375rem',
+                backgroundColor: colors.surface.gray[10],
+                border: 'none',
+                color: Palette.text.primary,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                '& .MuiSelect-icon': {
+                    color: Palette.text.primary,
+                },
+            }}
+            renderValue={(value) => {
+                const completed = false; // todo: Replace with real "completed" boolean value once it is available.
+                return (
+                    <span>
+                        <When condition={completed}>
+                            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faCheck} />
+                        </When>
+                        {languages.find((language) => language.code === value)?.name}
+                        <Unless condition={completed}>
+                            <StatusCircle required={true} />
+                        </Unless>
+                    </span>
+                );
+            }}
+        >
+            {languages.map((language) => {
+                const completed = false; // todo: Replace with the real "completed" boolean values once they are available.
+                return (
+                    <MenuItem value={language.code} key={language.code}>
+                        <When condition={completed}>
+                            <FontAwesomeIcon style={{ marginRight: '0.3rem' }} icon={faCheck} />
+                        </When>
+                        {language.name}
+                        <Unless condition={completed}>
+                            <StatusCircle required={true} />
+                        </Unless>
+                    </MenuItem>
+                );
+            })}
+        </Select>
     );
 };
 

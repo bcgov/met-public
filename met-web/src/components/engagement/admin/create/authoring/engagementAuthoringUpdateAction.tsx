@@ -88,7 +88,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     }
 
     if (0 === errors.length && 'preview' === requestType) {
-        return redirect(`/engagements/${engagement.id}/view`);
+        return redirect(`/engagements/${engagement.id}/old-view`);
     } else if (0 === errors.length && 'update' === requestType) {
         openNotification({
             severity: 'success',

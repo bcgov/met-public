@@ -93,26 +93,21 @@ const AuthenticatedRoutes = () => {
                     id="single-engagement"
                     errorElement={<NotFound />}
                     loader={engagementLoader}
+                    handle={{
+                        crumb: async (data: { engagement: Promise<Engagement> }) => {
+                            return data.engagement.then((engagement) => {
+                                return {
+                                    link: `/engagements/${engagement.id}/old-view`,
+                                    name: engagement.name,
+                                };
+                            });
+                        },
+                    }}
                 >
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
                     </Route>
                     <Route path="old-view" element={<OldEngagementView />} />
-                    <Route
-                        path="view"
-                        loader={engagementLoader}
-                        handle={{
-                            crumb: async (data: { engagement: Promise<Engagement> }) => {
-                                return data.engagement.then((engagement) => {
-                                    return {
-                                        link: `/engagements/${engagement.id}/details/config`,
-                                        name: engagement.name,
-                                    };
-                                });
-                            },
-                        }}
-                        element={<AdminEngagementView />}
-                    />
                     <Route index element={<Navigate to="details/config" />} />
                     <Route path="details">
                         <Route index element={<Navigate to="config" />} />
@@ -133,15 +128,15 @@ const AuthenticatedRoutes = () => {
                             </Route>
                         </Route>
                         <Route path="*" element={<NotFound />} />
+                        <Route
+                            path="config/edit"
+                            element={<EngagementConfigurationWizard />}
+                            action={engagementUpdateAction}
+                            handle={{
+                                crumb: () => ({ name: 'Configure' }),
+                            }}
+                        />
                     </Route>
-                    <Route
-                        path="config/edit"
-                        element={<EngagementConfigurationWizard />}
-                        action={engagementUpdateAction}
-                        handle={{
-                            crumb: () => ({ name: 'Configure' }),
-                        }}
-                    />
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
                     </Route>
