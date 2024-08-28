@@ -1,3 +1,7 @@
+## August 28, 2024
+
+- **Bugfix** Fix keyboard focus being trapped on buttons on authoring page [🎟️ DESENG-687](https://citz-gdx.atlassian.net/browse/DESENG-687)
+
 ## August 27, 2024
 
 - **Task** Upgrade to Node v20 [🎟️ DESENG-682](https://citz-gdx.atlassian.net/browse/DESENG-682)
