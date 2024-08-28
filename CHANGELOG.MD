@@ -1,3 +1,8 @@
+## August 27, 2024
+
+- **Task** Upgrade to Node v20 [🎟️ DESENG-682](https://citz-gdx.atlassian.net/browse/DESENG-682)
+  - Upgraded deployment / CI configs to reference Node v20
+
 ## August 22, 2024
 
 - **Task** Merge engagement summary content and custom content [🎟️ DESENG-676](https://citz-gdx.atlassian.net/browse/DESENG-676)
