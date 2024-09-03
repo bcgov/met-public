@@ -192,7 +192,6 @@ describe('Engagement View page tests', () => {
         mockWidgetsRtkUnwrap.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         mockContactRtkUnwrap.mockReturnValueOnce(Promise.resolve(mockContact));
         const { container } = render(<RouterProvider router={router} />);
-        screen.debug(undefined, 10000);
         await waitFor(() => {
             expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
             expect(screen.getByText('Who is Listening')).toBeVisible();
