@@ -6,9 +6,10 @@ import { faArrowRightLong } from '@fortawesome/pro-light-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { MetLabel, MetHeader3 } from 'components/common';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
-import { When } from 'react-if';
-import { Grid, Link } from '@mui/material';
+import { Unless, When } from 'react-if';
+import { Grid } from '@mui/material';
 import { colors } from 'styles/Theme';
+import { Link } from 'components/common/Navigation';
 
 const StatusCircle = (props: StatusCircleProps) => {
     const statusCircleStyles = {
@@ -52,17 +53,15 @@ const AuthoringButton = (props: AuthoringButtonProps) => {
         paddingRight: '0.4rem',
     };
     return (
-        <Link style={{ textDecoration: 'none' }} href={props.item.link}>
-            <button style={buttonStyles}>
-                <When condition={props.item.completed}>
-                    <FontAwesomeIcon style={checkStyles} icon={faCheck} />
-                </When>
-                <span style={textStyles}>{props.item.title}</span>
-                <When condition={!props.item.completed}>
-                    <StatusCircle required={props.item.required} />
-                </When>
-                <FontAwesomeIcon style={arrowStyles} icon={faArrowRightLong} />
-            </button>
+        <Link underline="none" style={{ ...buttonStyles }} to={props.item.link}>
+            <When condition={props.item.completed}>
+                <FontAwesomeIcon style={checkStyles} icon={faCheck} />
+            </When>
+            <span style={textStyles}>{props.item.title}</span>
+            <Unless condition={props.item.completed}>
+                <StatusCircle required={props.item.required} />
+            </Unless>
+            <FontAwesomeIcon style={arrowStyles} icon={faArrowRightLong} />
         </Link>
     );
 };
