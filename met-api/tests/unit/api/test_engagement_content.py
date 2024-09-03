@@ -24,7 +24,6 @@ from unittest.mock import patch
 import pytest
 from faker import Faker
 
-from met_api.constants.engagement_content_type import EngagementContentType
 from met_api.services.engagement_content_service import EngagementContentService
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_scenarios import TestEngagementContentInfo
@@ -70,7 +69,7 @@ def test_create_engagement_content(client, jwt, session, engagement_content_info
 @pytest.mark.parametrize('engagement_content_info', [TestEngagementContentInfo.content1])
 def test_get_engagement_content(client, jwt, session, engagement_content_info,
                                 setup_admin_user_and_claims):  # pylint:disable=unused-argument
-    """Assert that a engagement content can be fetched."""
+    """Assert that engagement content can be fetched."""
     engagement = factory_engagement_model()
     engagement_content_info['engagement_id'] = engagement.id
     user, claims = setup_admin_user_and_claims
@@ -117,20 +116,17 @@ def test_create_engagement_content_sort(client, jwt, session,
     assert rv.status_code == 200
     assert len(rv.json) == 2, 'Two Contents Should exist.'
     engagement_contents = rv.json
-    summary_content = _find_engagement_content(engagement_contents, EngagementContentType.Summary.name)
-    assert summary_content.get('sort_index') == 1
-
-    custom_content = _find_engagement_content(engagement_contents, EngagementContentType.Custom.name)
-    assert custom_content.get('sort_index') == 2
+    assert engagement_contents[0].get('title') == 'Summary'
+    assert engagement_contents[1].get('title') == 'Custom'
 
     # Do reorder
 
     reorder_dict = [
         {
-            'id': custom_content.get('id'),
+            'id': engagement_contents[1].get('id'),
         },
         {
-            'id': summary_content.get('id'),
+            'id': engagement_contents[0].get('id'),
         }
     ]
 
@@ -142,16 +138,9 @@ def test_create_engagement_content_sort(client, jwt, session,
     rv = client.get(f'/api/engagement/{engagement.id}/content',
                     headers=headers, content_type=ContentType.JSON.value)
     engagement_contents = rv.json
-    summary_content = _find_engagement_content(engagement_contents, EngagementContentType.Summary.name)
-    assert summary_content.get('sort_index') == 2
 
-    custom_content = _find_engagement_content(engagement_contents, EngagementContentType.Custom.name)
-    assert custom_content.get('sort_index') == 1
-
-
-def _find_engagement_content(engagement_contents, content_type):
-    search_result = next(x for x in engagement_contents if x.get('content_type') == content_type)
-    return search_result
+    assert engagement_contents[1].get('title') == 'Summary'
+    assert engagement_contents[0].get('title') == 'Custom'
 
 
 def test_create_engagement_content_sort_invalid(client, jwt, session,

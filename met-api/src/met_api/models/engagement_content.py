@@ -9,7 +9,6 @@ from datetime import datetime
 from typing import Optional
 
 from sqlalchemy.sql.schema import ForeignKey
-from met_api.constants.engagement_content_type import EngagementContentType
 
 from .base_model import BaseModel
 from .db import db
@@ -21,24 +20,23 @@ class EngagementContent(BaseModel):
     __tablename__ = 'engagement_content'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), unique=False, nullable=False)
-    icon_name = db.Column(db.Text, unique=False, nullable=True)
-    content_type = db.Column(db.Enum(EngagementContentType), nullable=False,
-                             default=EngagementContentType.Summary)
+    text_content = db.Column(db.Text, unique=False, nullable=True)
+    json_content = db.Column(db.JSON, unique=False, nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     sort_index = db.Column(db.Integer, nullable=False, default=1)
     is_internal = db.Column(db.Boolean, nullable=False)
 
     @classmethod
-    def get_contents_by_engagement_id(cls, engagement_id):
-        """Get contents by engagement id."""
+    def find_by_engagement_id(cls, engagement_id):
+        """Get content by engagement id."""
         return db.session.query(EngagementContent)\
             .filter(EngagementContent.engagement_id == engagement_id)\
             .order_by(EngagementContent.sort_index.asc())\
             .all()
 
     @classmethod
-    def update_engagement_contents(cls, update_mappings: list) -> None:
-        """Update contents."""
+    def bulk_update_engagement_content(cls, update_mappings: list) -> None:
+        """Update content."""
         db.session.bulk_update_mappings(EngagementContent, update_mappings)
         db.session.commit()
 
@@ -49,7 +47,7 @@ class EngagementContent(BaseModel):
 
     @classmethod
     def remove_engagement_content(cls, engagement_id, engagement_content_id,) -> EngagementContent:
-        """Remove engagement content from engagement."""
+        """Remove content from an engagement."""
         engagement_content = EngagementContent.query.filter_by(id=engagement_content_id,
                                                                engagement_id=engagement_id).delete()
         db.session.commit()

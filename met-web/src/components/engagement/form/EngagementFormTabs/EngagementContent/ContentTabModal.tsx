@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { MenuItem, Modal, Grid, Stack, TextField, Select } from '@mui/material';
+import { Modal, Grid, Stack, TextField } from '@mui/material';
 import { modalStyle, MetHeader1Old, MetLabel, PrimaryButtonOld } from 'components/common';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ActionContext } from '../../ActionContext';
-import { EngagementContentContext } from './EngagementContentContext';
 import { EngagementContent } from 'models/engagementContent';
 import { postEngagementContent, patchEngagementContent } from 'services/engagementContentService';
+import { EngagementContentContext } from './EngagementContentContext';
 
 interface ContentTabModalProps {
     open: boolean;
@@ -19,36 +19,27 @@ interface ContentTabModalProps {
 
 const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, tabIndex }: ContentTabModalProps) => {
     const { savedEngagement } = useContext(ActionContext);
-    const { isEditMode, setIsSummaryContentsLoading, setIsCustomContentsLoading } =
-        useContext(EngagementContentContext);
+    const { isEditMode } = useContext(EngagementContentContext);
     const dispatch = useAppDispatch();
     const [tabTitle, setTabTitle] = useState('');
-    const [tabIcon, setTabIcon] = useState('');
 
     useEffect(() => {
         // Fetch tab details when modal is opened and selectedTabIndex changes
         if (open && isEditMode && typeof tabIndex === 'number' && tabs[tabIndex]) {
             setTabTitle(tabs[tabIndex].title);
-            setTabIcon(tabs[tabIndex].icon_name);
         } else {
             // If not in edit mode, initialize tabTitle and tabIcon with empty values
             setTabTitle('');
-            setTabIcon('');
         }
     }, [open, isEditMode, tabIndex, tabs]);
 
     const fetchData = async () => {
-        setIsSummaryContentsLoading(true);
-        setIsCustomContentsLoading(true);
         const newtab = isEditMode
             ? await patchEngagementContent(savedEngagement.id, tabs[tabIndex || 0].id, {
                   title: tabTitle,
-                  icon_name: tabIcon,
               })
             : await postEngagementContent(savedEngagement.id, {
                   title: tabTitle,
-                  icon_name: tabIcon,
-                  content_type: selectedTabType,
                   engagement_id: savedEngagement.id,
               });
 
@@ -75,15 +66,12 @@ const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, ta
                 } details.`,
             }),
         );
-        setIsSummaryContentsLoading(false);
-        setIsCustomContentsLoading(false);
         handleModalClose();
     };
 
     const handleModalClose = () => {
         updateModal(false);
         setTabTitle('');
-        setTabIcon('');
     };
 
     return (
@@ -132,33 +120,6 @@ const ContentTabModal = ({ open, updateModal, tabs, setTabs, selectedTabType, ta
                                 }
                                 size="small"
                             />
-                        </Stack>
-                    </Grid>
-                </Grid>
-                <Grid container direction="row" item xs={12} alignItems="center">
-                    <Grid item md={2} xs={12}>
-                        <MetLabel align="left" marginBottom="1rem">
-                            Tab Icon:
-                        </MetLabel>
-                    </Grid>
-                    <Grid item md={10} xs={12}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <Select
-                                name="content-tab-icon"
-                                id="content-tab-icon"
-                                data-testid="content-tab/icon"
-                                variant="outlined"
-                                value={tabIcon}
-                                defaultValue="Select an tab icon"
-                                fullWidth
-                                sx={{ width: '100%' }}
-                                onChange={(e) => setTabIcon(e.target.value)}
-                                size="small"
-                            >
-                                <MenuItem value="">None</MenuItem>
-                                <MenuItem value="faRectangleList">Rectangle-list</MenuItem>
-                                <MenuItem value="faFileLines">File-lines</MenuItem>
-                            </Select>
                         </Stack>
                     </Grid>
                 </Grid>

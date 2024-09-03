@@ -3,23 +3,18 @@ import { Tab, Skeleton, Box } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Await, useLoaderData } from 'react-router-dom';
 import { EngagementContent } from 'models/engagementContent';
-import { EngagementSummaryContent } from 'models/engagementSummaryContent';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
+import { EngagementLoaderData } from './EngagementLoader';
 
 export const EngagementContentTabs = () => {
-    const { content, contentSummary } = useLoaderData() as {
-        content: Promise<EngagementContent>;
-        contentSummary: Promise<EngagementSummaryContent[]>;
-    };
+    const { content } = useLoaderData() as EngagementLoaderData;
     const [selectedTab, setSelectedTab] = useState('0');
     const handleChange = (event: SyntheticEvent<Element, Event>, newValue: string) => {
         setSelectedTab(newValue);
     };
-
-    const panelContents = Promise.all([content, contentSummary]);
 
     const tabListRef = useCallback((node: HTMLButtonElement) => {
         if (!node) return;
@@ -137,25 +132,22 @@ export const EngagementContentTabs = () => {
                         </Suspense>
                     </Box>
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '174px' }} />}>
-                        <Await resolve={panelContents}>
-                            {([content, contentSummary]: [
-                                content: EngagementContent[],
-                                contentSummary: EngagementSummaryContent[],
-                            ]) => {
-                                return contentSummary.map((summary, index) => (
-                                    <TabPanel key={summary.id} value={index.toString()} sx={{ padding: '24px 0px' }}>
+                        <Await resolve={content}>
+                            {(resolvedContent: EngagementContent[]) =>
+                                resolvedContent.map((content, index) => (
+                                    <TabPanel key={content.id} value={index.toString()} sx={{ padding: '24px 0px' }}>
                                         <Header2 decorated weight="thin">
-                                            {content[index].title}
+                                            {content.title}
                                         </Header2>
                                         <RichTextArea
-                                            key={summary.id}
-                                            editorState={getEditorStateFromRaw(summary.rich_content)}
+                                            key={content.id}
+                                            editorState={getEditorStateFromRaw(content.json_content)}
                                             readOnly={true}
                                             toolbarHidden
                                         />
                                     </TabPanel>
-                                ));
-                            }}
+                                ))
+                            }
                         </Await>
                     </Suspense>
                 </TabContext>

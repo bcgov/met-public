@@ -5,16 +5,16 @@ import { ActionContext } from './ActionContext';
 import { Skeleton } from '@mui/material';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
-export const EngagementContent = () => {
-    const { richContent, isEngagementLoading } = useContext(ActionContext);
+export const EngagementContent = ({ index = 0 }: { index?: number }) => {
+    const { content, isEngagementLoading } = useContext(ActionContext);
 
-    if (isEngagementLoading) {
+    if (isEngagementLoading || !content.length) {
         return <Skeleton variant="rectangular" width="100%" height="30em" />;
     }
 
     return (
         <MetPaper elevation={1} sx={{ padding: '2em', pt: '0px', minHeight: '30em' }}>
-            <Editor editorState={getEditorStateFromRaw(richContent)} readOnly={true} toolbarHidden />
+            <Editor editorState={getEditorStateFromRaw(content[index].json_content)} readOnly={true} toolbarHidden />
         </MetPaper>
     );
 };

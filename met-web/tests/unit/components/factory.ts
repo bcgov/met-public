@@ -290,11 +290,11 @@ const engagementSlugData = {
 const engagementContentData: EngagementContent = {
     id: 1,
     title: '',
-    icon_name: '',
-    content_type: '',
     engagement_id: 1,
     sort_index: 1,
     is_internal: true,
+    text_content: 'test',
+    json_content: '',
 };
 
 const staffUserState: Partial<UserState> = {
