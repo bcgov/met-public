@@ -1,44 +1,28 @@
-import React, { Suspense, useState, useMemo } from 'react';
-import { Await, useAsyncValue, useParams } from 'react-router-dom';
+import React from 'react';
 import { AppBar, Theme, ThemeProvider, Box, useMediaQuery, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { Palette, colors, DarkTheme, BaseTheme } from 'styles/Theme';
 import { When, Unless } from 'react-if';
 import { BodyText } from 'components/common/Typography';
 import { elevations } from 'components/common';
 import { Button } from 'components/common/Input';
-import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';
-import { useAppSelector } from 'hooks';
-import { getAuthoringRoutes } from './AuthoringNavElements';
-import { getTenantLanguages } from 'services/languageService';
-import { Language } from 'models/language';
 import { StatusCircle } from '../../view/AuthoringTab';
 import pagePreview from 'assets/images/pagePreview.png';
 import { AuthoringBottomNavProps, LanguageSelectorProps } from './types';
+import { getLanguageValue } from './AuthoringTemplate';
 
-const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
-    const { isDirty, isValid, isSubmitting } = props;
+const AuthoringBottomNav = ({
+    isDirty,
+    isValid,
+    isSubmitting,
+    currentLanguage,
+    setCurrentLanguage,
+    languages,
+    pageTitle,
+}: AuthoringBottomNavProps) => {
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
-
-    const tenant = useAppSelector((state) => state.tenant);
-    const { engagementId } = useParams() as { engagementId: string };
-    const location = window.location.href;
-    const locationArray = location.split('/');
-    const slug = locationArray[locationArray.length - 1];
-
-    const languages = useMemo(() => getTenantLanguages(tenant.id), [tenant.id]); // todo: Using tenant language list until language data is integrated with the engagement.
-    const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
-
-    const getPageValue = () => {
-        const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant);
-        return authoringRoutes.find((route) => route.path.includes(slug))?.name;
-    };
-
-    const getLanguageValue = (currentLanguage: string, languages: Language[]) => {
-        return languages.find((language) => language.code === currentLanguage)?.name;
-    };
 
     const buttonStyles = {
         height: '2.6rem',
@@ -80,24 +64,18 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                 <ThemeProvider theme={DarkTheme}>
                     <Box
                         sx={{
-                            width: '18.75rem',
-                            minWidth: '18.75rem',
+                            width: '18.8rem',
+                            minWidth: '18.8rem',
                             marginBottom: isMediumScreenOrLarger ? '0' : '1rem',
                         }}
                     >
                         <BodyText sx={{ fontWeight: 'bold' }}>Currently Authoring</BodyText>
                         <BodyText sx={{ fontSize: '0.7rem', alignItems: 'center', marginTop: '-5px', display: 'flex' }}>
-                            <span>{getPageValue()}</span>
+                            <span>{pageTitle}</span>
                             <span style={{ fontSize: '0.4rem', paddingLeft: '0.4rem', paddingRight: '0.4rem' }}>
                                 {'\u2B24'}
                             </span>
-                            <Suspense>
-                                <Await resolve={languages}>
-                                    {(languages: Language[]) => (
-                                        <span>{getLanguageValue(currentLanguage, languages)}</span>
-                                    )}
-                                </Await>
-                            </Suspense>
+                            {getLanguageValue(currentLanguage, languages)}
                         </BodyText>
                     </Box>
                     <Box
@@ -108,14 +86,13 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                         }}
                     >
                         <ThemeProvider theme={BaseTheme}>
-                            <Suspense>
-                                <Await resolve={languages}>
-                                    <LanguageSelector
-                                        currentLanguage={currentLanguage}
-                                        setCurrentLanguage={setCurrentLanguage}
-                                    />
-                                </Await>
-                            </Suspense>
+                            <LanguageSelector
+                                currentLanguage={currentLanguage}
+                                setCurrentLanguage={setCurrentLanguage}
+                                languages={languages}
+                                isDirty={isDirty}
+                                isSubmitting={isSubmitting}
+                            />
                         </ThemeProvider>
 
                         <Button
@@ -128,11 +105,10 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                                 margin: '0 1.2rem',
                             }}
                         >
-                            <Link sx={{ color: colors.surface.gray[60] }} href="#">
-                                Save Section
-                            </Link>
+                            Save Section
                         </Button>
                         <Button
+                            disabled={!isValid || !isDirty || isSubmitting}
                             type="submit"
                             name="request_type"
                             value="preview"
@@ -141,7 +117,14 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
                                 marginLeft: 'auto',
                             }}
                         >
-                            <img style={{ paddingRight: '0.3rem' }} src={pagePreview} alt="page preview icon" />
+                            <img
+                                style={{
+                                    paddingRight: '0.3rem',
+                                    filter: !isValid || !isDirty || isSubmitting ? 'opacity(40%)' : 'opacity(100%)',
+                                }}
+                                src={pagePreview}
+                                alt="page preview icon"
+                            />
                             Preview
                         </Button>
                     </Box>
@@ -152,10 +135,24 @@ const AuthoringBottomNav = (props: AuthoringBottomNavProps) => {
     );
 };
 
-const LanguageSelector = ({ currentLanguage, setCurrentLanguage }: LanguageSelectorProps) => {
-    const languages = useAsyncValue() as Language[];
+const LanguageSelector = ({
+    currentLanguage,
+    setCurrentLanguage,
+    languages,
+    isDirty,
+    isSubmitting,
+}: LanguageSelectorProps) => {
     const handleSelectChange = (event: SelectChangeEvent<string>) => {
         const newLanguageCode = event.target.value;
+        if (isDirty && !isSubmitting)
+            // todo: Replace this message with our stylized modal message.
+            window.confirm(
+                `Are you sure you want to switch to ${
+                    getLanguageValue(newLanguageCode, languages) || 'another language'
+                }? You have unsaved changes for the ${
+                    getLanguageValue(currentLanguage, languages) || 'current'
+                } language.`,
+            );
         setCurrentLanguage(newLanguageCode);
     };
     return (

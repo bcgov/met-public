@@ -43,8 +43,8 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
     const permissions = useAppSelector((state) => state.user.roles);
     const tenant = useAppSelector((state) => state.tenant);
 
-    const currentBaseRoute = getRoutes(Number(engagementId), tenant)
-        .map((route) => route.base)
+    const currentRoutePath = getRoutes(Number(engagementId), tenant)
+        .map((route) => route.path)
         .filter((route) => location.pathname.includes(route))
         .reduce((prev, curr) => (prev.length > curr.length ? prev : curr));
 
@@ -116,7 +116,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                             {route.name}
                         </span>
                         <StatusCircle required={route.required || false} />
-                        <When condition={currentBaseRoute === route.base}>
+                        <When condition={currentRoutePath === route.path}>
                             <span
                                 style={{
                                     position: 'absolute',
@@ -175,7 +175,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                         0 !== index &&
                         renderListItem(
                             route,
-                            currentBaseRoute === route.base ? 'selected' : 'other',
+                            currentRoutePath === route.path ? 'selected' : 'other',
                             index,
                             Number(engagementId),
                         ),

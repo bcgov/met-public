@@ -12,10 +12,10 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     const errors = [];
     const requestType = formData.get('request_type') as string;
     const engagement = await patchEngagement({
-        id: formData.get('id') as unknown as number,
+        id: Number(formData.get('id')) as unknown as number,
         name: (formData.get('name') as string) || undefined,
         start_date: (formData.get('start_date') as string) || undefined,
-        status_id: (formData.get('status_id') as unknown as number) || undefined,
+        status_id: (Number(formData.get('status_id')) as unknown as number) || undefined,
         end_date: (formData.get('end_date') as string) || undefined,
         description: (formData.get('description') as string) || undefined,
         rich_description: (formData.get('rich_description') as string) || undefined,
@@ -24,20 +24,22 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     });
 
     // Update engagement content.
-    try {
-        await patchEngagementContent(engagement.id, formData.get('content_id') as unknown as number, {
-            title: formData.get('title') as string,
-            icon_name: formData.get('icon_name') as string,
-        });
-    } catch (e) {
-        console.error('Error updating engagement', e);
-        errors.push(e);
+    if ((formData.get('title') || formData.get('icon_name')) && '0' !== formData.get('content_id')) {
+        try {
+            await patchEngagementContent(engagement.id, Number(formData.get('content_id')) as unknown as number, {
+                title: formData.get('title') as string,
+                icon_name: formData.get('icon_name') as string,
+            });
+        } catch (e) {
+            console.error('Error updating engagement', e);
+            errors.push(e);
+        }
     }
 
     // Update engagement summary if necessary.
     if (formData.get('content_id') && engagement.content && engagement.rich_content) {
         try {
-            await patchSummaryContent(formData.get('content_id') as unknown as number, {
+            await patchSummaryContent(Number(formData.get('content_id')) as unknown as number, {
                 content: engagement.content,
                 rich_content: engagement.rich_content,
             });
@@ -52,7 +54,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         try {
             await patchEngagementMetadata({
                 value: formData.get('metadata_value') as string,
-                taxon_id: formData.get('taxon_id') as unknown as number,
+                taxon_id: Number(formData.get('taxon_id')) as unknown as number,
                 engagement_id: engagement.id,
             });
         } catch (e) {
@@ -66,7 +68,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         try {
             await patchEngagementSettings({
                 engagement_id: engagement.id,
-                send_report: formData.get('send_report') as unknown as boolean,
+                send_report: 'true' === formData.get('send_report') ? true : false,
             });
         } catch (e) {
             console.error('Error updating engagement settings', e);

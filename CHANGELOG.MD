@@ -1,3 +1,7 @@
+## September 3, 2024
+- **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
+  - Added skeletons
+
 ## August 23, 2024
 - **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
   - Implemented authoring side nav

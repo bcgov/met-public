@@ -45,6 +45,13 @@ import { AuthoringTab } from 'components/engagement/admin/view/AuthoringTab';
 import AuthoringBanner from 'components/engagement/admin/create/authoring/AuthoringBanner';
 import { engagementAuthoringUpdateAction } from 'components/engagement/admin/create/authoring/engagementAuthoringUpdateAction';
 import { AuthoringContext } from 'components/engagement/admin/create/authoring/AuthoringContext';
+import AuthoringTemplate from 'components/engagement/admin/create/authoring/AuthoringTemplate';
+import AuthoringSummary from 'components/engagement/admin/create/authoring/AuthoringSummary';
+import AuthoringDetails from 'components/engagement/admin/create/authoring/AuthoringDetails';
+import AuthoringFeedback from 'components/engagement/admin/create/authoring/AuthoringFeedback';
+import AuthoringResults from 'components/engagement/admin/create/authoring/AuthoringResults';
+import AuthoringSubscribe from 'components/engagement/admin/create/authoring/AuthoringSubscribe';
+import AuthoringMore from 'components/engagement/admin/create/authoring/AuthoringMore';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -116,15 +123,84 @@ const AuthenticatedRoutes = () => {
                             <Route path="config" element={<ConfigTab />} />
                             <Route path="authoring" element={<AuthoringTab />}></Route>
                         </Route>
-                        <Route path="authoring" element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                            <Route element={<AuthoringContext />} action={engagementAuthoringUpdateAction}>
-                                <Route path="banner" element={<AuthoringBanner />} />
-                                {/* <Route path="summary" element={<AuthoringSummary />} />
-									<Route path="details" element={<AuthoringDetails />} />
-									<Route path="feedback" element={<AuthoringFeedback />} />
-									<Route path="results" element={<AuthoringResults />} />
-									<Route path="subscribe" element={<AuthoringSubscribe />} />
-									<Route path="more" element={<AuthoringMore />} /> */}
+                        <Route
+                            path="authoring"
+                            handle={{ crumb: () => ({ name: 'Authoring' }) }}
+                            element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
+                        >
+                            <Route element={<AuthoringContext />}>
+                                <Route element={<AuthoringTemplate />} action={engagementAuthoringUpdateAction}>
+                                    <Route
+                                        path="banner"
+                                        element={<AuthoringBanner />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `banner`,
+                                                name: 'Hero Banner',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="summary"
+                                        element={<AuthoringSummary />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `summary`,
+                                                name: 'Summary',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="details"
+                                        element={<AuthoringDetails />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `details`,
+                                                name: 'Details',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="feedback"
+                                        element={<AuthoringFeedback />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `feedback`,
+                                                name: 'Provide Feedback',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="results"
+                                        element={<AuthoringResults />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `results`,
+                                                name: 'View Results',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="subscribe"
+                                        element={<AuthoringSubscribe />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `subscribe`,
+                                                name: 'Subscribe',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="more"
+                                        element={<AuthoringMore />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `more`,
+                                                name: 'More Engagements',
+                                            }),
+                                        }}
+                                    />
+                                </Route>
                             </Route>
                         </Route>
                         <Route path="*" element={<NotFound />} />
