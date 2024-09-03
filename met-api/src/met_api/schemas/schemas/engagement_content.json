@@ -8,27 +8,18 @@
     "examples": [
       {
         "title": "Summary",
-        "icon_name": "SummarizeIcon",
-        "content_type": "Summary",
         "sort_index": 1,
         "is_internal": "False",
         "engagement_id": 1
       }
     ],
-    "required": ["title", "content_type", "engagement_id"],
+    "required": ["title", "engagement_id"],
     "properties": {
       "title": {
         "$id": "#/properties/title",
         "type": "string",
         "title": "Summary",
         "description": "The title of this content.",
-        "examples": [1]
-      },
-      "content_type": {
-        "$id": "#/properties/content_type",
-        "type": "string",
-        "title": "Summary",
-        "description": "The content type enum.",
         "examples": [1]
       },
       "engagement_id": {

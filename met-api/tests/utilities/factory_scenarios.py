@@ -24,12 +24,11 @@ from faker import Faker
 from met_api.config import get_named_config
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status as EngagementStatus
-from met_api.constants.engagement_content_type import EngagementContentType
 from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.timeline_event_status import TimelineEventStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
-from met_api.utils.enums import ContentTitle, LoginSource, UserStatus
+from met_api.utils.enums import LoginSource, UserStatus
 
 
 fake = Faker()
@@ -880,16 +879,20 @@ class TestEngagementContentInfo(dict, Enum):
     """Test scenarios of engagement content."""
 
     content1 = {
-        'title': ContentTitle.DEFAULT.value,
-        'icon_name': ContentTitle.DEFAULT_ICON.value,
-        'content_type': EngagementContentType.Summary.name,
+        'title': 'Summary',
         'is_internal': False,
+        'text_content': fake.text(max_nb_chars=20),
+        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+            "type":"unstyled","depth":0,\
+            "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
     content2 = {
         'title': 'Custom',
-        'icon_name': ContentTitle.DEFAULT_ICON.value,
-        'content_type': EngagementContentType.Custom.name,
         'is_internal': False,
+        'text_content': fake.text(max_nb_chars=20),
+        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+            "type":"unstyled","depth":0,\
+            "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
 
 

@@ -36,7 +36,7 @@ API = Namespace('engagement_content', description='Endpoints for Engagement Cont
 @cors_preflight('GET, POST, OPTIONS')
 @API.route('')
 class EngagementContent(Resource):
-    """Resource for managing a engagement content."""
+    """Resource for managing an engagement's contents."""
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -113,9 +113,8 @@ class EngagementContentEdit(Resource):
         try:
             user_id = TokenInfo.get_id()
             engagement_content_data = request.get_json()
-            valid_format, errors = schema_utils.validate(engagement_content_data, 'engagement_content_update')
-            if not valid_format:
-                return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
+            if not engagement_content_data or not engagement_content_data.get('title'):
+                return 'No content provided', HTTPStatus.BAD_REQUEST
 
             updated_engagement_content = EngagementContentService().update_engagement_content(engagement_id,
                                                                                               engagement_content_id,

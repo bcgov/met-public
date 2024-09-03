@@ -1,6 +1,6 @@
 # "build-stage", based on Node.js, to build and compile the frontend
 # pull official base image
-FROM node:16-alpine as build-stage
+FROM node:20-alpine as build-stage
 
 # set working directory
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY .npmrc ./
 
-RUN npm install --legacy-peer-deps --silent
+RUN apk --no-cache add g++ make py3-pip && npm install --legacy-peer-deps --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
 # create and set user permissions to app folder

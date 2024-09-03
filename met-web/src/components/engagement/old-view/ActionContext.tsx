@@ -9,7 +9,8 @@ import { SubmissionStatus } from 'constants/engagementStatus';
 import { verifyEmailVerification } from 'services/emailVerificationService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
-import { EngagementSummaryContent } from 'models/engagementSummaryContent';
+import { EngagementLoaderData } from '../public/view';
+import { EngagementContent } from 'models/engagementContent';
 
 interface EngagementSchedule {
     id: number;
@@ -31,8 +32,7 @@ export interface EngagementViewContext {
     engagementWidgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
-    content: string;
-    richContent: string;
+    content: EngagementContent[];
 }
 
 export type EngagementParams = {
@@ -56,8 +56,7 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
-    content: '',
-    richContent: '',
+    content: [],
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -73,14 +72,13 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [engagementWidgets, setEngagementWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [content, setContent] = useState('');
-    const [richContent, setRichContent] = useState('');
+    const [content, setContent] = useState<EngagementContent[]>([]);
 
-    const { engagement } = useRouteLoaderData('single-engagement') as { engagement: Promise<Engagement> };
-    const { contentSummary } = useRouteLoaderData('single-engagement') as {
-        contentSummary: Promise<EngagementSummaryContent[]>;
-    };
-    const { widgets } = useRouteLoaderData('single-engagement') as { widgets: Promise<Widget[]> };
+    const {
+        engagement,
+        widgets,
+        content: contentPromise,
+    } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -99,27 +97,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
 
     // Load the widgets from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
-        if (!engagementId && slug) {
-            return;
-        }
         widgets.then((result) => {
             setEngagementWidgets(result);
             setIsWidgetsLoading(false);
         });
-    }, [widgets]);
-
-    // Load the engagement's summary from the shared individual engagement loader and watch the summary variable for any changes.
-    useEffect(() => {
-        contentSummary.then((result: EngagementSummaryContent[]) => {
-            if ((!engagementId && slug) || !result.length) {
-                return;
-            }
-            const selectedEngagement = result[0];
-            setContent(selectedEngagement.content);
-            setRichContent(selectedEngagement.rich_content);
-            setEngagementLoading(false);
-        });
-    }, [contentSummary]);
+    }, [widgets, engagementId]);
 
     useEffect(() => {
         verifySubscribeToken();
@@ -128,6 +110,12 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     useEffect(() => {
         setMockStatus(savedEngagement.submission_status);
     }, [savedEngagement]);
+
+    useEffect(() => {
+        contentPromise.then((result) => {
+            setContent(result);
+        });
+    }, [contentPromise]);
 
     const verifySubscribeToken = async () => {
         try {
@@ -217,7 +205,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 mockStatus,
                 unpublishEngagement,
                 content,
-                richContent,
             }}
         >
             {children}

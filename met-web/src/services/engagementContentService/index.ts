@@ -17,11 +17,11 @@ export const getEngagementContent = async (engagementId: number): Promise<Engage
 
 interface PostEngagementContent {
     title?: string;
-    icon_name?: string;
-    content_type?: string;
     sort_index?: number;
     is_internal?: boolean;
     engagement_id?: number;
+    text_content?: string;
+    json_content?: string;
 }
 export const postEngagementContent = async (
     engagement_id: number,
@@ -41,7 +41,8 @@ export const postEngagementContent = async (
 
 export interface PatchEngagementContentRequest {
     title?: string;
-    icon_name?: string;
+    text_content?: string;
+    json_content?: string;
 }
 export const patchEngagementContent = async (
     engagementId: number,
