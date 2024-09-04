@@ -122,6 +122,7 @@ const AuthenticatedRoutes = () => {
                         <Route element={<AdminEngagementView />}>
                             <Route path="config" element={<ConfigTab />} />
                             <Route path="authoring" element={<AuthoringTab />}></Route>
+                            <Route path="*" element={<NotFound />} />
                         </Route>
                         <Route
                             path="authoring"

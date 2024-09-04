@@ -4,8 +4,8 @@ import { useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors, Palette } from 'styles/Theme';
-import { EyebrowText } from 'components/common/Typography';
-import { MetLabel, MetHeader3 } from 'components/common';
+import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { Button } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { EditorState } from 'draft-js';
@@ -23,11 +23,18 @@ const AuthoringBanner = () => {
     const [currentWidget, setCurrentWidget] = useState('');
 
     //Define the styles
+    const metBigLabelStyles = {
+        fontSize: '1.05rem',
+        marginBottom: '0.7rem',
+        lineHeight: 1.167,
+        color: '#292929',
+        fontWeight: '700',
+    };
     const metHeader3Styles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
     };
-    const eyebrowTextStyles = {
+    const formDescriptionTextStyles = {
         fontSize: '0.9rem',
         marginBottom: '1.5rem',
     };
@@ -91,13 +98,13 @@ const AuthoringBanner = () => {
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="section_heading">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Section Heading
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
                         id="section_heading"
@@ -108,15 +115,15 @@ const AuthoringBanner = () => {
                 </label>
             </Grid>
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
+            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="body_copy">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <RichTextArea
                         spellCheck
                         editorState={editorState}
@@ -135,9 +142,9 @@ const AuthoringBanner = () => {
 
             <Grid sx={{ mt: '1rem' }} item>
                 <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     You may use a widget to add supporting content to your primary content.
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid item>

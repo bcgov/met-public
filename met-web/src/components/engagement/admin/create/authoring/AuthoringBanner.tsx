@@ -4,8 +4,8 @@ import { useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { EyebrowText } from 'components/common/Typography';
-import { MetLabel, MetHeader3 } from 'components/common';
+import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import ImageUpload from 'components/imageUpload';
 
 const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
@@ -23,11 +23,18 @@ const AuthoringBanner = () => {
     const [viewResultsSectionSelectEnabled, setViewResultsSectionSelectEnabled] = useState(true);
 
     //Define the styles
+    const metBigLabelStyles = {
+        fontSize: '1.05rem',
+        marginBottom: '0.7rem',
+        lineHeight: 1.167,
+        color: '#292929',
+        fontWeight: '700',
+    };
     const metHeader3Styles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
     };
-    const eyebrowTextStyles = {
+    const formDescriptionTextStyles = {
         fontSize: '0.9rem',
         marginBottom: '1.5rem',
     };
@@ -77,13 +84,13 @@ const AuthoringBanner = () => {
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="name">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Engagement Title <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         This is the title that will display for your engagement and should be descriptive, short and
                         succinct.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Title</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -97,14 +104,14 @@ const AuthoringBanner = () => {
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="eyebrow">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Eyebrow Text <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         If your audience will need additional context to interpret the topic of your engagement or, it
                         is important for them to understand who, within BC Gov, is requesting feedback, you may wish to
                         add two to five words of eyebrow text.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Eyebrow</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -117,13 +124,13 @@ const AuthoringBanner = () => {
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <MetHeader3 style={metHeader3Styles}>
+                <MetBigLabel style={metBigLabelStyles}>
                     Hero Image <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                </MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                </MetBigLabel>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     Please ensure you use high quality images that help to communicate the topic of your engagement. You
                     must ensure that any important subject matter is positioned on the right side.
-                </EyebrowText>
+                </FormDescriptionText>
                 <ImageUpload
                     margin={4}
                     data-testid="engagement-form/image-upload"
@@ -137,21 +144,21 @@ const AuthoringBanner = () => {
 
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Engagement State Content Variants</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     The content in this section of your engagement may be changed based on the state or status of your
                     engagement. Select the Section Preview or Page Preview button to see each of these states.
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="message_text">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         "Upcoming" State Message Text <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         If you are going to publish your engagement before it is “Open”, you may add message text to
                         your hero banner advising your engagement audience to come back later to provide feedback.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Message Text</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -165,14 +172,14 @@ const AuthoringBanner = () => {
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="cta_button_text">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         "Open" State Primary CTA <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         When your engagement is open the Primary CTA (button) in your engagement's hero banner should
                         link to the most important action you want your engagement audience to take. Enter text for the
                         Primary CTA (button) below and then indicate where you would like it to link to.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Primary CTA (Button) Text</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -223,14 +230,14 @@ const AuthoringBanner = () => {
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="message_text">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         "Closed" (Results Pending) State Message Text{' '}
                         <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         When your engagement is closed, you may wish to add message text to your hero banner advising
                         your engagement audience to come back later to view the results of your engagement.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Message Text</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -242,16 +249,16 @@ const AuthoringBanner = () => {
                 </label>
             </Grid>
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="cta_button_text">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         "View Results" State Primary CTA <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         If you will be publishing the results of your engagement, you can use the primary CTA in your
                         hero banner do direct your engagement audience to those results. You may link to results
                         published within this engagement, or enter a URL to an external web page.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Button (Primary CTA) Text</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}

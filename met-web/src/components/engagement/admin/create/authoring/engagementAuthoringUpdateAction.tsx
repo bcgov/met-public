@@ -1,7 +1,6 @@
 import { ActionFunction, redirect } from 'react-router-dom';
 import { patchEngagement } from 'services/engagementService';
 import { patchEngagementContent } from 'services/engagementContentService';
-import { patchSummaryContent } from 'services/engagementSummaryService';
 import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
@@ -24,27 +23,18 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     });
 
     // Update engagement content.
-    if ((formData.get('title') || formData.get('icon_name')) && '0' !== formData.get('content_id')) {
+    if (
+        (formData.get('title') || formData.get('text_content' || formData.get('json_content'))) &&
+        '0' !== formData.get('content_id')
+    ) {
         try {
             await patchEngagementContent(engagement.id, Number(formData.get('content_id')) as unknown as number, {
-                title: formData.get('title') as string,
-                icon_name: formData.get('icon_name') as string,
+                title: (formData.get('title') as string) || undefined,
+                text_content: (formData.get('text_content') as string) || undefined,
+                json_content: (formData.get('json_content') as string) || undefined,
             });
         } catch (e) {
             console.error('Error updating engagement', e);
-            errors.push(e);
-        }
-    }
-
-    // Update engagement summary if necessary.
-    if (formData.get('content_id') && engagement.content && engagement.rich_content) {
-        try {
-            await patchSummaryContent(Number(formData.get('content_id')) as unknown as number, {
-                content: engagement.content,
-                rich_content: engagement.rich_content,
-            });
-        } catch (e) {
-            console.error('Error updating engagement summary', e);
             errors.push(e);
         }
     }

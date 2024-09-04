@@ -69,7 +69,7 @@ const AuthoringBottomNav = ({
                             marginBottom: isMediumScreenOrLarger ? '0' : '1rem',
                         }}
                     >
-                        <BodyText sx={{ fontWeight: 'bold' }}>Currently Authoring</BodyText>
+                        <BodyText bold>Currently Authoring</BodyText>
                         <BodyText sx={{ fontSize: '0.7rem', alignItems: 'center', marginTop: '-5px', display: 'flex' }}>
                             <span>{pageTitle}</span>
                             <span style={{ fontSize: '0.4rem', paddingLeft: '0.4rem', paddingRight: '0.4rem' }}>
@@ -123,7 +123,8 @@ const AuthoringBottomNav = ({
                                     filter: !isValid || !isDirty || isSubmitting ? 'opacity(40%)' : 'opacity(100%)',
                                 }}
                                 src={pagePreview}
-                                alt="page preview icon"
+                                alt=""
+                                aria-hidden="true"
                             />
                             Preview
                         </Button>

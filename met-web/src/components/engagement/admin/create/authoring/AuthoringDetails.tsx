@@ -1,6 +1,6 @@
 import { Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tab, Tabs } from '@mui/material';
-import { colors, MetHeader3, MetLabel } from 'components/common';
-import { EyebrowText } from 'components/common/Typography';
+import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { colors, MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { Button, TextField } from 'components/common/Input';
 import React, { SyntheticEvent, useState } from 'react';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
@@ -232,11 +232,18 @@ const DetailsTab = ({
     defaultTabValues,
 }: DetailsTabProps) => {
     // Define the styles
+    const metBigLabelStyles = {
+        fontSize: '1.05rem',
+        marginBottom: '0.7rem',
+        lineHeight: 1.167,
+        color: '#292929',
+        fontWeight: '700',
+    };
     const metHeader3Styles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
     };
-    const eyebrowTextStyles = {
+    const formDescriptionTextStyles = {
         fontSize: '0.9rem',
         marginBottom: '1.5rem',
     };
@@ -332,21 +339,21 @@ const DetailsTab = ({
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Primary Content (Required)</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     Primary content will display on the left two thirds of the page on large screens and full width on
                     small screens. (If you add optional supporting content in the section below, on small screens, your
                     primary content will display first (on top) followed by your supporting content (underneath).
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="section_heading">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Section Heading <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
                         value={1 < tabs.length ? tabs[tabIndex].heading : singleContentValues.heading}
@@ -361,16 +368,16 @@ const DetailsTab = ({
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="description">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         If the content you add for this tab is quite long, a “read more” expander will be added to your
                         content at approximately xx (large screens) and xx (small screens). In this case, you will want
                         to ensure that the most important body copy is first so that your audience will see it even if
                         they do not interact with the Read More expander.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <RichTextArea
                         spellCheck
                         editorState={tabs[tabIndex].bodyCopyEditorState}
@@ -389,11 +396,11 @@ const DetailsTab = ({
 
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     You may use a widget to add supporting content to your primary content. On large screens this
                     content will be displayed to the right of your primary content. On small screens this content will
                     be displayed below your primary content.
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid item>

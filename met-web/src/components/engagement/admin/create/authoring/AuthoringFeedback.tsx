@@ -1,8 +1,8 @@
 import { Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { colors, MetHeader3, MetLabel } from 'components/common';
+import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { colors, MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { Button, TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EyebrowText } from 'components/common/Typography';
 import { EditorState } from 'draft-js';
 import React, { useState } from 'react';
 import { Palette } from 'styles/Theme';
@@ -17,11 +17,18 @@ const AuthoringFeedback = () => {
     const [currentWidget, setCurrentWidget] = useState('');
 
     // Define the styles
+    const metBigLabelStyles = {
+        fontSize: '1.05rem',
+        marginBottom: '0.7rem',
+        lineHeight: 1.167,
+        color: '#292929',
+        fontWeight: '700',
+    };
     const metHeader3Styles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
     };
-    const eyebrowTextStyles = {
+    const formDescriptionTextStyles = {
         fontSize: '0.9rem',
         marginBottom: '1.5rem',
     };
@@ -91,20 +98,20 @@ const AuthoringFeedback = () => {
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Primary Content (Required)</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     This section of content should provide a brief overview of what your engagement is about and what
                     you would like your audience to do.
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="section_heading">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Section Heading <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
                         value={sectionHeading}
@@ -119,17 +126,17 @@ const AuthoringFeedback = () => {
                 </label>
             </Grid>
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
+            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="body_copy">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         You must either include links to your engagement feedback methods within this section’s body
                         copy using the link button in the WSIWYG editor below, or, Call to Action Buttons in the
                         following two fields.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <RichTextArea
                         spellCheck
                         editorState={editorState}
@@ -146,15 +153,15 @@ const AuthoringFeedback = () => {
                 </label>
             </Grid>
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="survey_button_text">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         Survey Call to Action Button <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         This is the button that will link to your engagement's Survey feedback method. You should use
                         short, action oriented text.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
                         value={surveyButtonText}
@@ -169,15 +176,15 @@ const AuthoringFeedback = () => {
                 </label>
             </Grid>
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
                 <label htmlFor="third_party_cta">
-                    <MetHeader3 style={metHeader3Styles}>
+                    <MetBigLabel style={metBigLabelStyles}>
                         3rd Party Call to Action Button <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetHeader3>
-                    <EyebrowText style={eyebrowTextStyles}>
+                    </MetBigLabel>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
                         This is the button that will link to your engagement's <strong>3rd Party</strong> feedback
                         method. You should use short, action oriented text.
-                    </EyebrowText>
+                    </FormDescriptionText>
                     <MetLabel style={metLabelStyles}>Primary CTA (Button) Text</MetLabel>
                     <TextField
                         sx={{ backgroundColor: colors.surface.white }}
@@ -207,11 +214,11 @@ const AuthoringFeedback = () => {
 
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <EyebrowText style={eyebrowTextStyles}>
+                <FormDescriptionText style={formDescriptionTextStyles}>
                     You may use a widget to add supporting content to your primary content. On large screens this
                     content will be displayed to the right of your primary content. On small screens this content will
                     be displayed below your primary content.
-                </EyebrowText>
+                </FormDescriptionText>
             </Grid>
 
             <Grid item>
