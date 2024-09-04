@@ -379,6 +379,10 @@ const DetailsTab = ({
                         they do not interact with the Read More expander.
                     </FormDescriptionText>
                     <RichTextArea
+                        ariaLabel="Body copy: If the content you add for this tab is quite long, a “read more” expander will be added to your
+                        content at approximately xx (large screens) and xx (small screens). In this case, you will want
+                        to ensure that the most important body copy is first so that your audience will see it even if
+                        they do not interact with the Read More expander."
                         spellCheck
                         editorState={tabs[tabIndex].bodyCopyEditorState}
                         onEditorStateChange={handleBodyTextChange}

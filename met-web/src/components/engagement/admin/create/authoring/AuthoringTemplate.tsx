@@ -129,10 +129,20 @@ const AuthoringTemplate = () => {
                         sx={{ flexWrap: 'nowrap', fontSize: '0.8rem', mb: '1rem', width: '100%' }}
                     >
                         <Grid item xs={6}>
-                            <FormControlLabel value="false" control={<Radio />} label="No Tabs" />
+                            <FormControlLabel
+                                aria-label="No Tabs: Select the no tabs option if you only want one content section."
+                                value="false"
+                                control={<Radio />}
+                                label="No Tabs"
+                            />
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControlLabel value="true" control={<Radio />} label="Tabs (2 Minimum)" />
+                            <FormControlLabel
+                                aria-label="Tabs (2 Minimum): Select the tabs option for lengthly content so you can break it into smaller chunks."
+                                value="true"
+                                control={<Radio />}
+                                label="Tabs (2 Minimum)"
+                            />
                         </Grid>
                     </RadioGroup>
                 </Grid>

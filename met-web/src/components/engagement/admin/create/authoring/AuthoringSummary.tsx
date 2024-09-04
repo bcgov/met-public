@@ -89,6 +89,7 @@ const AuthoringBanner = () => {
     };
 
     const handleEditorChange = (newEditorState: EditorState) => {
+        console.log(newEditorState);
         const plainText = newEditorState.getCurrentContent().getPlainText();
         setEditorState(newEditorState);
         setBodyText(plainText);
@@ -117,7 +118,7 @@ const AuthoringBanner = () => {
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
                 <label htmlFor="body_copy">
-                    <MetBigLabel style={metBigLabelStyles}>
+                    <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
                     </MetBigLabel>
@@ -125,6 +126,7 @@ const AuthoringBanner = () => {
                         Your section heading should be descriptive, short and succinct.
                     </FormDescriptionText>
                     <RichTextArea
+                        ariaLabel="Body Copy: Your section heading should be descriptive, short and succinct."
                         spellCheck
                         editorState={editorState}
                         onEditorStateChange={handleEditorChange}
