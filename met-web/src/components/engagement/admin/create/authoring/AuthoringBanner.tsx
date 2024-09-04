@@ -124,12 +124,14 @@ const AuthoringBanner = () => {
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <MetBigLabel style={{ ...metBigLabelStyles, marginBottom: '1rem' }}>
+                <MetBigLabel style={metBigLabelStyles}>
                     Hero Image <span style={{ fontWeight: 'normal' }}>(Required)</span>
                 </MetBigLabel>
+                <FormDescriptionText style={formDescriptionTextStyles}>
+                    Please ensure you use high quality images that help to communicate the topic of your engagement. You
+                    must ensure that any important subject matter is positioned on the right side.
+                </FormDescriptionText>
                 <ImageUpload
-                    helpText="Please select or drag-and-drop a high quality image that communicates the topic of your engagement. You
-                    must ensure that any important subject matter is positioned on the right side."
                     margin={4}
                     data-testid="engagement-form/image-upload"
                     handleAddFile={handleAddBannerImage}
