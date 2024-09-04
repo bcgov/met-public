@@ -131,7 +131,7 @@ const EngagementListing = () => {
             label: 'Engagement Name',
             allowSort: true,
             renderCell: (row: Engagement) => (
-                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/view`}>
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/details/config`}>
                     {row.name}
                 </MuiLink>
             ),

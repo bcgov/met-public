@@ -82,7 +82,7 @@ const ConfigForm = () => {
             }),
             {
                 method: 'patch',
-                action: `/engagements/${engagement.id}/config/`,
+                action: `/engagements/${engagement.id}/details/config/edit`,
             },
         );
     };
@@ -131,7 +131,7 @@ const ConfigForm = () => {
                     >
                         <Grid container direction="row" item xs={12}>
                             <Grid xs={12}>
-                                <Header2 sx={{ mb: 0 }}>We're just looking over your configuration.</Header2>
+                                <Header2 sx={{ mb: 0 }}>We're saving your configuration.</Header2>
                             </Grid>
                         </Grid>
                         <Grid container direction="row" item xs={12}>

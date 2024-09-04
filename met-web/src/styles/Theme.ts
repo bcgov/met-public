@@ -354,17 +354,6 @@ export const DarkTheme = createTheme({
                 },
             },
         },
-        MuiSelect: {
-            defaultProps: {
-                MenuProps: {
-                    sx: {
-                        '&:hover': {
-                            backgroundColor: DarkPalette.hover.light,
-                        },
-                    },
-                },
-            },
-        },
         MuiButton: {
             styleOverrides: {
                 root: {

@@ -58,7 +58,7 @@ export const engagementUpdateAction: ActionFunction = async ({ request, params }
         console.error('Error updating team members', e);
     }
 
-    return redirect(`/engagements/${engagementId}/view`);
+    return redirect(`/engagements/${engagementId}/details/config`);
 };
 
 export default engagementUpdateAction;

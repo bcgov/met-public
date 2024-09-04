@@ -1,3 +1,10 @@
+## September 3, 2024
+- **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
+  - Implemented authoring side nav
+  - Implemented authoring bottom nav
+  - Implemented authoring section context
+  - Added skeletons for the required sections
+
 ## August 28, 2024
 
 - **Bugfix** Fix keyboard focus being trapped on buttons on authoring page [🎟️ DESENG-687](https://citz-gdx.atlassian.net/browse/DESENG-687)

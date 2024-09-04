@@ -42,7 +42,7 @@ export const ImageUpload = ({
         >
             <Uploader height={height} accept={accept}>
                 <FontAwesomeIcon icon={faCloudUpload} size="2x" color={colors.surface.blue[90]} />
-                <BodyText bold size="small" sx={{ color: colors.surface.blue[90] }}>
+                <BodyText bold size="small" sx={{ color: colors.surface.blue[90], textAlign: 'center' }}>
                     {helpText}
                 </BodyText>
                 <BodyText size="small" sx={{ color: colors.surface.gray[80] }}>
