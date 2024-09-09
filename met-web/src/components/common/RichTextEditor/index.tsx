@@ -67,7 +67,6 @@ const RichTextEditor = ({
                         onEditorStateChange={handleChange}
                         handlePastedText={() => false}
                         editorStyle={{
-                            height: '10em',
                             padding: '1em',
                             resize: 'vertical',
                         }}

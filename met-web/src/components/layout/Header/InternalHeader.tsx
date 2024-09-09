@@ -23,15 +23,17 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useAsyncValue, useRouteLoaderData } from 'react-router-dom';
+import { Await, useAsyncValue, useRouteLoaderData, useParams } from 'react-router-dom';
 import { Tenant } from 'models/tenant';
-import { When, Unless } from 'react-if';
+import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
 import TrapFocus from '@mui/base/TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
+import AuthoringSideNav from '../../engagement/admin/create/authoring/AuthoringSideNav';
+import { getAuthoringRoutes } from '../../engagement/admin/create/authoring/AuthoringNavElements';
 
 const InternalHeader = () => {
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
@@ -57,6 +59,19 @@ const InternalHeader = () => {
             setSecondaryMenuOpen(false);
         }
     }, [isMediumScreenOrLarger, sideNavOpen]);
+
+    // Get the authoring nav elements and current route so we can check their last two slugs against the current route's last two slugs.
+    // This will be used to determine which sidenav menu is displayed.
+    const pathname = window.location.href;
+    const { engagementId } = useParams() as { engagementId: string };
+    const currentAuthoringSlug = pathname.split('/').slice(-2).join('/');
+    const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant).map((route) => {
+        // skip the "Engagement Home" link
+        if ('Engagement Home' !== route.name) {
+            const pathArray = route.path.split('/');
+            return pathArray.slice(-2).join('/');
+        }
+    });
 
     const { myTenants } = useRouteLoaderData('authenticated-root') as { myTenants: Tenant[] };
 
@@ -195,12 +210,27 @@ const InternalHeader = () => {
                     </Collapse>
                 </AppBar>
                 <When condition={canNavigate}>
-                    <SideNav
-                        open={sideNavOpen}
-                        setOpen={setSideNavOpen}
-                        data-testid="sidenav-header"
-                        isMediumScreen={isMediumScreenOrLarger}
-                    />
+                    <If condition={authoringRoutes.includes(currentAuthoringSlug)}>
+                        <Then>
+                            <>
+                                <AuthoringSideNav
+                                    open={sideNavOpen}
+                                    setOpen={setSideNavOpen}
+                                    data-testid="authoringnav-header"
+                                    isMediumScreen={isMediumScreenOrLarger}
+                                    engagementId={engagementId}
+                                />
+                            </>
+                        </Then>
+                        <Else>
+                            <SideNav
+                                open={sideNavOpen}
+                                setOpen={setSideNavOpen}
+                                data-testid="sidenav-header"
+                                isMediumScreen={isMediumScreenOrLarger}
+                            />
+                        </Else>
+                    </If>
                 </When>
             </Box>
         </TrapFocus>

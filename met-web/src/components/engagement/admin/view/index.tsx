@@ -1,27 +1,27 @@
-import React, { Suspense, useState } from 'react';
-import { useRouteLoaderData, Await } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { useRouteLoaderData, Await, useMatches, UIMatch, Outlet } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Tab } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { ConfigSummary } from './ConfigSummary';
-import { AuthoringTab } from './AuthoringTab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { EngagementLoaderData } from 'components/engagement/public/view';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 export const AdminEngagementView = () => {
     const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     const EngagementViewTabs = {
         config: 'Configuration',
-        author: 'Authoring',
+        authoring: 'Authoring',
         activity: 'Activity',
         results: 'Results',
         publish: 'Publishing',
     };
 
-    const [currentTab, setCurrentTab] = useState(EngagementViewTabs.config);
+    const matches = useMatches() as UIMatch[];
+    const currentTab = matches[matches.length - 1].pathname.split('/').pop() ?? '';
 
     return (
         <ResponsiveContainer>
@@ -50,7 +50,6 @@ export const AdminEngagementView = () => {
                 <TabList
                     component="nav"
                     variant="scrollable"
-                    onChange={(e, newValue) => setCurrentTab(newValue)}
                     aria-label="Admin Engagement View Tabs"
                     TabIndicatorProps={{ sx: { display: 'none' } }}
                     sx={{
@@ -63,9 +62,11 @@ export const AdminEngagementView = () => {
                     {Object.entries(EngagementViewTabs).map(([key, value]) => (
                         <Tab
                             key={key}
-                            value={value}
+                            value={key}
                             label={value}
                             disableFocusRipple
+                            LinkComponent={RouterLinkRenderer}
+                            href={`${key}`}
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -100,17 +101,12 @@ export const AdminEngagementView = () => {
                     ))}
                 </TabList>
                 <Suspense>
-                    <TabPanel value={EngagementViewTabs.config}>
+                    <TabPanel value={currentTab}>
                         <Await resolve={Promise.all([engagement, teamMembers, slug])}>
-                            <ConfigSummary />
+                            <Outlet />
                         </Await>
                     </TabPanel>
                 </Suspense>
-                <TabPanel value={EngagementViewTabs.author}>
-                    <Await resolve={engagement}>
-                        <AuthoringTab />
-                    </Await>
-                </TabPanel>
             </TabContext>
         </ResponsiveContainer>
     );

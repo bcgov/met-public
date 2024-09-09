@@ -79,7 +79,7 @@ export const FeedbackModal = () => {
     const isCommentNotProvided = comment_type !== CommentTypeEnum.None && !comment;
 
     const theme = useTheme();
-    const bottomSpacing = theme.spacing(40);
+    const bottomSpacing = theme.spacing(52);
     const rightSpacing = theme.spacing(0);
 
     return (

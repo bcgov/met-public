@@ -40,6 +40,18 @@ import EngagementCreationWizard from 'components/engagement/admin/config/wizard/
 import engagementCreateAction from 'components/engagement/admin/config/EngagementCreateAction';
 import EngagementConfigurationWizard from 'components/engagement/admin/config/wizard/ConfigWizard';
 import engagementUpdateAction from 'components/engagement/admin/config/EngagementUpdateAction';
+import { ConfigSummary as ConfigTab } from 'components/engagement/admin/view/ConfigSummary';
+import { AuthoringTab } from 'components/engagement/admin/view/AuthoringTab';
+import AuthoringBanner from 'components/engagement/admin/create/authoring/AuthoringBanner';
+import { engagementAuthoringUpdateAction } from 'components/engagement/admin/create/authoring/engagementAuthoringUpdateAction';
+import { AuthoringContext } from 'components/engagement/admin/create/authoring/AuthoringContext';
+import AuthoringTemplate from 'components/engagement/admin/create/authoring/AuthoringTemplate';
+import AuthoringSummary from 'components/engagement/admin/create/authoring/AuthoringSummary';
+import AuthoringDetails from 'components/engagement/admin/create/authoring/AuthoringDetails';
+import AuthoringFeedback from 'components/engagement/admin/create/authoring/AuthoringFeedback';
+import AuthoringResults from 'components/engagement/admin/create/authoring/AuthoringResults';
+import AuthoringSubscribe from 'components/engagement/admin/create/authoring/AuthoringSubscribe';
+import AuthoringMore from 'components/engagement/admin/create/authoring/AuthoringMore';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -92,29 +104,119 @@ const AuthenticatedRoutes = () => {
                         crumb: async (data: { engagement: Promise<Engagement> }) => {
                             return data.engagement.then((engagement) => {
                                 return {
-                                    link: `/engagements/${engagement.id}/view`,
+                                    link: `/engagements/${engagement.id}/old-view`,
                                     name: engagement.name,
                                 };
                             });
                         },
                     }}
                 >
-                    <Route index element={<Navigate to="view" />} />
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
                         <Route path="form" element={<EngagementForm />} />
+                    </Route>
+                    <Route path="old-view" element={<OldEngagementView />} />
+                    <Route index element={<Navigate to="details/config" />} />
+                    <Route path="details">
+                        <Route index element={<Navigate to="config" />} />
+                        {/* Wraps the tabs with the engagement title and TabContext */}
+                        <Route element={<AdminEngagementView />}>
+                            <Route path="config" element={<ConfigTab />} />
+                            <Route path="authoring" element={<AuthoringTab />}></Route>
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
                         <Route
-                            path="config"
+                            path="authoring"
+                            handle={{ crumb: () => ({ name: 'Authoring' }) }}
+                            element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
+                        >
+                            <Route element={<AuthoringContext />}>
+                                <Route element={<AuthoringTemplate />} action={engagementAuthoringUpdateAction}>
+                                    <Route
+                                        path="banner"
+                                        element={<AuthoringBanner />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `banner`,
+                                                name: 'Hero Banner',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="summary"
+                                        element={<AuthoringSummary />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `summary`,
+                                                name: 'Summary',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="details"
+                                        element={<AuthoringDetails />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `details`,
+                                                name: 'Details',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="feedback"
+                                        element={<AuthoringFeedback />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `feedback`,
+                                                name: 'Provide Feedback',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="results"
+                                        element={<AuthoringResults />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `results`,
+                                                name: 'View Results',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="subscribe"
+                                        element={<AuthoringSubscribe />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `subscribe`,
+                                                name: 'Subscribe',
+                                            }),
+                                        }}
+                                    />
+                                    <Route
+                                        path="more"
+                                        element={<AuthoringMore />}
+                                        handle={{
+                                            crumb: () => ({
+                                                link: `more`,
+                                                name: 'More Engagements',
+                                            }),
+                                        }}
+                                    />
+                                </Route>
+                            </Route>
+                        </Route>
+                        <Route path="*" element={<NotFound />} />
+                        <Route
+                            path="config/edit"
                             element={<EngagementConfigurationWizard />}
                             action={engagementUpdateAction}
                             handle={{
-                                crumb: () => ({
-                                    name: 'Configure',
-                                }),
+                                crumb: () => ({ name: 'Configure' }),
                             }}
                         />
                     </Route>
-                    <Route path="old-view" element={<OldEngagementView />} />
-                    <Route path="view" element={<AdminEngagementView />} />
+                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                        <Route path="form" element={<EngagementForm />} />
+                    </Route>
                     <Route path="comments/:dashboardType" element={<EngagementComments />} />
                     <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
                 </Route>
