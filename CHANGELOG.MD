@@ -1,3 +1,11 @@
+## September 9, 2024
+
+- **Feature** Add image widget [🎟️ DESENG-689](https://citz-gdx.atlassian.net/browse/DESENG-689)
+  - Added a new "ImageWidget" widget type in the API
+  - Image widgets can have a title, optional description, uploaded image, and optional alt text
+  - Added image widget option to the engagement authoring wizard
+  - Added image widget display for the engagement view page
+
 ## August 28, 2024
 
 - **Bugfix** Fix keyboard focus being trapped on buttons on authoring page [🎟️ DESENG-687](https://citz-gdx.atlassian.net/browse/DESENG-687)

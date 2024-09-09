@@ -40,7 +40,12 @@ export const postMap = async (widget_id: number, data: PostMapRequest): Promise<
         }
         formdata.append('engagement_id', data.engagement_id.toString());
         formdata.append('marker_label', data.marker_label ? data.marker_label : '');
-        const response = await http.PostRequest<WidgetMap>(url, formdata);
+        const response = await http.PostRequest<WidgetMap>(
+            url,
+            formdata,
+            {},
+            { 'Content-type': 'multipart/form-data' },
+        );
         if (response.data) {
             return response.data;
         }
@@ -56,11 +61,12 @@ interface PreviewShapefileRequest {
 
 export const previewShapeFile = async (data: PreviewShapefileRequest): Promise<GeoJSON> => {
     try {
+        const url = Endpoints.Maps.SHAPEFILE_PREVIEW;
         const formdata = new FormData();
         if (data.file) {
-            formdata.append('file', data.file);
+            formdata.append('file', data.file, data.file.name);
         }
-        const response = await http.PostRequest<GeoJSON>(Endpoints.Maps.SHAPEFILE_PREVIEW, formdata);
+        const response = await http.PostRequest<GeoJSON>(url, formdata, {}, { 'Content-type': 'multipart/form-data' });
         if (response.data) {
             return response.data;
         }

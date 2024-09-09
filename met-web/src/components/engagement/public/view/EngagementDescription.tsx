@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
 import { Widget } from 'models/widget';
 import { WidgetSwitch } from 'components/engagement/old-view/widgets/WidgetSwitch';
-import { BaseTheme, DarkTheme } from 'styles/Theme';
+import { DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 
 export const EngagementDescription = () => {
@@ -83,27 +83,25 @@ export const EngagementDescription = () => {
                         </Suspense>
                     </Grid>
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
-                        <ThemeProvider theme={BaseTheme}>
-                            <Await resolve={widgets}>
-                                {(resolvedWidgets: Widget[]) => {
-                                    const widget = resolvedWidgets?.[0];
-                                    if (widget)
-                                        return (
-                                            <Grid
-                                                item
-                                                sx={{
-                                                    width: { xs: '100%', md: '47.5%' },
-                                                    display: 'flex',
-                                                    minHeight: '360px',
-                                                    marginBottom: '48px',
-                                                }}
-                                            >
-                                                <WidgetSwitch widget={widget} />;
-                                            </Grid>
-                                        );
-                                }}
-                            </Await>
-                        </ThemeProvider>
+                        <Await resolve={widgets}>
+                            {(resolvedWidgets: Widget[]) => {
+                                const widget = resolvedWidgets[0];
+                                if (widget)
+                                    return (
+                                        <Grid
+                                            item
+                                            sx={{
+                                                width: { xs: '100%', md: '47.5%' },
+                                                display: 'flex',
+                                                minHeight: '360px',
+                                                marginBottom: '48px',
+                                            }}
+                                        >
+                                            <WidgetSwitch widget={widget} />
+                                        </Grid>
+                                    );
+                            }}
+                        </Await>
                     </Suspense>
                 </Grid>
             </ThemeProvider>

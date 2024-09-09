@@ -17,7 +17,6 @@ type TextInputProps = {
 
 export const textInputStyles = {
     display: 'flex',
-    height: '48px',
     padding: '8px 16px',
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,7 +55,6 @@ export const TextInput: React.FC<TextInputProps> = ({
     inputProps,
     ...textFieldProps
 }: TextInputProps) => {
-    // Exclude props that are not meant for the input element
     return (
         <Input
             className="met-input-text"
@@ -191,7 +189,7 @@ export const TextField = ({
 };
 
 export const TextAreaField = ({ ...textFieldProps }: Omit<TextFieldProps, 'multiline' | 'minRows' | 'maxRows'>) => {
-    return <TextField sx={{ height: 'unset' }} multiline minRows={4} maxRows={6} {...textFieldProps} />;
+    return <TextField sx={{ height: 'unset' }} multiline minRows={3} maxRows={6} {...textFieldProps} />;
 };
 
 // Define a Custom MUI Textfield

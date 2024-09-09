@@ -49,6 +49,7 @@ from .email_queue import EmailQueue
 from .engagement_slug import EngagementSlug
 from .report_setting import ReportSetting
 from .widget_video import WidgetVideo
+from .widget_image import WidgetImage
 from .cac_form import CACForm
 from .engagement_metadata import EngagementMetadata, MetadataTaxon
 from .widget_timeline import WidgetTimeline
