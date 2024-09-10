@@ -26,3 +26,4 @@ class WidgetType(IntEnum):
     Video = 7
     Timeline = 9
     Poll = 10
+    Image = 11
