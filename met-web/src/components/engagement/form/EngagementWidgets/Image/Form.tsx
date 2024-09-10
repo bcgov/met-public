@@ -162,12 +162,21 @@ const Form = () => {
                 <form onSubmit={uploadImageAndSubmit}>
                     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
                         <Grid item xs={12}>
-                            <MetLabel>Description</MetLabel>
+                            <label htmlFor="description">
+                                <MetLabel>Description</MetLabel>
+                            </label>
                             <Controller
                                 name="description"
                                 control={control}
                                 render={({ field }) => (
-                                    <TextField {...field} placeholder="Description" multiline maxRows={4} minRows={4} />
+                                    <TextField
+                                        {...field}
+                                        id="description"
+                                        placeholder="Description"
+                                        multiline
+                                        maxRows={4}
+                                        minRows={4}
+                                    />
                                 )}
                             />
                             <When condition={errors.description?.message !== undefined}>
@@ -177,7 +186,9 @@ const Form = () => {
                             </When>
                         </Grid>
                         <Grid item xs={12}>
-                            <MetLabel>Image Upload</MetLabel>
+                            <label htmlFor="select-file-button">
+                                <MetLabel>Image Upload</MetLabel>
+                            </label>
                             <Controller
                                 name="image_url"
                                 control={control}
@@ -197,12 +208,14 @@ const Form = () => {
                             </When>
                         </Grid>
                         <Grid item xs={12}>
-                            <MetLabel>Image Alt Text</MetLabel>
+                            <label htmlFor="alt_text">
+                                <MetLabel>Image Alt Text</MetLabel>
+                            </label>
                             <Controller
                                 name="alt_text"
                                 control={control}
                                 render={({ field }) => (
-                                    <TextField {...field} multiline maxRows={4} placeholder="Alt Text" />
+                                    <TextField {...field} id="alt_text" multiline maxRows={4} placeholder="Alt Text" />
                                 )}
                             />
                             <When condition={errors.alt_text?.message !== undefined}>
