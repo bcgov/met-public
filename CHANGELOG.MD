@@ -1,3 +1,10 @@
+## September 12, 2024
+- **Feature** New Summary page in authoring section [🎟️ DESENG-671](https://citz-gdx.atlassian.net/browse/DESENG-671)
+  - Fetches values
+  - Saves values to database
+  - Returns success and error messages to user after form submission
+  - Resets form dirty state after submission
+
 ## September 3, 2024
 - **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
   - Implemented authoring side nav

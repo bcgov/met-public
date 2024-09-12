@@ -1,9 +1,10 @@
-import { Control, SubmitHandler, UseFormSetValue, UseFormWatch } from 'react-hook-form';
+import { Control, SubmitHandler, UseFormGetValues, UseFormReset, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { EngagementUpdateData } from './AuthoringContext';
 import { Dispatch, SetStateAction } from 'react';
 import { Language } from 'models/language';
 import { Engagement } from 'models/engagement';
 import { EditorState } from 'draft-js';
+import { FetcherWithComponents } from 'react-router-dom';
 
 export interface AuthoringNavProps {
     open: boolean;
@@ -20,6 +21,9 @@ export interface DrawerBoxProps {
 
 export interface AuthoringContextType {
     onSubmit: SubmitHandler<EngagementUpdateData>;
+    defaultValues: EngagementUpdateData;
+    setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
+    fetcher: FetcherWithComponents<any>;
 }
 
 export interface LanguageSelectorProps {
@@ -38,6 +42,7 @@ export interface AuthoringBottomNavProps {
     setCurrentLanguage: Dispatch<SetStateAction<string>>;
     languages: Language[];
     pageTitle: string;
+    setValue: UseFormSetValue<EngagementUpdateData>;
 }
 
 export interface StatusLabelProps {
@@ -47,6 +52,7 @@ export interface StatusLabelProps {
 
 export interface AuthoringTemplateOutletContext {
     setValue: UseFormSetValue<EngagementUpdateData>;
+    getValues: UseFormGetValues<EngagementUpdateData>;
     watch: UseFormWatch<EngagementUpdateData>;
     control: Control<EngagementUpdateData, any>;
     engagement: Engagement;
@@ -57,6 +63,11 @@ export interface AuthoringTemplateOutletContext {
     setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
     setContentTabsEnabled: Dispatch<SetStateAction<string>>;
     defaultTabValues: TabValues;
+    isDirty: boolean;
+    reset: UseFormReset<EngagementUpdateData>;
+    defaultValues: EngagementUpdateData;
+    setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
+    fetcher: FetcherWithComponents<any>;
 }
 
 export interface DetailsTabProps {

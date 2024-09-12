@@ -12,7 +12,7 @@ const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
 const AuthoringBanner = () => {
-    const { setValue, watch, control, engagement }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
+    const { engagement }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
 
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(engagement.banner_filename || '');

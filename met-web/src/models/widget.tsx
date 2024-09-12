@@ -27,5 +27,7 @@ export enum WidgetType {
 }
 
 export enum WidgetLocation {
-    engagementAuthoring = 1,
+    Summary = 1,
+    Details = 2,
+    Feedback = 3,
 }

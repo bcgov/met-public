@@ -1,26 +1,70 @@
-import { Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import React, { useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { Grid } from '@mui/material';
+import React, { useEffect, Suspense } from 'react';
+import { useOutletContext, useRouteLoaderData, Await } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
-import { colors, Palette } from 'styles/Theme';
+import { colors } from 'styles/Theme';
 import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import { MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
-import { Button } from 'components/common/Input';
+import { MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EditorState } from 'draft-js';
+import { convertToRaw, EditorState } from 'draft-js';
+import { Controller } from 'react-hook-form';
+import { EngagementContent } from 'models/engagementContent';
+import { useAppDispatch } from 'hooks';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
-const AuthoringBanner = () => {
+const AuthoringSummary = () => {
     const {
-        setValue, // Optional form control prop
-        watch, // Optional form control prop
-        control, // Optional form control prop
-        engagement, // Engagement for populating values
-    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
+        setValue,
+        control,
+        reset,
+        getValues,
+        engagement,
+        defaultValues,
+        setDefaultValues,
+        fetcher,
+    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template.
 
-    const [editorState, setEditorState] = useState<EditorState>();
-    const [bodyText, setBodyText] = useState('');
-    const [currentWidget, setCurrentWidget] = useState('');
+    // Check if the form has succeeded or failed after a submit, and issue a message to the user.
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        if ('success' === fetcher.data) {
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: 'Engagement saved successfully.',
+                }),
+            );
+        } else if ('failure' === fetcher.data) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Unable to save engagement.',
+                }),
+            );
+        }
+        fetcher.data = undefined;
+    }, [fetcher.data]);
+
+    const { content } = useRouteLoaderData('authoring-loader') as {
+        content: Promise<EngagementContent[]>;
+    };
+
+    useEffect(() => {
+        // Reset values to default and retrieve relevant content from loader.
+        reset(defaultValues);
+        setValue('id', Number(engagement.id));
+        content.then((content) => {
+            setValue('content_id', Number(content[0].id));
+            setValue('title', content[0].title);
+            setValue('text_content', content[0].text_content);
+            if (tryParse(content[0].json_content)) {
+                // Make sure it's valid JSON.
+                setValue('json_content', content[0].json_content);
+            }
+            setDefaultValues(getValues()); // Update default values so that our loaded values are default.
+        });
+    }, [content]);
 
     //Define the styles
     const metBigLabelStyles = {
@@ -38,40 +82,26 @@ const AuthoringBanner = () => {
         fontSize: '0.9rem',
         marginBottom: '1.5rem',
     };
-    const metLabelStyles = {
-        fontSize: '0.95rem',
-    };
     const formItemContainerStyles = {
         padding: '2rem 1.4rem !important',
         margin: '1rem 0',
         borderRadius: '16px',
     };
-    const conditionalSelectStyles = {
-        width: '100%',
+    const toolbarStyles = {
+        border: '1px solid #7A7876',
+        borderBottom: 'none',
+        borderRadius: '8px 8px 0 0',
+        marginBottom: '0',
+        maxWidth: '100%',
+    };
+    const editorStyles = {
+        height: '15em',
+        padding: '0 1em 1em',
         backgroundColor: colors.surface.white,
-        borderRadius: '8px',
-        boxShadow: '0 0 0 1px #7A7876 inset',
-        lineHeight: '1.4375em',
-        height: '48px',
-        marginTop: '8px',
-        padding: '0',
-    };
-    const widgetPreviewStyles = {
-        margin: '2rem 4rem 4rem',
-        display: 'flex',
-        minHeight: '18rem',
-        border: '2px dashed rgb(122, 120, 118)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '16px',
-    };
-    const buttonStyles = {
-        height: '2.6rem',
-        borderRadius: '8px',
-        border: 'none',
-        padding: '0 1rem',
-        minWidth: '8.125rem',
-        fontSize: '0.9rem',
+        border: '1px solid #7A7876',
+        borderTop: 'none',
+        borderRadius: '0 0 8px 8px',
+        maxWidth: '100%',
     };
 
     const toolbar = {
@@ -83,22 +113,34 @@ const AuthoringBanner = () => {
         list: { options: ['unordered', 'ordered'] },
     };
 
-    const handleWidgetSelectChange = (event: SelectChangeEvent<string>) => {
-        const newWidgetValue = event.target.value;
-        setCurrentWidget(newWidgetValue);
+    const handleTitleChange = (value: string) => {
+        setValue('title', value);
+        return value;
     };
 
     const handleEditorChange = (newEditorState: EditorState) => {
-        console.log(newEditorState);
         const plainText = newEditorState.getCurrentContent().getPlainText();
-        setEditorState(newEditorState);
-        setBodyText(plainText);
+        const stringifiedEditorState = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
+        setValue('text_content', plainText);
+        setValue('json_content', stringifiedEditorState);
+        return newEditorState;
+    };
+
+    // Determines whether a string is JSON parseable.
+    const tryParse = (json: string) => {
+        try {
+            const object = JSON.parse(json);
+            if (object && typeof object === 'object') {
+                return object;
+            }
+        } catch (e) {}
+        return false;
     };
 
     return (
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="section_heading">
+                <label htmlFor="title">
                     <MetBigLabel style={metBigLabelStyles}>
                         Section Heading
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
@@ -106,18 +148,33 @@ const AuthoringBanner = () => {
                     <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
                     </FormDescriptionText>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="section_heading"
-                        counter
-                        maxLength={60}
-                        placeholder="Section heading text"
+                    <Controller
+                        control={control}
+                        name="title"
+                        rules={{ required: true }}
+                        render={({ field }) => {
+                            return (
+                                <TextField
+                                    {...field}
+                                    sx={{ backgroundColor: colors.surface.white }}
+                                    id="title"
+                                    value={field.value}
+                                    error={undefined}
+                                    counter
+                                    maxLength={60}
+                                    placeholder="Section heading text"
+                                    onChange={(value) => {
+                                        field.onChange(handleTitleChange(value));
+                                    }}
+                                />
+                            );
+                        }}
                     />
                 </label>
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="body_copy">
+                <label htmlFor="editor_state">
                     <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
@@ -125,20 +182,37 @@ const AuthoringBanner = () => {
                     <FormDescriptionText style={formDescriptionTextStyles}>
                         Your section heading should be descriptive, short and succinct.
                     </FormDescriptionText>
-                    <RichTextArea
-                        ariaLabel="Body Copy: Your section heading should be descriptive, short and succinct."
-                        spellCheck
-                        editorState={editorState}
-                        onEditorStateChange={handleEditorChange}
-                        handlePastedText={() => false}
-                        editorStyle={{
-                            height: '15em',
-                            padding: '1em',
-                            resize: 'vertical',
-                            backgroundColor: colors.surface.white,
-                        }}
-                        toolbar={toolbar}
-                    />
+                    <Suspense>
+                        <Await resolve={content}>
+                            {(content) => (
+                                <Controller
+                                    control={control}
+                                    name="editor_state"
+                                    rules={{ required: true }}
+                                    render={({ field }) => {
+                                        return (
+                                            <RichTextArea
+                                                ariaLabel="Body Copy: Your section heading should be descriptive, short and succinct."
+                                                spellCheck
+                                                initialContentState={
+                                                    tryParse(content[0].json_content)
+                                                        ? JSON.parse(content[0].json_content)
+                                                        : ''
+                                                }
+                                                onEditorStateChange={(value) => {
+                                                    field.onChange(handleEditorChange(value));
+                                                }}
+                                                handlePastedText={() => false}
+                                                toolbarStyle={toolbarStyles}
+                                                editorStyle={editorStyles}
+                                                toolbar={toolbar}
+                                            />
+                                        );
+                                    }}
+                                />
+                            )}
+                        </Await>
+                    </Suspense>
                 </label>
             </Grid>
 
@@ -148,69 +222,8 @@ const AuthoringBanner = () => {
                     You may use a widget to add supporting content to your primary content.
                 </FormDescriptionText>
             </Grid>
-
-            <Grid item>
-                <label htmlFor="widget_select">
-                    <MetLabel style={metLabelStyles}>Widgets</MetLabel>
-                    <Select
-                        sx={{ ...conditionalSelectStyles, maxWidth: '300px' }}
-                        id="widget_select"
-                        onChange={handleWidgetSelectChange}
-                        value={currentWidget}
-                    >
-                        <MenuItem value="Video">Video</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
-                    </Select>
-                </label>
-            </Grid>
-
-            <Grid
-                sx={{
-                    ...formItemContainerStyles,
-                    backgroundColor: colors.surface.blue[10],
-                    border: '2px dashed rgb(122, 120, 118)',
-                    minHeight: '33rem',
-                }}
-                item
-            >
-                <MetLabel style={{ minHeight: '1.5rem' }}>
-                    {currentWidget} {currentWidget && 'Widget'}
-                </MetLabel>
-                <Grid xs={12} sx={widgetPreviewStyles} item>
-                    {/* todo: show a preview of the widget here */}
-                    Widget Preview
-                </Grid>
-                <Button
-                    name="edit_widget"
-                    id="edit_widget"
-                    sx={{
-                        ...buttonStyles,
-                        background: Palette.primary.main,
-                        color: colors.surface.white,
-                        marginRight: '1rem',
-                        '&:hover': {
-                            background: Palette.primary.main,
-                            color: colors.surface.white,
-                        },
-                        // todo: Hook up the widget edit modal dialog to this button
-                    }}
-                >
-                    Edit Widget
-                </Button>
-                <Button
-                    name="remove_widget"
-                    id="remove_widget"
-                    onClick={() => '' !== currentWidget && setCurrentWidget('')}
-                    sx={{
-                        ...buttonStyles,
-                        boxShadow: '0 0 0 1px #7A7876 inset',
-                    }}
-                >
-                    Remove Widget
-                </Button>
-            </Grid>
         </Grid>
     );
 };
 
-export default AuthoringBanner;
+export default AuthoringSummary;
