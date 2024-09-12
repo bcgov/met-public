@@ -162,6 +162,11 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/widgets/widget_id/timelines`,
         UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/timelines/timeline_id`,
     },
+    ImageWidgets: {
+        GET: `${AppConfig.apiUrl}/widgets/widget_id/images`,
+        CREATE: `${AppConfig.apiUrl}/widgets/widget_id/images`,
+        UPDATE: `${AppConfig.apiUrl}/widgets/widget_id/images/image_widget_id`,
+    },
     Tenants: {
         CREATE: `${AppConfig.apiUrl}/tenants/`,
         GET: `${AppConfig.apiUrl}/tenants/tenant_id`,

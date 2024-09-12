@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthoringValue, AuthoringButtonProps, StatusCircleProps } from './types';
-import { Header2 } from 'components/common/Typography';
+import { BodyText, Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightLong } from '@fortawesome/pro-light-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
@@ -10,6 +10,9 @@ import { Unless, When } from 'react-if';
 import { Grid } from '@mui/material';
 import { colors } from 'styles/Theme';
 import { Link } from 'components/common/Navigation';
+import { WidgetLocation } from 'models/widget';
+import WidgetPicker from '../create/widgets';
+import { OutlineBox } from 'components/common/Layout';
 import { getDefaultAuthoringTabValues } from './AuthoringTabElements';
 
 export const StatusCircle = (props: StatusCircleProps) => {
@@ -175,6 +178,14 @@ export const AuthoringTab = () => {
                         <AuthoringButton item={method} key={method.id} />
                     ))}
                 </Grid>
+            </Grid>
+            <Grid item>
+                <BodyText mb={1} bold>
+                    Widget Configuration (temporary location)
+                </BodyText>
+                <OutlineBox>
+                    <WidgetPicker location={WidgetLocation.engagementAuthoring} />
+                </OutlineBox>
             </Grid>
         </Grid>
     );

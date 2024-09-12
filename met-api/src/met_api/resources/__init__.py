@@ -54,6 +54,7 @@ from .engagement_settings import API as ENGAGEMENT_SETTINGS_API
 from .cac_form import API as CAC_FORM_API
 from .widget_timeline import API as WIDGET_TIMELINE_API
 from .widget_poll import API as WIDGET_POLL_API
+from .widget_image import API as WIDGET_IMAGE_API
 from .language import API as LANGUAGE_API
 from .widget_translation import API as WIDGET_TRANSLATION_API
 from .survey_translation import API as SURVEY_TRANSLATION_API
@@ -69,7 +70,9 @@ __all__ = ('API_BLUEPRINT',)
 URL_PREFIX = '/api/'
 API_BLUEPRINT = Blueprint('API', __name__, url_prefix=URL_PREFIX)
 
-API = Api(API_BLUEPRINT, title='MET API', version='1.0', description='The Core API for MET')
+API = Api(
+    API_BLUEPRINT, title='MET API', version='1.0', description='The Core API for MET'
+)
 
 # HANDLER = ExceptionHandler(API)
 
@@ -102,6 +105,7 @@ API.add_namespace(ENGAGEMENT_SETTINGS_API)
 API.add_namespace(CAC_FORM_API, path='/engagements/<int:engagement_id>/cacform')
 API.add_namespace(WIDGET_TIMELINE_API, path='/widgets/<int:widget_id>/timelines')
 API.add_namespace(WIDGET_POLL_API, path='/widgets/<int:widget_id>/polls')
+API.add_namespace(WIDGET_IMAGE_API, path='/widgets/<int:widget_id>/images')
 API.add_namespace(LANGUAGE_API, path='/languages')
 API.add_namespace(WIDGET_TRANSLATION_API, path='/widget/<int:widget_id>/translations')
 API.add_namespace(SURVEY_TRANSLATION_API, path='/surveys/<int:survey_id>/translations')

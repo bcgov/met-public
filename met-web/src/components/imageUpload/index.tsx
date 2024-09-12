@@ -48,7 +48,7 @@ export const ImageUpload = ({
                 <BodyText size="small" sx={{ color: colors.surface.gray[80] }}>
                     Supported formats: JPG, PNG, WEBP
                 </BodyText>
-                <Button variant="secondary" size="small" sx={{ mt: '1.5em' }}>
+                <Button id="select-file-button" variant="secondary" size="small" sx={{ mt: '1.5em' }}>
                     Select File
                 </Button>
             </Uploader>

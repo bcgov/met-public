@@ -26,13 +26,14 @@ const GetRequest = <T>(url: string, params = {}, headers = {}, responseType?: st
     return axios.get<T>(url, requestOptions);
 };
 
-const PostRequest = <T>(url: string, data = {}, params = {}) => {
+const PostRequest = <T>(url: string, data = {}, params = {}, headers = {}) => {
     return axios.post<T>(url, data, {
         params,
         headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${UserService.getToken()}`,
             'tenant-id': `${sessionStorage.getItem('tenantId')}`,
+            ...headers,
         },
     });
 };

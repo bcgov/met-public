@@ -4,8 +4,17 @@
   - Saves values to database
   - Returns success and error messages to user after form submission
   - Resets form dirty state after submission
+  
+## September 9, 2024
+
+- **Feature** Add image widget [🎟️ DESENG-689](https://citz-gdx.atlassian.net/browse/DESENG-689)
+  - Added a new "ImageWidget" widget type in the API
+  - Image widgets can have a title, optional description, uploaded image, and optional alt text
+  - Added image widget option to the engagement authoring wizard
+  - Added image widget display for the engagement view page
 
 ## September 3, 2024
+
 - **Feature** New authoring content section [🎟️ DESENG-668](https://citz-gdx.atlassian.net/browse/DESENG-668)
   - Implemented authoring side nav
   - Implemented authoring bottom nav
