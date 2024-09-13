@@ -17,6 +17,9 @@ import { getAuthoringRoutes } from './AuthoringNavElements';
 import { FormControlLabel, Grid, Radio, RadioGroup } from '@mui/material';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { When } from 'react-if';
+import WidgetPicker from '../widgets';
+import { WidgetLocation } from 'models/widget';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     const statusLabelStyle = {
@@ -34,7 +37,7 @@ export const getLanguageValue = (currentLanguage: string, languages: Language[])
 };
 
 const AuthoringTemplate = () => {
-    const { onSubmit }: AuthoringContextType = useOutletContext();
+    const { onSubmit, defaultValues, setDefaultValues, fetcher }: AuthoringContextType = useOutletContext();
     const { engagementId } = useParams() as { engagementId: string }; // We need the engagement ID quickly, so let's grab it from useParams
     const { engagement } = useRouteLoaderData('single-engagement') as { engagement: Engagement };
     const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
@@ -61,13 +64,12 @@ const AuthoringTemplate = () => {
     const {
         handleSubmit,
         setValue,
+        getValues,
         watch,
+        reset,
         control,
         formState: { isDirty, isValid, isSubmitting },
     } = useFormContext<EngagementUpdateData>();
-
-    // Set hidden values for form data
-    setValue('id', Number(engagementId));
 
     const eyebrowTextStyles = {
         fontSize: '0.9rem',
@@ -108,7 +110,8 @@ const AuthoringTemplate = () => {
             <SystemMessage status="warning">
                 Under construction - the settings in this section have no effect.
             </SystemMessage>
-            {'details' === slug && (
+
+            <When condition={'details' === slug}>
                 <Grid container sx={{ maxWidth: '700px' }}>
                     <Header2 decorated style={{ paddingTop: '1rem' }}>
                         Content Configuration
@@ -146,7 +149,8 @@ const AuthoringTemplate = () => {
                         </Grid>
                     </RadioGroup>
                 </Grid>
-            )}
+            </When>
+
             <Header2 decorated style={{ paddingTop: '1rem' }}>
                 <Suspense>
                     <Await resolve={languages}>
@@ -166,12 +170,18 @@ const AuthoringTemplate = () => {
                                     setTabs,
                                     setSingleContentValues,
                                     setContentTabsEnabled,
+                                    getValues,
+                                    setDefaultValues,
+                                    reset,
                                     control,
                                     engagement,
                                     contentTabsEnabled,
                                     tabs,
                                     singleContentValues,
                                     defaultTabValues,
+                                    isDirty,
+                                    defaultValues,
+                                    fetcher,
                                 }}
                             />
                         )}
@@ -190,11 +200,18 @@ const AuthoringTemplate = () => {
                                 setCurrentLanguage={setCurrentLanguage}
                                 languages={languages}
                                 pageTitle={pageTitle || 'untitled'}
+                                setValue={setValue}
                             />
                         )}
                     </Await>
                 </Suspense>
             </Form>
+
+            <When condition={'summary' === slug}>
+                <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                    <WidgetPicker location={WidgetLocation.Summary} />
+                </Grid>
+            </When>
         </ResponsiveContainer>
     );
 };

@@ -4,7 +4,6 @@ import { patchEngagementContent } from 'services/engagementContentService';
 import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
-import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const engagementAuthoringUpdateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
@@ -22,7 +21,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         status_block: (formData.get('status_block') as unknown as unknown[]) || undefined,
     });
 
-    // Update engagement content.
+    // Update engagement content if necessary.
     if (
         (formData.get('title') || formData.get('text_content' || formData.get('json_content'))) &&
         '0' !== formData.get('content_id')
@@ -80,16 +79,10 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     }
 
     if (0 === errors.length && 'preview' === requestType) {
-        return redirect(`/engagements/${engagement.id}/old-view`);
+        return redirect(`../../../old-view`);
     } else if (0 === errors.length && 'update' === requestType) {
-        openNotification({
-            severity: 'success',
-            text: 'Engagement saved successfully.',
-        });
+        return 'success';
     } else {
-        openNotification({
-            severity: 'error',
-            text: 'preview' === requestType ? 'Unable to preview engagement' : 'Unable to save engagement',
-        });
+        return 'failure';
     }
 };
