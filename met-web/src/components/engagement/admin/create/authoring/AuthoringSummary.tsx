@@ -28,22 +28,18 @@ const AuthoringSummary = () => {
     // Check if the form has succeeded or failed after a submit, and issue a message to the user.
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if ('success' === fetcher.data) {
+        if ('success' === fetcher.data || 'failure' === fetcher.data) {
+            const responseText =
+                'success' === fetcher.data ? 'Engagement saved successfully.' : 'Unable to save engagement.';
+            const responseSeverity = 'success' === fetcher.data ? 'success' : 'error';
             dispatch(
                 openNotification({
-                    severity: 'success',
-                    text: 'Engagement saved successfully.',
+                    severity: responseSeverity,
+                    text: responseText,
                 }),
             );
-        } else if ('failure' === fetcher.data) {
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Unable to save engagement.',
-                }),
-            );
+            fetcher.data = undefined;
         }
-        fetcher.data = undefined;
     }, [fetcher.data]);
 
     const { content } = useRouteLoaderData('authoring-loader') as {
@@ -58,15 +54,15 @@ const AuthoringSummary = () => {
             setValue('content_id', Number(content[0].id));
             setValue('title', content[0].title);
             setValue('text_content', content[0].text_content);
+            // Make sure it's valid JSON.
             if (tryParse(content[0].json_content)) {
-                // Make sure it's valid JSON.
                 setValue('json_content', content[0].json_content);
             }
             setDefaultValues(getValues()); // Update default values so that our loaded values are default.
         });
     }, [content]);
 
-    //Define the styles
+    // Define the styles
     const metBigLabelStyles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
@@ -126,7 +122,7 @@ const AuthoringSummary = () => {
         return newEditorState;
     };
 
-    // Determines whether a string is JSON parseable.
+    // Determines whether a string is JSON parseable and returns the JSON if it is.
     const tryParse = (json: string) => {
         try {
             const object = JSON.parse(json);
@@ -174,31 +170,28 @@ const AuthoringSummary = () => {
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="editor_state">
+                <label htmlFor="summary_editor_state">
                     <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
                         Body Copy
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
                     </MetBigLabel>
                     <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your section heading should be descriptive, short and succinct.
+                        Body copy for the summary section of your engagement should provide a short overview of what
+                        your engagement is about and describe what you are asking your audience to do.
                     </FormDescriptionText>
                     <Suspense>
                         <Await resolve={content}>
                             {(content) => (
                                 <Controller
                                     control={control}
-                                    name="editor_state"
+                                    name="summary_editor_state"
                                     rules={{ required: true }}
                                     render={({ field }) => {
                                         return (
                                             <RichTextArea
-                                                ariaLabel="Body Copy: Your section heading should be descriptive, short and succinct."
+                                                ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
                                                 spellCheck
-                                                initialContentState={
-                                                    tryParse(content[0].json_content)
-                                                        ? JSON.parse(content[0].json_content)
-                                                        : ''
-                                                }
+                                                initialContentState={tryParse(content[0].json_content) || ''}
                                                 onEditorStateChange={(value) => {
                                                     field.onChange(handleEditorChange(value));
                                                 }}

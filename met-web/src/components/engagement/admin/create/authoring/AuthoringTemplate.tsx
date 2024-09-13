@@ -19,6 +19,7 @@ import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { When } from 'react-if';
 import WidgetPicker from '../widgets';
+import { WidgetLocation } from 'models/widget';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     const statusLabelStyle = {
@@ -208,7 +209,7 @@ const AuthoringTemplate = () => {
 
             <When condition={'summary' === slug}>
                 <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                    <WidgetPicker location={1} />
+                    <WidgetPicker location={WidgetLocation.Summary} />
                 </Grid>
             </When>
         </ResponsiveContainer>

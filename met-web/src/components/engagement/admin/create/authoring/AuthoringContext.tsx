@@ -24,7 +24,7 @@ export interface EngagementUpdateData {
     request_type: string;
     text_content: string;
     json_content: string;
-    editor_state: EditorState;
+    summary_editor_state: EditorState;
 }
 
 export const defaultValuesObject = {
@@ -47,7 +47,7 @@ export const defaultValuesObject = {
     request_type: '',
     text_content: '',
     json_content: '{ blocks: [], entityMap: {} }',
-    editor_state: EditorState.createEmpty(),
+    summary_editor_state: EditorState.createEmpty(),
 };
 
 export const AuthoringContext = () => {

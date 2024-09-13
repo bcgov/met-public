@@ -144,15 +144,18 @@ const LanguageSelector = ({
     const handleSelectChange = (event: SelectChangeEvent<string>) => {
         const newLanguageCode = event.target.value;
         if (isDirty && !isSubmitting)
-            // todo: Replace this message with our stylized modal message.
-            window.confirm(
-                `Are you sure you want to switch to ${
-                    getLanguageValue(newLanguageCode, languages) || 'another language'
-                }? You have unsaved changes for the ${
-                    getLanguageValue(currentLanguage, languages) || 'current'
-                } language.`,
-            );
-        setCurrentLanguage(newLanguageCode);
+            if (
+                window.confirm(
+                    `Are you sure you want to switch to ${
+                        getLanguageValue(newLanguageCode, languages) || 'another language'
+                    }? You have unsaved changes for the ${
+                        getLanguageValue(currentLanguage, languages) || 'current'
+                    } language.`,
+                )
+            ) {
+                // todo: Replace this message with our stylized modal message.
+                setCurrentLanguage(newLanguageCode);
+            }
     };
     return (
         <Select
