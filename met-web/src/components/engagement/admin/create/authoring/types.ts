@@ -68,6 +68,7 @@ export interface AuthoringTemplateOutletContext {
     defaultValues: EngagementUpdateData;
     setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
     fetcher: FetcherWithComponents<any>;
+    slug: string;
 }
 
 export interface DetailsTabProps {

@@ -7,6 +7,7 @@ export interface Engagement {
     name: string;
     description: string;
     rich_description: string;
+    description_title: string;
     status_id: number;
     start_date: string;
     end_date: string;
@@ -71,6 +72,7 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         name: '',
         description: '',
         rich_description: '',
+        description_title: '',
         status_id: 0,
         start_date: '',
         end_date: '',

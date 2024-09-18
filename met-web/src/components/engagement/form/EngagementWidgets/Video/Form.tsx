@@ -22,10 +22,8 @@ const schema = yup
             .url('Please enter a valid Link')
             .required('Please enter a valid Link')
             .max(255, 'Video link cannot exceed 255 characters'),
-        description: yup
-            .string()
-            .required('Please enter a description')
-            .max(500, 'Description cannot exceed 500 characters'),
+        title: yup.string().max(255, 'Video title cannot exceed 255 characters'),
+        description: yup.string().max(500, 'Description cannot exceed 500 characters'),
     })
     .required();
 
@@ -45,6 +43,7 @@ const Form = () => {
 
     useEffect(() => {
         if (videoWidget) {
+            methods.setValue('title', videoWidget.title);
             methods.setValue('description', videoWidget.description);
             methods.setValue('videoUrl', videoWidget.video_url);
         }
@@ -56,12 +55,13 @@ const Form = () => {
         }
 
         const validatedData = await schema.validate(data);
-        const { videoUrl, description } = validatedData;
+        const { videoUrl, title, description } = validatedData;
         await postVideo(widget.id, {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             video_url: videoUrl,
-            description: description,
+            title: title || '',
+            description: description || '',
             location: widget.location in WidgetLocation ? widget.location : null,
         });
         dispatch(openNotification({ severity: 'success', text: 'A new video was successfully added' }));
@@ -76,10 +76,12 @@ const Form = () => {
         const updatedDate = updatedDiff(
             {
                 description: videoWidget.description,
+                title: videoWidget.title,
                 video_url: videoWidget.video_url,
             },
             {
                 description: validatedData.description,
+                title: validatedData.title,
                 video_url: validatedData.videoUrl,
             },
         );
@@ -143,7 +145,19 @@ const Form = () => {
                             spacing={2}
                         >
                             <Grid item xs={12}>
-                                <MetLabel>Description</MetLabel>
+                                <MetLabel>Title (Optional)</MetLabel>
+                                <ControlledTextField
+                                    name="title"
+                                    variant="outlined"
+                                    label=" "
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel>Description (Optional)</MetLabel>
                                 <ControlledTextField
                                     name="description"
                                     variant="outlined"

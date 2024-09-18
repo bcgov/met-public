@@ -158,7 +158,6 @@ const AuthoringTemplate = () => {
                     </Await>
                 </Suspense>
             </Header2>
-
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Suspense>
                     <Await resolve={engagement}>
@@ -173,8 +172,8 @@ const AuthoringTemplate = () => {
                                     getValues,
                                     setDefaultValues,
                                     reset,
-                                    control,
                                     engagement,
+                                    control,
                                     contentTabsEnabled,
                                     tabs,
                                     singleContentValues,
@@ -182,12 +181,12 @@ const AuthoringTemplate = () => {
                                     isDirty,
                                     defaultValues,
                                     fetcher,
+                                    slug,
                                 }}
                             />
                         )}
                     </Await>
                 </Suspense>
-
                 <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
                 <Suspense>
                     <Await resolve={languages}>

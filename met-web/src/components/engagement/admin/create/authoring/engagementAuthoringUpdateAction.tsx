@@ -17,6 +17,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         end_date: (formData.get('end_date') as string) || undefined,
         description: (formData.get('description') as string) || undefined,
         rich_description: (formData.get('rich_description') as string) || undefined,
+        description_title: (formData.get('description_title') as string) || undefined,
         banner_filename: (formData.get('banner_filename') as string) || undefined,
         status_block: (formData.get('status_block') as unknown as unknown[]) || undefined,
     });

@@ -65,19 +65,21 @@ export const EngagementDescription = () => {
                             marginBottom: '48px',
                         }}
                     >
-                        <Header2 decorated id="description-header">
-                            Engagement Description
-                        </Header2>
                         <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
                             <Await resolve={engagement}>
                                 {(engagement: Engagement) => (
-                                    <BodyText>
-                                        <RichTextArea
-                                            toolbarHidden
-                                            readOnly
-                                            editorState={getEditorStateFromRaw(engagement.rich_description)}
-                                        />
-                                    </BodyText>
+                                    <>
+                                        <Header2 decorated id="description-header">
+                                            {engagement.description_title}
+                                        </Header2>
+                                        <BodyText>
+                                            <RichTextArea
+                                                toolbarHidden
+                                                readOnly
+                                                editorState={getEditorStateFromRaw(engagement.rich_description)}
+                                            />
+                                        </BodyText>
+                                    </>
                                 )}
                             </Await>
                         </Suspense>
