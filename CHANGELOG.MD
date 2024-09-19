@@ -1,4 +1,12 @@
+## September 18, 2024
+
+- **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
+  - Implemented Figma design
+  - Created custom layover bar for videos that shows video provider and has a custom logo
+  - Transcripts will not be implemented at this time
+
 ## September 12, 2024
+
 - **Feature** New Summary page in authoring section [🎟️ DESENG-671](https://citz-gdx.atlassian.net/browse/DESENG-671)
   - Fetches values
   - Saves values to database
