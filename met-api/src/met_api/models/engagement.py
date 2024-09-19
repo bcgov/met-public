@@ -38,6 +38,7 @@ class Engagement(BaseModel):
     name = db.Column(db.String(50))
     description = db.Column(db.Text, unique=False, nullable=False)
     rich_description = db.Column(JSON, unique=False, nullable=False)
+    description_title = db.Column(db.String(255), unique=False, nullable=False)
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
     status_id = db.Column(db.Integer, ForeignKey(
@@ -131,6 +132,7 @@ class Engagement(BaseModel):
             'name': engagement.get('name', None),
             'description': engagement.get('description', None),
             'rich_description': engagement.get('rich_description', None),
+            'description_title': engagement.get('description_title', None),
             'start_date': engagement.get('start_date', None),
             'end_date': engagement.get('end_date', None),
             'status_id': engagement.get('status_id', None),

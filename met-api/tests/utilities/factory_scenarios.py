@@ -194,7 +194,8 @@ class TestEngagementInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
         \"type\":\"unstyled\",\"depth\":0,\
-        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
     engagement_draft = {
@@ -210,6 +211,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
@@ -229,6 +231,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
@@ -256,6 +259,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
 
@@ -991,6 +995,7 @@ class TestEngagementTranslationInfo(dict, Enum):
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
 

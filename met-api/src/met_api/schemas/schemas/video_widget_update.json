@@ -7,25 +7,33 @@
   "default": {},
   "examples": [
     {
-      "description": "A video widget description",
-      "video_url": "https://www.youtube.com"
+        "description": "A video widget description",
+        "title": "A video widget title",
+        "video_url": "https://www.youtube.com"
     }
   ],
   "required": [],
   "properties": {
-    "description": {
-      "$id": "#/properties/description",
-      "type": "string",
-      "title": "Video description",
-      "description": "The description of this video.",
-      "examples": ["A video widget description"]
-    },
-    "video_url": {
-      "$id": "#/properties/video_url",
-      "type": "string",
-      "title": "Video url",
-      "description": "The url link to this video.",
-      "examples": ["https://www.youtube.com"]
-    }
+      "description": {
+          "$id": "#/properties/description",
+          "type": "string",
+          "title": "Video description",
+          "description": "The description of this video.",
+          "examples": ["A video widget description"]
+      },
+      "title": {
+          "$id": "#/properties/title",
+          "type": "string",
+          "title": "Video title",
+          "description": "The title of this video.",
+          "examples": ["A video widget title"]
+      },
+      "video_url": {
+          "$id": "#/properties/video_url",
+          "type": "string",
+          "title": "Video url",
+          "description": "The url link to this video.",
+          "examples": ["https://www.youtube.com"]
+      }
   }
 }

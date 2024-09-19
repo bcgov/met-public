@@ -25,4 +25,4 @@ class WidgetVideoSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-
         """Videos all of the Widget Video fields to a default schema."""
 
         model = WidgetVideoModel
-        fields = ('id', 'widget_id', 'engagement_id', 'video_url', 'description')
+        fields = ('id', 'widget_id', 'engagement_id', 'video_url', 'title', 'description')

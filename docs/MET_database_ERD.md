@@ -4,6 +4,7 @@ erDiagram
         integer id PK
         string name
         string description
+		string description_title
         timestamp start_date
         timestamp end_date
         integer status_id FK "The id from engagement status"
@@ -123,6 +124,7 @@ erDiagram
         integer widget_id FK "The id from widget"
         integer engagement_id FK "The id from engagement"
         string video_url
+		string title
         string description
         timestamp created_date
         timestamp updated_date
