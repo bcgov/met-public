@@ -84,19 +84,20 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     };
 
     const getVideoSource = (url: string) => {
-        if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        const hostname = new URL(url).hostname;
+        if ('youtube.com' === hostname || 'youtu.be' === hostname) {
             return 'YouTube';
-        } else if (url.includes('vimeo.com')) {
+        } else if ('vimeo.com' === hostname) {
             return 'Vimeo';
-        } else if (url.includes('facebook.com')) {
+        } else if ('facebook.com' === hostname) {
             return 'Facebook';
-        } else if (url.includes('twitch.tv')) {
+        } else if ('twitch.tv' === hostname) {
             return 'Twitch';
-        } else if (url.includes('soundcloud.com')) {
+        } else if ('soundcloud.com' === hostname) {
             return 'SoundCloud';
-        } else if (url.includes('mixcloud.com')) {
+        } else if ('mixcloud.com' === hostname) {
             return 'Mixcloud';
-        } else if (url.includes('dailymotion.com')) {
+        } else if ('dailymotion.com' === hostname) {
             return 'DailyMotion';
         } else {
             return 'Unknown';
