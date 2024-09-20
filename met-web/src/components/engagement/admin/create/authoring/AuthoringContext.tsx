@@ -82,7 +82,7 @@ export const AuthoringContext = () => {
                 title: data.title,
                 icon_name: data.icon_name,
                 metadata_value: data.metadata_value,
-                send_report: data.send_report ? getSendReportValue(data.send_report) : '',
+                send_report: (data.send_report || '').toString(),
                 slug: data.slug,
                 request_type: data.request_type,
                 text_content: data.text_content,
@@ -93,13 +93,6 @@ export const AuthoringContext = () => {
                 action: `/engagements/${data.id}/details/authoring/${slug}`,
             },
         );
-    };
-
-    const getSendReportValue = (valueToInterpret: boolean) => {
-        if (undefined === valueToInterpret) {
-            return '';
-        }
-        return valueToInterpret ? 'true' : 'false';
     };
 
     return (

@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useOutletContext, useRouteLoaderData, useNavigate } from 'react-router-dom';
+import { useLoaderData, useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
@@ -16,19 +16,8 @@ import { EngagementUpdateData } from './AuthoringContext';
 import { Engagement } from 'models/engagement';
 
 const AuthoringSummary = () => {
-    const { setValue, control, reset, getValues, setDefaultValues, fetcher, slug }: AuthoringTemplateOutletContext =
+    const { setValue, control, reset, getValues, setDefaultValues, fetcher }: AuthoringTemplateOutletContext =
         useOutletContext(); // Access the form functions and values from the authoring template.
-
-    // Update the loader data when the authoring section is changed, by triggering navigation().
-    const navigate = useNavigate();
-    useEffect(() => {
-        engagementData.then(() => navigate('.', { replace: true }));
-    }, [slug]);
-
-    // Get the engagement data
-    const { engagement: engagementData } = useRouteLoaderData('single-engagement') as {
-        engagement: Promise<Engagement>;
-    };
 
     // Check if the form has succeeded or failed after a submit, and issue a message to the user.
     const dispatch = useAppDispatch();
@@ -46,6 +35,8 @@ const AuthoringSummary = () => {
             fetcher.data = undefined;
         }
     }, [fetcher.data]);
+
+    const { engagement } = useLoaderData() as { engagement: Promise<Engagement> };
 
     const untouchedDefaultValues: EngagementUpdateData = {
         id: 0,
@@ -74,21 +65,22 @@ const AuthoringSummary = () => {
     // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {
         reset(untouchedDefaultValues);
-        engagementData.then((engagement) => {
-            setValue('id', Number(engagement.id));
+        engagement.then((eng) => {
+            setValue('id', Number(eng.id));
             // Make sure it is valid JSON.
-            if (tryParse(engagement.rich_description)) {
-                setValue('rich_description', engagement.rich_description);
+            if (tryParse(eng.rich_description)) {
+                setValue('rich_description', eng.rich_description);
             }
-            setValue('description_title', engagement.description_title || 'Hello world');
-            setValue('description', engagement.description);
+            setValue('description_title', eng.description_title || 'Hello world');
+            setValue('description', eng.description);
             setValue(
                 'summary_editor_state',
-                EditorState.createWithContent(convertFromRaw(JSON.parse(engagement.rich_description))),
+                EditorState.createWithContent(convertFromRaw(JSON.parse(eng.rich_description))),
             );
-            setDefaultValues(getValues()); // Update default values so that our loaded values are default.
+            // Update default values so that our loaded values are default.
+            setDefaultValues(getValues());
         });
-    }, [engagementData]);
+    }, [engagement]);
 
     // Define the styles
     const metBigLabelStyles = {

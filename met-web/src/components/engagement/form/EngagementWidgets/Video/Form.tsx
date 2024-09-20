@@ -136,7 +136,7 @@ const Form = () => {
             </Grid>
             <Grid item xs={12}>
                 <FormProvider {...methods}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)} aria-label="Video widget form">
                         <Grid
                             container
                             direction="row"
@@ -150,6 +150,7 @@ const Form = () => {
                                     name="title"
                                     variant="outlined"
                                     label=" "
+                                    aria-label="Title: optional."
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -162,6 +163,7 @@ const Form = () => {
                                     name="description"
                                     variant="outlined"
                                     label=" "
+                                    aria-label="Description: optional."
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -179,6 +181,7 @@ const Form = () => {
                                     name="videoUrl"
                                     variant="outlined"
                                     label=" "
+                                    aria-label="Video URL: required."
                                     InputLabelProps={{
                                         shrink: false,
                                     }}

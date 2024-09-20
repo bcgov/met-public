@@ -19,11 +19,23 @@ import {
     faMixcloud,
     faDailymotion,
 } from '@fortawesome/free-brands-svg-icons';
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faQuestionCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Palette } from 'styles/Theme';
 
 interface VideoWidgetProps {
     widget: Widget;
+}
+
+interface WidgetVideoSource {
+    domain: string;
+    name: string;
+    icon: IconDefinition;
+}
+
+interface VideoOverlayProps {
+    videoOverlayTitle: string;
+    source: string;
+    videoSources: WidgetVideoSource[];
 }
 
 const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
@@ -63,61 +75,6 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
         }
     };
 
-    const formatVideoDuration = (duration: number) => {
-        let minutes = 0;
-        let hours = 0;
-        let seconds = 0;
-        if (3600 < duration) {
-            hours = Math.floor(duration / 3600);
-            minutes = Math.floor((duration - hours * 3600) / 60);
-            seconds = Math.floor(duration - hours * 3600 - minutes * 60);
-            return `${hours} hr ${minutes} min ${seconds} sec`;
-        } else if (3600 > duration && 60 < duration) {
-            minutes = Math.floor(duration / 60);
-            seconds = Math.floor(duration - minutes * 60);
-            return `${minutes} min ${seconds} sec`;
-        } else if (60 > duration && 0 < duration) {
-            return `${seconds} seconds`;
-        } else {
-            return '';
-        }
-    };
-
-    const getVideoSource = (url: string) => {
-        const hostname = new URL(url).hostname;
-        if ('youtube.com' === hostname || 'youtu.be' === hostname) {
-            return 'YouTube';
-        } else if ('vimeo.com' === hostname) {
-            return 'Vimeo';
-        } else if ('facebook.com' === hostname) {
-            return 'Facebook';
-        } else if ('twitch.tv' === hostname) {
-            return 'Twitch';
-        } else if ('soundcloud.com' === hostname) {
-            return 'SoundCloud';
-        } else if ('mixcloud.com' === hostname) {
-            return 'Mixcloud';
-        } else if ('dailymotion.com' === hostname) {
-            return 'DailyMotion';
-        } else {
-            return 'Unknown';
-        }
-    };
-
-    const getVideoTitle = (player: ReactPlayer, source: string, widgetTitle: string) => {
-        if ('YouTube' === source) {
-            return `${player.getInternalPlayer().videoTitle} (${source} video)`;
-        } else if ('Vimeo' === source) {
-            return `${player.getInternalPlayer().element.title} (${source} video)`;
-        } else if ('Facebook' === source || 'Twitch' === source || 'DailyMotion' === source) {
-            return `${widgetTitle} (${source} video)`; // API doesn't return video title, use widget title.
-        } else if ('SoundCloud' === source || 'Mixcloud' === source) {
-            return `${widgetTitle} (${source} audio)`; // API doesn't return audio title, use widget title.
-        } else {
-            return `${widgetTitle} (video)`;
-        }
-    };
-
     useEffect(() => {
         fetchVideo();
     }, [widget]);
@@ -140,6 +97,53 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     if (!videoWidget) {
         return null;
     }
+
+    const formatVideoDuration = (duration: number) => {
+        let minutes = 0;
+        let hours = 0;
+        let seconds = 0;
+        if (3600 < duration) {
+            hours = Math.floor(duration / 3600);
+            minutes = Math.floor((duration - hours * 3600) / 60);
+            seconds = Math.floor(duration - hours * 3600 - minutes * 60);
+            return `${hours} hr ${minutes} min ${seconds} sec`;
+        } else if (3600 > duration && 60 < duration) {
+            minutes = Math.floor(duration / 60);
+            seconds = Math.floor(duration - minutes * 60);
+            return `${minutes} min ${seconds} sec`;
+        } else if (60 > duration && 0 < duration) {
+            return `${seconds} seconds`;
+        } else {
+            return '';
+        }
+    };
+
+    const videoSources: WidgetVideoSource[] = [
+        { domain: 'youtu.be', name: 'YouTube', icon: faYoutube },
+        { domain: 'vimeo.com', name: 'Vimeo', icon: faVimeo },
+        { domain: 'twitch.tv', name: 'Twitch', icon: faTwitch },
+        { domain: 'soundcloud.com', name: 'SoundCloud', icon: faSoundcloud },
+        { domain: 'mixcloud.com', name: 'Mixcloud', icon: faMixcloud },
+        { domain: 'dailymotion.com', name: 'DailyMotion', icon: faDailymotion },
+        { domain: 'facebook.com', name: 'Facebook', icon: faFacebookF },
+    ];
+
+    const hostname = new URL(videoWidget.video_url).hostname;
+    const videoSource = videoSources.find((source) => source.domain === hostname)?.name || 'Unknown';
+
+    const getVideoTitle = (player: ReactPlayer, source: string, widgetTitle: string) => {
+        if ('YouTube' === source) {
+            return `${player.getInternalPlayer().videoTitle} (${source} video)`;
+        } else if ('Vimeo' === source) {
+            return `${player.getInternalPlayer().element.title} (${source} video)`;
+        } else if ('Facebook' === source || 'Twitch' === source || 'DailyMotion' === source) {
+            return `${widgetTitle} (${source} video)`; // API doesn't return video title, use widget title.
+        } else if ('SoundCloud' === source || 'Mixcloud' === source) {
+            return `${widgetTitle} (${source} audio)`; // API doesn't return audio title, use widget title.
+        } else {
+            return `${widgetTitle} (video)`;
+        }
+    };
 
     return (
         <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
@@ -164,11 +168,12 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                 </BodyText>
             </Grid>
             {/* Overlay covers play button for Mixcloud so it shouldn't be displayed */}
-            <When condition={showOverlay && 'Mixcloud' !== getVideoSource(videoWidget.video_url)}>
+            <When condition={showOverlay && 'Mixcloud' !== videoSource}>
                 <Grid item xs={12} sx={{ maxHeight: '0px', padding: '0 !important', margin: '0' }}>
                     <VideoOverlay
                         videoOverlayTitle={videoOverlayTitle}
-                        source={getVideoSource(videoWidget.video_url)}
+                        source={videoSource}
+                        videoSources={videoSources}
                     />
                 </Grid>
             </When>
@@ -181,7 +186,6 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         url={videoWidget.video_url}
                         controls
                         onReady={(player) => {
-                            const videoSource = getVideoSource(videoWidget.video_url);
                             setVideoOverlayTitle(getVideoTitle(player, videoSource, videoWidget.title));
                         }}
                         onPlay={() => setShowOverlay(false)}
@@ -200,7 +204,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
             </Grid>
             <Grid item xs={12} sx={{ pt: '0.5rem !important' }}>
                 <BodyText
-                    style={{ fontSize: '0.95rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
+                    style={{ fontSize: '0.875rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
                 >
                     {videoDuration}
                 </BodyText>
@@ -209,31 +213,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     );
 };
 
-interface VideoOverlayProps {
-    videoOverlayTitle: string;
-    source: string;
-}
-
-const VideoOverlay = ({ videoOverlayTitle, source }: VideoOverlayProps) => {
-    const getIcon = (source: string) => {
-        if ('YouTube' === source) {
-            return faYoutube;
-        } else if ('Vimeo' === source) {
-            return faVimeo;
-        } else if ('Facebook' === source) {
-            return faFacebookF;
-        } else if ('Twitch' === source) {
-            return faTwitch;
-        } else if ('SoundCloud' === source) {
-            return faSoundcloud;
-        } else if ('Mixcloud' === source) {
-            return faMixcloud;
-        } else if ('DailyMotion' === source) {
-            return faDailymotion;
-        } else {
-            return faQuestionCircle;
-        }
-    };
+const VideoOverlay = ({ videoOverlayTitle, source, videoSources }: VideoOverlayProps) => {
     return (
         <Box
             sx={{
@@ -256,10 +236,10 @@ const VideoOverlay = ({ videoOverlayTitle, source }: VideoOverlayProps) => {
                 }}
             >
                 <FontAwesomeIcon
-                    icon={getIcon(source)}
+                    icon={videoSources.find((vs) => vs.name === source)?.icon || faQuestionCircle}
                     style={{ fontSize: '1.9rem', paddingRight: '0.65rem', color: '#FCBA19' }}
                 />{' '}
-                <span style={{ fontSize: '0.95rem' }}>{videoOverlayTitle}</span>
+                <span style={{ fontSize: '0.875rem' }}>{videoOverlayTitle}</span>
             </div>
         </Box>
     );
