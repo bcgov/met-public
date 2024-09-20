@@ -81,6 +81,7 @@ describe('CommentReview Component', () => {
             name: '',
             description: '',
             rich_description: '',
+            description_title: '',
             status_id: 0,
             start_date: '',
             end_date: '2024-04-10', // Apr 10, 2024

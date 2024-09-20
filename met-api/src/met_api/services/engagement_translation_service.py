@@ -136,6 +136,7 @@ class EngagementTranslationService:
         translation_data['name'] = engagement.name
         translation_data['description'] = engagement.description
         translation_data['rich_description'] = engagement.rich_description
+        translation_data['description_title'] = engagement.description_title
         translation_data['content'] = content.text_content
         translation_data['rich_content'] = content.json_content
         translation_data['consent_message'] = engagement.consent_message

@@ -175,6 +175,7 @@ class EngagementService:
             name=engagement_data.get('name', None),
             description=engagement_data.get('description', None),
             rich_description=engagement_data.get('rich_description', None),
+            description_title=engagement_data.get('description_title', None),
             start_date=engagement_data.get('start_date', None),
             end_date=engagement_data.get('end_date', None),
             status_id=Status.Draft.value,

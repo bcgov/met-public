@@ -36,6 +36,7 @@ const engagement: Engagement = {
     rich_description:
         '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     description: 'Test description',
+    description_title: 'Test Description Title',
     start_date: '2022-09-01',
     end_date: '2022-09-30',
     engagement_status: {

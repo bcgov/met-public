@@ -120,6 +120,7 @@ def test_patch_video(client, jwt, session,
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     video_edits = {
+        'title': fake.text(max_nb_chars=20),
         'description': fake.text(max_nb_chars=20),
         'video_url': fake.url(),
     }
@@ -136,6 +137,7 @@ def test_patch_video(client, jwt, session,
         content_type=ContentType.JSON.value
     )
     assert rv.status_code == HTTPStatus.OK
+    assert rv.json[0].get('title') == video_edits.get('title')
     assert rv.json[0].get('description') == video_edits.get('description')
 
     with patch.object(WidgetVideoService, 'update_video',

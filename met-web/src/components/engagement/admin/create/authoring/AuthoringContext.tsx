@@ -14,12 +14,13 @@ export interface EngagementUpdateData {
     end_date: Dayjs;
     description: string;
     rich_description: string;
+    description_title: string;
     banner_filename: string;
     status_block: string[];
     title: string;
     icon_name: string;
     metadata_value: string;
-    send_report: boolean;
+    send_report: boolean | undefined;
     slug: string;
     request_type: string;
     text_content: string;
@@ -37,6 +38,7 @@ export const defaultValuesObject = {
     end_date: dayjs(new Date(1970, 0, 1)),
     description: '',
     rich_description: '',
+    description_title: '',
     banner_filename: '',
     status_block: [],
     title: '',
@@ -74,12 +76,13 @@ export const AuthoringContext = () => {
                     '1970-01-01' === data.start_date.format('YYYY-MM-DD') ? '' : data.end_date.format('YYYY-MM-DD'),
                 description: data.description,
                 rich_description: data.rich_description,
+                description_title: data.description_title,
                 banner_filename: data.banner_filename,
                 status_block: data.status_block,
                 title: data.title,
                 icon_name: data.icon_name,
                 metadata_value: data.metadata_value,
-                send_report: getSendReportValue(data.send_report),
+                send_report: (data.send_report || '').toString(),
                 slug: data.slug,
                 request_type: data.request_type,
                 text_content: data.text_content,
@@ -90,13 +93,6 @@ export const AuthoringContext = () => {
                 action: `/engagements/${data.id}/details/authoring/${slug}`,
             },
         );
-    };
-
-    const getSendReportValue = (valueToInterpret: boolean) => {
-        if (undefined === valueToInterpret) {
-            return '';
-        }
-        return valueToInterpret ? 'true' : 'false';
     };
 
     return (

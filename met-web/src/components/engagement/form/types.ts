@@ -34,6 +34,7 @@ export interface EngagementForm {
     name: string;
     description: string;
     rich_description: string;
+    description_title: string;
     start_date: string;
     end_date: string;
     content: string;
@@ -48,6 +49,7 @@ export interface EngagementFormUpdate {
     name?: string;
     description?: string;
     rich_description?: string;
+    description_title: string;
     start_date?: string;
     end_date?: string;
     is_internal?: boolean;

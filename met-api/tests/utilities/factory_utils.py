@@ -169,6 +169,7 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, na
         name=name if name else fake.name(),
         description=eng_info.get('description'),
         rich_description=eng_info.get('rich_description'),
+        description_title=eng_info.get('description_title'),
         created_by=eng_info.get('created_by'),
         updated_by=eng_info.get('updated_by'),
         status_id=status if status else eng_info.get('status'),
@@ -525,6 +526,7 @@ def factory_video_model(video_info: dict = TestWidgetVideo.video1):
     """Produce a comment model."""
     video = WidgetVideoModel(
         video_url=video_info.get('video_url'),
+        title=video_info.get('title'),
         description=video_info.get('description'),
         widget_id=video_info.get('widget_id'),
         engagement_id=video_info.get('engagement_id'),

@@ -1,29 +1,23 @@
 import { Grid } from '@mui/material';
-import React, { useEffect, Suspense } from 'react';
-import { useOutletContext, useRouteLoaderData, Await } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLoaderData, useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
 import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import { MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { convertToRaw, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { Controller } from 'react-hook-form';
-import { EngagementContent } from 'models/engagementContent';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import dayjs from 'dayjs';
+import { EngagementUpdateData } from './AuthoringContext';
+import { EngagementLoaderData } from 'components/engagement/public/view';
 
 const AuthoringSummary = () => {
-    const {
-        setValue,
-        control,
-        reset,
-        getValues,
-        engagement,
-        defaultValues,
-        setDefaultValues,
-        fetcher,
-    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template.
+    const { setValue, control, reset, getValues, setDefaultValues, fetcher }: AuthoringTemplateOutletContext =
+        useOutletContext(); // Access the form functions and values from the authoring template.
 
     // Check if the form has succeeded or failed after a submit, and issue a message to the user.
     const dispatch = useAppDispatch();
@@ -42,25 +36,51 @@ const AuthoringSummary = () => {
         }
     }, [fetcher.data]);
 
-    const { content } = useRouteLoaderData('authoring-loader') as {
-        content: Promise<EngagementContent[]>;
+    const { engagement } = useLoaderData() as EngagementLoaderData;
+
+    const untouchedDefaultValues: EngagementUpdateData = {
+        id: 0,
+        status_id: 0,
+        taxon_id: 0,
+        content_id: 0,
+        name: '',
+        start_date: dayjs(new Date(1970, 0, 1)),
+        end_date: dayjs(new Date(1970, 0, 1)),
+        description: '',
+        rich_description: '',
+        description_title: '',
+        banner_filename: '',
+        status_block: [],
+        title: '',
+        icon_name: '',
+        metadata_value: '',
+        send_report: undefined,
+        slug: '',
+        request_type: '',
+        text_content: '',
+        json_content: '{ blocks: [], entityMap: {} }',
+        summary_editor_state: EditorState.createEmpty(),
     };
 
+    // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {
-        // Reset values to default and retrieve relevant content from loader.
-        reset(defaultValues);
-        setValue('id', Number(engagement.id));
-        content.then((content) => {
-            setValue('content_id', Number(content[0].id));
-            setValue('title', content[0].title);
-            setValue('text_content', content[0].text_content);
-            // Make sure it's valid JSON.
-            if (tryParse(content[0].json_content)) {
-                setValue('json_content', content[0].json_content);
+        reset(untouchedDefaultValues);
+        engagement.then((eng) => {
+            setValue('id', Number(eng.id));
+            // Make sure it is valid JSON.
+            if (tryParse(eng.rich_description)) {
+                setValue('rich_description', eng.rich_description);
             }
-            setDefaultValues(getValues()); // Update default values so that our loaded values are default.
+            setValue('description_title', eng.description_title || '');
+            setValue('description', eng.description);
+            setValue(
+                'summary_editor_state',
+                EditorState.createWithContent(convertFromRaw(JSON.parse(eng.rich_description))),
+            );
+            // Update default values so that our loaded values are default.
+            setDefaultValues(getValues());
         });
-    }, [content]);
+    }, [engagement]);
 
     // Define the styles
     const metBigLabelStyles = {
@@ -109,16 +129,11 @@ const AuthoringSummary = () => {
         list: { options: ['unordered', 'ordered'] },
     };
 
-    const handleTitleChange = (value: string) => {
-        setValue('title', value);
-        return value;
-    };
-
     const handleEditorChange = (newEditorState: EditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
         const stringifiedEditorState = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
-        setValue('text_content', plainText);
-        setValue('json_content', stringifiedEditorState);
+        setValue('description', plainText);
+        setValue('rich_description', stringifiedEditorState);
         return newEditorState;
     };
 
@@ -136,7 +151,7 @@ const AuthoringSummary = () => {
     return (
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="title">
+                <label htmlFor="description_title">
                     <MetBigLabel style={metBigLabelStyles}>
                         Section Heading
                         <span style={{ fontWeight: 'normal' }}> (Required)</span>
@@ -146,22 +161,17 @@ const AuthoringSummary = () => {
                     </FormDescriptionText>
                     <Controller
                         control={control}
-                        name="title"
+                        name="description_title"
                         rules={{ required: true }}
                         render={({ field }) => {
                             return (
                                 <TextField
                                     {...field}
                                     sx={{ backgroundColor: colors.surface.white }}
-                                    id="title"
-                                    value={field.value}
-                                    error={undefined}
+                                    id="description_title"
                                     counter
                                     maxLength={60}
                                     placeholder="Section heading text"
-                                    onChange={(value) => {
-                                        field.onChange(handleTitleChange(value));
-                                    }}
                                 />
                             );
                         }}
@@ -179,33 +189,27 @@ const AuthoringSummary = () => {
                         Body copy for the summary section of your engagement should provide a short overview of what
                         your engagement is about and describe what you are asking your audience to do.
                     </FormDescriptionText>
-                    <Suspense>
-                        <Await resolve={content}>
-                            {(content) => (
-                                <Controller
-                                    control={control}
-                                    name="summary_editor_state"
-                                    rules={{ required: true }}
-                                    render={({ field }) => {
-                                        return (
-                                            <RichTextArea
-                                                ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
-                                                spellCheck
-                                                initialContentState={tryParse(content[0].json_content) || ''}
-                                                onEditorStateChange={(value) => {
-                                                    field.onChange(handleEditorChange(value));
-                                                }}
-                                                handlePastedText={() => false}
-                                                toolbarStyle={toolbarStyles}
-                                                editorStyle={editorStyles}
-                                                toolbar={toolbar}
-                                            />
-                                        );
+                    <Controller
+                        control={control}
+                        name="summary_editor_state"
+                        rules={{ required: true }}
+                        render={({ field }) => {
+                            return (
+                                <RichTextArea
+                                    ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
+                                    spellCheck
+                                    editorState={field.value}
+                                    onEditorStateChange={(value) => {
+                                        field.onChange(handleEditorChange(value));
                                     }}
+                                    handlePastedText={() => false}
+                                    toolbarStyle={toolbarStyles}
+                                    editorStyle={editorStyles}
+                                    toolbar={toolbar}
                                 />
-                            )}
-                        </Await>
-                    </Suspense>
+                            );
+                        }}
+                    />
                 </label>
             </Grid>
 

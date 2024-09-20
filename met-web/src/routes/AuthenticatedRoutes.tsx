@@ -52,7 +52,6 @@ import AuthoringFeedback from 'components/engagement/admin/create/authoring/Auth
 import AuthoringResults from 'components/engagement/admin/create/authoring/AuthoringResults';
 import AuthoringSubscribe from 'components/engagement/admin/create/authoring/AuthoringSubscribe';
 import AuthoringMore from 'components/engagement/admin/create/authoring/AuthoringMore';
-import { authoringLoader } from 'components/engagement/admin/create/authoring/authoringLoader';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -131,7 +130,7 @@ const AuthenticatedRoutes = () => {
                             element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
                         >
                             <Route element={<AuthoringContext />}>
-                                <Route element={<AuthoringTemplate />} loader={authoringLoader} id="authoring-loader">
+                                <Route element={<AuthoringTemplate />} id="authoring-loader" loader={engagementLoader}>
                                     <Route
                                         path="banner"
                                         element={<AuthoringBanner />}
@@ -145,6 +144,7 @@ const AuthenticatedRoutes = () => {
                                     />
                                     <Route
                                         path="summary"
+                                        loader={engagementLoader}
                                         action={engagementAuthoringUpdateAction}
                                         element={<AuthoringSummary />}
                                         handle={{

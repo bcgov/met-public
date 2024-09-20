@@ -48,6 +48,7 @@ const draftEngagement: Engagement = {
     rich_description:
         '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     description: 'Test description',
+    description_title: 'Test description title',
     start_date: '2022-09-01',
     end_date: '2022-09-30',
     surveys: surveys,
@@ -248,6 +249,7 @@ const mockVideo: VideoWidget = {
     id: 1,
     widget_id: 1,
     engagement_id: 1,
+    title: 'Video Title',
     video_url: 'https://youtube.url',
     description: 'Video description',
 };

@@ -17,6 +17,7 @@ class EngagementTranslationSchema(Schema):
     name = fields.Str(data_key='name')
     description = fields.Str(data_key='description')
     rich_description = fields.Str(data_key='rich_description')
+    description_title = fields.Str(data_key='description_title')
     content = fields.Str(data_key='content')
     rich_content = fields.Str(data_key='rich_content')
     consent_message = fields.Str(data_key='consent_message')

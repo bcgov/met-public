@@ -1,17 +1,15 @@
 import React, { Suspense, useMemo, useState } from 'react';
-import { useOutletContext, Form, useParams, useRouteLoaderData, Await, Outlet } from 'react-router-dom';
+import { useOutletContext, Form, useParams, Await, Outlet, useLoaderData } from 'react-router-dom';
 import AuthoringBottomNav from './AuthoringBottomNav';
 import { EngagementUpdateData } from './AuthoringContext';
 import { useFormContext } from 'react-hook-form';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { AuthoringContextType, StatusLabelProps } from './types';
-import { Engagement } from 'models/engagement';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { EyebrowText, Header2 } from 'components/common/Typography';
 import { useAppSelector } from 'hooks';
-import { getTenantLanguages } from 'services/languageService';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
 import { FormControlLabel, Grid, Radio, RadioGroup } from '@mui/material';
@@ -20,6 +18,8 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { When } from 'react-if';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
+import { Engagement } from 'models/engagement';
+import { getTenantLanguages } from 'services/languageService';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     const statusLabelStyle = {
@@ -39,7 +39,7 @@ export const getLanguageValue = (currentLanguage: string, languages: Language[])
 const AuthoringTemplate = () => {
     const { onSubmit, defaultValues, setDefaultValues, fetcher }: AuthoringContextType = useOutletContext();
     const { engagementId } = useParams() as { engagementId: string }; // We need the engagement ID quickly, so let's grab it from useParams
-    const { engagement } = useRouteLoaderData('single-engagement') as { engagement: Engagement };
+    const { engagement } = useLoaderData() as { engagement: Promise<Engagement> };
     const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
     const [contentTabsEnabled, setContentTabsEnabled] = useState('false'); // todo: replace default value with stored value in engagement.
     const defaultTabValues = {
@@ -50,6 +50,7 @@ const AuthoringTemplate = () => {
     };
     const [tabs, setTabs] = useState([defaultTabValues]);
     const [singleContentValues, setSingleContentValues] = useState({ ...defaultTabValues, heading: '' });
+
     const tenant = useAppSelector((state) => state.tenant);
     const languages = useMemo(() => getTenantLanguages(tenant.id), [tenant.id]); // todo: Using tenant language list until language data is integrated with the engagement.
     const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant);
@@ -61,6 +62,7 @@ const AuthoringTemplate = () => {
         const pathSlug = pathArray[pathArray.length - 1];
         return pathSlug === slug;
     })?.name;
+
     const {
         handleSubmit,
         setValue,
@@ -95,17 +97,17 @@ const AuthoringTemplate = () => {
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
-            <Suspense>
-                <Await resolve={engagement}>
-                    {(engagement: Engagement) => (
-                        <div style={{ marginTop: '2rem' }}>
-                            <StatusLabel text={EngagementStatus[engagement?.status_id]} completed={false} />
-                            {/* todo: For the section status label when it's ready */}
-                            {/* <StatusLabel text={'Insert Section Status Text Here'} completed={'Insert Completed Boolean Here'} /> */}
-                        </div>
-                    )}
-                </Await>
-            </Suspense>
+            <div style={{ marginTop: '2rem' }}>
+                <Suspense>
+                    <Await resolve={engagement}>
+                        {(engagement: Engagement) => (
+                            <StatusLabel text={EngagementStatus[engagement.status_id]} completed={false} />
+                        )}
+                    </Await>
+                </Suspense>
+                {/* todo: For the section status label when it's ready */}
+                {/* <StatusLabel text={'Insert Section Status Text Here'} completed={'Insert Completed Boolean Here'} /> */}
+            </div>
             <h1 style={{ marginTop: '0.5rem', paddingBottom: '1rem' }}>{pageTitle}</h1>
             <SystemMessage status="warning">
                 Under construction - the settings in this section have no effect.
@@ -151,13 +153,15 @@ const AuthoringTemplate = () => {
                 </Grid>
             </When>
 
-            <Header2 decorated style={{ paddingTop: '1rem' }}>
-                <Suspense>
-                    <Await resolve={languages}>
-                        {(languages: Language[]) => getLanguageValue(currentLanguage, languages) + ' Content'}
-                    </Await>
-                </Suspense>
-            </Header2>
+            <Suspense>
+                <Await resolve={languages}>
+                    {(languages: Language[]) => (
+                        <Header2 decorated style={{ paddingTop: '1rem' }}>
+                            {`${getLanguageValue(currentLanguage, languages)} Content`}
+                        </Header2>
+                    )}
+                </Await>
+            </Suspense>
 
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Suspense>
@@ -173,8 +177,8 @@ const AuthoringTemplate = () => {
                                     getValues,
                                     setDefaultValues,
                                     reset,
-                                    control,
                                     engagement,
+                                    control,
                                     contentTabsEnabled,
                                     tabs,
                                     singleContentValues,
@@ -182,12 +186,12 @@ const AuthoringTemplate = () => {
                                     isDirty,
                                     defaultValues,
                                     fetcher,
+                                    slug,
                                 }}
                             />
                         )}
                     </Await>
                 </Suspense>
-
                 <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
                 <Suspense>
                     <Await resolve={languages}>

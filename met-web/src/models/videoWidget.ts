@@ -3,5 +3,6 @@ export interface VideoWidget {
     widget_id: number;
     engagement_id: number;
     video_url: string;
+    title: string;
     description: string;
 }
