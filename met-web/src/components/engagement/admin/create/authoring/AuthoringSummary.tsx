@@ -13,7 +13,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import dayjs from 'dayjs';
 import { EngagementUpdateData } from './AuthoringContext';
-import { Engagement } from 'models/engagement';
+import { EngagementLoaderData } from 'components/engagement/public/view';
 
 const AuthoringSummary = () => {
     const { setValue, control, reset, getValues, setDefaultValues, fetcher }: AuthoringTemplateOutletContext =
@@ -36,7 +36,7 @@ const AuthoringSummary = () => {
         }
     }, [fetcher.data]);
 
-    const { engagement } = useLoaderData() as { engagement: Promise<Engagement> };
+    const { engagement } = useLoaderData() as EngagementLoaderData;
 
     const untouchedDefaultValues: EngagementUpdateData = {
         id: 0,
@@ -71,7 +71,7 @@ const AuthoringSummary = () => {
             if (tryParse(eng.rich_description)) {
                 setValue('rich_description', eng.rich_description);
             }
-            setValue('description_title', eng.description_title || 'Hello world');
+            setValue('description_title', eng.description_title || '');
             setValue('description', eng.description);
             setValue(
                 'summary_editor_state',
@@ -129,11 +129,6 @@ const AuthoringSummary = () => {
         list: { options: ['unordered', 'ordered'] },
     };
 
-    const handleTitleChange = (value: string) => {
-        setValue('description_title', value);
-        return value;
-    };
-
     const handleEditorChange = (newEditorState: EditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
         const stringifiedEditorState = JSON.stringify(convertToRaw(newEditorState.getCurrentContent()));
@@ -173,15 +168,10 @@ const AuthoringSummary = () => {
                                 <TextField
                                     {...field}
                                     sx={{ backgroundColor: colors.surface.white }}
-                                    id="title"
-                                    value={field.value}
-                                    error={undefined}
+                                    id="description_title"
                                     counter
                                     maxLength={60}
                                     placeholder="Section heading text"
-                                    onChange={(value) => {
-                                        field.onChange(handleTitleChange(value));
-                                    }}
                                 />
                             );
                         }}
