@@ -130,6 +130,7 @@ class WidgetTranslationService:
             widget_video = WidgetVideoModel.get_video(widget_id)
             if widget_video:
                 translation_data['video_url'] = widget_video[0].video_url
+                translation_data['video_title'] = widget_video[0].title
                 translation_data['video_description'] = widget_video[0].description
 
         return translation_data

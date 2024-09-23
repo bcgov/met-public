@@ -194,7 +194,8 @@ class TestEngagementInfo(dict, Enum):
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
         \"type\":\"unstyled\",\"depth\":0,\
-        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"'
+        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
     engagement_draft = {
@@ -210,6 +211,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
@@ -229,6 +231,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
         'content': 'Content Sample',
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
@@ -256,6 +259,7 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
             \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
 
@@ -496,6 +500,13 @@ class TestWidgetInfo(dict, Enum):
     }
     widget_timeline = {
         'widget_type_id': WidgetType.Timeline.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_image = {
+        'widget_type_id': WidgetType.Image.value,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
@@ -984,6 +995,7 @@ class TestEngagementTranslationInfo(dict, Enum):
         'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
             \"type\":\"unstyled\",\"depth\":0,\
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
+        'description_title': 'My Test Description Title',
     }
 
 

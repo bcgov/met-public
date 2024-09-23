@@ -12,6 +12,7 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
         is_internal: formData.get('is_internal') === 'true',
         description: '',
         rich_description: '',
+        description_title: '',
         content: '',
         rich_content: '',
     });

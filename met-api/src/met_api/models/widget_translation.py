@@ -28,6 +28,7 @@ class WidgetTranslation(BaseModel):  # pylint: disable=too-few-public-methods
     poll_title = db.Column(db.String(255))
     poll_description = db.Column(db.String(2048))
     video_url = db.Column(db.String(255))
+    video_title = db.Column(db.Text(255))
     video_description = db.Column(db.Text())
 
     @classmethod
@@ -62,6 +63,7 @@ class WidgetTranslation(BaseModel):  # pylint: disable=too-few-public-methods
             poll_title=translation.get('poll_title', None),
             poll_description=translation.get('poll_description', None),
             video_url=translation.get('video_url', None),
+            video_title=translation.get('video_title', None),
             video_description=translation.get('video_description', None),
         )
 

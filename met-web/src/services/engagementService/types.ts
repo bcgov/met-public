@@ -10,6 +10,7 @@ export interface PostEngagementRequest {
     end_date: string;
     description: string;
     rich_description: string;
+    description_title: string;
     content: string;
     rich_content: string;
     banner_filename?: string;
@@ -24,6 +25,7 @@ export interface PutEngagementRequest {
     end_date: string;
     description: string;
     rich_description: string;
+    description_title: string;
     banner_filename?: string;
     status_block?: unknown[];
 }
@@ -36,6 +38,7 @@ export interface PatchEngagementRequest {
     end_date?: string;
     description?: string;
     rich_description?: string;
+    description_title?: string;
     banner_filename?: string;
     status_block?: unknown[];
     is_internal?: boolean;

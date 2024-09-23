@@ -22,6 +22,7 @@ class EngagementTranslation(BaseModel):
     name = db.Column(db.String(50))
     description = db.Column(db.Text())
     rich_description = db.Column(JSON, unique=False, nullable=True)
+    description_title = db.Column(db.String(255))
     content = db.Column(db.Text())
     rich_content = db.Column(JSON, unique=False, nullable=True)
     consent_message = db.Column(JSON, unique=False, nullable=True)

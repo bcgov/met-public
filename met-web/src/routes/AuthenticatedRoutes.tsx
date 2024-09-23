@@ -130,10 +130,11 @@ const AuthenticatedRoutes = () => {
                             element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
                         >
                             <Route element={<AuthoringContext />}>
-                                <Route element={<AuthoringTemplate />} action={engagementAuthoringUpdateAction}>
+                                <Route element={<AuthoringTemplate />} id="authoring-loader" loader={engagementLoader}>
                                     <Route
                                         path="banner"
                                         element={<AuthoringBanner />}
+                                        action={engagementAuthoringUpdateAction}
                                         handle={{
                                             crumb: () => ({
                                                 link: `banner`,
@@ -143,6 +144,8 @@ const AuthenticatedRoutes = () => {
                                     />
                                     <Route
                                         path="summary"
+                                        loader={engagementLoader}
+                                        action={engagementAuthoringUpdateAction}
                                         element={<AuthoringSummary />}
                                         handle={{
                                             crumb: () => ({
@@ -153,6 +156,7 @@ const AuthenticatedRoutes = () => {
                                     />
                                     <Route
                                         path="details"
+                                        action={engagementAuthoringUpdateAction}
                                         element={<AuthoringDetails />}
                                         handle={{
                                             crumb: () => ({
@@ -163,6 +167,7 @@ const AuthenticatedRoutes = () => {
                                     />
                                     <Route
                                         path="feedback"
+                                        action={engagementAuthoringUpdateAction}
                                         element={<AuthoringFeedback />}
                                         handle={{
                                             crumb: () => ({

@@ -24,6 +24,7 @@ interface EngagementFormData {
     start_date: string;
     end_date: string;
     description: string;
+    description_title: string;
     content: string;
     is_internal: boolean;
     consent_message: string;
@@ -45,6 +46,7 @@ const initialEngagementFormData = {
     start_date: '',
     end_date: '',
     description: '',
+    description_title: '',
     content: '',
     is_internal: false,
     consent_message: '',
@@ -205,6 +207,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         start_date: savedEngagement.start_date,
         end_date: savedEngagement.end_date,
         description: savedEngagement.description || '',
+        description_title: savedEngagement.description_title || '',
         content: savedEngagement.content || '',
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
@@ -246,6 +249,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 start_date: savedEngagement.start_date,
                 end_date: savedEngagement.end_date,
                 description: savedEngagement.description || '',
+                description_title: savedEngagement.description_title || '',
                 content: savedEngagement.content || '',
                 is_internal: savedEngagement.is_internal || false,
                 consent_message: savedEngagement.consent_message || '',

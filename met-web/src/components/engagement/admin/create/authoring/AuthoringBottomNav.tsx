@@ -14,12 +14,12 @@ import { getLanguageValue } from './AuthoringTemplate';
 
 const AuthoringBottomNav = ({
     isDirty,
-    isValid,
     isSubmitting,
     currentLanguage,
     setCurrentLanguage,
     languages,
     pageTitle,
+    setValue,
 }: AuthoringBottomNavProps) => {
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
@@ -96,10 +96,9 @@ const AuthoringBottomNav = ({
                         </ThemeProvider>
 
                         <Button
-                            disabled={!isValid || !isDirty || isSubmitting}
+                            disabled={!isDirty || isSubmitting}
                             type="submit"
-                            name="request_type"
-                            value="update"
+                            onClick={() => setValue('request_type', 'update')}
                             sx={{
                                 ...buttonStyles,
                                 margin: '0 1.2rem',
@@ -108,10 +107,9 @@ const AuthoringBottomNav = ({
                             Save Section
                         </Button>
                         <Button
-                            disabled={!isValid || !isDirty || isSubmitting}
+                            disabled={!isDirty || isSubmitting}
                             type="submit"
-                            name="request_type"
-                            value="preview"
+                            onClick={() => setValue('request_type', 'preview')}
                             sx={{
                                 ...buttonStyles,
                                 marginLeft: 'auto',
@@ -120,7 +118,7 @@ const AuthoringBottomNav = ({
                             <img
                                 style={{
                                     paddingRight: '0.3rem',
-                                    filter: !isValid || !isDirty || isSubmitting ? 'opacity(40%)' : 'opacity(100%)',
+                                    filter: !isDirty || isSubmitting ? 'opacity(40%)' : 'opacity(100%)',
                                 }}
                                 src={pagePreview}
                                 alt=""
@@ -146,15 +144,18 @@ const LanguageSelector = ({
     const handleSelectChange = (event: SelectChangeEvent<string>) => {
         const newLanguageCode = event.target.value;
         if (isDirty && !isSubmitting)
-            // todo: Replace this message with our stylized modal message.
-            window.confirm(
-                `Are you sure you want to switch to ${
-                    getLanguageValue(newLanguageCode, languages) || 'another language'
-                }? You have unsaved changes for the ${
-                    getLanguageValue(currentLanguage, languages) || 'current'
-                } language.`,
-            );
-        setCurrentLanguage(newLanguageCode);
+            if (
+                window.confirm(
+                    `Are you sure you want to switch to ${
+                        getLanguageValue(newLanguageCode, languages) || 'another language'
+                    }? You have unsaved changes for the ${
+                        getLanguageValue(currentLanguage, languages) || 'current'
+                    } language.`,
+                )
+            ) {
+                // todo: Replace this message with our stylized modal message.
+                setCurrentLanguage(newLanguageCode);
+            }
     };
     return (
         <Select

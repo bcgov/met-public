@@ -9,6 +9,7 @@ import MapOptionCard from './Map/MapOptionCard';
 import VideoOptionCard from './Video/VideoOptionCard';
 import TimelineOptionCard from './Timeline/TimelineOptionCard';
 import PollOptionCard from './Poll/PollOptionCard';
+import ImageOptionCard from './Image/ImageOptionCard';
 
 const WidgetOptionCards = () => {
     return (
@@ -40,6 +41,9 @@ const WidgetOptionCards = () => {
             </Grid>
             <Grid item xs={12} lg={6}>
                 <PollOptionCard />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+                <ImageOptionCard />
             </Grid>
         </Grid>
     );

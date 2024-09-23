@@ -11,8 +11,9 @@
             "subscribe_item_id": 1,
             "description": "Subscription description in Spanish",
             "rich_description": "Rich text subscription description in Spanish",
+            "description_title": "Description title in Spanish.",
             "call_to_action_text": "Subscribe Now",
-            "pre_populate" : false
+            "pre_populate": false
         },
         {
             "language_id": 2,
@@ -46,6 +47,12 @@
             "type": "string",
             "title": "Rich Description",
             "description": "A more detailed and formatted translation of the subscribe item."
+        },
+        "description_title": {
+            "$id": "#/properties/description_title",
+            "type": "string",
+            "title": "Description Title",
+            "description": "A title that displays above your engagement description."
         },
         "call_to_action_text": {
             "$id": "#/properties/call_to_action_text",

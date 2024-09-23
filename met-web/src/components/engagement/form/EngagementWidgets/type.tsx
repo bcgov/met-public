@@ -9,4 +9,5 @@ export const WidgetTabValues = {
     VIDEO_FORM: 'VIDEO_FORM',
     TIMELINE_FORM: 'TIMELINE_FORM',
     POLL_FORM: 'POLL_FORM',
+    IMAGE_FORM: 'IMAGE_FORM',
 };

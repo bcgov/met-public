@@ -19,6 +19,7 @@ import { Tenant } from 'models/tenant';
 import { EngagementContent } from 'models/engagementContent';
 import { UserState } from 'services/userService/types';
 import { USER_ROLES } from 'services/userService/constants';
+import { ImageWidget } from 'models/imageWidget';
 
 const tenant: Tenant = {
     name: 'Tenant 1',
@@ -47,6 +48,7 @@ const draftEngagement: Engagement = {
     rich_description:
         '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     description: 'Test description',
+    description_title: 'Test description title',
     start_date: '2022-09-01',
     end_date: '2022-09-30',
     surveys: surveys,
@@ -214,6 +216,15 @@ const timeLineWidget: Widget = {
     location: 1,
 };
 
+const imageWidget: Widget = {
+    id: 1,
+    title: 'Image',
+    widget_type_id: WidgetType.Image,
+    engagement_id: 1,
+    items: [],
+    location: 1,
+};
+
 const mockPollAnswer1: PollAnswer = {
     id: 0,
     answer_text: 'answer 1',
@@ -238,8 +249,18 @@ const mockVideo: VideoWidget = {
     id: 1,
     widget_id: 1,
     engagement_id: 1,
+    title: 'Video Title',
     video_url: 'https://youtube.url',
     description: 'Video description',
+};
+
+const mockImage: ImageWidget = {
+    id: 1,
+    widget_id: 1,
+    engagement_id: 1,
+    image_url: 'https://image.url',
+    alt_text: 'Image alt text',
+    description: 'Image description',
 };
 
 const mockTimeLineEvent1: TimelineEvent = {
@@ -261,6 +282,7 @@ const mockTimeLine: TimelineWidget = {
     description: 'Time Line Description',
     events: [mockTimeLineEvent1],
 };
+
 const engagementMetadata: EngagementMetadata = {
     engagement_id: 1,
     taxon_id: 1,
@@ -344,6 +366,8 @@ export {
     videoWidget,
     mockVideo,
     timeLineWidget,
+    imageWidget,
+    mockImage,
     mockTimeLine,
     subscribeWidget,
     engagementContentData,

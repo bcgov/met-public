@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
 import { Widget } from 'models/widget';
 import { WidgetSwitch } from 'components/engagement/old-view/widgets/WidgetSwitch';
-import { BaseTheme, DarkTheme } from 'styles/Theme';
+import { DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 
 export const EngagementDescription = () => {
@@ -65,45 +65,45 @@ export const EngagementDescription = () => {
                             marginBottom: '48px',
                         }}
                     >
-                        <Header2 decorated id="description-header">
-                            Engagement Description
-                        </Header2>
                         <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
                             <Await resolve={engagement}>
                                 {(engagement: Engagement) => (
-                                    <BodyText>
-                                        <RichTextArea
-                                            toolbarHidden
-                                            readOnly
-                                            editorState={getEditorStateFromRaw(engagement.rich_description)}
-                                        />
-                                    </BodyText>
+                                    <>
+                                        <Header2 decorated id="description-header">
+                                            {engagement.description_title}
+                                        </Header2>
+                                        <BodyText>
+                                            <RichTextArea
+                                                toolbarHidden
+                                                readOnly
+                                                editorState={getEditorStateFromRaw(engagement.rich_description)}
+                                            />
+                                        </BodyText>
+                                    </>
                                 )}
                             </Await>
                         </Suspense>
                     </Grid>
                     <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
-                        <ThemeProvider theme={BaseTheme}>
-                            <Await resolve={widgets}>
-                                {(resolvedWidgets: Widget[]) => {
-                                    const widget = resolvedWidgets?.[0];
-                                    if (widget)
-                                        return (
-                                            <Grid
-                                                item
-                                                sx={{
-                                                    width: { xs: '100%', md: '47.5%' },
-                                                    display: 'flex',
-                                                    minHeight: '360px',
-                                                    marginBottom: '48px',
-                                                }}
-                                            >
-                                                <WidgetSwitch widget={widget} />;
-                                            </Grid>
-                                        );
-                                }}
-                            </Await>
-                        </ThemeProvider>
+                        <Await resolve={widgets}>
+                            {(resolvedWidgets: Widget[]) => {
+                                const widget = resolvedWidgets[0];
+                                if (widget)
+                                    return (
+                                        <Grid
+                                            item
+                                            sx={{
+                                                width: { xs: '100%', md: '47.5%' },
+                                                display: 'flex',
+                                                minHeight: '360px',
+                                                marginBottom: '48px',
+                                            }}
+                                        >
+                                            <WidgetSwitch widget={widget} />
+                                        </Grid>
+                                    );
+                            }}
+                        </Await>
                     </Suspense>
                 </Grid>
             </ThemeProvider>

@@ -24,8 +24,11 @@ export enum WidgetType {
     CACForm = 8,
     Timeline = 9,
     Poll = 10,
+    Image = 11,
 }
 
 export enum WidgetLocation {
-    engagementAuthoring = 1,
+    Summary = 1,
+    Details = 2,
+    Feedback = 3,
 }

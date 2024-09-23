@@ -26,9 +26,6 @@ const handleDuplicateTabNames = (newTabs: TabValues[], newTabName: string) => {
 const AuthoringDetails = () => {
     const {
         setValue,
-        watch, // Optional form control prop
-        control, // Optional form control prop
-        engagement, // Optional form control prop
         contentTabsEnabled,
         tabs,
         setTabs,

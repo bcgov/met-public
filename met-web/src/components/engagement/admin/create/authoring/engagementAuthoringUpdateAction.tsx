@@ -4,7 +4,6 @@ import { patchEngagementContent } from 'services/engagementContentService';
 import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
-import { openNotification } from 'services/notificationService/notificationSlice';
 
 export const engagementAuthoringUpdateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
@@ -18,11 +17,12 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         end_date: (formData.get('end_date') as string) || undefined,
         description: (formData.get('description') as string) || undefined,
         rich_description: (formData.get('rich_description') as string) || undefined,
+        description_title: (formData.get('description_title') as string) || undefined,
         banner_filename: (formData.get('banner_filename') as string) || undefined,
         status_block: (formData.get('status_block') as unknown as unknown[]) || undefined,
     });
 
-    // Update engagement content.
+    // Update engagement content if necessary.
     if (
         (formData.get('title') || formData.get('text_content' || formData.get('json_content'))) &&
         '0' !== formData.get('content_id')
@@ -80,16 +80,10 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     }
 
     if (0 === errors.length && 'preview' === requestType) {
-        return redirect(`/engagements/${engagement.id}/old-view`);
+        return redirect(`../../../old-view`);
     } else if (0 === errors.length && 'update' === requestType) {
-        openNotification({
-            severity: 'success',
-            text: 'Engagement saved successfully.',
-        });
+        return 'success';
     } else {
-        openNotification({
-            severity: 'error',
-            text: 'preview' === requestType ? 'Unable to preview engagement' : 'Unable to save engagement',
-        });
+        return 'failure';
     }
 };

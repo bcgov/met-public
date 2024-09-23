@@ -58,6 +58,7 @@ export const WidgetPickerButton = ({ location }: { location: WidgetLocation }) =
                             />
                         ) : (
                             <button
+                                type="button"
                                 onClick={() => handleWidgetDrawerOpen(true)}
                                 style={{
                                     width: '100%',
