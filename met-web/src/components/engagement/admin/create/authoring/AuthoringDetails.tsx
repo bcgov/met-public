@@ -1,29 +1,17 @@
-import {
-    FormControlLabel,
-    Grid,
-    IconButton,
-    MenuItem,
-    Radio,
-    RadioGroup,
-    Select,
-    SelectChangeEvent,
-    Tab,
-    Tabs,
-} from '@mui/material';
-import { BodyText, EyebrowText as FormDescriptionText, Header2 } from 'components/common/Typography';
+import { Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tab, Tabs } from '@mui/material';
+import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import { colors, MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { Button, TextField } from 'components/common/Input';
 import React, { SyntheticEvent, useState } from 'react';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { DetailsTabProps, TabValues } from './types';
+import { AuthoringTemplateOutletContext, DetailsTabProps, TabValues } from './types';
+import { useOutletContext } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
 import { Unless, When } from 'react-if';
 import { TabContext, TabPanel } from '@mui/lab';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/pro-regular-svg-icons';
 import { EditorState } from 'draft-js';
-import { createPortal } from 'react-dom';
-import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const handleDuplicateTabNames = (newTabs: TabValues[], newTabName: string) => {
     // Will add a sequencial number suffix for up to 10 numbers if there is a duplicate, then add (copy) if none of those are available.
@@ -36,16 +24,17 @@ const handleDuplicateTabNames = (newTabs: TabValues[], newTabName: string) => {
 };
 
 const AuthoringDetails = () => {
-    const [contentTabsEnabled, setContentTabsEnabled] = useState('false'); // todo: replace default value with stored value in engagement.
-    const defaultTabValues = {
-        heading: 'Tab 1',
-        bodyCopyPlainText: '',
-        bodyCopyEditorState: getEditorStateFromRaw(''),
-        widget: '',
-    };
-    const [tabs, setTabs] = useState([defaultTabValues]);
+    const {
+        setValue,
+        contentTabsEnabled,
+        tabs,
+        setTabs,
+        setSingleContentValues,
+        setContentTabsEnabled,
+        singleContentValues,
+        defaultTabValues,
+    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
     const [currentTab, setCurrentTab] = useState(tabs[0]);
-    const [singleContentValues, setSingleContentValues] = useState({ ...defaultTabValues, heading: '' });
 
     const tabsStyles = {
         borderBottom: `2px solid ${colors.surface.gray[60]}`,
@@ -116,64 +105,8 @@ const AuthoringDetails = () => {
         setCurrentTab(newTabs[newTabs.length - 1]);
     };
 
-    // If switching from single to multiple, add "tab 2". If switching from multiple to single, remove all values but index 0.
-    const handleTabsRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newTabsRadioValue = event.target.value;
-        if ('true' === newTabsRadioValue) {
-            setTabs([
-                { ...tabs[0], heading: singleContentValues.heading ? singleContentValues.heading : 'Tab 1' },
-                { ...defaultTabValues, heading: 'Tab 2' },
-            ]);
-            setContentTabsEnabled('true');
-        } else {
-            setSingleContentValues({ ...tabs[0], heading: 'Tab 1' !== tabs[0].heading ? tabs[0].heading : '' });
-            setTabs([tabs[0]]);
-            setContentTabsEnabled('false');
-        }
-    };
-
     return (
         <Grid item sx={{ maxWidth: '700px' }} direction="column">
-            {createPortal(
-                <Grid container sx={{ maxWidth: '700px' }}>
-                    <Header2 decorated style={{ paddingTop: '1rem' }}>
-                        Content Configuration
-                    </Header2>
-                    <BodyText size="small">
-                        In the Details Section of your engagement, you have the option to display your content in a
-                        normal, static page section view (No Tabs), or for lengthy content, use Tabs. You may wish to
-                        use tabs if your content is quite lengthy so you can organize it into smaller, more digestible
-                        chunks and reduce the length of your engagement page.
-                    </BodyText>
-                    <RadioGroup
-                        row
-                        id="tabs_enabled"
-                        name="tabs_enabled"
-                        defaultValue="false"
-                        value={contentTabsEnabled}
-                        onChange={handleTabsRadio}
-                        sx={{ flexWrap: 'nowrap', fontSize: '0.8rem', mb: '1rem', width: '100%' }}
-                    >
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                aria-label="No Tabs: Select the no tabs option if you only want one content section."
-                                value="false"
-                                control={<Radio />}
-                                label="No Tabs"
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                aria-label="Tabs (2 Minimum): Select the tabs option for lengthly content so you can break it into smaller chunks."
-                                value="true"
-                                control={<Radio />}
-                                label="Tabs (2 Minimum)"
-                            />
-                        </Grid>
-                    </RadioGroup>
-                </Grid>,
-                document.getElementById('pre-authoring-content') as HTMLElement,
-            )}
             <When condition={'true' === contentTabsEnabled && 1 < tabs.length}>
                 <Grid sx={{ borderBottom: '1', borderColor: 'divider' }} item>
                     <TabContext
@@ -252,6 +185,7 @@ const AuthoringDetails = () => {
                             return (
                                 <TabPanel value={tab.heading} key={key} sx={{ padding: '1rem 0' }}>
                                     <DetailsTab
+                                        setValue={setValue}
                                         setTabs={setTabs}
                                         setCurrentTab={setCurrentTab}
                                         setSingleContentValues={setSingleContentValues}
@@ -268,6 +202,7 @@ const AuthoringDetails = () => {
             </When>
             <Unless condition={'true' === contentTabsEnabled}>
                 <DetailsTab
+                    setValue={setValue}
                     setTabs={setTabs}
                     setCurrentTab={setCurrentTab}
                     setSingleContentValues={setSingleContentValues}
@@ -284,6 +219,7 @@ const AuthoringDetails = () => {
 export default AuthoringDetails;
 
 const DetailsTab = ({
+    setValue,
     setTabs,
     setCurrentTab,
     setSingleContentValues,
