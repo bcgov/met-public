@@ -23,12 +23,13 @@ export enum EngagementDisplayStatus {
     Unpublished = 7,
 }
 
-export type SubmissionStatusTypes = 'Upcoming' | 'Open' | 'Closed';
+export type SubmissionStatusTypes = 'Upcoming' | 'Open' | 'Closed' | 'ViewResults';
 
 export const SUBMISSION_STATUS: { [status: string]: SubmissionStatusTypes } = {
     UPCOMING: 'Upcoming',
     OPEN: 'Open',
     CLOSED: 'Closed',
+    VIEW_RESULTS: 'ViewResults',
 };
 
 export enum PollStatus {

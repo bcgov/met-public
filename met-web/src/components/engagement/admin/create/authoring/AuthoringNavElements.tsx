@@ -1,5 +1,4 @@
 import { USER_ROLES } from 'services/userService/constants';
-import { TenantState } from 'reduxSlices/tenantSlice';
 
 export interface AuthoringRoute {
     name: string;
@@ -10,11 +9,11 @@ export interface AuthoringRoute {
     required?: boolean;
 }
 
-export const getAuthoringRoutes = (engagementId: number, tenant: TenantState): AuthoringRoute[] => [
+export const getAuthoringRoutes = (engagementId: number): AuthoringRoute[] => [
     {
         name: 'Engagement Home',
-        path: `/${tenant.id}/engagements/${engagementId}/details/authoring`,
-        base: `/${tenant.id}/engagements`,
+        path: `/engagements/${engagementId}/details/authoring`,
+        base: `/engagements`,
         authenticated: false,
         allowedRoles: [USER_ROLES.EDIT_ENGAGEMENT],
         required: true,

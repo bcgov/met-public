@@ -80,7 +80,7 @@ Examples of when to Request Changes
 - Be sure to make use of shared components found under `src/components/common`. Below is a non-exhaustive list of common app components:
   - `Button`: A versatile button with different style types that are complimentary of MET styling. Choose a particular button style with: `variant=<"primary"|"secondary"|"tertiary"|undefined>`
   - `RichTextArea`: A WYSIWYG editor used app-wide. It will dynamically render out links and h2s as React components.
-  - `Header1`, `Header2`: MET-styled h1, h2 components.
+  - `Header1`, `Header2`, `Header3`: MET-styled h1, h2 and h3 components. Prefer these over using the native HTML headers.
   - `ResponsiveContainer`: A container that decreases its padding on smaller screens.
   - `ResponsiveWrapper`: A route wrapper that adds a responsive container around its child routes.
   - `Pagination`: Provides a pagination UI - a wrapper around Material UI's pagination.
@@ -96,3 +96,8 @@ Examples of when to Request Changes
   - `FormStep`: A wrapper around a form component that accepts a completion criteria and displays the user's progress. Accepts a `step` prop that is a number (from 1 to 9) that represents the current step in the form. This will be rendered as an icon with a checkmark if the step is complete, and a number if it's the current step or if it's incomplete.
   - `SystemMessage`: An informational message that can be displayed to the user. Accepts a `type` prop that can be "error", "warning", "info", or "success", which affects the display of the message.
   - `WidgetPicker`: A modular widget picker component that can be placed anywhere in the engagement editing area. In order to align widgets in the backend with the frontend, a "location" prop is required. Add new locations to the `WidgetLocation` enum.
+  - `ErrorMessage`: Display a form validation error message with an error icon. Used when creating a custom form element, e.g. `TextField`.
+    Accepts a `message` prop that is the error message to display.
+  - `TextInput`: A styled text input that can be used in forms. Accepts a `placeholder` and all other props that a normal MUI TextField would accept.
+  - `TextField`: A convenience wrapper around `TextInput` that includes a label, requirement decorations, and helper/error text. Error text is internally rendered by `ErrorMessage`.
+  - `RichTextArea`: A WYSIWYG editor that can be used in forms. Hook into editor state with `editorState` and `onEditorStateChange`. Accepts aria accessibility props. Manage toolbar options with the `toolbar` prop. The editor is pre-styled, but can be overridden with `wrapperStyle`, `toolbarStyle`, and `editorStyle`.

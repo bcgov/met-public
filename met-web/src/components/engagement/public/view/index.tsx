@@ -5,6 +5,13 @@ import { EngagementContentTabs } from './EngagementContentTabs';
 import { EngagementSurveyBlock } from './EngagementSurveyBlock';
 import { SuggestedEngagements } from './SuggestedEngagements';
 
+export enum EngagementViewSections {
+    HERO = 'hero',
+    DESCRIPTION = 'description',
+    CONTENT_TABS = 'contentTabs',
+    PROVIDE_FEEDBACK = 'provideFeedback',
+}
+
 export const PublicEngagementView = () => {
     return (
         <main>

@@ -1,8 +1,8 @@
 import { Breadcrumbs } from '@mui/material';
-import React, { Suspense } from 'react';
+import React, { useMemo } from 'react';
 import { BodyText } from '../Typography';
 import { Link } from '../Navigation';
-import { Await, UIMatch, useMatches } from 'react-router-dom';
+import { UIMatch, useLocation, useMatches } from 'react-router-dom';
 
 type BreadcrumbProps = {
     name: string;
@@ -49,48 +49,47 @@ interface UIMatchWithCrumb
  * @returns A list of breadcrumbs.
  */
 export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ smallScreenOnly }) => {
+    const location = useLocation();
     const matches = (useMatches() as UIMatchWithCrumb[]).filter((match) => match.handle?.crumb);
+
+    const crumbs = useMemo(() => {
+        return matches.map((match) => {
+            const data = match.data as unknown;
+            const handle = match.handle as {
+                crumb?: (data: unknown) => Promise<{ name: string; link?: string }>;
+            };
+            return handle?.crumb ? handle.crumb(data) : Promise.resolve({ name: '', link: '' });
+        });
+    }, [location.pathname]);
+
+    const [resolvedCrumbs, setResolvedCrumbs] = React.useState<{ name: string; link?: string }[]>(
+        new Array(matches.length).fill({ name: 'Loading...', link: '' }),
+    );
+
+    React.useEffect(() => {
+        Promise.all(crumbs).then((results) => {
+            setResolvedCrumbs(results);
+        });
+    }, [crumbs]);
+
     return (
         <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
-            {matches.map((match, index) => {
-                const data = match.data as unknown;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const handle = match.handle as {
-                    crumb?: (data: unknown) => Promise<{ name: string; link?: string }>;
-                };
-                if (!handle?.crumb) return null;
-                const crumb = handle.crumb?.(data);
-                return (
-                    <Suspense
-                        key={match.pathname}
-                        fallback={
-                            <BodyText bold size="small">
-                                Loading...
-                            </BodyText>
-                        }
+            {resolvedCrumbs.map((resolvedCrumb, index) => {
+                const name = resolvedCrumb?.name;
+                const link = index < matches.length - 1 ? resolvedCrumb?.link ?? matches[index].pathname : undefined;
+                return link ? (
+                    <Link size="small" key={matches[index].pathname + name} to={link}>
+                        {name}
+                    </Link>
+                ) : (
+                    <BodyText
+                        size="small"
+                        bold={index == matches.length - 1}
+                        key={matches[index].pathname + name}
+                        sx={{ lineHeight: '24px' }}
                     >
-                        <Await resolve={crumb} errorElement={null}>
-                            {(resolvedCrumb) => {
-                                const name = resolvedCrumb?.name;
-                                const link =
-                                    index < matches.length - 1 ? resolvedCrumb?.link ?? match.pathname : undefined;
-                                return link ? (
-                                    <Link size="small" key={name} to={link}>
-                                        {name}
-                                    </Link>
-                                ) : (
-                                    <BodyText
-                                        size="small"
-                                        bold={index == matches.length - 1}
-                                        key={name}
-                                        sx={{ lineHeight: '24px' }}
-                                    >
-                                        {name}
-                                    </BodyText>
-                                );
-                            }}
-                        </Await>
-                    </Suspense>
+                        {name}
+                    </BodyText>
                 );
             })}
         </Breadcrumbs>

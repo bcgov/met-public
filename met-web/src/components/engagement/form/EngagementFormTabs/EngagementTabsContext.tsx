@@ -29,8 +29,6 @@ interface EngagementFormData {
     is_internal: boolean;
     consent_message: string;
     sponsor_name: string;
-    cta_message: string;
-    cta_url: string;
 }
 
 interface EngagementSettingsFormData {
@@ -51,8 +49,6 @@ const initialEngagementFormData = {
     is_internal: false,
     consent_message: '',
     sponsor_name: '',
-    cta_message: '',
-    cta_url: '',
 };
 
 const initialEngagementSettingsFormData = {
@@ -151,6 +147,7 @@ export const EngagementTabsContext = createContext<EngagementTabsContextState>({
         Upcoming: '',
         Open: '',
         Closed: '',
+        ViewResults: '',
     },
     setSurveyBlockText: () => {
         throw new Error('setSurveyBlockText not implemented');
@@ -212,8 +209,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         is_internal: savedEngagement.is_internal || false,
         consent_message: savedEngagement.consent_message || '',
         sponsor_name: savedEngagement.sponsor_name,
-        cta_message: savedEngagement.cta_message,
-        cta_url: savedEngagement.cta_url,
     });
     const [richDescription, setRichDescription] = useState(savedEngagement?.rich_description || '');
     const [richContent, setRichContent] = useState('');
@@ -233,6 +228,9 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             '',
         Closed:
             savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.CLOSED)
+                ?.block_text || '',
+        ViewResults:
+            savedEngagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.VIEW_RESULTS)
                 ?.block_text || '',
     });
 
@@ -254,8 +252,6 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
                 is_internal: savedEngagement.is_internal || false,
                 consent_message: savedEngagement.consent_message || '',
                 sponsor_name: savedEngagement.sponsor_name,
-                cta_message: savedEngagement.cta_message,
-                cta_url: savedEngagement.cta_url,
             });
             setRichDescription(savedEngagement?.rich_description || '');
             setRichConsentMessage(savedEngagement?.consent_message || '');
@@ -408,14 +404,26 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
         {
             survey_status: SUBMISSION_STATUS.UPCOMING,
             block_text: surveyBlockText.Upcoming,
+            link_type: 'none',
         },
         {
             survey_status: SUBMISSION_STATUS.OPEN,
             block_text: surveyBlockText.Open,
+            button_text: 'Provide Feedback',
+            link_type: 'internal',
+            internal_link: 'provideFeedback',
         },
         {
             survey_status: SUBMISSION_STATUS.CLOSED,
             block_text: surveyBlockText.Closed,
+            link_type: 'none',
+        },
+        {
+            survey_status: SUBMISSION_STATUS.VIEW_RESULTS,
+            block_text: '',
+            link_type: 'internal',
+            internal_link: 'provideFeedback',
+            button_text: 'View Results',
         },
     ];
     const validateForm = () => {

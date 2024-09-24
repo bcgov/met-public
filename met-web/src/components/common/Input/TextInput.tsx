@@ -119,6 +119,7 @@ const clearInputButton = (onClick: () => void) => {
 
 export type TextFieldProps = {
     error?: string;
+    errorPosition?: 'top' | 'bottom';
     counter?: boolean;
     maxLength?: number;
     clearable?: boolean;
@@ -131,6 +132,7 @@ export const TextField = ({
     title,
     instructions,
     error,
+    errorPosition = 'top',
     name,
     required,
     optional,
@@ -163,6 +165,7 @@ export const TextField = ({
             required={required}
             optional={optional}
             error={error}
+            errorPosition={errorPosition}
             {...formFieldProps}
         >
             <TextInput

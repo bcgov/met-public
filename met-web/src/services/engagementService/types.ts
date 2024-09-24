@@ -1,4 +1,5 @@
 import { Engagement } from 'models/engagement';
+import { EngagementStatusBlock } from 'models/engagementStatusBlock';
 
 export interface EngagementState {
     allEngagements: Engagement[];
@@ -14,7 +15,7 @@ export interface PostEngagementRequest {
     content: string;
     rich_content: string;
     banner_filename?: string;
-    status_block?: unknown[];
+    status_block?: EngagementStatusBlock[];
     is_internal?: boolean;
 }
 
@@ -27,7 +28,8 @@ export interface PutEngagementRequest {
     rich_description: string;
     description_title: string;
     banner_filename?: string;
-    status_block?: unknown[];
+    status_block?: EngagementStatusBlock[];
+    sponsor_name?: string;
 }
 
 export interface PatchEngagementRequest {
@@ -40,6 +42,7 @@ export interface PatchEngagementRequest {
     rich_description?: string;
     description_title?: string;
     banner_filename?: string;
-    status_block?: unknown[];
+    status_block?: EngagementStatusBlock[];
     is_internal?: boolean;
+    sponsor_name?: string;
 }

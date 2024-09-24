@@ -498,6 +498,7 @@ def test_patch_new_survey_block_engagement(client, jwt, session,
         'status_block': [{
             'block_text': '{"foo":"bar"}',
             'survey_status': SubmissionStatus.Upcoming.name,
+            'link_type': 'none',
         }]}
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)
@@ -529,9 +530,11 @@ def test_update_survey_block_engagement(client, jwt, session,
         'status_block': [{
             'block_text': block_text_for_upcoming,
             'survey_status': SubmissionStatus.Closed.name,
+            'link_type': 'none',
         }, {
             'block_text': '{"foo2":"bar2"}',
             'survey_status': SubmissionStatus.Open.name,
+            'link_type': 'none',
         }]}
     rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                       headers=headers, content_type=ContentType.JSON.value)

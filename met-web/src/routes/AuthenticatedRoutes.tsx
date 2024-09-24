@@ -102,12 +102,10 @@ const AuthenticatedRoutes = () => {
                     loader={engagementLoader}
                     handle={{
                         crumb: async (data: { engagement: Promise<Engagement> }) => {
-                            return data.engagement.then((engagement) => {
-                                return {
-                                    link: `/engagements/${engagement.id}/old-view`,
-                                    name: engagement.name,
-                                };
-                            });
+                            return data.engagement.then((engagement) => ({
+                                name: engagement.name,
+                                link: `/engagements/${engagement.id}/details/config`,
+                            }));
                         },
                     }}
                 >
@@ -130,81 +128,45 @@ const AuthenticatedRoutes = () => {
                             element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
                         >
                             <Route element={<AuthoringContext />}>
-                                <Route element={<AuthoringTemplate />} id="authoring-loader" loader={engagementLoader}>
+                                <Route element={<AuthoringTemplate />} id="authoring-loader">
                                     <Route
                                         path="banner"
                                         element={<AuthoringBanner />}
                                         action={engagementAuthoringUpdateAction}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `banner`,
-                                                name: 'Hero Banner',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'Hero Banner' }) }}
                                     />
                                     <Route
                                         path="summary"
-                                        loader={engagementLoader}
                                         action={engagementAuthoringUpdateAction}
                                         element={<AuthoringSummary />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `summary`,
-                                                name: 'Summary',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'Summary' }) }}
                                     />
                                     <Route
                                         path="details"
                                         action={engagementAuthoringUpdateAction}
                                         element={<AuthoringDetails />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `details`,
-                                                name: 'Details',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'Details' }) }}
                                     />
                                     <Route
                                         path="feedback"
                                         action={engagementAuthoringUpdateAction}
                                         element={<AuthoringFeedback />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `feedback`,
-                                                name: 'Provide Feedback',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'Provide Feedback' }) }}
                                     />
                                     <Route
                                         path="results"
                                         element={<AuthoringResults />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `results`,
-                                                name: 'View Results',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'View Results' }) }}
                                     />
                                     <Route
                                         path="subscribe"
                                         element={<AuthoringSubscribe />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `subscribe`,
-                                                name: 'Subscribe',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'Subscribe' }) }}
                                     />
                                     <Route
                                         path="more"
                                         element={<AuthoringMore />}
-                                        handle={{
-                                            crumb: () => ({
-                                                link: `more`,
-                                                name: 'More Engagements',
-                                            }),
-                                        }}
+                                        handle={{ crumb: () => ({ name: 'More Engagements' }) }}
                                     />
                                 </Route>
                             </Route>
@@ -214,9 +176,7 @@ const AuthenticatedRoutes = () => {
                             path="config/edit"
                             element={<EngagementConfigurationWizard />}
                             action={engagementUpdateAction}
-                            handle={{
-                                crumb: () => ({ name: 'Configure' }),
-                            }}
+                            handle={{ crumb: () => ({ name: 'Configure' }) }}
                         />
                     </Route>
                     <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>

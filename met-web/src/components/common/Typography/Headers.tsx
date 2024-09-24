@@ -85,9 +85,38 @@ export const Header2 = ({
     );
 };
 
+export const Header3 = ({
+    children,
+    weight,
+    component,
+    ...props
+}: {
+    children: React.ReactNode;
+    weight?: 'bold' | 'regular' | 'thin';
+    component?: React.ElementType;
+} & TypographyProps) => {
+    return (
+        <Typography
+            component={component || 'h3'}
+            variant="h3"
+            {...props}
+            sx={{
+                lineHeight: '1.5',
+                fontSize: '1.25rem',
+                fontStyle: 'normal',
+                fontWeight: fontWeight(weight),
+                ...props.sx,
+            }}
+        >
+            {children}
+        </Typography>
+    );
+};
+
 const Headers = {
     Header1,
     Header2,
+    Header3,
 };
 
 export default Headers;

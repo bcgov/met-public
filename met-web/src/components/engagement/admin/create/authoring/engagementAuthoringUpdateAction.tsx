@@ -4,14 +4,43 @@ import { patchEngagementContent } from 'services/engagementContentService';
 import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
+import { EngagementStatusBlock } from 'models/engagementStatusBlock';
 
-export const engagementAuthoringUpdateAction: ActionFunction = async ({ request }) => {
+export const engagementAuthoringUpdateAction: ActionFunction = async ({ request, context }) => {
     const formData = (await request.formData()) as FormData;
     const errors = [];
     const requestType = formData.get('request_type') as string;
+    const statusBlock = [
+        {
+            survey_status: 'Open',
+            button_text: formData.get('open_cta') as string,
+            link_type: formData.get('open_cta_link_type') as string,
+            internal_link: formData.get('open_section_link') as string,
+            external_link: formData.get('open_external_link') as string,
+        },
+        {
+            survey_status: 'ViewResults',
+            button_text: formData.get('view_results_cta') as string,
+            link_type: formData.get('view_results_link_type') as string,
+            internal_link: formData.get('view_results_section_link') as string,
+            external_link: formData.get('view_results_external_link') as string,
+        },
+        {
+            survey_status: 'Closed',
+            block_text: formData.get('closed_message') as string,
+            link_type: 'none',
+        },
+        {
+            survey_status: 'Upcoming',
+            block_text: formData.get('upcoming_message') as string,
+            link_type: 'none',
+        },
+    ] as EngagementStatusBlock[];
+
     const engagement = await patchEngagement({
         id: Number(formData.get('id')) as unknown as number,
         name: (formData.get('name') as string) || undefined,
+        sponsor_name: (formData.get('eyebrow') as string) || undefined,
         start_date: (formData.get('start_date') as string) || undefined,
         status_id: (Number(formData.get('status_id')) as unknown as number) || undefined,
         end_date: (formData.get('end_date') as string) || undefined,
@@ -19,7 +48,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
         rich_description: (formData.get('rich_description') as string) || undefined,
         description_title: (formData.get('description_title') as string) || undefined,
         banner_filename: (formData.get('banner_filename') as string) || undefined,
-        status_block: (formData.get('status_block') as unknown as unknown[]) || undefined,
+        status_block: statusBlock,
     });
 
     // Update engagement content if necessary.

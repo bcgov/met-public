@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import { Grid, Stack } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
 import { ImageUploadContext } from './imageUploadContext';
-import { colors } from 'components/common';
 import { Button } from 'components/common/Input';
 
 interface UploaderProps {
@@ -106,18 +105,19 @@ const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => 
             accept={accept}
         >
             {({ getRootProps, getInputProps }) => (
-                <section>
+                <section id="image-upload-section">
                     <Grid
                         {...getRootProps()}
                         container
                         direction="column"
                         alignItems="center"
                         justifyContent="center"
-                        style={{
+                        sx={{
                             paddingTop: '1em',
                             borderRadius: '8px',
-                            border: `2px dashed ${colors.surface.gray[80]}`,
-                            background: colors.surface.blue[10],
+                            border: '2px dashed',
+                            borderColor: 'gray.80',
+                            backgroundColor: 'blue.10',
                             height: height,
                             cursor: 'pointer',
                         }}

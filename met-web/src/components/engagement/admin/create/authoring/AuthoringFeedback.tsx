@@ -9,7 +9,6 @@ import { Palette } from 'styles/Theme';
 
 const AuthoringFeedback = () => {
     const [sectionHeading, setSectionHeading] = useState('');
-    const [bodyText, setBodyText] = useState('');
     const [editorState, setEditorState] = useState<EditorState>();
     const [surveyButtonText, setSurveyButtonText] = useState('');
     const [thirdPartyCtaText, setThirdPartyCtaText] = useState('');
@@ -77,9 +76,7 @@ const AuthoringFeedback = () => {
     };
 
     const handleEditorChange = (newEditorState: EditorState) => {
-        const plainText = newEditorState.getCurrentContent().getPlainText();
         setEditorState(newEditorState);
-        setBodyText(plainText);
     };
 
     const handleWidgetChange = (event: SelectChangeEvent<string>) => {

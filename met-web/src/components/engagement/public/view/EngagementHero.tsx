@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Await, useLoaderData } from 'react-router-dom';
 import { StatusChipSkeleton } from 'components/common/Indicators/StatusChip';
+import { EngagementViewSections } from '.';
 
 export const EngagementHero = () => {
     const dateFormat = 'MMM DD, YYYY';
@@ -20,7 +21,7 @@ export const EngagementHero = () => {
     const engagementInfo = Promise.all([engagement, startDate, endDate]);
 
     return (
-        <section aria-label="Engagement Overview">
+        <section aria-label="Engagement Overview" id={EngagementViewSections.HERO}>
             <Suspense
                 fallback={
                     <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '160px', md: '840px' } }} />
@@ -114,7 +115,10 @@ export const EngagementHero = () => {
                                     </Grid>
                                 </Grid>
                                 <Button
-                                    href={engagement.cta_url || '#cta-section'}
+                                    href={
+                                        engagement.status_block.find((block) => block.link_type === 'internal')
+                                            ?.internal_link || '#cta-section'
+                                    }
                                     LinkComponent={'a'}
                                     variant="primary"
                                     size="large"
@@ -122,7 +126,8 @@ export const EngagementHero = () => {
                                     iconPosition="right"
                                     sx={{ borderRadius: '8px' }}
                                 >
-                                    {engagement.cta_message || 'Learn more'}
+                                    {engagement.status_block.find((block) => block.link_type === 'internal')
+                                        ?.button_text || 'Learn More'}
                                 </Button>
                             </>
                         )}
