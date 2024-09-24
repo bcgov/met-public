@@ -142,10 +142,16 @@ export const AuthoringContext = () => {
         }
     }, [fetcher.data]);
     const pageName = useMatch('/engagements/:engagementId/details/authoring/:page')?.params.page;
-    // Set the form resolver based on the page name
+    /* Changes the resolver based on the page name. 
+    If you require more complex validation, you can 
+    define your own resolver and add a case for it here.
+    Using a global resolver is not recommended as required
+    fields will still be validated on other pages.
+     */
     const resolver = useMemo(() => {
         switch (pageName) {
             case 'banner':
+                // on the banner page, we need inter-field validation so we use the yup resolver
                 return yupResolver(authoringTemplateSchema);
             default:
                 return undefined;
