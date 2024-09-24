@@ -62,6 +62,13 @@ export interface AuthoringTemplateOutletContext {
     setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
     fetcher: FetcherWithComponents<object>;
     pageName: string;
+    contentTabsEnabled: string;
+    tabs: TabValues[];
+    setTabs: Dispatch<SetStateAction<TabValues[]>>;
+    setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
+    setContentTabsEnabled: Dispatch<SetStateAction<string>>;
+    singleContentValues: TabValues;
+    defaultTabValues: TabValues;
 }
 
 export interface DetailsTabProps {
