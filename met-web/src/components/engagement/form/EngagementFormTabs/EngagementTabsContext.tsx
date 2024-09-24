@@ -49,8 +49,6 @@ const initialEngagementFormData = {
     is_internal: false,
     consent_message: '',
     sponsor_name: '',
-    cta_message: '',
-    cta_url: '',
 };
 
 const initialEngagementSettingsFormData = {

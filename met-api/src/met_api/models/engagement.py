@@ -147,7 +147,6 @@ class Engagement(BaseModel):
             'consent_message': engagement.get(
                 'consent_message', record.consent_message),
             'sponsor_name': engagement.get('sponsor_name', record.sponsor_name),
-            'cta_message': engagement.get('cta_message', record.cta_message),
             'cta_url': engagement.get('cta_url', record.cta_url),
         }
         query.update(update_fields)
