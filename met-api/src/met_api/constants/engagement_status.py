@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants of engagement status."""
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class Status(IntEnum):
@@ -43,3 +43,13 @@ class SubmissionStatus(IntEnum):
     Upcoming = 1
     Open = 2
     Closed = 3
+    ViewResults = 4
+
+
+class EngagementViewSections(Enum):
+    """Enum of sections that can be displayed in the engagement view."""
+
+    HERO = 'hero'
+    DESCRIPTION = 'description'
+    CONTENT_TABS = 'contentTabs'
+    PROVIDE_FEEDBACK = 'provideFeedback'

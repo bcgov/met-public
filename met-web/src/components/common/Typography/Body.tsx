@@ -1,5 +1,8 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { colors } from 'styles/Theme';
 
 export const BodyText = ({
     bold,
@@ -44,6 +47,21 @@ export const BodyText = ({
         >
             {children}
         </Typography>
+    );
+};
+
+export const ErrorMessage = ({ error }: { error?: string }) => {
+    if (!error) {
+        return <></>;
+    }
+    return (
+        <BodyText bold size="small" sx={{ color: colors.notification.error.shade, lineHeight: '24px' }}>
+            <FontAwesomeIcon
+                icon={faExclamationCircle}
+                style={{ marginRight: '8px', fontSize: '18px', position: 'relative', top: '2px' }}
+            />
+            {error}
+        </BodyText>
     );
 };
 

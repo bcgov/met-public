@@ -28,8 +28,6 @@ export interface Engagement {
     is_internal: boolean;
     consent_message: string;
     sponsor_name: string;
-    cta_message: string;
-    cta_url: string;
 }
 
 export interface Status {
@@ -99,8 +97,6 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         is_internal: false,
         consent_message: '',
         sponsor_name: sponsorName ?? '',
-        cta_message: 'Provide Feedback',
-        cta_url: '',
     };
 };
 

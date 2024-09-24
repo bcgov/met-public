@@ -23,7 +23,7 @@ export interface AuthoringContextType {
     onSubmit: SubmitHandler<EngagementUpdateData>;
     defaultValues: EngagementUpdateData;
     setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
-    fetcher: FetcherWithComponents<any>;
+    fetcher: FetcherWithComponents<object>;
 }
 
 export interface LanguageSelectorProps {
@@ -54,25 +54,17 @@ export interface AuthoringTemplateOutletContext {
     setValue: UseFormSetValue<EngagementUpdateData>;
     getValues: UseFormGetValues<EngagementUpdateData>;
     watch: UseFormWatch<EngagementUpdateData>;
-    control: Control<EngagementUpdateData, any>;
+    control: Control<EngagementUpdateData, object>;
     engagement: Engagement;
-    contentTabsEnabled: string;
-    tabs: TabValues[];
-    setTabs: Dispatch<SetStateAction<TabValues[]>>;
-    singleContentValues: TabValues;
-    setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
-    setContentTabsEnabled: Dispatch<SetStateAction<string>>;
-    defaultTabValues: TabValues;
     isDirty: boolean;
     reset: UseFormReset<EngagementUpdateData>;
     defaultValues: EngagementUpdateData;
     setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
-    fetcher: FetcherWithComponents<any>;
-    slug: string;
+    fetcher: FetcherWithComponents<object>;
+    pageName: string;
 }
 
 export interface DetailsTabProps {
-    setValue: UseFormSetValue<EngagementUpdateData>;
     setTabs: Dispatch<SetStateAction<TabValues[]>>;
     setCurrentTab: Dispatch<SetStateAction<TabValues>>;
     setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
