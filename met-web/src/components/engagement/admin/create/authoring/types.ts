@@ -72,6 +72,7 @@ export interface AuthoringTemplateOutletContext {
 }
 
 export interface DetailsTabProps {
+    setValue: UseFormSetValue<EngagementUpdateData>;
     setTabs: Dispatch<SetStateAction<TabValues[]>>;
     setCurrentTab: Dispatch<SetStateAction<TabValues>>;
     setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
