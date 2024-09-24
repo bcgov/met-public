@@ -80,7 +80,7 @@ Examples of when to Request Changes
 - Be sure to make use of shared components found under `src/components/common`. Below is a non-exhaustive list of common app components:
   - `Button`: A versatile button with different style types that are complimentary of MET styling. Choose a particular button style with: `variant=<"primary"|"secondary"|"tertiary"|undefined>`
   - `RichTextArea`: A WYSIWYG editor used app-wide. It will dynamically render out links and h2s as React components.
-  - `Header1`, `Header2`: MET-styled h1, h2 components.
+  - `Header1`, `Header2`, `Header3`: MET-styled h1, h2 and h3 components. Prefer these over using the native HTML headers.
   - `ResponsiveContainer`: A container that decreases its padding on smaller screens.
   - `ResponsiveWrapper`: A route wrapper that adds a responsive container around its child routes.
   - `Pagination`: Provides a pagination UI - a wrapper around Material UI's pagination.
