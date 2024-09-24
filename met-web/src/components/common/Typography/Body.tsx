@@ -51,9 +51,7 @@ export const BodyText = ({
 };
 
 export const ErrorMessage = ({ error }: { error?: string }) => {
-    if (!error) {
-        return <></>;
-    }
+    if (!error) return null;
     return (
         <BodyText bold size="small" sx={{ color: colors.notification.error.shade, lineHeight: '24px' }}>
             <FontAwesomeIcon

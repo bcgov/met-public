@@ -142,11 +142,20 @@ export const AuthoringContext = () => {
         }
     }, [fetcher.data]);
     const pageName = useMatch('/engagements/:engagementId/details/authoring/:page')?.params.page;
+    // Set the form resolver based on the page name
+    const resolver = useMemo(() => {
+        switch (pageName) {
+            case 'banner':
+                return yupResolver(authoringTemplateSchema);
+            default:
+                return undefined;
+        }
+    }, [pageName]);
     const engagementUpdateForm = useForm<EngagementUpdateData>({
         defaultValues: useMemo(() => defaultValues, [defaultValues]),
         mode: 'onSubmit',
         reValidateMode: 'onChange',
-        resolver: pageName === 'banner' ? yupResolver(authoringTemplateSchema) : undefined,
+        resolver: resolver,
     });
     const onSubmit = async (data: EngagementUpdateData) => {
         const savedImageDetails = data.image_file

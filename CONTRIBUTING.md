@@ -96,3 +96,6 @@ Examples of when to Request Changes
   - `FormStep`: A wrapper around a form component that accepts a completion criteria and displays the user's progress. Accepts a `step` prop that is a number (from 1 to 9) that represents the current step in the form. This will be rendered as an icon with a checkmark if the step is complete, and a number if it's the current step or if it's incomplete.
   - `SystemMessage`: An informational message that can be displayed to the user. Accepts a `type` prop that can be "error", "warning", "info", or "success", which affects the display of the message.
   - `WidgetPicker`: A modular widget picker component that can be placed anywhere in the engagement editing area. In order to align widgets in the backend with the frontend, a "location" prop is required. Add new locations to the `WidgetLocation` enum.
+  - `ErrorMessage`: A styled error message that can be displayed to the user. Accepts a `message` prop that is the error message to display.
+  - `TextInput`: A styled text input that can be used in forms. Accepts a `placeholder` and all other props that a normal MUI TextField would accept.
+  - `TextField`: A convenience wrapper around `TextInput` that includes a label, requirement decorations, and helper/error text. Error text is internally rendered by `ErrorMessage`.
