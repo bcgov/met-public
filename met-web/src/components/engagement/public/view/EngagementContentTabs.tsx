@@ -8,6 +8,7 @@ import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { EngagementLoaderData } from './EngagementLoader';
+import { EngagementViewSections } from '.';
 
 export const EngagementContentTabs = () => {
     const { content } = useLoaderData() as EngagementLoaderData;
@@ -39,7 +40,7 @@ export const EngagementContentTabs = () => {
     };
 
     return (
-        <section id="content-tabs" aria-label="Engagement content tabs">
+        <section id={EngagementViewSections.CONTENT_TABS} aria-label="Engagement content tabs">
             <Box
                 sx={{
                     padding: { xs: '0 16px 24px 16px', md: '0 5vw 40px 5vw', lg: '0 156px 40px 156px' },

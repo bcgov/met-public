@@ -1,70 +1,29 @@
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useLoaderData, useOutletContext } from 'react-router-dom';
+import { useRouteLoaderData, useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
 import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import { MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { convertToRaw, EditorState } from 'draft-js';
 import { Controller } from 'react-hook-form';
-import { useAppDispatch } from 'hooks';
-import { openNotification } from 'services/notificationService/notificationSlice';
-import dayjs from 'dayjs';
-import { EngagementUpdateData } from './AuthoringContext';
+import { defaultValuesObject } from './AuthoringContext';
 import { EngagementLoaderData } from 'components/engagement/public/view';
+import WidgetPicker from '../widgets';
+import { WidgetLocation } from 'models/widget';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const AuthoringSummary = () => {
-    const { setValue, control, reset, getValues, setDefaultValues, fetcher }: AuthoringTemplateOutletContext =
+    const { setValue, control, reset, getValues, setDefaultValues }: AuthoringTemplateOutletContext =
         useOutletContext(); // Access the form functions and values from the authoring template.
 
-    // Check if the form has succeeded or failed after a submit, and issue a message to the user.
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        if ('success' === fetcher.data || 'failure' === fetcher.data) {
-            const responseText =
-                'success' === fetcher.data ? 'Engagement saved successfully.' : 'Unable to save engagement.';
-            const responseSeverity = 'success' === fetcher.data ? 'success' : 'error';
-            dispatch(
-                openNotification({
-                    severity: responseSeverity,
-                    text: responseText,
-                }),
-            );
-            fetcher.data = undefined;
-        }
-    }, [fetcher.data]);
-
-    const { engagement } = useLoaderData() as EngagementLoaderData;
-
-    const untouchedDefaultValues: EngagementUpdateData = {
-        id: 0,
-        status_id: 0,
-        taxon_id: 0,
-        content_id: 0,
-        name: '',
-        start_date: dayjs(new Date(1970, 0, 1)),
-        end_date: dayjs(new Date(1970, 0, 1)),
-        description: '',
-        rich_description: '',
-        description_title: '',
-        banner_filename: '',
-        status_block: [],
-        title: '',
-        icon_name: '',
-        metadata_value: '',
-        send_report: undefined,
-        slug: '',
-        request_type: '',
-        text_content: '',
-        json_content: '{ blocks: [], entityMap: {} }',
-        summary_editor_state: EditorState.createEmpty(),
-    };
+    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {
-        reset(untouchedDefaultValues);
+        reset(defaultValuesObject);
         engagement.then((eng) => {
             setValue('id', Number(eng.id));
             // Make sure it is valid JSON.
@@ -73,10 +32,7 @@ const AuthoringSummary = () => {
             }
             setValue('description_title', eng.description_title || '');
             setValue('description', eng.description);
-            setValue(
-                'summary_editor_state',
-                EditorState.createWithContent(convertFromRaw(JSON.parse(eng.rich_description))),
-            );
+            setValue('summary_editor_state', getEditorStateFromRaw(eng.rich_description || ''));
             // Update default values so that our loaded values are default.
             setDefaultValues(getValues());
         });
@@ -102,22 +58,6 @@ const AuthoringSummary = () => {
         padding: '2rem 1.4rem !important',
         margin: '1rem 0',
         borderRadius: '16px',
-    };
-    const toolbarStyles = {
-        border: '1px solid #7A7876',
-        borderBottom: 'none',
-        borderRadius: '8px 8px 0 0',
-        marginBottom: '0',
-        maxWidth: '100%',
-    };
-    const editorStyles = {
-        height: '15em',
-        padding: '0 1em 1em',
-        backgroundColor: colors.surface.white,
-        border: '1px solid #7A7876',
-        borderTop: 'none',
-        borderRadius: '0 0 8px 8px',
-        maxWidth: '100%',
     };
 
     const toolbar = {
@@ -203,8 +143,6 @@ const AuthoringSummary = () => {
                                         field.onChange(handleEditorChange(value));
                                     }}
                                     handlePastedText={() => false}
-                                    toolbarStyle={toolbarStyles}
-                                    editorStyle={editorStyles}
                                     toolbar={toolbar}
                                 />
                             );
@@ -218,6 +156,9 @@ const AuthoringSummary = () => {
                 <FormDescriptionText style={formDescriptionTextStyles}>
                     You may use a widget to add supporting content to your primary content.
                 </FormDescriptionText>
+                <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                    <WidgetPicker location={WidgetLocation.Summary} />
+                </Grid>
             </Grid>
         </Grid>
     );

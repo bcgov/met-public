@@ -1,4 +1,5 @@
 """Service for engagement management."""
+
 from datetime import datetime
 from http import HTTPStatus
 
@@ -7,6 +8,7 @@ from flask import current_app
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
 from met_api.exceptions.business_exception import BusinessException
+from met_api.models import Tenant as TenantModel
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
@@ -15,9 +17,9 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
+from met_api.services.engagement_content_service import EngagementContentService
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
-from met_api.services.engagement_content_service import EngagementContentService
 from met_api.services.object_storage_service import ObjectStorageService
 from met_api.services.project_service import ProjectService
 from met_api.utils import email_util, notification
@@ -25,7 +27,6 @@ from met_api.utils.enums import SourceAction, SourceType
 from met_api.utils.roles import Role
 from met_api.utils.template import Template
 from met_api.utils.token_info import TokenInfo
-from met_api.models import Tenant as TenantModel
 
 
 class EngagementService:
@@ -42,29 +43,38 @@ class EngagementService:
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 
         if engagement_model:
-            if TokenInfo.get_id() is None \
-                    and engagement_model.status_id not in (Status.Published.value, Status.Closed.value):
+            if TokenInfo.get_id() is None and engagement_model.status_id not in (
+                Status.Published.value,
+                Status.Closed.value,
+            ):
                 # Non authenticated users only have access to published and closed engagements
                 return None
-            if engagement_model.status_id in (Status.Draft.value, Status.Scheduled.value):
+            if engagement_model.status_id in (
+                Status.Draft.value,
+                Status.Scheduled.value,
+            ):
                 one_of_roles = (
                     MembershipType.TEAM_MEMBER.name,
                     MembershipType.REVIEWER.name,
-                    Role.VIEW_ALL_ENGAGEMENTS.value
+                    Role.VIEW_ALL_ENGAGEMENTS.value,
                 )
-                authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
+                authorization.check_auth(
+                    one_of_roles=one_of_roles, engagement_id=engagement_id
+                )
 
             engagement = EngagementSchema().dump(engagement_model)
-            engagement['banner_url'] = self.object_storage.get_url(engagement['banner_filename'])
+            engagement['banner_url'] = self.object_storage.get_url(
+                engagement['banner_filename']
+            )
             return engagement
         return None
 
     def get_engagements_paginated(
-            self,
-            external_user_id,
-            pagination_options: PaginationOptions,
-            search_options=None,
-            include_banner_url=False,
+        self,
+        external_user_id,
+        pagination_options: PaginationOptions,
+        search_options=None,
+        include_banner_url=False,
     ):
         """Get engagements paginated."""
         user_roles = TokenInfo.get_user_roles()
@@ -82,14 +92,13 @@ class EngagementService:
 
         if include_banner_url:
             engagements = self._attach_banner_url(engagements)
-        return {
-            'items': engagements,
-            'total': total
-        }
+        return {'items': engagements, 'total': total}
 
     def _attach_banner_url(self, engagements: list):
         for engagement in engagements:
-            engagement['banner_url'] = self.object_storage.get_url(engagement['banner_filename'])
+            engagement['banner_url'] = self.object_storage.get_url(
+                engagement['banner_filename']
+            )
         return engagements
 
     @staticmethod
@@ -105,22 +114,18 @@ class EngagementService:
                 return EngagementScopeOptions(restricted=False)
 
             # check if user
-            return EngagementScopeOptions(
-                include_assigned=True
-            )
+            return EngagementScopeOptions(include_assigned=True)
         if Role.VIEW_ENGAGEMENT.value in user_roles:
             # If user has VIEW_ENGAGEMENT role, e.g. TEAM MEMBER, return scope options to include assigned
             # engagements and public engagements
             return EngagementScopeOptions(
                 engagement_status_ids=[Status.Published.value, Status.Closed.value],
-                include_assigned=True
+                include_assigned=True,
             )
         if Role.VIEW_ASSIGNED_ENGAGEMENTS.value in user_roles:
             # If user has VIEW_ASSIGNED_ENGAGEMENTS role, e.g. REVIEWER, return scope options to include only
             # assigned engagements
-            return EngagementScopeOptions(
-                include_assigned=True
-            )
+            return EngagementScopeOptions(include_assigned=True)
 
         # Default scope options for users without specific roles e.g. public users
         return EngagementScopeOptions(
@@ -131,7 +136,10 @@ class EngagementService:
     def close_engagements_due():
         """Close published engagements that are due for a closeout."""
         engagements = EngagementModel.close_engagements_due()
-        results = [EngagementService._send_closeout_emails(engagement) for engagement in engagements]
+        results = [
+            EngagementService._send_closeout_emails(engagement)
+            for engagement in engagements
+        ]
         return results
 
     @staticmethod
@@ -145,8 +153,12 @@ class EngagementService:
 
         print('Engagements published: ', engagements)
         for engagement in engagements:
-            email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, engagement.id,
-                                              SourceAction.PUBLISHED.value, True)
+            email_util.publish_to_email_queue(
+                SourceType.ENGAGEMENT.value,
+                engagement.id,
+                SourceAction.PUBLISHED.value,
+                True,
+            )
             print('Engagements published added to email queue: ', engagement.id)
         return engagements
 
@@ -163,7 +175,9 @@ class EngagementService:
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
-        email_util.publish_to_email_queue(SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True)
+        email_util.publish_to_email_queue(
+            SourceType.ENGAGEMENT.value, eng_model.id, SourceAction.CREATED.value, True
+        )
         EngagementSlugService.create_engagement_slug(eng_model.id)
         EngagementSettingsService.create_default_settings(eng_model.id)
         return eng_model.find_by_id(eng_model.id)
@@ -189,8 +203,6 @@ class EngagementService:
             is_internal=engagement_data.get('is_internal', False),
             consent_message=engagement_data.get('consent_message', None),
             sponsor_name=engagement_data.get('sponsor_name', None),
-            cta_message=engagement_data.get('cta_message', None),
-            cta_url=engagement_data.get('cta_url', None),
         )
         new_engagement.save()
         return new_engagement
@@ -198,17 +210,17 @@ class EngagementService:
     @staticmethod
     def create_default_engagement_content(eng_id):
         """Create default engagement content for the given engagement ID."""
-        default_engagement_content = {
-            'title': 'Summary',
-            'engagement_id': eng_id
-        }
+        default_engagement_content = {'title': 'Summary', 'engagement_id': eng_id}
         try:
-            eng_content = EngagementContentService.create_engagement_content(default_engagement_content, eng_id)
+            eng_content = EngagementContentService.create_engagement_content(
+                default_engagement_content, eng_id
+            )
         except Exception as exc:  # noqa: B902
             current_app.logger.error('Failed to create default engagement content', exc)
             raise BusinessException(
                 error='Failed to create default engagement content.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            ) from exc
 
         return eng_content
 
@@ -223,12 +235,17 @@ class EngagementService:
             'json_content': content_data.get('rich_content', None),
         }
         try:
-            EngagementContentService.create_engagement_content(default_summary_content, eng_id)
+            EngagementContentService.create_engagement_content(
+                default_summary_content, eng_id
+            )
         except Exception as exc:  # noqa: B902
-            current_app.logger.error('Failed to create default engagement summary content', exc)
+            current_app.logger.error(
+                'Failed to create default engagement summary content', exc
+            )
             raise BusinessException(
                 error='Failed to create default engagement summary content.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            ) from exc
 
     @staticmethod
     def _create_eng_status_block(eng_id, engagement_data: dict):
@@ -238,7 +255,7 @@ class EngagementService:
             new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(
                 engagement_id=eng_id,
                 survey_status=status.get('survey_status'),
-                block_text=status.get('block_text')
+                block_text=status.get('block_text'),
             )
             status_blocks.append(new_status_block)
 
@@ -247,19 +264,31 @@ class EngagementService:
     @staticmethod
     def _save_or_update_eng_block(engagement_id, status_block):
         for survey_block in status_block:
-            # see if there is one existing for the status ;if not create one
+            # Check for an existing status block with the same survey status
             survey_status = survey_block.get('survey_status')
-            survey_block = survey_block.get('block_text')
-            status_block: EngagementStatusBlockModel = EngagementStatusBlockModel. \
-                get_by_status(engagement_id, survey_status)
+            survey_block_text = survey_block.get('block_text')
+            status_block: EngagementStatusBlockModel = (
+                EngagementStatusBlockModel.get_by_status(engagement_id, survey_status)
+            )
+            # If the status block exists, update it. Otherwise, create a new one.
             if status_block:
-                status_block.block_text = survey_block
+                status_block.block_text = survey_block_text
+                status_block.button_text = survey_block.get('button_text')
+                status_block.link_type = survey_block.get('link_type')
+                status_block.internal_link = survey_block.get('internal_link')
+                status_block.external_link = survey_block.get('external_link')
                 status_block.commit()
             else:
-                new_status_block: EngagementStatusBlockModel = EngagementStatusBlockModel(
-                    engagement_id=engagement_id,
-                    survey_status=survey_status,
-                    block_text=survey_block
+                new_status_block: EngagementStatusBlockModel = (
+                    EngagementStatusBlockModel(
+                        engagement_id=engagement_id,
+                        survey_status=survey_status,
+                        block_text=survey_block_text,
+                        button_text=survey_block.get('button_text'),
+                        link_type=survey_block.get('link_type'),
+                        internal_link=survey_block.get('internal_link'),
+                        external_link=survey_block.get('external_link'),
+                    )
                 )
 
                 new_status_block.save()
@@ -269,8 +298,12 @@ class EngagementService:
         engagement = EngagementModel.find_by_id(engagement_id)
         draft_status_restricted_changes = (EngagementModel.is_internal.key,)
         engagement_has_been_opened = engagement.status_id != Status.Draft.value
-        if engagement_has_been_opened and any(field in data for field in draft_status_restricted_changes):
-            raise ValueError('Some fields cannot be updated after the engagement has been published')
+        if engagement_has_been_opened and any(
+            field in data for field in draft_status_restricted_changes
+        ):
+            raise ValueError(
+                'Some fields cannot be updated after the engagement has been published'
+            )
 
     @staticmethod
     def edit_engagement(data: dict):
@@ -278,11 +311,8 @@ class EngagementService:
         survey_block = data.pop('status_block', None)
         engagement_id = data.get('id', None)
         authorization.check_auth(
-            one_of_roles=(
-                MembershipType.TEAM_MEMBER.name,
-                Role.EDIT_ENGAGEMENT.value
-            ),
-            engagement_id=engagement_id
+            one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
+            engagement_id=engagement_id,
         )
 
         EngagementService._validate_engagement_edit_data(engagement_id, data)
@@ -314,31 +344,50 @@ class EngagementService:
     def _send_closeout_emails(engagement: EngagementModel) -> None:
         """Send the engagement closeout emails.Throws error if fails."""
         lang_code = current_app.config['DEFAULT_LANGUAGE']
-        subject, body, args = EngagementService._render_email_template(engagement, lang_code)
+        subject, body, args = EngagementService._render_email_template(
+            engagement, lang_code
+        )
         participants = SubmissionModel.get_engaged_participants(engagement.id)
         template_id = current_app.config['EMAIL_TEMPLATES']['CLOSEOUT']['ID']
-        emails = [participant.decode_email(participant.email_address) for participant in participants]
+        emails = [
+            participant.decode_email(participant.email_address)
+            for participant in participants
+        ]
         # Removes duplicated records
         emails = list(set(emails))
         try:
-            [notification.send_email(subject=subject, email=email_address, html_body=body,
-                                     args=args, template_id=template_id) for email_address in emails]
+            [
+                notification.send_email(
+                    subject=subject,
+                    email=email_address,
+                    html_body=body,
+                    args=args,
+                    template_id=template_id,
+                )
+                for email_address in emails
+            ]
         except Exception as exc:  # noqa: B902
-            current_app.logger.error('<Notification for engagement closeout failed', exc)
+            current_app.logger.error(
+                '<Notification for engagement closeout failed', exc
+            )
             raise BusinessException(
                 error='Error sending engagement closeout.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR) from exc
+                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            ) from exc
 
     @staticmethod
     def _render_email_template(engagement: EngagementModel, lang_code):
         template = Template.get_template('email_engagement_closeout.html')
         dashboard_path = EngagementService._get_dashboard_path(engagement, lang_code)
-        engagement_url = notification.get_tenant_site_url(engagement.tenant_id, dashboard_path)
+        engagement_url = notification.get_tenant_site_url(
+            engagement.tenant_id, dashboard_path
+        )
         templates = current_app.config['EMAIL_TEMPLATES']
-        subject = templates['CLOSEOUT']['SUBJECT'].format(engagement_name=engagement.name)
+        subject = templates['CLOSEOUT']['SUBJECT'].format(
+            engagement_name=engagement.name
+        )
         email_environment = templates['ENVIRONMENT']
-        tenant_name = EngagementService._get_tenant_name(
-            engagement.tenant_id)
+        tenant_name = EngagementService._get_tenant_name(engagement.tenant_id)
         args = {
             'engagement_name': engagement.name,
             'engagement_url': engagement_url,
@@ -363,5 +412,9 @@ class EngagementService:
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement.id)
         paths = current_app.config['PATH_CONFIG']
         if engagement_slug:
-            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(slug=engagement_slug.slug, lang=lang_code)
-        return paths['ENGAGEMENT']['DASHBOARD'].format(engagement_id=engagement.id, lang=lang_code)
+            return paths['ENGAGEMENT']['DASHBOARD_SLUG'].format(
+                slug=engagement_slug.slug, lang=lang_code
+            )
+        return paths['ENGAGEMENT']['DASHBOARD'].format(
+            engagement_id=engagement.id, lang=lang_code
+        )

@@ -1,136 +1,162 @@
+import React, { useState, useEffect } from 'react';
 import { FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
-import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import { MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
+import { BodyText } from 'components/common/Typography';
 import ImageUpload from 'components/imageUpload';
+import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
+import { Header3 } from 'components/common/Typography/Headers';
+import { EngagementViewSections } from 'components/engagement/public/view';
+import { Controller, useFormContext } from 'react-hook-form';
+import { SUBMISSION_STATUS } from 'constants/engagementStatus';
+import { RichTextArea } from 'components/common/Input/RichTextArea';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { convertToRaw, EditorState } from 'draft-js';
+import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
+import { ErrorMessage } from 'components/common/Typography/Body';
 
 const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
 const AuthoringBanner = () => {
-    const { engagement }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
+    // Access the form functions and values from the authoring template
+    const { engagement, setDefaultValues }: AuthoringTemplateOutletContext = useOutletContext();
+    const {
+        setValue,
+        getValues,
+        watch,
+        reset,
+        control,
+        formState: { errors },
+    } = useFormContext<EngagementUpdateData>();
 
-    const [bannerImage, setBannerImage] = useState<File | null>();
-    const [savedBannerImageFileName, setSavedBannerImageFileName] = useState(engagement.banner_filename || '');
+    const open_section = engagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.OPEN);
+    const closed_section = engagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.CLOSED);
+    const upcoming_section = engagement.status_block.find(
+        (block) => block.survey_status === SUBMISSION_STATUS.UPCOMING,
+    );
+    const view_results_section = engagement.status_block.find(
+        (block) => block.survey_status === SUBMISSION_STATUS.VIEW_RESULTS,
+    );
 
-    const [openCtaExternalURLEnabled, setOpenCtaExternalURLEnabled] = useState(false);
-    const [openCtaSectionSelectEnabled, setOpenCtaSectionSelectEnabled] = useState(true);
-    const [viewResultsCtaExternalURLEnabled, setViewResultsCtaExternalURLEnabled] = useState(false);
-    const [viewResultsSectionSelectEnabled, setViewResultsSectionSelectEnabled] = useState(true);
-
-    //Define the styles
-    const metBigLabelStyles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-        lineHeight: 1.167,
-        color: '#292929',
-        fontWeight: '700',
-    };
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-    };
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
-    };
-    const metLabelStyles = {
-        fontSize: '0.95rem',
-    };
-    const formItemContainerStyles = {
-        padding: '2rem 1.4rem !important',
-        margin: '1rem 0',
-        borderRadius: '16px',
-    };
-    const conditionalSelectStyles = {
-        width: '100%',
-        backgroundColor: colors.surface.white,
-        borderRadius: '8px',
-        // boxShadow: '0 0 0 1px #7A7876 inset',
-        lineHeight: '1.4375em',
-        height: '48px',
-        marginTop: '8px',
-        padding: '0',
-        '&:disabled': {
-            boxShadow: 'none',
-        },
-    };
+    const [upcomingEditorState, setUpcomingEditorState] = useState<EditorState>(
+        getEditorStateFromRaw(upcoming_section?.block_text || ''),
+    );
+    const [closedEditorState, setClosedEditorState] = useState<EditorState>(
+        getEditorStateFromRaw(closed_section?.block_text || ''),
+    );
 
     const handleAddBannerImage = (files: File[]) => {
         if (files.length > 0) {
-            setBannerImage(files[0]);
+            setValue('image_file', files[0], { shouldDirty: true });
             return;
         }
-        setBannerImage(null);
-        setSavedBannerImageFileName('');
+        setValue('image_file', null, { shouldDirty: true });
+        setValue('image_url', '');
     };
 
-    const handleRadioSelectChange = (event: React.FormEvent<HTMLInputElement>, source: string) => {
-        const newRadioValue = event.currentTarget.value;
-        if ('ctaLinkType' === source) {
-            setOpenCtaExternalURLEnabled('section' === newRadioValue ? false : true);
-            setOpenCtaSectionSelectEnabled('section' === newRadioValue ? true : false);
-        } else {
-            setViewResultsCtaExternalURLEnabled('section' === newRadioValue ? false : true);
-            setViewResultsSectionSelectEnabled('section' === newRadioValue ? true : false);
-        }
+    useEffect(() => {
+        reset(defaultValuesObject);
+        setValue('id', Number(engagement.id));
+        setValue('name', engagement.name);
+        setValue('image_url', engagement.banner_url);
+        setValue('eyebrow', engagement.sponsor_name);
+        setValue('open_cta', open_section?.button_text);
+        setValue('open_cta_link_type', open_section?.link_type);
+        setValue('open_section_link', open_section?.internal_link);
+        setValue('open_external_link', open_section?.external_link);
+        setValue('view_results_cta', view_results_section?.button_text);
+        setValue('view_results_link_type', view_results_section?.link_type);
+        setValue('view_results_section_link', view_results_section?.internal_link);
+        setValue('view_results_external_link', view_results_section?.external_link);
+        setValue('closed_message', closed_section?.block_text);
+        setValue('upcoming_message', upcoming_section?.block_text);
+        setUpcomingEditorState(getEditorStateFromRaw(upcoming_section?.block_text || ''));
+        setClosedEditorState(getEditorStateFromRaw(closed_section?.block_text || ''));
+        setDefaultValues(getValues());
+    }, [engagement]);
+
+    const updateEditorState = (editorState: EditorState, field: 'upcoming_message' | 'closed_message') => {
+        const stateSetters = {
+            upcoming_message: setUpcomingEditorState,
+            closed_message: setClosedEditorState,
+        };
+        stateSetters[field](editorState);
+        setValue(field, JSON.stringify(convertToRaw(editorState.getCurrentContent())), { shouldDirty: true });
+        // Set the plain text value for the editor state for length validation
+        setValue(`_${field}_plain`, editorState.getCurrentContent().getPlainText());
     };
 
     return (
-        <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="name">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Engagement Title <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        This is the title that will display for your engagement and should be descriptive, short and
-                        succinct.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Title</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="name"
-                        counter
-                        maxLength={60}
-                        placeholder="Engagement title"
-                    />
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
-                <label htmlFor="eyebrow">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Eyebrow Text <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        If your audience will need additional context to interpret the topic of your engagement or, it
-                        is important for them to understand who, within BC Gov, is requesting feedback, you may wish to
-                        add two to five words of eyebrow text.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Eyebrow</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="eyebrow"
-                        counter
-                        maxLength={40}
-                        placeholder="Eyebrow text"
-                    />
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <MetBigLabel style={metBigLabelStyles}>
-                    Hero Image <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                </MetBigLabel>
-                <FormDescriptionText style={formDescriptionTextStyles}>
-                    Please ensure you use high quality images that help to communicate the topic of your engagement. You
-                    must ensure that any important subject matter is positioned on the right side.
-                </FormDescriptionText>
+        <AuthoringFormContainer
+            sx={{
+                '& .met-input-form-field-title': { fontSize: '0.875rem' },
+                '& .met-input-text': { background: 'white' },
+                '& #image-upload-section .MuiGrid-container': { background: 'white' },
+            }}
+        >
+            <AuthoringFormSection
+                required
+                name="Engagement Title"
+                labelFor="name"
+                details="This is the title that will display for your engagement and should be descriptive, short and succinct."
+            >
+                <Controller
+                    name="name"
+                    control={control}
+                    defaultValue={engagement.name}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            id="name"
+                            title="Title"
+                            counter
+                            maxLength={60}
+                            placeholder="Engagement title"
+                            error={errors.name?.message}
+                        />
+                    )}
+                />
+            </AuthoringFormSection>
+            <AuthoringFormSection
+                name="Eyebrow Text"
+                labelFor="eyebrow"
+                details={
+                    'If your audience will need additional context to interpret the topic of your ' +
+                    'engagement, or it is important for them to understand who, within BC Gov, is ' +
+                    'requesting feedback, you may wish to add two to five words of eyebrow text.'
+                }
+            >
+                <Controller
+                    name="eyebrow"
+                    control={control}
+                    defaultValue={engagement.sponsor_name}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            value={field.value || undefined}
+                            id="eyebrow"
+                            title="Eyebrow"
+                            counter
+                            maxLength={40}
+                            placeholder="Eyebrow text"
+                            error={errors.eyebrow?.message}
+                        />
+                    )}
+                />
+            </AuthoringFormSection>
+            <AuthoringFormSection
+                required
+                name="Hero Image"
+                labelFor="select-file-button"
+                details={
+                    'Please ensure you use high quality images that help to communicate the topic of your ' +
+                    'engagement. You must ensure that any important subject matter is positioned on the right side.'
+                }
+            >
+                <ErrorMessage error={errors.image_url?.message} />
                 <ImageUpload
                     margin={4}
                     data-testid="engagement-form/image-upload"
@@ -140,173 +166,235 @@ const AuthoringBanner = () => {
                     height={ENGAGEMENT_UPLOADER_HEIGHT}
                     cropAspectRatio={ENGAGEMENT_CROPPER_ASPECT_RATIO}
                 />
-            </Grid>
+            </AuthoringFormSection>
 
             <Grid item sx={{ mt: '1rem' }}>
-                <MetHeader3 style={metHeader3Styles}>Engagement State Content Variants</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
+                <Header3>Engagement State Content Variants</Header3>
+                <BodyText size="small">
                     The content in this section of your engagement may be changed based on the state or status of your
                     engagement. Select the Section Preview or Page Preview button to see each of these states.
-                </FormDescriptionText>
+                </BodyText>
             </Grid>
+            <AuthoringFormSection
+                name="“Upcoming” State Message Text "
+                details={
+                    "While your engagement is open, the Primary CTA (button) in your engagement's hero banner should " +
+                    'link to the most important action you want your engagement audience to take. Enter text for the ' +
+                    'Primary CTA (button) below and then indicate where you would like it to link to.'
+                }
+            >
+                <BodyText size="small" bold sx={{ mb: -2 }}>
+                    Message Text
+                </BodyText>
+                <ErrorMessage error={errors._upcoming_message_plain?.message} />
+                <RichTextArea
+                    ariaLabel="Upcoming State Message Text"
+                    toolbar={{
+                        options: ['inline', 'link', 'history'],
+                        inline: { options: ['bold', 'italic', 'underline', 'superscript', 'subscript'] },
+                    }}
+                    editorState={upcomingEditorState}
+                    onEditorStateChange={(value) => updateEditorState(value, 'upcoming_message')}
+                />
+                <BodyText size="small" ml="auto" mt={-2}>
+                    {upcomingEditorState.getCurrentContent().getPlainText().length}/150
+                </BodyText>
+            </AuthoringFormSection>
+            <AuthoringFormSection
+                required
+                name="“Open” State Primary CTA"
+                labelFor="cta_button_text"
+                details={
+                    "When your engagement is open the Primary CTA (button) in your engagement's hero banner should " +
+                    'link to the most important action you want your engagement audience to take. Enter text for the ' +
+                    'Primary CTA (button) below and then indicate where you would like it to link to.'
+                }
+            >
+                <Controller
+                    name="open_cta"
+                    control={control}
+                    defaultValue={open_section?.button_text}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            id="cta_button_text"
+                            title="Primary CTA (Button) Text"
+                            counter
+                            maxLength={20}
+                            placeholder="Call-to-action button text"
+                            error={errors.open_cta?.message}
+                        />
+                    )}
+                />
+                <Controller
+                    name="open_cta_link_type"
+                    control={control}
+                    defaultValue={open_section?.link_type}
+                    render={({ field }) => (
+                        <RadioGroup row id="cta_link_radio" {...field}>
+                            <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
+                                <FormControlLabel value="internal" control={<Radio />} label="In-Page Section Link" />
+                                <br />
+                                <Controller
+                                    name="open_section_link"
+                                    control={control}
+                                    defaultValue={open_section?.internal_link}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            disabled={watch('open_cta_link_type') !== 'internal'}
+                                            aria-label="Section Link"
+                                            fullWidth
+                                            sx={{ mt: 1, height: '3em', '& fieldset': { borderColor: '#7A7876' } }}
+                                            id="section_link"
+                                        >
+                                            <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>
+                                                Provide Feedback Section
+                                            </MenuItem>
+                                            <MenuItem value={EngagementViewSections.CONTENT_TABS}>
+                                                Tabbed Content
+                                            </MenuItem>
+                                            <MenuItem value={EngagementViewSections.DESCRIPTION}>
+                                                Description Section
+                                            </MenuItem>
+                                        </Select>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControlLabel value="external" control={<Radio />} label="External URL" />
+                                <br />
+                                <Controller
+                                    name="open_external_link"
+                                    aria-label="External URL"
+                                    control={control}
+                                    defaultValue={open_section?.external_link}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            value={field.value || undefined}
+                                            disabled={watch('open_cta_link_type') !== 'external'}
+                                            sx={{ backgroundColor: colors.surface.white }}
+                                            id="external_link"
+                                            placeholder="Paste or type URL here"
+                                            error={errors.open_external_link?.message}
+                                            errorPosition="bottom"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                        </RadioGroup>
+                    )}
+                />
+            </AuthoringFormSection>
+            <AuthoringFormSection
+                name="“Closed” (Results Pending) State Message Text"
+                details={
+                    'When your engagement is closed, you may wish to add message text to your hero banner advising ' +
+                    'your engagement audience to come back later to view the results of your engagement.'
+                }
+            >
+                <BodyText size="small" bold sx={{ mb: -2 }}>
+                    Message Text
+                </BodyText>
+                <ErrorMessage error={errors._closed_message_plain?.message} />
+                <RichTextArea
+                    ariaLabel="Closed State Message Text"
+                    toolbar={{
+                        options: ['inline', 'link', 'history'],
+                        inline: { options: ['bold', 'italic', 'underline', 'superscript', 'subscript'] },
+                    }}
+                    editorState={closedEditorState}
+                    onEditorStateChange={(value) => updateEditorState(value, 'closed_message')}
+                />
+                <BodyText size="small" ml="auto" mt={-2}>
+                    {closedEditorState.getCurrentContent().getPlainText().length}/150
+                </BodyText>
+            </AuthoringFormSection>
+            <AuthoringFormSection
+                name="“View Results” State Primary CTA"
+                labelFor="cta_button_text"
+                details={
+                    'If you will be publishing the results of your engagement, you can use the primary CTA in your ' +
+                    'hero banner do direct your engagement audience to those results. You may link to results ' +
+                    'published within this engagement, or enter a URL to an external web page.'
+                }
+            >
+                <Controller
+                    name="view_results_cta"
+                    control={control}
+                    defaultValue={view_results_section?.block_text}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            id="cta_button_text"
+                            title="Button (Primary CTA) Text"
+                            counter
+                            maxLength={20}
+                            placeholder="View results text"
+                        />
+                    )}
+                />
+                <Controller
+                    name="view_results_link_type"
+                    control={control}
+                    defaultValue={view_results_section?.link_type}
+                    render={({ field }) => (
+                        <RadioGroup row id="cta_view_results_radio" defaultValue="internal" {...field}>
+                            <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
+                                <FormControlLabel value="internal" control={<Radio />} label="In-Page Section Link" />
+                                <br />
+                                <Controller
+                                    name="view_results_section_link"
+                                    control={control}
+                                    defaultValue={view_results_section?.internal_link}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            aria-label="Section Link"
+                                            fullWidth
+                                            disabled={watch('view_results_link_type') !== 'internal'}
+                                            sx={{ mt: 1, height: '3em', '& fieldset': { borderColor: '#7A7876' } }}
+                                            id="view_results_link"
+                                        >
+                                            <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>
+                                                Provide Feedback Section
+                                            </MenuItem>
+                                            <MenuItem value={EngagementViewSections.CONTENT_TABS}>
+                                                Tabbed Content
+                                            </MenuItem>
+                                            <MenuItem value={EngagementViewSections.DESCRIPTION}>
+                                                Description Section
+                                            </MenuItem>
+                                        </Select>
+                                    )}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControlLabel value="external" control={<Radio />} label="External URL" />
+                                <br />
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
-                <label htmlFor="message_text">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        "Upcoming" State Message Text <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        If you are going to publish your engagement before it is “Open”, you may add message text to
-                        your hero banner advising your engagement audience to come back later to provide feedback.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Message Text</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="message_text"
-                        counter
-                        maxLength={20}
-                        placeholder="Message text"
-                    />
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="cta_button_text">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        "Open" State Primary CTA <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        When your engagement is open the Primary CTA (button) in your engagement's hero banner should
-                        link to the most important action you want your engagement audience to take. Enter text for the
-                        Primary CTA (button) below and then indicate where you would like it to link to.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Primary CTA (Button) Text</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="cta_button_text"
-                        counter
-                        maxLength={20}
-                        placeholder="Call-to-action button text"
-                    />
-                </label>
-                <label htmlFor="cta_link_type">
-                    <RadioGroup
-                        row
-                        id="cta_link_radio"
-                        name="cta_link_radio"
-                        defaultValue="section"
-                        sx={{ flexWrap: 'nowrap' }}
-                        onChange={(event) => handleRadioSelectChange(event, 'ctaLinkType')}
-                    >
-                        <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
-                            <FormControlLabel value="section" control={<Radio />} label="In-Page Section Link" />
-                            <br />
-                            <Select
-                                disabled={!openCtaSectionSelectEnabled}
-                                sx={{
-                                    ...conditionalSelectStyles,
-                                    boxShadow: openCtaSectionSelectEnabled ? '0 0 0 1px #7A7876 inset' : 'none',
-                                }}
-                                id="section_link"
-                                defaultValue="provide_feedback"
-                            >
-                                <MenuItem value="provide_feedback">Provide Feedback Section</MenuItem>
-                                <MenuItem value="other_section">Other Section</MenuItem>
-                            </Select>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControlLabel value="external" control={<Radio />} label="External URL" />
-                            <br />
-                            <TextField
-                                disabled={!openCtaExternalURLEnabled}
-                                sx={{ backgroundColor: colors.surface.white }}
-                                id="external_link"
-                                placeholder="Paste or type URL here"
-                            />
-                        </Grid>
-                    </RadioGroup>
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
-                <label htmlFor="message_text">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        "Closed" (Results Pending) State Message Text{' '}
-                        <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        When your engagement is closed, you may wish to add message text to your hero banner advising
-                        your engagement audience to come back later to view the results of your engagement.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Message Text</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="message_text"
-                        counter
-                        maxLength={20}
-                        placeholder="Engagement closed message"
-                    />
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.gray[10] }} item>
-                <label htmlFor="cta_button_text">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        "View Results" State Primary CTA <span style={{ fontWeight: 'normal' }}>(Optional)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        If you will be publishing the results of your engagement, you can use the primary CTA in your
-                        hero banner do direct your engagement audience to those results. You may link to results
-                        published within this engagement, or enter a URL to an external web page.
-                    </FormDescriptionText>
-                    <MetLabel style={metLabelStyles}>Button (Primary CTA) Text</MetLabel>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        id="cta_button_text"
-                        counter
-                        maxLength={20}
-                        placeholder="View results text"
-                    />
-                </label>
-                <label htmlFor="cta_link_type">
-                    <RadioGroup
-                        row
-                        id="cta_view_results_radio"
-                        name="cta_view_results_radio"
-                        defaultValue="section"
-                        sx={{ flexWrap: 'nowrap' }}
-                        onChange={(event) => handleRadioSelectChange(event, 'ctaViewResultsType')}
-                    >
-                        <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
-                            <FormControlLabel value="section" control={<Radio />} label="In-Page Section Link" />
-                            <br />
-                            <Select
-                                disabled={!viewResultsSectionSelectEnabled}
-                                sx={{
-                                    ...conditionalSelectStyles,
-                                    boxShadow: viewResultsSectionSelectEnabled ? '0 0 0 1px #7A7876 inset' : 'none',
-                                }}
-                                id="view_results_link"
-                                defaultValue="results_section"
-                            >
-                                <MenuItem value="results_section">Results Section</MenuItem>
-                                <MenuItem value="other_section">Other Section</MenuItem>
-                            </Select>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControlLabel value="external" control={<Radio />} label="External URL" />
-                            <br />
-                            <TextField
-                                disabled={!viewResultsCtaExternalURLEnabled}
-                                sx={{ backgroundColor: colors.surface.white }}
-                                id="view_results_link"
-                                placeholder="Paste or type URL here"
-                            />
-                        </Grid>
-                    </RadioGroup>
-                </label>
-            </Grid>
-        </Grid>
+                                <Controller
+                                    name="view_results_external_link"
+                                    control={control}
+                                    defaultValue={view_results_section?.external_link}
+                                    render={({ field }) => (
+                                        <TextField
+                                            {...field}
+                                            value={field.value || undefined}
+                                            disabled={watch('view_results_link_type') !== 'external'}
+                                            sx={{ backgroundColor: colors.surface.white }}
+                                            id="view_results_link"
+                                            placeholder="Paste or type URL here"
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                        </RadioGroup>
+                    )}
+                />
+            </AuthoringFormSection>
+        </AuthoringFormContainer>
     );
 };
 

@@ -65,7 +65,7 @@ const InternalHeader = () => {
     const pathname = window.location.href;
     const { engagementId } = useParams() as { engagementId: string };
     const currentAuthoringSlug = pathname.split('/').slice(-2).join('/');
-    const authoringRoutes = getAuthoringRoutes(Number(engagementId), tenant).map((route) => {
+    const authoringRoutes = getAuthoringRoutes(Number(engagementId)).map((route) => {
         // skip the "Engagement Home" link
         if ('Engagement Home' !== route.name) {
             const pathArray = route.path.split('/');

@@ -4,17 +4,26 @@
   - Implemented Figma design
   - Fixed issue with map labels that were making them inaccessible
 
+## September 23, 2024
+
+- **Feature** New Hero Banner page in authoring section [🎟️ DESENG-670](https://citz-gdx.atlassian.net/browse/DESENG-670)
+  - Hooks into existing AuthoringTemplate component for form submission
+  - Added new fields for hero banner content
+  - Added image upload functionality
+  - Added layout components for engagement authoring form fields
+
 ## September 18, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
+
   - Implemented Figma design
   - Created custom layover bar for videos that shows video provider and has a custom logo
   - Transcripts will not be implemented at this time
 
 - Summary page in authoring section [🎟️ DESENG-671](https://citz-gdx.atlassian.net/browse/DESENG-671)
-	- Streamlined data loaders and actions to account for page changes
-	- Updated data structure so that summary data is pulled from engagement table
-		- Added 'description_title' column to engagement table
+  - Streamlined data loaders and actions to account for page changes
+  - Updated data structure so that summary data is pulled from engagement table
+    - Added 'description_title' column to engagement table
 
 ## September 12, 2024
 
@@ -23,7 +32,7 @@
   - Saves values to database
   - Returns success and error messages to user after form submission
   - Resets form dirty state after submission
-  
+
 ## September 9, 2024
 
 - **Feature** Add image widget [🎟️ DESENG-689](https://citz-gdx.atlassian.net/browse/DESENG-689)

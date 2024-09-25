@@ -16,6 +16,7 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'components/engagement/old-view/EmailModal';
+import { EngagementViewSections } from '.';
 
 const gridContainerStyles = {
     width: '100%',
@@ -99,7 +100,7 @@ export const EngagementSurveyBlock = () => {
                             <Grid container justifyContent="space-between" sx={gridContainerStyles}>
                                 <Grid
                                     component={'section'}
-                                    id="survey-section"
+                                    id={EngagementViewSections.PROVIDE_FEEDBACK}
                                     aria-label="Survey Section"
                                     item
                                     sx={{

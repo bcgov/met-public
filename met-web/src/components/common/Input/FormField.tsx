@@ -1,9 +1,7 @@
 import React from 'react';
 import { Grid, GridProps } from '@mui/material';
 import { BodyText } from '../Typography';
-import { colors } from '..';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { ErrorMessage } from '../Typography/Body';
 
 export type FormFieldProps = {
     title?: string;
@@ -12,6 +10,7 @@ export type FormFieldProps = {
     required?: boolean;
     optional?: boolean;
     error?: string;
+    errorPosition?: 'top' | 'bottom';
     children: React.ReactNode;
 } & GridProps;
 
@@ -22,6 +21,7 @@ export const FormField = ({
     required,
     optional,
     error,
+    errorPosition = 'top',
     children,
     ...gridProps
 }: FormFieldProps) => {
@@ -45,20 +45,19 @@ export const FormField = ({
                 <Grid item xs={12} sx={{ mb: '8px' }}>
                     <BodyText size="small">{instructions}</BodyText>
                 </Grid>
-                {error && (
+                {error && errorPosition === 'top' && (
                     <Grid item container xs={12} sx={{ mb: '8px' }}>
-                        <BodyText bold size="small" sx={{ color: colors.notification.error.shade, lineHeight: '24px' }}>
-                            <FontAwesomeIcon
-                                icon={faExclamationCircle}
-                                style={{ marginRight: '8px', fontSize: '18px', position: 'relative', top: '2px' }}
-                            />
-                            {error}
-                        </BodyText>
+                        <ErrorMessage error={error} />
                     </Grid>
                 )}
                 <Grid item container xs={12}>
                     {children}
                 </Grid>
+                {error && errorPosition === 'bottom' && (
+                    <Grid item container xs={12} sx={{ mb: '8px' }}>
+                        <ErrorMessage error={error} />
+                    </Grid>
+                )}
             </Grid>
         </label>
     );

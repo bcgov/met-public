@@ -41,14 +41,13 @@ export const routeItemStyle = {
 
 const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxProps) => {
     const permissions = useAppSelector((state) => state.user.roles);
-    const tenant = useAppSelector((state) => state.tenant);
 
-    const currentRoutePath = getRoutes(Number(engagementId), tenant)
+    const currentRoutePath = getRoutes(Number(engagementId))
         .map((route) => route.path)
         .filter((route) => location.pathname.includes(route))
         .reduce((prev, curr) => (prev.length > curr.length ? prev : curr));
 
-    const allowedRoutes = getRoutes(Number(engagementId), tenant).filter((route) => {
+    const allowedRoutes = getRoutes(Number(engagementId)).filter((route) => {
         return !route.authenticated || route.allowedRoles.some((role) => permissions.includes(role));
     });
 
@@ -154,7 +153,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
             <List sx={{ pt: { xs: 4, md: 0 }, pb: '0' }}>
                 {/* Engagement Home link */}
                 <Link
-                    href={getRoutes(Number(engagementId), tenant)[0].path}
+                    to={getRoutes(Number(engagementId))[0].path}
                     style={{
                         color: Palette.text.primary,
                         textDecoration: 'none',
@@ -166,7 +165,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                         style={{ fontSize: '1.3rem', fontWeight: 'normal', paddingRight: '0.5rem' }}
                         icon={faArrowLeftLong}
                     />
-                    <span style={{ fontWeight: 'bold' }}>{getRoutes(Number(engagementId), tenant)[0].name}</span>
+                    <span style={{ fontWeight: 'bold' }}>{getRoutes(Number(engagementId))[0].name}</span>
                 </Link>
                 <br />
                 {/* All other menu items */}

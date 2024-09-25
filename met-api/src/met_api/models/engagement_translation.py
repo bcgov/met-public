@@ -31,7 +31,6 @@ class EngagementTranslation(BaseModel):
     open_status_block_text = db.Column(JSON, unique=False, nullable=True)
     closed_status_block_text = db.Column(JSON, unique=False, nullable=True)
     sponsor_name = db.Column(db.String(50))
-    cta_message = db.Column(db.String(50))
 
     # Add a unique constraint on engagement_id and language_id
     # A engagement has only one version in a particular language
@@ -80,7 +79,6 @@ class EngagementTranslation(BaseModel):
             open_status_block_text=data.get('open_status_block_text', None),
             closed_status_block_text=data.get('closed_status_block_text', None),
             sponsor_name=data.get('sponsor_name', None),
-            cta_message=data.get('cta_message', None),
         )
 
     @staticmethod

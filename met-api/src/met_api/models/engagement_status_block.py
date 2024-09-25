@@ -18,22 +18,33 @@ class EngagementStatusBlock(BaseModel):
 
     __tablename__ = 'engagement_status_block'
     __table_args__ = (
-        db.UniqueConstraint('engagement_id', 'survey_status', name='unique_engagement_status_block'),
+        db.UniqueConstraint(
+            'engagement_id', 'survey_status', name='unique_engagement_status_block'
+        ),
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    engagement_id = db.Column(
+        db.Integer, ForeignKey('engagement.id', ondelete='CASCADE')
+    )
     survey_status = db.Column(db.Enum(SubmissionStatus), nullable=False)
     block_text = db.Column(JSON, unique=False, nullable=False)
+    button_text = db.Column(db.String(20), nullable=True)
+    link_type = db.Column(db.String(20), nullable=False)
+    internal_link = db.Column(db.String(50), nullable=True)
+    external_link = db.Column(db.String(300), nullable=True)
 
     @classmethod
     def get_by_status(cls, engagement_id, survey_status):
         """Get Engagement Status by survey status."""
-        return db.session.query(EngagementStatusBlock) \
-            .filter(EngagementStatusBlock.survey_status == survey_status,
-                    EngagementStatusBlock.engagement_id == engagement_id
-                    ) \
+        return (
+            db.session.query(EngagementStatusBlock)
+            .filter(
+                EngagementStatusBlock.survey_status == survey_status,
+                EngagementStatusBlock.engagement_id == engagement_id,
+            )
             .first()
+        )
 
     @classmethod
     def save_status_blocks(cls, status_blocks: list) -> None:
