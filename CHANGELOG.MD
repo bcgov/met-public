@@ -1,3 +1,9 @@
+## September 25, 2024
+
+- **Feature** New Map Widget front end [🎟️ DESENG-693](https://citz-gdx.atlassian.net/browse/DESENG-693)
+  - Implemented Figma design
+  - Fixed issue with map labels that were making them inaccessible
+
 ## September 18, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
