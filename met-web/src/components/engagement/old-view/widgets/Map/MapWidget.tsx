@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetPaper } from 'components/common';
-import { Grid, Skeleton, Divider, Box, useMediaQuery, Theme } from '@mui/material';
+import { MetHeader3 } from 'components/common';
+import { Grid, Skeleton, Box, useMediaQuery, Theme, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -10,10 +10,11 @@ import { WidgetMap } from 'models/widgetMap';
 import { ExpandModal } from './ExpandModal';
 import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
-import { IconButton } from 'components/common/Input';
 import { Link } from 'components/common/Navigation';
 import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
 import { Header2 } from 'components/common/Typography';
+import { colors, Palette } from 'styles/Theme';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface MapWidgetProps {
     widget: Widget;
@@ -28,6 +29,9 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
     const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
     const [mapWidth, setMapWidth] = useState(250);
     const [mapHeight, setMapHeight] = useState(250);
+
+    const theme = useTheme();
+    const isDarkMode = 'dark' === theme.palette.mode;
 
     const fetchMap = async () => {
         try {
@@ -56,21 +60,19 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
 
     if (isLoading) {
         return (
-            <MetPaper elevation={1} sx={{ padding: '1em' }}>
-                <Grid container justifyContent="flex-start" spacing={3}>
-                    <Grid item xs={12}>
-                        <Header2>
-                            <Skeleton variant="rectangular" />
-                        </Header2>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
-                    </Grid>
+            <Grid container justifyContent="flex-start" spacing={3}>
+                <Grid item xs={12}>
+                    <Header2>
+                        <Skeleton variant="rectangular" />
+                    </Header2>
                 </Grid>
-            </MetPaper>
+                <Grid item xs={12}>
+                    <Skeleton variant="rectangular" height="10em" />
+                </Grid>
+                <Grid item xs={12}>
+                    <Skeleton variant="rectangular" height="10em" />
+                </Grid>
+            </Grid>
         );
     }
 
@@ -78,54 +80,72 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
         return null;
     }
 
+    // Define the styles
+    const metHeader3Styles = {
+        fontWeight: 'lighter',
+        fontSize: '1.5rem',
+        marginBottom: '2.5rem',
+        marginTop: '4rem',
+        color: isDarkMode ? colors.surface.white : Palette.text.primary,
+    };
+    const outerContainerStyles = {
+        position: 'relative',
+        width: '100%',
+        paddingTop: '66.67%' /* 3:2 aspect ratio (height / width * 100) */,
+    };
+    const innerContainerStyles = {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: '16px',
+        overflow: 'hidden',
+    };
+    const linkStyles = {
+        color: isDarkMode ? colors.surface.white : Palette.text.primary,
+        textDecorationColor: isDarkMode ? colors.surface.white : Palette.text.primary,
+        cursor: 'pointer',
+    };
+
     return (
-        <>
-            <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em', minHeight: '12em' }}>
-                <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-                    <Grid
-                        item
-                        container
-                        justifyContent={{ xs: 'center', md: 'flex-start' }}
-                        flexDirection={'column'}
-                        xs={12}
-                        paddingBottom={0}
-                    >
-                        <Header2>{widget.title}</Header2>
-                        <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Box
-                            ref={mapContainerRef}
-                            sx={{
-                                width: '100%',
-                                height: '370px',
-                            }}
-                        >
-                            <MetMap
-                                geojson={geoJSONDecode(map.geojson)}
-                                longitude={map.longitude}
-                                latitude={map.latitude}
-                                markerLabel={map.marker_label}
-                                zoom={calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(map.geojson))}
-                            />
-                        </Box>
-                    </Grid>
-                    <When condition={isLargeScreen}>
-                        <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
-                            <Grid item paddingRight={'5px'}>
-                                <IconButton icon={faExpand} onClick={() => setOpen(true)} backgroundColor="none" />
-                            </Grid>
-                            <Grid item>
-                                <Link onClick={() => setOpen(true)} tabIndex={0} onKeyPress={() => setOpen(true)}>
-                                    View Expanded Map
-                                </Link>
-                            </Grid>
-                        </Grid>
-                        <ExpandModal map={map} open={open} setOpen={setOpen} />
-                    </When>
+        <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+            <Grid
+                item
+                container
+                justifyContent={{ xs: 'center', md: 'flex-start' }}
+                flexDirection={'column'}
+                xs={12}
+                paddingBottom={0}
+            >
+                <MetHeader3 style={metHeader3Styles}>{widget.title}</MetHeader3>
+            </Grid>
+            <Grid item xs={12}>
+                <Box sx={outerContainerStyles}>
+                    <Box sx={innerContainerStyles}>
+                        <MetMap
+                            geojson={geoJSONDecode(map.geojson)}
+                            longitude={map.longitude}
+                            latitude={map.latitude}
+                            markerLabel={map.marker_label}
+                            zoom={calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(map.geojson))}
+                        />
+                    </Box>
+                </Box>
+            </Grid>
+            <When condition={isLargeScreen}>
+                <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
+                    <Link onClick={() => setOpen(true)} sx={linkStyles} tabIndex={0} onKeyDown={() => setOpen(true)}>
+                        <FontAwesomeIcon
+                            icon={faExpand}
+                            style={{ color: isDarkMode ? colors.surface.white : Palette.text.primary }}
+                        />
+                        <span style={{ paddingLeft: '0.5rem' }}>View Expanded Map</span>
+                    </Link>
                 </Grid>
-            </MetPaper>
-        </>
+                <ExpandModal map={map} open={open} setOpen={setOpen} />
+            </When>
+        </Grid>
     );
 };
 
