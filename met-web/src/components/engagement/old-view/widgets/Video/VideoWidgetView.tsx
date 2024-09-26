@@ -147,7 +147,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
     return (
         <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-            <Grid item xs={12} sx={{ height: 0 === videoWidget.title.length ? '0px' : 'auto' }}>
+            <Grid item xs={12} sx={{ height: 0 === widget.title.length ? '0px' : 'auto' }}>
                 <MetHeader3
                     style={{
                         fontWeight: 'lighter',
@@ -157,7 +157,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         color: isDarkMode ? colors.surface.white : Palette.text.primary,
                     }}
                 >
-                    {videoWidget.title}
+                    {widget.title}
                 </MetHeader3>
             </Grid>
             <Grid item xs={12}>
@@ -186,7 +186,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         url={videoWidget.video_url}
                         controls
                         onReady={(player) => {
-                            setVideoOverlayTitle(getVideoTitle(player, videoSource, videoWidget.title));
+                            setVideoOverlayTitle(getVideoTitle(player, videoSource, widget.title));
                         }}
                         onPlay={() => setShowOverlay(false)}
                         width="100%"

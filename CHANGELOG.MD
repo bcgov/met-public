@@ -1,8 +1,12 @@
 ## September 25, 2024
 
+- **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
+	- Removed unneeded tables from db
+	- Updated all other met_api and met_web logic to accomodate this
+
 - **Feature** New Map Widget front end [🎟️ DESENG-693](https://citz-gdx.atlassian.net/browse/DESENG-693)
-  - Implemented Figma design
-  - Fixed issue with map labels that were making them inaccessible
+	- Implemented Figma design
+	- Fixed accessibility issue with map labels (white text on white background)
 
 ## September 23, 2024
 
@@ -15,7 +19,6 @@
 ## September 18, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Implemented Figma design
   - Created custom layover bar for videos that shows video provider and has a custom logo
   - Transcripts will not be implemented at this time

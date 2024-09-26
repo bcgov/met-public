@@ -249,7 +249,6 @@ const mockVideo: VideoWidget = {
     id: 1,
     widget_id: 1,
     engagement_id: 1,
-    title: 'Video Title',
     video_url: 'https://youtube.url',
     description: 'Video description',
 };

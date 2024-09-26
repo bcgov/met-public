@@ -47,7 +47,6 @@ class WidgetVideoService:
         video_model.widget_id = widget_id
         video_model.engagement_id = video_data.get('engagement_id')
         video_model.video_url = video_data.get('video_url')
-        video_model.title = video_data.get('title')
         video_model.description = video_data.get('description')
         video_model.flush()
         return video_model

@@ -18,7 +18,6 @@ class WidgetVideo(BaseModel):  # pylint: disable=too-few-public-methods, too-man
     widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'), nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
     video_url = db.Column(db.String(255), nullable=False)
-    title = db.Column(db.String(255), nullable=True)
     description = db.Column(db.Text())
 
     @classmethod

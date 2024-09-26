@@ -124,7 +124,6 @@ erDiagram
         integer widget_id FK "The id from widget"
         integer engagement_id FK "The id from engagement"
         string video_url
-		string title
         string description
         timestamp created_date
         timestamp updated_date

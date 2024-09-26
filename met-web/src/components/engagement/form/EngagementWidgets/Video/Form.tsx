@@ -43,7 +43,6 @@ const Form = () => {
 
     useEffect(() => {
         if (videoWidget) {
-            methods.setValue('title', videoWidget.title);
             methods.setValue('description', videoWidget.description);
             methods.setValue('videoUrl', videoWidget.video_url);
         }
@@ -55,12 +54,11 @@ const Form = () => {
         }
 
         const validatedData = await schema.validate(data);
-        const { videoUrl, title, description } = validatedData;
+        const { videoUrl, description } = validatedData;
         await postVideo(widget.id, {
             widget_id: widget.id,
             engagement_id: widget.engagement_id,
             video_url: videoUrl,
-            title: title || '',
             description: description || '',
             location: widget.location in WidgetLocation ? widget.location : null,
         });
@@ -76,12 +74,10 @@ const Form = () => {
         const updatedDate = updatedDiff(
             {
                 description: videoWidget.description,
-                title: videoWidget.title,
                 video_url: videoWidget.video_url,
             },
             {
                 description: validatedData.description,
-                title: validatedData.title,
                 video_url: validatedData.videoUrl,
             },
         );
@@ -144,19 +140,6 @@ const Form = () => {
                             justifyContent="flex-start"
                             spacing={2}
                         >
-                            <Grid item xs={12}>
-                                <MetLabel>Title (Optional)</MetLabel>
-                                <ControlledTextField
-                                    name="title"
-                                    variant="outlined"
-                                    label=" "
-                                    aria-label="Title: optional."
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                />
-                            </Grid>
                             <Grid item xs={12}>
                                 <MetLabel>Description (Optional)</MetLabel>
                                 <ControlledTextField
