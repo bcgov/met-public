@@ -19,6 +19,5 @@ class WidgetTranslationSchema(Schema):
     map_file_name = fields.Str(data_key='map_file_name')
     poll_title = fields.Str(data_key='poll_title')
     poll_description = fields.Str(data_key='poll_description')
-    video_url = fields.Str(data_key='video_url')
     video_title = fields.Str(data_key='video_title')
     video_description = fields.Str(data_key='video_description')

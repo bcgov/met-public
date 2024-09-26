@@ -88,7 +88,6 @@ describe('Video Widget tests', () => {
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Video}`));
         await waitFor(() => {
-            expect(screen.getByText('Title (Optional)')).toBeVisible();
             expect(screen.getByText('Description (Optional)')).toBeVisible();
         });
     }
@@ -113,7 +112,6 @@ describe('Video Widget tests', () => {
         await addVideoWidget();
 
         expect(getWidgetsMock).toHaveBeenCalled();
-        expect(screen.getByText('Title (Optional)')).toBeVisible();
         expect(screen.getByText('Description (Optional)')).toBeVisible();
         expect(screen.getByText('Video Link')).toBeVisible();
     });

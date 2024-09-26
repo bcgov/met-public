@@ -18,7 +18,6 @@ interface PostVideoRequest {
     widget_id: number;
     engagement_id: number;
     video_url: string;
-    title: string;
     description: string;
     location: WidgetLocation | null;
 }
@@ -35,7 +34,6 @@ export const postVideo = async (widget_id: number, data: PostVideoRequest): Prom
 
 interface PatchVideoRequest {
     video_url?: string;
-    title?: string;
     description?: string;
 }
 

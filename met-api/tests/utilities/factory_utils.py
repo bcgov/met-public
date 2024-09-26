@@ -526,7 +526,6 @@ def factory_video_model(video_info: dict = TestWidgetVideo.video1):
     """Produce a comment model."""
     video = WidgetVideoModel(
         video_url=video_info.get('video_url'),
-        title=video_info.get('title'),
         description=video_info.get('description'),
         widget_id=video_info.get('widget_id'),
         engagement_id=video_info.get('engagement_id'),
