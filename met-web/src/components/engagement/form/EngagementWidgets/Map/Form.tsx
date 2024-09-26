@@ -31,7 +31,7 @@ import { WidgetLocation } from 'models/widget';
 
 const schema = yup
     .object({
-        markerLabel: yup.string().max(30, 'Markel label cannot exceed 30 characters'),
+        markerLabel: yup.string().max(30, 'Marker label cannot exceed 30 characters'),
         shapefile: yup.mixed(),
         geojson: yup.mixed(),
         latitude: yup
@@ -191,8 +191,10 @@ const Form = () => {
                                     handleAddFile={handleAddFile}
                                     savedFileName={uploadName}
                                     savedFile={methods.getValues('shapefile')}
+                                    aria-label={'Upload a shape file.'}
                                 />
                             </Grid>
+
                             <When condition={Boolean(filename)}>
                                 <Grid item xs={12}>
                                     <MetLabel sx={{ marginBottom: '2px' }}>File Uploaded </MetLabel>
@@ -228,7 +230,7 @@ const Form = () => {
                                 </Grid>
                             </When>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Latitude</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Latitude (Required)</MetLabel>
                                 <MetDescription>Latitude in British Columbia is between 48.30 and 60.00</MetDescription>
                                 <ControlledTextField
                                     name="latitude"
@@ -239,10 +241,13 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                    aria-label={
+                                        'Latitude: Latitude in British Columbia is between 48.30 and 60.00. Required field, numeric value with up to two decimal places.'
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Longitude</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Longitude (Required)</MetLabel>
                                 <MetDescription>
                                     Longitude in British Columbia is between  -139.06 and -114.03
                                 </MetDescription>
@@ -255,10 +260,13 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                    aria-label={
+                                        'Longitude: Longitude in British Columbia is between -139.06 and -114.03. Required field, numeric value with up to two decimal places.'
+                                    }
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Marker Label</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Marker Label (Optional)</MetLabel>
                                 <MetDescription>This text will appear next to your marker on the map</MetDescription>
                                 <ControlledTextField
                                     name="markerLabel"
@@ -269,6 +277,7 @@ const Form = () => {
                                     }}
                                     fullWidth
                                     size="small"
+                                    aria-label="Marker label: This text will appear next to your marker on the map. Optional field, maximum 30 characters."
                                 />
                             </Grid>
                             <Grid item xs={12} container direction="row" justifyContent={'flex-end'}>

@@ -41,7 +41,12 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
             }}
             keepMounted={false}
         >
-            <Paper>
+            <Paper
+                style={{
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                }}
+            >
                 <Grid
                     container
                     direction="row"

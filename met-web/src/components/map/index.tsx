@@ -9,7 +9,8 @@ import { MetSmallTextOld } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
 import { AnyLayer } from 'mapbox-gl';
-import { Palette } from 'styles/Theme';
+import { colors, Palette } from 'styles/Theme';
+
 interface MapProps {
     latitude: number;
     longitude: number;
@@ -74,7 +75,8 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                     <When condition={Boolean(markerLabel)}>
                         <MetSmallTextOld
                             bold
-                            bgcolor={'var(--bcds-surface-background-white)'}
+                            bgcolor={'#12508F'}
+                            style={{ color: colors.surface.white, padding: '1px 4px' }}
                             borderRadius="10px"
                             padding="0 2px 0 2px"
                         >
