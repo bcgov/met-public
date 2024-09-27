@@ -61,7 +61,7 @@ export const CommonSelect: React.FC<CommonSelectProps & Omit<MuiSelectProps, 'va
                 p: 1,
                 height: 48,
                 borderRadius: '2em',
-                background: bgColor,
+                backgroundColor: bgColor,
                 color: textColors.primary,
                 boxShadow: 3,
                 '&:hover': {
