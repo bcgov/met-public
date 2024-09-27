@@ -1,11 +1,10 @@
 import React, { Suspense } from 'react';
 import { Grid, Skeleton, Paper, ThemeProvider, Box } from '@mui/material';
 import { Widget } from 'models/widget';
-import { TimelineWidget, TimelineEvent as TimelineEventType } from 'models/timelineWidget';
+import { TimelineWidget, TimelineEvent as TimelineEventType, EventStatus } from 'models/timelineWidget';
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BaseTheme } from 'styles/Theme';
-import { EventStatus } from 'models/timelineWidget';
 import { BodyText, Header3 } from 'components/common/Typography';
 import { Await } from 'react-router-dom';
 import { faCircle, faCircleHalf } from '@fortawesome/pro-solid-svg-icons';
