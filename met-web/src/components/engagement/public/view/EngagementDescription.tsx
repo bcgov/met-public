@@ -70,7 +70,7 @@ export const EngagementDescription = () => {
                             <Await resolve={engagement}>
                                 {(engagement: Engagement) => (
                                     <>
-                                        <Header2 decorated id="description-header">
+                                        <Header2 decorated id="description-header" sx={{ mb: 1 }}>
                                             {engagement.description_title}
                                         </Header2>
                                         <BodyText>
