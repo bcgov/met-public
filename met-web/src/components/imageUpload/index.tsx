@@ -42,10 +42,17 @@ export const ImageUpload = ({
         >
             <Uploader height={height} accept={accept}>
                 <FontAwesomeIcon icon={faCloudUpload} size="2x" color={colors.surface.blue[90]} />
-                <BodyText bold size="small" sx={{ color: colors.surface.blue[90], textAlign: 'center' }}>
+                <BodyText
+                    bold
+                    size="small"
+                    sx={{ color: colors.surface.blue[90], textAlign: 'center', pl: '1rem', pr: '1rem' }}
+                >
                     {helpText}
                 </BodyText>
-                <BodyText size="small" sx={{ color: colors.surface.gray[80] }}>
+                <BodyText
+                    size="small"
+                    sx={{ color: colors.surface.gray[80], textAlign: 'center', pl: '1rem', pr: '1rem' }}
+                >
                     Supported formats: JPG, PNG, WEBP
                 </BodyText>
                 <Button id="select-file-button" variant="secondary" size="small" sx={{ mt: '1.5em' }}>

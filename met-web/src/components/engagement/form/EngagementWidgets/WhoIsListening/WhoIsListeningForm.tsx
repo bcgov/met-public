@@ -140,6 +140,7 @@ const WhoIsListeningForm = () => {
                             <TextField
                                 {...params}
                                 label=" "
+                                aria-label="Select an existing contact."
                                 InputLabelProps={{
                                     shrink: false,
                                 }}

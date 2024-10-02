@@ -6,6 +6,7 @@
 	- Added option to enter widget description text (below title, above contacts)
 	- Adjusted CSS to accomodate multiple viewports
 	- Added ARIA labels for accessibility
+	- Updated contact create/edit form
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
 	- Changed icon colour from yellow to white to accomodate company branding requests
@@ -22,7 +23,6 @@
 ## September 25, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Removed unneeded tables from db
   - Updated all other met_api and met_web logic to accomodate this
 
