@@ -10,11 +10,20 @@ import ContactBlock from './ContactBlock';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { useCreateWidgetItemsMutation } from 'apiManager/apiSlices/widgets';
 import { WidgetTitle } from '../WidgetTitle';
+import { patchListeningWidget, postListeningWidget } from 'services/widgetService/ListeningService';
 
 const WhoIsListeningForm = () => {
     const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
-    const { handleAddContactDrawerOpen, loadingContacts, contacts, addedContacts, setAddedContacts } =
-        useContext(WhoIsListeningContext);
+    const {
+        handleAddContactDrawerOpen,
+        loadingContacts,
+        contacts,
+        addedContacts,
+        setAddedContacts,
+        listeningWidget,
+        setListeningWidget,
+        loadListeningWidget,
+    } = useContext(WhoIsListeningContext);
     const dispatch = useAppDispatch();
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
@@ -72,6 +81,18 @@ const WhoIsListeningForm = () => {
             setSavingWidgetItems(true);
             await createWidgetItems({ widget_id: widget.id, widget_items_data: widgetsToUpdate }).unwrap();
             await loadWidgets();
+            if (listeningWidget.id) {
+                await patchListeningWidget(widget.id, listeningWidget.id, {
+                    description: listeningWidget.description,
+                });
+            } else {
+                await postListeningWidget(widget.id, {
+                    engagement_id: widget.engagement_id,
+                    widget_id: widget.id,
+                    description: listeningWidget.description,
+                });
+            }
+            await loadListeningWidget();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
             handleWidgetDrawerOpen(false);
             setSavingWidgetItems(false);
@@ -89,6 +110,25 @@ const WhoIsListeningForm = () => {
             <Grid item xs={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
+            </Grid>
+            <Grid item xs={12}>
+                <MetLabel>Description (Optional)</MetLabel>
+                <TextField
+                    name="description"
+                    variant="outlined"
+                    value={listeningWidget?.description}
+                    onChange={(e) => {
+                        setListeningWidget({ ...listeningWidget, description: e.target.value });
+                    }}
+                    label=" "
+                    aria-label="Description: optional."
+                    InputLabelProps={{
+                        shrink: false,
+                    }}
+                    fullWidth
+                    multiline
+                    rows={4}
+                />
             </Grid>
             <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1}>
                 <Grid item xs={12}>

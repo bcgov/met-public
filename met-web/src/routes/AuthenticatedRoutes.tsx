@@ -138,6 +138,7 @@ const AuthenticatedRoutes = () => {
                                     <Route
                                         path="summary"
                                         action={engagementAuthoringUpdateAction}
+                                        loader={engagementLoader}
                                         element={<AuthoringSummary />}
                                         handle={{ crumb: () => ({ name: 'Summary' }) }}
                                     />

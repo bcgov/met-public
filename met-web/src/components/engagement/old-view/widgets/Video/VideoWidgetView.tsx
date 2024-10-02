@@ -237,7 +237,7 @@ const VideoOverlay = ({ videoOverlayTitle, source, videoSources }: VideoOverlayP
             >
                 <FontAwesomeIcon
                     icon={videoSources.find((vs) => vs.name === source)?.icon || faQuestionCircle}
-                    style={{ fontSize: '1.9rem', paddingRight: '0.65rem', color: '#FCBA19' }}
+                    style={{ fontSize: '1.9rem', paddingRight: '0.65rem', color: colors.surface.white }}
                 />{' '}
                 <span style={{ fontSize: '0.875rem' }}>{videoOverlayTitle}</span>
             </div>

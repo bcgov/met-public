@@ -66,6 +66,7 @@ from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
+from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
@@ -76,7 +77,7 @@ from tests.utilities.factory_scenarios import (
     TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
     TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
     TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
-    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo)
+    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo, TestWidgetListening)
 
 
 fake = Faker()
@@ -532,6 +533,17 @@ def factory_video_model(video_info: dict = TestWidgetVideo.video1):
     )
     video.save()
     return video
+
+
+def factory_widget_listening_model(listening_info: dict = TestWidgetListening.listening1):
+    """Produce a who is listening model."""
+    listening_widget = WidgetListeningModel(
+        description=listening_info.get('description'),
+        widget_id=listening_info.get('widget_id'),
+        engagement_id=listening_info.get('engagement_id'),
+    )
+    listening_widget.save()
+    return listening_widget
 
 
 def factory_widget_timeline_model(
