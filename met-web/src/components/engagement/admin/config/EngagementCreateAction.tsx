@@ -27,7 +27,7 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
     formData.getAll('users').forEach((user_id) => {
         addTeamMemberToEngagement({ user_id: user_id.toString(), engagement_id: engagement.id });
     });
-    return redirect(`/engagements/${engagement.id}/view`);
+    return redirect(`/engagements/${engagement.id}/details/config`);
 };
 
 export default engagementCreateAction;

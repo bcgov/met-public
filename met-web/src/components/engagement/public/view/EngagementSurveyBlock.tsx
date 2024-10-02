@@ -97,11 +97,15 @@ export const EngagementSurveyBlock = () => {
                         // No point in rendering if there is no status block or 2nd widget
                         if (!statusBlock?.block_text && !widget) return null;
                         return (
-                            <Grid container justifyContent="space-between" sx={gridContainerStyles}>
+                            <Grid
+                                component="section"
+                                id={EngagementViewSections.PROVIDE_FEEDBACK}
+                                container
+                                justifyContent="space-between"
+                                sx={gridContainerStyles}
+                                aria-label="Survey Section"
+                            >
                                 <Grid
-                                    component={'section'}
-                                    id={EngagementViewSections.PROVIDE_FEEDBACK}
-                                    aria-label="Survey Section"
                                     item
                                     sx={{
                                         width: { xs: '100%', md: '47.5%' },
@@ -166,9 +170,7 @@ export const EngagementSurveyBlock = () => {
                                         marginBottom: '48px',
                                     }}
                                 >
-                                    <ThemeProvider theme={BaseTheme}>
-                                        {widget && <WidgetSwitch widget={widget} />}
-                                    </ThemeProvider>
+                                    {widget && <WidgetSwitch widget={widget} />}
                                 </Grid>
                             </Grid>
                         );

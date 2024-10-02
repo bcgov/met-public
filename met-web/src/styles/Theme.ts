@@ -204,16 +204,16 @@ export const BaseTheme = createTheme({
             },
         },
         MuiSelect: {
-            defaultProps: {
-                componentsProps: {
-                    root: {
-                        style: {
-                            backgroundColor: 'white',
-                            borderRadius: '8px',
-                        },
+            variants: [
+                {
+                    props: { variant: 'outlined' },
+                    style: {
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
                     },
                 },
-
+            ],
+            defaultProps: {
                 MenuProps: {
                     sx: {
                         '& .MuiMenu-list .MuiMenuItem-root:hover, .MuiMenu-list .MuiMenuItem-root.Mui-focusVisible': {
