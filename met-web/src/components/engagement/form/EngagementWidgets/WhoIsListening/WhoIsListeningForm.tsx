@@ -120,7 +120,6 @@ const WhoIsListeningForm = () => {
                     onChange={(e) => {
                         setListeningWidget({ ...listeningWidget, description: e.target.value });
                     }}
-                    label=" "
                     aria-label="Description: optional."
                     InputLabelProps={{
                         shrink: false,
@@ -139,7 +138,6 @@ const WhoIsListeningForm = () => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label=" "
                                 aria-label="Select an existing contact."
                                 InputLabelProps={{
                                     shrink: false,

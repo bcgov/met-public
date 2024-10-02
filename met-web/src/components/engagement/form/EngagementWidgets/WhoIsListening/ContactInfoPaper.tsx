@@ -20,12 +20,21 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
     return (
         <MetWidgetPaper elevation={1} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={1}>
+                <Grid item xs={12} xl={0.5} sx={{ pb: '0.5rem' }}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
                         <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
-                <Grid item xs={3} container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
+                <Grid
+                    item
+                    xs={12}
+                    xl={3.5}
+                    container
+                    direction="row"
+                    alignItems={'flex-start'}
+                    justifyContent="flex-start"
+                    sx={{ pb: '0.5rem' }}
+                >
                     <Grid item xs={12}>
                         <MetLabel noWrap={true}>{contact.name}</MetLabel>
                     </Grid>
@@ -39,35 +48,39 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                 </Grid>
                 <Grid
                     item
-                    xs={6.5}
+                    xs={12}
+                    xl={6.25}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent="flex-start"
                     spacing={1}
+                    sx={{ pb: '0.5rem' }}
                 >
                     <When condition={!!contact.phone_number}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} xl={2.5}>
                             <MetParagraphOld>Phone:</MetParagraphOld>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={12} xl={9.5}>
                             <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.phone_number}
                             </MetParagraphOld>
                         </Grid>
                     </When>
 
-                    <Grid item xs={3}>
+                    <Grid item xs={12} xl={2.5}>
                         <MetParagraphOld>Email:</MetParagraphOld>
                     </Grid>
-                    <Grid item xs={9}>
-                        <MetParagraphOld>{contact.email}</MetParagraphOld>
+                    <Grid item xs={12} xl={9.5}>
+                        <MetParagraphOld style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {contact.email}
+                        </MetParagraphOld>
                     </Grid>
                     <When condition={!!contact.address}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} xl={2.5}>
                             <MetParagraphOld>Address:</MetParagraphOld>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={12} xl={9.5}>
                             <MetParagraphOld
                                 width={'100%'}
                                 overflow="hidden"
@@ -79,10 +92,10 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                         </Grid>
                     </When>
                     <When condition={Boolean(contact.bio)}>
-                        <Grid item xs={3}>
+                        <Grid item xs={12} xl={2.5}>
                             <MetParagraphOld>Bio:</MetParagraphOld>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={12} xl={9.5}>
                             <MetParagraphOld
                                 width={'100%'}
                                 overflow="hidden"
@@ -94,10 +107,10 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                         </Grid>
                     </When>
                 </Grid>
-                <Grid container item xs={1.5}>
-                    <Grid item xs={6}>
+                <Grid container item xs={1.75} sx={{ ml: 'auto', flexWrap: 'nowrap' }}>
+                    <Grid item xs={6} sx={{ display: 'flex' }}>
                         <IconButton
-                            sx={{ padding: 1, margin: 0 }}
+                            sx={{ padding: 0, margin: 0, ml: 'auto' }}
                             onClick={() => {
                                 handleChangeContactToEdit(contact);
                                 handleAddContactDrawerOpen(true);
@@ -108,9 +121,9 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} sx={{ ml: 'auto', display: 'flex' }}>
                         <IconButton
-                            sx={{ padding: 1, margin: 0 }}
+                            sx={{ padding: 0, margin: 0, ml: 'auto' }}
                             onClick={() => removeContact(contact.id)}
                             color="inherit"
                             aria-label="delete-icon"

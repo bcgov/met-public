@@ -199,15 +199,11 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             xl={9}
                         >
                             <Grid justifyContent={{ xs: 'center', md: 'flex-start' }} item xs={12}>
-                                <BodyText sx={contactNameStyles} aria-label="Contact name:">
-                                    {contact.name}
-                                </BodyText>
+                                <BodyText sx={contactNameStyles}>{contact.name}</BodyText>
                             </Grid>
                             <When condition={Boolean(contact.title)}>
                                 <Grid justifyContent={{ xs: 'center', md: 'flex-start' }} xs={12}>
-                                    <BodyText sx={contactTitleStyles} aria-label="Contact job title:">
-                                        {contact.title}
-                                    </BodyText>
+                                    <BodyText sx={contactTitleStyles}>{contact.title}</BodyText>
                                 </Grid>
                             </When>
                             <When condition={Boolean(contact.bio)}>

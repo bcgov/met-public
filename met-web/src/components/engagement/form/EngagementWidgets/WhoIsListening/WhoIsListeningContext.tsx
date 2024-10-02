@@ -68,33 +68,10 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
     const [addedContacts, setAddedContacts] = useState<Contact[]>([]);
     const [loadingContacts, setLoadingContacts] = useState(true);
 
-    if (!widget) {
-        return (
-            <WhoIsListeningContext.Provider
-                value={{
-                    loadingContacts: false,
-                    contactToEdit: null,
-                    addContactDrawerOpen: false,
-                    handleAddContactDrawerOpen: (_open: boolean) => {
-                        /*empty*/
-                    },
-                    contacts: [],
-                    loadContacts: () => Promise.resolve([]),
-                    listeningWidget: emptyListeningWidget,
-                    setListeningWidget: (updatedListeningWidget: React.SetStateAction<ListeningWidget>) =>
-                        emptyListeningWidget,
-                    loadListeningWidget: () => Promise.resolve(emptyListeningWidget),
-                    handleChangeContactToEdit: () => {
-                        /*empty*/
-                    },
-                    setAddedContacts: (updatedContacts: React.SetStateAction<Contact[]>) => [],
-                    addedContacts: [],
-                }}
-            >
-                {children}
-            </WhoIsListeningContext.Provider>
-        );
-    }
+    useEffect(() => {
+        loadContacts();
+        loadListeningWidget();
+    }, [savedEngagement]);
 
     const loadContacts = async () => {
         try {
@@ -116,7 +93,7 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
 
     const loadListeningWidget = async () => {
         try {
-            if (!savedEngagement.id) {
+            if (!savedEngagement.id || !widget?.id) {
                 return Promise.resolve(emptyListeningWidget);
             }
             const loadedListeningWidget = await fetchListeningWidget(widget.id);
@@ -132,11 +109,6 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
             );
         }
     };
-
-    useEffect(() => {
-        loadContacts();
-        loadListeningWidget();
-    }, [savedEngagement]);
 
     const handleChangeContactToEdit = (contact: Contact | null) => {
         setContactToEdit(contact);

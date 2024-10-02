@@ -7,6 +7,7 @@
 	- Adjusted CSS to accomodate multiple viewports
 	- Added ARIA labels for accessibility
 	- Updated contact create/edit form
+	- Updated Who is Listening widget form
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
 	- Changed icon colour from yellow to white to accomodate company branding requests
