@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/listening_widget_update",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "description": "A Who is Listening widget description"
+        }
+    ],
+    "required": [],
+    "properties": {
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Who is Listening description",
+            "description": "The description of this Who is Listening widget.",
+            "examples": ["A Who is Listening widget description"]
+        }
+    }
+}

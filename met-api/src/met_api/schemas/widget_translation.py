@@ -21,3 +21,4 @@ class WidgetTranslationSchema(Schema):
     poll_description = fields.Str(data_key='poll_description')
     video_title = fields.Str(data_key='video_title')
     video_description = fields.Str(data_key='video_description')
+    listening_description = fields.Str(data_key='listening_description')

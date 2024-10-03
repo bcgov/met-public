@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useRouteLoaderData, useOutletContext } from 'react-router-dom';
+import { useOutletContext, useLoaderData } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
@@ -19,7 +19,8 @@ const AuthoringSummary = () => {
     const { setValue, control, reset, getValues, setDefaultValues }: AuthoringTemplateOutletContext =
         useOutletContext(); // Access the form functions and values from the authoring template.
 
-    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    // Must be a loader assigned to this route or data won't be refreshed on page change.
+    const { engagement } = useLoaderData() as EngagementLoaderData;
 
     // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {

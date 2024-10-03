@@ -143,7 +143,7 @@ const AddContactDrawer = () => {
 
     return (
         <Drawer anchor="right" open={addContactDrawerOpen} onClose={handleCloseDrawer}>
-            <Box sx={{ width: '40vw', paddingTop: '7em' }} role="presentation">
+            <Box sx={{ width: '45vw', paddingTop: '7em' }} role="presentation">
                 <FormProvider {...methods}>
                     <Grid
                         container
@@ -157,9 +157,10 @@ const AddContactDrawer = () => {
                             <MetHeader3 bold>{contactToEdit ? 'Edit' : 'Add'} Contact</MetHeader3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
-                        <Grid item xs={12} lg={4}>
+                        <Grid item xs={12} lg={5} sx={{ minHeight: '14rem' }}>
                             <MetLabel sx={{ marginBottom: '2px' }}>Profile Picture</MetLabel>
                             <ImageUpload
+                                height="17.813rem"
                                 data-testid="contact/image-upload"
                                 handleAddFile={handleAddAvatarImage}
                                 savedImageUrl={contactToEdit?.avatar_url}
@@ -167,15 +168,15 @@ const AddContactDrawer = () => {
                                 helpText={'Drop an image here or click to select one.'}
                             />
                         </Grid>
-                        <Grid item xs={12} lg={8} container direction="row" spacing={2}>
+                        <Grid item xs={12} lg={7} container direction="row" spacing={2}>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name *</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Name (Required)</MetLabel>
                                 <ControlledTextField
                                     name="name"
+                                    aria-label="Name: required."
                                     id="contact-name"
                                     data-testid="contact-form/name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -184,9 +185,10 @@ const AddContactDrawer = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Title</MetLabel>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Title (Optional)</MetLabel>
                                 <ControlledTextField
                                     id="contact-title"
+                                    aria-label="Title: optional."
                                     data-testid="contact-form/title"
                                     variant="outlined"
                                     InputLabelProps={{
@@ -197,44 +199,45 @@ const AddContactDrawer = () => {
                                     size="small"
                                 />
                             </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Phone (Optional)</MetLabel>
+                                <ControlledTextField
+                                    id="contact-phone"
+                                    data-testid="contact-form/phone"
+                                    aria-label="Phone: optional."
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    name="phone_number"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Email (Required)</MetLabel>
+                                <ControlledTextField
+                                    id="contact-email"
+                                    data-testid="contact-form/email"
+                                    aria-label="Email: optional."
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    name="email"
+                                    size="small"
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} lg={4}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Phone</MetLabel>
-                            <ControlledTextField
-                                id="contact-phone"
-                                data-testid="contact-form/phone"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
-                                name="phone_number"
-                                size="small"
-                            />
-                        </Grid>
-                        <Grid item xs={12} lg={8}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Email *</MetLabel>
-                            <ControlledTextField
-                                id="contact-email"
-                                data-testid="contact-form/email"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
-                                name="email"
-                                size="small"
-                            />
-                        </Grid>
+
                         <Grid item xs={12}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Address</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Address (Optional)</MetLabel>
                             <ControlledTextField
                                 id="contact-address"
                                 data-testid="contact-form/address"
+                                aria-label="Address: optional."
                                 variant="outlined"
-                                label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -244,12 +247,12 @@ const AddContactDrawer = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Bio</MetLabel>
+                            <MetLabel sx={{ marginBottom: '2px' }}>Biography (Optional)</MetLabel>
                             <ControlledTextField
                                 id="contact-bio"
                                 data-testid="contact-form/bio"
+                                aria-label="Biography: optional."
                                 variant="outlined"
-                                label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}

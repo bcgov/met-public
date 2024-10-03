@@ -26,7 +26,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
     const [map, setMap] = useState<WidgetMap | null>(null);
     const [open, setOpen] = useState<boolean>(false);
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('lg'));
+    const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [mapWidth, setMapWidth] = useState(250);
     const [mapHeight, setMapHeight] = useState(250);
 
@@ -133,7 +133,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                     </Box>
                 </Box>
             </Grid>
-            <When condition={isLargeScreen}>
+            <When condition={isMediumScreen}>
                 <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
                     <Link onClick={() => setOpen(true)} sx={linkStyles} tabIndex={0} onKeyDown={() => setOpen(true)}>
                         <FontAwesomeIcon

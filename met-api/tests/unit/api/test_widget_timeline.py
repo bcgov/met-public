@@ -134,8 +134,8 @@ def test_patch_timeline(client, jwt, session,
     """Assert that a timeline can be PATCHed."""
     user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
-    TestWidgetInfo.widget_video['engagement_id'] = engagement.id
-    widget = factory_widget_model(TestWidgetInfo.widget_video)
+    TestWidgetInfo.widget_timeline['engagement_id'] = engagement.id
+    widget = factory_widget_model(TestWidgetInfo.widget_timeline)
 
     timeline_widget_info = TestTimelineInfo.widget_timeline
     timeline_event_info = TestTimelineInfo.timeline_event

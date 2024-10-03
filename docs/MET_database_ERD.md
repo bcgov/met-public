@@ -173,6 +173,17 @@ erDiagram
         boolean is_uploaded
     }
     widget only one to zero or more widget_documents : has
+	widget_listening {
+        integer id PK
+        integer widget_id FK "The id from widget"
+        integer engagement_id FK "The id from engagement"
+        string description
+        timestamp created_date
+        timestamp updated_date
+        string created_by
+        string updated_by
+    }
+    widget only one to zero or more widget_documents : has
     user_status {
         integer id PK
         string status_name

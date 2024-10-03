@@ -11,6 +11,7 @@ from met_api.models.widget_map import WidgetMap as WidgetMapModel
 from met_api.models.widget_poll import Poll as PollModel
 from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
+from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.schemas.widget_translation import WidgetTranslationSchema
 from met_api.services import authorization
 from met_api.utils.roles import Role
@@ -131,5 +132,10 @@ class WidgetTranslationService:
             if widget_video:
                 translation_data['video_url'] = widget_video[0].video_url
                 translation_data['video_description'] = widget_video[0].description
+                
+        if widget_type == WidgetType.WHO_IS_LISTENING.value:
+            widget_listening = WidgetListeningModel.get_listening(widget_id)
+            if widget_listening:
+                translation_data['listening_description'] = widget_listening[0].description
 
         return translation_data
