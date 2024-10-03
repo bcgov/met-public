@@ -18,10 +18,8 @@ export default function DocumentTree({ documentItem }: DocumentTreeProps) {
     return (
         <TreeView
             aria-label="documentTree"
-            defaultExpanded={['3']}
             defaultCollapseIcon={<FontAwesomeIcon icon={faChevronDown} style={{ fontSize: '18px' }} />}
             defaultExpandIcon={<FontAwesomeIcon icon={faChevronRight} style={{ fontSize: '18px' }} />}
-            defaultEndIcon={<div style={{ width: 24 }} />}
             sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
             <If condition={documentItem.type === 'folder'}>
