@@ -177,7 +177,6 @@ const AddContactDrawer = () => {
                                     id="contact-name"
                                     data-testid="contact-form/name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -207,7 +206,6 @@ const AddContactDrawer = () => {
                                     data-testid="contact-form/phone"
                                     aria-label="Phone: optional."
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -223,7 +221,6 @@ const AddContactDrawer = () => {
                                     data-testid="contact-form/email"
                                     aria-label="Email: optional."
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -241,7 +238,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/address"
                                 aria-label="Address: optional."
                                 variant="outlined"
-                                label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
@@ -257,7 +253,6 @@ const AddContactDrawer = () => {
                                 data-testid="contact-form/bio"
                                 aria-label="Biography: optional."
                                 variant="outlined"
-                                label=" "
                                 InputLabelProps={{
                                     shrink: false,
                                 }}
