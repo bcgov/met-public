@@ -71,15 +71,9 @@ export interface AuthoringTemplateOutletContext {
     slug: string;
 }
 
-export interface DetailsTabProps {
-    setValue: UseFormSetValue<EngagementUpdateData>;
-    setTabs: Dispatch<SetStateAction<TabValues[]>>;
-    setCurrentTab: Dispatch<SetStateAction<TabValues>>;
-    setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
-    tabs: TabValues[];
-    tabIndex: number;
-    singleContentValues: TabValues;
-    defaultTabValues: TabValues;
+export interface DetailsFieldsProps {
+    index?: number;
+    tabsSelected: boolean;
 }
 
 export interface TabValues {

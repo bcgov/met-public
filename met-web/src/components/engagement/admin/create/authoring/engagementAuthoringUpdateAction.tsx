@@ -23,10 +23,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
     });
 
     // Update engagement content if necessary.
-    if (
-        (formData.get('title') || formData.get('text_content' || formData.get('json_content'))) &&
-        '0' !== formData.get('content_id')
-    ) {
+    if (formData.get('tabs')) {
         try {
             await patchEngagementContent(engagement.id, Number(formData.get('content_id')) as unknown as number, {
                 title: (formData.get('title') as string) || undefined,
@@ -38,6 +35,8 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request 
             errors.push(e);
         }
     }
+
+    // Also need to delete
 
     // Update engagement metadata if necessary.
     if (formData.get('metadata_value') && formData.get('taxon_id')) {

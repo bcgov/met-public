@@ -112,47 +112,6 @@ const AuthoringTemplate = () => {
             <SystemMessage status="warning">
                 Under construction - the settings in this section have no effect.
             </SystemMessage>
-
-            <When condition={'details' === slug}>
-                <Grid container sx={{ maxWidth: '700px' }}>
-                    <Header2 decorated style={{ paddingTop: '1rem' }}>
-                        Content Configuration
-                    </Header2>
-                    <EyebrowText sx={eyebrowTextStyles}>
-                        In the Details Section of your engagement, you have the option to display your content in a
-                        normal, static page section view (No Tabs), or for lengthy content, use Tabs. You may wish to
-                        use tabs if your content is quite lengthy so you can organize it into smaller, more digestible
-                        chunks and reduce the length of your engagement page.
-                    </EyebrowText>
-                    <RadioGroup
-                        row
-                        id="tabs_enabled"
-                        name="tabs_enabled"
-                        defaultValue="false"
-                        value={contentTabsEnabled}
-                        onChange={handleTabsRadio}
-                        sx={{ flexWrap: 'nowrap', fontSize: '0.8rem', mb: '1rem', width: '100%' }}
-                    >
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                aria-label="No Tabs: Select the no tabs option if you only want one content section."
-                                value="false"
-                                control={<Radio />}
-                                label="No Tabs"
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControlLabel
-                                aria-label="Tabs (2 Minimum): Select the tabs option for lengthly content so you can break it into smaller chunks."
-                                value="true"
-                                control={<Radio />}
-                                label="Tabs (2 Minimum)"
-                            />
-                        </Grid>
-                    </RadioGroup>
-                </Grid>
-            </When>
-
             <Suspense>
                 <Await resolve={languages}>
                     {(languages: Language[]) => (

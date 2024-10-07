@@ -26,6 +26,16 @@ export interface EngagementUpdateData {
     text_content: string;
     json_content: string;
     summary_editor_state: EditorState;
+    tabs_selected: boolean;
+    tabs: {
+        engagement_id: number;
+        sort_index: number;
+        is_internal: boolean;
+        title: string;
+        heading: string;
+        json_content: string;
+        text_content: string;
+    }[];
 }
 
 export const defaultValuesObject = {
@@ -50,6 +60,18 @@ export const defaultValuesObject = {
     text_content: '',
     json_content: '{ blocks: [], entityMap: {} }',
     summary_editor_state: EditorState.createEmpty(),
+    tabs_selected: false,
+    tabs: [
+        {
+            engagement_id: 0,
+            sort_index: 0,
+            is_internal: false,
+            title: '',
+            heading: '',
+            json_content: '',
+            text_content: '',
+        },
+    ],
 };
 
 export const AuthoringContext = () => {

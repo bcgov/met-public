@@ -1,40 +1,76 @@
-import { Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tab, Tabs } from '@mui/material';
-import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { Grid, IconButton, Tab, Tabs, TextField, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { colors, MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
-import { Button, TextField } from 'components/common/Input';
-import React, { SyntheticEvent, useState } from 'react';
+import { Button } from 'components/common/Input';
+import React, { useEffect, useState } from 'react';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { AuthoringTemplateOutletContext, DetailsTabProps, TabValues } from './types';
-import { useOutletContext } from 'react-router-dom';
+import { AuthoringTemplateOutletContext, DetailsFieldsProps } from './types';
+import { useOutletContext, useParams } from 'react-router-dom';
+import { Controller, useFormContext, useFieldArray, useForm, FormProvider } from 'react-hook-form';
+import { useRouteLoaderData } from 'react-router-dom';
 import { Palette } from 'styles/Theme';
-import { Unless, When } from 'react-if';
-import { TabContext, TabPanel } from '@mui/lab';
+import { If, Else, Then, When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/pro-regular-svg-icons';
-import { EditorState } from 'draft-js';
-
-const handleDuplicateTabNames = (newTabs: TabValues[], newTabName: string) => {
-    // Will add a sequencial number suffix for up to 10 numbers if there is a duplicate, then add (copy) if none of those are available.
-    for (let i = 2; i < 12; i++) {
-        if (!newTabs.find((tab) => tab.heading === `${newTabName} (${i})`)) {
-            return `${newTabName} (${i})`;
-        }
-    }
-    return `${newTabName} (copy)`;
-};
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import WidgetPicker from '../widgets';
+import { WidgetLocation } from 'models/widget';
+import { Header2, EyebrowText } from 'components/common/Typography';
+import RichTextEditor from 'components/common/RichTextEditor';
+import { useAppSelector } from 'hooks';
+import AuthoringBottomNav from './AuthoringBottomNav';
+import { EngagementLoaderData } from 'components/engagement/public/view';
+import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 
 const AuthoringDetails = () => {
     const {
+        watch,
+        control,
+        formState: { isDirty, isValid, isSubmitting },
+        register,
+        reset,
         setValue,
-        contentTabsEnabled,
-        tabs,
-        setTabs,
-        setSingleContentValues,
-        setContentTabsEnabled,
-        singleContentValues,
-        defaultTabValues,
-    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
-    const [currentTab, setCurrentTab] = useState(tabs[0]);
+    } = useFormContext<EngagementUpdateData>();
+    const { engagement } = useOutletContext() as EngagementLoaderData;
+
+    // useEffect(() => {
+    //     reset(defaultValuesObject);
+    //     engagement.then(() => {
+    //         /** */
+    //     });
+    // }, [engagement]);
+
+    const [currentTab, setCurrentTab] = useState(0);
+
+    // Set up other field array form utilities.
+    const { fields, append, update, remove } = useFieldArray({
+        control,
+        name: 'tabs',
+    });
+    const watchTabs = watch('tabs');
+    const controlledFields = fields.map((field, index) => {
+        return {
+            ...field,
+            ...watchTabs[index],
+        };
+    });
+
+    const handleDeleteTab = (tabIndex: number, existingId = 0) => {
+        // Save any IDs of content tabs that have been marked for deletion.
+        setCurrentTab(0);
+        remove(tabIndex);
+    };
+
+    const handleAddTab = () => {
+        append({
+            engagement_id: 0,
+            sort_index: fields.length - 1,
+            is_internal: false,
+            title: `Tab ${fields.length + 1}`,
+            heading: '',
+            json_content: '',
+            text_content: '',
+        });
+    };
 
     const tabsStyles = {
         borderBottom: `2px solid ${colors.surface.gray[60]}`,
@@ -75,159 +111,177 @@ const AuthoringDetails = () => {
         },
     };
 
-    const handleCloseTab = (e: React.MouseEvent, tab: TabValues) => {
-        e.stopPropagation();
-        const index = tabs.findIndex((t) => t.heading === tab.heading);
-        if (-1 < index) {
-            const newTabs = [...tabs];
-            newTabs.splice(index, 1);
-            if (1 === newTabs.length) {
-                // If we're switching back to single content mode
-                'Tab 1' !== tabs[0].heading
-                    ? setSingleContentValues(tabs[0])
-                    : setSingleContentValues({ ...tabs[0], heading: '' }); // If the current Section Heading is "Tab 1" then change it to a blank value.
-                setTabs([tabs[0]]);
-                setContentTabsEnabled('false');
-            } else {
-                setTabs(newTabs);
-                tab === currentTab && setCurrentTab(newTabs[index - 1]); // Switch tabs if you're closing the current one
-            }
-        }
-    };
+    const handleTabsSelected = (event: React.ChangeEvent<HTMLInputElement>, onChange: (...event: any[]) => void) => {
+        let updatedTabsSelected;
 
-    const handleAddTab = () => {
-        const newTabs = [...tabs];
-        const newTabName = 'Tab ' + (newTabs.length + 1);
-        newTabs.find((tab) => newTabName === tab.heading)
-            ? newTabs.push({ ...defaultTabValues, heading: handleDuplicateTabNames(newTabs, newTabName) })
-            : newTabs.push({ ...defaultTabValues, heading: newTabName }); // Don't create duplicate entries
-        setTabs(newTabs);
-        setCurrentTab(newTabs[newTabs.length - 1]);
+        if (event.target.value === 'true') {
+            // Convert to boolean
+            updatedTabsSelected = true;
+            // If tabs are selected, update the first default tab name
+            setValue('tabs.0.title', 'Tab 1');
+        } else if (event.target.value === 'false') {
+            // Convert to boolean
+            updatedTabsSelected = false;
+            // If tabs aren't selected, erase the first tab name
+            setValue('tabs.0.title', '');
+        }
+        // Finally, update the form value
+        onChange(updatedTabsSelected);
     };
 
     return (
-        <Grid item sx={{ maxWidth: '700px' }} direction="column">
-            <When condition={'true' === contentTabsEnabled && 1 < tabs.length}>
-                <Grid sx={{ borderBottom: '1', borderColor: 'divider' }} item>
-                    <TabContext
-                        value={
-                            tabs.find((tab) => tab.heading === currentTab.heading)
-                                ? tabs[tabs.findIndex((t) => t.heading === currentTab.heading)].heading
-                                : tabs[tabs.length - 1].heading
-                        }
-                    >
-                        <Tabs
-                            component="nav"
-                            variant="scrollable"
-                            aria-label="Admin Engagement View Tabs"
-                            TabIndicatorProps={{ sx: { display: 'none' } }}
-                            sx={tabsStyles}
-                            value={
-                                tabs.find((tab) => tab.heading === currentTab.heading)
-                                    ? tabs[tabs.findIndex((t) => t.heading === currentTab.heading)].heading
-                                    : tabs[tabs.length - 1].heading
-                            }
-                            onChange={(event: SyntheticEvent<Element, Event>, value: string) =>
-                                tabs.find((tab) => tab.heading === value) &&
-                                setCurrentTab(tabs[tabs.findIndex((tab) => tab.heading === value)])
-                            }
+        <Grid item sx={{ maxWidth: '700px' }}>
+            <Grid container sx={{ maxWidth: '700px' }}>
+                <Header2 decorated style={{ paddingTop: '1rem' }}>
+                    Content Configuration
+                </Header2>
+                <label>
+                    In the Details Section of your engagement, you have the option to display your content in a normal,
+                    static page section view (No Tabs), or for lengthy content, use Tabs. You may wish to use tabs if
+                    your content is quite lengthy so you can organize it into smaller, more digestible chunks and reduce
+                    the length of your engagement page.
+                </label>
+                <Controller
+                    name="tabs_selected"
+                    control={control}
+                    render={({ field: { value, onChange, ref } }) => (
+                        <RadioGroup
+                            row
+                            id="tabs_enabled"
+                            name="tabs_enabled"
+                            defaultValue={watch('tabs_selected')}
+                            value={value}
+                            onChange={(e) => handleTabsSelected(e, onChange)}
+                            sx={{ flexWrap: 'nowrap', fontSize: '0.8rem', mb: '1rem', width: '100%' }}
                         >
-                            {tabs.map((tab, key) => {
-                                return (
-                                    <Tab
-                                        sx={tabStyles}
-                                        label={
-                                            <span>
-                                                <span style={{ marginRight: '1rem' }}>{tab.heading}</span>
-                                                <When condition={0 !== key}>
-                                                    <IconButton
-                                                        size="small"
-                                                        component="span"
-                                                        onClick={(e: React.MouseEvent) => handleCloseTab(e, tab)}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faX}
-                                                            style={{
-                                                                fontSize: '0.9rem',
-                                                                marginTop: '-4px',
-                                                                color:
-                                                                    currentTab.heading === tab.heading
-                                                                        ? colors.surface.white
-                                                                        : Palette.text.primary,
-                                                            }}
-                                                        />
-                                                    </IconButton>
-                                                </When>
-                                            </span>
-                                        }
-                                        key={key}
-                                        value={tab.heading}
-                                        disableFocusRipple
-                                    />
-                                );
-                            })}
-                            <Button
-                                sx={{
-                                    border: 'none !important',
-                                    boxShadow: 'none !important',
-                                    backgroundColor: 'transparent !important',
-                                    color: '#12508F !important',
-                                    fontSize: '0.9rem',
-                                }}
-                                onClick={() => {
-                                    handleAddTab();
-                                }}
-                            >
-                                + Add Tab
-                            </Button>
-                        </Tabs>
-                        {tabs.map((tab, key) => {
+                            <Grid item xs={6}>
+                                <FormControlLabel
+                                    aria-label="No Tabs: Select the no tabs option if you only want one content section."
+                                    value={false}
+                                    control={<Radio ref={ref} />}
+                                    label="No Tabs"
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormControlLabel
+                                    aria-label="Tabs (2 Minimum): Select the tabs option for lengthly content so you can break it into smaller chunks."
+                                    value={true}
+                                    control={<Radio ref={ref} />}
+                                    label="Tabs (2 Minimum)"
+                                />
+                            </Grid>
+                        </RadioGroup>
+                    )}
+                />
+            </Grid>
+            <Grid sx={{ borderBottom: '1', borderColor: 'divider' }} item>
+                {watch('tabs_selected') && (
+                    <Tabs
+                        component="nav"
+                        variant="scrollable"
+                        aria-label="Admin Engagement View Tabs"
+                        TabIndicatorProps={{ sx: { display: 'none' } }}
+                        sx={tabsStyles}
+                        value={currentTab}
+                        onChange={(_, newValue: number) => setCurrentTab(newValue)}
+                    >
+                        {controlledFields.map((field, index) => {
                             return (
-                                <TabPanel value={tab.heading} key={key} sx={{ padding: '1rem 0' }}>
-                                    <DetailsTab
-                                        setValue={setValue}
-                                        setTabs={setTabs}
-                                        setCurrentTab={setCurrentTab}
-                                        setSingleContentValues={setSingleContentValues}
-                                        tabs={tabs}
-                                        tabIndex={key}
-                                        singleContentValues={singleContentValues}
-                                        defaultTabValues={defaultTabValues}
-                                    />
-                                </TabPanel>
+                                <Tab
+                                    sx={tabStyles}
+                                    label={
+                                        <span>
+                                            <span style={{ marginRight: '1rem' }}>{watchTabs[index].title}</span>
+                                            <When condition={0 !== index}>
+                                                <IconButton
+                                                    size="small"
+                                                    component="span"
+                                                    onClick={() => handleDeleteTab(index, Number(field.id))}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faX}
+                                                        style={{
+                                                            fontSize: '0.9rem',
+                                                            marginTop: '-4px',
+                                                            color: Palette.text.primary,
+                                                        }}
+                                                    />
+                                                </IconButton>
+                                            </When>
+                                        </span>
+                                    }
+                                    key={field.id}
+                                    disableFocusRipple
+                                />
                             );
                         })}
-                    </TabContext>
-                </Grid>
-            </When>
-            <Unless condition={'true' === contentTabsEnabled}>
-                <DetailsTab
-                    setValue={setValue}
-                    setTabs={setTabs}
-                    setCurrentTab={setCurrentTab}
-                    setSingleContentValues={setSingleContentValues}
-                    tabs={tabs}
-                    tabIndex={0}
-                    singleContentValues={singleContentValues}
-                    defaultTabValues={defaultTabValues}
-                />
-            </Unless>
+                        +{' '}
+                        <Button
+                            sx={{
+                                border: 'none !important',
+                                boxShadow: 'none !important',
+                                backgroundColor: 'transparent !important',
+                                color: '#12508F !important',
+                                fontSize: '0.9rem',
+                            }}
+                            onClick={() => {
+                                handleAddTab();
+                            }}
+                        >
+                            + Add Tab
+                        </Button>
+                    </Tabs>
+                )}
+                {controlledFields.map((field, index) => (
+                    <TabPanel index={index} key={field.id} value={currentTab}>
+                        <DetailsFields tabsSelected={watch('tabs_selected')} index={index} />
+                    </TabPanel>
+                ))}
+            </Grid>
         </Grid>
+    );
+};
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+    const { children, value, index } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`details-tab-${index}`}
+        >
+            {value === index && <div>{children}</div>}
+        </div>
+    );
+};
+
+/**
+ * To work with useFieldArray, each rich text editor needs its own state
+ * which gets mounted and unmounted dynamically when browsing between tabs.
+ */
+const ManagedStateEditor = (props: any) => {
+    const [editorState] = useState(props.value);
+
+    return (
+        <RichTextEditor
+            initialRawEditorState={editorState}
+            handleEditorStateChange={(editorState: string) => props.onChange(editorState)}
+        />
     );
 };
 
 export default AuthoringDetails;
 
-const DetailsTab = ({
-    setValue,
-    setTabs,
-    setCurrentTab,
-    setSingleContentValues,
-    tabs,
-    tabIndex,
-    singleContentValues,
-    defaultTabValues,
-}: DetailsTabProps) => {
+const DetailsFields = ({ index, tabsSelected }: DetailsFieldsProps) => {
+    const { control, getValues, register, setValue, watch } = useFormContext();
     // Define the styles
     const metBigLabelStyles = {
         fontSize: '1.05rem',
@@ -289,180 +343,82 @@ const DetailsTab = ({
         list: { options: ['unordered', 'ordered'] },
     };
 
-    const handleSectionHeadingChange = (value: string) => {
-        const newHeading = value;
-        if (2 > tabs.length && 0 === tabIndex) {
-            // If there are no tabs
-            setSingleContentValues({ ...singleContentValues, heading: newHeading });
-            setTabs([{ ...defaultTabValues, heading: newHeading }]);
-        } else {
-            // If there are tabs
-            const newTabs = [...tabs];
-            newTabs[tabIndex].heading = newTabs.find((tab) => tab.heading === newHeading)
-                ? handleDuplicateTabNames(newTabs, newHeading)
-                : newHeading; // If the new name is the same as an existing one, rename it
-            setSingleContentValues(newTabs[0]);
-            setTabs([...newTabs]);
-            setCurrentTab(newTabs[tabIndex]);
-        }
-    };
-
-    const handleWidgetChange = (event: SelectChangeEvent<string>) => {
-        const newWidget = event.target.value;
-        const newTabs = [...tabs];
-        newTabs[tabIndex].widget = newWidget;
-        setTabs(newTabs);
-    };
-
-    const handleRemoveWidget = () => {
-        if ('' === tabs[tabIndex].widget) {
-            return;
-        } else {
-            const newTabs = [...tabs];
-            newTabs[tabIndex].widget = '';
-            setTabs(newTabs);
-        }
-    };
-
-    const handleBodyTextChange = (newEditorState: EditorState) => {
-        const plainText = newEditorState.getCurrentContent().getPlainText();
-        const newTabs = [...tabs];
-        newTabs[tabIndex].bodyCopyEditorState = newEditorState;
-        newTabs[tabIndex].bodyCopyPlainText = plainText;
-        setTabs(newTabs);
-    };
-
     return (
         <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+            {watch('tabs_selected') && (
+                <Grid item sx={{ mt: '1rem' }}>
+                    <MetBigLabel id="tab-title-label" style={metBigLabelStyles}>
+                        Tab Label <span style={{ fontWeight: 'normal' }}>(Required)</span>
+                    </MetBigLabel>
+                    <label id="tab-title-description" style={formDescriptionTextStyles}>
+                        Your tab label should be one or two words (maximum 20 characters).
+                    </label>
+                    <TextField
+                        {...register(`tabs.${index}.title` as const)}
+                        sx={{ backgroundColor: colors.surface.white }}
+                        aria-labelledby="tab-title-label tab-title-description"
+                        placeholder="Tab name"
+                    />
+                </Grid>
+            )}
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Primary Content (Required)</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
+                <span style={formDescriptionTextStyles}>
                     Primary content will display on the left two thirds of the page on large screens and full width on
                     small screens. (If you add optional supporting content in the section below, on small screens, your
                     primary content will display first (on top) followed by your supporting content (underneath).
-                </FormDescriptionText>
+                </span>
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="section_heading">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Section Heading <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your section heading should be descriptive, short and succinct.
-                    </FormDescriptionText>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        value={1 < tabs.length ? tabs[tabIndex].heading : singleContentValues.heading}
-                        id="section_heading"
-                        counter
-                        maxLength={60}
-                        placeholder="Section heading message"
-                        onChange={handleSectionHeadingChange}
-                    />
-                </label>
+                <MetBigLabel id="section-heading-label" style={metBigLabelStyles}>
+                    Section Heading <span style={{ fontWeight: 'normal' }}>(Required)</span>
+                </MetBigLabel>
+                <span id="section-heading-description" style={formDescriptionTextStyles}>
+                    Your section heading should be descriptive, short and succinct.
+                </span>
+                <TextField
+                    {...register(`tabs.${index}.heading`)}
+                    sx={{ backgroundColor: colors.surface.white }}
+                    id="section_heading"
+                    aria-labelledby="section-heading-label section-heading-description"
+                    placeholder="Section heading message"
+                />
             </Grid>
 
             <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="description">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Body Copy
-                        <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        If the content you add for this tab is quite long, a “read more” expander will be added to your
-                        content at approximately xx (large screens) and xx (small screens). In this case, you will want
-                        to ensure that the most important body copy is first so that your audience will see it even if
-                        they do not interact with the Read More expander.
-                    </FormDescriptionText>
-                    <RichTextArea
-                        ariaLabel="Body copy: If the content you add for this tab is quite long, a “read more” expander will be added to your
-                        content at approximately xx (large screens) and xx (small screens). In this case, you will want
-                        to ensure that the most important body copy is first so that your audience will see it even if
-                        they do not interact with the Read More expander."
-                        spellCheck
-                        editorState={tabs[tabIndex].bodyCopyEditorState}
-                        onEditorStateChange={handleBodyTextChange}
-                        handlePastedText={() => false}
-                        editorStyle={{
-                            height: '40em',
-                            padding: '1em',
-                            resize: 'vertical',
-                            backgroundColor: colors.surface.white,
-                        }}
-                        toolbar={toolbar}
-                    />
+                <MetBigLabel id="body-copy-label" style={metBigLabelStyles}>
+                    Body Copy
+                    <span style={{ fontWeight: 'normal' }}> (Required)</span>
+                </MetBigLabel>
+                <label id="body-copy-description" style={formDescriptionTextStyles}>
+                    If the content you add for this tab is quite long, a “read more” expander button will appear on some
+                    screen sizes. In this case, you will want to ensure that the most important body copy is first so
+                    that your audience will see it even if they do not interact with the "read more" expander.
                 </label>
+                <Controller
+                    name={`tabs.${index}.json_content`}
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                        <ManagedStateEditor
+                            value={value}
+                            defaultState={getValues(`tabs.${index}.json_content`)}
+                            onChange={onChange}
+                            toolbar={toolbar}
+                        />
+                    )}
+                />
+                <label htmlFor="description"></label>
             </Grid>
 
             <Grid item sx={{ mt: '1rem' }}>
                 <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
+                <label style={formDescriptionTextStyles}>
                     You may use a widget to add supporting content to your primary content. On large screens this
                     content will be displayed to the right of your primary content. On small screens this content will
                     be displayed below your primary content.
-                </FormDescriptionText>
-            </Grid>
-
-            <Grid item>
-                <label htmlFor="widget_select">
-                    <MetLabel style={metLabelStyles}>Widgets</MetLabel>
-                    <Select
-                        sx={{ ...conditionalSelectStyles, maxWidth: '300px' }}
-                        id="widget_select"
-                        onChange={handleWidgetChange}
-                        value={tabs[tabIndex].widget}
-                    >
-                        <MenuItem value="Video">Video</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
-                    </Select>
                 </label>
-            </Grid>
-
-            <Grid
-                sx={{
-                    ...formItemContainerStyles,
-                    backgroundColor: colors.surface.blue[10],
-                    border: '2px dashed rgb(122, 120, 118)',
-                    minHeight: '33rem',
-                }}
-                item
-            >
-                <MetLabel style={{ minHeight: '1.5rem' }}>
-                    {tabs[tabIndex].widget} {tabs[tabIndex].widget && 'Widget'}
-                </MetLabel>
-                <Grid xs={12} sx={widgetPreviewStyles} item>
-                    {/* todo: show a preview of the widget here */}
-                    Widget Preview
-                </Grid>
-                <Button
-                    name="edit_widget"
-                    id="edit_widget"
-                    sx={{
-                        ...buttonStyles,
-                        background: Palette.primary.main,
-                        color: colors.surface.white,
-                        marginRight: '1rem',
-                        '&:hover': {
-                            background: Palette.primary.main,
-                            color: colors.surface.white,
-                        },
-                        // todo: Hook up the widget edit modal dialog to this button
-                    }}
-                >
-                    Edit Widget
-                </Button>
-                <Button
-                    name="remove_widget"
-                    id="remove_widget"
-                    onClick={handleRemoveWidget}
-                    sx={{
-                        ...buttonStyles,
-                        boxShadow: '0 0 0 1px #7A7876 inset',
-                    }}
-                >
-                    Remove Widget
-                </Button>
+                <WidgetPicker location={WidgetLocation.Details} />
             </Grid>
         </Grid>
     );
