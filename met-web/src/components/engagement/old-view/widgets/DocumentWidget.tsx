@@ -2,14 +2,13 @@ import React, { Suspense, useMemo } from 'react';
 import { Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
-import DocumentTree from 'components/engagement/form/EngagementWidgets/Documents/TreeView';
 import { useLazyGetDocumentsQuery } from 'apiManager/apiSlices/documents';
 import { BodyText, Header3 } from 'components/common/Typography';
 import { BaseTheme } from 'styles/Theme';
-import { Await, useNavigate } from 'react-router-dom';
+import { Await } from 'react-router-dom';
 import TreeView from '@mui/lab/TreeView';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TreeItem, { TreeItemProps } from '@mui/lab/TreeItem';
+import TreeItem from '@mui/lab/TreeItem';
 import {
     faFolder,
     faFileAudio,
@@ -119,7 +118,7 @@ const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
             icon={
                 documentItem.type === DOCUMENT_TYPE.FILE ? (
                     <FontAwesomeIcon
-                        icon={getFileIcon(documentItem.url || '', documentItem.is_uploaded ?? false)}
+                        icon={getFileIcon(documentItem.url ?? '', documentItem.is_uploaded ?? false)}
                         style={{ fontSize: '18px' }}
                     />
                 ) : undefined
@@ -139,7 +138,7 @@ const DocumentLabel = ({ documentItem }: DocumentTreeProps) =>
             {documentItem.title}
         </BodyText>
     ) : (
-        <Link to={documentItem.url || ''} underline="hover" color="#292929">
+        <Link to={documentItem.url ?? ''} underline="hover" color="#292929">
             <BodyText>{documentItem.title}</BodyText>
         </Link>
     );
@@ -195,72 +194,74 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                     display: 'flex', // Use flexbox to align content
                     flexDirection: 'column',
                 }}
-                aria-label="Document Tree Widget"
-                role="region"
             >
-                <ThemeProvider theme={BaseTheme}>
-                    <Suspense fallback={<DocumentWidgetSkeleton />}>
-                        <Grid container item spacing={1} rowSpacing={1} xs={12} paddingTop={2} flexGrow={1}>
-                            <TreeView
-                                sx={{
-                                    width: '100%',
-                                    '& .Mui-expanded .MuiTreeItem-label': {
-                                        color: BaseTheme.palette.primary.main,
-                                        fontWeight: 700,
-                                    },
-                                }}
-                                defaultParentIcon
-                                defaultCollapseIcon={
-                                    <>
-                                        <FontAwesomeIcon
-                                            icon={faChevronDown}
-                                            style={{
-                                                fontSize: '12px',
-                                                color: BaseTheme.palette.primary.main,
-                                                marginRight: '0.5em',
-                                                marginLeft: '1em',
-                                                marginTop: '0.2em',
-                                            }}
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={faFolderOpen}
-                                            style={{
-                                                color: BaseTheme.palette.primary.main,
-                                            }}
-                                        />
-                                    </>
-                                }
-                                defaultExpandIcon={
-                                    <>
-                                        <FontAwesomeIcon
-                                            icon={faChevronRight}
-                                            style={{
-                                                fontSize: '12px',
-                                                marginRight: '0.5em',
-                                                marginLeft: '1em',
-                                                marginTop: '0.2em',
-                                            }}
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={faFolder}
-                                            style={{
-                                                fontSize: '18px',
-                                            }}
-                                        />
-                                    </>
-                                }
-                            >
-                                <Await resolve={documents}>
-                                    {(documents: DocumentItem[]) => {
-                                        return documents.map((document: DocumentItem) => {
-                                            return <RecursiveDocumentTree documentItem={document} />;
-                                        });
+                <section aria-label="Document Tree Widget" style={{ flexGrow: 1 }}>
+                    <ThemeProvider theme={BaseTheme}>
+                        <Suspense fallback={<DocumentWidgetSkeleton />}>
+                            <Grid container item spacing={1} rowSpacing={1} xs={12} paddingTop={2} flexGrow={1}>
+                                <TreeView
+                                    sx={{
+                                        width: '100%',
+                                        '& .Mui-expanded .MuiTreeItem-label': {
+                                            color: BaseTheme.palette.primary.main,
+                                            fontWeight: 700,
+                                        },
                                     }}
-                                </Await>
-                            </TreeView>
-                        </Grid>
-                    </Suspense>
-                </ThemeProvider>
+                                    defaultParentIcon
+                                    defaultCollapseIcon={
+                                        <>
+                                            <FontAwesomeIcon
+                                                icon={faChevronDown}
+                                                style={{
+                                                    fontSize: '12px',
+                                                    color: BaseTheme.palette.primary.main,
+                                                    marginRight: '0.5em',
+                                                    marginLeft: '1em',
+                                                    marginTop: '0.2em',
+                                                }}
+                                            />
+                                            <FontAwesomeIcon
+                                                icon={faFolderOpen}
+                                                style={{
+                                                    color: BaseTheme.palette.primary.main,
+                                                }}
+                                            />
+                                        </>
+                                    }
+                                    defaultExpandIcon={
+                                        <>
+                                            <FontAwesomeIcon
+                                                icon={faChevronRight}
+                                                style={{
+                                                    fontSize: '12px',
+                                                    marginRight: '0.5em',
+                                                    marginLeft: '1em',
+                                                    marginTop: '0.2em',
+                                                }}
+                                            />
+                                            <FontAwesomeIcon
+                                                icon={faFolder}
+                                                style={{
+                                                    fontSize: '18px',
+                                                }}
+                                            />
+                                        </>
+                                    }
+                                >
+                                    <Await resolve={documents}>
+                                        {(documents: DocumentItem[]) => {
+                                            return documents.map((document: DocumentItem) => {
+                                                return (
+                                                    <RecursiveDocumentTree documentItem={document} key={document.id} />
+                                                );
+                                            });
+                                        }}
+                                    </Await>
+                                </TreeView>
+                            </Grid>
+                        </Suspense>
+                    </ThemeProvider>
+                </section>
             </Grid>
         </Grid>
     );
