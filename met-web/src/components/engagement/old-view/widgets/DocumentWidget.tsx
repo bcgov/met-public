@@ -25,6 +25,8 @@ import {
     faFileImage,
     faLink,
     faChainBroken,
+    faChevronDown,
+    faChevronRight,
 } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
 
@@ -84,15 +86,34 @@ const getFileIcon = (url: string, isFile: boolean) => {
     }
 };
 
+const treeItemStyles = {
+    color: 'text.primary',
+    '& div.MuiTreeItem-label': {
+        padding: '0.5em 0.5em 0.5em 1em',
+    },
+    '& div.MuiTreeItem-content': {
+        borderRadius: '8px',
+    },
+    userSelect: 'none',
+};
+
 const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
+    const renderEmptyFolder = () => (
+        <TreeItem
+            sx={{ '& div.MuiTreeItem-content.Mui-disabled': { cursor: 'not-allowed' } }}
+            disabled
+            nodeId={`${documentItem.id}-empty`}
+            label={
+                <BodyText color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                    [Empty Folder]
+                </BodyText>
+            }
+        />
+    );
+
     return (
         <TreeItem
-            sx={{
-                color: 'text.primary',
-                '& div.MuiTreeItem-label': {
-                    padding: '0.5em',
-                },
-            }}
+            sx={treeItemStyles}
             nodeId={documentItem.id.toString()}
             label={<DocumentLabel documentItem={documentItem} />}
             icon={
@@ -104,38 +125,43 @@ const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
                 ) : undefined
             }
         >
-            {documentItem.children?.map((document: DocumentItem) => {
-                return <RecursiveDocumentTree documentItem={document} />;
-            })}
-            {documentItem.type === DOCUMENT_TYPE.FOLDER && !documentItem.children?.length && (
-                <TreeItem
-                    disabled
-                    nodeId={`${documentItem.id}-empty`}
-                    label={
-                        <BodyText color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                            [Empty Folder]
-                        </BodyText>
-                    }
-                />
-            )}
+            {documentItem.children?.map((document: DocumentItem) => (
+                <RecursiveDocumentTree key={document.id} documentItem={document} />
+            ))}
+            {documentItem.type === DOCUMENT_TYPE.FOLDER && !documentItem.children?.length && renderEmptyFolder()}
         </TreeItem>
     );
 };
 
-const DocumentLabel = ({ documentItem }: DocumentTreeProps) => {
-    if (documentItem.type === DOCUMENT_TYPE.FOLDER) {
-        return (
-            <BodyText color="inherit" fontWeight="inherit">
-                {documentItem.title}
-            </BodyText>
-        );
-    }
-    return (
+const DocumentLabel = ({ documentItem }: DocumentTreeProps) =>
+    documentItem.type === DOCUMENT_TYPE.FOLDER ? (
+        <BodyText color="inherit" fontWeight="inherit">
+            {documentItem.title}
+        </BodyText>
+    ) : (
         <Link to={documentItem.url || ''} underline="hover" color="#292929">
             <BodyText>{documentItem.title}</BodyText>
         </Link>
     );
-};
+
+// Skeleton component for the DocumentWidget
+const DocumentWidgetSkeleton = () => (
+    <Grid container spacing={0.5}>
+        {[...Array(3)].map((_, index) => (
+            // Simulate a folder with a title and two subitems
+            <Grid item xs={12} key={`skeleton-folder-${index}`} sx={{ mb: 1 }}>
+                <Skeleton variant="text" width="60%" height={20} />
+                <Grid container spacing={0.5} sx={{ pl: 3, mt: 0.5 }}>
+                    {[...Array(2)].map((_, subIndex) => (
+                        <Grid item xs={12} key={`skeleton-subitem-${index}-${subIndex}`}>
+                            <Skeleton variant="text" width="40%" height={15} />
+                        </Grid>
+                    ))}
+                </Grid>
+            </Grid>
+        ))}
+    </Grid>
+);
 
 interface DocumentWidgetProps {
     widget: Widget;
@@ -153,7 +179,6 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
             </Grid>
             <Grid
                 item
-                container
                 xs={12}
                 component={Paper}
                 sx={{
@@ -163,12 +188,19 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                     borderRadius: '16px',
                     border: '1px solid',
                     borderColor: 'blue.90',
-                    height: 'fit-content',
+                    // Ensure the white box tries to fill the available space defined
+                    // by its sibling content to avoid unnecessary animation of its height
+                    // when expanding/collapsing items.
+                    height: 'calc(100% - 9em)',
+                    display: 'flex', // Use flexbox to align content
+                    flexDirection: 'column',
                 }}
+                aria-label="Document Tree Widget"
+                role="region"
             >
                 <ThemeProvider theme={BaseTheme}>
-                    <Suspense fallback={<Skeleton variant="rectangular" height={150} />}>
-                        <Grid container item spacing={1} rowSpacing={1} xs={12} paddingTop={2}>
+                    <Suspense fallback={<DocumentWidgetSkeleton />}>
+                        <Grid container item spacing={1} rowSpacing={1} xs={12} paddingTop={2} flexGrow={1}>
                             <TreeView
                                 sx={{
                                     width: '100%',
@@ -179,12 +211,44 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                 }}
                                 defaultParentIcon
                                 defaultCollapseIcon={
-                                    <FontAwesomeIcon
-                                        icon={faFolderOpen}
-                                        style={{ fontSize: '18px', color: BaseTheme.palette.primary.main }}
-                                    />
+                                    <>
+                                        <FontAwesomeIcon
+                                            icon={faChevronDown}
+                                            style={{
+                                                fontSize: '12px',
+                                                color: BaseTheme.palette.primary.main,
+                                                marginRight: '0.5em',
+                                                marginLeft: '1em',
+                                                marginTop: '0.2em',
+                                            }}
+                                        />
+                                        <FontAwesomeIcon
+                                            icon={faFolderOpen}
+                                            style={{
+                                                color: BaseTheme.palette.primary.main,
+                                            }}
+                                        />
+                                    </>
                                 }
-                                defaultExpandIcon={<FontAwesomeIcon icon={faFolder} style={{ fontSize: '18px' }} />}
+                                defaultExpandIcon={
+                                    <>
+                                        <FontAwesomeIcon
+                                            icon={faChevronRight}
+                                            style={{
+                                                fontSize: '12px',
+                                                marginRight: '0.5em',
+                                                marginLeft: '1em',
+                                                marginTop: '0.2em',
+                                            }}
+                                        />
+                                        <FontAwesomeIcon
+                                            icon={faFolder}
+                                            style={{
+                                                fontSize: '18px',
+                                            }}
+                                        />
+                                    </>
+                                }
                             >
                                 <Await resolve={documents}>
                                     {(documents: DocumentItem[]) => {
