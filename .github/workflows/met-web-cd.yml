@@ -3,7 +3,7 @@ name: MET WEB DEV CD
 on:
   push:
     branches:
-      - main
+      - omega-project
     paths:
       - "met-web/**"
   workflow_dispatch:

@@ -3,7 +3,7 @@ name: MET API CD
 on:
   push:
     branches:
-      - main
+      - omega-project
     paths:
       - "met-api/**"
   workflow_dispatch:

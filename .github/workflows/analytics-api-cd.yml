@@ -3,7 +3,7 @@ name: MET ANALYTICS API DEV CD
 on:
   push:
     branches:
-      - main
+      - omega-project
     paths:
       - "analytics-api/**"
   workflow_dispatch:
