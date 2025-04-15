@@ -88,7 +88,8 @@ const getFileIcon = (url: string, isFile: boolean) => {
 const treeItemStyles = {
     color: 'text.primary',
     '& div.MuiTreeItem-label': {
-        padding: '0.5em 0.5em 0.5em 1em',
+        padding: '0.5em',
+        paddingLeft: '1em',
     },
     '& div.MuiTreeItem-content': {
         borderRadius: '8px',
