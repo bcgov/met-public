@@ -3,7 +3,7 @@ name: MET NOTIFY API DEV CD
 on:
   push:
     branches:
-      - main
+      - omega-project
     paths:
       - "notify-api/**"
   workflow_dispatch:

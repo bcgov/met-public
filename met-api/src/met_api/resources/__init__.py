@@ -55,6 +55,7 @@ from .cac_form import API as CAC_FORM_API
 from .widget_timeline import API as WIDGET_TIMELINE_API
 from .widget_poll import API as WIDGET_POLL_API
 from .widget_image import API as WIDGET_IMAGE_API
+from .widget_listening import API as WIDGET_LISTENING_API
 from .language import API as LANGUAGE_API
 from .widget_translation import API as WIDGET_TRANSLATION_API
 from .survey_translation import API as SURVEY_TRANSLATION_API
@@ -101,6 +102,7 @@ API.add_namespace(WIDGET_MAPS_API, path='/widgets/<int:widget_id>/maps')
 API.add_namespace(ENGAGEMENT_SLUG_API, path='/slugs')
 API.add_namespace(REPORT_SETTING_API, path='/surveys/<int:survey_id>/reportsettings')
 API.add_namespace(WIDGET_VIDEO_API, path='/widgets/<int:widget_id>/videos')
+API.add_namespace(WIDGET_LISTENING_API, path='/widgets/<int:widget_id>/listening_widgets')
 API.add_namespace(ENGAGEMENT_SETTINGS_API)
 API.add_namespace(CAC_FORM_API, path='/engagements/<int:engagement_id>/cacform')
 API.add_namespace(WIDGET_TIMELINE_API, path='/widgets/<int:widget_id>/timelines')

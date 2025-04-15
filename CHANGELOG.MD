@@ -11,6 +11,23 @@
 
 - The project was on hold during this period, and no changes were made to the codebase. The team was directed to focus on other projects. Any technical debt or issues that were identified during this period will be addressed in future sprints.
 
+## October 2, 2024
+
+- **Feature** New Who is Listening widget front end [🎟️ DESENG-695](https://citz-gdx.atlassian.net/browse/DESENG-695)
+	- Implemented Figma design
+	- Added widget_listening table to db for widget instance data
+	- Added option to enter widget description text (below title, above contacts)
+	- Adjusted CSS to accomodate multiple viewports
+	- Added ARIA labels for accessibility
+	- Updated contact create/edit form
+	- Updated Who is Listening widget form
+
+- **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
+	- Changed icon colour from yellow to white to accomodate company branding requests
+
+- **Feature** New Map Widget front end [🎟️ DESENG-693](https://citz-gdx.atlassian.net/browse/DESENG-693)
+	- Adjusted viewport settings of expand map link to accomodate breakpoints of engagement view page
+
 ## September 26, 2024
 
 - **Feature** New Timeline Widget designs [🎟️ DESENG-694](https://citz-gdx.atlassian.net/browse/DESENG-694)
@@ -20,7 +37,6 @@
 ## September 25, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Removed unneeded tables from db
   - Updated all other met_api and met_web logic to accomodate this
 

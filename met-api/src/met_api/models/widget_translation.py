@@ -29,6 +29,7 @@ class WidgetTranslation(BaseModel):  # pylint: disable=too-few-public-methods
     poll_description = db.Column(db.String(2048))
     video_url = db.Column(db.String(255))
     video_description = db.Column(db.Text())
+    listening_description = db.Column(db.Text())
 
     @classmethod
     def get_translation_by_widget_id_and_language_id(cls, widget_id=None, language_id=None):
@@ -63,6 +64,7 @@ class WidgetTranslation(BaseModel):  # pylint: disable=too-few-public-methods
             poll_description=translation.get('poll_description', None),
             video_url=translation.get('video_url', None),
             video_description=translation.get('video_description', None),
+            listening_description=translation.get('listening_description', None),
         )
 
     @classmethod

@@ -3,12 +3,12 @@ name: MET API CI
 on:
   pull_request:
     branches:
-      - main
+      - omega-project
     paths:
       - "met-api/**"
   push:
     branches:
-      - main
+      - omega-project
 
 defaults:
   run:
