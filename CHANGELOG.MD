@@ -1,3 +1,16 @@
+## April 15, 2025
+
+- **Feature** Redesign document widget [🎟️ DESENG-696](https://citz-gdx.atlassian.net/browse/DESENG-696)
+  - Significant refactor to DocumentWidget.tsx implementing Figma design
+  - Use recursive rendering to support theoretically infinite subfolders in future
+  - Many accessibility/QoL improvements
+  - Improved layout - minimizes layout shift by forcing the list widget to be at least as tall as the copy it appears beside.
+  - Improved skeleton while loading
+
+## _Interregnum break_: _October 2024 - March 2025_
+
+- The project was on hold during this period, and no changes were made to the codebase. The team was directed to focus on other projects. Any technical debt or issues that were identified during this period will be addressed in future sprints.
+
 ## September 26, 2024
 
 - **Feature** New Timeline Widget designs [🎟️ DESENG-694](https://citz-gdx.atlassian.net/browse/DESENG-694)
