@@ -1,6 +1,6 @@
 ## April 15, 2025
 
-- **Bugfix** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
+- **Chore** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
   - This is to stay ahead of the deprecation of ubuntu-20.04 in GitHub Actions as of today's date
 
 ## October 2, 2024
