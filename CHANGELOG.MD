@@ -1,11 +1,16 @@
 ## April 15, 2025
 
 - **Feature** Redesign document widget [🎟️ DESENG-696](https://citz-gdx.atlassian.net/browse/DESENG-696)
+
   - Significant refactor to DocumentWidget.tsx implementing Figma design
   - Use recursive rendering to support theoretically infinite subfolders in future
   - Many accessibility/QoL improvements
   - Improved layout - minimizes layout shift by forcing the list widget to be at least as tall as the copy it appears beside.
   - Improved skeleton while loading
+
+- **Chore** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
+
+  - This is to stay ahead of the deprecation of ubuntu-20.04 in GitHub Actions as of today's date
 
 ## _Interregnum break_: _October 2024 - March 2025_
 
@@ -14,19 +19,21 @@
 ## October 2, 2024
 
 - **Feature** New Who is Listening widget front end [🎟️ DESENG-695](https://citz-gdx.atlassian.net/browse/DESENG-695)
-	- Implemented Figma design
-	- Added widget_listening table to db for widget instance data
-	- Added option to enter widget description text (below title, above contacts)
-	- Adjusted CSS to accomodate multiple viewports
-	- Added ARIA labels for accessibility
-	- Updated contact create/edit form
-	- Updated Who is Listening widget form
+
+  - Implemented Figma design
+  - Added widget_listening table to db for widget instance data
+  - Added option to enter widget description text (below title, above contacts)
+  - Adjusted CSS to accomodate multiple viewports
+  - Added ARIA labels for accessibility
+  - Updated contact create/edit form
+  - Updated Who is Listening widget form
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-	- Changed icon colour from yellow to white to accomodate company branding requests
+
+  - Changed icon colour from yellow to white to accomodate company branding requests
 
 - **Feature** New Map Widget front end [🎟️ DESENG-693](https://citz-gdx.atlassian.net/browse/DESENG-693)
-	- Adjusted viewport settings of expand map link to accomodate breakpoints of engagement view page
+  - Adjusted viewport settings of expand map link to accomodate breakpoints of engagement view page
 
 ## September 26, 2024
 
@@ -37,6 +44,7 @@
 ## September 25, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
+
   - Removed unneeded tables from db
   - Updated all other met_api and met_web logic to accomodate this
 
