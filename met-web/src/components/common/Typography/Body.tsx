@@ -36,15 +36,7 @@ export const BodyText = ({
         return 400;
     };
     return (
-        <Typography
-            {...props}
-            sx={{
-                fontSize,
-                lineHeight,
-                fontWeight: fontWeight(),
-                ...props.sx,
-            }}
-        >
+        <Typography fontWeight={fontWeight()} fontSize={fontSize} lineHeight={lineHeight} {...props}>
             {children}
         </Typography>
     );
