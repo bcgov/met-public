@@ -185,12 +185,11 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             setIsSubmitted(true);
             addSubmittedPoll(widget.id);
             setResponseMessage(RESPONSE_MESSAGES.SUCCESS);
-        } catch (error: any) {
+        } catch (error: unknown) {
             // Simplified error extraction
-            const errorResponse = error;
+            const errorResponse = error as { status?: number; data?: unknown; message?: string };
             const rejectionReason =
-                error ??
-                error.message ??
+                errorResponse?.message ??
                 (typeof errorResponse?.data === 'string' ? errorResponse.data : null) ??
                 'An unknown error occurred';
             // Check if this is a submission limit error (400)

@@ -71,13 +71,13 @@ export const postPollResponse = async (
         url = replaceUrl(url, 'poll_id', String(poll_id));
         const response = await http.PostRequest<PollResponse>(url, data);
         return response.data ?? Promise.reject('Failed to create Poll Response');
-    } catch (err: any) {
+    } catch (err: unknown) {
         // Handle plaintext errors
-        const errorData = err?.response?.data;
+        const errorData = (err as unknown as { response?: { data?: string | { message?: string } } })?.response?.data;
         const errorMessage =
             typeof errorData === 'string'
                 ? errorData
-                : errorData?.message ?? err.message ?? 'Failed to create Poll Response';
+                : errorData?.message ?? (err as Error).message ?? 'Failed to create Poll Response';
         return Promise.reject(new Error(errorMessage));
     }
 };
