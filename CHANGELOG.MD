@@ -1,4 +1,4 @@
-## April 21, 2025
+## April 22, 2025
 
 - **Feature** Redesign poll widget [🎟️ DESENG-697](https://citz-gdx.atlassian.net/browse/DESENG-697)
 
