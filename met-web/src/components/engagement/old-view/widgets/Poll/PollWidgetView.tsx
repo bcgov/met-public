@@ -19,7 +19,6 @@ import {
     IconDefinition,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Poll } from '@mui/icons-material';
 
 interface PollWidgetViewProps {
     widget: Widget;
