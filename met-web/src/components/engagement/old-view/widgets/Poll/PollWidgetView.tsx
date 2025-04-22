@@ -178,7 +178,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
         }
 
         try {
-            const response = await postPollResponse(widget.id, pollWidget.id, {
+            await postPollResponse(widget.id, pollWidget.id, {
                 selected_answer_id: parseInt(selectedOption),
             });
 
@@ -189,8 +189,9 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             // Simplified error extraction
             const errorResponse = error;
             const rejectionReason =
-                error ||
-                (typeof errorResponse?.data === 'string' ? errorResponse.data : null) ||
+                error ??
+                error.message ??
+                (typeof errorResponse?.data === 'string' ? errorResponse.data : null) ??
                 'An unknown error occurred';
             // Check if this is a submission limit error (400)
             if (getSubmittedPolls().includes(widget.id)) {
