@@ -1,3 +1,13 @@
+## April 21, 2025
+
+- **Feature** Redesign poll widget [🎟️ DESENG-697](https://citz-gdx.atlassian.net/browse/DESENG-697)
+
+  - Refactor PollWidget.tsx implementing Figma design
+    - Improved layout, similar to DocumentWidget
+  - Load data more efficiently
+  - Added new skeleton while loading
+  - Added new error handling for poll submission
+
 ## April 15, 2025
 
 - **Feature** Redesign document widget [🎟️ DESENG-696](https://citz-gdx.atlassian.net/browse/DESENG-696)
