@@ -128,7 +128,7 @@ describe('PollWidgetView Component Tests', () => {
 
         fireEvent.click(screen.getByText('Submit'));
         await waitFor(() => {
-            expect(screen.getByText('An error occurred.')).toBeInTheDocument();
+            expect(screen.getByText('An unknown error occurred')).toBeInTheDocument();
         });
     });
 });
