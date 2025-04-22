@@ -19,6 +19,7 @@ import {
     IconDefinition,
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Poll } from '@mui/icons-material';
 
 interface PollWidgetViewProps {
     widget: Widget;
@@ -244,7 +245,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
                 <section aria-label="Widget" style={{ flexGrow: 1 }}>
                     <ThemeProvider theme={BaseTheme}>
                         <Suspense fallback={<PollWidgetSkeleton />}>
-                            <Await resolve={cachedPollDetails}>
+                            <Await resolve={cachedPollDetails} errorElement={<PollWidgetLoadingErrorElement />}>
                                 {(pollWidget: PollWidget) => (
                                     <PollContent
                                         pollWidget={pollWidget}
@@ -277,5 +278,16 @@ const PollWidgetSkeleton = () => (
         </Grid>
     </Grid>
 );
+
+const PollWidgetLoadingErrorElement = () => {
+    // Return an error message based on the PollMessage component
+    return (
+        <PollMessage
+            message="Error occurred while fetching widget information"
+            color={colors.notification.error.icon}
+            icon={faSignalStreamSlash}
+        />
+    );
+};
 
 export default PollWidgetView;

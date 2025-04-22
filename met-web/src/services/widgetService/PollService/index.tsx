@@ -73,7 +73,7 @@ export const postPollResponse = async (
         return response.data ?? Promise.reject('Failed to create Poll Response');
     } catch (err: unknown) {
         // Handle plaintext errors
-        const errorData = (err as unknown as { response?: { data?: string | { message?: string } } })?.response?.data;
+        const errorData = (err as { response?: { data?: string | { message?: string } } })?.response?.data;
         const errorMessage =
             typeof errorData === 'string'
                 ? errorData
