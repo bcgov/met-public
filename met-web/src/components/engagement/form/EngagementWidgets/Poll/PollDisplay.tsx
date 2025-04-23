@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@mui/material';
 import { PollWidget } from 'models/pollWidget';
+import { BodyText } from 'components/common/Typography';
+import { Palette } from 'styles/Theme';
 
 // type for the component's props
 interface PollDisplayProps {
@@ -24,11 +26,13 @@ const PollDisplay = ({ pollWidget, interactionEnabled, onOptionChange }: PollDis
     }
 
     return (
-        <FormControl component="fieldset" sx={{ minWidth: 275, marginTop: '1em' }}>
+        <FormControl component="fieldset" sx={{ minWidth: 275 }}>
             <FormLabel component="legend" style={{ fontWeight: 'bold' }}>
                 {pollWidget.title}
             </FormLabel>
-            <p style={{ opacity: 0.6 }}>{pollWidget.description}</p>
+            <BodyText variant="body2" color="text.secondary" sx={{ marginTop: '1em', marginBottom: '1em' }}>
+                {pollWidget.description}
+            </BodyText>
             <RadioGroup
                 style={{ pointerEvents: interactionEnabled ? 'auto' : 'none' }}
                 name="poll-options"
@@ -39,8 +43,36 @@ const PollDisplay = ({ pollWidget, interactionEnabled, onOptionChange }: PollDis
                     <FormControlLabel
                         key={'answer' + index}
                         value={answer.id.toString()}
-                        control={<Radio />}
-                        label={answer.answer_text}
+                        control={
+                            <Radio
+                                sx={{
+                                    '& .MuiSvgIcon-root': {
+                                        fontSize: 28,
+                                        '&[data-testid=RadioButtonCheckedIcon]': {
+                                            fontSize: 22,
+                                            marginTop: '3px',
+                                            marginLeft: '3px',
+                                        },
+                                    },
+                                    '&.Mui-checked': {
+                                        color: 'primary.main',
+                                        fontWeight: 'bold',
+                                    },
+                                }}
+                            />
+                        }
+                        label={
+                            <BodyText
+                                variant="body2"
+                                style={{
+                                    lineHeight: '32px',
+                                    fontWeight: selectedOption === answer.id.toString() ? 'bold' : 'normal',
+                                    color: selectedOption === answer.id.toString() ? Palette.blue[90] : 'inherit',
+                                }}
+                            >
+                                {answer.answer_text}
+                            </BodyText>
+                        }
                     />
                 ))}
             </RadioGroup>

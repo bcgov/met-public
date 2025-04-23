@@ -3,7 +3,6 @@ import { act, render, waitFor, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import PollWidgetView from 'components/engagement/old-view/widgets/Poll/PollWidgetView';
 import * as widgetService from 'services/widgetService/PollService';
-import * as notificationService from 'services/notificationService/notificationSlice';
 import * as reactRedux from 'react-redux';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
@@ -94,10 +93,7 @@ describe('PollWidgetView Component Tests', () => {
         });
 
         await waitFor(() => {
-            expect(notificationService.openNotification).toHaveBeenCalledWith({
-                severity: 'error',
-                text: 'Error occurred while fetching Engagement widgets information',
-            });
+            expect(screen.getByText('Error occurred while fetching widget information')).toBeInTheDocument();
         });
     });
 
@@ -132,7 +128,7 @@ describe('PollWidgetView Component Tests', () => {
 
         fireEvent.click(screen.getByText('Submit'));
         await waitFor(() => {
-            expect(screen.getByText('An error occurred.')).toBeInTheDocument();
+            expect(screen.getByText('An unknown error occurred')).toBeInTheDocument();
         });
     });
 });
