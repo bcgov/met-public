@@ -1,3 +1,8 @@
+## April 23, 2025
+
+- **Bugfix** Update Dagster version and its python container to attempt to solve issue on Dagster server [🎟️ DESENG-775](https://citz-gdx.atlassian.net/browse/DESENG-775)
+
+
 ## April 15, 2025
 
 - **Chore** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
