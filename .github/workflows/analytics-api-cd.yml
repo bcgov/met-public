@@ -30,7 +30,7 @@ env:
 
 jobs:
   analytics-api-cd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
     environment:
@@ -38,6 +38,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Openshift Tooling
+        uses: redhat-actions/openshift-tools-installer@v1.13.1
+        with:
+          oc: "4.16"
 
       - name: Login Openshift
         shell: bash

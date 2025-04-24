@@ -22,11 +22,16 @@ env:
 
 jobs:
   met-deployment:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: ${{ github.event.inputs.environment }}
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Openshift Tooling
+        uses: redhat-actions/openshift-tools-installer@v1.13.1
+        with:
+          oc: "4.16"
 
       - name: Login Openshift
         shell: bash

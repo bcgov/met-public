@@ -1,6 +1,8 @@
 ## April 24, 2025
 
 - **Bugfix** Update Dagster versions to attempt fix of Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Add in required installation commands for openshift CLI [🎟️ DESENG-813](https://citz-gdx.atlassian.net/browse/DESENG-813)
+  - Chose concrete version of Ubuntu to mitigate future issues
 
 ## April 22, 2025
 
