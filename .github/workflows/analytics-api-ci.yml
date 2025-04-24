@@ -14,7 +14,7 @@ defaults:
 
 jobs:
   setup-job:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
 
@@ -24,7 +24,7 @@ jobs:
 
   linting:
     needs: setup-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -75,7 +75,7 @@ jobs:
 
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
@@ -121,7 +121,7 @@ jobs:
 
   build-check:
     needs: setup-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v3
