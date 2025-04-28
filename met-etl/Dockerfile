@@ -1,12 +1,12 @@
-FROM python:3.12.2-bullseye
+FROM python:3.12-alpine
 
-ARG DAGSTER_VERSION=0.23.15
+ARG DAGSTER_VERSION=0.26.11
 
 RUN pip install --upgrade pip
 # ==> Add Dagster layer
 RUN \
     pip install \
-        dagster==1.7.15 \
+        dagster==1.10.12 \
         dagster-postgres==${DAGSTER_VERSION} \
         dagster-celery[flower,redis,kubernetes]==${DAGSTER_VERSION} \
         dagster-aws==${DAGSTER_VERSION} \
