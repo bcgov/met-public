@@ -20,14 +20,14 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
         display: 'flex',
         marginLeft: 'auto',
         marginRight: '14px',
-        color: Palette.gray[100],
+        color: Palette.text.primary,
         fontSize: '24px',
         width: '24px',
         justifyContent: 'center',
     };
     const pStyles = {
         margin: 0,
-        color: Palette.gray[100],
+        color: Palette.text.primary,
     };
 
     // Parse the address into multiple lines
