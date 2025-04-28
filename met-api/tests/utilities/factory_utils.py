@@ -760,6 +760,7 @@ def factory_event_item_model(widget_event=None, event_item_info: dict = None):
         widget_event = factory_widget_event_model()
 
     event_item = EventItemModel(
+        event_name=event_item_info.get('event_name', ''),
         description=event_item_info.get('description', ''),
         location_name=event_item_info.get('location_name', ''),
         location_address=event_item_info.get('location_address', ''),
@@ -790,6 +791,7 @@ def factory_event_item_translation_model(
     event_translation = EventItemTranslationModel(
         event_item_id=event_translation_info.get('event_item_id'),
         language_id=event_translation_info.get('language_id'),
+        event_name=event_translation_info.get('event_name'),
         description=event_translation_info.get('description'),
         location_name=event_translation_info.get('location_name'),
         location_address=event_translation_info.get('location_address'),

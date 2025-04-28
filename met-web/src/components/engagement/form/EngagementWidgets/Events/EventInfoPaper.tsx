@@ -37,6 +37,17 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                     justifyContent="flex-start"
                     spacing={1}
                 >
+                    <When condition={!!eventItem.event_name}>
+                        <Grid item xs={3}>
+                            <MetParagraphOld>Name:</MetParagraphOld>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {eventItem.event_name}
+                            </MetParagraphOld>
+                        </Grid>
+                    </When>
+
                     <When condition={!!eventItem.description}>
                         <Grid item xs={3}>
                             <MetParagraphOld>Description:</MetParagraphOld>

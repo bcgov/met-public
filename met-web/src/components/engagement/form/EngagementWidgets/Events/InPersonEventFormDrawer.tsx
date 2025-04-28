@@ -24,6 +24,10 @@ dayjs.extend(tz);
 
 const schema = yup
     .object({
+        event_name: yup
+            .string()
+            .max(100, 'Event name cannot exceed 100 characters')
+            .required('Event name cannot be empty'),
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
         location_name: yup
             .string()
@@ -67,6 +71,7 @@ const InPersonEventFormDrawer = () => {
     };
 
     useEffect(() => {
+        methods.setValue('event_name', eventItemToEdit?.event_name || '');
         methods.setValue('description', eventItemToEdit?.description || '');
         methods.setValue('location_name', eventItemToEdit?.location_name || '');
         methods.setValue('location_address', eventItemToEdit?.location_address || '');
@@ -99,7 +104,7 @@ const InPersonEventFormDrawer = () => {
 
     const createEvent = async (data: InPersonEventForm) => {
         const validatedData = await schema.validate(data);
-        const { description, location_address, location_name, date, time_from, time_to } = validatedData;
+        const { event_name, description, location_address, location_name, date, time_from, time_to } = validatedData;
         const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
         if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
@@ -107,6 +112,7 @@ const InPersonEventFormDrawer = () => {
                 type: EVENT_TYPE.OPENHOUSE,
                 items: [
                     {
+                        event_name: event_name,
                         description: description,
                         location_name: location_name,
                         location_address: location_address,
@@ -168,6 +174,19 @@ const InPersonEventFormDrawer = () => {
                             <Grid item xs={12}>
                                 <MetHeader3 bold>{eventItemToEdit ? 'Edit' : 'Add'} In-Person Event</MetHeader3>
                                 <Divider sx={{ marginTop: '1em' }} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Event Name</MetLabel>
+                                <ControlledTextField
+                                    name="event_name"
+                                    variant="outlined"
+                                    label=" "
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    size="small"
+                                />
                             </Grid>
                             <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>

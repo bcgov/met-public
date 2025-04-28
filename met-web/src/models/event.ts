@@ -8,6 +8,7 @@ export const EVENT_TYPE: { [x: string]: EventTypeLabel } = {
 
 export interface EventItem {
     id: number;
+    event_name: string;
     description: string;
     location_name: string;
     location_address: string;
