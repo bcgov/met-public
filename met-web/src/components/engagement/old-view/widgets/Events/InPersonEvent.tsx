@@ -31,7 +31,7 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
     };
 
     // Parse the address into multiple lines
-    const parsedAddress = eventItem.location_address?.split(',') || ['', '', ''];
+    const parsedAddress = eventItem.location_address?.split(',') || [''];
     const finalAddress = parsedAddress.every((val) => val === '')
         ? parsedAddress
         : parsedAddress.map((line, index) => (parsedAddress.length - 1 === index ? line : line + ','));
@@ -58,9 +58,9 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                     <strong>Address</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={pStyles}>{finalAddress[0] || ''}</p>
-                    <p style={pStyles}>{finalAddress[1] || ''}</p>
-                    <p style={pStyles}>{finalAddress[2] || ''}</p>
+                    {finalAddress.map((aLine) => {
+                        return <p style={pStyles}>{aLine ?? ''}</p>;
+                    })}
                 </Grid>
             </Grid>
             <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
