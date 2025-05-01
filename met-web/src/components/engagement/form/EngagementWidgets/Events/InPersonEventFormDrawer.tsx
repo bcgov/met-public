@@ -180,7 +180,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="event_name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -193,7 +192,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="description"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -208,7 +206,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="location_name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -221,7 +218,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="location_address"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -235,7 +231,6 @@ const InPersonEventFormDrawer = () => {
                                     name="date"
                                     type="date"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -249,7 +244,6 @@ const InPersonEventFormDrawer = () => {
                                     name="time_from"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -263,7 +257,6 @@ const InPersonEventFormDrawer = () => {
                                     name="time_to"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}

@@ -177,7 +177,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="event_name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -190,7 +189,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="description"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -206,7 +204,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="date"
                                     type="date"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -220,7 +217,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="time_from"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -234,7 +230,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="time_to"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -247,7 +242,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="session_link"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -260,7 +254,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="session_link_text"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}

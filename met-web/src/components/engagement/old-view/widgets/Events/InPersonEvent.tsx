@@ -5,6 +5,7 @@ import { formatDate } from 'components/common/dateHelper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
 import { Palette } from 'styles/Theme';
+import { BodyText } from 'components/common/Typography/Body';
 
 export interface EventProps {
     eventItem: EventItem;
@@ -51,16 +52,18 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                     <strong>Location</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={{ ...pStyles, marginBottom: 'inherit' }}>{eventItem.location_name}</p>
+                    <BodyText style={{ ...pStyles, marginBottom: 'inherit' }}>{eventItem.location_name}</BodyText>
                 </Grid>
                 <Grid item xs={0} md={1}></Grid>
                 <Grid item xs={6} md={3} xl={2} alignSelf="flex-start">
                     <strong>Address</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    {finalAddress.map((aLine) => {
-                        return <p style={pStyles}>{aLine ?? ''}</p>;
-                    })}
+                    {finalAddress.map((aLine) => (
+                        <p key={aLine} style={pStyles}>
+                            {aLine ?? ''}
+                        </p>
+                    ))}
                 </Grid>
             </Grid>
             <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
@@ -71,7 +74,7 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                     <strong>Date</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={pStyles}>{startDate}</p>
+                    <BodyText style={pStyles}>{startDate}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
@@ -82,7 +85,7 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
                     <strong>Time</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={pStyles}>{`${startTime} to ${endTime} PT`}</p>
+                    <BodyText style={pStyles}>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
         </>

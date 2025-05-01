@@ -1,11 +1,11 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
-import { Palette } from 'styles/Theme';
-import { StyledPrimaryButton } from 'components/common';
+import { Palette, colors } from 'styles/Theme';
+import { BodyText } from 'components/common/Typography/Body';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
     // Define styles
@@ -17,7 +17,7 @@ const VirtualSession = ({ eventItem }: EventProps) => {
         display: 'flex',
         marginLeft: 'auto',
         marginRight: '14px',
-        color: Palette.gray[100],
+        color: Palette.text.primary,
         fontSize: '24px',
         width: '24px',
         justifyContent: 'center',
@@ -27,6 +27,8 @@ const VirtualSession = ({ eventItem }: EventProps) => {
         color: Palette.gray[100],
     };
     const buttonStyles = {
+        color: colors.type.inverted,
+        backgroundColor: Palette.primary.main,
         borderRadius: '16px !important',
         lineHeight: '56px',
         height: 'auto !important',
@@ -40,6 +42,8 @@ const VirtualSession = ({ eventItem }: EventProps) => {
         paddingRight: '1.5rem',
         flexWrap: 'wrap',
         '&:hover': {
+            color: colors.type.inverted,
+            backgroundColor: Palette.primary.main,
             textDecoration: 'none',
         },
     };
@@ -59,7 +63,7 @@ const VirtualSession = ({ eventItem }: EventProps) => {
                     <strong>Date</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={pStyles}>{startDate}</p>
+                    <BodyText style={pStyles}>{startDate}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
@@ -70,13 +74,13 @@ const VirtualSession = ({ eventItem }: EventProps) => {
                     <strong>Time</strong>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <p style={pStyles}>{`${startTime} to ${endTime} PT`}</p>
+                    <BodyText style={pStyles}>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <StyledPrimaryButton sx={buttonStyles} href={eventItem.url}>
+                <Button sx={buttonStyles} href={eventItem.url}>
                     {eventItem.url_label}
-                </StyledPrimaryButton>
+                </Button>
             </Grid>
         </>
     );
