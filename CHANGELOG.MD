@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 ## May 1, 2025
 
 - **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Feature** Redesign event widget [🎟️ DESENG-698](https://citz-gdx.atlassian.net/browse/DESENG-698)
+
+  - Modified api to accomodate additional field required in event widget design
+  - Modified forms and cards on admin side to show new field
+  - Implemented front-end design
+    - Tested with multiple events on one page
+  - Optimized for mobile and desktop viewports
+  - Updated unit test data
 
 ## April 24, 2025
 

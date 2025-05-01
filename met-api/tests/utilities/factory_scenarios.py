@@ -629,6 +629,7 @@ class TestEventnfo(dict, Enum):
         'type': 'MEETUP',
         'items': [
             {
+                'event_name': 'An amazing meetup',
                 'description': fake.name(),
                 'venue': 'Online',
                 'location_address': 'location_address',
@@ -646,6 +647,7 @@ class TestEventnfo(dict, Enum):
         'type': 'OPENHOUSE',
         'items': [
             {
+                'event_name': 'An amazing openhouse',
                 'description': fake.name(),
                 'venue': 'Online',
                 'location_address': 'location_address',
@@ -663,6 +665,7 @@ class TestEventnfo(dict, Enum):
         'type': 'VIRTUAL',
         'items': [
             {
+                'event_name': 'An amazing virtual event',
                 'description': fake.name(),
                 'venue': 'Online',
                 'location_address': '',
@@ -972,6 +975,7 @@ class TestEventItemTranslationInfo(dict, Enum):
     event_item_info1 = {
         'event_item_id': 1,
         'language_id': 2,
+        'event_name': 'An amazing event',
         'description': fake.text(),
         'location_name': 'Location name',
         'location_address': 'location address',

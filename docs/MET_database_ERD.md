@@ -336,6 +336,7 @@ erDiagram
     tenant only one to zero or many feedback : has
     event_item {
         integer id PK
+        string event_name
         string description
         string location_name
         string location_address
