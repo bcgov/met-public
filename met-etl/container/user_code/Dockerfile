@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim-bookworm
 
 ARG DAGSTER_LIBRARIES_VERSION=0.26.11
 
@@ -6,7 +6,7 @@ RUN pip install --upgrade pip
 # ==> Add Dagster layer
 RUN \
     pip install \
-        dagster==1.10.12 \
+        dagster==1.10.11 \
         dagster-postgres==${DAGSTER_LIBRARIES_VERSION} \
         dagster-celery[flower,redis,kubernetes]==${DAGSTER_LIBRARIES_VERSION} \
         dagster-aws==${DAGSTER_LIBRARIES_VERSION} \
