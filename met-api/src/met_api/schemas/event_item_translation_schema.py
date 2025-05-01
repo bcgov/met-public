@@ -18,6 +18,7 @@ class EventItemTranslationSchema(SQLAlchemyAutoSchema):
     id = fields.Int(dump_only=True)
     language_id = fields.Int(required=True)
     event_item_id = fields.Int(required=True)
+    event_name = fields.Str(allow_none=True)
     description = fields.Str(allow_none=True)
     location_name = fields.Str(allow_none=True)
     location_address = fields.Str(allow_none=True)

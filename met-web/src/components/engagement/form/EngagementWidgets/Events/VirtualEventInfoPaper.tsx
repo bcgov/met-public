@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { MetParagraphOld, MetWidgetPaper } from 'components/common';
+import { MetWidgetPaper } from 'components/common';
 import { Grid, IconButton } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
@@ -9,6 +9,7 @@ import { When } from 'react-if';
 import { formatDate } from 'components/common/dateHelper';
 import { EventInfoPaperProps } from './EventInfoPaper';
 import { EventsContext } from './EventsContext';
+import { BodyText } from 'components/common/Typography/Body';
 
 const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) => {
     const eventItem = event.event_items[0];
@@ -32,44 +33,54 @@ const VirtualEventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperPr
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    <When condition={!!eventItem.description}>
+                    <When condition={!!eventItem.event_name}>
                         <Grid item xs={3}>
-                            <MetParagraphOld>Description:</MetParagraphOld>
+                            <BodyText>Name:</BodyText>
                         </Grid>
                         <Grid item xs={9}>
-                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                            <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                                {eventItem.event_name}
+                            </BodyText>
+                        </Grid>
+                    </When>
+                    <When condition={!!eventItem.description}>
+                        <Grid item xs={3}>
+                            <BodyText>Description:</BodyText>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {eventItem.description}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </When>
                     <Grid item xs={3}>
-                        <MetParagraphOld>Date:</MetParagraphOld>
+                        <BodyText>Date:</BodyText>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
 
                     <Grid item xs={3}>
-                        <MetParagraphOld>Time:</MetParagraphOld>
+                        <BodyText>Time:</BodyText>
                     </Grid>
                     <Grid item xs={9}>
-                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                                 eventItem.end_date,
                                 'h:mm a',
                             )} PT`}
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
                     <Grid item xs={3}>
-                        <MetParagraphOld>Link: </MetParagraphOld>
+                        <BodyText>Link: </BodyText>
                     </Grid>
 
                     <Grid item xs={9}>
-                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {eventItem.url} - {eventItem.url_label}
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
                 </Grid>
                 <Grid container item xs={1.5}>

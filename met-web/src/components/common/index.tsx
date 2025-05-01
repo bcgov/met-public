@@ -60,7 +60,7 @@ export const MobileToolbar = styled(Toolbar)(() => ({
     marginBottom: '40px',
 }));
 
-const StyledPrimaryButton = styled(LoadingButton)(() => ({
+export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: colors.button.default.shade,
     color: '#fff',
     lineHeight: '1.1rem',

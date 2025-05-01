@@ -9,6 +9,7 @@
         {
             "language_id": 2,
             "event_item_id": 1,
+            "event_name": "Event name in Spanish",
             "description": "Description in Spanish",
             "location_name": "Location Name in Spanish",
             "location_address": "Location Address in Spanish",
@@ -35,6 +36,13 @@
             "type": "integer",
             "title": "Event Item ID",
             "description": "The ID of the event item being translated."
+        },
+        "event_name": {
+            "$id": "#/properties/event_name",
+            "type": "string",
+            "title": "Event Name",
+            "description": "The name of the event.",
+            "maxLength": 100
         },
         "description": {
             "$id": "#/properties/description",

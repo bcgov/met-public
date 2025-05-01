@@ -15,6 +15,7 @@ class EventItem(BaseModel):  # pylint: disable=too-few-public-methods, too-many-
 
     __tablename__ = 'event_item'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    event_name = db.Column(db.String(100), nullable=True)
     description = db.Column(db.String(500))
     location_name = db.Column(db.String(50), nullable=True)
     location_address = db.Column(db.String(100), comment='The address of the location', nullable=True)
