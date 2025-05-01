@@ -1,6 +1,7 @@
 ## May 1, 2025
 
 - **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - Tweak dagster versions and python base image
 - **Feature** Redesign event widget [🎟️ DESENG-698](https://citz-gdx.atlassian.net/browse/DESENG-698)
 
   - Modified api to accomodate additional field required in event widget design
