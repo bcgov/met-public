@@ -1,3 +1,7 @@
+## May 1, 2025
+
+- **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+
 ## April 24, 2025
 
 - **Bugfix** Update Dagster versions to attempt fix of Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
