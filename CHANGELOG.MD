@@ -11,6 +11,8 @@
   - Migrated the DeploymentConfig to a Helm template.
     - Modified heavily to use new Vault secrets. Secrets are now mounted as files in the
       container at /vault/secrets, and the application is expected to read them from the filesystem.
+    - Bound the DeploymentConfig to the e903c2-vault service account, which has access to the
+      secrets in the vault. Also granted the vault account image pull permissions from e903c2-tools.
   - Created environment-specific values files (dev, test, prod) for deployment settings.
     - Deployments for all environments can now be done using `helm install` or `helm upgrade` from
       the same folder, using the appropriate values file. Example:
