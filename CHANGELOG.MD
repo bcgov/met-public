@@ -23,6 +23,8 @@
       oc project e903c2-test
       helm upgrade --install met-api . --values values-test.yaml
       ```
+  - Removed YAML for the old Keycloak server, since we have migrated to using the shared SSO Keycloak
+    server.
 
 ## May 1, 2025
 
