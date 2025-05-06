@@ -14,15 +14,7 @@
     - Bound the DeploymentConfig to the e903c2-vault service account, which has access to the
       secrets in the vault. Also granted the vault account image pull permissions from e903c2-tools.
   - Created environment-specific values files (dev, test, prod) for deployment settings.
-    - Deployments for all environments can now be done using `helm install` or `helm upgrade` from
-      the same folder, using the appropriate values file. Example:
-      ```
-      cd ./openshift/api
-      oc project e903c2-dev
-      helm upgrade --install met-api . --values values-dev.yaml
-      oc project e903c2-test
-      helm upgrade --install met-api . --values values-test.yaml
-      ```
+    - See `openshift/README.md` for more information on how to deploy the API using the new Helm chart.
   - Removed YAML for the old Keycloak server, since we have migrated to using the shared SSO Keycloak
     server.
 
