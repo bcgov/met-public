@@ -1,0 +1,21 @@
+# {{ required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Values.app.name }}-web-path
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+spec:
+  host: {{ .Values.site.url }}
+  path: /api
+  to:
+    kind: Service
+    name: {{ .Values.app.name }}
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

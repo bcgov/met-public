@@ -1,3 +1,23 @@
+## May 5, 2025
+
+- **Feature** Add Helm chart and templates for MET API [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET API deployment.
+  - Migrated existing HorizontalPodAutoscaler, Route, Service, and MET ConfigMap to Helm templates.
+  - Removed Secrets in favor of using HashiCorp Vault for sensitive data.
+    - Also removed several ConfigMap values that were either sensitive or were contextually linked to
+      the secrets, and moved their data to the Vault.
+    - Developers can now use `helm` to generate the Openshift YAML files without needing
+      to seek out secrets and keep them within their values files.
+  - Migrated the DeploymentConfig to a Helm template.
+    - Modified heavily to use new Vault secrets. Secrets are now mounted as files in the
+      container at /vault/secrets, and the application is expected to read them from the filesystem.
+    - Bound the DeploymentConfig to the e903c2-vault service account, which has access to the
+      secrets in the vault. Also granted the vault account image pull permissions from e903c2-tools.
+  - Created environment-specific values files (dev, test, prod) for deployment settings.
+    - See `openshift/README.md` for more information on how to deploy the API using the new Helm chart.
+  - Removed YAML for the old Keycloak server, since we have migrated to using the shared SSO Keycloak
+    server.
+
 ## May 1, 2025
 
 - **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)

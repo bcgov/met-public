@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: {{ .Values.app.name }}
+    labels:
+        app: {{ .Values.app.name }}
+        app-group: met-app
+data:
+    # MET configuration
+    FLASK_ENV: production
+    CORS_ORIGINS: {{ .Values.site.url }}
+    DEFAULT_TENANT_SHORT_NAME: {{ .Values.tenant.shortName }}
+    ACCESS_REQUEST_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.accessRequest }}
+    CORS_MAX_AGE: {{ .Values.cors.maxAge | quote }}
+    CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.closedEngagementRejected }}
+    NOTIFICATIONS_EMAIL_ENDPOINT: {{ .Values.email.notificationsEndpoint }}
+    REJECTED_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.rejected }}
+    SEND_EMAIL_INTERNAL_ONLY: {{ .Values.email.sendInternalOnly | quote }}
+    SITE_URL: https://{{ .Values.site.url }}/
+    SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.submissionResponse }}
+    SUBSCRIBE_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.subscribe }}
+    VERIFICATION_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.verification }}
