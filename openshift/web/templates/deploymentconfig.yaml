@@ -35,6 +35,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.app.name }}
+          env:
+            - name: ENV
+              value: {{ .Values.environment | upper }}
           resources:
             limits:
               cpu: 300m
