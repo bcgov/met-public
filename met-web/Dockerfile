@@ -1,6 +1,6 @@
 # "build-stage", based on Node.js, to build and compile the frontend
 # pull official base image
-FROM node:20-alpine as build-stage
+FROM node:20-alpine AS build-stage
 
 # set working directory
 WORKDIR /app
@@ -43,6 +43,7 @@ RUN usermod -a -G root $user
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY /nginx/*.conf /etc/nginx/
 COPY /nginx/docker-entrypoint.sh /
+COPY /nginx/config.js.template /usr/share/nginx/html/config.js.template
 
 # Set ownership and permissions
 # Set scripts as executable (make files and python files do not have to be marked)

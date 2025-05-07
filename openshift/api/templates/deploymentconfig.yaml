@@ -7,7 +7,7 @@ metadata:
     app-group: met-app
   name: {{ .Values.app.name }}
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1 # This is managed by the HPA
   revisionHistoryLimit: 10
   selector:
     app: {{ .Values.app.name }}

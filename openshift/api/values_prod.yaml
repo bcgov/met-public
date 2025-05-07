@@ -1,5 +1,8 @@
 environment: prod
 
+deployment:
+  maxReplicas: 5
+
 site:
   url: met-web-demo.apps.gold.devops.gov.bc.ca
 

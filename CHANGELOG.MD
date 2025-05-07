@@ -1,3 +1,14 @@
+## May 7, 2025
+
+- **Feature** Add Helm chart and templates for MET Web [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET Web deployment.
+  - Migrated existing resources to Helm templates.
+  - Removed several unused ConfigMap values
+  - Removed JWT/OIDC related values in favor of requesting the data from the MET API (single source of truth).
+    - Created an endpoint at `/api/oidc_config` to return the OIDC configuration for the MET API.
+  - Created an location in the Nginx config to produce the file config.js from environment variables.
+  - Updated existing templates to set minReplicas and maxReplicas for the HPA, rather than trying to configure it on the Deployment.
+
 ## May 5, 2025
 
 - **Feature** Add Helm chart and templates for MET API [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
