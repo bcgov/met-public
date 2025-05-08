@@ -10,8 +10,9 @@ data:
     # This data gets turned into config.js by the nginx config
     # Common
     REACT_APP_PUBLIC_URL: "{{ .Values.site.url }}"
-    REACT_APP_API_URL: "https://{{ .Values.app.name }}-{{ .Values.environment }}.apps.gold.devops.gov.bc.ca/api/"
-    REACT_APP_ANALYTICS_API_URL: "https://analytics-api-{{ .Values.environment }}.apps.gold.devops.gov.bc.ca/api/"
+      # These URLS should not have a trailing slash
+    REACT_APP_API_URL: "https://{{ .Values.app.name }}-{{ .Values.environment }}.apps.gold.devops.gov.bc.ca/api"
+    REACT_APP_ANALYTICS_API_URL: "https://analytics-api-{{ .Values.environment }}.apps.gold.devops.gov.bc.ca/api"
     # Tenant
     REACT_APP_DEFAULT_TENANT: {{ .Values.tenants.default }}
     REACT_APP_DEFAULT_LANGUAGE: "en"
