@@ -22,7 +22,7 @@ PUBLIC_CONFIG = {
     # as it will be intentionally exposed to the public
     'KEYCLOAK_URL': keycloak_config['BASE_URL'],
     'KEYCLOAK_REALM': keycloak_config['REALMNAME'],
-    'KEYCLOAK_CLIENT_ID': jwt_config['AUDIENCE'],
+    'KEYCLOAK_CLIENT': jwt_config['AUDIENCE'],
     'KEYCLOAK_ADMIN_ROLE': Role.SUPER_ADMIN.value,
 }
 
