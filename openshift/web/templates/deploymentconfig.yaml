@@ -11,7 +11,7 @@ spec:
   selector:
     app: {{ .Values.app.name }}
   strategy:
-    activeDeadlineSeconds: 600
+    activeDeadlineSeconds: 1200
     type: Rolling
     rollingParams:
       intervalSeconds: 1
