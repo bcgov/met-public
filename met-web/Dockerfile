@@ -31,7 +31,7 @@ COPY . ./
 RUN npm run build
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.17 as production-stage
+FROM nginx:1.17 AS production-stage
 RUN mkdir /app
 
 # RUN  touch /var/run/nginx.pid && \
@@ -51,7 +51,12 @@ COPY /nginx/config.js.template /usr/share/nginx/html/config.js.template
 RUN chown -R $user:root /etc/nginx/ \
     && chmod -R ug+rw /etc/nginx/ \
     && chmod ug+x docker-entrypoint.sh \
-    && chmod g+rw /etc/passwd
+    && chmod g+rw /etc/passwd \
+    && chown -R $user:root /usr/share/nginx/html/ \
+    && chmod g+rw /usr/share/nginx/html/ \
+    && chown -R $user:root /usr/share/nginx/html/config.js.template \
+    && chmod g+rw /usr/share/nginx/html/config.js.template 
 
 USER $user
+
 ENTRYPOINT ["sh", "/docker-entrypoint.sh"]
