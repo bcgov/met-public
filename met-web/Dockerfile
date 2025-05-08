@@ -48,13 +48,13 @@ COPY /nginx/config.js.template /usr/share/nginx/html/config.js.template
 # Set ownership and permissions
 # Set scripts as executable (make files and python files do not have to be marked)
 # Make /etc/passwd writable for the root group so an entry can be created for an OpenShift assigned user account.
-RUN chown -R $user:root /etc/nginx/ \
+RUN chown -R "$user:root" /etc/nginx/ \
     && chmod -R ug+rw /etc/nginx/ \
     && chmod ug+x docker-entrypoint.sh \
     && chmod g+rw /etc/passwd \
-    && chown -R $user:root /usr/share/nginx/html/ \
+    && chown -R "$user:root" /usr/share/nginx/html/ \
     && chmod g+rw /usr/share/nginx/html/ \
-    && chown -R $user:root /usr/share/nginx/html/config.js.template \
+    && chown -R "$user:root" /usr/share/nginx/html/config.js.template \
     && chmod g+rw /usr/share/nginx/html/config.js.template 
 
 USER $user
