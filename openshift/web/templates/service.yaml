@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+    environment: {{ .Values.environment }}
+spec:
+  ipFamilyPolicy: SingleStack
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: {{ .Values.app.name }}
+  sessionAffinity: None
+  type: ClusterIP

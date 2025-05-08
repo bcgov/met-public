@@ -6,7 +6,8 @@ cors:
   maxAge: 7200
 
 deployment:
-  replicas: 1
+  minReplicas: 2
+  maxReplicas: 3
 
 email:
   templateID:

@@ -4,7 +4,7 @@ Notes and example commands to deploy MET in an Openshift environment.
 
 ## Build Configuration
 
-Github actions are being used for building images but ******IF NECESSARY****** to use openshift,
+Github actions are being used for building images but **\*\***IF NECESSARY**\*\*** to use openshift,
 follow the steps below:
 
 In the tools namespace use the following to create the build configurations:
@@ -125,7 +125,7 @@ To restore the backup follow these steps:
    psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
    ```
 
-   **Note:** Should the restore fail due to roles not being found, the following psql commands can be ran from within the database pod to alter the roles
+   **Note:** Should the restore fail due to roles not being found, the following psql commands can be run from within the database pod to alter the roles
 
    ```
      alter role met WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
@@ -152,18 +152,27 @@ To restore the backup follow these steps:
 In each environment namespace (dev, test, prod) use the following
 IMAGE_TAG values of the following commands should also be changed to reflect the environment they will be installed to
 
-Deploy the web application:
+**Deploy the `Web` application**:
 
-```
-oc process -f ./web.dc.yml \
-  -p ENV=<dev/test/prod> \
-  -p IMAGE_TAG=<dev/test/prod> \
-  | oc create -f -
+> This deployment uses the helm chart located in the `openshift/web` folder.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the web application.
+
+```bash
+cd ./openshift/web
+### Dev
+oc project e903c2-dev
+helm upgrade --install met-web . --values values_dev.yaml
+### Test
+oc project e903c2-test
+helm upgrade --install met-web . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install met-web . --values values_prod.yaml
 ```
 
 **Deploy the `API` application**:
 
-> This deployment uses the helm chart located in the openshift/api folder.
+> This deployment uses the helm chart located in the `openshift/api` folder.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
 
 ```bash
@@ -181,7 +190,7 @@ helm upgrade --install met-api . --values values_prod.yaml
 
 Deploy the notify api application:
 
-```
+```bash
 oc process -f ./notify-api.dc.yml \
  -p ENV=<dev/test/prod> \
  -p IMAGE_TAG=<dev/test/prod> \
@@ -192,7 +201,7 @@ oc process -f ./notify-api.dc.yml \
 
 Deploy the cron job application:
 
-```
+```bash
 oc process -f ./cron.dc.yml \
  -p ENV=<dev/test/prod> \
  -p IMAGE_TAG=<dev/test/prod> \
@@ -201,27 +210,35 @@ oc process -f ./cron.dc.yml \
  -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> \
  -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email \
  | oc create -f -
-
 ```
 
 Deploy the analytics api
 
-```
-
+```bash
 oc process -f ./analytics-api.dc.yml \
  -p ENV=<dev/test/prod> \
  -p IMAGE_TAG=<dev/test/prod>
 | oc create -f -
-
 ```
 
 Deploy the redash analytics helm chart:
 
-```
+```bash
 cd redash
 helm dependency build
 helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
 ```
+
+**Deploying the MET RBAC chart**:
+
+> RBAC in this project is managed by the helm chart located in the `openshift/rbac` folder.
+> This chart determines its environment based on the namespace it is being deployed to.
+
+Currently the chart creates the following:
+
+1. **Vault Service Account RoleBinding**: This rolebinding allows the vault service account to pull images from the tools namespace.
+   > The {licenseplate}-vault service account should be used on Deployments that need access to Vault.
+   > In order for the Vault service account to be able to pull images from the tools namespace, this rolebinding must be created.
 
 ### Additional NetworkPolicies
 

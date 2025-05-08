@@ -1,6 +1,6 @@
 # "build-stage", based on Node.js, to build and compile the frontend
 # pull official base image
-FROM node:20-alpine as build-stage
+FROM node:20-alpine AS build-stage
 
 # set working directory
 WORKDIR /app
@@ -31,7 +31,7 @@ COPY . ./
 RUN npm run build
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx:1.17 as production-stage
+FROM nginx:1.17 AS production-stage
 RUN mkdir /app
 
 # RUN  touch /var/run/nginx.pid && \
@@ -43,14 +43,20 @@ RUN usermod -a -G root $user
 COPY --from=build-stage /app/build /usr/share/nginx/html
 COPY /nginx/*.conf /etc/nginx/
 COPY /nginx/docker-entrypoint.sh /
+COPY /nginx/config.js.template /usr/share/nginx/html/config.js.template
 
 # Set ownership and permissions
 # Set scripts as executable (make files and python files do not have to be marked)
 # Make /etc/passwd writable for the root group so an entry can be created for an OpenShift assigned user account.
-RUN chown -R $user:root /etc/nginx/ \
+RUN chown -R "$user:root" /etc/nginx/ \
     && chmod -R ug+rw /etc/nginx/ \
     && chmod ug+x docker-entrypoint.sh \
-    && chmod g+rw /etc/passwd
+    && chmod g+rw /etc/passwd \
+    && chown -R "$user:root" /usr/share/nginx/html/ \
+    && chmod g+rw /usr/share/nginx/html/ \
+    && chown -R "$user:root" /usr/share/nginx/html/config.js.template \
+    && chmod g+rw /usr/share/nginx/html/config.js.template 
 
 USER $user
+
 ENTRYPOINT ["sh", "/docker-entrypoint.sh"]

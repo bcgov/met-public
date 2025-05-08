@@ -1,3 +1,15 @@
+## May 7, 2025
+
+- **Feature** Add Helm chart and templates for MET Web [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET Web deployment.
+  - Migrated existing resources to Helm templates.
+  - Removed several unused ConfigMap values
+  - Removed JWT/OIDC related values in favor of requesting the data from the MET API (single source of truth).
+    - Created an endpoint at `/api/oidc_config` to return the OIDC configuration for the MET API.
+  - Modified the Docker entrypoint to generate a config script from REACT*APP* environment variables at startup.
+    - The config script is then served alongside the app at runtime.
+- **Bugfix** Updated existing templates to set minReplicas and maxReplicas for the HPA (matching met-web) rather than trying to configure it on the Deployment, which has no effect.
+
 ## May 5, 2025
 
 - **Feature** Add Helm chart and templates for MET API [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
