@@ -19,7 +19,7 @@ fi
 # At startup, generate the JavaScript file that sets the environment variables
 # for the React app. This env variable will be used in a substitution by Nginx
 # when serving the static file /config.js.
-REACT_APP_VARS_JS = $(
+export REACT_APP_VARS_JS = $(
     # For each environment variable
     env |
     # that starts with REACT_APP_,
@@ -30,6 +30,6 @@ REACT_APP_VARS_JS = $(
     awk '{printf "%s\\n", $0}' |
     # then remove the last newline character
     sed 's/\\n$//'
-)
+);
 
 nginx -g 'daemon off;'
