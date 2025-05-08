@@ -37,7 +37,7 @@ spec:
                 name: {{ .Values.app.name }}
           env:
             - name: ENV
-              value: {{ .Values.environment | upper }}
+              value: {{ .Values.environment }}
           resources:
             limits:
               cpu: 300m
