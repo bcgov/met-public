@@ -1,0 +1,4 @@
+apiVersion: v2
+name: met-web
+version: 0.1.0
+description: Helm chart for the MET WEB project
