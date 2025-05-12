@@ -8,13 +8,17 @@ metadata:
         app-group: met-app
 data:
     # MET configuration
-    FLASK_ENV: production
     CORS_ORIGINS: {{ .Values.site.url }}
     DEFAULT_TENANT_SHORT_NAME: {{ .Values.tenant.shortName }}
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.accessRequest }}
     CORS_MAX_AGE: {{ .Values.cors.maxAge | quote }}
     CLOSED_ENGAGEMENT_REJECTED_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.closedEngagementRejected }}
+    CLOSEOUT_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.closeout }}
+    CLOSING_SOON_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.closingSoon }}
+    CLOSING_SOON_EMAIL_ADVANCE_NOTICE_DAYS: {{ .Values.email.closingSoonAdvanceNoticeDays | quote }}
+    EMAIL_ENVIRONMENT: {{ .Values.email.environment }}
     NOTIFICATIONS_EMAIL_ENDPOINT: {{ .Values.email.notificationsEndpoint }}
+    PUBLISH_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.publish }}
     REJECTED_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.rejected }}
     SEND_EMAIL_INTERNAL_ONLY: {{ .Values.email.sendInternalOnly | quote }}
     SITE_URL: https://{{ .Values.site.url }}/

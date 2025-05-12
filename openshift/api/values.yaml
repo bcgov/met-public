@@ -2,6 +2,11 @@ app:
   name: met-api
   licenseplate: 'e903c2'
 
+app_cron:
+  name: met-cron
+  deployment:
+    replicas: 1
+
 cors:
   maxAge: 7200
 
@@ -10,10 +15,15 @@ deployment:
   maxReplicas: 3
 
 email:
+  # How many days before an engagement closes to send the "closing soon" email
+  closingSoonAdvanceNoticeDays: 2
   templateID:
     accessRequest: '41afa792-4c75-425a-9ad9-c558561d6669'
     closedEngagementRejected: 'e942dea1-094e-4021-9aac-21a0ac1f240d'
+    closeout: 'b7ea041b-fc30-4ad3-acb2-82119dd4f95d'
+    closingSoon: '30344886-ea33-4ca2-83e1-e5ebe9c3457d'
     rejected: '8410c055-587b-4788-bd2f-b563562bcb2d'
+    publish: '7bf2ffcd-d69e-4c3f-9aa0-e8e89b491e92'
     submissionResponse: '07f0f037-5ccb-44c5-89c6-9fe86078323e'
     subscribe: '9cd4942b-8ac9-49ae-a869-c800c57a7472'
     verification: 'c4cc1633-321a-4400-8a22-272acecd836a'

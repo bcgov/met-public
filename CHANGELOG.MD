@@ -1,3 +1,13 @@
+## May 12, 2025
+
+- **Feature** Add MET Cron job to OpenShift [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Added the met-cron deployment to the met-api helm chart.
+  - Removed an unneeded Service, as the Cron does not serve any traffic.
+  - Set up injection of HashiCorp Vault secrets to the Cron job
+  - Merged met-cron ConfigMap into the met-api ConfigMap, as they differed very little.
+  - Renamed config key "OFFSET_DAYS" to "CLOSING_SOON_EMAIL_ADVANCE_NOTICE_DAYS" to be more descriptive.
+  - Removed the old met-cron deployment YAML files.
+
 ## May 7, 2025
 
 - **Feature** Add Helm chart and templates for MET Web [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
@@ -6,7 +16,7 @@
   - Removed several unused ConfigMap values
   - Removed JWT/OIDC related values in favor of requesting the data from the MET API (single source of truth).
     - Created an endpoint at `/api/oidc_config` to return the OIDC configuration for the MET API.
-  - Modified the Docker entrypoint to generate a config script from REACT*APP* environment variables at startup.
+  - Modified the Docker entrypoint to generate a config script from REACT_APP\_\* environment variables at startup.
     - The config script is then served alongside the app at runtime.
 - **Bugfix** Updated existing templates to set minReplicas and maxReplicas for the HPA (matching met-web) rather than trying to configure it on the Deployment, which has no effect.
 
