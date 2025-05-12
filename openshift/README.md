@@ -170,9 +170,10 @@ oc project e903c2-prod
 helm upgrade --install met-web . --values values_prod.yaml
 ```
 
-**Deploy the `API` application**:
+**Deploy the `API` (and `cron`) applications**:
 
 > This deployment uses the helm chart located in the `openshift/api` folder.
+> This creates 2 deployments as the met-api and met-cron submodules are deployed together.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
 
 ```bash
@@ -196,19 +197,6 @@ oc process -f ./notify-api.dc.yml \
  -p IMAGE_TAG=<dev/test/prod> \
  -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
  -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY> \
- | oc create -f -
-```
-
-Deploy the cron job application:
-
-```bash
-oc process -f ./cron.dc.yml \
- -p ENV=<dev/test/prod> \
- -p IMAGE_TAG=<dev/test/prod> \
- -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
- -p SITE_URL=https://met-web-test.apps.gold.devops.gov.bc.ca \
- -p MET_ADMIN_CLIENT_SECRET=<SERVICE_ACCOUNT_SECRET> \
- -p NOTIFICATIONS_EMAIL_ENDPOINT=https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email \
  | oc create -f -
 ```
 

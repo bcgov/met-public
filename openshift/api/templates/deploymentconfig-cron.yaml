@@ -1,0 +1,89 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: {{ .Values.app_cron.name }}
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - {{ .Values.app_cron.name }}
+        from:
+          kind: ImageStreamTag
+          namespace: {{ .Values.image.namespace }}
+          name: "{{ .Values.app_cron.name }}:{{ .Values.image.tag }}"
+    - type: ConfigChange
+  replicas: {{ .Values.app_cron.deployment.replicas }}
+  test: false
+  selector:
+    app: {{ .Values.app_cron.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_cron.name }}
+        app-group: met-app
+        environment: {{ .Values.environment }}
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: auth/k8s-gold
+        vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
+        # Iterate over the secret data and export each key-value pair as an environment variable
+        vault.hashicorp.com/agent-inject-template-email: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        # Custom built URI for met-patroni by indexing into the secret data object
+        # All patroni logins are stored in the same secret, so we shouldn't inject them all
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
+          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "met-username" }}:{{ index .Data.data "met-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}`}}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      containers:
+      - name: {{ .Values.app_cron.name }}
+        image: {{ .Values.image.repository }}/{{ .Values.app_cron.name }}:{{ .Values.image.tag }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          source /vault/secrets/email && \
+          source /vault/secrets/met-jwt-oidc && \
+          source /vault/secrets/met-patroni && \
+          bash /met-cron/docker-entrypoint.sh
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.app.name }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 750m
+            memory: 2Gi

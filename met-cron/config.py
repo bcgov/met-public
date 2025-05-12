@@ -229,7 +229,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     MAIL_BATCH_SIZE = os.getenv('MAIL_BATCH_SIZE', 10)
 
     # config for offset days to send reminder emails
-    OFFSET_DAYS = os.getenv('OFFSET_DAYS', 2)
+    MAIL_ADVANCE_NOTICE_DAYS = os.getenv('CLOSING_SOON_EMAIL_ADVANCE_NOTICE_DAYS', 2)
 
 class DevConfig(_Config):  # pylint: disable=too-few-public-methods
     """Dev Config."""
