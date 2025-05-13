@@ -1,3 +1,7 @@
+## May 13, 2025
+
+- **Bugfix** Align library versions with EPIC app [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+
 ## May 1, 2025
 
 - **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
