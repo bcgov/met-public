@@ -200,7 +200,7 @@ helm upgrade --install met-api . --values values_prod.yaml
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the notify-api application.
 
 ```bash
-cd ./openshift/notify-api
+cd ./openshift/notify
 ### Dev
 oc project e903c2-dev
 helm upgrade --install notify-api . --values values_dev.yaml
