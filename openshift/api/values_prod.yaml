@@ -10,7 +10,6 @@ keycloak:
   baseUrl: 'loginproxy.gov.bc.ca'
 
 email:
-  notificationsEndpoint: 'https://met-notify-api.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
   environment: 'Sent from the Production environment'
   
 image:
