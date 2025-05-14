@@ -1,0 +1,13 @@
+# Environment-specific overrides for test
+environment: test
+
+app:
+  host: met-notify-api-test.apps.gold.devops.gov.bc.ca
+  path: /api
+
+image:
+  tag: test
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: /test

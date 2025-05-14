@@ -1,0 +1,13 @@
+# Environment-specific overrides for production
+environment: prod
+
+app:
+  host: met-notify-api.apps.gold.devops.gov.bc.ca
+  path: /api
+
+image:
+  tag: prod
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: '' # No path for prod as it is the root of the vault engine

@@ -1,0 +1,13 @@
+# Environment-specific overrides for dev
+environment: dev
+
+app:
+  host: met-notify-api-dev.apps.gold.devops.gov.bc.ca
+  path: /api
+
+image:
+  tag: dev
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: /dev
