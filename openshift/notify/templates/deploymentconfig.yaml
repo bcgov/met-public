@@ -53,6 +53,7 @@ spec:
           {{- else }}
           export {{ $k }}='{{ $v }}'
           {{- end }}
+          {{- end }}
           {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
         vault.hashicorp.com/agent-inject-template-global: |
