@@ -203,15 +203,15 @@ helm upgrade --install met-api . --values values_prod.yaml
 cd ./openshift/notify-api
 ### Dev
 oc project e903c2-dev
-helm upgrade --install met-notify-api . --values values_dev.yaml
+helm upgrade --install notify-api . --values values_dev.yaml
  ## Port forward the service to localhost (optional)
-oc port-forward svc/met-notify-api 8081:8080 -n e903c2-dev
+oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
 ### Test
 oc project e903c2-test
-helm upgrade --install met-notify-api . --values values_test.yaml
+helm upgrade --install notify-api . --values values_test.yaml
 ### Prod
 oc project e903c2-prod
-helm upgrade --install met-notify-api . --values values_prod.yaml
+helm upgrade --install notify-api . --values values_prod.yaml
 ```
 
 Deploy the analytics api

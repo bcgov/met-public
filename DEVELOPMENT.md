@@ -69,7 +69,7 @@ make test
 Create a port forward to the email service hosted on OpenShift:
 
 ```
-cd ./met-notify
+cd ./notify-api
 make port-forward
 # Or, if you prefer not to use make:
 oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
