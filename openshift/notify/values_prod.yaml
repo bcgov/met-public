@@ -1,10 +1,6 @@
 # Environment-specific overrides for production
 environment: prod
 
-app:
-  host: met-notify-api.apps.gold.devops.gov.bc.ca
-  path: /api
-
 image:
   tag: prod
 
