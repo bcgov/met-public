@@ -1,6 +1,6 @@
 ## May 20, 2025
 
-- **Bugfix** Remove redundant potentially Dagster libraries [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Remove potentially redundant Dagster libraries [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 - Remove pip `-U` flag from installation commands to prevent version instabilities
 
 ## May 13, 2025
