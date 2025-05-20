@@ -7,7 +7,6 @@ keycloak:
   baseUrl: 'test.loginproxy.gov.bc.ca'
 
 email:
-  notificationsEndpoint: 'https://met-notify-api-test.apps.gold.devops.gov.bc.ca/api/v1/notifications/email'
   environment: 'You are using the TEST environment'
 
 image:

@@ -34,7 +34,9 @@ npm run test
 ```
 
 ## met-api
+
 ## analytics-api
+
 ## notify-api
 
 Create a .env file based on the sample.env
@@ -46,7 +48,7 @@ make setup
 ```
 
 Manually upgrading the database:
-*This wil also create some default data for the app if it does not exist*
+_This wil also create some default data for the app if it does not exist_
 
 ```
 make db
@@ -64,6 +66,15 @@ Running the unit test:
 make test
 ```
 
+Create a port forward to the email service hosted on OpenShift:
+
+```
+cd ./notify-api
+make port-forward
+# Or, if you prefer not to use make:
+oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
+```
+
 ## met-cron
 
 Create a .env file based on the sample.env
@@ -79,6 +90,7 @@ This is a task scheduler project, to run tasks manually use the following comman
 ```
 make run_closeout
 ```
+
 ```
 make run_publish
 ```
@@ -98,16 +110,19 @@ docker compose up
 A custom redash project is used for some of the dashboards whithin MET.
 
 To start an instance clone the following repository:
+
 ```
 git clone https://github.com/bcgov/redash
 ```
 
 create a .env file with the following:
+
 ```
 REDASH_COOKIE_SECRET=redash
 ```
 
 Run the docker compose command:
+
 ```
 docker compose up
 ```

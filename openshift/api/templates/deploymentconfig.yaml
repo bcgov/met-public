@@ -64,6 +64,13 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
+        vault.hashicorp.com/agent-inject-template-global: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
         # Custom built URI for met-patroni by indexing into the secret data object
         # All patroni logins are stored in the same secret, so we shouldn't inject them all
@@ -72,7 +79,6 @@ spec:
           {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
           export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "met-username" }}:{{ index .Data.data "met-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
           {{- end }}`}}
-        
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       containers:

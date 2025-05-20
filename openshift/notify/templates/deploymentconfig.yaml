@@ -1,40 +1,30 @@
+# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
-  name: {{ .Values.app_cron.name }}
+  name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
     app-group: met-app
 spec:
+  replicas: {{ .Values.app.replicas }}
+  revisionHistoryLimit: 10
+  selector:
+    app: {{ .Values.app.name }}
   strategy:
     type: Rolling
     rollingParams:
-      updatePeriodSeconds: 1
       intervalSeconds: 1
-      timeoutSeconds: 600
-      maxUnavailable: 25%
       maxSurge: 25%
-  triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - {{ .Values.app_cron.name }}
-        from:
-          kind: ImageStreamTag
-          namespace: {{ .Values.image.namespace }}
-          name: "{{ .Values.app_cron.name }}:{{ .Values.image.tag }}"
-    - type: ConfigChange
-  replicas: {{ .Values.app_cron.deployment.replicas }}
-  test: false
-  selector:
-    app: {{ .Values.app_cron.name }}
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
   template:
     metadata:
       labels:
-        app: {{ .Values.app_cron.name }}
-        app-group: met-app
+        app: {{ .Values.app.name }}
         environment: {{ .Values.environment }}
+        role: api
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
@@ -51,10 +41,18 @@ spec:
           {{- end }}
           {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        # Here we use some overrides because the client ID and secret should be
+        # from met-api since it is the client here, and not met-web
         vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
           {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{` }}
           {{- range $k, $v := .Data.data }}
+          {{- if eq $k "MET_ADMIN_CLIENT_ID" }}
+          export JWT_OIDC_AUDIENCE='{{ $v }}'
+          {{- else if eq $k "MET_ADMIN_CLIENT_SECRET" }}
+          export JWT_OIDC_CLIENT_SECRET='{{ $v }}'
+          {{- else }}
           export {{ $k }}='{{ $v }}'
+          {{- end }}
           {{- end }}
           {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
@@ -64,33 +62,36 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}`}}
-        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        # Custom built URI for met-patroni by indexing into the secret data object
-        # All patroni logins are stored in the same secret, so we shouldn't inject them all
-        vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
-          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "met-username" }}:{{ index .Data.data "met-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
-          {{- end }}`}}
     spec:
+      # Needed to allow the vault agent to run in the pod
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       containers:
-      - name: {{ .Values.app_cron.name }}
-        image: {{ .Values.image.repository }}/{{ .Values.app_cron.name }}:{{ .Values.image.tag }}
+      - name: {{ .Values.app.name }}
+        image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.app.name }}
+        imagePullPolicy: Always
+        stdin: true
+        tty: true
         command:
         - /bin/bash
         - -c
         - |
           source /vault/secrets/email && \
           source /vault/secrets/met-jwt-oidc && \
-          source /vault/secrets/met-patroni && \
-          bash /met-cron/docker-entrypoint.sh
-        envFrom:
-        - configMapRef:
-            name: {{ .Values.app.name }}
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 750m
-            memory: 2Gi
+          source /vault/secrets/global && \
+          bash /opt/app-root/docker-entrypoint.sh
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

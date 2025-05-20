@@ -1,3 +1,14 @@
+## May 14, 2025
+
+- **Feature** Create Helm chart for notify-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the notify-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Removed notify-api Route, as the notify-api does not need to be publicly accessible. Instead, it is called by the MET API & MET Cron jobs.
+    - For local development, the notify-api can be accessed via port-forwarding. See DEVELOPMENT.md for more information.
+  - Added new "global" Vault secret for all flask apps to use, which contains the `SECRET_KEY`.
+  - Migrated the DeploymentConfig to a Helm template.
+  - Created values files (dev, test, prod) for deployment settings; see `openshift/README.md`
+
 ## May 12, 2025
 
 - **Feature** Add MET Cron job to OpenShift [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)

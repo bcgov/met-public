@@ -154,6 +154,7 @@ IMAGE_TAG values of the following commands should also be changed to reflect the
 
 **Deploy the `Web` application**:
 
+> Accessible to the public: _Yes_
 > This deployment uses the helm chart located in the `openshift/web` folder.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the web application.
 
@@ -172,6 +173,7 @@ helm upgrade --install met-web . --values values_prod.yaml
 
 **Deploy the `API` (and `cron`) applications**:
 
+> Accessible to the public: _Yes_ (API only)
 > This deployment uses the helm chart located in the `openshift/api` folder.
 > This creates 2 deployments as the met-api and met-cron submodules are deployed together.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
@@ -189,15 +191,27 @@ oc project e903c2-prod
 helm upgrade --install met-api . --values values_prod.yaml
 ```
 
-Deploy the notify api application:
+**Deploy the `Notify API` application:**
+
+> Accessible to the public: _No_
+> To access this application, you need to port-forward the service to your localhost.
+> A shortcut to do this is provided in the Notify API makefile (make port-forward).
+> This deployment uses the helm chart located in the `openshift/notify-api` folder.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the notify-api application.
 
 ```bash
-oc process -f ./notify-api.dc.yml \
- -p ENV=<dev/test/prod> \
- -p IMAGE_TAG=<dev/test/prod> \
- -p KC_DOMAIN=met-oidc-test.apps.gold.devops.gov.bc.ca \
- -p GC_NOTIFY_API_KEY=<GC_NOTIFY_API_KEY> \
- | oc create -f -
+cd ./openshift/notify
+### Dev
+oc project e903c2-dev
+helm upgrade --install notify-api . --values values_dev.yaml
+ ## Port forward the service to localhost (optional)
+oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
+### Test
+oc project e903c2-test
+helm upgrade --install notify-api . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install notify-api . --values values_prod.yaml
 ```
 
 Deploy the analytics api

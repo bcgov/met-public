@@ -7,6 +7,7 @@ MKFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_ABS_DIR:=$(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
 PROJECT_NAME:=notify_api
+SERVICE_NAME:=notify-api
 DOCKER_NAME:=notify-api
 
 #################################################################################
@@ -138,6 +139,40 @@ tag: push ## tag image
 #################################################################################
 # COMMANDS - Local                                                              #
 #################################################################################
+oc-setup:
+	# Check if oc command is present
+	if command -v oc &> /dev/null; then \
+		oc_project=$(shell oc project -q); \
+		echo "Current OpenShift project: $$oc_project"; \
+		if [ -z "$$oc_project" ]; then \
+			echo "You are not logged in to OpenShift. Please log in using 'oc login'."; \
+			exit 1; \
+		fi; \
+		project_name=$$(echo "$$oc_project" | cut -d '-' -f 1); \
+        tag_name=$$(echo "$$oc_project" | cut -d '-' -f 2); \
+		if [ "$$tag_name" != "dev" ]; then \
+			read -p "You are in project '$$oc_project'. Do you want to switch to 'dev' project? (y/n): " choice; \
+			if [ "$$choice" = "y" ]; then \
+				oc project "$$project_name-dev"; \
+			else \
+				echo "Staying in project '$$oc_project'. Please ensure you are in the correct project for local development."; \
+			fi; \
+		else \
+			echo "You are already in the 'dev' project: $$oc_project"; \
+		fi; \
+	else \
+		echo "oc command not found. Install OpenShift CLI to use related features."; \
+	fi
+
+port-forward: oc-setup ## Port forward the notify-api service
+		if oc get svc $(SERVICE_NAME) &> /dev/null; then \
+			oc_project="$(shell oc project -q)"; \
+			echo "Notify API service exists in the current project: $$oc_project"; \
+			echo "Port forwarding notify-api service on port 8081"; \
+			echo "Press Ctrl+C to stop"; \
+			oc port-forward svc/$(SERVICE_NAME) 8081:8080 -n "$$oc_project"; \
+		fi;
+
 run: ## Run the project in local
 	. venv/bin/activate && python -m flask run -p 5002
 
