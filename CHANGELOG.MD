@@ -5,6 +5,12 @@
   - Migrated existing Service and ConfigMap to Helm templates.
   - Secrets now use HashiCorp Vault for sensitive data.
   - Removed "debug=True" from all flask apps, as this is not appropriate for production.
+- **Feature** Update helm chart for MET Analytics (Redash) [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Updated the helm chart for MET Analytics (Redash) to use Vault secrets for sensitive data.
+  - Removed Secrets file
+  - Removed sentiment analysis from the repository, as it is no longer used.
+  - Change from Ingress to Route for consistency with other applications.
+  - Properly randomized the secret keys for redash and the database
 
 ## May 14, 2025
 

@@ -18,16 +18,32 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      volumes:
+      - name: conf
+        configMap:
+          name: redis-exporter
+      automountServiceAccountToken: false
       containers:
       - image: "{{ .Values.exporter.image.registry }}/{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         name: "{{ .Chart.Name }}"
         ports:
         - containerPort: 9121
           name: exporter
-      - command:
-        - /conf/update-node.sh
-        - redis-server
-        - /conf/redis.conf 
+        resources:
+          limits:
+            cpu: "{{ .Values.exporter.resources.limits.cpu }}"
+            memory: "{{ .Values.exporter.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.limits.ephemeralStorage }}"
+          requests:
+            cpu: "{{ .Values.exporter.resources.requests.cpu }}"
+            memory: "{{ .Values.exporter.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.requests.ephemeralStorage }}"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            sh /conf/update-node.sh
+            redis-server /conf/redis.conf
         env:
         - name: POD_IP
           valueFrom:
@@ -60,22 +76,17 @@ spec:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"
             memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
           requests:
             cpu: "{{ .Values.resources.requests.cpu }}"
             memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
         volumeMounts:
         - mountPath: /conf
           name: conf
           readOnly: true
         - mountPath: /data
           name: redis-data
-          readOnly: false
-      volumes:
-      - configMap:
-          defaultMode: 0555
-          name: {{ .Chart.Name }}
-        name: conf
-
   volumeClaimTemplates:
   - metadata:
       name: redis-data
@@ -84,5 +95,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: {{ .Values.persistentVolumeClaim.size }}
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
+        limits:
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
       storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}

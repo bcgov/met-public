@@ -6,8 +6,8 @@ metadata:
   name: {{ .Chart.Name }}
 spec:
   ports:
-  - name: "{{.Values.ingress.port}}"
-    port: {{.Values.ingress.port}}
-    targetPort: {{.Values.ingress.port}}
+  - name: "{{ .Values.ingress.port }}"
+    port: {{ .Values.ingress.port }}
+    targetPort: {{ .Values.ingress.port }}
   selector:
     app: {{ .Chart.Name }}-server
