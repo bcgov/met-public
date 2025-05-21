@@ -18,12 +18,22 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      autoMountServiceAccountToken: false
       containers:
       - image: "{{ .Values.exporter.image.registry }}/{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         name: "{{ .Chart.Name }}"
         ports:
         - containerPort: 9121
           name: exporter
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
       - command:
         - /conf/update-node.sh
         - redis-server
