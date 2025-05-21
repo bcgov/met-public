@@ -1,5 +1,10 @@
 ## May 21, 2025
 
+- **Feature** Create Helm chart for analytics-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the analytics-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Secrets now use HashiCorp Vault for sensitive data.
+  - Removed "debug=True" from all flask apps, as this is not appropriate for production.
 - **Feature** Update helm chart for MET Analytics (Redash) [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
   - Updated the helm chart for MET Analytics (Redash) to use Vault secrets for sensitive data.
   - Removed Secrets file

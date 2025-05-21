@@ -5,5 +5,5 @@ image:
   tag: prod
 
 vault:
-  engine: 'e903c2-nonprod'
+  engine: 'e903c2-prod'
   path: '' # No path for prod as it is the root of the vault engine
