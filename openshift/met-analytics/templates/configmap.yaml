@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}"
+  name: "{{ .Chart.Name }}"
+data:
+  REDASH_LOG_LEVEL: INFO
+  REDASH_MULTI_ORG: 'false'
+  ADHOC_WORKERS_COUNT: "1"
+  SCHEDULED_WORKERS_COUNT: "1"
+  WORKERS_COUNT: "2"
+  PYTHONUNBUFFERED: "0"
+  REDASH_REDIS_URL: "redis://{{ .Values.redisExporter.redis.exporter.hostname }}:6379/0" # url of the redis database to connect to
+  REDASH_HOST: "{{ tpl .Values.hostname . }}"
+  ADHOC_WORKERS_COUNT: "1"
+  SCHEDULED_WORKERS_COUNT: "1"
+  WORKERS_COUNT: "2"
+  WEB_WORKERS_COUNT: "4"
+  GUNICORN_CMD_ARGS: "--timeout 300"
+
+

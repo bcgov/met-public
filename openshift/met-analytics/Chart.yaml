@@ -4,5 +4,4 @@ dependencies:
   - name: redis-exporter
     version: 1.0.1
 name: met-analytics
-tags: met-analytics
 version: v1.0.1
