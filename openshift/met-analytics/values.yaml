@@ -1,7 +1,7 @@
 Domain: apps.gold.devops.gov.bc.ca
-ingress: 
-  enabled: true # create an ingress for this component
-  hostname: "{{.Chart.Name}}-{{.Release.Namespace}}.{{.Values.Domain}}"
+hostname: '{{ .Chart.Name }}-{{ .Release.Namespace | splitList "-" | last }}.{{ .Values.Domain }}' # the hostname for the ingress
+licenseplate: e903c2
+ingress:
   port: 5000
 
 redisExporter:
@@ -11,6 +11,8 @@ redisExporter:
       repository: oliver006/redis_exporter
       tag: v1.14.0-alpine
   redis:
+    exporter:
+      hostname: redis-exporter
     image:  
       registry: docker.io
       repository: redis
@@ -31,9 +33,6 @@ redash:
     namespace: e903c2-tools
     repository: e903c2-tools/met-analytics
     tag: latest
-  database:
-    password: postgres # admin password
-    url: "postgresql://postgres:postgres@postgresql-analytics:5432/postgres"
 
 
 resources:
