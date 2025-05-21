@@ -33,9 +33,11 @@ spec:
           limits:
             cpu: "{{ .Values.exporter.resources.limits.cpu }}"
             memory: "{{ .Values.exporter.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.limits.ephemeralStorage }}"
           requests:
             cpu: "{{ .Values.exporter.resources.requests.cpu }}"
             memory: "{{ .Values.exporter.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.requests.ephemeralStorage }}"
       - command:
         - /conf/update-node.sh
         - redis-server
@@ -72,9 +74,11 @@ spec:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"
             memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
           requests:
             cpu: "{{ .Values.resources.requests.cpu }}"
             memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
         volumeMounts:
         - mountPath: /conf
           name: conf
