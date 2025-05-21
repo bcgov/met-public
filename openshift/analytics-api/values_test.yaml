@@ -1,0 +1,19 @@
+environment: test
+
+image:
+  tag: latest
+  namespace: e903c2-tools
+
+cors:
+  origins: 'https://met-analytics-api-test.apps.gold.devops.gov.bc.ca'
+
+route:
+  host: met-analytics-api-test.apps.gold.devops.gov.bc.ca
+  path: /api/
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: '/test'

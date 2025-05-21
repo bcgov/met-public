@@ -1,0 +1,114 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+  name: {{ .Values.app.name }}
+spec:
+  replicas: 1 # This is managed by the HPA
+  revisionHistoryLimit: 10
+  selector:
+    app: {{ .Values.app.name }}
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        environment: {{ .Values.environment }}
+        role: api
+        app-group: met-app
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: auth/k8s-gold
+        vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
+        # Iterate over the secret data and export each key-value pair as an environment variable
+        vault.hashicorp.com/agent-inject-template-email: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
+        vault.hashicorp.com/agent-inject-template-s3: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        # Custom built URI for met-patroni by indexing into the secret data object
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
+          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "analytics-username" }}:{{ index .Data.data "analytics-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}`}}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: {{ .Values.app.name }}
+        # Required for the vault agent to run in the pod
+        env:
+        - name: CORS_ORIGINS
+          value: {{ .Values.cors.origins }}
+        imagePullPolicy: Always
+        name: {{ .Values.app.name }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          . /vault/secrets/email && \
+          . /vault/secrets/s3 && \
+          . /vault/secrets/met-jwt-oidc && \
+          . /vault/secrets/met-patroni && \
+          bash /opt/app-root/docker-entrypoint.sh
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 150m
+            memory: 512Mi
+          requests:
+            cpu: 75m
+            memory: 100Mi
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - {{ .Values.app.name }}
+      from:
+        kind: ImageStreamTag
+        name: {{ .Values.app.name }}:{{ .Values.image.tag }}
+        namespace: {{ .Values.image.namespace }}
