@@ -38,10 +38,12 @@ spec:
             cpu: "{{ .Values.exporter.resources.requests.cpu }}"
             memory: "{{ .Values.exporter.resources.requests.memory }}"
             ephemeral-storage: "{{ .Values.exporter.resources.requests.ephemeralStorage }}"
-      - command:
-        - /conf/update-node.sh
-        - redis-server
-        - /conf/redis.conf 
+        command:
+          - /bin/sh
+          - -c
+          - |
+            sh /conf/update-node.sh
+            redis-server /conf/redis.conf
         env:
         - name: POD_IP
           valueFrom:
