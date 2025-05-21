@@ -1,3 +1,4 @@
+environment: prod
 vault:
   engine: 'e903c2-prod'
   path: ''

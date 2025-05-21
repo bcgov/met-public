@@ -33,8 +33,8 @@ spec:
         vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
         vault.hashicorp.com/agent-inject-template-global: |
           {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{` }}
-          export REDASH_COOKIE_SECRET='{{ .Data.data.SECRET_KEY }}'
-          export REDASH_SECRET_KEY='{{ .Data.data.SECRET_KEY_2 }}'
+          export REDASH_COOKIE_SECRET=$'{{ .Data.data.SECRET_KEY | replace "'" "\\\""}}'
+          export REDASH_SECRET_KEY=$'{{ .Data.data.SECRET_KEY_2 | replace "'" "\\\""}}'
           {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
         # Custom built URI for met-patroni by indexing into the secret data object
