@@ -18,6 +18,10 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      volumes:
+      - name: conf
+        configMap:
+          name: redis-exporter
       automountServiceAccountToken: false
       containers:
       - image: "{{ .Values.exporter.image.registry }}/{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
@@ -86,11 +90,6 @@ spec:
       resources:
         requests:
           storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
-      storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: {{ .Values.persistentVolumeClaim.size }}
+        limits:
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
       storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}
