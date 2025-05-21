@@ -1,3 +1,12 @@
+## May 21, 2025
+
+- **Feature** Update helm chart for MET Analytics (Redash) [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Updated the helm chart for MET Analytics (Redash) to use Vault secrets for sensitive data.
+  - Removed Secrets file
+  - Removed sentiment analysis from the repository, as it is no longer used.
+  - Change from Ingress to Route for consistency with other applications.
+  - Properly randomized the secret keys for redash and the database
+
 ## May 14, 2025
 
 - **Feature** Create Helm chart for notify-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
