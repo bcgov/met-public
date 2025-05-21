@@ -18,7 +18,7 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
-      autoMountServiceAccountToken: false
+      automountServiceAccountToken: false
       containers:
       - image: "{{ .Values.exporter.image.registry }}/{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
         name: "{{ .Chart.Name }}"
@@ -27,13 +27,11 @@ spec:
           name: exporter
         resources:
           limits:
-            cpu: "{{ .Values.resources.limits.cpu }}"
-            memory: "{{ .Values.resources.limits.memory }}"
-            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
+            cpu: "{{ .Values.exporter.resources.limits.cpu }}"
+            memory: "{{ .Values.exporter.resources.limits.memory }}"
           requests:
-            cpu: "{{ .Values.resources.requests.cpu }}"
-            memory: "{{ .Values.resources.requests.memory }}"
-            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
+            cpu: "{{ .Values.exporter.resources.requests.cpu }}"
+            memory: "{{ .Values.exporter.resources.requests.memory }}"
       - command:
         - /conf/update-node.sh
         - redis-server
@@ -79,16 +77,16 @@ spec:
           readOnly: true
         - mountPath: /data
           name: redis-data
-          readOnly: false
-      volumes:
-      - configMap:
-          defaultMode: 0555
-          name: {{ .Chart.Name }}
-        name: conf
-
   volumeClaimTemplates:
   - metadata:
       name: redis-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
+      storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}
     spec:
       accessModes:
       - ReadWriteOnce
