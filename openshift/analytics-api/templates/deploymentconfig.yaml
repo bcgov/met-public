@@ -34,14 +34,6 @@ spec:
         vault.hashicorp.com/namespace: platform-services
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
         vault.hashicorp.com/auth-path: auth/k8s-gold
-        vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
-        # Iterate over the secret data and export each key-value pair as an environment variable
-        vault.hashicorp.com/agent-inject-template-email: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{` }}
-          {{- range $k, $v := .Data.data }}
-          export {{ $k }}='{{ $v }}'
-          {{- end }}
-          {{- end }}`}}
         vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
         vault.hashicorp.com/agent-inject-template-s3: |
           {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{` }}
@@ -77,7 +69,6 @@ spec:
         - /bin/sh
         - -c
         - |
-          . /vault/secrets/email && \
           . /vault/secrets/s3 && \
           . /vault/secrets/met-jwt-oidc && \
           . /vault/secrets/met-patroni && \
