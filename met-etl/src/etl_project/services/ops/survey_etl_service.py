@@ -315,7 +315,7 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
 
 def _update_survey_responses_with_active_survey_id(session, survey):
     etl_active_survey_id = session.query(EtlSurveyModel.id).filter(
-        EtlSurveyModel.source_survey_id == survey.id, EtlSurveyModel.is_active == True).first()
+        EtlSurveyModel.source_survey_id == survey.id, EtlSurveyModel.is_active == True).scalar()
 
     subquery = (
         session.query(EtlSurveyModel.id)
