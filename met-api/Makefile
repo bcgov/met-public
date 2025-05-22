@@ -55,11 +55,11 @@ install: clean ## Install python virtual environment
 	test -f venv/bin/activate || python3.12 -m venv  $(CURRENT_ABS_DIR)/venv ;\
 	. venv/bin/activate ;\
 	pip install --upgrade pip ;\
-	pip install -Ur requirements.txt
+	pip install -r requirements.txt
 
 install-dev: ## Install local application
 	. venv/bin/activate ; \
-	pip install -Ur requirements/dev.txt; \
+	pip install -r requirements/dev.txt; \
 	pip install -e .
 
 #################################################################################

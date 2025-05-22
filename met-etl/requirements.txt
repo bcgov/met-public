@@ -1,19 +1,18 @@
-dagit==1.10.12
-dagster-docker==0.26.12
-Flask-Cors==3.0.10
-Flask-Migrate==2.7.0
-Flask-Moment==1.0.5
-Flask-SQLAlchemy==3.0.5
-Flask==2.2.5
-SQLAlchemy-Utils==0.41.2
-SQLAlchemy==1.4.52
-Werkzeug==3.0.3
-flask-marshmallow==1.0.0
+flask==2.2.5
+flask-cors==3.0.10
 flask-restx==1.3.0
-marshmallow-sqlalchemy==1.0.0
+flask-moment==1.0.6
+flask-jwt-oidc==0.3.0
+Werkzeug==3.0.3
 marshmallow==3.21.1
-packaging==24.0
-python-dotenv==1.0.1
-pytz==2024.1
+marshmallow-sqlalchemy==1.0.0
+dagster==1.7.15
+dagit==1.7.15
+dagster-docker==0.23.15
+SQLAlchemy-Utils==0.38.3
+SQLAlchemy==1.4.52
+packaging==21.3
+python-dotenv==0.21.0
+pytz==2022.5
 -e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api
 -e git+https://github.com/bcgov/met-public.git#egg=analytics-api&subdirectory=analytics-api

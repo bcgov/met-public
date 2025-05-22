@@ -1,5 +1,14 @@
+## May 22, 2025
+
+- **Bugfix** Fix survey ID access in MET ETL [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - the load_survey function in the MET ETL pipeline now uses .scalar() instead of .first() to get the survey ID
+  - Commit more often during processing to avoid deadlocks
+
 ## May 21, 2025
 
+- **Bugfix** Update SQLAlchemy library in MET ETL to match MET API [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Add required dependencies for met-etl to requirements.txt [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - pin flask_restx to 1.3.0
 - **Feature** Create Helm chart for analytics-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
   - Created a helm chart for the analytics-api deployment.
   - Migrated existing Service and ConfigMap to Helm templates.
@@ -12,6 +21,11 @@
   - Change from Ingress to Route for consistency with other applications.
   - Properly randomized the secret keys for redash and the database
 
+## May 20, 2025
+
+- **Bugfix** Remove potentially redundant Dagster libraries [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- Remove pip `-U` flag from installation commands to prevent version instabilities
+
 ## May 14, 2025
 
 - **Feature** Create Helm chart for notify-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
@@ -22,6 +36,10 @@
   - Added new "global" Vault secret for all flask apps to use, which contains the `SECRET_KEY`.
   - Migrated the DeploymentConfig to a Helm template.
   - Created values files (dev, test, prod) for deployment settings; see `openshift/README.md`
+
+## May 13, 2025
+
+- **Bugfix** Align library versions with EPIC app [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 
 ## May 12, 2025
 
