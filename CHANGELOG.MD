@@ -1,5 +1,8 @@
 ## May 21, 2025
+
 - **Bugfix** Update SQLAlchemy library in MET ETL to match MET API [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Add required dependencies for met-etl to requirements.txt [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - pin flask_restx to 1.3.0
 
 ## May 20, 2025
 
