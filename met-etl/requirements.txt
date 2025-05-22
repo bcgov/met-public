@@ -1,3 +1,11 @@
+flask==2.2.5
+flask-cors==3.0.10
+flask-restx==1.3.0
+flask-moment==1.0.6
+flask-jwt-oidc==0.3.0
+Werkzeug==3.0.3
+marshmallow==3.21.1
+marshmallow-sqlalchemy==1.0.0
 dagster==1.7.15
 dagit==1.7.15
 dagster-docker==0.23.15
