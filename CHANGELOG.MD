@@ -2,6 +2,7 @@
 
 - **Bugfix** Fix survey ID access in MET ETL [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
   - the load_survey function in the MET ETL pipeline now uses .scalar() instead of .first() to get the survey ID
+  - Commit more often during processing to avoid deadlocks
 
 ## May 21, 2025
 
