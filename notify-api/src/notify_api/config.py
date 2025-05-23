@@ -65,7 +65,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     # JWT_OIDC Settings
     KEYCLOAK_BASE_URL = os.getenv('KEYCLOAK_BASE_URL', '')
     KEYCLOAK_REALMNAME = os.getenv('KEYCLOAK_REALMNAME', 'standard')
-    JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_ISSUER', f"{KEYCLOAK_BASE_URL}/realm/{KEYCLOAK_REALMNAME}")
+    JWT_OIDC_ISSUER = os.getenv('JWT_OIDC_ISSUER', f'{KEYCLOAK_BASE_URL}/realm/{KEYCLOAK_REALMNAME}')
     JWT_OIDC_WELL_KNOWN_CONFIG = os.getenv(
         'JWT_OIDC_WELL_KNOWN_CONFIG',
         f'{JWT_OIDC_ISSUER}/.well-known/openid-configuration'

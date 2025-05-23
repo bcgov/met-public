@@ -811,8 +811,8 @@ class TestWidgetVideo(dict, Enum):
         'video_url': fake.url(),
         'description': fake.text(max_nb_chars=50),
     }
-    
-    
+
+
 class TestWidgetListening(dict, Enum):
     """Test scenarios of Who is Listening widget."""
 

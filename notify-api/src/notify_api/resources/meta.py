@@ -16,7 +16,9 @@
 Currently this only provides API versioning information
 """
 import os
+
 from flask import jsonify
+
 from flask_restx import Namespace, Resource, cors
 
 API = Namespace('', description='API for Sending MET Notifications')

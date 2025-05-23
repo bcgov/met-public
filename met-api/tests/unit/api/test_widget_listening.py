@@ -26,17 +26,16 @@ from faker import Faker
 from met_api.exceptions.business_exception import BusinessException
 from met_api.services.widget_listening_service import WidgetListeningService
 from met_api.utils.enums import ContentType
-from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetListening, TestWidgetInfo
+from tests.utilities.factory_scenarios import TestJwtClaims, TestWidgetInfo, TestWidgetListening
 from tests.utilities.factory_utils import (
-    factory_auth_header, factory_engagement_model, factory_widget_model,
-    factory_widget_listening_model)
+    factory_auth_header, factory_engagement_model, factory_widget_listening_model, factory_widget_model)
 
 
 fake = Faker()
 
 
 def test_create_listening_widget(client, jwt, session,
-                                setup_admin_user_and_claims):  # pylint:disable=unused-argument
+                                 setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that Who is Listening widget can be POSTed."""
     user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()
@@ -109,7 +108,7 @@ def test_get_timeline(client, jwt, session):  # pylint:disable=unused-argument
 
 
 def test_patch_listening(client, jwt, session,
-                        setup_admin_user_and_claims):  # pylint:disable=unused-argument
+                         setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a Who is Listening widget can be PATCHed."""
     user, claims = setup_admin_user_and_claims
     engagement = factory_engagement_model()

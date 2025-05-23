@@ -1,6 +1,4 @@
-"""
-A simple endpoint to serve the OpenID Connect configuration for the web application.
-"""
+"""A simple endpoint to serve the OpenID Connect configuration for the web application."""
 
 from flask import jsonify
 from flask_cors import cross_origin
@@ -26,6 +24,7 @@ PUBLIC_CONFIG = {
     'KEYCLOAK_ADMIN_ROLE': Role.SUPER_ADMIN.value,
 }
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/')
 class OIDCConfigAsJson(Resource):
@@ -37,12 +36,13 @@ class OIDCConfigAsJson(Resource):
         """Fetch OpenID Connect configuration."""
         return jsonify(PUBLIC_CONFIG), 200
 
+
 @cors_preflight('GET,OPTIONS')
 @API.route('/config.js')
 class OIDCConfigAsJs(Resource):
     """Resource for OpenID Connect configuration in JavaScript format."""
 
-    js_prefix = "window._env_ = window._env_ || {};\n"
+    js_prefix = 'window._env_ = window._env_ || {};\n'
     js_template = "window._env_.{VAR_NAME} = '{VAR_VALUE}';\n"
 
     @staticmethod
@@ -52,6 +52,6 @@ class OIDCConfigAsJs(Resource):
         js_content = OIDCConfigAsJs.js_prefix
         for key, value in PUBLIC_CONFIG.items():
             js_content += OIDCConfigAsJs.js_template.format(
-                VAR_NAME='REACT_APP_'+key, VAR_VALUE=value
+                VAR_NAME='REACT_APP_' + key, VAR_VALUE=value
             )
         return js_content, 200, {'Content-Type': 'application/javascript'}
