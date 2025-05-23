@@ -132,7 +132,7 @@ class WidgetTranslationService:
             if widget_video:
                 translation_data['video_url'] = widget_video[0].video_url
                 translation_data['video_description'] = widget_video[0].description
-                
+
         if widget_type == WidgetType.WHO_IS_LISTENING.value:
             widget_listening = WidgetListeningModel.get_listening(widget_id)
             if widget_listening:
