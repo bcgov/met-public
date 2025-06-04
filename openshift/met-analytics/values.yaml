@@ -39,9 +39,11 @@ resources:
   limits:
     cpu: 200m
     memory: 2Gi
+    ephemeralStorage: 2Gi
   requests:
     cpu: 180m
     memory: 1Gi
+    ephemeralStorage: 1Gi
 
 vault:
   namespace: 'platform-services'
