@@ -12,7 +12,7 @@ from met_cron.services.mail_service import EmailService
 
 
 class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
-    """Mail for newly published engagements"""
+    """Service to send emails for engagements that are closing soon."""
 
     @staticmethod
     def do_mail():
@@ -22,8 +22,8 @@ class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
             2. Process each mail and send it to subscribed users
 
         """
-        offset_days: int = int(current_app.config.get('OFFSET_DAYS'))
-        engagements_closing_soon = ClosingSoonEmailService.get_engagements_closing_soon(offset_days)
+        advance_notice_days: int = int(current_app.config.get('MAIL_ADVANCE_NOTICE_DAYS'))
+        engagements_closing_soon = ClosingSoonEmailService.get_engagements_closing_soon(advance_notice_days)
         templates = current_app.config['EMAIL_TEMPLATES']
         template_id = templates['CLOSING_SOON']['ID']
         subject = templates['CLOSING_SOON']['SUBJECT']
@@ -35,10 +35,15 @@ class ClosingSoonEmailService:  # pylint: disable=too-few-public-methods
                                                                        subject, template)
 
     @staticmethod
-    def get_engagements_closing_soon(offset_days: int) -> List[EngagementModel]:
-        """Get engagements that are closing within two days."""
+    def get_engagements_closing_soon(days_until_closing: int) -> List[EngagementModel]:
+        """Get engagements that are closing within the next N days.
+        Args:
+            days_until_closing (int): Number of days until the engagement closes.
+        Returns:
+            List[EngagementModel]: List of engagements that are closing soon.
+        """
         now = local_datetime()
-        days_from_now = now + timedelta(days=offset_days)
+        days_from_now = now + timedelta(days=days_until_closing)
         engagements = db.session.query(EngagementModel) \
             .filter(
                 and_(

@@ -1,0 +1,9 @@
+# Environment-specific overrides for dev
+environment: dev
+
+image:
+  tag: dev
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: /dev

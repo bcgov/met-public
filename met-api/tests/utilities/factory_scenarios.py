@@ -512,6 +512,13 @@ class TestWidgetInfo(dict, Enum):
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
     }
+    widget_listening = {
+        'widget_type_id': WidgetType.WHO_IS_LISTENING.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
 
 
 class TestWidgetItemInfo(dict, Enum):
@@ -811,8 +818,8 @@ class TestWidgetVideo(dict, Enum):
         'video_url': fake.url(),
         'description': fake.text(max_nb_chars=50),
     }
-    
-    
+
+
 class TestWidgetListening(dict, Enum):
     """Test scenarios of Who is Listening widget."""
 

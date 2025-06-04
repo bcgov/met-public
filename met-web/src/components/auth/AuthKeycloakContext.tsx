@@ -1,8 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useAppDispatch } from 'hooks';
 import UserService from '../../services/userService';
-import { _kc } from 'constants/tenantConstants';
-const KeycloakData = _kc;
+import { KeycloakClient } from 'constants/tenantConstants';
 
 export interface AuthKeyCloakContextProps {
     isAuthenticated: boolean;
@@ -24,14 +23,14 @@ export const AuthKeyCloakContextProvider = ({ children }: { children: JSX.Elemen
     useEffect(() => {
         const initAuth = async () => {
             try {
-                const authenticated = await KeycloakData.init({
+                const authenticated = await KeycloakClient.init({
                     onLoad: 'check-sso',
                     silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
                     pkceMethod: 'S256',
                     checkLoginIframe: false,
                 });
                 setIsAuthenticated(authenticated); // Update authentication state
-                UserService.setKeycloakInstance(KeycloakData);
+                UserService.setKeycloakInstance(KeycloakClient);
                 UserService.setAuthData(dispatch);
             } catch (error) {
                 console.error('Authentication initialization failed:', error);
@@ -48,7 +47,7 @@ export const AuthKeyCloakContextProvider = ({ children }: { children: JSX.Elemen
             value={{
                 isAuthenticated,
                 isAuthenticating,
-                keycloakInstance: KeycloakData,
+                keycloakInstance: KeycloakClient,
             }}
         >
             {!isAuthenticating && children}

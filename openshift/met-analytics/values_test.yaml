@@ -1,0 +1,4 @@
+environment: test
+vault:
+  engine: 'e903c2-nonprod'
+  path: '/test'

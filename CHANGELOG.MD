@@ -9,15 +9,79 @@
 - **Bugfix** Update SQLAlchemy library in MET ETL to match MET API [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 - **Bugfix** Add required dependencies for met-etl to requirements.txt [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
   - pin flask_restx to 1.3.0
+- **Feature** Create Helm chart for analytics-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the analytics-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Secrets now use HashiCorp Vault for sensitive data.
+  - Removed "debug=True" from all flask apps, as this is not appropriate for production.
+- **Feature** Update helm chart for MET Analytics (Redash) [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Updated the helm chart for MET Analytics (Redash) to use Vault secrets for sensitive data.
+  - Removed Secrets file
+  - Removed sentiment analysis from the repository, as it is no longer used.
+  - Change from Ingress to Route for consistency with other applications.
+  - Properly randomized the secret keys for redash and the database
 
 ## May 20, 2025
 
 - **Bugfix** Remove potentially redundant Dagster libraries [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
 - Remove pip `-U` flag from installation commands to prevent version instabilities
 
+## May 14, 2025
+
+- **Feature** Create Helm chart for notify-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the notify-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Removed notify-api Route, as the notify-api does not need to be publicly accessible. Instead, it is called by the MET API & MET Cron jobs.
+    - For local development, the notify-api can be accessed via port-forwarding. See DEVELOPMENT.md for more information.
+  - Added new "global" Vault secret for all flask apps to use, which contains the `SECRET_KEY`.
+  - Migrated the DeploymentConfig to a Helm template.
+  - Created values files (dev, test, prod) for deployment settings; see `openshift/README.md`
+
 ## May 13, 2025
 
 - **Bugfix** Align library versions with EPIC app [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+
+## May 12, 2025
+
+- **Feature** Add MET Cron job to OpenShift [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Added the met-cron deployment to the met-api helm chart.
+  - Removed an unneeded Service, as the Cron does not serve any traffic.
+  - Set up injection of HashiCorp Vault secrets to the Cron job
+  - Merged met-cron ConfigMap into the met-api ConfigMap, as they differed very little.
+  - Renamed config key "OFFSET_DAYS" to "CLOSING_SOON_EMAIL_ADVANCE_NOTICE_DAYS" to be more descriptive.
+  - Removed the old met-cron deployment YAML files.
+
+## May 7, 2025
+
+- **Feature** Add Helm chart and templates for MET Web [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET Web deployment.
+  - Migrated existing resources to Helm templates.
+  - Removed several unused ConfigMap values
+  - Removed JWT/OIDC related values in favor of requesting the data from the MET API (single source of truth).
+    - Created an endpoint at `/api/oidc_config` to return the OIDC configuration for the MET API.
+  - Modified the Docker entrypoint to generate a config script from REACT_APP\_\* environment variables at startup.
+    - The config script is then served alongside the app at runtime.
+- **Bugfix** Updated existing templates to set minReplicas and maxReplicas for the HPA (matching met-web) rather than trying to configure it on the Deployment, which has no effect.
+
+## May 5, 2025
+
+- **Feature** Add Helm chart and templates for MET API [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET API deployment.
+  - Migrated existing HorizontalPodAutoscaler, Route, Service, and MET ConfigMap to Helm templates.
+  - Removed Secrets in favor of using HashiCorp Vault for sensitive data.
+    - Also removed several ConfigMap values that were either sensitive or were contextually linked to
+      the secrets, and moved their data to the Vault.
+    - Developers can now use `helm` to generate the Openshift YAML files without needing
+      to seek out secrets and keep them within their values files.
+  - Migrated the DeploymentConfig to a Helm template.
+    - Modified heavily to use new Vault secrets. Secrets are now mounted as files in the
+      container at /vault/secrets, and the application is expected to read them from the filesystem.
+    - Bound the DeploymentConfig to the e903c2-vault service account, which has access to the
+      secrets in the vault. Also granted the vault account image pull permissions from e903c2-tools.
+  - Created environment-specific values files (dev, test, prod) for deployment settings.
+    - See `openshift/README.md` for more information on how to deploy the API using the new Helm chart.
+  - Removed YAML for the old Keycloak server, since we have migrated to using the shared SSO Keycloak
+    server.
 
 ## May 1, 2025
 

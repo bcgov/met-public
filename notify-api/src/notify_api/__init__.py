@@ -14,6 +14,7 @@
 """The report Microservice.This module is the API for the Legal Entity system."""
 
 import os
+
 from flask import Flask
 
 from notify_api.auth import jwt as jwt_manager

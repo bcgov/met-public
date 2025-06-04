@@ -271,6 +271,7 @@ class Config:  # pylint: disable=too-few-public-methods
         # The time of day when engagements get closed. This should match the
         # value in met-cron/cron/crontab
         'CLOSING_TIME': os.getenv('ENGAGEMENT_END_TIME', '5 PM'),
+        # This only applies when using GC Notify instead of CHES
         'FROM_ADDRESS': os.getenv('EMAIL_FROM_ADDRESS'),
         'ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT'),
         'SUBSCRIBE': {

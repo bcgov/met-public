@@ -1,0 +1,8 @@
+apiVersion: v2
+name: met-rbac
+version: 0.1.0
+description: |
+  A Helm chart for the MET RBAC project, designed to be used with OpenShift
+  IMPORTANT: Since this chart updates the OpenShift RBAC, we should *not* automatically
+  deploy it in a CI/CD pipeline. It should be deployed manually by a developer
+  with the appropriate permissions to the OpenShift cluster.

@@ -13,6 +13,7 @@
 # limitations under the License.
 """GC notify email service."""
 import os
+
 from notifications_python_client import NotificationsAPIClient
 
 from .email_base_service import EmailBaseService

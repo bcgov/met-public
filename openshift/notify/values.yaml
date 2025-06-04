@@ -1,0 +1,26 @@
+app:
+  replicas: 1
+  name: "notify-api"
+  licenseplate: "e903c2"
+  path: "/api"
+  port: 8080-tcp
+
+image:
+  repository: 'image-registry.openshift-image-registry.svc:5000/e903c2-tools'
+  tag: latest
+
+email:
+  # Must be one of: "GC_NOTIFY" or "CHES"
+  provider: GC_NOTIFY
+
+resources:
+  limits:
+    cpu: 150m
+    memory: 512Mi
+  requests:
+    cpu: 75m
+    memory: 100Mi
+
+vault:
+  namespace: 'platform-services'
+  authPath: 'k8s-gold'

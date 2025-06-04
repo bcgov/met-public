@@ -1,0 +1,22 @@
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.app.name }}-hpa
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+spec:
+  scaleTargetRef:
+    kind: DeploymentConfig
+    name: {{ .Values.app.name }}
+    apiVersion: apps.openshift.io/v1
+  minReplicas: {{ .Values.deployment.minReplicas }}
+  maxReplicas: {{ .Values.deployment.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80

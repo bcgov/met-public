@@ -61,12 +61,12 @@ from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
+from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
-from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
@@ -77,7 +77,8 @@ from tests.utilities.factory_scenarios import (
     TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
     TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
     TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
-    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo, TestWidgetListening)
+    TestWidgetItemInfo, TestWidgetListening, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo,
+    TestWidgetVideo)
 
 
 fake = Faker()

@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Chart.Name }}-worker"
+  name: "{{ .Chart.Name }}-worker"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}-worker"
+  strategy:    
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}-worker"
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
+        vault.hashicorp.com/agent-inject-template-global: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{ ` }}
+          export REDASH_COOKIE_SECRET='{{ .Data.data.SECRET_KEY }}'
+          export REDASH_SECRET_KEY='{{ .Data.data.SECRET_KEY_2 }}'
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        # Custom built URI for met-patroni by indexing into the secret data object
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
+          export REDASH_DATABASE_URL='postgresql://{{ index .Data.data "redash-username" }}:{{ index .Data.data "redash-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}` }}
+    spec:
+      serviceAccountName: {{ .Values.licenseplate }}-vault
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          . /vault/secrets/global && \
+          . /vault/secrets/met-patroni && \
+          bash /app/bin/docker-entrypoint worker
+        envFrom:
+        - configMapRef:
+            name: "{{ .Chart.Name }}" # default redash environment variables
+        env:
+        - name: QUEUES
+          value: "queries"
+        image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-worker"
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
+      restartPolicy: Always

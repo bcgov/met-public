@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "9121"
+        prometheus.io/scrape: "true"
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      volumes:
+      - name: conf
+        configMap:
+          name: redis-exporter
+      automountServiceAccountToken: false
+      containers:
+      - image: "{{ .Values.exporter.image.registry }}/{{ .Values.exporter.image.repository }}:{{ .Values.exporter.image.tag }}"
+        name: "{{ .Chart.Name }}"
+        ports:
+        - containerPort: 9121
+          name: exporter
+        resources:
+          limits:
+            cpu: "{{ .Values.exporter.resources.limits.cpu }}"
+            memory: "{{ .Values.exporter.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.limits.ephemeralStorage }}"
+          requests:
+            cpu: "{{ .Values.exporter.resources.requests.cpu }}"
+            memory: "{{ .Values.exporter.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.exporter.resources.requests.ephemeralStorage }}"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            sh /conf/update-node.sh
+            redis-server /conf/redis.conf
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        image: "{{ .Values.redis.image.registry }}/{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: client
+          timeoutSeconds: 5
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: client
+        - containerPort: 16379
+          name: gossip
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 10
+          periodSeconds: 3
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: "{{ .Values.resources.limits.cpu }}"
+            memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
+          requests:
+            cpu: "{{ .Values.resources.requests.cpu }}"
+            memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
+        volumeMounts:
+        - mountPath: /conf
+          name: conf
+          readOnly: true
+        - mountPath: /data
+          name: redis-data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
+        limits:
+          storage: {{ .Values.persistentVolumeClaim.size | default "1Gi" }}
+      storageClassName: {{ .Values.persistentVolumeClaim.storageClass }}

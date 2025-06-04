@@ -1,0 +1,132 @@
+# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+  name: {{ .Values.app.name }}
+spec:
+  replicas: 1 # This is managed by the HPA
+  revisionHistoryLimit: 10
+  selector:
+    app: {{ .Values.app.name }}
+  strategy:
+    type: Rolling
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    resources: {}
+    activeDeadlineSeconds: 21600
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        environment: {{ .Values.environment | default "dev" }}
+        role: api
+        app-group: met-app
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
+        # Iterate over the secret data and export each key-value pair as an environment variable
+        vault.hashicorp.com/agent-inject-template-email: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
+        vault.hashicorp.com/agent-inject-template-s3: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-cdogs: {{ .Values.vault.engine }}{{ .Values.vault.path }}/cdogs
+        vault.hashicorp.com/agent-inject-template-cdogs: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/cdogs"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
+        vault.hashicorp.com/agent-inject-template-global: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        # Custom built URI for met-patroni by indexing into the secret data object
+        # All patroni logins are stored in the same secret, so we shouldn't inject them all
+        # Plus, they are not in the uppercase environment variable format
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
+          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "met-username" }}:{{ index .Data.data "met-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}` }}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      containers:
+      - imagePullPolicy: Always
+        image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
+        name: {{ .Values.app.name }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          source /vault/secrets/email && \
+          source /vault/secrets/s3 && \
+          source /vault/secrets/met-jwt-oidc && \
+          source /vault/secrets/cdogs && \
+          source /vault/secrets/met-patroni && \
+          /opt/app-root/pre-hook-update-db.sh &&
+          echo "Upgrade completed" && \
+          bash /opt/app-root/docker-entrypoint.sh
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.app.name }}
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 150m
+            memory: 512Mi
+          requests:
+            cpu: 75m
+            memory: 100Mi
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - {{ .Values.app.name }}
+      from:
+        kind: ImageStreamTag
+        name: {{ .Values.app.name }}:{{ .Values.image.tag }}
+        namespace: {{ .Values.image.namespace }}
