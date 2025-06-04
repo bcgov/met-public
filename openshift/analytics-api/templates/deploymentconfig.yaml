@@ -36,24 +36,24 @@ spec:
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
         vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
         vault.hashicorp.com/agent-inject-template-s3: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
           {{- end }}
-          {{- end }}`}}
+          {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
         vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
           {{- end }}
-          {{- end }}`}}
+          {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
         # Custom built URI for met-patroni by indexing into the secret data object
         vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
           export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "analytics-username" }}:{{ index .Data.data "analytics-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
-          {{- end }}`}}
+          {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       containers:

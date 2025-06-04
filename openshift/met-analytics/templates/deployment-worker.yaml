@@ -24,16 +24,16 @@ spec:
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
         vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
         vault.hashicorp.com/agent-inject-template-global: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{ ` }}
           export REDASH_COOKIE_SECRET='{{ .Data.data.SECRET_KEY }}'
           export REDASH_SECRET_KEY='{{ .Data.data.SECRET_KEY_2 }}'
-          {{- end }}`}}
+          {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
         # Custom built URI for met-patroni by indexing into the secret data object
         vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
           export REDASH_DATABASE_URL='postgresql://{{ index .Data.data "redash-username" }}:{{ index .Data.data "redash-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
-          {{- end }}`}}
+          {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.licenseplate }}-vault
       containers:
@@ -50,7 +50,7 @@ spec:
         env:
         - name: QUEUES
           value: "queries"
-        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
         name: "{{ .Chart.Name }}-worker"
         resources:
           limits:

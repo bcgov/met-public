@@ -35,16 +35,16 @@ spec:
         vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
         # Iterate over the secret data and export each key-value pair as an environment variable
         vault.hashicorp.com/agent-inject-template-email: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
           {{- end }}
-          {{- end }}`}}
+          {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
         # Here we use some overrides because the client ID and secret should be
         # from met-api since it is the client here, and not met-web
         vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
           {{- if eq $k "MET_ADMIN_CLIENT_ID" }}
           export JWT_OIDC_AUDIENCE='{{ $v }}'
@@ -54,14 +54,14 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}
-          {{- end }}`}}
+          {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-global: {{ .Values.vault.engine }}{{ .Values.vault.path }}/global
         vault.hashicorp.com/agent-inject-template-global: |
-          {{`{{- with secret `}}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{` }}
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/global"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
           {{- end }}
-          {{- end }}`}}
+          {{- end }}` }}
     spec:
       # Needed to allow the vault agent to run in the pod
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
