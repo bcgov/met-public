@@ -28,6 +28,7 @@ from met_api.constants.engagement_status import SubmissionStatus
 from met_api.constants.timeline_event_status import TimelineEventStatus
 from met_api.constants.feedback import CommentType, FeedbackSourceType, FeedbackStatusType, RatingType
 from met_api.constants.widget import WidgetType
+from met_api.models import widget_listening
 from met_api.utils.enums import LoginSource, UserStatus
 
 
@@ -507,6 +508,13 @@ class TestWidgetInfo(dict, Enum):
     }
     widget_image = {
         'widget_type_id': WidgetType.Image.value,
+        'created_by': '123',
+        'updated_by': '123',
+        'created_date': datetime.now().strftime('%Y-%m-%d'),
+        'updated_date': datetime.now().strftime('%Y-%m-%d'),
+    }
+    widget_listening = {
+        'widget_type_id': WidgetType.WHO_IS_LISTENING.value,
         'created_by': '123',
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),

@@ -43,7 +43,7 @@ def test_create_listening_widget(client, jwt, session,
     widget = factory_widget_model(TestWidgetInfo.widget_listening)
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
-    listening_widget_info = TestWidgetListening.widget_listening
+    listening_widget_info = TestWidgetListening.listening1
 
     data = {
         **listening_widget_info,
@@ -61,10 +61,10 @@ def test_create_listening_widget(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK.value
     assert rv.json.get('engagement_id') == engagement.id
 
-    with patch.object(WidgetListeningService, 'create_timeline',
+    with patch.object(WidgetListeningService, 'create_listening',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.post(
-            f'/api/widgets/{widget.id}/timelines',
+            f'/api/widgets/{widget.id}/listening_widgets',
             data=json.dumps(data),
             headers=headers,
             content_type=ContentType.JSON.value
@@ -80,7 +80,7 @@ def test_get_timeline(client, jwt, session):  # pylint:disable=unused-argument
 
     headers = factory_auth_header(jwt=jwt, claims=TestJwtClaims.no_role)
 
-    listening_widget_info = TestWidgetListening.widget_listening
+    listening_widget_info = TestWidgetListening.listening1
 
     widget_listening = factory_widget_listening_model({
         'widget_id': widget.id,
@@ -97,7 +97,7 @@ def test_get_timeline(client, jwt, session):  # pylint:disable=unused-argument
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('id') == widget_listening.id
 
-    with patch.object(WidgetListeningService, 'get_listening_widget',
+    with patch.object(WidgetListeningService, 'get_listening',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.get(
             f'/api/widgets/{widget.id}/listening_widgets',
@@ -115,7 +115,7 @@ def test_patch_listening(client, jwt, session,
     TestWidgetInfo.widget_listening['engagement_id'] = engagement.id
     widget = factory_widget_model(TestWidgetInfo.widget_listening)
 
-    listening_widget_info = TestWidgetListening.widget_listening
+    listening_widget_info = TestWidgetListening.listening1
 
     widget_listening = factory_widget_listening_model({
         'widget_id': widget.id,
@@ -143,7 +143,7 @@ def test_patch_listening(client, jwt, session,
     assert rv.status_code == HTTPStatus.OK
     assert rv.json[0].get('description') == listening_edits.get('description')
 
-    with patch.object(WidgetListeningService, 'update_listening_widget',
+    with patch.object(WidgetListeningService, 'update_listening',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
         rv = client.patch(f'/api/widgets/{widget.id}/listening_widgets/{widget_listening.id}',
                           data=json.dumps(listening_edits),
