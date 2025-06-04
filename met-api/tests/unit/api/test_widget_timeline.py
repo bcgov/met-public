@@ -147,7 +147,7 @@ def test_patch_timeline(client, jwt, session,
         'description': timeline_widget_info.get('description'),
     })
 
-    timeline_event = factory_timeline_event_model({
+    factory_timeline_event_model({
         'widget_id': widget.id,
         'engagement_id': engagement.id,
         'timeline_id': widget_timeline.id,
