@@ -48,7 +48,7 @@ make setup
 ```
 
 Manually upgrading the database:
-_This wil also create some default data for the app if it does not exist_
+_This will also create some default data for the app if it does not exist_
 
 ```
 make db
