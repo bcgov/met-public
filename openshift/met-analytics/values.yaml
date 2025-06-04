@@ -42,3 +42,7 @@ resources:
   requests:
     cpu: 180m
     memory: 1Gi
+
+vault:
+  namespace: 'platform-services'
+  authPath: 'k8s-gold'

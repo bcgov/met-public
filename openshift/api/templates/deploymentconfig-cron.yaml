@@ -39,9 +39,9 @@ spec:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
         vault.hashicorp.com/agent-pre-populate-only: 'true'
-        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
-        vault.hashicorp.com/auth-path: auth/k8s-gold
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
         vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
         # Iterate over the secret data and export each key-value pair as an environment variable
         vault.hashicorp.com/agent-inject-template-email: |

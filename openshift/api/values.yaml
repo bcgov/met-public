@@ -39,3 +39,7 @@ image:
   tag: latest
   namespace: e903c2-tools
   repository: 'image-registry.openshift-image-registry.svc:5000/e903c2-tools'
+
+vault:
+  namespace: 'platform-services'
+  authPath: 'k8s-gold'
