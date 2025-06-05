@@ -14,4 +14,4 @@ image:
 
 vault:
   namespace: 'platform-services'
-  authPath: 'k8s-gold'
+  authPath: 'auth/k8s-gold'
