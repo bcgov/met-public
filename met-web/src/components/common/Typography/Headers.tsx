@@ -25,7 +25,7 @@ const fontWeight = (weight?: string | number) => {
 export const Header1 = ({ children, weight, component, ...props }: HeaderProps) => {
     return (
         <Typography
-            component={component || 'h1'}
+            component={component ?? 'h1'}
             variant="h1"
             {...props}
             sx={{
@@ -54,7 +54,7 @@ export const Header2 = ({
     return (
         <Typography
             variant="h2"
-            component={component || 'h2'}
+            component={component ?? 'h2'}
             {...props}
             sx={{
                 lineHeight: '1.5',
@@ -93,7 +93,7 @@ export const Header3 = ({
 } & TypographyProps) => {
     return (
         <Typography
-            component={component || 'h3'}
+            component={component ?? 'h3'}
             variant="h3"
             {...props}
             sx={{
@@ -121,7 +121,7 @@ export const Header4 = ({
 } & TypographyProps) => {
     return (
         <Typography
-            component={component || 'h4'}
+            component={component ?? 'h4'}
             variant="h4"
             {...props}
             sx={{
