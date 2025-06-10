@@ -80,7 +80,7 @@ class EngagementMetadata(Resource):
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
-    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED) # type: ignore
+    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)  # type: ignore
     @_jwt.requires_auth
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""
