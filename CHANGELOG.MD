@@ -1,3 +1,9 @@
+## June 6, 2025
+
+- **Task** Deprecate old components in MET Web [🎟️ DESENG-817](https://citz-gdx.atlassian.net/browse/DESENG-817)
+  - Deprecated old components in MET Web to prepare for the new design system
+  - Most components should now have suitable replacements in the new design system
+
 ## May 22, 2025
 
 - **Bugfix** Fix survey ID access in MET ETL [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
