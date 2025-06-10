@@ -473,9 +473,7 @@ export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
 };
 
 /**
- * @deprecated Use ‹BodyText size="large" thin component="h4"› from common/Typography instead.
- *             If using a lot of h4 elements, consider creating a custom Header4 component
- *             based on the Figma design system.
+ * @deprecated Use ‹Header4› from common/Typography instead
  */
 export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) => {
     return (
