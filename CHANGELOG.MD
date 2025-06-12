@@ -1,3 +1,11 @@
+## Jun 10, 2025
+
+- **Bugfix** Fix routing issue in engagement "old view" [🎟️ DESENG-837](https://citz-gdx.atlassian.net/browse/DESENG-837)
+  - Add correct loaders to the engagement "old view" route
+  - Update implementation of route loaders to use `useLoaderData` instead of `useRouteLoaderData`
+  - Update permission checks on the API side to allow public users to access engagement metadata
+    (accidentally broken in PR #2506 for DESENG-603)
+
 ## June 6, 2025
 
 - **Task** Deprecate old components in MET Web [🎟️ DESENG-817](https://citz-gdx.atlassian.net/browse/DESENG-817)

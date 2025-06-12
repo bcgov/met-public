@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
-import { Palette, colors } from 'styles/Theme';
+import { Palette } from 'styles/Theme';
 import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
     // Define styles
@@ -25,27 +26,6 @@ const VirtualSession = ({ eventItem }: EventProps) => {
     const pStyles = {
         margin: 0,
         color: Palette.gray[100],
-    };
-    const buttonStyles = {
-        color: colors.type.inverted,
-        backgroundColor: Palette.primary.main,
-        borderRadius: '16px !important',
-        lineHeight: '56px',
-        height: 'auto !important',
-        minHeight: '56px',
-        marginTop: '2rem',
-        marginLeft: {
-            xs: 0,
-            md: 'calc(8.5% - 40px)',
-        },
-        paddingLeft: '1.5rem',
-        paddingRight: '1.5rem',
-        flexWrap: 'wrap',
-        '&:hover': {
-            color: colors.type.inverted,
-            backgroundColor: Palette.primary.main,
-            textDecoration: 'none',
-        },
     };
 
     // Define time/date
@@ -78,7 +58,7 @@ const VirtualSession = ({ eventItem }: EventProps) => {
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <Button sx={buttonStyles} href={eventItem.url}>
+                <Button variant="primary" size="large" href={eventItem.url}>
                     {eventItem.url_label}
                 </Button>
             </Grid>

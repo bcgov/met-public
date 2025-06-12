@@ -71,26 +71,16 @@ class EngagementMetadata(Resource):
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
-    @API.doc(security='apikey')
     @API.marshal_list_with(metadata_return_model)
-    @_jwt.requires_auth
     def get(engagement_id):
         """Fetch engagement metadata entries by engagement id."""
-        authorization.check_auth(
-            one_of_roles=(
-                MembershipType.TEAM_MEMBER.name,
-                Role.VIEW_ENGAGEMENT.value
-            ),
-            engagement_id=engagement_id
-        )
         return metadata_service.get_by_engagement(engagement_id)
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
     @API.doc(security='apikey')
     @API.expect(metadata_create_model)
-    # type: ignore
-    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)
+    @API.marshal_with(metadata_return_model, code=HTTPStatus.CREATED)  # type: ignore
     @_jwt.requires_auth
     def post(engagement_id: int):
         """Create a new metadata entry for an engagement."""

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { colors, MetDescription, MetPaper } from 'components/common';
-import { Grid, Skeleton, useTheme } from '@mui/material';
+import { colors, MetDescription } from 'components/common';
+import { Grid, Paper, Skeleton, ThemeProvider, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
 import { useAppDispatch } from 'hooks';
@@ -10,7 +10,7 @@ import { getEvents } from 'services/widgetService/EventService';
 import VirtualSession from './VirtualSession';
 import InPersonEvent from './InPersonEvent';
 import { Header2 } from 'components/common/Typography';
-import { Palette } from 'styles/Theme';
+import { BaseTheme, Palette } from 'styles/Theme';
 
 interface EventsWidgetProps {
     widget: Widget;
@@ -43,30 +43,6 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
         fetchEvents();
     }, [widget]);
 
-    if (isLoading) {
-        return (
-            <MetPaper elevation={1} sx={{ padding: '1em' }}>
-                <Grid container justifyContent="flex-start" spacing={3}>
-                    <Grid item xs={12}>
-                        <Header2>
-                            <Skeleton variant="rectangular" />
-                        </Header2>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="10em" />
-                    </Grid>
-                </Grid>
-            </MetPaper>
-        );
-    }
-
-    if (events.length === 0) {
-        return null;
-    }
-
     // Define styles
     const metPaperStyles = {
         padding: '2em',
@@ -89,6 +65,33 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
         fontSize: '16px',
     };
 
+    if (isLoading) {
+        return (
+            <Grid item container justifyContent="flex-start" flexDirection={'column'} xs={12} paddingBottom={0}>
+                <Header2 sx={eventHeaderStyles} style={{ marginBottom: '1rem' }}>
+                    <Skeleton variant="rectangular">
+                        <span style={{ width: '50%' }}>Loading Events...</span>
+                    </Skeleton>
+                </Header2>
+                <Paper elevation={1} sx={metPaperStyles}>
+                    <Grid container justifyContent="flex-start" spacing={3}>
+                        <Grid item xs={12}></Grid>
+                        <Grid item xs={12}>
+                            <Skeleton variant="rectangular" height="10em" />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Skeleton variant="rectangular" height="10em" />
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </Grid>
+        );
+    }
+
+    if (events.length === 0) {
+        return null;
+    }
+
     return (
         <Grid item container justifyContent="flex-start" flexDirection={'column'} xs={12} paddingBottom={0}>
             {events.map((event: Event) => {
@@ -97,30 +100,32 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                     <>
                         <Header2 style={eventHeaderStyles}>{eventItem.event_name}</Header2>
                         <MetDescription style={eventDescriptionStyles}>{eventItem.description}</MetDescription>
-                        <MetPaper elevation={1} sx={metPaperStyles}>
-                            <Grid
-                                key={event.id}
-                                container
-                                columnSpacing={1}
-                                rowSpacing={1}
-                                margin={0}
-                                xs={12}
-                                lineHeight="2.25rem"
-                            >
-                                <Switch>
-                                    <Case condition={event.type === EVENT_TYPE.VIRTUAL}>
-                                        <VirtualSession eventItem={eventItem} />
-                                    </Case>
-                                    <Case
-                                        condition={
-                                            event.type === EVENT_TYPE.OPENHOUSE || event.type === EVENT_TYPE.MEETUP
-                                        }
-                                    >
-                                        <InPersonEvent eventItem={eventItem} />
-                                    </Case>
-                                </Switch>
-                            </Grid>
-                        </MetPaper>
+                        <Paper elevation={1} sx={metPaperStyles}>
+                            <ThemeProvider theme={BaseTheme}>
+                                <Grid
+                                    key={event.id}
+                                    container
+                                    columnSpacing={1}
+                                    rowSpacing={1}
+                                    margin={0}
+                                    xs={12}
+                                    lineHeight="2.25rem"
+                                >
+                                    <Switch>
+                                        <Case condition={event.type === EVENT_TYPE.VIRTUAL}>
+                                            <VirtualSession eventItem={eventItem} />
+                                        </Case>
+                                        <Case
+                                            condition={
+                                                event.type === EVENT_TYPE.OPENHOUSE || event.type === EVENT_TYPE.MEETUP
+                                            }
+                                        >
+                                            <InPersonEvent eventItem={eventItem} />
+                                        </Case>
+                                    </Switch>
+                                </Grid>
+                            </ThemeProvider>
+                        </Paper>
                     </>
                 );
             })}
