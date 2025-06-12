@@ -195,7 +195,9 @@ const StyledPaper = styled(MuiPaper)(({ theme }) => ({
     border: '1px solid',
     borderColor: theme.palette.mode === 'dark' ? colors.surface.gray[100] : colors.surface.gray[60],
     borderRadius: '5px',
-    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, ' +
+               'rgb(0 0 0 / 6%) 0px 1px 1px 0px, ' +
+               'rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
 
 /**
