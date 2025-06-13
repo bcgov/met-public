@@ -1,6 +1,14 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
 
+type HeaderWeight = 'bold' | 'regular' | 'thin';
+
+type HeaderProps = {
+    children: React.ReactNode;
+    weight?: HeaderWeight;
+    component?: React.ElementType;
+} & TypographyProps;
+
 const fontWeight = (weight?: string | number) => {
     switch (weight) {
         case 'bold':
@@ -14,19 +22,10 @@ const fontWeight = (weight?: string | number) => {
     }
 };
 
-export const Header1 = ({
-    children,
-    weight,
-    component,
-    ...props
-}: {
-    children: React.ReactNode;
-    weight?: 'bold' | 'regular' | 'thin';
-    component?: React.ElementType;
-} & TypographyProps) => {
+export const Header1 = ({ children, weight, component, ...props }: HeaderProps) => {
     return (
         <Typography
-            component={component || 'h1'}
+            component={component ?? 'h1'}
             variant="h1"
             {...props}
             sx={{
@@ -49,16 +48,13 @@ export const Header2 = ({
     weight,
     component,
     ...props
-}: {
-    children: React.ReactNode;
+}: HeaderProps & {
     decorated?: boolean;
-    weight?: 'bold' | 'regular' | 'thin';
-    component?: React.ElementType;
-} & TypographyProps) => {
+}) => {
     return (
         <Typography
             variant="h2"
-            component={component || 'h2'}
+            component={component ?? 'h2'}
             {...props}
             sx={{
                 lineHeight: '1.5',
@@ -92,12 +88,12 @@ export const Header3 = ({
     ...props
 }: {
     children: React.ReactNode;
-    weight?: 'bold' | 'regular' | 'thin';
+    weight?: HeaderWeight;
     component?: React.ElementType;
 } & TypographyProps) => {
     return (
         <Typography
-            component={component || 'h3'}
+            component={component ?? 'h3'}
             variant="h3"
             {...props}
             sx={{
@@ -113,10 +109,39 @@ export const Header3 = ({
     );
 };
 
+export const Header4 = ({
+    children,
+    weight = 'bold',
+    component,
+    ...props
+}: {
+    children: React.ReactNode;
+    weight?: HeaderWeight;
+    component?: React.ElementType;
+} & TypographyProps) => {
+    return (
+        <Typography
+            component={component ?? 'h4'}
+            variant="h4"
+            {...props}
+            sx={{
+                lineHeight: '1.5',
+                fontSize: '1.125rem',
+                fontStyle: 'normal',
+                fontWeight: fontWeight(weight),
+                ...props.sx,
+            }}
+        >
+            {children}
+        </Typography>
+    );
+};
+
 const Headers = {
     Header1,
     Header2,
     Header3,
+    Header4,
 };
 
 export default Headers;

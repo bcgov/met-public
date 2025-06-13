@@ -7,7 +7,6 @@ import {
     Typography,
     Stack,
     IconButton,
-    Toolbar,
     Box,
     CircularProgressProps,
     ToggleButton,
@@ -44,6 +43,9 @@ export const globalFocusVisible = {
     },
 };
 
+/**
+ * @deprecated Use ‹Tooltip› from Material UI instead
+ */
 export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
@@ -56,10 +58,9 @@ export const MetTooltip = styled(({ className, ...props }: TooltipProps) => (
     },
 }));
 
-export const MobileToolbar = styled(Toolbar)(() => ({
-    marginBottom: '40px',
-}));
-
+/**
+ * @deprecated Use ‹Button variant="primary"› from common/Input instead
+ */
 export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     backgroundColor: colors.button.default.shade,
     color: '#fff',
@@ -72,6 +73,9 @@ export const StyledPrimaryButton = styled(LoadingButton)(() => ({
     },
 }));
 
+/**
+ * @deprecated Use ‹Button variant="secondary"› from common/Input instead
+ */
 const StyledSecondaryButton = styled(LoadingButton)(() => ({
     backgroundColor: 'transparent',
     color: Palette.primary.main,
@@ -99,49 +103,16 @@ const StyledWidgetButton = styled(MuiButton)(() => ({
         border: `2px solid ${'#f2f2f2'}`,
     },
 }));
-
-const StyledSocialIconButton = styled(IconButton)(() => ({
-    border: '1px solid #494949',
-    color: '#494949',
-    borderRadius: '100%',
-}));
-
-const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
-    backgroundColor: 'transparent',
-    color: Palette.primary.main,
-    lineHeight: '1.1rem',
-    border: `2px solid ${Palette.primary.main}`,
-    '&.Mui-selected': {
-        backgroundColor: Palette.primary.main,
-        color: '#fff',
-        '&:hover': {
-            backgroundColor: Palette.primary.main,
-        },
-    },
-    '&:hover': {
-        opacity: '0.8',
-        textDecoration: 'underline',
-        backgroundColor: Palette.primary.main,
-        color: '#FFFFFF',
-        '&.Mui-selected:hover': {
-            textDecoration: 'underline',
-        },
-    },
-}));
-
-export const SocialIconButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
-    <StyledSocialIconButton color="info" {...rest}>
-        {children}
-    </StyledSocialIconButton>
-);
-
+/**
+ * @deprecated Use ‹Button variant="secondary" size="small"› from common/Input instead
+ */
 export const WidgetButton = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => (
     <StyledWidgetButton {...rest} variant="outlined">
         {children}
     </StyledWidgetButton>
 );
 /**
- * @deprecated Use ‹SecondaryButton› from common/Input instead
+ * @deprecated Use ‹Button variant="secondary"› from common/Input instead
  */
 export const SecondaryButtonOld = ({
     children,
@@ -188,6 +159,32 @@ interface MetToggleButtonProps {
     [prop: string]: unknown;
 }
 
+const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+    backgroundColor: 'transparent',
+    color: Palette.primary.main,
+    lineHeight: '1.1rem',
+    border: `2px solid ${Palette.primary.main}`,
+    '&.Mui-selected': {
+        backgroundColor: Palette.primary.main,
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: Palette.primary.main,
+        },
+    },
+    '&:hover': {
+        opacity: '0.8',
+        textDecoration: 'underline',
+        backgroundColor: Palette.primary.main,
+        color: '#FFFFFF',
+        '&.Mui-selected:hover': {
+            textDecoration: 'underline',
+        },
+    },
+}));
+
+/**
+ * @deprecated Use ‹Button variant="primary"› from common/Input instead
+ */
 export const MetToggleButton = ({ value, children, ...rest }: MetToggleButtonProps) => (
     <StyledToggleButton {...rest} value={value}>
         {children}
@@ -198,9 +195,14 @@ const StyledPaper = styled(MuiPaper)(({ theme }) => ({
     border: '1px solid',
     borderColor: theme.palette.mode === 'dark' ? colors.surface.gray[100] : colors.surface.gray[60],
     borderRadius: '5px',
-    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, rgb(0 0 0 / 6%) 0px 1px 1px 0px, rgb(0 0 0 / 6%) 0px 1px 3px 0px',
+    boxShadow: 'rgb(0 0 0 / 6%) 0px 2px 2px -1px, ' +
+               'rgb(0 0 0 / 6%) 0px 1px 1px 0px, ' +
+               'rgb(0 0 0 / 6%) 0px 1px 3px 0px',
 }));
 
+/**
+ * @deprecated Use ‹Paper elevation={0}› from Material UI instead
+ */
 export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [prop: string]: unknown }) => {
     return (
         <StyledPaper elevation={0} {...rest}>
@@ -209,6 +211,9 @@ export const MetPaper = ({ children, ...rest }: { children: React.ReactNode; [pr
     );
 };
 
+/**
+ * @deprecated Use ‹Paper elevation={3}› from Material UI instead
+ */
 export const MetWidgetPaper = styled(MuiPaper)(() => ({
     backgroundColor: '#F2F2F2',
     padding: '1em',
@@ -281,6 +286,9 @@ export const MetPageGridContainer = styled(Grid)(() => ({
     padding: '3em',
 }));
 
+/**
+ * @deprecated Use ‹BodyText bold› from common/Typography instead
+ */
 export const MetLabel = styled(Typography)(() => ({
     fontSize: '16px',
     fontWeight: 'bold',
@@ -288,19 +296,25 @@ export const MetLabel = styled(Typography)(() => ({
 }));
 
 /**
- * @deprecated Use ‹MetBody› from common/Typography instead
+ * @deprecated Use ‹BodyText› from common/Typography instead
  */
 export const MetParagraphOld = styled(Typography)(() => ({
     fontSize: '16px',
     fontFamily: MET_Header_Font_Family,
 }));
 
+/**
+ * @deprecated Use ‹MetIconText› from common/Typography instead
+ */
 export const MetIconText = styled(Typography)(() => ({
     fontSize: '11px',
     fontFamily: MET_Header_Font_Family,
     lineHeight: '1.2',
 }));
 
+/**
+ * @deprecated Use ‹BodyText› from common/Typography instead
+ */
 export const MetDescription = styled(Typography)(() => ({
     fontSize: '13px',
     fontFamily: MET_Header_Font_Family,
@@ -324,6 +338,9 @@ export const SubHeaderOld = styled(Typography)(() => ({
     fontFamily: MET_Header_Font_Family,
 }));
 
+/**
+ * @deprecated Use ‹BodyText small› from common/Typography instead
+ */
 export const ListItem = styled(Typography)(() => ({
     fontSize: '14px',
     fontFamily: MET_Header_Font_Family,
@@ -436,6 +453,10 @@ export const MetHeader2Old = ({ bold, children, sx, ...rest }: HeaderProps) => {
         </Typography>
     );
 };
+
+/**
+ * @deprecated Use ‹Header3› from common/Typography instead
+ */
 export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
@@ -452,6 +473,10 @@ export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
         </Typography>
     );
 };
+
+/**
+ * @deprecated Use ‹Header4› from common/Typography instead
+ */
 export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
@@ -484,20 +509,6 @@ export const MetBodyOld = ({ bold, children, sx, ...rest }: HeaderProps) => {
             }}
             {...rest}
         >
-            {children}
-        </Typography>
-    );
-};
-
-export const ModalSubtitle = ({
-    children,
-    ...rest
-}: {
-    children: JSX.Element[] | JSX.Element | string;
-    [prop: string]: unknown;
-}) => {
-    return (
-        <Typography variant={'subtitle1'} {...rest}>
             {children}
         </Typography>
     );
