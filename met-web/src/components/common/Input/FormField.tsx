@@ -14,6 +14,32 @@ export type FormFieldProps = {
     children: React.ReactNode;
 } & GridProps;
 
+/**
+ * Displays a form field with a title, instructions, and error messages.
+ * It is designed to be used as a wrapper for form inputs, providing a consistent layout and styling.
+ * The field can be disabled, and it supports displaying required or optional indicators.
+ * The error message can be positioned at the top or bottom of the field.
+ * @param {FormFieldProps} props - The properties for the form field.
+ * @param {string} [props.title] - The title of the form field.
+ * @param {boolean} [props.disabled=false] - If true, the field will be disabled.
+ * @param {string} [props.instructions] - Instructions or additional information for the field.
+ * @param {boolean} [props.required=false] - If true, indicates that the field is required.
+ * @param {boolean} [props.optional=false] - If true, indicates that the field is optional.
+ * @param {string} [props.error] - An error message to display for the field.
+ * @param {'top' | 'bottom'} [props.errorPosition='top'] - The position of the error message, either 'top' or 'bottom'.
+ * @param {React.ReactNode} props.children - The content of the form field, typically an input component.
+ * @param {GridProps} [props.gridProps] - Additional properties for the Grid component.
+ * @returns {JSX.Element} A styled form field component.
+ * @example
+ * <FormField
+ *     title="Username"
+ *     instructions="Please enter your username."
+ *     required
+ *     error="Username is required."
+ * >
+ *     <TextInput name="username" />
+ * </FormField>
+ */
 export const FormField = ({
     title,
     disabled,

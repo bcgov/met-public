@@ -10,6 +10,26 @@ interface FocusableNavLinkProps extends MuiLinkProps {
     size?: 'small' | 'regular' | 'large';
 }
 
+/**
+ * A link component that can be used with react-router's NavLink or as a regular anchor tag.
+ * It supports different sizes and colors, and can handle click events.
+ * @param {FocusableNavLinkProps} props - The properties for the link component.
+ * @param {React.ReactNode} props.children - The content of the link.
+ * @param {string} [props.size='regular'] - The size of the link; can be 'small', 'regular', or 'large'.
+ * @param {string} props.to - An **internal route** to open when clicked. If this is specified, element renders with react-router's NavLink.
+ * @param {string} props.href - An **external URL** to open when clicked. Renders as a regular anchor tag.
+ * @param {React.MouseEventHandler<HTMLAnchorElement>} [props.onClick] - Optional click handler for the link.
+ * @param {string} [props.color] - The color of the link text. If not specified, it defaults to the theme's link color.
+ * @returns {JSX.Element} A styled link component that can be used in a React application.
+ * @example
+ * <Link to="/home" size="large" color="primary" onClick={() => console.log('Link clicked')}>
+ *     Home
+ * </Link>
+ * <Link href="https://example.com" size="small" color="secondary">
+ *     External Link
+ * </Link>
+ * @see {@link https://mui.com/material-ui/api/link/} for more details on the MuiLink component.
+ */
 export const Link: React.FC<FocusableNavLinkProps> = ({
     children,
     size = 'regular',

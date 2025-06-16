@@ -22,6 +22,15 @@ const fontWeight = (weight?: string | number) => {
     }
 };
 
+/**
+ * Header1 component for rendering a primary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param children - The content of the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h1'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element.
+ */
 export const Header1 = ({ children, weight, component, ...props }: HeaderProps) => {
     return (
         <Typography
@@ -42,6 +51,16 @@ export const Header1 = ({ children, weight, component, ...props }: HeaderProps) 
     );
 };
 
+/**
+ * Header2 component for rendering a secondary header.
+ * This component uses the MUI Typography component to render a header with optional decoration and customizable styles.
+ * @param children - The content of the header.
+ * @param decorated - Whether to add a decorative line above the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h2'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element with optional decoration.
+ */
 export const Header2 = ({
     children,
     decorated = false,
@@ -81,6 +100,15 @@ export const Header2 = ({
     );
 };
 
+/**
+ * Header3 component for rendering a tertiary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param children - The content of the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h3'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element.
+ */
 export const Header3 = ({
     children,
     weight,
@@ -109,6 +137,15 @@ export const Header3 = ({
     );
 };
 
+/**
+ * Header4 component for rendering a quaternary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param {Object} props - Additional props to pass to the Typography component.
+ * @param {React.ReactNode} props.children - The content of the header.
+ * @param {string} props.weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param {React.ElementType} props.component - The HTML element to use for the header, defaults to 'h4'.
+ * @returns JSX.Element: A styled header element.
+ */
 export const Header4 = ({
     children,
     weight = 'bold',

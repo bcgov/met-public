@@ -8,7 +8,7 @@ import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SxProps, Theme } from '@mui/system';
 
-type TextInputProps = {
+export type TextInputProps = {
     value?: string;
     onChange?: (value: string, name?: string) => void;
     placeholder?: string;
@@ -45,6 +45,17 @@ export const textInputStyles = {
     },
 };
 
+/**
+ * A customizable text input component that allows users to enter text.
+ * It supports features like placeholder text, disabled state, and custom styles.
+ * @param {TextInputProps} props - The properties for the text input component.
+ * @param {string} [props.value] - The current value of the input field.
+ * @param {function} [props.onChange] - Callback function that is called when the input value changes.
+ * @param {string} [props.placeholder] - Placeholder text displayed when the input is empty.
+ * @param {boolean} [props.disabled] - If true, the input field is disabled and cannot be interacted with.
+ * @param {SxProps<Theme>} [props.sx] - Custom styles for the input component.
+ * @param {boolean} [props.error] - If true, the input field will display an error state.
+ */
 export const TextInput: React.FC<TextInputProps> = ({
     value,
     onChange,
@@ -128,6 +139,39 @@ export type TextFieldProps = {
 } & Omit<FormFieldProps, 'children' | 'onChange'> &
     Omit<TextInputProps, 'fullWidth' | 'error' | 'onChange'>;
 
+/**
+ * A text field component that combines a label, instructions, and an input field.
+ * It supports features like error messages, required fields, and clearable input.
+ * @param {TextFieldProps} props - The properties for the text field.
+ * @param {string} [props.title] - The title of the text field.
+ * @param {string} [props.instructions] - Instructions or additional information for the text field.
+ * @param {string} [props.error] - An error message to display for the text field.
+ * @param {'top' | 'bottom'} [props.errorPosition='top'] - The position of the error message, either 'top' or 'bottom'.
+ * @param {string} [props.name] - The name of the input field, used for form submission.
+ * @param {boolean} [props.required=false] - If true, indicates that the field is required.
+ * @param {boolean} [props.optional=false] - If true, indicates that the field is optional.
+ * @param {boolean} [props.clearable=false] - If true, adds a button to clear the input field.
+ * @param {boolean} [props.counter=false] - If true, displays a character count below the input field.
+ * @param {number} [props.maxLength] - The maximum number of characters allowed in the input field.
+ * @param {function} [props.onChange] - Callback function that is called when the input value changes.
+ * @param {boolean} [props.disabled=false] - If true, the input field is disabled and cannot be interacted with.
+ * @param {Partial<FormFieldProps>} [props.formFieldProps] - Additional properties for the form field.
+ * @returns {JSX.Element} A styled text field component with a label, instructions, and an input field.
+ * @example
+ * <TextField
+ *     title="Username"
+ *     instructions="Please enter your username."
+ *     error="Username is required."
+ *     name="username"
+ *     required
+ *     clearable
+ *     onChange={(value) => console.log(value)}
+ *     disabled={false}
+ *     placeholder="Enter your username"
+ *     maxLength={20}
+ *     counter
+ * />
+ */
 export const TextField = ({
     title,
     instructions,
@@ -195,7 +239,6 @@ export const TextAreaField = ({ ...textFieldProps }: Omit<TextFieldProps, 'multi
     return <TextField sx={{ height: 'unset' }} multiline minRows={3} maxRows={6} {...textFieldProps} />;
 };
 
-// Define a Custom MUI Textfield
 interface CustomTextFieldProps extends Omit<MuiTextFieldProps, 'variant'> {
     customLabel?: string;
     sx?: SxProps<Theme>;

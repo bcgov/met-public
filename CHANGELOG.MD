@@ -1,3 +1,10 @@
+## Jun 16, 2025
+
+- **Task** Update documentation for common components [🎟️ DESENG-816](https://citz-gdx.atlassian.net/browse/DESENG-816)
+  - Added docblocks to the majority of common components
+  - Updated CONTRIBUTING.md to link to each component's documentation, and provide a brief overview of the component and its usage
+  - Updated PR template to remind developers to update documentation when adding new components or modifying existing ones
+
 ## Jun 10, 2025
 
 - **Bugfix** Fix routing issue in engagement "old view" [🎟️ DESENG-837](https://citz-gdx.atlassian.net/browse/DESENG-837)

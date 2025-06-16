@@ -5,6 +5,39 @@ import { StatusIcon } from '../Communication/StatusIcon';
 import { colors } from 'styles/Theme';
 import { faClose } from '@fortawesome/pro-regular-svg-icons';
 
+/**
+ * Displays an inline system message with an icon, text, and optional dismiss button.
+ * The message can be styled based on the status (success, warning, danger, info).
+ * Differs from a modal by being inline in the layout, allowing for more helpful placement in the UI.
+ * @param {Object} props - The properties for the SystemMessage component.
+ * @param {string} props.status - The status of the message, which determines its styling (success, warning, danger, info).
+ * @param {Function} [props.onDismiss] - Optional function to call when the dismiss button is clicked.
+ * @param {string} [props.color] - Optional color for the icon.
+ * @param {boolean} [props.coloredBackground] - If true, the background will be colored based on the status.
+ * @param {string} [props.icon] - Optional icon to display instead of the default status icon.
+ * @param {React.ReactNode} props.children - The content of the message.
+ * @param {GridProps} [props.sx] - Additional styles to apply to the grid container.
+ * @returns {JSX.Element} A styled grid component representing the system message.
+ * @example
+ * <SystemMessage
+ *     status="success"
+ *     onDismiss={() => console.log('Message dismissed')}
+ *     color="green"
+ *     coloredBackground={true}
+ *     icon="check-circle"
+ * >
+ *     Your operation was successful!
+ * </SystemMessage>
+ * @example
+ * <SystemMessage
+ *     status="warning"
+ *     color="orange"
+ *     coloredBackground={true}
+ *    icon="exclamation-triangle"
+ * >
+ *    Please be cautious with this action.
+ * </SystemMessage>
+ */
 export const SystemMessage = ({
     status,
     onDismiss,
