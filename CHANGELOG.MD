@@ -1,3 +1,15 @@
+## Jun 16, 2025
+
+- **Task** DeploymentConfig -> Deployment conversion for existing DeploymentConfig yamls.
+  [🎟️ DESENG-802](htps://citz-gdx.atlassian.net/browse/DESENG-802)
+  [🎟️ DESENG-803](https://citz-gdx.atlassian.net/browse/DESENG-803)
+  [🎟️ DESENG-804](https://citz-gdx.atlassian.net/browse/DESENG-804)
+  [🎟️ DESENG-805](https://citz-gdx.atlassian.net/browse/DESENG-805)
+  [🎟️ DESENG-806](https://citz-gdx.atlassian.net/browse/DESENG-806)
+- Converted all DeploymentConfig YAML files to Deployment YAML files.
+- If a DeploymentConfig was deployed by a Helm chart in the repository, it was converted to a Deployment and the Helm chart was updated accordingly.
+- TODO: If a DeploymentConfig was not created by a helm chart (DESENG-807 through DESENG-810), it will need to first be added to the repository as a Deployment YAML file in a new helm chart. This will be done in a future PR for those tickets.
+
 ## Jun 10, 2025
 
 - **Bugfix** Fix routing issue in engagement "old view" [🎟️ DESENG-837](https://citz-gdx.atlassian.net/browse/DESENG-837)

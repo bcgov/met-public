@@ -7,6 +7,7 @@ metadata:
     app-group: met-app
     environment: {{ .Values.environment }}
 data:
+    ENV: "{{ .Values.environment }}"
     # This data gets turned into config.js by the nginx config
     # Common
     REACT_APP_PUBLIC_URL: "{{ .Values.site.url }}"

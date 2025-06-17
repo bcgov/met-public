@@ -4,6 +4,6 @@ metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: notify-api
 data:
   EMAIL_PROVIDER: {{ .Values.email.provider }}

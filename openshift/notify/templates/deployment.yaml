@@ -1,24 +1,19 @@
 # Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: notify-api
 spec:
   replicas: {{ .Values.app.replicas }}
   revisionHistoryLimit: 10
   selector:
-    app: {{ .Values.app.name }}
+    matchLabels:
+      app: {{ .Values.app.name }}
   strategy:
-    type: Rolling
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -26,6 +21,18 @@ spec:
         environment: {{ .Values.environment }}
         role: api
       annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+              "automatic": true,
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.app.name }}:{{ .Values.image.tag }}",
+                "namespace": "{{ .Values.image.namespace }}"
+              },
+              "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}')].image"
+            }
+          ]
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
         vault.hashicorp.com/agent-pre-populate-only: 'true'
@@ -33,7 +40,6 @@ spec:
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
         vault.hashicorp.com/agent-inject-secret-email: {{ .Values.vault.engine }}{{ .Values.vault.path }}/email
-        # Iterate over the secret data and export each key-value pair as an environment variable
         vault.hashicorp.com/agent-inject-template-email: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/email"{{ ` }}
           {{- range $k, $v := .Data.data }}
@@ -41,8 +47,6 @@ spec:
           {{- end }}
           {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
-        # Here we use some overrides because the client ID and secret should be
-        # from met-api since it is the client here, and not met-web
         vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
@@ -63,7 +67,6 @@ spec:
           {{- end }}
           {{- end }}` }}
     spec:
-      # Needed to allow the vault agent to run in the pod
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       containers:
       - name: {{ .Values.app.name }}

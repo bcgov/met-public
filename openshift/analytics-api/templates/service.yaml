@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: met-analytics
   name: {{ .Values.app.name }}
 spec:
   ipFamilyPolicy: SingleStack
