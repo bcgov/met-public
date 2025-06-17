@@ -2,7 +2,6 @@
     background-color: white;
     padding: 0.5em 1em;
     border-radius: 8px;
-    /* border: 1px solid #605E5C; */
 }
 
 .rdw-editor-wrapper:has(.public-DraftEditor-content[contenteditable="false"]){
