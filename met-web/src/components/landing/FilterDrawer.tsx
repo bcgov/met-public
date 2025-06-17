@@ -1,12 +1,22 @@
 import React, { useContext, useMemo } from 'react';
 import { LandingContext } from './LandingContext';
-import { SwipeableDrawer, IconButton, Typography, Stack, Grid, useTheme, useMediaQuery } from '@mui/material';
+import {
+    SwipeableDrawer,
+    IconButton,
+    Typography,
+    Stack,
+    Grid,
+    useTheme,
+    useMediaQuery,
+    ThemeProvider,
+} from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { MetadataFilterChip } from './MetadataFilterChip';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input';
+import { DarkTheme } from 'styles/Theme';
 
 const FilterDrawer = () => {
     const { searchFilters, setSearchFilters, setPage, metadataFilters, clearFilters, drawerOpened, setDrawerOpened } =
@@ -70,119 +80,117 @@ const FilterDrawer = () => {
             onClose={() => setDrawerOpened(false)}
             onOpen={() => setDrawerOpened(true)}
         >
-            <IconButton
-                onClick={() => setDrawerOpened(false)}
-                title={translate('landing.filters.aria.closeDrawer')}
-                sx={{
-                    color: 'white',
-                    position: 'absolute',
-                    top: '1em',
-                    right: '1em',
-                    '&:focus-visible': {
-                        outline: 'white 2px dashed',
-                        outlineOffset: '2px',
-                    },
-                }}
-            >
-                <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
-            </IconButton>
-            <Typography mt={3} mb={6} variant="h5">
-                {translate('landing.filters.drawer.title')}
-            </Typography>
-
-            <Typography mt={3} variant="subtitle1">
-                {translate('landing.filters.drawer.statusFilter')}
-            </Typography>
-            <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
-                {[
-                    -1,
-                    EngagementDisplayStatus.Open,
-                    EngagementDisplayStatus.Upcoming,
-                    EngagementDisplayStatus.Closed,
-                ].map((status) => (
-                    <MetadataFilterChip
-                        key={status}
-                        name={(EngagementDisplayStatus[status] || 'All') + ' Engagements'}
-                        selected={selectedValue == status}
-                        onClick={() => {
-                            setSearchFilters({
-                                ...searchFilters,
-                                status: status == -1 ? [] : [status],
-                            });
-                            setPage(1);
-                        }}
-                    />
-                ))}
-            </Stack>
-
-            {metadataFilters.map((metadataFilter) => (
-                <>
-                    <Typography mt={3} variant="subtitle1">
-                        {translate('landing.filters.drawer.filterHeader').replace(
-                            '{0}',
-                            metadataFilter.name ?? 'metadata',
-                        )}
-                    </Typography>
-                    <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
-                        {metadataFilter.values.map((value) => (
-                            <MetadataFilterChip
-                                key={`${metadataFilter.taxon_id}-${value}`}
-                                name={value}
-                                selected={searchFilters.metadata.some(
-                                    (filter) =>
-                                        filter.taxon_id === metadataFilter.taxon_id && filter.values.includes(value),
-                                )}
-                                onClick={() => handleMetadataFilterClick(metadataFilter.taxon_id, value)}
-                            />
-                        ))}
-                    </Stack>
-                </>
-            ))}
-
-            <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-end">
-                <Button
-                    variant="primary"
-                    aria-label={translate('landing.filters.aria.applyFilters')}
-                    sx={{
-                        mt: 4,
-                        mr: 2,
-                        width: '200px',
-                        backgroundColor: 'white',
-                        color: theme.palette.primary.main,
-                        '&:hover, &:focus': {
-                            backgroundColor: '#EDEBE9',
-                        },
-                        '&:focus-visible': {
-                            outline: 'white 2px dashed',
-                            outlineOffset: '2px',
-                        },
-                    }}
+            <ThemeProvider theme={DarkTheme}>
+                <IconButton
                     onClick={() => setDrawerOpened(false)}
-                >
-                    {translate('landing.filters.drawer.apply')}
-                </Button>
-
-                <Button
-                    variant="tertiary"
+                    title={translate('landing.filters.aria.closeDrawer')}
                     sx={{
-                        mt: 2,
-                        width: '200px',
                         color: 'white',
-                        '&:hover,&:focus': {
-                            backgroundColor: '#1E5189',
-                        },
+                        position: 'absolute',
+                        top: '1em',
+                        right: '1em',
                         '&:focus-visible': {
                             outline: 'white 2px dashed',
                             outlineOffset: '2px',
                         },
                     }}
-                    onClick={clearFilters}
-                    icon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
-                    iconPosition="right"
                 >
-                    {translate('landing.filters.clear')}
-                </Button>
-            </Grid>
+                    <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />
+                </IconButton>
+                <Typography mt={3} mb={6} variant="h5">
+                    {translate('landing.filters.drawer.title')}
+                </Typography>
+
+                <Typography mt={3} variant="subtitle1">
+                    {translate('landing.filters.drawer.statusFilter')}
+                </Typography>
+                <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
+                    {[
+                        -1,
+                        EngagementDisplayStatus.Open,
+                        EngagementDisplayStatus.Upcoming,
+                        EngagementDisplayStatus.Closed,
+                    ].map((status) => (
+                        <MetadataFilterChip
+                            key={status}
+                            name={(EngagementDisplayStatus[status] || 'All') + ' Engagements'}
+                            selected={selectedValue == status}
+                            onClick={() => {
+                                setSearchFilters({
+                                    ...searchFilters,
+                                    status: status == -1 ? [] : [status],
+                                });
+                                setPage(1);
+                            }}
+                        />
+                    ))}
+                </Stack>
+
+                {metadataFilters.map((metadataFilter) => (
+                    <>
+                        <Typography mt={3} variant="subtitle1">
+                            {translate('landing.filters.drawer.filterHeader').replace(
+                                '{0}',
+                                metadataFilter.name ?? 'metadata',
+                            )}
+                        </Typography>
+                        <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
+                            {metadataFilter.values.map((value) => (
+                                <MetadataFilterChip
+                                    key={`${metadataFilter.taxon_id}-${value}`}
+                                    name={value}
+                                    selected={searchFilters.metadata.some(
+                                        (filter) =>
+                                            filter.taxon_id === metadataFilter.taxon_id &&
+                                            filter.values.includes(value),
+                                    )}
+                                    onClick={() => handleMetadataFilterClick(metadataFilter.taxon_id, value)}
+                                />
+                            ))}
+                        </Stack>
+                    </>
+                ))}
+
+                <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-end">
+                    <Button
+                        variant="primary"
+                        aria-label={translate('landing.filters.aria.applyFilters')}
+                        sx={{
+                            mt: 4,
+                            mr: 2,
+                            width: '200px',
+                            '&:focus-visible': {
+                                outline: 'white 2px dashed',
+                                outlineOffset: '2px',
+                            },
+                        }}
+                        onClick={() => setDrawerOpened(false)}
+                    >
+                        {translate('landing.filters.drawer.apply')}
+                    </Button>
+
+                    <Button
+                        variant="tertiary"
+                        sx={{
+                            mt: 2,
+                            width: '200px',
+                            color: 'white',
+                            '&:hover,&:focus': {
+                                backgroundColor: 'blue.80',
+                            },
+                            '&:focus-visible': {
+                                outline: 'white 2px dashed',
+                                outlineOffset: '2px',
+                            },
+                        }}
+                        onClick={clearFilters}
+                        icon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
+                        iconPosition="right"
+                    >
+                        {translate('landing.filters.clear')}
+                    </Button>
+                </Grid>
+            </ThemeProvider>
         </SwipeableDrawer>
     );
 };

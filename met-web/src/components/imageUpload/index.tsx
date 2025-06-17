@@ -19,6 +19,21 @@ interface UploaderProps {
     cropAspectRatio?: number;
     accept?: Accept;
 }
+/**
+ * ImageUpload component allows users to upload images with drag-and-drop functionality.
+ * It provides a user-friendly interface for selecting images, displaying upload instructions,
+ * and supports image cropping.
+ * @param {Object} props - The properties for the ImageUpload component.
+ * @param {number} [props.margin=2] - Margin around the uploader.
+ * @param {function} props.handleAddFile - Callback function to handle file addition.
+ * @param {string} [props.savedImageUrl=''] - URL of a previously saved image.
+ * @param {string} [props.savedImageName=''] - Name of a previously saved image.
+ * @param {string} [props.helpText='Drag and drop your image here.'] - Instruction text for users.
+ * @param {string} [props.height='10em'] - Height of the uploader component.
+ * @param {number} [props.cropAspectRatio=1] - Aspect ratio for image cropping.
+ * @param {Accept} [props.accept] - Accepted file types for upload.
+ * @returns {JSX.Element} The rendered ImageUpload component.
+ */
 export const ImageUpload = ({
     margin = 2,
     handleAddFile,

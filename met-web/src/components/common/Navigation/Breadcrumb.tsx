@@ -9,6 +9,23 @@ type BreadcrumbProps = {
     link?: string;
 };
 
+/**
+ * A component that displays a breadcrumb trail based on the provided crumbs.
+ * Each crumb can be a link or plain text, and the last crumb is always displayed as plain text.
+ * @param {Object} props - The properties for the breadcrumb trail component.
+ * @param {Object[]} props.crumbs - An array of objects representing the breadcrumb items, each with a name and an optional link.
+ * @param {boolean} [props.smallScreenOnly] - If true, the breadcrumbs will only be displayed on small screens.
+ * @returns A JSX element representing the breadcrumb trail.
+ * @example
+ * <BreadcrumbTrail
+ *     crumbs={[
+ *         { name: 'Home', link: '/' },
+ *         { name: 'Products', link: '/products' },
+ *         { name: 'Electronics' } // Last crumb without a link
+ *     ]}
+ *     smallScreenOnly={true}
+ * />
+ */
 export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenOnly?: boolean }> = ({
     crumbs,
     smallScreenOnly,
@@ -45,7 +62,8 @@ interface UIMatchWithCrumb
 
 /**
  * Automatically generates breadcrumbs based on the `handle.crumb` function of the current route and its parents.
- * @param smallScreenOnly If true, only displays the breadcrumbs on small screens.
+ * @param {Object} props - The properties for the AutoBreadcrumbs component.
+ * @param {boolean} [props.smallScreenOnly] - If true, only displays the breadcrumbs on small screens.
  * @returns A list of breadcrumbs.
  */
 export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ smallScreenOnly }) => {

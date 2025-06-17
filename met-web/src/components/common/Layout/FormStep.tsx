@@ -28,6 +28,30 @@ const circleNumberIcons = [
     faCircle9,
 ];
 
+/**
+ * A component that represents a step in a form, displaying the step number and its status.
+ * Can be used to visually indicate progress in a multi-step form.
+ * Extends a line down the left side that is colored based on the step's completion status.
+ * It includes a title, optional details, and children components for additional content.
+ * The step can be marked as completing or completed, and it can be grouped with other steps.
+ * @param {Object} props - The properties for the form step component.
+ * @param {number} props.step - The step number to display.
+ * @param {boolean} [props.completing=false] - Indicates if the step is currently being completed. Highlights the step with a different color.
+ * @param {boolean} [props.completed=false] - Indicates if the step has been completed. Replaces the step number with a check icon.
+ * @param {string} [props.question] - The main question or title for the step.
+ * @param {string} [props.details] - Additional details or instructions for the step.
+ * @param {string} [props.labelFor] - The ID of the input element associated with this step, for accessibility.
+ * @param {boolean} [props.isGroup=false] - If false, the step text acts as a label for an input element.
+ * If true, the step text acts as a legend for a fieldset element, grouping related form elements.
+ * @param {React.ReactNode} [children] - Additional content to render within the step.
+ * @returns {JSX.Element} A styled grid component representing the form step.
+ * @example
+ * <FormStep
+ *     step={1}
+ *     completing={true}
+ *     completed={false}
+ *   question="What is your name?"
+ */
 export const FormStep = ({
     step,
     completing,
@@ -105,17 +129,32 @@ export const FormStep = ({
                 aria-labelledby={titleId + ' ' + instructionsId}
                 sx={{ border: 'none' }}
             >
-                <Grid item xs={12}>
-                    <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>
-                        <label htmlFor={isGroup ? undefined : labelFor} id={titleId}>
+                {isGroup ? (
+                    <>
+                        <legend id={titleId} style={{ marginBottom: 0, fontSize: '20px', fontWeight: 300, padding: 0 }}>
                             {question}
-                        </label>
-                    </Header2>
-                </Grid>
-                {details && (
+                        </legend>
+                        {details && (
+                            <Grid item sx={{ marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+                                <BodyText size="small">
+                                    <span id={instructionsId}>{details}</span>
+                                </BodyText>
+                            </Grid>
+                        )}
+                    </>
+                ) : (
+                    <Grid item xs={12}>
+                        <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>
+                            <label htmlFor={labelFor} id={titleId}>
+                                {question}
+                            </label>
+                        </Header2>
+                    </Grid>
+                )}
+                {!isGroup && details && (
                     <Grid item sx={{ marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
                         <BodyText size="small">
-                            <label htmlFor={isGroup ? undefined : labelFor} id={instructionsId}>
+                            <label htmlFor={labelFor} id={instructionsId}>
                                 {details}
                             </label>
                         </BodyText>
