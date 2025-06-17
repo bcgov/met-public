@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
-import { RichTextArea as Editor } from '../Input/RichTextArea';
-import { FormControl, FormHelperText } from '@mui/material';
+import { RichTextArea } from '../Input/RichTextArea';
+import { FormControl, Paper } from '@mui/material';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './RichEditorStyles.css';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from './utils';
-import { MetPaper } from '..';
+import { ErrorMessage } from '../Typography';
 
 /**
  * A Rich Text Editor component that uses react-draft-wysiwyg to render a rich text editor.
+ * Its primary purpose is to allow users to create rich text content to display in the {@link RichTextArea} component.
  * It allows for rich text editing with various toolbar options.
  * @param {Object} props - The properties for the RichTextEditor component.
  * @param {Function} props.setRawText - Function to set the raw text content of the editor.
@@ -77,9 +78,16 @@ const RichTextEditor = ({
 
     return (
         <FormControl fullWidth>
-            <MetPaper style={{ borderColor: `${error ? '#d32f2f' : ''}` }}>
+            <Paper
+                sx={{
+                    borderColor: error ? 'error.main' : '#605E5C',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderRadius: '8px',
+                }}
+            >
                 <form>
-                    <Editor
+                    <RichTextArea
                         spellCheck
                         editorState={editorState}
                         onEditorStateChange={handleChange}
@@ -91,8 +99,8 @@ const RichTextEditor = ({
                         toolbar={toolbar}
                     />
                 </form>
-            </MetPaper>
-            <FormHelperText error={error}>{error ? helperText : ''}</FormHelperText>
+            </Paper>
+            <ErrorMessage error={error ? helperText : undefined} />
         </FormControl>
     );
 };

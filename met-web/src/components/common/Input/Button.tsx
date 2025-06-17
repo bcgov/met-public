@@ -248,7 +248,8 @@ const TertiaryButton = ({
 };
 
 /**
- *
+ * The main MET-styled button component. Matches the MET design system styling
+ * and provides a consistent interface for different button variants.
  * @param {ButtonProps} props - Button properties including variant, children, onClick, etc.
  * @param {('primary' | 'secondary' | 'tertiary')} props.variant - The variant of the button, can be 'primary', 'secondary', or 'tertiary'. Default is 'secondary'.
  * @param {React.ReactNode} props.children - The content of the button, typically text or icons.
