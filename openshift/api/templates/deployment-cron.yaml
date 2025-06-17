@@ -71,6 +71,7 @@ spec:
       containers:
       - name: {{ .Values.app_cron.name }}
         image: {{ .Values.image.repository }}/{{ .Values.app_cron.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
         command:
         - /bin/bash
         - -c
@@ -86,6 +87,8 @@ spec:
           requests:
             cpu: 100m
             memory: 128Mi
+            ephemeral-storage: 1Gi
           limits:
             cpu: 750m
             memory: 2Gi
+            ephemeral-storage: 2Gi

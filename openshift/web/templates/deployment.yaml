@@ -33,6 +33,7 @@ spec:
             }
           ]
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: {{ .Values.app.name }}
           image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
@@ -43,12 +44,14 @@ spec:
             - configMapRef:
                 name: {{ .Values.app.name }}
           resources:
-            limits:
-              cpu: 300m
-              memory: 1Gi
             requests:
               cpu: 150m
               memory: 250Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 300m
+              memory: 1Gi
+              ephemeral-storage: 2Gi
           readinessProbe:
             httpGet:
               path: /readiness
