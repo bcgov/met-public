@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: notify-api
 spec:
   ports:
   - name: 8080-tcp

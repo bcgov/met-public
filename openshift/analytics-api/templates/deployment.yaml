@@ -1,33 +1,42 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: met-analytics
   name: {{ .Values.app.name }}
 spec:
   replicas: 1 # This is managed by the HPA
   revisionHistoryLimit: 10
   selector:
-    app: {{ .Values.app.name }}
+    matchLabels:
+      app: {{ .Values.app.name }}
+      environment: {{ .Values.environment }}
+      role: api
+      app-group: met-analytics
   strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
-      maxSurge: 25%
-      maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: {{ .Values.app.name }}
         environment: {{ .Values.environment }}
         role: api
-        app-group: met-app
+        app-group: met-analytics
       annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+              "automatic": true,
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.app.name }}:{{ .Values.image.tag }}",
+                "namespace": "{{ .Values.image.namespace }}"
+              },
+              "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}')].image"
+            }
+          ]
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
         vault.hashicorp.com/agent-pre-populate-only: 'true'
@@ -57,7 +66,7 @@ spec:
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       containers:
-      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
         name: {{ .Values.app.name }}
         # Required for the vault agent to run in the pod
         env:
@@ -92,14 +101,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-  test: false
-  triggers:
-  - type: ConfigChange
-    imageChangeParams:
-      automatic: true
-      containerNames:
-      - {{ .Values.app.name }}
-      from:
-        kind: ImageStreamTag
-        name: {{ .Values.app.name }}:{{ .Values.image.tag }}
-        namespace: {{ .Values.image.namespace }}
