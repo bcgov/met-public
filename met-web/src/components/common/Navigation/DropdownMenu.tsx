@@ -35,6 +35,36 @@ export const ToggleNav = ({ isNav, children }: { isNav?: boolean; children: Reac
     return <>{children}</>;
 };
 
+/**
+ * A dropdown menu component that expands on click and allows for navigation or selection.
+ * It supports custom button content, click-away behavior, and focus trapping.
+ *
+ * @param {MenuListProps} [props] - Additional properties for the MenuList component.
+ * @param {string} [props.name] - The name of the dropdown menu, used for accessibility.
+ * @param {boolean} [props.forNavigation=false] - If true, wraps the menu in a <nav> element for accessibility.
+ * @param {function} [props.buttonContent] - A function that returns custom content for the dropdown button.
+ * @param {ButtonBaseProps} [props.buttonProps] - Additional properties for the button.
+ * @param {PopperProps} [props.popperProps] - Additional properties for the Popper component.
+ * @param {React.ReactNode} [props.children] - The menu items to display within the dropdown.
+ * @returns {JSX.Element} A dropdown menu component that can be used for navigation or selection.
+ * @example
+ * <DropdownMenu
+ *   name="Options"
+ *   buttonContent={({ isOpen }) => (
+ *     <span>{isOpen ? 'Close Menu' : 'Open Menu'}</span>
+ *   )}
+ *   buttonProps={{ color: 'primary' }}
+ *   popperProps={{ placement: 'bottom-end' }}
+ * >
+ *   <MenuItem onClick={() => window.location.href = '/option1'}>
+ *     Option 1
+ *   </MenuItem>
+ *   <MenuItem onClick={() => window.location.href = '/option2'}>
+ *     Option 2
+ *   </MenuItem>
+ * </DropdownMenu>
+ * */
+
 export const DropdownMenu = ({
     name,
     forNavigation,

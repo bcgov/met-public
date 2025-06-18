@@ -1,11 +1,30 @@
 import React, { useEffect } from 'react';
 import { EditorState, convertToRaw } from 'draft-js';
-import { RichTextArea as Editor } from '../Input/RichTextArea';
-import { FormControl, FormHelperText } from '@mui/material';
+import { RichTextArea } from '../Input/RichTextArea';
+import { FormControl, Paper } from '@mui/material';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './RichEditorStyles.css';
 import { getEditorStateFromHtml, getEditorStateFromRaw } from './utils';
-import { MetPaper } from '..';
+import { ErrorMessage } from '../Typography';
+
+/**
+ * A Rich Text Editor component that uses react-draft-wysiwyg to render a rich text editor.
+ * Its primary purpose is to allow users to create rich text content to display in the {@link RichTextArea} component.
+ * It allows for rich text editing with various toolbar options.
+ * @param {Object} props - The properties for the RichTextEditor component.
+ * @param {Function} props.setRawText - Function to set the raw text content of the editor.
+ * @param {Function} props.handleEditorStateChange - Function to handle changes in the editor state.
+ * @param {string} props.initialRawEditorState - Initial raw editor state in JSON format.
+ * @param {string} props.initialHTMLText - Initial HTML text to populate the editor.
+ * @param {boolean} props.error - Boolean indicating if there is an error in the editor.
+ * @param {string} props.helperText - Text to display as helper text below the editor, typically used for error messages.
+ * @param {Object} props.toolbar - Configuration for the editor toolbar, allowing customization of available options.
+ *                  Options include 'inline', 'list', 'link', 'blockType', and 'history'.
+ *                  Each option can have sub-options, such as 'bold', 'italic', 'underline', etc.
+ * @see {@link https://jpuri.github.io/react-draft-wysiwyg/#/docs} for more details on the editor and its options.
+ * @see {@link https://draftjs.org/docs/advanced-topics-decorators} for more information on decorators in Draft.js.
+ * @returns
+ */
 
 const RichTextEditor = ({
     setRawText = (_rawText: string) => {
@@ -59,9 +78,16 @@ const RichTextEditor = ({
 
     return (
         <FormControl fullWidth>
-            <MetPaper style={{ borderColor: `${error ? '#d32f2f' : ''}` }}>
+            <Paper
+                sx={{
+                    borderColor: error ? 'error.main' : '#605E5C',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
+                    borderRadius: '8px',
+                }}
+            >
                 <form>
-                    <Editor
+                    <RichTextArea
                         spellCheck
                         editorState={editorState}
                         onEditorStateChange={handleChange}
@@ -73,8 +99,8 @@ const RichTextEditor = ({
                         toolbar={toolbar}
                     />
                 </form>
-            </MetPaper>
-            <FormHelperText error={error}>{error ? helperText : ''}</FormHelperText>
+            </Paper>
+            <ErrorMessage error={error ? helperText : undefined} />
         </FormControl>
     );
 };

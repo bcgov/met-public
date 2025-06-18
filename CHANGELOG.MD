@@ -9,6 +9,10 @@
   - Converted all DeploymentConfig YAML files to Deployment YAML files.
   - If a DeploymentConfig was deployed by a Helm chart in the repository, it was converted to a Deployment and the Helm chart was updated accordingly.
   - TODO: If a DeploymentConfig was not created by a helm chart (DESENG-807 through DESENG-810), it will need to first be added to the repository as a Deployment YAML file in a new helm chart. This will be done in a future PR for those tickets.
+- **Task** Update documentation for common components [🎟️ DESENG-816](https://citz-gdx.atlassian.net/browse/DESENG-816)
+  - Added docblocks to the majority of common components
+  - Updated CONTRIBUTING.md to link to each component's documentation, and provide a brief overview of the component and its usage
+  - Updated PR template to remind developers to update documentation when adding new components or modifying existing ones
 
 ## Jun 10, 2025
 

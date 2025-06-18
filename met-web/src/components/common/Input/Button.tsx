@@ -247,6 +247,20 @@ const TertiaryButton = ({
     );
 };
 
+/**
+ * The main MET-styled button component. Matches the MET design system styling
+ * and provides a consistent interface for different button variants.
+ * @param {ButtonProps} props - Button properties including variant, children, onClick, etc.
+ * @param {('primary' | 'secondary' | 'tertiary')} props.variant - The variant of the button, can be 'primary', 'secondary', or 'tertiary'. Default is 'secondary'.
+ * @param {React.ReactNode} props.children - The content of the button, typically text or icons.
+ * @param {() => void} props.onClick - The function to call when the button is clicked.
+ * @param {'small' | 'medium' | 'large'} props.size - The size of the button, can be 'small' (40px), 'medium' (48px), or 'large' (56px). Default is 'medium'.
+ * @param {'default' | 'danger' | 'warning' | 'success' | string} props.color - The color of the button, can be 'default', 'danger', 'warning', 'success', or a custom color.
+ * @param {React.ReactNode} props.icon - An optional icon to display in the button.
+ * @param {'left' | 'right'} props.iconPosition - The position of the icon, can be 'left' or 'right'. Default is 'left'.
+ *
+ * @returns A button component that renders different styles based on the variant.
+ */
 export const Button = ({
     variant = 'secondary',
     ...props
@@ -281,6 +295,17 @@ const StyledIconButton = styled(MuiIconButton)(() => ({
     height: '40px', // Set height to maintain circle shape
 }));
 
+/**
+ * IconButton component that renders a circular button with an icon.
+ * It supports focus styles and hover effects.
+ * @param {IconButtonProps} props - The properties for the icon button.
+ * @param {IconProp} props.icon - The icon to display in the button.
+ * @param {() => void} props.onClick - The function to call when the button is clicked.
+ * @param {string} props.title - The title for the button, used for accessibility.
+ * @param {React.CSSProperties} props.sx - Additional styles to apply to the button.
+ * @param {string} props.backgroundColor - Optional background color for the button.
+ * @returns A styled icon button component.
+ */
 export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx, backgroundColor }) => {
     const [focused, setFocused] = useState(false);
 
@@ -290,7 +315,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx
             justifyContent="center"
             alignItems="center"
             sx={{
-                backgroundColor: backgroundColor ? backgroundColor : `${colors.focus.regular.inner}`,
+                backgroundColor: backgroundColor ?? `${colors.focus.regular.inner}`,
                 cursor: 'pointer',
                 borderRadius: '50%',
                 boxShadow: focused ? `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}` : 'none',

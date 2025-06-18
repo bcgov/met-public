@@ -23,6 +23,14 @@ import { colors } from 'styles/Theme';
 
 type IconWeight = 'solid' | 'regular' | 'light';
 
+/**
+ * A component that displays an icon representing the status of a process or notification.
+ * It uses FontAwesome icons to visually indicate success, warning, danger, or info statuses.
+ * @param {Partial<FontAwesomeIconProps>} [props] - Additional properties for the FontAwesomeIcon component.
+ * @param {string} props.status - The status to represent, can be 'success', 'warning', 'danger', or 'info'.
+ * @param {string} props.color - Optional color for the icon, defaults to the theme's notification color for the given status.
+ * @param {IconWeight} [props.weight='regular'] - The weight of the icon, can be 'solid', 'regular', or 'light'.
+ */
 export const StatusIcon = ({
     status,
     color,

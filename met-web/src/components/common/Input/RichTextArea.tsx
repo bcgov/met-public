@@ -24,6 +24,19 @@ const Header2Renderer = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+/**
+ * A Rich Text Area component that uses react-draft-wysiwyg to render rich text.
+ * Its primary purpose is to display rich text content created in {@link RichTextEditor}.
+ * It contains custom styling for links and headers.
+ * @param {EditorProps} props - Other props to pass to the Editor component.
+ * @param {Array} props.customDecorators - Optional custom decorators to extend the functionality of the editor.
+ * @param {boolean} props.readOnly - Optional prop to render the editor in read-only mode.
+ *                   If true, the editor will not allow any text input or modifications.
+ * @see {@link https://jpuri.github.io/react-draft-wysiwyg/#/docs} for more details on the editor and its options.
+ * @see {@link https://draftjs.org/docs/advanced-topics-decorators} for more information on decorators in Draft.js.
+ * @see {@link https://draftjs.org/docs/advanced-topics-block-styling} for more information on block styles in Draft.js.
+ * @returns
+ */
 export const RichTextArea = ({ customDecorators, ...props }: EditorProps) => {
     return (
         <Editor
