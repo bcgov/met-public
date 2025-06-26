@@ -1,0 +1,42 @@
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+    role: app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.app.name }}
+  minReplicas: {{ .Values.app.scaler.minReplicas }}
+  maxReplicas: {{ .Values.app.scaler.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.app.scaler.cpuUtilization }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.app.scaler.memoryUtilization }}
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.app.scaler.httpRequestsPerSecond }}
+    - type: Pods
+      pods:
+        metric:
+          name: response_time_seconds
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.app.scaler.responseTimeSeconds }}

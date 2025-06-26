@@ -1,0 +1,97 @@
+# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-backup
+  namespace: {{ .Values.backup.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+    role: backup
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      role: backup
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        role: backup
+      annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+              "automatic": true,
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.backup.image.name }}:{{ .Values.backup.image.tag }}",
+                "namespace": "{{ .Values.backup.image.namespace }}"
+              },
+              "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}-backup')].image"
+            }
+          ]
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
+          export DATABASE_USER='{{ index .Data.data "superuser-username" }}'
+          export DATABASE_PASSWORD='{{ index .Data.data "superuser-password" }}'
+          export POSTGRESQL_DATABASE='{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}` }}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      volumes:
+        - name: backup-pvc
+          persistentVolumeClaim:
+            claimName: {{ .Values.app.name }}-backup
+        - name: backup-verification
+          persistentVolumeClaim:
+            claimName: {{ .Values.app.name }}-backup-verification
+        - name: backup-config-volume
+          configMap:
+            name: {{ .Values.app.name }}-backup
+            items:
+              - key: backup.conf
+                path: backup.conf
+      containers:
+        - name: {{ .Values.app.name }}-backup
+          {{- with .Values.backup.image }}         
+          image: "{{ .repository }}/{{ .namespace }}/{{ .name }}:{{ .tag }}"
+          {{- end }}
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail && \
+              . /vault/secrets/met-patroni && \
+              bash ./backup.sh
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.app.name }}-backup
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+              ephemeral-storage: {{ .Values.backup.resources.requests.ephemeralStorage }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+              ephemeral-storage: {{ .Values.backup.resources.limits.ephemeralStorage }}
+          volumeMounts:
+            - name: backup-pvc
+              mountPath: {{ .Values.backup.mountPath }}
+            - name: backup-verification
+              mountPath: {{ .Values.backup.verification.mountPath }}
+            - name: backup-config-volume
+              mountPath: /backup.conf
+              subPath: backup.conf

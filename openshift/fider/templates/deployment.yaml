@@ -1,0 +1,109 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app: {{ .Values.app.name }}
+    role: app
+spec:
+  replicas: 1 # managed by HPA
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      role: app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        role: app
+      annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+              "automatic": true,
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.image.name }}:{{ .Values.image.tag }}",
+                "namespace": "{{ .Values.image.namespace }}"
+              },
+              "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}')].image"
+            }
+          ]
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-met-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider
+        vault.hashicorp.com/agent-inject-template-met-fider: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          {{- if eq $k "POSTGRESQL_DATABASE" }}
+            export DATABASE_NAME='{{ $v }}'
+          {{- else if eq $k "POSTGRESQL_USER" }}
+            export POSTGRESQL_USERNAME='{{ $v }}'
+          {{- else }}
+            export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}
+            export DATABASE_URL='postgresql://{{ index .Data.data "POSTGRESQL_USER" }}:{{ index .Data.data "POSTGRESQL_PASSWORD" }}@'${POSTGRESQL_DB_HOST}':'${POSTGRESQL_DB_PORT}'/{{ index .Data.data "POSTGRESQL_DATABASE"}}?sslmode=disable'
+          {{- end }}` }}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      containers:
+        - name: {{ .Values.app.name }}
+          {{- with .Values.image }}
+          image: "{{ .repository }}/{{ .namespace }}/{{ .name }}:{{ .tag }}"
+          {{- end }}
+          imagePullPolicy: Always
+          command:
+            - /bin/bash
+            - -c
+            - |
+              . /vault/secrets/met-fider && \
+              ./fider migrate && \
+              ./fider server --host
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.app.name }}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+              ephemeral-storage: 2Gi
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  . /vault/secrets/met-fider && \
+                  ./fider ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  . /vault/secrets/met-fider && \
+                  ./fider ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          
+          
