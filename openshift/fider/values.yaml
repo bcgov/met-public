@@ -33,7 +33,7 @@ backup:
     repository: "ghcr.io"
     namespace: bcgov
     name: backup-container
-    tag: latest
+    tag: 2.10
 
 db:
   storageSize: "1Gi"
