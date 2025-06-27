@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.app.name }}-backup
+  namespace: {{ .Values.backup.namespace }}
+data:
+  ENVIRONMENT: "{{ .Values.environment }}"
+  BACKUP_STRATEGY: "{{ .Values.backup.strategy }}"
+  BACKUP_DIR: "{{ .Values.backup.mountPath }}"
+  NUM_BACKUPS: "40"
+  DAILY_BACKUPS: "7"
+  WEEKLY_BACKUPS: "4"
+  MONTHLY_BACKUPS: "3"
+  TABLE_SCHEMA: "{{ .Values.backup.schema }}"
+  ENVIRONMENT_NAME: "{{ .Values.backup.environment }}"
+  ENVIRONMENT_FRIENDLY_NAME: "{{ .Values.backup.environmentFriendlyName }}"
+  CONTAINER_TYPE: "postgres"
+  DATABASE_SERVICE_NAME: "{{ .Values.backup.dbName }}-patroni"
+  
+  backup.conf: |
+    0 1 * * * default ./backup.sh -s
+    0 4 * * * default ./backup.sh -s -v all

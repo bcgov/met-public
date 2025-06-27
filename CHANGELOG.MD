@@ -1,3 +1,13 @@
+## Jun 25, 2025
+
+- **Task** DeploymentConfig -> Deployment conversion for previously undeployed DeploymentConfig yamls.
+  [🎟️ DESENG-807](https://citz-gdx.atlassian.net/browse/DESENG-807)
+  [🎟️ DESENG-808](https://citz-gdx.atlassian.net/browse/DESENG-808)
+  [🎟️ DESENG-809](https://citz-gdx.atlassian.net/browse/DESENG-809)
+  [🎟️ DESENG-810](https://citz-gdx.atlassian.net/browse/DESENG-810)
+  - Took undocumented resources in Openshift that were previously DeploymentConfigs and converted them to Deployments in new Helm charts.
+  - Changed Backup pod backup-container images to use the new URL. (hub.docker.com -> ghcr.io)
+
 ## Jun 16, 2025
 
 - **Task** DeploymentConfig -> Deployment conversion for existing DeploymentConfig yamls.
@@ -8,7 +18,6 @@
   [🎟️ DESENG-806](https://citz-gdx.atlassian.net/browse/DESENG-806)
   - Converted all DeploymentConfig YAML files to Deployment YAML files.
   - If a DeploymentConfig was deployed by a Helm chart in the repository, it was converted to a Deployment and the Helm chart was updated accordingly.
-  - TODO: If a DeploymentConfig was not created by a helm chart (DESENG-807 through DESENG-810), it will need to first be added to the repository as a Deployment YAML file in a new helm chart. This will be done in a future PR for those tickets.
 - **Task** Update documentation for common components [🎟️ DESENG-816](https://citz-gdx.atlassian.net/browse/DESENG-816)
   - Added docblocks to the majority of common components
   - Updated CONTRIBUTING.md to link to each component's documentation, and provide a brief overview of the component and its usage

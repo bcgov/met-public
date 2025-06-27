@@ -1,0 +1,12 @@
+environment: "prod"
+
+app:
+  environmentFriendlyName: Production
+
+backup:
+  namespace: "e903c2-prod"
+  schedule: "0 3 * * *"
+
+vault:
+  engine: e903c2-prod
+  path: ""

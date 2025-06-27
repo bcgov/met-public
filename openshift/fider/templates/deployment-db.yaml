@@ -1,0 +1,109 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.app.name }}-postgresql
+  namespace: e903c2-tools
+  labels:
+    app: {{ .Values.app.name }}
+    role: db
+spec:
+  strategy:
+    type: Recreate # Ensures old pods are terminated and release the PVC before new pods are created
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      role: db
+  template:
+    metadata:
+      annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+            "automatic": true,
+            "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.db.image.name }}:{{ .Values.db.image.tag }}",
+                "namespace": "{{ .Values.db.image.namespace }}"
+            },
+            "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}-postgresql')].image"
+            }
+          ]
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-met-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider
+        vault.hashicorp.com/agent-inject-template-met-fider: |
+            {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider"{{ ` }}
+            {{- range $k, $v := .Data.data }}
+            export {{ $k }}='{{ $v }}'
+            {{- end }}
+            {{- end }}` }}
+      labels:
+        app: {{ .Values.app.name }}
+        role: db
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      volumes:
+        - name: postgresql-volume
+          persistentVolumeClaim:
+            claimName: {{ .Values.app.name }}-postgresql
+      containers:
+        - name: {{ .Values.app.name }}-postgresql
+          {{- with .Values.db.image }}
+          image: "{{ .repository }}/{{ .namespace }}/{{ .name }}:{{ .tag }}"
+          {{- end }}
+          imagePullPolicy: Always
+          command:
+            - /bin/bash
+            - '-c'
+            - |
+              set -euo pipefail
+              . /vault/secrets/met-fider && \
+              postgres -D /var/lib/pgsql/data/userdata
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+              ephemeral-storage: "1Gi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+              ephemeral-storage: "2Gi"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - '-c'
+                - pg_isready -h localhost -p 5432
+            initialDelaySeconds: 20
+            timeoutSeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - name: postgresql-volume
+              mountPath: /var/lib/pgsql/data
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler

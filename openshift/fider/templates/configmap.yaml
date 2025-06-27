@@ -1,0 +1,16 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.app.name }}
+  namespace: {{ .Values.app.namespace }}
+data:
+  POSTGRESQL_DB_HOST: {{ .Values.app.name }}-postgresql
+  POSTGRESQL_DB_PORT: "5432"
+  GO_ENV: "production"
+  LOG_LEVEL: "error"
+  TABLE_SCHEMA: "{{ .Values.backup.schema }}"
+  EMAIL_SMTP_HOST: "{{ .Values.email.smtp.host }}"
+  EMAIL_SMTP_PORT: "{{ .Values.email.smtp.port }}"
+  EMAIL_SMTP_USERNAME: "{{ .Values.email.smtp.username }}"
+  EMAIL_NOREPLY: "{{ .Values.email.smtp.noreply }}"
+  BASE_URL: "https://{{ .Values.app.name }}.{{ .Values.app.domain }}"

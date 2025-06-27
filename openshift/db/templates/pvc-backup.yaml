@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.app.name }}-backup
+  namespace: {{ .Values.backup.namespace }}
+  annotations:
+    # Do not remove this PVC when uninstalling the chart
+    "helm.sh/resource-policy": "keep"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.backup.storage.size }}
+  storageClassName: {{ .Values.backup.storage.storageClassName }}
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.app.name }}-backup-verification
+  namespace: {{ .Values.backup.namespace }}
+  annotations:
+    # Do not remove this PVC when uninstalling the chart
+    "helm.sh/resource-policy": "keep"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.backup.verification.storageSize }}
+  storageClassName: {{ .Values.backup.verification.storageClass }}
+  volumeMode: Filesystem

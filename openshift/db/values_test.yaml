@@ -1,0 +1,11 @@
+environment: "test"
+
+app:
+  environmentFriendlyName: Test
+
+backup:
+  namespace: "e903c2-test"
+
+vault:
+  engine: e903c2-nonprod
+  path: "/test"

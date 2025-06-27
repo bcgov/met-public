@@ -1,0 +1,12 @@
+environment: "dev"
+
+app:
+  environmentFriendlyName: Development
+
+backup:
+  namespace: "e903c2-dev"
+  schedule: "0 1 * * *"
+
+vault:
+  engine: e903c2-nonprod
+  path: "/dev"
