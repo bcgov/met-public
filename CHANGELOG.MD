@@ -1,3 +1,9 @@
+## Jul 9, 2025
+
+- **Feature** Add Dependabot alerts for Github Actions [🎟️ DESENG-812](https://citz-gdx.atlassian.net/browse/DESENG-812)
+  - Added a Dependabot configuration file to automatically check for updates to Github Actions runner images and workflows.
+    If any updates are found, a pull request will be created to update the versions referenced in the workflows.
+
 ## Jun 25, 2025
 
 - **Task** DeploymentConfig -> Deployment conversion for previously undeployed DeploymentConfig yamls.
