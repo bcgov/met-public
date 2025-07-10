@@ -2,35 +2,155 @@
 
 Notes and example commands to deploy MET in an Openshift environment.
 
-## Build Configuration
+## Deployment Configuration
 
-Github actions are being used for building images but **\*\***IF NECESSARY**\*\*** to use openshift,
-follow the steps below:
+In this project, we use Helm charts to deploy the applications. The charts are located in the `openshift` folder, with subfolders for each application.
 
-In the tools namespace use the following to create the build configurations:
+**Deploy the `Web` application**:
 
-```
-    oc process -f ./buildconfigs/web.bc.yml | oc create -f -
-```
+> Accessible to the public: _Yes_
+> This deployment uses the helm chart located in the `openshift/web` folder.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the web application.
 
-```
-    oc process -f ./buildconfigs/api.bc.yml | oc create -f -
-```
-
-```
-    oc process -f ./buildconfigs/notify-api.bc.yml | oc create -f -
-```
-
-```
-    oc process -f ./buildconfigs/cron.bc.yml | oc create -f -
-```
-
-```
-    oc process -f ./buildconfigs/met-analytics.bc.yml | oc create -f -
+```bash
+cd ./openshift/web
+### Dev
+oc project e903c2-dev
+helm upgrade --install met-web . --values values_dev.yaml
+### Test
+oc project e903c2-test
+helm upgrade --install met-web . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install met-web . --values values_prod.yaml
 ```
 
+**Deploy the `API` (and `cron`) applications**:
+
+> Accessible to the public: _Yes_ (API only)
+> This deployment uses the helm chart located in the `openshift/api` folder.
+> This creates 2 deployments as the met-api and met-cron submodules are deployed together.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
+
+```bash
+cd ./openshift/api
+### Dev
+oc project e903c2-dev
+helm upgrade --install met-api . --values values_dev.yaml
+### Test
+oc project e903c2-test
+helm upgrade --install met-api . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install met-api . --values values_prod.yaml
 ```
-    oc process -f ./buildconfigs/analytics-api.bc.yml | oc create -f -
+
+**Deploy the `Notify API` application:**
+
+> Accessible to the public: _No_
+> To access this application, you need to port-forward the service to your localhost.
+> A shortcut to do this is provided in the Notify API makefile (make port-forward).
+> This deployment uses the helm chart located in the `openshift/notify-api` folder.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the notify-api application.
+
+```bash
+cd ./openshift/notify
+### Dev
+oc project e903c2-dev
+helm upgrade --install notify-api . --values values_dev.yaml
+ ## Port forward the service to localhost (optional)
+oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
+### Test
+oc project e903c2-test
+helm upgrade --install notify-api . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install notify-api . --values values_prod.yaml
+```
+
+**Deploy the `Analytics API` application:**
+
+> Accessible to the public: _No_
+> This deployment uses the helm chart located in the `openshift/analytics-api` folder.
+> This application is used to collect and process analytics data from the MET applications.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the analytics-api application.
+> The analytics-api is used by the redash application to collect and process analytics data.
+
+```bash
+cd ./openshift/analytics-api
+### Dev
+oc project e903c2-dev
+helm upgrade --install met-analytics . --values values_dev.yaml
+### Test
+oc project e903c2-test
+helm upgrade --install met-analytics . --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install met-analytics . --values values_prod.yaml
+```
+
+**Deploy the `Redash` application**:
+
+> Accessible to the public: _No_
+> This deployment uses the helm chart located in the `openshift/redash` folder.
+> Redash is used to visualize and query the analytics data collected by the analytics-api.
+
+```bash
+cd redash
+helm dependency build
+helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
+```
+
+**Deploying the MET RBAC chart**:
+
+> RBAC in this project is managed by the helm chart located in the `openshift/rbac` folder.
+> This chart determines its environment based on the namespace it is being deployed to.
+
+Currently the chart creates the following:
+
+1. **Vault Service Account RoleBinding**: This rolebinding allows the vault service account to pull images from the tools namespace.
+   > The {licenseplate}-vault service account should be used on Deployments that need access to Vault.
+   > In order for the Vault service account to be able to pull images from the tools namespace, this rolebinding must be created.
+
+### Additional NetworkPolicies
+
+Setting this ingress policy on all pods allows incoming connections from pods within the same environment (API pods can connect to the database pods):
+
+```yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-same-namespace
+  namespace: e903c2-<dev/test/prod>
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              environment: <dev/test/prod>
+              name: e903c2
+  policyTypes:
+    - Ingress
+```
+
+Allow public access to your deployed routes by creating the following network policy:
+
+```yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-from-openshift-ingress
+  namespace: e903c2-<ENV>
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+  policyTypes:
+    - Ingress
 ```
 
 ## Image Puller Configuration
@@ -147,138 +267,33 @@ To restore the backup follow these steps:
 
    Once the roles are altered the restore script can be run again.
 
-## Deployment Configuration
+## Build Configuration
 
-In each environment namespace (dev, test, prod) use the following
-IMAGE_TAG values of the following commands should also be changed to reflect the environment they will be installed to
+Github actions are being used for building images but **\*\***IF NECESSARY**\*\*** to use openshift,
+follow the steps below:
 
-**Deploy the `Web` application**:
+In the tools namespace use the following to create the build configurations:
 
-> Accessible to the public: _Yes_
-> This deployment uses the helm chart located in the `openshift/web` folder.
-> Use one of dev, test or prod and the corresponding values.yaml file to deploy the web application.
-
-```bash
-cd ./openshift/web
-### Dev
-oc project e903c2-dev
-helm upgrade --install met-web . --values values_dev.yaml
-### Test
-oc project e903c2-test
-helm upgrade --install met-web . --values values_test.yaml
-### Prod
-oc project e903c2-prod
-helm upgrade --install met-web . --values values_prod.yaml
+```
+    oc process -f ./buildconfigs/web.bc.yml | oc create -f -
 ```
 
-**Deploy the `API` (and `cron`) applications**:
-
-> Accessible to the public: _Yes_ (API only)
-> This deployment uses the helm chart located in the `openshift/api` folder.
-> This creates 2 deployments as the met-api and met-cron submodules are deployed together.
-> Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
-
-```bash
-cd ./openshift/api
-### Dev
-oc project e903c2-dev
-helm upgrade --install met-api . --values values_dev.yaml
-### Test
-oc project e903c2-test
-helm upgrade --install met-api . --values values_test.yaml
-### Prod
-oc project e903c2-prod
-helm upgrade --install met-api . --values values_prod.yaml
+```
+    oc process -f ./buildconfigs/api.bc.yml | oc create -f -
 ```
 
-**Deploy the `Notify API` application:**
-
-> Accessible to the public: _No_
-> To access this application, you need to port-forward the service to your localhost.
-> A shortcut to do this is provided in the Notify API makefile (make port-forward).
-> This deployment uses the helm chart located in the `openshift/notify-api` folder.
-> Use one of dev, test or prod and the corresponding values.yaml file to deploy the notify-api application.
-
-```bash
-cd ./openshift/notify
-### Dev
-oc project e903c2-dev
-helm upgrade --install notify-api . --values values_dev.yaml
- ## Port forward the service to localhost (optional)
-oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
-### Test
-oc project e903c2-test
-helm upgrade --install notify-api . --values values_test.yaml
-### Prod
-oc project e903c2-prod
-helm upgrade --install notify-api . --values values_prod.yaml
+```
+    oc process -f ./buildconfigs/notify-api.bc.yml | oc create -f -
 ```
 
-Deploy the analytics api
-
-```bash
-oc process -f ./analytics-api.dc.yml \
- -p ENV=<dev/test/prod> \
- -p IMAGE_TAG=<dev/test/prod>
-| oc create -f -
+```
+    oc process -f ./buildconfigs/cron.bc.yml | oc create -f -
 ```
 
-Deploy the redash analytics helm chart:
-
-```bash
-cd redash
-helm dependency build
-helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
+```
+    oc process -f ./buildconfigs/met-analytics.bc.yml | oc create -f -
 ```
 
-**Deploying the MET RBAC chart**:
-
-> RBAC in this project is managed by the helm chart located in the `openshift/rbac` folder.
-> This chart determines its environment based on the namespace it is being deployed to.
-
-Currently the chart creates the following:
-
-1. **Vault Service Account RoleBinding**: This rolebinding allows the vault service account to pull images from the tools namespace.
-   > The {licenseplate}-vault service account should be used on Deployments that need access to Vault.
-   > In order for the Vault service account to be able to pull images from the tools namespace, this rolebinding must be created.
-
-### Additional NetworkPolicies
-
-Setting this ingress policy on all pods allows incoming connections from pods within the same environment (API pods can connect to the database pods):
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-same-namespace
-  namespace: e903c2-<dev/test/prod>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              environment: <dev/test/prod>
-              name: e903c2
-  policyTypes:
-    - Ingress
 ```
-
-Allow public access to your deployed routes by creating the following network policy:
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-openshift-ingress
-  namespace: e903c2-<ENV>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              network.openshift.io/policy-group: ingress
-  policyTypes:
-    - Ingress
+    oc process -f ./buildconfigs/analytics-api.bc.yml | oc create -f -
 ```
