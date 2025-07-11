@@ -61,17 +61,15 @@ schedule_storage:
         env: DAGSTER_POSTGRES_DB
       port: 5432
 
-event_log_storage:
-  module: dagster_postgres.event_log
-  class: PostgresEventLogStorage
-  config:
-    postgres_db:
-      hostname:
-        env: DAGSTER_POSTGRES_HOSTNAME
-      username:
-        env: DAGSTER_POSTGRES_USER
-      password:
-        env: DAGSTER_POSTGRES_PASSWORD
-      db_name:
-        env: DAGSTER_POSTGRES_DB
-      port: 5432
+retention:
+  event_log:
+    purge_after_days: 90 # retain event logs for 90 days
+  schedule:
+    purge_after_days: 90 # retain schedule ticks for 90 days
+  run:
+    purge_after_days: 90 # retain run logs for 90 days
+  sensor:
+    purge_after_days:
+      skipped: 7 # retain skipped sensor ticks for 7 days
+      failure: 30 # retain failed sensor ticks for 30 days
+      success: 30 # retain successful sensor ticks for 30 days
