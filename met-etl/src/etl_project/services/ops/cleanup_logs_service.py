@@ -8,9 +8,6 @@ def cleanup_old_event_and_run_logs(context):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     session = context.resources.met_db_session
 
-    # Debug: print the current user
-    context.log.info(f"Current user: {session.execute('SELECT current_user').scalar()}")
-
     # Log start of operation
     context.log.info(f"Starting cleanup of logs older than {cutoff_date}")
 
@@ -50,7 +47,7 @@ def vacuum_met_etl_schema(context):
         context.log.info("Starting VACUUM ANALYZE...")
         vacuum_start = datetime.now(timezone.utc)
 
-        session.execute(
+        cmd = session.execute(
             """
             SELECT format('VACUUM ANALYZE %I.%I;', table_schema, table_name)
             FROM information_schema.tables
@@ -58,11 +55,16 @@ def vacuum_met_etl_schema(context):
             """
         )
 
+        for i, command in enumerate(cmd, start=1):
+            # Log each command being executed
+            context.log.info(f"Executing: {command[0]} ({i/len(cmd)})")
+            # Execute the command
+            session.execute(command[0])
+
         vacuum_duration = datetime.now(timezone.utc) - vacuum_start
         context.log.info(
-            f"VACUUM ANALYZE completed in {vacuum_duration.total_seconds():.2f} seconds"
+            f"VACUUMed {len(cmd)} tables in {vacuum_duration.total_seconds():.2f} seconds"
         )
-
         # Log reindex start
         context.log.info("Starting REINDEX...")
         reindex_start = datetime.now(timezone.utc)
