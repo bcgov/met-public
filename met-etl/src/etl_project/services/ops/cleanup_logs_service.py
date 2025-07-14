@@ -1,35 +1,75 @@
 from dagster import op
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 
 MAX_AGE_DAYS = 45  # Define the maximum age of logs to keep (in days)
 
 @op(required_resource_keys={"met_db_session"})
 def cleanup_old_event_and_run_logs(context):
-    cutoff_date = datetime.now(UTC) - timedelta(days=MAX_AGE_DAYS)
+    cutoff_date = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     session = context.resources.met_db_session
-    # Delete event logs
+    
+    # Log start of operation
+    context.log.info(f"Starting cleanup of logs older than {cutoff_date}")
+    
+    # Delete event logs with progress logging
+    context.log.info("Starting event logs cleanup...")
     deleted_event = session.execute(
         """
         DELETE FROM dagster.event_logs WHERE created_at < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
-    # Delete run logs
+    context.log.info(f"Deleted {deleted_event.rowcount} event log records")
+    
+    # Delete run logs with progress logging
+    context.log.info("Starting run logs cleanup...")
     deleted_run = session.execute(
         """
         DELETE FROM dagster.runs WHERE created_at < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
+    context.log.info(f"Deleted {deleted_run.rowcount} run records")
+    
     # Commit the changes
     session.commit()
-    # Show results in logs
-    context.log.info(f"Deleted {deleted_event.rowcount} event logs and {deleted_run.rowcount} run logs older than {cutoff_date}")
+    context.log.info("Cleanup completed successfully")
 
 @op(required_resource_keys={"met_etl_db_session"})
 def vacuum_met_etl_schema(context):
     session = context.resources.met_etl_db_session
-    # Vacuum the schema to reclaim space
-    session.execute("VACUUM ANALYZE dagster.*")
-    # Remove deleted rows from the indexes
-    session.execute("REINDEX SCHEMA dagster")
+    start_time = datetime.now(timezone.utc)
+    
+    context.log.info("Starting schema maintenance...")
+    
+    try:
+        # Log vacuum start
+        context.log.info("Starting VACUUM ANALYZE...")
+        vacuum_start = datetime.now(timezone.utc)
+        
+        session.execute("VACUUM ANALYZE dagster.*")
+        
+        vacuum_duration = datetime.now(timezone.utc) - vacuum_start
+        context.log.info(
+            f"VACUUM ANALYZE completed in {vacuum_duration.total_seconds():.2f} seconds"
+        )
+        
+        # Log reindex start
+        context.log.info("Starting REINDEX...")
+        reindex_start = datetime.now(timezone.utc)
+        
+        session.execute("REINDEX SCHEMA dagster")
+        
+        reindex_duration = datetime.now(timezone.utc) - reindex_start
+        context.log.info(
+            f"REINDEX completed in {reindex_duration.total_seconds():.2f} seconds"
+        )
+        
+        total_duration = datetime.now(timezone.utc) - start_time
+        context.log.info(
+            f"Schema maintenance completed in {total_duration.total_seconds():.2f} seconds"
+        )
+        
+    except Exception as e:
+        context.log.error(f"Error during schema maintenance: {str(e)}")
+        raise
