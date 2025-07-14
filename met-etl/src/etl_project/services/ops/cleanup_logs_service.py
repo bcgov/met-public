@@ -8,6 +8,9 @@ def cleanup_old_event_and_run_logs(context):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     session = context.resources.met_db_session
     
+    # Debug: print the current user
+    context.log.info(f"Current user: {session.execute('SELECT current_user').scalar()}")
+
     # Log start of operation
     context.log.info(f"Starting cleanup of logs older than {cutoff_date}")
     
