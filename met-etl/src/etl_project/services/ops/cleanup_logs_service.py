@@ -53,7 +53,7 @@ def vacuum_met_etl_schema(context):
             FROM information_schema.tables
             WHERE table_schema = 'dagster';
             """
-        )
+        ).fetchall()
 
         for i, command in enumerate(cmd, start=1):
             # Log each command being executed
