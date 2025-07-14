@@ -15,7 +15,7 @@ def cleanup_old_event_and_run_logs(context):
     context.log.info("Starting event logs cleanup...")
     deleted_event = session.execute(
         """
-        DELETE FROM dagster.event_logs WHERE created_at < :cutoff_date
+        DELETE FROM dagster.event_logs WHERE timestamp < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
@@ -25,7 +25,7 @@ def cleanup_old_event_and_run_logs(context):
     context.log.info("Starting run logs cleanup...")
     deleted_run = session.execute(
         """
-        DELETE FROM dagster.runs WHERE created_at < :cutoff_date
+        DELETE FROM dagster.runs WHERE update_timestamp < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
