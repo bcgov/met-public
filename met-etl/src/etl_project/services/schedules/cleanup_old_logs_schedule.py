@@ -1,6 +1,5 @@
 from dagster import ScheduleDefinition
-from jobs.cleanup_old_logs import cleanup_old_logs
-from jobs.vacuum_met_etl import vacuum_met_etl
+from jobs.cleanup_old_logs import cleanup_old_logs, vacuum_met_etl
 
 cleanup_old_logs_schedule = ScheduleDefinition(
     job=cleanup_old_logs,
