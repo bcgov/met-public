@@ -55,11 +55,19 @@ def vacuum_met_db_schema(context):
             """
         ).scalars().all()
 
-        for i, command in enumerate(cmd, start=1):
-            # Log each command being executed
-            context.log.info(f"Executing: {command} ({i/len(cmd)})")
-            # Execute the command
-            session.execute(command)
+        # VACUUM cannot run inside a transaction block, so use autocommit
+        connection = session.connection()
+        raw_connection = connection.connection
+        old_isolation_level = raw_connection.isolation_level
+        try:
+            raw_connection.set_isolation_level(0)  # autocommit mode
+            for i, command in enumerate(cmd, start=1):
+                # Log each command being executed
+                context.log.info(f"Executing: {command} ({i/len(cmd)})")
+                # Execute the command
+                session.execute(command)
+        finally:
+            raw_connection.set_isolation_level(old_isolation_level)
 
         vacuum_duration = datetime.now(timezone.utc) - vacuum_start
         context.log.info(
