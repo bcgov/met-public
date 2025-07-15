@@ -59,7 +59,7 @@ def vacuum_met_db_schema(context):
             # Log each command being executed
             context.log.info(f"Executing: {command} ({i/len(cmd)})")
             # Execute the command
-            session.execute(command[0])
+            session.execute(command)
 
         vacuum_duration = datetime.now(timezone.utc) - vacuum_start
         context.log.info(
