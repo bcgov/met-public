@@ -8,43 +8,47 @@ def cleanup_old_event_and_run_logs(context):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
     session = context.resources.met_db_session
 
-    # Log start of operation
-    context.log.info(f"Starting cleanup of logs older than {cutoff_date}")
+    context.log.info(f"[Cleanup] Starting cleanup of logs older than {cutoff_date.isoformat()}")
 
     # Delete event logs with progress logging
-    context.log.info("Starting event logs cleanup...")
+    context.log.info(f"[Cleanup] Deleting from dagster.event_logs where timestamp < {cutoff_date.isoformat()}")
     deleted_event = session.execute(
         """
         DELETE FROM dagster.event_logs WHERE timestamp < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
-    context.log.info(f"Deleted {deleted_event.rowcount} event log records")
+    if deleted_event.rowcount:
+        context.log.info(f"[Cleanup] Deleted {deleted_event.rowcount} event log records")
+    else:
+        context.log.info("[Cleanup] No event log records deleted")
 
     # Delete run logs with progress logging
-    context.log.info("Starting run logs cleanup...")
+    context.log.info(f"[Cleanup] Deleting from dagster.runs where update_timestamp < {cutoff_date.isoformat()}")
     deleted_run = session.execute(
         """
         DELETE FROM dagster.runs WHERE update_timestamp < :cutoff_date
         """,
         {"cutoff_date": cutoff_date}
     )
-    context.log.info(f"Deleted {deleted_run.rowcount} run records")
+    if deleted_run.rowcount:
+        context.log.info(f"[Cleanup] Deleted {deleted_run.rowcount} run records")
+    else:
+        context.log.info("[Cleanup] No run records deleted")
 
     # Commit the changes
     session.commit()
-    context.log.info("Cleanup completed successfully")
+    context.log.info("[Cleanup] Cleanup completed successfully")
 
 @op(required_resource_keys={"met_db_session"})
 def vacuum_met_db_schema(context):
     session = context.resources.met_db_session
     start_time = datetime.now(timezone.utc)
 
-    context.log.info("Starting schema maintenance...")
+    context.log.info("[Vacuum] Starting schema maintenance for 'dagster' schema")
 
     try:
-        # Log vacuum start
-        context.log.info("Starting VACUUM ANALYZE...")
+        context.log.info("[Vacuum] Starting VACUUM ANALYZE on all tables in 'dagster' schema...")
         vacuum_start = datetime.now(timezone.utc)
 
         cmd = session.execute(
@@ -55,29 +59,28 @@ def vacuum_met_db_schema(context):
             """
         ).scalars().all()
 
-        # VACUUM cannot run inside a transaction block, so use autocommit
-        connection = session.connection()
-        raw_connection = connection.connection
-        old_isolation_level = raw_connection.isolation_level
-        try:
-            raw_connection.set_isolation_level(0)  # autocommit mode
-            for i, command in enumerate(cmd, start=1):
-                # Log each command being executed
-                context.log.info(f"Executing: {command} ({i/len(cmd)})")
-                # Execute the command
-                session.execute(command)
-        finally:
-            raw_connection.set_isolation_level(old_isolation_level)
+        if not cmd:
+            context.log.info("[Vacuum] No tables found in 'dagster' schema to vacuum.")
+        else:
+            connection = session.connection()
+            raw_connection = connection.connection
+            old_isolation_level = raw_connection.isolation_level
+            try:
+                raw_connection.set_isolation_level(0)  # autocommit mode
+                for i, command in enumerate(cmd, start=1):
+                    context.log.info(f"[Vacuum] Executing: {command} ({i}/{len(cmd)})")
+                    session.execute(command)
+            finally:
+                raw_connection.set_isolation_level(old_isolation_level)
 
-        vacuum_duration = datetime.now(timezone.utc) - vacuum_start
-        context.log.info(
-            f"VACUUMed {len(cmd)} tables in {vacuum_duration.total_seconds():.2f} seconds"
-        )
-        # Log reindex start
-        context.log.info("Starting REINDEX...")
+            vacuum_duration = datetime.now(timezone.utc) - vacuum_start
+            context.log.info(
+                f"[Vacuum] VACUUMed {len(cmd)} tables in {vacuum_duration.total_seconds():.2f} seconds"
+            )
+
+        context.log.info("[Vacuum] Starting REINDEX on 'dagster' schema...")
         reindex_start = datetime.now(timezone.utc)
 
-        # REINDEX SCHEMA cannot run inside a transaction block, so use autocommit
         connection = session.connection()
         raw_connection = connection.connection
         old_isolation_level = raw_connection.isolation_level
@@ -91,14 +94,14 @@ def vacuum_met_db_schema(context):
 
         reindex_duration = datetime.now(timezone.utc) - reindex_start
         context.log.info(
-            f"REINDEX completed in {reindex_duration.total_seconds():.2f} seconds"
+            f"[Vacuum] REINDEX completed in {reindex_duration.total_seconds():.2f} seconds"
         )
 
         total_duration = datetime.now(timezone.utc) - start_time
         context.log.info(
-            f"Schema maintenance completed in {total_duration.total_seconds():.2f} seconds"
+            f"[Vacuum] Schema maintenance completed in {total_duration.total_seconds():.2f} seconds"
         )
 
     except Exception as e:
-        context.log.error(f"Error during schema maintenance: {str(e)}")
+        context.log.error(f"[Vacuum] Error during schema maintenance: {str(e)}", exc_info=True)
         raise
