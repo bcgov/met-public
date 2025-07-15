@@ -69,7 +69,17 @@ def vacuum_met_etl_schema(context):
         context.log.info("Starting REINDEX...")
         reindex_start = datetime.now(timezone.utc)
 
-        session.execute("REINDEX SCHEMA dagster")
+        # REINDEX SCHEMA cannot run inside a transaction block, so use autocommit
+        connection = session.connection()
+        raw_connection = connection.connection
+        old_isolation_level = raw_connection.isolation_level
+        try:
+            raw_connection.set_isolation_level(0)  # autocommit mode
+            cursor = raw_connection.cursor()
+            cursor.execute("REINDEX SCHEMA dagster;")
+            cursor.close()
+        finally:
+            raw_connection.set_isolation_level(old_isolation_level)
 
         reindex_duration = datetime.now(timezone.utc) - reindex_start
         context.log.info(
