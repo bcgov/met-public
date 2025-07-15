@@ -35,9 +35,9 @@ def cleanup_old_event_and_run_logs(context):
     session.commit()
     context.log.info("Cleanup completed successfully")
 
-@op(required_resource_keys={"met_etl_db_session"})
-def vacuum_met_etl_schema(context):
-    session = context.resources.met_etl_db_session
+@op(required_resource_keys={"met_db_session"})
+def vacuum_met_db(context):
+    session = context.resources.met_db_session
     start_time = datetime.now(timezone.utc)
 
     context.log.info("Starting schema maintenance...")
@@ -53,11 +53,11 @@ def vacuum_met_etl_schema(context):
             FROM information_schema.tables
             WHERE table_schema = 'dagster';
             """
-        ).fetchall()
+        ).scalars().all()
 
         for i, command in enumerate(cmd, start=1):
             # Log each command being executed
-            context.log.info(f"Executing: {command[0]} ({i/len(cmd)})")
+            context.log.info(f"Executing: {command} ({i/len(cmd)})")
             # Execute the command
             session.execute(command[0])
 
