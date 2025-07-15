@@ -3,10 +3,10 @@ from datetime import datetime, timedelta, timezone
 
 MAX_AGE_DAYS = 45  # Define the maximum age of logs to keep (in days)
 
-@op(required_resource_keys={"met_db_session"})
+@op(required_resource_keys={"dagster_db_session"})
 def cleanup_old_event_and_run_logs(context):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=MAX_AGE_DAYS)
-    session = context.resources.met_db_session
+    session = context.resources.dagster_db_session
 
     context.log.info(f"[Cleanup] Starting cleanup of logs older than {cutoff_date.isoformat()}")
 
@@ -40,9 +40,9 @@ def cleanup_old_event_and_run_logs(context):
     session.commit()
     context.log.info("[Cleanup] Cleanup completed successfully")
 
-@op(required_resource_keys={"met_db_session"})
+@op(required_resource_keys={"dagster_db_session"})
 def vacuum_met_db_schema(context):
-    session = context.resources.met_db_session
+    session = context.resources.dagster_db_session
     start_time = datetime.now(timezone.utc)
 
     context.log.info("[Vacuum] Starting schema maintenance for 'dagster' schema")
