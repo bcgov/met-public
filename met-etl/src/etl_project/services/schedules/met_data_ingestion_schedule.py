@@ -5,7 +5,7 @@ from jobs.met_data_ingestion import met_data_ingestion
 @schedule(
     cron_schedule="*/30 * * * *",
     job=met_data_ingestion,
-    execution_timezone="US/Central",
+    execution_timezone="Canada/Pacific",
 )
 def met_data_ingestion_schedule(_context):
     return {}
