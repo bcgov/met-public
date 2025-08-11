@@ -1,4 +1,4 @@
-## Jul 11, 2025
+## Jul 22, 2025
 
 - **Bugfix/Feature** Solutions for storage issues in dev [🎟️ DESENG-842](https://citz-gdx.atlassian.net/browse/DESENG-842)
   - Updated the Dagster configuration to add retention policies for the event log, schedule, and run logs.
