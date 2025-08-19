@@ -69,8 +69,10 @@ jobs:
 
       # Set codecov branch name with prefix if pull request
       - name: Sets Codecov branch name
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
-          echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
+          echo "CODECOV_BRANCH=PR_${HEAD_REF}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
 
       - name: Upload coverage to Codecov
