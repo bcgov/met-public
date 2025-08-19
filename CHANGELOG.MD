@@ -5,6 +5,7 @@
   - Replaced the Font Awesome NPM registry with a private Artifactory repository.
   - Updated the `.npmrc` file to use the new repository and credentials.
   - Updated GitHub Actions workflows to use the new credentials for building and deploying the web app.
+  - Updated Dockerfile to use build secrets instead of baking credentials into the image.
 
 ## Jul 22, 2025
 
