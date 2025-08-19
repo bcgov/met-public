@@ -2,8 +2,6 @@ name: MET ANALYTICS API CI
 
 on:
   pull_request:
-    branches:
-      - omega-project
     paths:
       - "analytics-api/**"
 

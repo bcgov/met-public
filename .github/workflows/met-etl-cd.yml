@@ -3,16 +3,21 @@ name: MET ETL CD
 on:
   push:
     branches:
-      - omega-project
+      - main
     paths:
       - "met-etl/**"
       - "met-api/**"
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (dev/test/prod)"
+        description: "Environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 defaults:
   run:

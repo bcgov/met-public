@@ -6,7 +6,7 @@ on:
       - "met-web/**"
   push:
     branches:
-      - omega-project
+      - main
 
 defaults:
   run:
