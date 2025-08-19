@@ -1,3 +1,11 @@
+## August 19, 2025
+
+- **Bugfix/Feature** Switched Font Awesome hosting to private repository due to licensing
+  [🎟️ DESENG-823](https://citz-gdx.atlassian.net/browse/DESENG-823)
+  - Replaced the Font Awesome NPM registry with a private Artifactory repository.
+  - Updated the `.npmrc` file to use the new repository and credentials.
+  - Updated GitHub Actions workflows to use the new credentials for building and deploying the web app.
+
 ## Jul 22, 2025
 
 - **Bugfix/Feature** Solutions for storage issues in dev [🎟️ DESENG-842](https://citz-gdx.atlassian.net/browse/DESENG-842)

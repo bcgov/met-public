@@ -8,11 +8,13 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
-# Argument for the FontAwesome token
-ARG FONTAWESOME_TOKEN
+# Arguments for Artifactory auth
+ARG ARTIFACTORY_USERNAME
+ARG ARTIFACTORY_PASSWORD
 
-# Set FontAwesome token as an environment variable for use in the .npmrc
-ENV FONTAWESOME_PACKAGE_TOKEN=${FONTAWESOME_TOKEN}
+# Set Artifactory auth as environment variables for use in the .npmrc
+ENV ARTIFACTORY_USERNAME=${ARTIFACTORY_USERNAME}
+ENV ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}
 
 # install app dependencies
 COPY package.json ./

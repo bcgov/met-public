@@ -27,7 +27,8 @@ env:
   OPENSHIFT_SA_NAME: ${{ secrets.OPENSHIFT_SA_NAME }}
   OPENSHIFT_IMAGE_REGISTRY: ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
-  FONTAWESOME_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
 jobs:
   met-web-cd:
@@ -57,7 +58,10 @@ jobs:
 
       - name: Build image
         run: |
-          docker build . --file Dockerfile --build-arg FONTAWESOME_TOKEN=${{ env.FONTAWESOME_TOKEN}} --tag image
+          docker build . --file Dockerfile --build-arg \
+          ARTIFACTORY_USERNAME=${{ env.ARTIFACTORY_USERNAME }} \
+          --build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }} \
+          --tag image
 
       - name: Push image
         run: |
