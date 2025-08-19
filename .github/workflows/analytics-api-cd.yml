@@ -3,15 +3,20 @@ name: MET ANALYTICS API DEV CD
 on:
   push:
     branches:
-      - omega-project
+      - main
     paths:
       - "analytics-api/**"
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (dev/test/prod)"
+        description: "Environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 defaults:
   run:

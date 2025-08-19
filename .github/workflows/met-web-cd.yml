@@ -3,15 +3,20 @@ name: MET WEB DEV CD
 on:
   push:
     branches:
-      - omega-project
+      - main
     paths:
       - "met-web/**"
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (dev/test/prod)"
+        description: "Environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 defaults:
   run:

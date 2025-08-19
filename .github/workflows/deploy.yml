@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (test/prod)"
+        description: "Environment"
         required: true
         default: "test"
+        type: choice
+        options:
+          - test
+          - prod
 
 defaults:
   run:
