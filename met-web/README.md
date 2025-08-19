@@ -24,11 +24,11 @@ The development scripts for this application allow customization via an environm
 
 The following commands support various development scenarios and needs.
 
+> _Note: you must be running the [API application](../met-api/README.md) concurrently._  
 > `npm start`
 >
 > Runs the react.js application.  
 > Open [http://localhost:3000](http://localhost:3000) to view it in the browser.  
-> Note: you must be running the [API application](met-api) concurrently.  
 > The page will reload if you make edits.  
 > You will also see any lint errors in the console.
 
