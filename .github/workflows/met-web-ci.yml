@@ -2,8 +2,6 @@ name: MET WEB CI
 
 on:
   pull_request:
-    branches:
-      - omega-project
     paths:
       - "met-web/**"
   push:
