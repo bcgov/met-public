@@ -6,20 +6,19 @@ FROM node:20-alpine AS build-stage
 WORKDIR /app
 
 # add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
 
-# Argument for the FontAwesome token
-ARG FONTAWESOME_TOKEN
-
-# Set FontAwesome token as an environment variable for use in the .npmrc
-ENV FONTAWESOME_PACKAGE_TOKEN=${FONTAWESOME_TOKEN}
-
-# install app dependencies
+# install app dependencies using BuildKit secrets for Artifactory credentials
 COPY package.json ./
 COPY package-lock.json ./
 COPY .npmrc ./
 
-RUN apk --no-cache add g++ make py3-pip && npm install --legacy-peer-deps --silent
+RUN --mount=type=secret,id=artifactory_password \
+    --mount=type=secret,id=artifactory_username \
+    apk --no-cache add g++ make py3-pip \
+    && export ARTIFACTORY_USERNAME=$(cat /run/secrets/artifactory_username) \
+    && export ARTIFACTORY_PASSWORD=$(cat /run/secrets/artifactory_password) \
+    && npm install --legacy-peer-deps --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
 # create and set user permissions to app folder

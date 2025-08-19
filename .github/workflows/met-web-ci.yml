@@ -2,8 +2,6 @@ name: MET WEB CI
 
 on:
   pull_request:
-    branches:
-      - omega-project
     paths:
       - "met-web/**"
   push:
@@ -15,15 +13,17 @@ defaults:
     shell: bash
     working-directory: ./met-web
 
+env:
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
 jobs:
   setup-job:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
-
     steps:
       - uses: actions/checkout@v3
-      - run: "true"
 
   linting:
     needs: setup-job
@@ -42,8 +42,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-        env:
-          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
       - name: Lint
         id: lint
         run: |
@@ -60,12 +58,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-        env:
-          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
 
       - name: Test with jest
         id: test
@@ -101,8 +96,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm install --legacy-peer-deps
-        env:
-          FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
       - name: build to check strictness
         id: build
         run: |
