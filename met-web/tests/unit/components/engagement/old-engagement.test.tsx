@@ -146,6 +146,24 @@ jest.mock('react-router-dom', () => ({
             };
         }
     },
+    useLoaderData: () => ({
+        engagement: Promise.resolve(draftEngagement),
+        metadata: Promise.resolve([]),
+        widgets: Promise.resolve([whoIsListeningWidget]),
+        content: Promise.resolve([
+            {
+                id: 1,
+                title: 'title',
+                text_content: 'text content',
+                json_content:
+                    '{"blocks":[{"key":"fclgj","text":"Rich Content Sample","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+                engagement_id: 1,
+                content: 'content',
+                sort_index: 1,
+                is_internal: false,
+            } as EngagementContent,
+        ]),
+    }),
 }));
 
 describe('Engagement View page tests', () => {
