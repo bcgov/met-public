@@ -1,5 +1,8 @@
 ## August 19, 2025
 
+- **Feature** Restricted options for values in manual CD runs
+  - Updated input type from `text` to `choice` in `met-cron-cd.yml`, `met-etl-cd.yml`,
+    and `notify-api-cd.yml`
 - **Bugfix/Feature** Switched Font Awesome hosting to private repository due to licensing
   [🎟️ DESENG-823](https://citz-gdx.atlassian.net/browse/DESENG-823)
   - Replaced the Font Awesome NPM registry with a private Artifactory repository.
