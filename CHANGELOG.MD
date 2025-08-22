@@ -1,3 +1,9 @@
+## August 22, 2025
+
+- **Bugfix** Finish upgrading DeploymentConfigs -> Deployments cross-app [🎟️ DESENG-847](https://citz-gdx.atlassian.net/browse/DESENG-847)
+  - Completed the replacement of all deprecated DeploymentConfigs with Deployments across the application.
+  - Updated Helm charts and deployment scripts to reflect the changes.
+
 ## August 19, 2025
 
 - **Feature** Restricted options for values in manual CD runs
