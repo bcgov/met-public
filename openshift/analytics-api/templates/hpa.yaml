@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app.name }}
 spec:
   scaleTargetRef:
-    kind: DeploymentConfig
+    kind: Deployment
     name: {{ .Values.app.name }}
     apiVersion: apps.openshift.io/v1
   minReplicas: {{ .Values.hpa.minReplicas }}
