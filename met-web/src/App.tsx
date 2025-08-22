@@ -214,7 +214,7 @@ const App = () => {
             ],
             { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
-        return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
+        return <RouterProvider router={router} />;
     }
 
     // Otherwise, if the user is authenticated but does not have a role, display the admin area with no access to children pages.
@@ -235,7 +235,7 @@ const App = () => {
             ],
             { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
-        return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
+        return <RouterProvider router={router} />;
     }
 
     // Otherwise, display the admin area.
@@ -254,6 +254,6 @@ const App = () => {
         { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
     );
 
-    return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
+    return <RouterProvider router={router} />;
 };
 export default App;
