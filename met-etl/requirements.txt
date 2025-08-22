@@ -6,7 +6,7 @@ flask-jwt-oidc==0.3.0
 Werkzeug==3.0.3
 marshmallow==3.21.1
 marshmallow-sqlalchemy==1.0.0
-dagster==1.7.15
+dagster==1.10.16
 dagit==1.7.15
 dagster-docker==0.23.15
 SQLAlchemy-Utils==0.38.3
