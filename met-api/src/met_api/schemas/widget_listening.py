@@ -16,7 +16,7 @@
 from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 
 from marshmallow import Schema
-from marshmallow_sqlalchemy.fields import Nested
+
 
 class WidgetListeningSchema(Schema):  # pylint: disable=too-many-ancestors, too-few-public-methods
     """This is the schema for the widget listening model."""

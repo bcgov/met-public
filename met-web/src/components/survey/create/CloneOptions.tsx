@@ -24,7 +24,7 @@ const SORT_ORDER = 'asc';
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(window.location.search);
     const engagementId = searchParams.get('engagementId');
     const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
     const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
@@ -79,7 +79,7 @@ const CloneOptions = () => {
             });
             setAvailableSurveys(fetchedSurveys.items);
             setLoadingSurveys(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching available surveys' }));
         }
     };
@@ -93,7 +93,7 @@ const CloneOptions = () => {
             });
             setAvailableEngagements(fetchedEngagements.items.filter((engagement) => engagement.surveys.length !== 0));
             setLoadingEngagements(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while fetching available engagements' }),
             );
@@ -141,7 +141,7 @@ const CloneOptions = () => {
                 }),
             );
             navigate(`/surveys/${createdSurvey.id}/build`);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

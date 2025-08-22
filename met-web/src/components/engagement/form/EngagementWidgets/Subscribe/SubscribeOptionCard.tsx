@@ -45,7 +45,7 @@ const SubscribeOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.SUBSCRIBE_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating subscription widget' }),

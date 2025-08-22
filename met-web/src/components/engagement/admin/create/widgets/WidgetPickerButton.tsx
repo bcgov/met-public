@@ -8,6 +8,16 @@ import { WidgetCardSwitch } from 'components/engagement/form/EngagementWidgets/W
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { WidgetLocation } from 'models/widget';
 
+/**
+ * A button component that allows users to pick and manage widgets for a specific location in an engagement.
+ * It displays the first widget if available, or a button to open the widget drawer if no widgets are present.
+ * The component also handles the removal of widgets with a confirmation modal.
+ * @param {Object} props - The properties for the WidgetPickerButton component.
+ * @param {WidgetLocation} props.location - The location where the widget will be placed in the engagement.
+ * @returns {JSX.Element} A button that displays the first widget or prompts the user to add a widget.
+ * @example
+ * <WidgetPickerButton location={WidgetLocation.Header} />
+ */
 export const WidgetPickerButton = ({ location }: { location: WidgetLocation }) => {
     const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading, setWidgetLocation } =
         useContext(WidgetDrawerContext);

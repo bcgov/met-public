@@ -200,6 +200,7 @@ export const BaseTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: Palette.background.paper,
+                    borderRadius: '1rem',
                 },
             },
         },

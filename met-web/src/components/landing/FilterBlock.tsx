@@ -14,7 +14,7 @@ import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input/Button';
 import { colors } from '../common';
-import { CustomTextField, CommonSelect } from 'components/common/Input';
+import { CustomTextField, Select } from 'components/common/Input';
 import { When } from 'react-if';
 
 const FilterBlock = () => {
@@ -161,7 +161,7 @@ const FilterBlock = () => {
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <CommonSelect
+                    <Select
                         value={selectedValue}
                         id="status-filter"
                         aria-label={`Filtering by ${selectableStatuses.get(

@@ -24,6 +24,10 @@ dayjs.extend(tz);
 
 const schema = yup
     .object({
+        event_name: yup
+            .string()
+            .max(100, 'Event name cannot exceed 100 characters')
+            .required('Event name cannot be empty'),
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
         location_name: yup
             .string()
@@ -67,6 +71,7 @@ const InPersonEventFormDrawer = () => {
     };
 
     useEffect(() => {
+        methods.setValue('event_name', eventItemToEdit?.event_name || '');
         methods.setValue('description', eventItemToEdit?.description || '');
         methods.setValue('location_name', eventItemToEdit?.location_name || '');
         methods.setValue('location_address', eventItemToEdit?.location_address || '');
@@ -99,7 +104,7 @@ const InPersonEventFormDrawer = () => {
 
     const createEvent = async (data: InPersonEventForm) => {
         const validatedData = await schema.validate(data);
-        const { description, location_address, location_name, date, time_from, time_to } = validatedData;
+        const { event_name, description, location_address, location_name, date, time_from, time_to } = validatedData;
         const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
         if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
@@ -107,6 +112,7 @@ const InPersonEventFormDrawer = () => {
                 type: EVENT_TYPE.OPENHOUSE,
                 items: [
                     {
+                        event_name: event_name,
                         description: description,
                         location_name: location_name,
                         location_address: location_address,
@@ -140,7 +146,7 @@ const InPersonEventFormDrawer = () => {
             setIsCreating(false);
             reset({});
             setInPersonFormTabOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);
         }
@@ -170,11 +176,22 @@ const InPersonEventFormDrawer = () => {
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Event Name</MetLabel>
+                                <ControlledTextField
+                                    name="event_name"
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
                                 <ControlledTextField
                                     name="description"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -189,7 +206,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="location_name"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -202,7 +218,6 @@ const InPersonEventFormDrawer = () => {
                                 <ControlledTextField
                                     name="location_address"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -216,7 +231,6 @@ const InPersonEventFormDrawer = () => {
                                     name="date"
                                     type="date"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -230,7 +244,6 @@ const InPersonEventFormDrawer = () => {
                                     name="time_from"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -244,7 +257,6 @@ const InPersonEventFormDrawer = () => {
                                     name="time_to"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}

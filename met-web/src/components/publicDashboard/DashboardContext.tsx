@@ -99,7 +99,7 @@ export const DashboardContextProvider = ({ children }: DashboardContextProviderP
         try {
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
-        } catch (error) {
+        } catch {
             navigate('/not-found');
         }
     };

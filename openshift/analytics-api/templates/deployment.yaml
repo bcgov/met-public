@@ -1,0 +1,103 @@
+# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-analytics
+  name: {{ .Values.app.name }}
+spec:
+  replicas: 1 # This is managed by the HPA
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      environment: {{ .Values.environment }}
+      role: api
+      app-group: met-analytics
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        environment: {{ .Values.environment }}
+        role: api
+        app-group: met-analytics
+      annotations:
+        image.openshift.io/triggers: >
+          [
+            {
+              "automatic": true,
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "{{ .Values.app.name }}:{{ .Values.image.tag }}",
+                "namespace": "{{ .Values.image.namespace }}"
+              },
+              "fieldPath": "spec.template.spec.containers[?(name=='{{ .Values.app.name }}')].image"
+            }
+          ]
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.vault.engine }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
+        vault.hashicorp.com/agent-inject-template-s3: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
+        # Custom built URI for met-patroni by indexing into the secret data object
+        vault.hashicorp.com/agent-inject-template-met-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
+          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "analytics-username" }}:{{ index .Data.data "analytics-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+          {{- end }}` }}
+    spec:
+      serviceAccountName: {{ .Values.app.licenseplate }}-vault
+      containers:
+      - image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
+        name: {{ .Values.app.name }}
+        # Required for the vault agent to run in the pod
+        env:
+        - name: CORS_ORIGINS
+          value: {{ .Values.cors.origins }}
+        imagePullPolicy: Always
+        name: {{ .Values.app.name }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          . /vault/secrets/s3 && \
+          . /vault/secrets/met-jwt-oidc && \
+          . /vault/secrets/met-patroni && \
+          bash /opt/app-root/docker-entrypoint.sh
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 150m
+            memory: 512Mi
+          requests:
+            cpu: 75m
+            memory: 100Mi
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

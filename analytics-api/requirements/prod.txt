@@ -27,7 +27,7 @@ Flask-Caching
 asyncio-nats-client
 asyncio-nats-streaming
 sqlalchemy==1.4.52
-secure
+secure==0.3.0
 python-dotenv
 aws-requests-auth
 requests

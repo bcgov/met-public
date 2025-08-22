@@ -1,4 +1,4 @@
-name: MET ETL DEV CD
+name: MET ETL CD
 
 on:
   push:
@@ -10,9 +10,14 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (dev/test/prod)"
+        description: "Environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 defaults:
   run:
@@ -22,7 +27,7 @@ defaults:
 env:
   APP_NAME: "dagster-etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
-  TAG_NAME: "dev"
+  TAG_NAME: "${{ github.event.inputs.environment || 'dev' }}"
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
   OPENSHIFT_SA_TOKEN: ${{ secrets.OPENSHIFT_SA_TOKEN }}
@@ -32,7 +37,7 @@ env:
 
 jobs:
   met-etl-cd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
     environment:
@@ -40,6 +45,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Openshift Tooling
+        uses: redhat-actions/openshift-tools-installer@v1.13.1
+        with:
+          oc: "4.16"
 
       - name: Login Openshift
         shell: bash

@@ -15,4 +15,25 @@ else
         echo "Root configuration file not found and environment template not found, using default."
     fi
 fi
+
+# Generate the config.js file from the environment variables
+REACT_APP_VARS_JS=$(
+    # For each environment variable
+    env |
+    # that starts with REACT_APP_,
+    grep -E '^REACT_APP_' |
+    # Create a string of the form "window._env_.REACT_APP_VAR_NAME' = 'REACT_APP_VAR_VALUE';"
+    sed -E "s/^(REACT_APP_[^=]+)=(.*)/window._env_.\1 = '\2';/" |
+    # Join the lines with a newline character,
+    awk '{printf "%s\n", $0}' |
+    # then remove the last newline character
+    sed 's/\n$//'
+)
+export REACT_APP_VARS_JS
+
+# Create the config.js file from the template
+# This file will be served by Nginx and will be used by the React app to
+# set the environment variables at runtime.
+envsubst < /usr/share/nginx/html/config.js.template > /usr/share/nginx/html/config.js
+
 nginx -g 'daemon off;'

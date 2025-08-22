@@ -15,7 +15,6 @@ import { LanguageProvider } from 'components/common/LanguageContext';
 Formio.use(MetFormioComponents);
 Formio.Utils.Evaluator.noeval = false;
 
-// eslint-disable-next-line
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
     // <React.StrictMode>

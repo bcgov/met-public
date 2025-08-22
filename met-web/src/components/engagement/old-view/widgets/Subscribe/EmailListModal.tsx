@@ -70,7 +70,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                     type: 'update',
                 }),
             );
-        } catch (error) {
+        } catch {
             setOpen(false);
             dispatch(
                 openNotificationModal({

@@ -11,5 +11,10 @@
     "--load-plugins",
     "pylint_flask_sqlalchemy",
     "pylint_flask"],
-  "python.analysis.autoImportCompletions": true
+  "python.analysis.autoImportCompletions": true,
+  "python-envs.pythonProjects": [],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "bcgov-sonarcloud",
+    "projectKey": "bcgov_met-public"
+  }
 }

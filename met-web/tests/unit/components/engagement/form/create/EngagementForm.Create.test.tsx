@@ -68,18 +68,6 @@ jest.mock('react-router-dom', () => ({
     },
 }));
 
-const router = createMemoryRouter(
-    [
-        {
-            path: '/engagements/create/form/',
-            element: <EngagementForm />,
-        },
-    ],
-    {
-        initialEntries: [`/engagements/create/form/`],
-    },
-);
-
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [jest.fn(() => Promise.resolve())],

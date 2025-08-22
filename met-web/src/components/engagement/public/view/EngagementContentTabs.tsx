@@ -17,21 +17,28 @@ export const EngagementContentTabs = () => {
         setSelectedTab(newValue);
     };
 
-    const tabListRef = useCallback((node: HTMLButtonElement) => {
+    const tabListRef = useCallback((node: HTMLDivElement | null) => {
         if (!node) return;
         const scroller = node.getElementsByClassName('MuiTabs-scroller')[0];
-        scroller.addEventListener('scroll', () => checkFade(node)); // check when scrolling
+        if (!scroller) return;
+        const handleScroll = () => checkFade(node);
+        scroller.addEventListener('scroll', handleScroll);
         const resizeObserver = new ResizeObserver(() => checkFade(node));
-        resizeObserver.observe(scroller); // check when window resizes
-        checkFade(node); // initial check when attaching the ref
+        resizeObserver.observe(scroller);
+        checkFade(node);
+        return () => {
+            scroller.removeEventListener('scroll', handleScroll);
+            resizeObserver.disconnect();
+        };
     }, []);
 
-    const checkFade = (node: HTMLButtonElement) => {
+    const checkFade = (node: HTMLDivElement) => {
         if (!node) return;
-        const scroller = node.getElementsByClassName('MuiTabs-scroller')[0];
-        const scrollPosition = scroller.scrollLeft; // distance from left edge
-        const maxScroll = scroller.scrollWidth - scroller.clientWidth; // distance from right edge
-        const fadeMargin = 64; // pixels
+        const scroller = node.getElementsByClassName('MuiTabs-scroller')[0] as HTMLElement;
+        if (!scroller) return;
+        const scrollPosition = scroller.scrollLeft;
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        const fadeMargin = 64;
         if (maxScroll - scrollPosition < fadeMargin) {
             node.classList.remove('fade-right');
         } else {
@@ -69,7 +76,6 @@ export const EngagementContentTabs = () => {
                                                 lg: 'calc(100% + 156px)',
                                             },
                                             '&.fade-right::after': {
-                                                // fade out the right edge of the tab list
                                                 content: '""',
                                                 display: 'block',
                                                 position: 'absolute',
@@ -79,7 +85,7 @@ export const EngagementContentTabs = () => {
                                                 height: '100%',
                                                 background:
                                                     'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 5%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
-                                                pointerEvents: 'none', //allow clicking on faded tabs
+                                                pointerEvents: 'none',
                                             },
                                             '& .MuiTabs-indicator': {
                                                 display: 'flex',

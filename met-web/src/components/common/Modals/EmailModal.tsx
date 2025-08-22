@@ -21,6 +21,35 @@ import {
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
 
+/**
+ * A modal component for collecting user email and agreement to terms.
+ * It includes fields for email input, terms and conditions checkbox, and submit button.
+ * @param {Object} props - The properties for the EmailModal component.
+ * @param {boolean} props.open - Controls the visibility of the modal.
+ * @param {string} props.email - The email address input by the user.
+ * @param {Function} props.updateEmail - Function to update the email state.
+ * @param {Function} props.updateModal - Function to update the modal visibility state.
+ * @param {string} props.header - The main title of the modal.
+ * @param {Array} props.subText - An array of objects containing text to display in the modal, with optional bold styling.
+ * @param {JSX.Element} props.signupoptions - JSX element containing additional signup options.
+ * @param {JSX.Element} props.termsOfService - JSX element containing the terms of service text.
+ * @param {Function} props.handleConfirm - Function to call when the user confirms the action.
+ * @param {boolean} props.isSaving - Indicates if the form is currently being submitted.
+ * @returns {JSX.Element} A modal component with email input and terms agreement.
+ * @example
+ * <EmailModal
+ *     open={true}
+ *     email={email}
+ *     updateEmail={setEmail}
+ *     updateModal={setOpen}
+ *     header="Sign Up"
+ *     subText={[{ text: 'Please enter your email to sign up.', bold: false }]}
+ *     signupoptions={<div>Additional signup options here</div>}
+ *     termsOfService={<div>Terms of Service text here</div>}
+ *     handleConfirm={() => console.log('Confirmed')}
+ *     isSaving={false}
+ * />
+ */
 const EmailModal = ({
     open,
     email,

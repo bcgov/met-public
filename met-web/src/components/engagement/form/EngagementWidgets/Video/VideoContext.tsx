@@ -37,7 +37,7 @@ export const VideoContextProvider = ({ children }: { children: JSX.Element | JSX
             const result = await fetchVideoWidgets(widget.id);
             setVideoWidget(result[result.length - 1]);
             setIsLoadingVideoWidget(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occurred while trying to load video data' }),
             );

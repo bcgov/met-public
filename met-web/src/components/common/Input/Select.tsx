@@ -13,7 +13,7 @@ import { useTheme } from '@mui/material/styles';
 import { colors, elevations } from '../../common';
 import { isDarkColor } from 'utils';
 
-type CommonSelectProps = {
+type SelectProps = {
     options: Array<{ value: string | number; label: string }>;
     value: string | number;
     onChange: (event: SelectChangeEvent<unknown>) => void;
@@ -25,7 +25,35 @@ type CommonSelectProps = {
     color?: 'default' | 'danger' | 'warning' | 'success' | string;
 };
 
-export const CommonSelect: React.FC<CommonSelectProps & Omit<MuiSelectProps, 'value' | 'onChange' | 'renderValue'>> = ({
+/**
+ * A customizable select component that allows users to choose from a list of options.
+ * It supports custom rendering of selected values, and can display a checkmark next to the selected option.
+ * The component is styled to match the application's theme and supports various colors.
+ * @param {SelectProps} props - The properties for the select component.
+ * @param {Array<{ value: string | number; label: string }>} props.options - The list of options to display in the select dropdown.
+ * @param {string | number} props.value - The currently selected value.
+ * @param {function} props.onChange - The function to call when the selected value changes.
+ * @param {string} props.id - The unique identifier for the select component.
+ * @param {function} props.renderValue - A function to render the selected value.
+ * @param {boolean} [props.displayEmpty=false] - If true, allows the select to display an empty value.
+ * @param {Record<string, unknown>} [props.inputProps={}] - Additional properties to pass to the input element.
+ * @param {Record<string, unknown>} [props.MenuProps={}] - Additional properties for the dropdown menu.
+ * @param {string} [props.color='default'] - The color of the select component, can be 'default', 'danger', 'warning', 'success', or any custom color.
+ * @returns {JSX.Element} A styled select component that allows users to choose from a list of options.
+ * @example
+ * <Select
+ *   options={[
+ *     { value: 'option1', label: 'Option 1' },
+ *     { value: 'option2', label: 'Option 2' },
+ *   ]}
+ *   value="option1"
+ *   onChange={(event) => console.log(event.target.value)}
+ *   id="my-select"
+ *   renderValue={(value) => `Selected: ${value}`}
+ *   displayEmpty
+ *
+ */
+export const Select: React.FC<SelectProps & Omit<MuiSelectProps, 'value' | 'onChange' | 'renderValue'>> = ({
     options,
     value,
     onChange,

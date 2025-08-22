@@ -30,7 +30,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
             setData(response);
             setIsLoading(false);
             setIsError(false);
-        } catch (error) {
+        } catch {
             setIsError(true);
         }
     };

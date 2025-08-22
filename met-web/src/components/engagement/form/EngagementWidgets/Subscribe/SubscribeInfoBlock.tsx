@@ -85,7 +85,7 @@ const SubscribeInfoBlock = () => {
                     }),
                 );
             }
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

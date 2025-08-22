@@ -74,7 +74,7 @@ export const AddTeamMemberModal = () => {
             });
             setUsers(response.items);
             setUsersLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

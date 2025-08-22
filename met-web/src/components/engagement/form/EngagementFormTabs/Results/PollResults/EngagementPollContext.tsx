@@ -46,7 +46,7 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
-        } catch (err) {
+        } catch {
             setIsWidgetsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
         } finally {
@@ -65,7 +65,7 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
             const result = await fetchPollWidgets(widget.id);
             setPollWidget(result.at(-1));
             setIsLoadingPollWidget(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load Poll data' }));
             setIsLoadingPollWidget(false);
         } finally {
@@ -81,7 +81,7 @@ export const EngagementPollContextProvider = ({ children }: { children: JSX.Elem
             const data = await fetchPollResults(widget.id, pollWidget.id);
             setPollResults(data);
             setIsPollResultsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error fetching poll results' }));
             setIsPollResultsLoading(false);
         } finally {

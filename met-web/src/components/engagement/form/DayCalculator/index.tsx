@@ -512,7 +512,6 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         defaultValue={options[0]}
                                         data-testid={'autocomplete'}
                                         value={selectedOption}
-                                        placeholder="selectedOption"
                                     />
                                 </Stack>
                             </Grid>
@@ -585,7 +584,6 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                         defaultValue={options[0]}
                                         data-testid={'autocomplete'}
                                         value={selectedOption}
-                                        placeholder="selectedOption"
                                     />
                                 </Stack>
                             </Grid>

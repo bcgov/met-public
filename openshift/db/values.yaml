@@ -1,0 +1,52 @@
+# Default values for db chart
+# This file contains values for the backup deployment and can be overridden per environment
+
+app:
+  name: met-db
+  licenseplate: "e903c2"
+
+backup:
+  enabled: true
+  image:
+    repository: "ghcr.io"
+    namespace: bcgov
+    name: backup-container
+    tag: latest
+  storage:
+    size: 2Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: "netapp-file-backup"
+  verification:
+    enabled: true
+    storageSize: 3Gi
+    storageClass: "netapp-file-standard"
+    mountPath: "/var/lib/pgsql/data"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+      ephemeralStorage: 2Gi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+      ephemeralStorage: 2Gi
+  dbName: met
+  strategy: rolling
+  schema: public
+  mountPath: "/backups/"
+  environment: dev
+  environmentFriendlyName: Development
+
+vault:
+  namespace: platform-services
+  authPath: auth/k8s-gold
+  engine: e903c2-nonprod
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

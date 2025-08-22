@@ -42,7 +42,7 @@ const UnauthenticatedRoutes = () => {
             <Route path="/engagements">
                 <Route path="create/form/:language" element={<RedirectLoginWrapper />} />
                 <Route path=":engagementId">
-                    <Route path="view/:language" element={<EngagementViewWrapper />} />
+                    <Route path="view/:language" loader={engagementLoader} element={<EngagementViewWrapper />} />
                     <Route path="comments/:dashboardType/:language" element={<EngagementCommentsWrapper />} />
                     <Route path="dashboard/:dashboardType/:language" element={<PublicDashboardWrapper />} />
                     <Route path="edit/:token/:language" loader={SurveyLoader} element={<EditSurveyWrapper />} />
@@ -56,7 +56,7 @@ const UnauthenticatedRoutes = () => {
                 <Route path="comments/:dashboardType/:language" element={<EngagementCommentsWrapper />} />
                 <Route path="edit/:token/:language" loader={SurveyLoader} element={<EditSurveyWrapper />} />
                 <Route path="cacform/:widgetId/:language" element={<FormCACWrapper />} />
-                <Route path=":language" element={<EngagementViewWrapper />} />
+                <Route path=":language" loader={engagementLoader} element={<EngagementViewWrapper />} />
             </Route>
             <Route path="/not-available" element={<NotAvailable />} />
             <Route path="/not-found" element={<NotFound />} />

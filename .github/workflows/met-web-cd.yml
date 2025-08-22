@@ -9,9 +9,14 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment (dev/test/prod)"
+        description: "Environment"
         required: true
         default: "dev"
+        type: choice
+        options:
+          - dev
+          - test
+          - prod
 
 defaults:
   run:
@@ -27,11 +32,12 @@ env:
   OPENSHIFT_SA_NAME: ${{ secrets.OPENSHIFT_SA_NAME }}
   OPENSHIFT_IMAGE_REGISTRY: ${{ secrets.OPENSHIFT_IMAGE_REGISTRY }}
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
-  FONTAWESOME_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
 jobs:
   met-web-cd:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
     environment:
@@ -39,6 +45,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Openshift Tooling
+        uses: redhat-actions/openshift-tools-installer@v1.13.1
+        with:
+          oc: "4.16"
 
       - name: Login Openshift
         shell: bash
@@ -50,9 +61,19 @@ jobs:
           echo "${{ env.OPENSHIFT_SA_TOKEN }}" | 
           docker login ${{ env.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ env.OPENSHIFT_SA_NAME}} --password-stdin
 
-      - name: Build image
+      - name: Create Artifactory secret files
         run: |
-          docker build . --file Dockerfile --build-arg FONTAWESOME_TOKEN=${{ env.FONTAWESOME_TOKEN}} --tag image
+          echo -n "${{ env.ARTIFACTORY_USERNAME }}" > /tmp/artifactory_username
+          echo -n "${{ env.ARTIFACTORY_PASSWORD }}" > /tmp/artifactory_password
+
+      - name: Build image with BuildKit secrets
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker build . --file Dockerfile \
+            --secret id=artifactory_username,src=/tmp/artifactory_username \
+            --secret id=artifactory_password,src=/tmp/artifactory_password \
+            --tag image
 
       - name: Push image
         run: |

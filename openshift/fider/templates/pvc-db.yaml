@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.app.name }}-postgresql
+  namespace: {{ .Values.app.namespace }}
+  annotations:
+    "helm.sh/resource-policy": "keep"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.db.storageSize }}
+  storageClassName: {{ .Values.db.storageClass }}
+  volumeMode: {{ .Values.db.volumeMode }}

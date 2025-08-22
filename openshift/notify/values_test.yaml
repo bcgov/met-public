@@ -1,0 +1,9 @@
+# Environment-specific overrides for test
+environment: test
+
+image:
+  tag: test
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: /test

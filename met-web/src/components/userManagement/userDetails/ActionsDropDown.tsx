@@ -31,7 +31,7 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
                 }),
             );
             setLoading(false);
-        } catch (error) {
+        } catch {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to revoke membership', severity: 'error' }));
         }
@@ -49,7 +49,7 @@ export const ActionsDropDown = ({ membership }: { membership: EngagementTeamMemb
                 }),
             );
             setLoading(false);
-        } catch (error) {
+        } catch {
             setLoading(false);
             dispatch(openNotification({ text: 'Failed to reinstate membership', severity: 'error' }));
         }

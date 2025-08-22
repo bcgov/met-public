@@ -146,7 +146,7 @@ const Form = () => {
             setIsCreating(false);
             reset({});
             handleWidgetDrawerOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add image' }));
             setIsCreating(false);
         }

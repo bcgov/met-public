@@ -1,0 +1,17 @@
+apiVersion: v2
+name: db
+description: |
+  A Helm chart for Kubernetes to deploy database resources.
+  This chart is intended to be used with a Patroni instance.
+  Contents:
+    - PostgreSQL backup container
+      - Persistent Volume Claims for backup storage
+      - Configuration map for backup schedule and settings
+  TODO: Move patroni instance into this chart.
+type: application
+version: 0.1.0
+appVersion: "1.0"
+# dependencies:
+#   - name: patroni
+#     version: 0.0.1
+#     repository: https://bcgov.github.io/nr-patroni-chart

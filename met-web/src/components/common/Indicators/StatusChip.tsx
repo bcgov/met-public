@@ -22,7 +22,17 @@ export const getStatusFromStatusId = (statusId: SubmissionStatus): StatusText =>
             return 'Closed';
     }
 };
-
+/**
+ * A Chip component that displays the status of an engagement.
+ * It uses the SubmissionStatus enum to determine the status and applies appropriate styles.
+ * @param {ChipProps} props - Other properties for the chip component.
+ * @param {string} [props.label] - Optional custom label for the chip. If not provided, the status text will be used.
+ * @param {SubmissionStatus} props.statusId - The status ID of the engagement, used to determine the chip's appearance.
+ * @returns A styled MuiChip component with the status label.
+ * @example
+ * <EngagementStatusChip statusId={SubmissionStatus.Open} />
+ * <EngagementStatusChip statusId={SubmissionStatus.Upcoming} label="Upcoming Engagement" />
+ */
 export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> = ({
     label: customLabel,
     statusId: status,
@@ -85,6 +95,11 @@ export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> =
     );
 };
 
+/**
+ * A skeleton component for the StatusChip.
+ * It provides a placeholder for the chip while the actual data is loading.
+ * @returns A rectangular skeleton with a fixed width and height, styled to resemble a status chip.
+ */
 export const StatusChipSkeleton = () => (
     <Skeleton variant="rectangular" sx={{ width: '64px', height: '28px', borderRadius: '24px' }} />
 );

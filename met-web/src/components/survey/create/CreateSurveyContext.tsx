@@ -91,7 +91,7 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
         try {
             const engagement = await getEngagement(Number(engagementId));
             handleEngagement(engagement);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error fetching the linked engagement' }));
             navigate(-1);
         }

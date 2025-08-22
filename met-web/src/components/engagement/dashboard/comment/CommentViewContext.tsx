@@ -74,7 +74,7 @@ export const CommentViewProvider = ({ children }: { children: JSX.Element | JSX.
         try {
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
-        } catch (error) {
+        } catch {
             navigate('/not-found');
         }
     };

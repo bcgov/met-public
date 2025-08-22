@@ -1,91 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { MetPaper, MetHeader2Old } from 'components/common';
-import { Grid, Skeleton, Divider } from '@mui/material';
-import PollDisplay from '../../../form/EngagementWidgets/Poll/PollDisplay';
+import React, { useState, useEffect, Suspense, useMemo, memo } from 'react';
+import { Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch, useSubmittedPolls, useAppSelector } from 'hooks';
 import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { BodyText, Header3 } from 'components/common/Typography';
+import { BaseTheme, colors } from 'styles/Theme';
+import { Await } from 'react-router-dom';
 import { PollStatus } from 'constants/engagementStatus';
-import { Button } from 'components/common/Input/Button';
+import PollDisplay from 'components/engagement/form/EngagementWidgets/Poll/PollDisplay';
+import { Button } from 'components/common/Input';
+import {
+    faCheckCircle,
+    faInboxFull,
+    faSignalStreamSlash,
+    faXmarkCircle,
+    IconDefinition,
+} from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface PollWidgetViewProps {
     widget: Widget;
 }
 
-interface HttpResponseError extends Error {
-    response?: {
-        status: number;
-    };
-}
-
 interface ResponseMessage {
     color: string;
     message: string;
+    icon: IconDefinition;
 }
 
-const RESPONSE_MESSAGE_SUCCESS: ResponseMessage = { color: 'green', message: 'Thank you for the response.' };
-const RESPONSE_MESSAGE_RECORDED: ResponseMessage = { color: 'green', message: 'Response already recorded.' };
-const RESPONSE_MESSAGE_ERROR: ResponseMessage = { color: 'red', message: 'An error occurred.' };
-const RESPONSE_MESSAGE_LIMIT: ResponseMessage = { color: 'red', message: 'Limit exceeded for this poll.' };
+const RESPONSE_MESSAGES = {
+    SUCCESS: {
+        color: colors.notification.success.icon,
+        message: 'Thank you for the response.',
+        icon: faCheckCircle,
+    },
+    RECORDED: { color: colors.notification.info.icon, message: 'Response already recorded.', icon: faCheckCircle },
+    ERROR: { color: colors.notification.error.icon, message: 'An unknown error occurred.', icon: faXmarkCircle },
+    NETWORK_ERROR: {
+        color: colors.notification.error.icon,
+        message: 'Network error. Please check your connection.',
+        icon: faSignalStreamSlash,
+    },
+    LIMIT: {
+        color: colors.notification.error.icon,
+        message: 'You or your IP address have exceeded the response limit for this poll.',
+        icon: faInboxFull,
+    },
+};
+
+const PollMessage = ({ message, color, icon }: { message: string; color: string; icon: IconDefinition }) => (
+    <Grid
+        item
+        xs={12}
+        sx={{
+            mt: 2,
+            textAlign: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+        }}
+    >
+        <BodyText
+            color={color}
+            sx={{
+                fontSize: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            <span style={{ fontSize: '3rem', marginBottom: '0.5em' }}>
+                <FontAwesomeIcon icon={icon} />
+            </span>
+            {message}
+        </BodyText>
+    </Grid>
+);
+
+const SubmitSection = memo(
+    ({
+        isLoggedIn,
+        onSubmit,
+        responseMessage,
+    }: {
+        isLoggedIn: boolean;
+        onSubmit: () => void;
+        responseMessage: ResponseMessage | null;
+    }) => {
+        if (isLoggedIn) return null; // Only show for non-logged-in users
+
+        return (
+            <>
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                    <Button onClick={onSubmit} variant="primary" size="small">
+                        Submit
+                    </Button>
+                </Grid>
+                {responseMessage && <PollMessage {...responseMessage} />}
+            </>
+        );
+    },
+);
+
+const PollContent = ({
+    pollWidget,
+    isSubmitted,
+    isLoggedIn,
+    responseMessage,
+    handleSubmit,
+    handleOptionChange,
+}: {
+    pollWidget: PollWidget;
+    isSubmitted: boolean;
+    isLoggedIn: boolean;
+    responseMessage: ResponseMessage | null;
+    handleSubmit: (pollWidget: PollWidget) => Promise<void>;
+    handleOptionChange: (option: string) => void;
+}) => {
+    if (pollWidget.status === PollStatus.Inactive) {
+        return <PollMessage {...RESPONSE_MESSAGES.ERROR} message="Poll is inactive." />;
+    }
+
+    if (responseMessage) {
+        return <PollMessage {...responseMessage} />;
+    }
+
+    return (
+        <>
+            <PollDisplay pollWidget={pollWidget} interactionEnabled={true} onOptionChange={handleOptionChange} />
+            <SubmitSection
+                isLoggedIn={isLoggedIn}
+                onSubmit={() => handleSubmit(pollWidget)}
+                responseMessage={null} // Ensure no duplicate error message below the poll
+            />
+        </>
+    );
+};
+
+const fetchPollDetails = async (id: number) => {
+    const pollWidgets = await fetchPollWidgets(id);
+    return pollWidgets[pollWidgets.length - 1];
+};
 
 const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const dispatch = useAppDispatch();
-    const [pollWidget, setPollWidget] = useState<PollWidget>({
-        id: 0,
-        widget_id: 0,
-        engagement_id: 0,
-        title: '',
-        description: '',
-        status: '',
-        answers: [],
-    });
-
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const [isLoading, setIsLoading] = useState(true);
     const [selectedOption, setSelectedOption] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [interactionEnabled, setInteractionEnabled] = useState(true);
     const [responseMessage, setResponseMessage] = useState<ResponseMessage | null>(null);
     const { getSubmittedPolls, addSubmittedPoll } = useSubmittedPolls();
 
     useEffect(() => {
-        // Check if the current widget ID is in the submitted polls
         if (getSubmittedPolls().includes(widget.id)) {
             setIsSubmitted(true);
-            setResponseMessage(RESPONSE_MESSAGE_RECORDED);
+            // Only set the response message on refresh
+            if (!responseMessage) {
+                setResponseMessage(RESPONSE_MESSAGES.RECORDED);
+            }
         }
-        fetchPollDetails();
-    }, [widget]);
+    }, [widget, getSubmittedPolls, responseMessage]);
 
-    const fetchPollDetails = async () => {
-        try {
-            const pollWidgets = await fetchPollWidgets(widget.id);
-            const pollWidget = pollWidgets[pollWidgets.length - 1];
-            setPollWidget(pollWidget);
-            setIsLoading(false);
-        } catch (error) {
-            setIsLoading(false);
-            console.log(error);
-            dispatch(
-                openNotification({
-                    severity: 'error',
-                    text: 'Error occurred while fetching Engagement widgets information',
-                }),
-            );
-        }
-    };
-    // Type guard for HttpResponseError
-    const isHttpResponseError = (error: unknown): error is HttpResponseError => {
-        return error instanceof Error && 'response' in error;
-    };
-
-    const handleSubmit = async () => {
-        // Resetting error message
+    const handleSubmit = async (pollWidget: PollWidget) => {
         setResponseMessage(null);
 
-        if (selectedOption == '') {
+        if (!selectedOption) {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -94,7 +176,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
             );
             return;
         }
-        setInteractionEnabled(false);
+
         try {
             await postPollResponse(widget.id, pollWidget.id, {
                 selected_answer_id: parseInt(selectedOption),
@@ -102,93 +184,108 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
 
             setIsSubmitted(true);
             addSubmittedPoll(widget.id);
-            setResponseMessage(RESPONSE_MESSAGE_SUCCESS);
+            setResponseMessage(RESPONSE_MESSAGES.SUCCESS);
         } catch (error: unknown) {
-            let responseMessage = RESPONSE_MESSAGE_ERROR;
-            if (isHttpResponseError(error) && error.response?.status === 400) {
-                // If  exceed limit error, do not allow them to poll again and added poll to already poll list
-                responseMessage = RESPONSE_MESSAGE_LIMIT;
-                setIsSubmitted(true);
-                addSubmittedPoll(widget.id);
-            } else {
-                // If not exceed limit error, allow them to poll again
-                setIsSubmitted(false);
-                setInteractionEnabled(true);
+            // Simplified error extraction
+            const errorResponse = error as { status?: number; data?: unknown; message?: string };
+            const rejectionReason =
+                errorResponse?.message ??
+                (typeof errorResponse?.data === 'string' ? errorResponse.data : null) ??
+                'An unknown error occurred';
+            // Check if this is a submission limit error (400)
+            if (getSubmittedPolls().includes(widget.id)) {
+                setResponseMessage(RESPONSE_MESSAGES.RECORDED);
             }
-            setResponseMessage(responseMessage);
+            if (rejectionReason.toLowerCase().includes('limit')) {
+                setResponseMessage(RESPONSE_MESSAGES.LIMIT);
+            } else if (rejectionReason.toLowerCase().includes('network')) {
+                setResponseMessage(RESPONSE_MESSAGES.NETWORK_ERROR);
+            } else {
+                const error = RESPONSE_MESSAGES.ERROR;
+                if (rejectionReason) {
+                    error.message = rejectionReason;
+                }
+                setResponseMessage(error);
+            }
+
+            // Only set submission to false if it's not a 400 error
+            if (errorResponse?.status !== 400) {
+                setIsSubmitted(false);
+            }
         }
     };
 
-    const handleOptionChange = (option: string) => {
-        setSelectedOption(option);
-    };
-
-    const isPollNotReady = () => {
-        if (pollWidget) {
-            return pollWidget.status === PollStatus.Inactive || pollWidget.answers.length == 0;
-        } else {
-            return true;
-        }
-    };
-
-    if (isPollNotReady()) {
-        return null;
-    }
-
-    if (isLoading) {
-        return (
-            <MetPaper elevation={1} sx={{ padding: '1em' }}>
-                <Grid container justifyContent="flex-start" spacing={3}>
-                    <Grid item xs={12}>
-                        <MetHeader2Old>
-                            <Skeleton variant="rectangular" />
-                        </MetHeader2Old>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Skeleton variant="rectangular" height="20em" />
-                    </Grid>
-                </Grid>
-            </MetPaper>
-        );
-    }
+    const handleOptionChange = (option: string) => setSelectedOption(option);
+    const cachedPollDetails = useMemo(() => fetchPollDetails(widget.id), [widget.id]);
 
     return (
-        <MetPaper elevation={1} sx={{ paddingTop: '0.5em', padding: '1em' }}>
-            <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-                <Grid
-                    item
-                    container
-                    justifyContent={{ xs: 'center', md: 'flex-start' }}
-                    flexDirection={'column'}
-                    xs={12}
-                    paddingBottom={0}
-                >
-                    <MetHeader2Old bold>{widget.title}</MetHeader2Old>
-                    <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
-                </Grid>
-                <Grid item xs={12}>
-                    <PollDisplay
-                        pollWidget={pollWidget}
-                        interactionEnabled={interactionEnabled && !isSubmitted && !isLoggedIn}
-                        onOptionChange={handleOptionChange}
-                    />
-                    {!isLoggedIn && (
-                        <>
-                            {!isSubmitted && (
-                                <Grid item xs={12} sx={{ marginTop: '1em' }}>
-                                    <Button onClick={() => handleSubmit()} variant="primary" size="small">
-                                        Submit
-                                    </Button>
-                                </Grid>
-                            )}
-                            {responseMessage?.message && (
-                                <p style={{ color: responseMessage?.color }}>{responseMessage?.message}</p>
-                            )}
-                        </>
-                    )}
-                </Grid>
+        <Grid container gap="1rem">
+            <Grid item xs={12} mt="4rem">
+                <Header3 sx={{ fontSize: '1.375rem' }} weight="thin">
+                    {widget.title}
+                </Header3>
             </Grid>
-        </MetPaper>
+            <Grid
+                item
+                xs={12}
+                component={Paper}
+                sx={{
+                    mt: '1.5rem',
+                    bgcolor: 'white',
+                    padding: '2em',
+                    borderRadius: '16px',
+                    border: '1px solid',
+                    borderColor: 'blue.90',
+                    height: 'calc(100% - 9em)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <section aria-label="Widget" style={{ flexGrow: 1 }}>
+                    <ThemeProvider theme={BaseTheme}>
+                        <Suspense fallback={<PollWidgetSkeleton />}>
+                            <Await resolve={cachedPollDetails} errorElement={<PollWidgetLoadingErrorElement />}>
+                                {(pollWidget: PollWidget) => (
+                                    <PollContent
+                                        pollWidget={pollWidget}
+                                        isSubmitted={isSubmitted}
+                                        isLoggedIn={isLoggedIn}
+                                        responseMessage={responseMessage}
+                                        handleSubmit={handleSubmit}
+                                        handleOptionChange={handleOptionChange}
+                                    />
+                                )}
+                            </Await>
+                        </Suspense>
+                    </ThemeProvider>
+                </section>
+            </Grid>
+        </Grid>
+    );
+};
+
+const PollWidgetSkeleton = () => (
+    <Grid container spacing={2}>
+        <Grid item xs={12}>
+            <Skeleton variant="text" width="60%" height={40} />
+        </Grid>
+        <Grid item xs={12}>
+            <Skeleton variant="rectangular" width="100%" height={115} />
+        </Grid>
+        <Grid item xs={12}>
+            <Skeleton variant="text" width="30%" height={40} />
+        </Grid>
+    </Grid>
+);
+
+const PollWidgetLoadingErrorElement = () => {
+    // Return an error message based on the PollMessage component
+    return (
+        <PollMessage
+            message="Error occurred while fetching widget information"
+            color={colors.notification.error.icon}
+            icon={faSignalStreamSlash}
+        />
     );
 };
 

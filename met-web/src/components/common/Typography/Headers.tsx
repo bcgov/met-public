@@ -1,6 +1,14 @@
 import React from 'react';
 import { Typography, TypographyProps } from '@mui/material';
 
+type HeaderWeight = 'bold' | 'regular' | 'thin';
+
+type HeaderProps = {
+    children: React.ReactNode;
+    weight?: HeaderWeight;
+    component?: React.ElementType;
+} & TypographyProps;
+
 const fontWeight = (weight?: string | number) => {
     switch (weight) {
         case 'bold':
@@ -14,16 +22,16 @@ const fontWeight = (weight?: string | number) => {
     }
 };
 
-export const Header1 = ({
-    children,
-    weight,
-    component,
-    ...props
-}: {
-    children: React.ReactNode;
-    weight?: 'bold' | 'regular' | 'thin';
-    component?: React.ElementType;
-} & TypographyProps) => {
+/**
+ * Header1 component for rendering a primary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param children - The content of the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h1'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element.
+ */
+export const Header1 = ({ children, weight, component, ...props }: HeaderProps) => {
     return (
         <Typography
             component={component || 'h1'}
@@ -43,18 +51,25 @@ export const Header1 = ({
     );
 };
 
+/**
+ * Header2 component for rendering a secondary header.
+ * This component uses the MUI Typography component to render a header with optional decoration and customizable styles.
+ * @param children - The content of the header.
+ * @param decorated - Whether to add a decorative line above the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h2'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element with optional decoration.
+ */
 export const Header2 = ({
     children,
     decorated = false,
     weight,
     component,
     ...props
-}: {
-    children: React.ReactNode;
+}: HeaderProps & {
     decorated?: boolean;
-    weight?: 'bold' | 'regular' | 'thin';
-    component?: React.ElementType;
-} & TypographyProps) => {
+}) => {
     return (
         <Typography
             variant="h2"
@@ -85,6 +100,15 @@ export const Header2 = ({
     );
 };
 
+/**
+ * Header3 component for rendering a tertiary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param children - The content of the header.
+ * @param weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param component - The HTML element to use for the header, defaults to 'h3'.
+ * @param props - Additional props to pass to the Typography component.
+ * @returns JSX.Element: A styled header element.
+ */
 export const Header3 = ({
     children,
     weight,
@@ -92,7 +116,7 @@ export const Header3 = ({
     ...props
 }: {
     children: React.ReactNode;
-    weight?: 'bold' | 'regular' | 'thin';
+    weight?: HeaderWeight;
     component?: React.ElementType;
 } & TypographyProps) => {
     return (
@@ -113,10 +137,48 @@ export const Header3 = ({
     );
 };
 
+/**
+ * Header4 component for rendering a quaternary header.
+ * This component uses the MUI Typography component to render a header with customizable styles.
+ * @param {Object} props - Additional props to pass to the Typography component.
+ * @param {React.ReactNode} props.children - The content of the header.
+ * @param {string} props.weight - The font weight of the header, can be 'bold', 'regular', or 'thin'.
+ * @param {React.ElementType} props.component - The HTML element to use for the header, defaults to 'h4'.
+ * @returns JSX.Element: A styled header element.
+ */
+export const Header4 = ({
+    children,
+    weight = 'bold',
+    component,
+    ...props
+}: {
+    children: React.ReactNode;
+    weight?: HeaderWeight;
+    component?: React.ElementType;
+} & TypographyProps) => {
+    return (
+        <Typography
+            component={component || 'h4'}
+            variant="h4"
+            {...props}
+            sx={{
+                lineHeight: '1.5',
+                fontSize: '1.125rem',
+                fontStyle: 'normal',
+                fontWeight: fontWeight(weight),
+                ...props.sx,
+            }}
+        >
+            {children}
+        </Typography>
+    );
+};
+
 const Headers = {
     Header1,
     Header2,
     Header3,
+    Header4,
 };
 
 export default Headers;

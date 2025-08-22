@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-analytics
+  name: {{ .Values.app.name }}
+spec:
+  host: {{ .Values.route.host }}
+  path: {{ .Values.route.path }}
+  port:
+    targetPort: 8080-tcp
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: {{ .Values.app.name }}
+    weight: 100
+  wildcardPolicy: None

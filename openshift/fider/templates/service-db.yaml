@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.app.name }}-postgresql
+  namespace: e903c2-tools
+  labels:
+    app: {{ .Values.app.name }}
+    role: db
+spec:
+  ports:
+    - name: postgresql
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: {{ .Values.app.name }}
+    role: db

@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+    app-group: met-app
+spec:
+    host: {{ .Values.site.url | trimPrefix "https://" | trimSuffix "/" }}
+    tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+    to:
+        kind: Service
+        name: {{ .Values.app.name }}
+        weight: 100
+    wildcardPolicy: None

@@ -45,7 +45,7 @@ const PollOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.POLL_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating Poll widget' }));
             handleWidgetDrawerOpen(false);

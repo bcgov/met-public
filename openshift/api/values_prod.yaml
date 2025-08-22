@@ -1,0 +1,20 @@
+environment: prod
+
+deployment:
+  maxReplicas: 5
+
+site:
+  url: met-web-demo.apps.gold.devops.gov.bc.ca
+
+keycloak:
+  baseUrl: 'loginproxy.gov.bc.ca'
+
+email:
+  environment: 'Sent from the Production environment'
+  
+image:
+  tag: prod
+
+vault:
+  engine: 'e903c2-prod'
+  path: '' # no /prod because prod is at the root of the vault

@@ -70,7 +70,7 @@ export const SurveyForm = () => {
                     open: true,
                 },
             });
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

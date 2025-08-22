@@ -1,0 +1,7 @@
+---
+apiVersion: v2
+dependencies:
+  - name: redis-exporter
+    version: 1.0.1
+name: met-analytics
+version: v1.0.1

@@ -45,7 +45,7 @@ const EventsOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.EVENTS_FORM);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating events widget' }));
             setIsCreatingWidget(false);
             handleWidgetDrawerOpen(false);

@@ -104,6 +104,7 @@ const openEngagement = {
 
 const mockEventItem: EventItem = {
     id: 1,
+    event_name: 'event name',
     description: 'description',
     location_name: 'location name',
     location_address: 'location address',

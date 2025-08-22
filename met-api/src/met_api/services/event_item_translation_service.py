@@ -61,6 +61,7 @@ class EventItemTranslationService:
                     raise BusinessException(
                         'EventItem not found', HTTPStatus.NOT_FOUND
                     )
+                data['event_name'] = event_item.event_name
                 data['description'] = event_item.description
                 data['location_name'] = event_item.location_name
                 data['location_address'] = event_item.location_address

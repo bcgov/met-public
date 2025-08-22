@@ -25,6 +25,7 @@ from re import A
 from flask import Blueprint
 
 from .apihelper import Api
+from .oidc_config import API as OIDC_CONFIG_API
 from .comment import API as COMMENT_API
 from .contact import API as CONTACT_API
 from .document import API as DOCUMENT_API
@@ -77,6 +78,7 @@ API = Api(
 
 # HANDLER = ExceptionHandler(API)
 
+API.add_namespace(OIDC_CONFIG_API, path='/oidc_config')
 API.add_namespace(ENGAGEMENT_API)
 API.add_namespace(USER_API)
 API.add_namespace(DOCUMENT_API)

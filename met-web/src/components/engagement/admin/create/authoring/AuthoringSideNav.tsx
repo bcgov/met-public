@@ -44,7 +44,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
 
     const currentRoutePath = getRoutes(Number(engagementId))
         .map((route) => route.path)
-        .filter((route) => location.pathname.includes(route))
+        .filter((route) => window.location.pathname.includes(route))
         .reduce((prev, curr) => (prev.length > curr.length ? prev : curr));
 
     const allowedRoutes = getRoutes(Number(engagementId)).filter((route) => {
@@ -261,7 +261,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                             <BodyText sx={{ fontSize: '10px', lineHeight: 1 }}>
                                 {currentUser?.roles.includes(USER_ROLES.SUPER_ADMIN)
                                     ? 'Super Admin'
-                                    : currentUser?.main_role ?? 'User'}
+                                    : (currentUser?.main_role ?? 'User')}
                             </BodyText>
                         </Grid>
                         <Grid item sx={{ marginLeft: 'auto', marginRight: '2rem' }}>

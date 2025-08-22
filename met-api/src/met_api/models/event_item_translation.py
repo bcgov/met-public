@@ -25,6 +25,7 @@ class EventItemTranslation(BaseModel):
         ForeignKey('event_item.id', ondelete='CASCADE'),
         nullable=False,
     )
+    event_name = db.Column(db.String(100), nullable=True)
     description = db.Column(db.String(500))
     location_name = db.Column(db.String(50), nullable=True)
     location_address = db.Column(
@@ -73,6 +74,9 @@ class EventItemTranslation(BaseModel):
         event_item_translation = EventItemTranslation(
             event_item_id=data['event_item_id'],
             language_id=data['language_id'],
+            event_name=data.get(
+                'event_name'
+            ),
             description=data.get(
                 'description'
             ),

@@ -2,41 +2,58 @@ import React from 'react';
 import { Grid } from '@mui/material';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
-import { Link } from 'components/common/Navigation';
-import { BodyText } from 'components/common/Typography';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
-    const justifyContent = { xs: 'center', md: 'flex-start' };
+    // Define styles
+    const containerStyles = {
+        alignItems: 'center',
+        paddingLeft: '0 !important',
+    };
+    const iconStyles = {
+        display: 'flex',
+        marginRight: '0.8750em',
+        fontSize: '1.5em',
+        width: '1em',
+        verticalAlign: 'middle',
+    };
+
+    // Define time/date
+    const startDate = formatDate(eventItem.start_date, 'DD MMM, YYYY');
+    const startTime = formatDate(eventItem.start_date, 'h:mm a');
+    const endTime = formatDate(eventItem.end_date, 'h:mm a');
+
     return (
         <>
-            <Grid container justifyContent={justifyContent} paddingBottom={0.5} item xs={12}>
-                <BodyText>{eventItem.description}</BodyText>
-            </Grid>
-            <Grid item container justifyContent={justifyContent} xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <BodyText bold>Date:&nbsp;</BodyText>
+            <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faCalendarDays} style={iconStyles} />
                 </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <BodyText>{formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</BodyText>
+                <Grid item xs={6} md={3} xl={2}>
+                    <BodyText bold>Date</BodyText>
                 </Grid>
-            </Grid>
-            <Grid container justifyContent={justifyContent} item xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <BodyText bold>Time:&nbsp;</BodyText>
-                </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <BodyText>
-                        {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
-                            eventItem.end_date,
-                            'h:mm a',
-                        )} PT`}
-                    </BodyText>
+                <Grid item xs={12} md={8} xl={9}>
+                    <BodyText>{startDate}</BodyText>
                 </Grid>
             </Grid>
-            <Grid container justifyContent={justifyContent} item xs={12} sx={{ whiteSpace: 'pre-line' }}>
-                <Link target="_blank" href={`${eventItem.url}`}>
+            <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faClock} style={iconStyles} />
+                </Grid>
+                <Grid item xs={6} md={3} xl={2}>
+                    <BodyText bold>Time</BodyText>
+                </Grid>
+                <Grid item xs={12} md={8} xl={9}>
+                    <BodyText>{`${startTime} to ${endTime} PT`}</BodyText>
+                </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
+                <Button variant="primary" size="large" href={eventItem.url} sx={{ mt: '2em' }}>
                     {eventItem.url_label}
-                </Link>
+                </Button>
             </Grid>
         </>
     );

@@ -147,7 +147,7 @@ def test_patch_timeline(client, jwt, session,
         'description': timeline_widget_info.get('description'),
     })
 
-    timeline_event = factory_timeline_event_model({
+    factory_timeline_event_model({
         'widget_id': widget.id,
         'engagement_id': engagement.id,
         'timeline_id': widget_timeline.id,
@@ -173,7 +173,7 @@ def test_patch_timeline(client, jwt, session,
         }]
     }
 
-    rv = client.patch(f'/api/widgets/{widget.id}/timelines/{timeline_event.id}',
+    rv = client.patch(f'/api/widgets/{widget.id}/timelines/{widget_timeline.id}',
                       data=json.dumps(timeline_edits),
                       headers=headers, content_type=ContentType.JSON.value)
 
@@ -190,7 +190,7 @@ def test_patch_timeline(client, jwt, session,
 
     with patch.object(WidgetTimelineService, 'update_timeline',
                       side_effect=BusinessException('Test error', status_code=HTTPStatus.BAD_REQUEST)):
-        rv = client.patch(f'/api/widgets/{widget.id}/timelines/{timeline_event.id}',
+        rv = client.patch(f'/api/widgets/{widget.id}/timelines/{widget_timeline.id}',
                           data=json.dumps(timeline_edits),
                           headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == HTTPStatus.BAD_REQUEST

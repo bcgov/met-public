@@ -206,11 +206,11 @@ describe('Landing page tests', () => {
             />,
         );
 
-        // Find all elements with role "button"
-        const allButtons = screen.getAllByRole('button');
+        // Find all elements with role "combobox"
+        const allComboboxes = screen.getAllByRole('combobox');
 
-        // Find the specific button with id "status"
-        const statusDropdown = allButtons.find((button) => button.id === 'status-filter') as HTMLElement;
+        // Find the specific combobox with id "status"
+        const statusDropdown = allComboboxes.find((combobox) => combobox.id === 'status-filter') as HTMLElement;
         fireEvent.mouseDown(statusDropdown); // click event doesn't work for MUI Select
         // Wait for the dropdown to appear
         const listbox = within(getByRole(document.body, 'listbox'));

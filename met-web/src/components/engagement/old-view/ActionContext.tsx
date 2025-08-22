@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate, useParams, useRouteLoaderData, useRevalidator } from 'react-router-dom';
+import { useNavigate, useParams, useLoaderData, useRevalidator } from 'react-router-dom';
 import { patchEngagement } from '../../../services/engagementService';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
@@ -74,11 +74,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [content, setContent] = useState<EngagementContent[]>([]);
 
-    const {
-        engagement,
-        widgets,
-        content: contentPromise,
-    } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement, widgets, content: contentPromise } = useLoaderData() as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -93,7 +89,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             setSavedEngagement(result);
             setEngagementLoading(false);
         });
-    }, [engagement]);
+    }, [engagement, engagementId, slug, navigate]);
 
     // Load the widgets from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -184,7 +180,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         try {
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
-        } catch (error) {
+        } catch {
             navigate('/not-found');
         }
     };

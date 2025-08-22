@@ -20,7 +20,7 @@ import { postMap, previewShapeFile } from 'services/widgetService/MapService';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import ShapeFileUpload from 'components/engagement/form/EngagementWidgets/Map/ShapeFileUpload/FileUpload';
 import { geoJSONDecode } from './utils';
-import { GeoJSON } from 'geojson';
+import { FeatureCollection, GeoJSON, Point } from 'geojson';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
@@ -114,7 +114,7 @@ const Form = () => {
             setIsCreating(false);
             reset({});
             handleWidgetDrawerOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add map' }));
             setIsCreating(false);
         }
@@ -148,10 +148,10 @@ const Form = () => {
             methods.setValue('shapefile', files[0]);
             previewGeoJson = (await previewShapeFile({
                 file: files[0],
-            })) as unknown as turf.FeatureCollection<turf.Point>;
+            })) as unknown as FeatureCollection<Point>;
             setCalculatingZoom(true);
             updateZoom(previewGeoJson);
-            const centerPoint = turf.center(previewGeoJson as turf.FeatureCollection<turf.Point>);
+            const centerPoint = turf.center(previewGeoJson as FeatureCollection<Point>);
             methods.setValue('longitude', centerPoint.geometry.coordinates[0]);
             methods.setValue('latitude', centerPoint.geometry.coordinates[1]);
             setCalculatingZoom(false);

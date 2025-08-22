@@ -64,7 +64,7 @@ export const UserDetailsContextProvider = ({ children }: { children: JSX.Element
         }
         try {
             await getUserDetails();
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

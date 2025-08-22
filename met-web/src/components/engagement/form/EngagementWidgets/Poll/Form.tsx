@@ -113,7 +113,7 @@ const Form = () => {
             await savePollWidget(data);
             setIsCreating(false);
             handleWidgetDrawerOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add the event' }));
             setIsCreating(false);
         }

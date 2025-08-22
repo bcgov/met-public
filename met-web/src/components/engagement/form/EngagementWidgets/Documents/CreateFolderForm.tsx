@@ -53,7 +53,7 @@ const CreateFolderForm = () => {
             await loadDocuments();
             setCreatingFolder(false);
             setCreateFolderMode(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occured while creating the folder' }));
             setCreatingFolder(false);
         }

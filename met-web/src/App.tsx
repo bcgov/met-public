@@ -147,7 +147,7 @@ const App = () => {
         try {
             const translationFile = await import(`./locales/${localeId}.json`);
             return translationFile;
-        } catch (error) {
+        } catch {
             const defaultTranslationFile = await import(`./locales/en.json`);
             return defaultTranslationFile;
         }
@@ -171,7 +171,7 @@ const App = () => {
             i18n.addResourceBundle(language.id, 'common', translations['common']);
 
             dispatch(loadingTenant(false));
-        } catch (error) {
+        } catch {
             dispatch(loadingTenant(false));
             dispatch(
                 openNotification({
@@ -212,7 +212,7 @@ const App = () => {
                     children: createRoutesFromElements(UnauthenticatedRoutes()),
                 },
             ],
-            { basename: `/${basename}` },
+            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
         return <RouterProvider router={router} />;
     }
@@ -233,7 +233,7 @@ const App = () => {
                     id: 'authenticated-root',
                 },
             ],
-            { basename: `/${basename}` },
+            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
         return <RouterProvider router={router} />;
     }
@@ -251,7 +251,7 @@ const App = () => {
                 loader: authenticatedRootLoader,
             },
         ],
-        { basename: `/${basename}` },
+        { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
     );
 
     return <RouterProvider router={router} />;

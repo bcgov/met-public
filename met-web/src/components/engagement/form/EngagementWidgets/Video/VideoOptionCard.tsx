@@ -45,7 +45,7 @@ const VideoOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.VIDEO_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating video widget' }));
             handleWidgetDrawerOpen(false);

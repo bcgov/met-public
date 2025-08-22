@@ -42,7 +42,7 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
             dispatch(openNotification({ severity: 'success', text: 'Widget title successfully updated' }));
             setIsSaving(false);
             setEditing(false);
-        } catch (error) {
+        } catch {
             setIsSaving(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while updating widget title' }));
         }

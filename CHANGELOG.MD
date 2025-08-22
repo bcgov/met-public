@@ -1,7 +1,196 @@
+## August 19, 2025
+
+- **Feature** Restricted options for values in manual CD runs
+  - Updated input type from `text` to `choice` in `met-cron-cd.yml`, `met-etl-cd.yml`,
+    and `notify-api-cd.yml`
+- **Bugfix/Feature** Switched Font Awesome hosting to private repository due to licensing
+  [🎟️ DESENG-823](https://citz-gdx.atlassian.net/browse/DESENG-823)
+  - Replaced the Font Awesome NPM registry with a private Artifactory repository.
+  - Updated the `.npmrc` file to use the new repository and credentials.
+  - Updated GitHub Actions workflows to use the new credentials for building and deploying the web app.
+  - Updated Dockerfile to use build secrets instead of baking credentials into the image.
+
+## Jul 22, 2025
+
+- **Bugfix/Feature** Solutions for storage issues in dev [🎟️ DESENG-842](https://citz-gdx.atlassian.net/browse/DESENG-842)
+  - Updated the Dagster configuration to add retention policies for the event log, schedule, and run logs.
+
+## Jul 9, 2025
+
+- **Feature** Add Dependabot alerts for Github Actions [🎟️ DESENG-812](https://citz-gdx.atlassian.net/browse/DESENG-812)
+  - Added a Dependabot configuration file to automatically check for updates to Github Actions runner images and workflows.
+    If any updates are found, a pull request will be created to update the versions referenced in the workflows.
+
+## Jun 25, 2025
+
+- **Task** DeploymentConfig -> Deployment conversion for previously undeployed DeploymentConfig yamls.
+  [🎟️ DESENG-807](https://citz-gdx.atlassian.net/browse/DESENG-807)
+  [🎟️ DESENG-808](https://citz-gdx.atlassian.net/browse/DESENG-808)
+  [🎟️ DESENG-809](https://citz-gdx.atlassian.net/browse/DESENG-809)
+  [🎟️ DESENG-810](https://citz-gdx.atlassian.net/browse/DESENG-810)
+  - Took undocumented resources in Openshift that were previously DeploymentConfigs and converted them to Deployments in new Helm charts.
+  - Changed Backup pod backup-container images to use the new URL. (hub.docker.com -> ghcr.io)
+
+## Jun 16, 2025
+
+- **Task** DeploymentConfig -> Deployment conversion for existing DeploymentConfig yamls.
+  [🎟️ DESENG-802](https://citz-gdx.atlassian.net/browse/DESENG-802)
+  [🎟️ DESENG-803](https://citz-gdx.atlassian.net/browse/DESENG-803)
+  [🎟️ DESENG-804](https://citz-gdx.atlassian.net/browse/DESENG-804)
+  [🎟️ DESENG-805](https://citz-gdx.atlassian.net/browse/DESENG-805)
+  [🎟️ DESENG-806](https://citz-gdx.atlassian.net/browse/DESENG-806)
+  - Converted all DeploymentConfig YAML files to Deployment YAML files.
+  - If a DeploymentConfig was deployed by a Helm chart in the repository, it was converted to a Deployment and the Helm chart was updated accordingly.
+- **Task** Update documentation for common components [🎟️ DESENG-816](https://citz-gdx.atlassian.net/browse/DESENG-816)
+  - Added docblocks to the majority of common components
+  - Updated CONTRIBUTING.md to link to each component's documentation, and provide a brief overview of the component and its usage
+  - Updated PR template to remind developers to update documentation when adding new components or modifying existing ones
+
+## Jun 10, 2025
+
+- **Bugfix** Fix routing issue in engagement "old view" [🎟️ DESENG-837](https://citz-gdx.atlassian.net/browse/DESENG-837)
+  - Add correct loaders to the engagement "old view" route
+  - Update implementation of route loaders to use `useLoaderData` instead of `useRouteLoaderData`
+  - Update permission checks on the API side to allow public users to access engagement metadata
+    (accidentally broken in PR #2506 for DESENG-603)
+
+## June 6, 2025
+
+- **Task** Deprecate old components in MET Web [🎟️ DESENG-817](https://citz-gdx.atlassian.net/browse/DESENG-817)
+  - Deprecated old components in MET Web to prepare for the new design system
+  - Most components should now have suitable replacements in the new design system
+
+## May 22, 2025
+
+- **Bugfix** Fix survey ID access in MET ETL [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - the load_survey function in the MET ETL pipeline now uses .scalar() instead of .first() to get the survey ID
+  - Commit more often during processing to avoid deadlocks
+
+## May 21, 2025
+
+- **Bugfix** Update SQLAlchemy library in MET ETL to match MET API [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Add required dependencies for met-etl to requirements.txt [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - pin flask_restx to 1.3.0
+- **Feature** Create Helm chart for analytics-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the analytics-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Secrets now use HashiCorp Vault for sensitive data.
+  - Removed "debug=True" from all flask apps, as this is not appropriate for production.
+- **Feature** Update helm chart for MET Analytics (Redash) [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Updated the helm chart for MET Analytics (Redash) to use Vault secrets for sensitive data.
+  - Removed Secrets file
+  - Removed sentiment analysis from the repository, as it is no longer used.
+  - Change from Ingress to Route for consistency with other applications.
+  - Properly randomized the secret keys for redash and the database
+
+## May 20, 2025
+
+- **Bugfix** Remove potentially redundant Dagster libraries [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- Remove pip `-U` flag from installation commands to prevent version instabilities
+
+## May 14, 2025
+
+- **Feature** Create Helm chart for notify-api [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the notify-api deployment.
+  - Migrated existing Service and ConfigMap to Helm templates.
+  - Removed notify-api Route, as the notify-api does not need to be publicly accessible. Instead, it is called by the MET API & MET Cron jobs.
+    - For local development, the notify-api can be accessed via port-forwarding. See DEVELOPMENT.md for more information.
+  - Added new "global" Vault secret for all flask apps to use, which contains the `SECRET_KEY`.
+  - Migrated the DeploymentConfig to a Helm template.
+  - Created values files (dev, test, prod) for deployment settings; see `openshift/README.md`
+
+## May 13, 2025
+
+- **Bugfix** Align library versions with EPIC app [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+
+## May 12, 2025
+
+- **Feature** Add MET Cron job to OpenShift [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Added the met-cron deployment to the met-api helm chart.
+  - Removed an unneeded Service, as the Cron does not serve any traffic.
+  - Set up injection of HashiCorp Vault secrets to the Cron job
+  - Merged met-cron ConfigMap into the met-api ConfigMap, as they differed very little.
+  - Renamed config key "OFFSET_DAYS" to "CLOSING_SOON_EMAIL_ADVANCE_NOTICE_DAYS" to be more descriptive.
+  - Removed the old met-cron deployment YAML files.
+
+## May 7, 2025
+
+- **Feature** Add Helm chart and templates for MET Web [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET Web deployment.
+  - Migrated existing resources to Helm templates.
+  - Removed several unused ConfigMap values
+  - Removed JWT/OIDC related values in favor of requesting the data from the MET API (single source of truth).
+    - Created an endpoint at `/api/oidc_config` to return the OIDC configuration for the MET API.
+  - Modified the Docker entrypoint to generate a config script from REACT_APP\_\* environment variables at startup.
+    - The config script is then served alongside the app at runtime.
+- **Bugfix** Updated existing templates to set minReplicas and maxReplicas for the HPA (matching met-web) rather than trying to configure it on the Deployment, which has no effect.
+
+## May 5, 2025
+
+- **Feature** Add Helm chart and templates for MET API [🎟️ DESENG-811](https://citz-gdx.atlassian.net/browse/DESENG-811)
+  - Created a helm chart for the MET API deployment.
+  - Migrated existing HorizontalPodAutoscaler, Route, Service, and MET ConfigMap to Helm templates.
+  - Removed Secrets in favor of using HashiCorp Vault for sensitive data.
+    - Also removed several ConfigMap values that were either sensitive or were contextually linked to
+      the secrets, and moved their data to the Vault.
+    - Developers can now use `helm` to generate the Openshift YAML files without needing
+      to seek out secrets and keep them within their values files.
+  - Migrated the DeploymentConfig to a Helm template.
+    - Modified heavily to use new Vault secrets. Secrets are now mounted as files in the
+      container at /vault/secrets, and the application is expected to read them from the filesystem.
+    - Bound the DeploymentConfig to the e903c2-vault service account, which has access to the
+      secrets in the vault. Also granted the vault account image pull permissions from e903c2-tools.
+  - Created environment-specific values files (dev, test, prod) for deployment settings.
+    - See `openshift/README.md` for more information on how to deploy the API using the new Helm chart.
+  - Removed YAML for the old Keycloak server, since we have migrated to using the shared SSO Keycloak
+    server.
+
+## May 1, 2025
+
+- **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+  - Tweak dagster versions and python base image
+- **Feature** Redesign event widget [🎟️ DESENG-698](https://citz-gdx.atlassian.net/browse/DESENG-698)
+
+  - Modified api to accomodate additional field required in event widget design
+  - Modified forms and cards on admin side to show new field
+  - Implemented front-end design
+    - Tested with multiple events on one page
+  - Optimized for mobile and desktop viewports
+  - Updated unit test data
+
+## April 24, 2025
+
+- **Bugfix** Update Dagster versions to attempt fix of Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
+- **Bugfix** Add in required installation commands for openshift CLI [🎟️ DESENG-813](https://citz-gdx.atlassian.net/browse/DESENG-813)
+  - Chose concrete version of Ubuntu to mitigate future issues
+
+## April 22, 2025
+
+- **Feature** Redesign poll widget [🎟️ DESENG-697](https://citz-gdx.atlassian.net/browse/DESENG-697)
+
+  - Refactor PollWidget.tsx implementing Figma design
+    - Improved layout, similar to DocumentWidget
+  - Load data more efficiently
+  - Added new skeleton while loading
+  - Added new error handling for poll submission
+
 ## April 15, 2025
 
+- **Feature** Redesign document widget [🎟️ DESENG-696](https://citz-gdx.atlassian.net/browse/DESENG-696)
+
+  - Significant refactor to DocumentWidget.tsx implementing Figma design
+  - Use recursive rendering to support theoretically infinite subfolders in future
+  - Many accessibility/QoL improvements
+  - Improved layout - minimizes layout shift by forcing the list widget to be at least as tall as the copy it appears beside.
+  - Improved skeleton while loading
+
 - **Chore** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
+
   - This is to stay ahead of the deprecation of ubuntu-20.04 in GitHub Actions as of today's date
+
+## _Interregnum break_: _October 2024 - March 2025_
+
+- The project was on hold during this period, and no changes were made to the codebase. The team was directed to focus on other projects. Any technical debt or issues that were identified during this period will be addressed in future sprints.
 
 ## October 2, 2024
 

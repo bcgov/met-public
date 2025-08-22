@@ -51,7 +51,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             const engagement = await getEngagement(engagementId);
             setLoadedEngagement(engagement);
             setIsLoadingEngagement(false);
-        } catch (error) {
+        } catch {
             setIsLoadingEngagement(false);
         }
     };
@@ -66,7 +66,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
         try {
             const response = await getSlugByEngagementId(loadedEngagement.id);
             setSlug(response.slug);
-        } catch (error) {
+        } catch {
             setSlug('');
         }
     };

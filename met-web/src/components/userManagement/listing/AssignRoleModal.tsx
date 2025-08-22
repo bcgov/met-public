@@ -43,11 +43,11 @@ const schema = yup
     .object({
         role: yup.string().required('A role must be specified'),
         engagement: yup
-            .object()
+            .mixed<Engagement>()
             .nullable()
             .when('role', {
                 is: USER_COMPOSITE_ROLE.REVIEWER.value,
-                then: yup.object().nullable().required('An engagement must be selected'),
+                then: (schema) => schema.required('An engagement must be selected'),
             }),
     })
     .required();
@@ -111,7 +111,7 @@ export const AssignRoleModal = () => {
             });
             setEngagements(response.items);
             setEngagementsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

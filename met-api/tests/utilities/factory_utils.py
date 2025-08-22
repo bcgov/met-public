@@ -61,12 +61,12 @@ from met_api.models.widget import Widget as WidgetModal
 from met_api.models.widget_documents import WidgetDocuments as WidgetDocumentModel
 from met_api.models.widget_events import WidgetEvents as WidgetEventsModel
 from met_api.models.widget_item import WidgetItem as WidgetItemModal
+from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.models.widget_map import WidgetMap as WidgetMapModel
 from met_api.models.widget_poll import Poll as WidgetPollModel
 from met_api.models.widget_timeline import WidgetTimeline as WidgetTimelineModel
 from met_api.models.widget_translation import WidgetTranslation as WidgetTranslationModel
 from met_api.models.widget_video import WidgetVideo as WidgetVideoModel
-from met_api.models.widget_listening import WidgetListening as WidgetListeningModel
 from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeModel
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
@@ -77,7 +77,8 @@ from tests.utilities.factory_scenarios import (
     TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
     TestSubscribeInfo, TestSubscribeItemTranslationInfo, TestSurveyInfo, TestSurveyTranslationInfo, TestTenantInfo,
     TestTimelineEventTranslationInfo, TestTimelineInfo, TestUserInfo, TestWidgetDocumentInfo, TestWidgetInfo,
-    TestWidgetItemInfo, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo, TestWidgetVideo, TestWidgetListening)
+    TestWidgetItemInfo, TestWidgetListening, TestWidgetMap, TestWidgetPollInfo, TestWidgetTranslationInfo,
+    TestWidgetVideo)
 
 
 fake = Faker()
@@ -760,6 +761,7 @@ def factory_event_item_model(widget_event=None, event_item_info: dict = None):
         widget_event = factory_widget_event_model()
 
     event_item = EventItemModel(
+        event_name=event_item_info.get('event_name', ''),
         description=event_item_info.get('description', ''),
         location_name=event_item_info.get('location_name', ''),
         location_address=event_item_info.get('location_address', ''),
@@ -790,6 +792,7 @@ def factory_event_item_translation_model(
     event_translation = EventItemTranslationModel(
         event_item_id=event_translation_info.get('event_item_id'),
         language_id=event_translation_info.get('language_id'),
+        event_name=event_translation_info.get('event_name'),
         description=event_translation_info.get('description'),
         location_name=event_translation_info.get('location_name'),
         location_address=event_translation_info.get('location_address'),

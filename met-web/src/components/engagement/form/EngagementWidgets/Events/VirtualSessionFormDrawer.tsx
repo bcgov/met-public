@@ -23,6 +23,10 @@ dayjs.extend(tz);
 
 const schema = yup
     .object({
+        event_name: yup
+            .string()
+            .max(100, 'Session name cannot exceed 100 characters')
+            .required('Session name cannot be empty'),
         description: yup.string().max(500, 'Description cannot exceed 500 characters'),
         session_link: yup.string().required('Session link cannot be empty'),
         session_link_text: yup.string().default('Click here to register').required('Session Link Text cannot be empty'),
@@ -64,6 +68,7 @@ const VirtualSessionFormDrawer = () => {
     }, []);
 
     useEffect(() => {
+        methods.setValue('event_name', eventItemToEdit?.event_name || '');
         methods.setValue('description', eventItemToEdit?.description || '');
         methods.setValue('date', eventItemToEdit ? formatDate(eventItemToEdit.start_date) : '');
         methods.setValue('session_link', eventItemToEdit?.url || '');
@@ -77,9 +82,11 @@ const VirtualSessionFormDrawer = () => {
     const updateEvent = async (data: VirtualSessionForm) => {
         if (eventItemToEdit && eventToEdit && widget) {
             const validatedData = await schema.validate(data);
-            const { description, date, time_from, time_to, session_link, session_link_text } = validatedData;
+            const { event_name, description, date, time_from, time_to, session_link, session_link_text } =
+                validatedData;
             const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
             await patchEvent(widget.id, eventToEdit.id, eventItemToEdit.id, {
+                event_name: event_name,
                 description: description,
                 start_date: formatToUTC(dateFrom),
                 end_date: formatToUTC(dateTo),
@@ -94,7 +101,7 @@ const VirtualSessionFormDrawer = () => {
 
     const createEvent = async (data: VirtualSessionForm) => {
         const validatedData = await schema.validate(data);
-        const { description, session_link, session_link_text, date, time_from, time_to } = validatedData;
+        const { event_name, description, session_link, session_link_text, date, time_from, time_to } = validatedData;
         const { dateFrom, dateTo } = formEventDates(date, time_from, time_to);
         if (widget) {
             const createdWidgetEvent = await postEvent(widget.id, {
@@ -102,6 +109,7 @@ const VirtualSessionFormDrawer = () => {
                 type: EVENT_TYPE.VIRTUAL,
                 items: [
                     {
+                        event_name: event_name,
                         description: description,
                         url: session_link,
                         url_label: session_link_text,
@@ -135,7 +143,7 @@ const VirtualSessionFormDrawer = () => {
             setIsCreating(false);
             reset({});
             setVirtualSessionFormTabOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);
         }
@@ -165,11 +173,22 @@ const VirtualSessionFormDrawer = () => {
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid item xs={12}>
+                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
+                                <ControlledTextField
+                                    name="event_name"
+                                    variant="outlined"
+                                    InputLabelProps={{
+                                        shrink: false,
+                                    }}
+                                    fullWidth
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
                                 <ControlledTextField
                                     name="description"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -185,7 +204,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="date"
                                     type="date"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -199,7 +217,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="time_from"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -213,7 +230,6 @@ const VirtualSessionFormDrawer = () => {
                                     name="time_to"
                                     type="time"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -226,7 +242,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="session_link"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}
@@ -239,7 +254,6 @@ const VirtualSessionFormDrawer = () => {
                                 <ControlledTextField
                                     name="session_link_text"
                                     variant="outlined"
-                                    label=" "
                                     InputLabelProps={{
                                         shrink: false,
                                     }}

@@ -1,0 +1,17 @@
+environment: dev
+
+site:
+  url: met-web-dev.apps.gold.devops.gov.bc.ca
+
+keycloak:
+  baseUrl: 'dev.loginproxy.gov.bc.ca'
+
+email:
+  environment: 'You are using the DEV environment'
+
+image:
+  tag: dev
+
+vault:
+  engine: 'e903c2-nonprod'
+  path: '/dev'

@@ -45,7 +45,7 @@ const MapOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.MAP_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating map widget' }));
             handleWidgetDrawerOpen(false);

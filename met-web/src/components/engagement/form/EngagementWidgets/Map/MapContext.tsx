@@ -81,7 +81,7 @@ export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[
             setMapData(loadedMap[loadedMap.length - 1]);
             updateZoom(loadedMap[loadedMap.length - 1]?.geojson);
             setIsLoadingMap(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load map data' }));
             setIsLoadingMap(false);
         }

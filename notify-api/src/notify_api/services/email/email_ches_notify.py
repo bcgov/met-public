@@ -15,8 +15,9 @@
 
 This module is being invoked from a job and it sends SMS reminders to customers.
 """
-import os
 import json
+import os
+
 import requests
 
 from .email_base_service import EmailBaseService

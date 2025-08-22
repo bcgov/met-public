@@ -12,6 +12,31 @@ import {
     faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * A reusable modal component that displays a confirmation dialog.
+ * It allows users to confirm or cancel an action with customizable text and styles.
+ * @param {Object} props - The properties for the confirmation modal.
+ * @param {string} [props.style="default"] - The style of the modal, which determines its color scheme and icon.
+ * @param {string} props.header - The main title of the modal.
+ * @param {string} [props.subHeader] - An optional secondary title for additional context.
+ * @param {Array<{ text: string; bold?: boolean }>} props.subText - An array of objects containing text to display in the modal, with optional bold styling.
+ * @param {() => void} props.handleConfirm - A function to call when the user confirms the action.
+ * @param {() => void} props.handleClose - A function to call when the user cancels the action or closes the modal.
+ * @param {string} [props.confirmButtonText="Confirm"] - The text for the confirm button.
+ * @param {string} [props.cancelButtonText="Cancel"] - The text for the cancel button.
+ * @returns A JSX element representing the confirmation modal.
+ * @example
+ * <ConfirmModal
+ *     style="warning"
+ *     header="Delete Item"
+ *     subHeader="Are you sure?"
+ *     subText={[{ text: 'This action cannot be undone.', bold: true }]}
+ *     handleConfirm={() => console.log('Confirmed')}
+ *     handleClose={() => console.log('Cancelled')}
+ *     confirmButtonText="Yes, Delete"
+ *     cancelButtonText="No, Keep It"
+ *  />
+ */
 const ConfirmModal = ({
     style = 'default',
     header,

@@ -75,7 +75,7 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
             const loadedSubscribe = await getSubscriptionsForms(widget.id);
             setSubscribeOptions(loadedSubscribe);
             setIsLoadingSubscribe(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occurred while trying to load the Subscribe' }),
             );
@@ -100,7 +100,7 @@ export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.El
         }
         try {
             await sortWidgetSubscribeForms(widget.id, resortedWidgetSubscribe);
-        } catch (err) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widget Subscribe' }));
         }
     };

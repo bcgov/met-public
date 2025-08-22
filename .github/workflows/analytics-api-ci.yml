@@ -2,8 +2,6 @@ name: MET ANALYTICS API CI
 
 on:
   pull_request:
-    branches:
-      - main
     paths:
       - "analytics-api/**"
 
@@ -14,7 +12,7 @@ defaults:
 
 jobs:
   setup-job:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
 
@@ -24,7 +22,7 @@ jobs:
 
   linting:
     needs: setup-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -75,7 +73,7 @@ jobs:
 
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
@@ -105,8 +103,10 @@ jobs:
 
       # Set codecov branch name with prefix if pull request
       - name: Sets Codecov branch name
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
-          echo "CODECOV_BRANCH=PR_${{github.head_ref}}" >> $GITHUB_ENV
+          echo "CODECOV_BRANCH=PR_${HEAD_REF}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
 
       - name: Upload coverage to Codecov
@@ -121,7 +121,7 @@ jobs:
 
   build-check:
     needs: setup-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v3

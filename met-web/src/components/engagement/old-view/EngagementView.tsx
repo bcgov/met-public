@@ -51,7 +51,7 @@ export const EngagementView = () => {
         try {
             const result = await getAvailableTranslationLanguages(engagementId);
             setAvailableEngagementTranslations(result);
-        } catch (error) {
+        } catch {
             setAvailableEngagementTranslations([]);
         }
     };

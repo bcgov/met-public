@@ -64,11 +64,11 @@ const AuthoringBanner = () => {
         setValue('image_url', engagement.banner_url);
         setValue('eyebrow', engagement.sponsor_name);
         setValue('open_cta', open_section?.button_text);
-        setValue('open_cta_link_type', open_section?.link_type);
+        setValue('open_cta_link_type', open_section?.link_type || 'internal');
         setValue('open_section_link', open_section?.internal_link);
         setValue('open_external_link', open_section?.external_link);
         setValue('view_results_cta', view_results_section?.button_text);
-        setValue('view_results_link_type', view_results_section?.link_type);
+        setValue('view_results_link_type', view_results_section?.link_type || 'internal');
         setValue('view_results_section_link', view_results_section?.internal_link);
         setValue('view_results_external_link', view_results_section?.external_link);
         setValue('closed_message', closed_section?.block_text);

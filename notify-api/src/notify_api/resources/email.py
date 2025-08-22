@@ -13,6 +13,7 @@
 # limitations under the License.
 """Endpoints to check manage notifications."""
 from flask import jsonify, request
+
 from flask_restx import Namespace, Resource
 
 from notify_api.auth import Auth

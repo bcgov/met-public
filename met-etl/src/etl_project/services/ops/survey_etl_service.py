@@ -152,20 +152,21 @@ def extract_survey_components(context, session, survey, survey_new_runcycleid, f
     return position
 
 
-# inactivate if record is existing in analytics database
+# deactivate if record exists in analytics database
 def _refresh_questions_and_available_option_status(session, source_survey_id):
     etl_survey_model = session.query(EtlSurveyModel.id).filter(EtlSurveyModel.source_survey_id == source_survey_id,
                                                                EtlSurveyModel.is_active == False)
     if not etl_survey_model:
         return
 
-    deactive_flag = {'is_active': False}
+    status_inactive = {'is_active': False}
 
     etl_survey_ids = [survey_id[0] for survey_id in etl_survey_model]
     for survey_id in etl_survey_ids:
-        session.query(EtlRequestTypeOption).filter(EtlRequestTypeOption.survey_id == survey_id).update(deactive_flag)
+        session.query(EtlRequestTypeOption).filter(EtlRequestTypeOption.survey_id == survey_id).update(status_inactive)
         session.query(EtlAvailableResponseOption).filter(
-            EtlAvailableResponseOption.survey_id == survey_id).update(deactive_flag)
+            EtlAvailableResponseOption.survey_id == survey_id).update(status_inactive)
+        session.commit() # commit after each update to avoid locking issues
 
 
 def _do_etl_survey_data(session, survey, survey_new_runcycleid):
@@ -315,7 +316,7 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
 
 def _update_survey_responses_with_active_survey_id(session, survey):
     etl_active_survey_id = session.query(EtlSurveyModel.id).filter(
-        EtlSurveyModel.source_survey_id == survey.id, EtlSurveyModel.is_active == True).first()
+        EtlSurveyModel.source_survey_id == survey.id, EtlSurveyModel.is_active == True).scalar()
 
     subquery = (
         session.query(EtlSurveyModel.id)

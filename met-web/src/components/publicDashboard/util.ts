@@ -35,27 +35,29 @@ export const getMapImageDataUrl = async (projectMapData: IMap | null): Promise<s
     });
     // Add marker
     map.on('load', function () {
+        map.addSource('mapPoint', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [projectMapData.longitude, projectMapData.latitude],
+                        },
+                        properties: {
+                            title: 'Project Location',
+                        },
+                    },
+                ],
+            },
+        });
+
         map.addLayer({
             id: 'mapLine',
             type: 'circle',
-            source: {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: [
-                        {
-                            type: 'Feature',
-                            geometry: {
-                                type: 'Point',
-                                coordinates: [projectMapData.longitude, projectMapData.latitude],
-                            },
-                            properties: {
-                                title: 'Project Location',
-                            },
-                        },
-                    ],
-                },
-            },
+            source: 'mapPoint',
             paint: {
                 'circle-radius': 8,
                 'circle-color': 'red',

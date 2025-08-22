@@ -45,7 +45,7 @@ const WhoIsListeningOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.WHO_IS_LISTENING_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'Error occurred while creating who is listening widget' }),

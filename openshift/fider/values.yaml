@@ -1,0 +1,69 @@
+app:
+  name: "met-fider"
+  licenseplate: "e903c2"
+  namespace: "e903c2-tools"
+  domain: "apps.gold.devops.gov.bc.ca"
+  scaler:
+    minReplicas: 1
+    maxReplicas: 5
+    cpuUtilization: 75
+    memoryUtilization: 75
+    httpRequestsPerSecond: 100
+    responseTimeSeconds: 0.5
+
+image:
+  repository: "image-registry.openshift-image-registry.svc:5000"
+  namespace: e903c2-tools
+  name: fider-bcgov
+  tag: latest
+
+backup:
+  verification:
+    mountPath: "/var/lib/pgsql/data"
+    storageSize: "1Gi"
+    storageClass: "netapp-file-standard"
+  strategy: "rolling"
+  mountPath: "/backups/"
+  schema: "public"
+  environment: "fider"
+  environmentFriendlyName: "Fider DB Backups"
+  storageSize: "5Gi"
+  storageClass: "netapp-file-backup"
+  image:
+    repository: "ghcr.io"
+    namespace: bcgov
+    name: backup-container
+    tag: 2.10
+
+db:
+  storageSize: "1Gi"
+  storageClass: "netapp-file-standard"
+  volumeMode: "Filesystem"
+  image:
+    repository: "image-registry.openshift-image-registry.svc:5000"
+    namespace: openshift
+    name: postgresql
+    tag: "9.6"
+
+vault:
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"
+  engine: "e903c2-nonprod"
+  path: "/tools"
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+    ephemeralStorage: "2Gi"
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+    ephemeralStorage: "1Gi"
+
+email:
+  smtp:
+    host: "apps.smtp.gov.bc.ca"
+    port: 25
+    username: "met-fider@gov.bc.ca"
+    noreply: "noreply@gov.bc.ca"

@@ -1,56 +1,88 @@
 import React from 'react';
 import { EventItem } from 'models/event';
 import { Grid } from '@mui/material';
-import { MetBodyOld } from 'components/common';
 import { formatDate } from 'components/common/dateHelper';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot, faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
+import { BodyText } from 'components/common/Typography';
 
 export interface EventProps {
     eventItem: EventItem;
 }
 
 const InPersonEvent = ({ eventItem }: EventProps) => {
-    const justifyContent = { xs: 'center', md: 'flex-start' };
+    // Define styles
+    const containerStyles = {
+        // alignItems: 'center',
+        paddingLeft: '0 !important',
+    };
+    const iconStyles = {
+        display: 'flex',
+        marginRight: '0.8750em',
+        fontSize: '1.5em',
+        width: '1em',
+        verticalAlign: 'middle',
+    };
+
+    // Parse the address into multiple lines
+    const parsedAddress = eventItem.location_address?.split(',') || [''];
+    const finalAddress = parsedAddress.every((val) => val === '')
+        ? parsedAddress
+        : parsedAddress.map((line, index) => (parsedAddress.length - 1 === index ? line : line + ','));
+
+    // Create start and end time/date
+    const startDate = formatDate(eventItem.start_date, 'DD MMM, YYYY');
+    const startTime = formatDate(eventItem.start_date, 'h:mm a');
+    const endTime = formatDate(eventItem.end_date, 'h:mm a');
 
     return (
         <>
-            <Grid container justifyContent={justifyContent} paddingBottom={0.5} item xs={12}>
-                <MetBodyOld>{eventItem.description}</MetBodyOld>
+            <Grid container justifyContent="flex-start" xs={12} sx={containerStyles} marginBottom={1}>
+                <Grid container item xs={12}>
+                    <Grid item xs={0} md={1} style={{ maxWidth: '2rem' }}>
+                        <FontAwesomeIcon icon={faLocationDot} style={iconStyles} />
+                    </Grid>
+                    <Grid item xs={6} md={3} xl={2}>
+                        <BodyText bold>Location</BodyText>
+                    </Grid>
+                    <Grid item xs={12} md={8} xl={8}>
+                        <BodyText sx={{ mb: 'inherit' }}>{eventItem.location_name}</BodyText>
+                    </Grid>
+                </Grid>
+                <Grid container item xs={12}>
+                    <Grid item xs={0} md={1} style={{ maxWidth: '2rem' }}>
+                        <div style={{ opacity: 0, ...iconStyles }}></div>
+                    </Grid>
+                    <Grid item xs={6} md={3} xl={2} alignSelf="flex-start">
+                        <BodyText bold>Address</BodyText>
+                    </Grid>
+                    <Grid item xs={12} md={8} xl={8}>
+                        {finalAddress.map((aLine) => {
+                            return <BodyText>{aLine ?? ''}</BodyText>;
+                        })}
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid container justifyContent={justifyContent} item xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <MetBodyOld bold>Location:&nbsp;</MetBodyOld>
+            <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faCalendarDays} style={iconStyles} />
                 </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <MetBodyOld>{eventItem.location_name}</MetBodyOld>
+                <Grid item xs={6} md={3} xl={2}>
+                    <BodyText bold>Date</BodyText>
                 </Grid>
-            </Grid>
-            <Grid container justifyContent={justifyContent} item xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <MetBodyOld bold>Address:&nbsp;</MetBodyOld>
-                </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <MetBodyOld>{eventItem.location_address}</MetBodyOld>
+                <Grid item xs={12} md={8} xl={9}>
+                    <BodyText>{startDate}</BodyText>
                 </Grid>
             </Grid>
-            <Grid item container justifyContent={justifyContent} xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <MetBodyOld bold>Date:&nbsp;</MetBodyOld>
+            <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faClock} style={iconStyles} />
                 </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <MetBodyOld>{formatDate(eventItem.start_date, 'MMMM DD, YYYY')}</MetBodyOld>
+                <Grid item xs={6} md={3} xl={2}>
+                    <BodyText bold>Time</BodyText>
                 </Grid>
-            </Grid>
-            <Grid container justifyContent={justifyContent} item xs={12}>
-                <Grid item xs={3} marginRight={2}>
-                    <MetBodyOld bold>Time:&nbsp;</MetBodyOld>
-                </Grid>
-                <Grid item xs={8} paddingLeft={2}>
-                    <MetBodyOld>
-                        {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
-                            eventItem.end_date,
-                            'h:mm a',
-                        )} PT`}
-                    </MetBodyOld>
+                <Grid item xs={12} md={8} xl={9}>
+                    <BodyText>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
         </>

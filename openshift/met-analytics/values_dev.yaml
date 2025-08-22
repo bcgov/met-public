@@ -1,0 +1,4 @@
+environment: dev
+vault:
+  engine: 'e903c2-nonprod'
+  path: '/dev'

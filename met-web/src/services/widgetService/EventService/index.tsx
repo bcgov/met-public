@@ -19,6 +19,7 @@ interface PostEventProps {
     title?: string;
     type: EventTypeLabel;
     items: {
+        event_name?: string;
         description?: string;
         location_name?: string;
         location_address?: string;
@@ -43,6 +44,7 @@ export const postEvent = async (widget_id: number, data: PostEventProps): Promis
 };
 
 export interface PatchEventProps {
+    event_name?: string;
     description?: string;
     location_name?: string;
     location_address?: string;

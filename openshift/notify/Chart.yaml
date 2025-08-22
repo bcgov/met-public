@@ -1,0 +1,7 @@
+apiVersion: v2
+name: notify
+version: 0.1.1
+description: |
+  Helm chart for the notify-api deployment, designed to be used with OpenShift
+  Environment-agnostic values are in values.yaml
+  Environment-specific values are in values_dev.yaml, values_test.yaml, and values_prod.yaml

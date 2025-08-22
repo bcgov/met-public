@@ -265,7 +265,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             const response = await getTeamMembers({ engagement_id: savedEngagement.id });
             setTeamMembers(response);
             setTeamMembersLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -295,7 +295,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             setSettings(response);
             setSendReport({ send_report: response.send_report });
             setSettingsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -334,7 +334,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -355,7 +355,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             const response = await getSlugByEngagementId(savedEngagement.id);
             setSavedSlug(response.slug);
             setSlug({ slug: response.slug });
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -388,7 +388,7 @@ export const EngagementTabsContextProvider = ({ children }: { children: React.Re
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been saved' }));
             setSaving(false);
             return;
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

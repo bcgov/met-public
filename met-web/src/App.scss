@@ -1,6 +1,6 @@
 @charset "UTF-8";
-@import '@bcgov/design-tokens/css-prefixed/variables';
-  
+@use '../node_modules/@bcgov/design-tokens/css-prefixed/variables.css';
+
 #main {
   margin-top: 10px;
 }

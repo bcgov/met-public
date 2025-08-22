@@ -23,5 +23,27 @@ module.exports = function override(config) {
             fullySpecified: false, // disable the behavior
         },
     });
+    const sassRule = config.module.rules.find((rule) =>
+        rule.oneOf?.find((oneOfRule) =>
+        oneOfRule.test?.toString().includes('scss') || oneOfRule.test?.toString().includes('sass')
+        )
+    );
+
+    if (sassRule) {
+        sassRule.oneOf.forEach((oneOfRule) => {
+        if (oneOfRule.test?.toString().includes('scss') || oneOfRule.test?.toString().includes('sass')) {
+            const sassLoader = oneOfRule.use.find((use) =>
+            use.loader?.includes('sass-loader')
+            );
+            if (sassLoader) {
+            // Force use of the modern Sass API
+            sassLoader.options = {
+                ...sassLoader.options,
+                api: 'modern',
+            };
+            }
+        }
+        });
+    }
     return config;
 };

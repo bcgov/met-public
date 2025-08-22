@@ -6,6 +6,7 @@ import {
     BoxProps,
     Grid,
     IconButton,
+    Paper,
     PaperProps,
     Popper,
     PopperProps,
@@ -17,7 +18,6 @@ import { colors } from 'styles/Theme';
 import { BodyText } from 'components/common/Typography';
 import { When } from 'react-if';
 import { Button } from 'components/common/Input';
-import { MetPaper } from 'components/common';
 import { OutlineBox } from 'components/common/Layout';
 
 import {
@@ -185,13 +185,17 @@ const MultiSelect = <T,>({
                                 {selectedOptions?.length === 1 ? selectedLabel.singular : selectedLabel.plural}
                             </BodyText>
                         </Grid>
-                        {selectedOptions?.map((option) => (
+                        {selectedOptions?.map((option, index) => (
                             <Grid item container key={getOptionLabel?.(option)} alignItems="center" spacing={2}>
                                 <Grid item>
                                     <FontAwesomeIcon icon={faCheck} color={colors.type.regular.primary} />
                                 </Grid>
                                 <Grid item>
-                                    {renderSelectedOption?.({}, option, { selected: false, inputValue: searchTerm })}
+                                    {renderSelectedOption?.({}, option, {
+                                        selected: false,
+                                        inputValue: searchTerm,
+                                        index: index,
+                                    })}
                                 </Grid>
                                 <Grid item marginLeft="auto" hidden={getOptionRequired?.(option) === true}>
                                     <IconButton
@@ -211,7 +215,11 @@ const MultiSelect = <T,>({
     );
 };
 
-const SearchPaper = (props: PaperProps) => <MetPaper {...props} children={props.children ?? []} />;
+const SearchPaper = (props: PaperProps) => (
+    <Paper elevation={0} {...props}>
+        {props.children}
+    </Paper>
+);
 const SearchPopper = (props: PopperProps) => (
     <Popper
         {...props}
