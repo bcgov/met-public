@@ -58,8 +58,8 @@ jobs:
 
       - name: Login Docker
         run: |
-          echo "${{ env.OPENSHIFT_SA_TOKEN }}" | 
-          docker login ${{ env.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ env.OPENSHIFT_SA_NAME}} --password-stdin
+          echo "${OPENSHIFT_SA_TOKEN}" | 
+          docker login ${OPENSHIFT_IMAGE_REGISTRY} -u ${OPENSHIFT_SA_NAME} --password-stdin
 
       - name: Build image
         run: |
@@ -67,7 +67,7 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=${{ env.OPENSHIFT_IMAGE_REGISTRY }}/"${{ env.OPENSHIFT_REPOSITORY}}-tools"/$APP_NAME
+          IMAGE_ID=${OPENSHIFT_IMAGE_REGISTRY}/"${OPENSHIFT_REPOSITORY}-tools"/$APP_NAME
           docker tag image $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
           docker image tag $IMAGE_ID:latest $IMAGE_ID:$TAG_NAME
@@ -76,4 +76,4 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
-          oc rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status deployment/${DEPLOYMENT_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w

@@ -58,13 +58,13 @@ jobs:
 
       - name: Login Docker
         run: |
-          echo "${{ env.OPENSHIFT_SA_TOKEN }}" | 
-          docker login ${{ env.OPENSHIFT_IMAGE_REGISTRY }} -u ${{ env.OPENSHIFT_SA_NAME}} --password-stdin
+          echo "${OPENSHIFT_SA_TOKEN}" | 
+          docker login ${OPENSHIFT_IMAGE_REGISTRY} -u ${OPENSHIFT_SA_NAME} --password-stdin
 
       - name: Create Artifactory secret files
         run: |
-          echo -n "${{ env.ARTIFACTORY_USERNAME }}" > /tmp/artifactory_username
-          echo -n "${{ env.ARTIFACTORY_PASSWORD }}" > /tmp/artifactory_password
+          echo -n "${ARTIFACTORY_USERNAME}" > /tmp/artifactory_username
+          echo -n "${ARTIFACTORY_PASSWORD}" > /tmp/artifactory_password
 
       - name: Build image with BuildKit secrets
         env:
@@ -77,7 +77,7 @@ jobs:
 
       - name: Push image
         run: |
-          IMAGE_ID=${{ env.OPENSHIFT_IMAGE_REGISTRY }}/"${{ env.OPENSHIFT_REPOSITORY}}-tools"/$APP_NAME
+          IMAGE_ID=${OPENSHIFT_IMAGE_REGISTRY}/"${OPENSHIFT_REPOSITORY}-tools"/$APP_NAME
           docker tag image $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
           docker image tag $IMAGE_ID:latest $IMAGE_ID:$TAG_NAME
@@ -86,4 +86,4 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
-          oc rollout status deployment/${{ env.APP_NAME }} -n ${{ env.OPENSHIFT_REPOSITORY }}-${{ env.TAG_NAME }} -w
+          oc rollout status deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w
