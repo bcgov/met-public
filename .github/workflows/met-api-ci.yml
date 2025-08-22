@@ -77,6 +77,9 @@ jobs:
       KEYCLOAK_TEST_AUTH_CLIENT_SECRET: "1111111111"
       KEYCLOAK_TEST_BASE_URL: "http://localhost:8081/auth"
       KEYCLOAK_TEST_REALMNAME: "demo"
+
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       USE_TEST_KEYCLOAK_DOCKER: "YES"
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
 
@@ -128,7 +131,7 @@ jobs:
           fail_ci_if_error: true
           verbose: true
           override_branch: ${CODECOV_BRANCH}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${ CODECOV_TOKEN }
 
   build-check:
     needs: setup-job

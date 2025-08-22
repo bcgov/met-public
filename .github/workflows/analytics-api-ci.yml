@@ -71,6 +71,8 @@ jobs:
       KEYCLOAK_TEST_REALMNAME: "demo"
       USE_TEST_KEYCLOAK_DOCKER: "YES"
 
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
 
     runs-on: ubuntu-24.04
@@ -102,7 +104,7 @@ jobs:
           make test
 
       # Set codecov branch name with prefix if pull request
-      - name: Sets Codecov branch name
+      - name: Set Codecov branch name
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
@@ -117,7 +119,7 @@ jobs:
           fail_ci_if_error: true
           verbose: true
           override_branch: ${CODECOV_BRANCH}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${CODECOV_TOKEN}
 
   build-check:
     needs: setup-job

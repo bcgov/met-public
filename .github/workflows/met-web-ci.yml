@@ -16,6 +16,7 @@ defaults:
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   setup-job:
@@ -83,7 +84,7 @@ jobs:
           fail_ci_if_error: true
           verbose: true
           override_branch: ${CODECOV_BRANCH}
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${ CODECOV_TOKEN }
 
   build-check:
     needs: setup-job
