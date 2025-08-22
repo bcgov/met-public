@@ -53,7 +53,7 @@ jobs:
       - name: Login Openshift
         shell: bash
         run: |
-          oc login --server=${{env.OPENSHIFT_LOGIN_REGISTRY}} --token=${{env.OPENSHIFT_SA_TOKEN}}
+          oc login --server=${OPENSHIFT_LOGIN_REGISTRY} --token=${OPENSHIFT_SA_TOKEN}
 
       - name: Login Docker
         run: |

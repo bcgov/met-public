@@ -46,6 +46,7 @@ module.exports = [
             // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
             "prettier/prettier": ["error", { endOfLine: "auto" }],
             "@typescript-eslint/no-unused-vars": ["error", { args: "none" }],
+            "@typescript-eslint/no-unused-expressions": ['error', { allowShortCircuit: true, allowTernary: true }]
         },
         settings: {
             react: {

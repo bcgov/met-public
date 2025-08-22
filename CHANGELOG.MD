@@ -1,5 +1,10 @@
 ## August 22, 2025
 
+- **Chore** Resolve Dependabot vulnerability reports [🎟️ DESENG-845](https://citz-gdx.atlassian.net/browse/DESENG-845)
+  - Update several packages to the latest version, resolving Dependabot PRs that are too old to be rebased.
+
+## August 22, 2025
+
 - **Bugfix** Finish upgrading DeploymentConfigs -> Deployments cross-app [🎟️ DESENG-847](https://citz-gdx.atlassian.net/browse/DESENG-847)
   - Completed the replacement of all deprecated DeploymentConfigs with Deployments across the application.
   - Updated Helm charts and deployment scripts to reflect the changes.

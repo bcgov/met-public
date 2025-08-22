@@ -127,7 +127,7 @@ jobs:
           name: codecov-met-api
           fail_ci_if_error: true
           verbose: true
-          override_branch: ${{env.CODECOV_BRANCH}}
+          override_branch: ${CODECOV_BRANCH}
           token: ${{ secrets.CODECOV_TOKEN }}
 
   build-check:
