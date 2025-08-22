@@ -59,7 +59,7 @@ module.exports = [
         "plugin:prettier/recommended" // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
     ),
     {
-        files: ["**/*.ts", "**/*.tsx"], // Your TypeScript files extension
+        files: ["**/*.ts", "**/*.tsx"], // TypeScript file extension(s)
         languageOptions: {
             parserOptions: {
                 project: ["./tsconfig.json"], // Specify it only for TypeScript files
