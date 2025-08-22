@@ -42,7 +42,7 @@ jobs:
       name: "dev"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Install Openshift Tooling
         uses: redhat-actions/openshift-tools-installer@v1.13.1
