@@ -89,7 +89,7 @@ const SettingsForm = () => {
                 }),
             );
             handleNavigateOnSave();
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

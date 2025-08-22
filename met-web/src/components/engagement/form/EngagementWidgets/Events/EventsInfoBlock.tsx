@@ -76,7 +76,7 @@ const EventsInfoBlock = () => {
                 setEvents([...newEvents]);
                 dispatch(openNotification({ severity: 'success', text: 'The event was removed successfully' }));
             }
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to remove event' }));
         }
     };

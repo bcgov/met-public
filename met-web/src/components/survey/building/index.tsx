@@ -126,7 +126,7 @@ export const FormBuilderPage = () => {
                 setIsFormDirty(false);
             })();
             setSaveError(false);
-        } catch (error) {
+        } catch {
             setSaveError(true);
         }
     };

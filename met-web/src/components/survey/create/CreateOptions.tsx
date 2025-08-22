@@ -70,7 +70,7 @@ export const CreateOptions = () => {
                 }),
             );
             navigate(`/surveys/${createdSurvey.id}/build`);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

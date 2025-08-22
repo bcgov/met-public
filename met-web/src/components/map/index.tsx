@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactMapGL, { Marker, NavigationControl, Source, Layer } from 'react-map-gl';
+import ReactMapGL, { Marker, NavigationControl, Source, Layer, MapLib } from 'react-map-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import maplibregl from 'maplibre-gl';
 import { GeoJSON } from 'geojson';
@@ -8,7 +8,7 @@ import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
 import { MetSmallTextOld } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
-import { AnyLayer } from 'mapbox-gl';
+import mapboxgl, { AnyLayer } from 'mapbox-gl';
 import { colors, Palette } from 'styles/Theme';
 
 interface MapProps {
@@ -55,7 +55,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                 latitude: latitude,
                 zoom: zoom,
             }}
-            mapLib={maplibregl}
+            mapLib={maplibregl as unknown as MapLib<mapboxgl.Map>}
             mapStyle={MAP_STYLE}
             style={{
                 width: '100%',

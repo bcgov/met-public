@@ -53,7 +53,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
 
     // Update engagement content if necessary.
     if (
-        (formData.get('title') || formData.get('text_content' || formData.get('json_content'))) &&
+        (formData.get('title') || formData.get('text_content') || formData.get('json_content')) &&
         '0' !== formData.get('content_id')
     ) {
         try {

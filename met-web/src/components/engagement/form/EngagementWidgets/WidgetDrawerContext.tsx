@@ -69,7 +69,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             await removeWidget({ engagementId: savedEngagement.id, widgetId });
             dispatch(openNotification({ severity: 'success', text: 'Removed Widget' }));
             loadWidgets();
-        } catch (err) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
         }
     };
@@ -77,7 +77,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
         try {
             await sortWidgets({ engagementId: savedEngagement.id, widgets: resortedWidgets });
-        } catch (err) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
         }
     };
@@ -92,7 +92,7 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             const widgetsList = await getWidgets(savedEngagement.id);
             setWidgets(widgetsList);
             setIsWidgetsLoading(false);
-        } catch (err) {
+        } catch {
             setIsWidgetsLoading(false);
             dispatch(openNotification({ severity: 'error', text: 'Error fetching engagement widgets' }));
         }

@@ -66,11 +66,11 @@ const SurveyBlock = ({ startSurvey }: SurveyBlockProps) => {
                                 data-testid="SurveyBlock/view-feedback-button"
                                 disabled={!surveyId}
                                 onClick={() => {
-                                    isLoggedIn
-                                        ? navigate(`/engagements/${savedEngagement.id}/dashboard/public`)
-                                        : navigate(
-                                              `/engagements/${savedEngagement.id}/dashboard/public/${languagePath}`,
-                                          );
+                                    if (isLoggedIn) {
+                                        navigate(`/engagements/${savedEngagement.id}/dashboard/public`);
+                                    } else {
+                                        navigate(`/engagements/${savedEngagement.id}/dashboard/public/${languagePath}`);
+                                    }
                                 }}
                             >
                                 {translate('buttonText.viewFeedback')}

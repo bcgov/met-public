@@ -62,7 +62,7 @@ export const FeedbackModal = () => {
             await createFeedback(formData);
             dispatch(openNotification({ severity: 'success', text: translate('feedback.notification.success') }));
             setIsSubmitted(true);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: translate('feedback.notification.error') }));
         } finally {
             setIsSaving(false);

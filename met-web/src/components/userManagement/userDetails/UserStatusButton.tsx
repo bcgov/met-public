@@ -42,7 +42,7 @@ const UserStatusButton = () => {
                 }),
             );
             setTogglingUserStatus(false);
-        } catch (error) {
+        } catch {
             setUserStatus(!active);
             setTogglingUserStatus(false);
             dispatch(openNotification({ severity: 'error', text: 'Failed to update user status' }));

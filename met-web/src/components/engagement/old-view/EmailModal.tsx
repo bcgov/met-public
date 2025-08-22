@@ -64,7 +64,7 @@ const EmailModal = ({ defaultPanel, open, handleClose, engagement }: EmailModalP
                 }),
             );
             setFormIndex('success');
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

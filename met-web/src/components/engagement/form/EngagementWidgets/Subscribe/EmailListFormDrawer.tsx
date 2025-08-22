@@ -144,7 +144,7 @@ const EmailListDrawer = () => {
             await saveForm(data);
             setIsCreating(false);
             handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

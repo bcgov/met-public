@@ -185,13 +185,17 @@ const MultiSelect = <T,>({
                                 {selectedOptions?.length === 1 ? selectedLabel.singular : selectedLabel.plural}
                             </BodyText>
                         </Grid>
-                        {selectedOptions?.map((option) => (
+                        {selectedOptions?.map((option, index) => (
                             <Grid item container key={getOptionLabel?.(option)} alignItems="center" spacing={2}>
                                 <Grid item>
                                     <FontAwesomeIcon icon={faCheck} color={colors.type.regular.primary} />
                                 </Grid>
                                 <Grid item>
-                                    {renderSelectedOption?.({}, option, { selected: false, inputValue: searchTerm })}
+                                    {renderSelectedOption?.({}, option, {
+                                        selected: false,
+                                        inputValue: searchTerm,
+                                        index: index,
+                                    })}
                                 </Grid>
                                 <Grid item marginLeft="auto" hidden={getOptionRequired?.(option) === true}>
                                     <IconButton

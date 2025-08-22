@@ -73,7 +73,7 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
             const loadedEvents = await getEvents(widget.id);
             setEvents(loadedEvents);
             setIsLoadingEvents(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occurred while trying to load the events' }),
             );
@@ -105,7 +105,7 @@ export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         }
         try {
             await sortWidgetEvents(widget.id, resortedWidgetEvents);
-        } catch (err) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error sorting widget events' }));
         }
     };

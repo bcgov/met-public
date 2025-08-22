@@ -22,10 +22,13 @@ const SettingsTable = ({
     const surveyReportSettings = useAsyncValue() as SurveyReportSetting[];
 
     useEffect(() => {
-        const map = surveyReportSettings.reduce((acc, curr) => {
-            acc[curr.id] = curr.display;
-            return acc;
-        }, {} as { [key: number]: boolean });
+        const map = surveyReportSettings.reduce(
+            (acc, curr) => {
+                acc[curr.id] = curr.display;
+                return acc;
+            },
+            {} as { [key: number]: boolean },
+        );
         setDisplayedMap(map);
     }, [surveyReportSettings]);
 

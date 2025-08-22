@@ -83,7 +83,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             setLoading(true);
             const engagement = await getEngagement(Number(engagementId));
             return engagement;
-        } catch (err) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',
@@ -103,7 +103,7 @@ export const FormContextProvider = ({ children }: { children: JSX.Element }) => 
             const subscriptionForms = await getSubscriptionsForms(Number(widgetId));
 
             return subscriptionForms.find((form) => form.type === SUBSCRIBE_TYPE.SIGN_UP);
-        } catch (err) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: translate('formCAC.formContentNotification.widgetError') }),
             );

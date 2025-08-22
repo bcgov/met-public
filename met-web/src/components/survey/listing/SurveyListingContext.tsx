@@ -177,7 +177,7 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
                 total: response.total,
             });
             setTableLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching surveys' }));
             setTableLoading(false);
         }

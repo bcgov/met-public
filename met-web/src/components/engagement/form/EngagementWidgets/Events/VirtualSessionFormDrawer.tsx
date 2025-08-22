@@ -143,7 +143,7 @@ const VirtualSessionFormDrawer = () => {
             setIsCreating(false);
             reset({});
             setVirtualSessionFormTabOpen(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);
         }

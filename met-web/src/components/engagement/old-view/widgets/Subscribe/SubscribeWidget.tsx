@@ -26,7 +26,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
             const loadedSubscribe = await getSubscriptionsForms(widget.id);
             setSubscribeItems(loadedSubscribe);
             setIsLoadingSubscribeItems(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

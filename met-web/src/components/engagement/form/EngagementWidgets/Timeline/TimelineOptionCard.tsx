@@ -45,7 +45,7 @@ const TimelineOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.TIMELINE_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating timeline widget' }));
             handleWidgetDrawerOpen(false);

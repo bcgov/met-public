@@ -50,7 +50,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                     open: true,
                 },
             });
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

@@ -29,7 +29,7 @@ const LinkOptions = () => {
             });
             setAvailableSurveys(fetchedSurveys);
             setLoadingSurveys(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching available surveys' }));
         }
     };

@@ -44,7 +44,7 @@ const DocumentOptionCard = () => {
             );
             setIsCreatingWidget(false);
             handleWidgetDrawerTabValueChange(WidgetTabValues.DOCUMENT_FORM);
-        } catch (error) {
+        } catch {
             setIsCreatingWidget(false);
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while creating document widget' }));
         }

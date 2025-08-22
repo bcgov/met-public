@@ -53,7 +53,7 @@ export const ReassignRoleModal = () => {
                 }),
             );
             setIsSaving(false);
-        } catch (err) {
+        } catch {
             setIsSaving(false);
             dispatch(openNotification({ text: 'An error occurred while reassiging role', severity: 'error' }));
         }

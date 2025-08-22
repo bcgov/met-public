@@ -83,14 +83,16 @@ const AuthoringDetails = () => {
             newTabs.splice(index, 1);
             if (1 === newTabs.length) {
                 // If we're switching back to single content mode
-                'Tab 1' !== tabs[0].heading
-                    ? setSingleContentValues(tabs[0])
-                    : setSingleContentValues({ ...tabs[0], heading: '' }); // If the current Section Heading is "Tab 1" then change it to a blank value.
+                if (tabs[0].heading !== 'Tab 1') {
+                    setSingleContentValues(tabs[0]);
+                } else {
+                    setSingleContentValues({ ...tabs[0], heading: '' }); // If the current Section Heading is "Tab 1" then change it to a blank value.
+                }
                 setTabs([tabs[0]]);
                 setContentTabsEnabled('false');
             } else {
                 setTabs(newTabs);
-                tab === currentTab && setCurrentTab(newTabs[index - 1]); // Switch tabs if you're closing the current one
+                if (tab === currentTab) setCurrentTab(newTabs[index - 1]); // Switch tabs if you're closing the current one
             }
         }
     };
@@ -98,9 +100,11 @@ const AuthoringDetails = () => {
     const handleAddTab = () => {
         const newTabs = [...tabs];
         const newTabName = 'Tab ' + (newTabs.length + 1);
-        newTabs.find((tab) => newTabName === tab.heading)
-            ? newTabs.push({ ...defaultTabValues, heading: handleDuplicateTabNames(newTabs, newTabName) })
-            : newTabs.push({ ...defaultTabValues, heading: newTabName }); // Don't create duplicate entries
+        if (newTabs.find((tab) => tab.heading === newTabName)) {
+            newTabs.push({ ...defaultTabValues, heading: handleDuplicateTabNames(newTabs, newTabName) });
+        } else {
+            newTabs.push({ ...defaultTabValues, heading: newTabName }); // Don't create duplicate entries
+        }
         setTabs(newTabs);
         setCurrentTab(newTabs[newTabs.length - 1]);
     };

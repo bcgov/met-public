@@ -85,7 +85,7 @@ const AuthoringSummary = () => {
             if (object && typeof object === 'object') {
                 return object;
             }
-        } catch (e) {}
+        } catch {}
         return false;
     };
 

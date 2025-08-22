@@ -261,7 +261,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                             <BodyText sx={{ fontSize: '10px', lineHeight: 1 }}>
                                 {currentUser?.roles.includes(USER_ROLES.SUPER_ADMIN)
                                     ? 'Super Admin'
-                                    : currentUser?.main_role ?? 'User'}
+                                    : (currentUser?.main_role ?? 'User')}
                             </BodyText>
                         </Grid>
                         <Grid item sx={{ marginLeft: 'auto', marginRight: '2rem' }}>

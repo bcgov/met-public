@@ -55,7 +55,7 @@ const LanguageSelector = () => {
         //     }
         //     dispatch(loadingLanguage(false));
         //     navigate(pathSegments.join('/'));
-        // } catch {
+        // } catch (error) {
         //     dispatch(loadingLanguage(false));
         //     console.error('Error occurred while fetching Language information');
         // }

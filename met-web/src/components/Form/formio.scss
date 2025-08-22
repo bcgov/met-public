@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-@import './formio-bootstrap.scss';
+@use 'formio-bootstrap.scss';
 
 @import '~formiojs/dist/formio.full.min.css';
 
@@ -599,7 +599,7 @@ div[disabled] {
 
 .btn-wizard-nav-next:hover {
     @extend .BC-Gov-PrimaryButton;
-    @extend .BC-Gov-PrimaryButton:hover;
+    @extend .BC-Gov-PrimaryButton, :hover
 }
 
 .btn-wizard-nav-cancel {
@@ -608,7 +608,7 @@ div[disabled] {
 
 .btn-wizard-nav-cancel:hover {
     @extend .BC-Gov-SecondaryButton;
-    @extend .BC-Gov-SecondaryButton:hover;
+    @extend .BC-Gov-SecondaryButton, :hover;
 }
 
 .btn-wizard-nav-previous {
@@ -617,7 +617,7 @@ div[disabled] {
 
 .btn-wizard-nav-previous:hover {
     @extend .BC-Gov-SecondaryButton;
-    @extend .BC-Gov-SecondaryButton:hover;
+    @extend .BC-Gov-SecondaryButton, :hover;
 }
 
 .btn-wizard-nav-submit {
@@ -626,7 +626,7 @@ div[disabled] {
 
 .btn-wizard-nav-submit:hover {
     @extend .BC-Gov-PrimaryButton;
-    @extend .BC-Gov-PrimaryButton:hover;
+    @extend .BC-Gov-PrimaryButton, :hover;
 }
 
 .pagination {

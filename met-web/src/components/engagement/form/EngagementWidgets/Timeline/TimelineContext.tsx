@@ -37,7 +37,7 @@ export const TimelineContextProvider = ({ children }: { children: JSX.Element | 
             const result = await fetchTimelineWidgets(widget.id);
             setTimelineWidget(result[result.length - 1]);
             setIsLoadingTimelineWidget(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occurred while trying to load timeline data' }),
             );

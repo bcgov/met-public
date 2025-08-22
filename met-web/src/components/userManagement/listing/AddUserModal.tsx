@@ -24,7 +24,13 @@ import axios, { AxiosError } from 'axios';
 
 const schema = yup
     .object({
-        engagement: yup.object().nullable(),
+        engagement: yup
+            .object()
+            .shape({
+                id: yup.number().required(),
+                name: yup.string().required(),
+            })
+            .nullable(),
     })
     .required();
 

@@ -147,7 +147,7 @@ const App = () => {
         try {
             const translationFile = await import(`./locales/${localeId}.json`);
             return translationFile;
-        } catch (error) {
+        } catch {
             const defaultTranslationFile = await import(`./locales/en.json`);
             return defaultTranslationFile;
         }
@@ -171,7 +171,7 @@ const App = () => {
             i18n.addResourceBundle(language.id, 'common', translations['common']);
 
             dispatch(loadingTenant(false));
-        } catch (error) {
+        } catch {
             dispatch(loadingTenant(false));
             dispatch(
                 openNotification({
@@ -212,9 +212,9 @@ const App = () => {
                     children: createRoutesFromElements(UnauthenticatedRoutes()),
                 },
             ],
-            { basename: `/${basename}` },
+            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
-        return <RouterProvider router={router} />;
+        return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
     }
 
     // Otherwise, if the user is authenticated but does not have a role, display the admin area with no access to children pages.
@@ -233,9 +233,9 @@ const App = () => {
                     id: 'authenticated-root',
                 },
             ],
-            { basename: `/${basename}` },
+            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
-        return <RouterProvider router={router} />;
+        return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
     }
 
     // Otherwise, display the admin area.
@@ -251,9 +251,9 @@ const App = () => {
                 loader: authenticatedRootLoader,
             },
         ],
-        { basename: `/${basename}` },
+        { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
     );
 
-    return <RouterProvider router={router} />;
+    return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
 };
 export default App;

@@ -37,7 +37,7 @@ export const PollContextProvider = ({ children }: { children: JSX.Element | JSX.
             const result = await fetchPollWidgets(widget.id);
             setPollWidget(result[result.length - 1]);
             setIsLoadingPollWidget(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to load Poll data' }));
             setIsLoadingPollWidget(false);
         }

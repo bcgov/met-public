@@ -22,17 +22,20 @@ const EngagementMetadata = forwardRef((_props, ref) => {
     const dispatch = useAppDispatch();
 
     const validationSchema = useMemo(() => {
-        const schemaShape: { [key: string]: yup.AnySchema } = tenantTaxa.reduce((acc, taxon) => {
-            const taxonType = TaxonTypes[taxon.data_type as keyof typeof TaxonTypes];
-            if (taxonType.yupValidator) {
-                if (taxon.one_per_engagement) {
-                    acc[taxon.id.toString()] = taxonType.yupValidator.nullable();
-                } else {
-                    acc[taxon.id.toString()] = yup.array().of(taxonType.yupValidator).nullable();
+        const schemaShape: { [key: string]: yup.AnySchema } = tenantTaxa.reduce(
+            (acc, taxon) => {
+                const taxonType = TaxonTypes[taxon.data_type as keyof typeof TaxonTypes];
+                if (taxonType.yupValidator) {
+                    if (taxon.one_per_engagement) {
+                        acc[taxon.id.toString()] = taxonType.yupValidator.nullable();
+                    } else {
+                        acc[taxon.id.toString()] = yup.array().of(taxonType.yupValidator).nullable();
+                    }
                 }
-            }
-            return acc;
-        }, {} as { [key: string]: yup.AnySchema }); // Add index signature to the initial value of acc
+                return acc;
+            },
+            {} as { [key: string]: yup.AnySchema },
+        ); // Add index signature to the initial value of acc
         return yup.object().shape(schemaShape);
     }, [tenantTaxa]);
 
@@ -159,8 +162,10 @@ const EngagementMetadata = forwardRef((_props, ref) => {
                             color="primary"
                             icon={<taxonType.icon />}
                             onClick={() => {
-                                taxonType.externalResource &&
-                                    window.open(taxonType.externalResource(taxonValue), '_blank');
+                                return (
+                                    taxonType.externalResource &&
+                                    window.open(taxonType.externalResource(taxonValue), '_blank')
+                                );
                             }}
                         />
                     </Grid>

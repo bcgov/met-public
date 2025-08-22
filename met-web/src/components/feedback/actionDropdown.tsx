@@ -25,7 +25,7 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
             await updateFeedback(feedback.id, { ...feedback, status: FeedbackStatusEnum.Archived });
             dispatch(openNotification({ severity: 'success', text: 'Feedback has been archived.' }));
             reload();
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while archiving feedback.' }));
         }
     };
@@ -45,7 +45,7 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
                             await deleteFeedback(feedback.id);
                             dispatch(openNotification({ severity: 'success', text: 'Feedback has been deleted.' }));
                             reload();
-                        } catch (error) {
+                        } catch {
                             dispatch(
                                 openNotification({
                                     severity: 'error',

@@ -145,7 +145,7 @@ const FormSignUpDrawer = () => {
             await saveSubscribeForm(data);
             setIsCreating(false);
             setFormSignUpTabOpen(false);
-        } catch (error) {
+        } catch {
             setIsCreating(false);
             dispatch(
                 openNotification({ severity: 'error', text: 'An error occurred while trying to save the widget' }),

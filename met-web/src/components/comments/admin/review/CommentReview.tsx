@@ -112,7 +112,7 @@ const CommentReview = () => {
                     : fetchedSubmission.comment_status_id,
             );
             setIsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching comments' }));
             navigate('/');
         }
@@ -177,7 +177,7 @@ const CommentReview = () => {
             setIsSaving(false);
             dispatch(openNotification({ severity: 'success', text: 'Comments successfully reviewed.' }));
             navigate(`/surveys/${submission.survey_id}/comments`);
-        } catch (error) {
+        } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error occurred while sending comments review.' }));
             setIsSaving(false);
         }

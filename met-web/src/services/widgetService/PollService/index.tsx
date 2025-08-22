@@ -77,7 +77,7 @@ export const postPollResponse = async (
         const errorMessage =
             typeof errorData === 'string'
                 ? errorData
-                : errorData?.message ?? (err as Error).message ?? 'Failed to create Poll Response';
+                : (errorData?.message ?? (err as Error).message ?? 'Failed to create Poll Response');
         return Promise.reject(new Error(errorMessage));
     }
 };

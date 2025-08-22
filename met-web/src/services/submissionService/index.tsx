@@ -105,6 +105,6 @@ export const updateSubmission = async (token: string, requestData: UpdateSubmiss
         await http.PutRequest(url, requestData);
         return Promise.resolve();
     } catch (err) {
-        return Promise.reject('Failed to update submission');
+        return Promise.reject('Failed to update submission: ' + err);
     }
 };

@@ -56,7 +56,7 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface UIMatchWithCrumb
     extends UIMatch<unknown, { crumb?: (data: unknown) => Promise<{ name: string; link?: string }> }> {}
 
@@ -94,7 +94,7 @@ export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ small
         <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
             {resolvedCrumbs.map((resolvedCrumb, index) => {
                 const name = resolvedCrumb?.name;
-                const link = index < matches.length - 1 ? resolvedCrumb?.link ?? matches[index].pathname : undefined;
+                const link = index < matches.length - 1 ? (resolvedCrumb?.link ?? matches[index].pathname) : undefined;
                 return link ? (
                     <Link size="small" key={matches[index].pathname + name} to={link}>
                         {name}

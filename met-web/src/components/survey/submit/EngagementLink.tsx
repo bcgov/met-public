@@ -51,7 +51,7 @@ export const EngagementLink = () => {
                 <MuiLink
                     component={Link}
                     to={`/surveys`}
-                    onClick={(e) => {
+                    onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
                         e.preventDefault();
                         handleNavigate('/surveys');
                     }}

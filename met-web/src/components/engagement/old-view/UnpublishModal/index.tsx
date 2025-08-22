@@ -19,7 +19,7 @@ const UnpublishModal = ({ open, setModalOpen }: UnpublishModalProps) => {
             await unpublishEngagement({ id: savedEngagement.id, status_id: EngagementStatus.Unpublished });
             setIsUnpublishing(false);
             setModalOpen(false);
-        } catch (error) {
+        } catch {
             setIsUnpublishing(false);
             setModalOpen(false);
         }
