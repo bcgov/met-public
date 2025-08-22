@@ -74,6 +74,7 @@ jobs:
           HEAD_REF: ${{ github.head_ref }}
         run: |
           echo "CODECOV_BRANCH=PR_${HEAD_REF}" >> $GITHUB_ENV
+          echo "CODECOV_TOKEN=${CODECOV_TOKEN}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
 
       - name: Upload coverage to Codecov
