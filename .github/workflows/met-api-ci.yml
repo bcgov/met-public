@@ -131,7 +131,7 @@ jobs:
           fail_ci_if_error: true
           verbose: true
           override_branch: ${CODECOV_BRANCH}
-          token: ${ CODECOV_TOKEN }
+          token: ${CODECOV_TOKEN}
 
   build-check:
     needs: setup-job
