@@ -80,7 +80,7 @@ const CommentTextListing = () => {
             downloadFile(response, `INTERNAL ONLY - ${survey.engagement?.name || ''} - ${formatToUTC(Date())}.csv`);
             setIsExporting(false);
             handleExportToCSVClose(); // Close the menu after export
-        } catch (error) {
+        } catch {
             setIsExporting(false);
             dispatch(
                 openNotification({

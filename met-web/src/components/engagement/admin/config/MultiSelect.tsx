@@ -6,6 +6,7 @@ import {
     BoxProps,
     Grid,
     IconButton,
+    Paper,
     PaperProps,
     Popper,
     PopperProps,
@@ -17,7 +18,6 @@ import { colors } from 'styles/Theme';
 import { BodyText } from 'components/common/Typography';
 import { When } from 'react-if';
 import { Button } from 'components/common/Input';
-import { MetPaper } from 'components/common';
 import { OutlineBox } from 'components/common/Layout';
 
 import {
@@ -215,7 +215,11 @@ const MultiSelect = <T,>({
     );
 };
 
-const SearchPaper = (props: PaperProps) => <MetPaper {...props} children={props.children ?? []} />;
+const SearchPaper = (props: PaperProps) => (
+    <Paper elevation={0} {...props}>
+        {props.children}
+    </Paper>
+);
 const SearchPopper = (props: PopperProps) => (
     <Popper
         {...props}

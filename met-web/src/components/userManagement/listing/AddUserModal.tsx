@@ -85,7 +85,7 @@ export const AddUserModal = () => {
             });
             setEngagements(response.items);
             setEngagementsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

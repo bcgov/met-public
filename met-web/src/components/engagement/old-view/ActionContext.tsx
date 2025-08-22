@@ -180,7 +180,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
         try {
             const result = await getEngagementIdBySlug(slug);
             setEngagementId(result.engagement_id);
-        } catch (error) {
+        } catch {
             navigate('/not-found');
         }
     };

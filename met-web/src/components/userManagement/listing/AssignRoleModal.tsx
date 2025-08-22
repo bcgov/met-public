@@ -111,7 +111,7 @@ export const AssignRoleModal = () => {
             });
             setEngagements(response.items);
             setEngagementsLoading(false);
-        } catch (error) {
+        } catch {
             dispatch(
                 openNotification({
                     severity: 'error',

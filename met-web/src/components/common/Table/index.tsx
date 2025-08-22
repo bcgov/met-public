@@ -117,7 +117,7 @@ function MetTable<T>({
     noRowBorder = false,
     noPagination = false,
     commentTable = false,
-    // eslint-disable-next-line
+
     handleChangePagination = (_pagination: PaginationOptions<T>) => {},
     loading = false,
     paginationOptions = {
