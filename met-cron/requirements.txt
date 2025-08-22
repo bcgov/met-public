@@ -40,7 +40,7 @@ packaging==24.1
 psycopg2-binary==2.9.9
 pyasn1==0.6.0
 python-dotenv==1.0.1
-python-jose==3.3.0
+python-jose==3.4.0
 pytz==2024.1
 referencing==0.35.1
 requests==2.32.3
