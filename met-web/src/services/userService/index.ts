@@ -15,13 +15,14 @@ import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { USER_ROLES, USER_STATUS } from 'services/userService/constants';
 import { getBaseUrl } from 'helper';
+import Keycloak from 'keycloak-js';
 
-let KeycloakData: Keycloak.default;
+let KeycloakData: Keycloak;
 
 /**
  * Setting Keycloak instance.
  */
-const setKeycloakInstance = (instance: Keycloak.default) => {
+const setKeycloakInstance = (instance: Keycloak) => {
     KeycloakData = instance;
 };
 /**

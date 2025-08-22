@@ -44,7 +44,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
 
     const currentRoutePath = getRoutes(Number(engagementId))
         .map((route) => route.path)
-        .filter((route) => location.pathname.includes(route))
+        .filter((route) => window.location.pathname.includes(route))
         .reduce((prev, curr) => (prev.length > curr.length ? prev : curr));
 
     const allowedRoutes = getRoutes(Number(engagementId)).filter((route) => {
