@@ -4,7 +4,6 @@ import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
-import { Palette } from 'styles/Theme';
 import { BodyText } from 'components/common/Typography/Body';
 import { Button } from 'components/common/Input';
 
@@ -14,18 +13,12 @@ const VirtualSession = ({ eventItem }: EventProps) => {
         alignItems: 'center',
         paddingLeft: '0 !important',
     };
-    const fontStyles = {
+    const iconStyles = {
         display: 'flex',
-        marginLeft: 'auto',
-        marginRight: '14px',
-        color: Palette.text.primary,
-        fontSize: '24px',
-        width: '24px',
-        justifyContent: 'center',
-    };
-    const pStyles = {
-        margin: 0,
-        color: Palette.gray[100],
+        marginRight: '0.8750em',
+        fontSize: '1.5em',
+        width: '1em',
+        verticalAlign: 'middle',
     };
 
     // Define time/date
@@ -36,29 +29,29 @@ const VirtualSession = ({ eventItem }: EventProps) => {
     return (
         <>
             <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1}>
-                    <FontAwesomeIcon icon={faCalendarDays} style={fontStyles} />
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faCalendarDays} style={iconStyles} />
                 </Grid>
                 <Grid item xs={6} md={3} xl={2}>
-                    <strong>Date</strong>
+                    <BodyText bold>Date</BodyText>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <BodyText style={pStyles}>{startDate}</BodyText>
+                    <BodyText>{startDate}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1}>
-                    <FontAwesomeIcon icon={faClock} style={fontStyles} />
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faClock} style={iconStyles} />
                 </Grid>
                 <Grid item xs={6} md={3} xl={2}>
-                    <strong>Time</strong>
+                    <BodyText bold>Time</BodyText>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <BodyText style={pStyles}>{`${startTime} to ${endTime} PT`}</BodyText>
+                    <BodyText>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <Button variant="primary" size="large" href={eventItem.url}>
+                <Button variant="primary" size="large" href={eventItem.url} sx={{ mt: '2em' }}>
                     {eventItem.url_label}
                 </Button>
             </Grid>

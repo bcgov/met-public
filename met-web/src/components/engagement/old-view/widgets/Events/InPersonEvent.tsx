@@ -4,8 +4,7 @@ import { Grid } from '@mui/material';
 import { formatDate } from 'components/common/dateHelper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot, faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
-import { Palette } from 'styles/Theme';
-import { BodyText } from 'components/common/Typography/Body';
+import { BodyText } from 'components/common/Typography';
 
 export interface EventProps {
     eventItem: EventItem;
@@ -14,21 +13,15 @@ export interface EventProps {
 const InPersonEvent = ({ eventItem }: EventProps) => {
     // Define styles
     const containerStyles = {
-        alignItems: 'center',
+        // alignItems: 'center',
         paddingLeft: '0 !important',
     };
-    const fontStyles = {
+    const iconStyles = {
         display: 'flex',
-        marginLeft: 'auto',
-        marginRight: '14px',
-        color: Palette.text.primary,
-        fontSize: '24px',
-        width: '24px',
-        justifyContent: 'center',
-    };
-    const pStyles = {
-        margin: 0,
-        color: Palette.text.primary,
+        marginRight: '0.8750em',
+        fontSize: '1.5em',
+        width: '1em',
+        verticalAlign: 'middle',
     };
 
     // Parse the address into multiple lines
@@ -44,48 +37,52 @@ const InPersonEvent = ({ eventItem }: EventProps) => {
 
     return (
         <>
-            <Grid container justifyContent="flex-start" xs={12} sx={containerStyles} marginBottom={2}>
-                <Grid item xs={0} sm={1}>
-                    <FontAwesomeIcon icon={faLocationDot} style={fontStyles} />
+            <Grid container justifyContent="flex-start" xs={12} sx={containerStyles} marginBottom={1}>
+                <Grid container item xs={12}>
+                    <Grid item xs={0} md={1} style={{ maxWidth: '2rem' }}>
+                        <FontAwesomeIcon icon={faLocationDot} style={iconStyles} />
+                    </Grid>
+                    <Grid item xs={6} md={3} xl={2}>
+                        <BodyText bold>Location</BodyText>
+                    </Grid>
+                    <Grid item xs={12} md={8} xl={8}>
+                        <BodyText sx={{ mb: 'inherit' }}>{eventItem.location_name}</BodyText>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6} md={3} xl={2}>
-                    <strong>Location</strong>
-                </Grid>
-                <Grid item xs={12} md={8} xl={9}>
-                    <BodyText style={{ ...pStyles, marginBottom: 'inherit' }}>{eventItem.location_name}</BodyText>
-                </Grid>
-                <Grid item xs={0} md={1}></Grid>
-                <Grid item xs={6} md={3} xl={2} alignSelf="flex-start">
-                    <strong>Address</strong>
-                </Grid>
-                <Grid item xs={12} md={8} xl={9}>
-                    {finalAddress.map((aLine) => (
-                        <p key={aLine} style={pStyles}>
-                            {aLine ?? ''}
-                        </p>
-                    ))}
+                <Grid container item xs={12}>
+                    <Grid item xs={0} md={1} style={{ maxWidth: '2rem' }}>
+                        <div style={{ opacity: 0, ...iconStyles }}></div>
+                    </Grid>
+                    <Grid item xs={6} md={3} xl={2} alignSelf="flex-start">
+                        <BodyText bold>Address</BodyText>
+                    </Grid>
+                    <Grid item xs={12} md={8} xl={8}>
+                        {finalAddress.map((aLine) => {
+                            return <BodyText>{aLine ?? ''}</BodyText>;
+                        })}
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1}>
-                    <FontAwesomeIcon icon={faCalendarDays} style={fontStyles} />
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faCalendarDays} style={iconStyles} />
                 </Grid>
                 <Grid item xs={6} md={3} xl={2}>
-                    <strong>Date</strong>
+                    <BodyText bold>Date</BodyText>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <BodyText style={pStyles}>{startDate}</BodyText>
+                    <BodyText>{startDate}</BodyText>
                 </Grid>
             </Grid>
             <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1}>
-                    <FontAwesomeIcon icon={faClock} style={fontStyles} />
+                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+                    <FontAwesomeIcon icon={faClock} style={iconStyles} />
                 </Grid>
                 <Grid item xs={6} md={3} xl={2}>
-                    <strong>Time</strong>
+                    <BodyText bold>Time</BodyText>
                 </Grid>
                 <Grid item xs={12} md={8} xl={9}>
-                    <BodyText style={pStyles}>{`${startTime} to ${endTime} PT`}</BodyText>
+                    <BodyText>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
         </>
