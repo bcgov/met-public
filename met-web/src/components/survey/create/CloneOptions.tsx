@@ -24,7 +24,7 @@ const SORT_ORDER = 'asc';
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const searchParams = new URLSearchParams(location.search);
+    const searchParams = new URLSearchParams(window.location.search);
     const engagementId = searchParams.get('engagementId');
     const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
     const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
