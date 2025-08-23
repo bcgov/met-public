@@ -71,8 +71,6 @@ jobs:
       KEYCLOAK_TEST_REALMNAME: "demo"
       USE_TEST_KEYCLOAK_DOCKER: "YES"
 
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
       SQLALCHEMY_DATABASE_URI: "postgresql://postgres:postgres@localhost:5432/postgres"
 
     runs-on: ubuntu-24.04
@@ -108,19 +106,20 @@ jobs:
         env:
           HEAD_REF: ${{ github.head_ref }}
         run: |
-          echo "CODECOV_TOKEN=${CODECOV_TOKEN}" >> $GITHUB_ENV
           echo "CODECOV_BRANCH=PR_${HEAD_REF}" >> $GITHUB_ENV
         if: github.event_name == 'pull_request'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           flags: analyticsapi
           name: codecov-analytics-api
           fail_ci_if_error: true
           verbose: true
           override_branch: ${CODECOV_BRANCH}
-          token: ${CODECOV_TOKEN}
+          token: ${{ env.CODECOV_TOKEN}}
 
   build-check:
     needs: setup-job
