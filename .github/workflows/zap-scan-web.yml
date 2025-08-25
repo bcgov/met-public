@@ -8,7 +8,7 @@ jobs:
     name: Scan the met application
     steps:
       - name: zap_scan_web
-        uses: zaproxy/action-full-scan@v0.4.0
+        uses: zaproxy/action-full-scan@v0.12.0
         with:
           allow_issue_writing: false
           token: ${{ secrets.GITHUB_TOKEN }}
