@@ -43,7 +43,7 @@ python-dotenv==1.0.1
 python-jose==3.5.0
 pytz==2024.1
 referencing==0.35.1
-requests==2.32.3
+requests==2.32.4
 rpds-py==0.18.1
 rsa==4.9
 secure==0.3.0
