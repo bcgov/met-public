@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, waitFor, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PollWidgetView from 'components/engagement/old-view/widgets/Poll/PollWidgetView';
+import PollWidgetView from 'components/engagement/widgets/Poll/PollWidgetView';
 import * as widgetService from 'services/widgetService/PollService';
 import * as reactRedux from 'react-redux';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';

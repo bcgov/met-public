@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { MetDisclaimer } from 'components/common';
-import { ActionContext } from '../../ActionContext';
+import { ActionContext } from '../../old-view/ActionContext';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';

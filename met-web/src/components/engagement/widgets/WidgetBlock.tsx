@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { ActionContext } from '../ActionContext';
+import { ActionContext } from '../old-view/ActionContext';
 import { WidgetSwitch } from './WidgetSwitch';
 
 const WidgetBlock = () => {

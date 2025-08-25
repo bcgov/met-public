@@ -6,7 +6,7 @@ import NotAvailable from './NotAvailable';
 import EngagementComments from '../components/engagement/dashboard/comment';
 import PublicDashboard from 'components/publicDashboard';
 import Landing from 'components/landing';
-import ManageSubscription from '../components/engagement/old-view/widgets/Subscribe/ManageSubscription';
+import ManageSubscription from '../components/engagement/widgets/Subscribe/ManageSubscription';
 import { FormCAC } from 'components/FormCAC';
 import { RedirectLogin } from './RedirectLogin';
 import withLanguageParam from './LanguageParam';

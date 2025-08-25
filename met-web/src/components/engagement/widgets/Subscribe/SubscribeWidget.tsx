@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { MetPaper } from 'components/common';
-import { ActionContext } from '../../ActionContext';
+import { ActionContext } from '../../old-view/ActionContext';
 import { Divider, Grid, Skeleton } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
