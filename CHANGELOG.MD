@@ -1,3 +1,7 @@
+## August 25, 2025
+
+- **Chore** Updated the versions of several packages to resolve additional [Dependabot vulnerabilities](https://github.com/bcgov/met-public/security/dependabot) (internal link).
+
 ## August 22, 2025
 
 - **Chore** Resolve Dependabot vulnerability reports [🎟️ DESENG-845](https://citz-gdx.atlassian.net/browse/DESENG-845)
