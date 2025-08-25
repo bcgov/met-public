@@ -1,3 +1,8 @@
+## August 25, 2025
+
+- **Chore** Move Widgets out of old view folder [🎟️ DESENG-801](https://citz-gdx.atlassian.net/browse/DESENG-801)
+  - Move the refreshed widget components from `components/engagement/old-view/` to `components/engagement/widgets/`, as they are being reused in the new engagement view.
+
 ## August 22, 2025
 
 - **Chore** Resolve Dependabot vulnerability reports [🎟️ DESENG-845](https://citz-gdx.atlassian.net/browse/DESENG-845)
