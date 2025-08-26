@@ -143,7 +143,7 @@ jobs:
           fi
 
           # Convert to JSON array
-          charts_json=$(printf '%s\n' "${charts[@]}" | jq -s '.')
+          charts_json=$(printf '%s\n' "${charts[@]}" | jq -s -c '.')
 
           echo "charts=${charts_json}" >> $GITHUB_OUTPUT
           echo "Charts to process: ${charts_json}" >> $GITHUB_STEP_SUMMARY
