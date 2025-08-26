@@ -83,8 +83,8 @@ jobs:
             environments=("dev")
           fi
 
-          # Convert to JSON array
-          environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s .)
+          # Convert to compact JSON array
+          environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s -c .)
 
           echo "environments=${environments_json}" >> $GITHUB_OUTPUT
           echo "Environments to process: ${environments_json}" >> $GITHUB_STEP_SUMMARY
