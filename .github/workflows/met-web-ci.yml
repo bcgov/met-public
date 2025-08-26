@@ -68,8 +68,6 @@ jobs:
           npm test -- --coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           flags: metweb
           name: codecov-met-web
