@@ -36,6 +36,7 @@ on:
 
 env:
   OC_VERSION: "4.16"
+  PROJECT_NAMESPACE_PREFIX: "e903c2"
 
 # Concurrency control to prevent simultaneous deployments to the same environment
 concurrency:
@@ -177,22 +178,23 @@ jobs:
       matrix:
         chart: ${{ fromJson(needs.setup.outputs.charts) }}
         environment: ${{ fromJson(needs.setup.outputs.environments) }}
+    env:
+      NAMESPACE: ${PROJECT_NAMESPACE_PREFIX}-${{ matrix.environment }}
     environment: ${{ matrix.environment }} # Link to environment-specific secrets
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install OpenShift CLI
-        uses: redhat-actions/openshift-tools-installer@v1
+        uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
         with:
           oc: ${{ env.OC_VERSION }}
 
       - name: Log in to OpenShift
-        uses: redhat-actions/oc-login@v1
+        uses: redhat-actions/oc-login@5eb45e848b168b6bf6b8fe7f1561003c12e3c99d #v1.3
         with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
-          namespace: ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }}
+          openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
 
       - name: Deploy Helm chart
         run: |
@@ -205,44 +207,40 @@ jobs:
           helm upgrade --install \
             ${{ matrix.chart.name }} \
             . \
-            --namespace ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+            --namespace "$NAMESPACE" \
             --values values-${{ matrix.environment }}.yaml \
             --atomic \
             --timeout 10m \
-            --wait
-
       - name: Verify deployment
         run: |
           # Run helm tests if defined
           if helm test -h &> /dev/null; then
             helm test ${{ matrix.chart.name }} \
-              --namespace ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+              --namespace "$NAMESPACE" \
               --timeout 300s
           fi
 
           # Check rollout status for all deployments and statefulsets
-          oc get deployments,statefulsets -n ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+          oc get deployments,statefulsets -n "$NAMESPACE" \
             -l app.kubernetes.io/instance=${{ matrix.chart.name }} \
             -o name | while read resource; do
             oc rollout status $resource \
-              --namespace ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+              --namespace "$NAMESPACE" \
               --timeout 300s
-          done
-
       - name: Verify service endpoints
         # Only critical for production
         continue-on-error: ${{ matrix.environment != 'prod' }}
         if: ${{ matrix.environment == 'prod' }}
         run: |
           # Get all services for this chart
-          services=$(oc get services -n ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+          services=$(oc get services -n "$NAMESPACE" \
             -l app.kubernetes.io/instance=${{ matrix.chart.name }} \
             -o jsonpath='{.items[*].metadata.name}')
 
           for service in $services; do
             echo "Checking service endpoints for $service"
             endpoints=$(oc get endpoints $service \
-              -n ${{ secrets.PROJECT_NAMESPACE_PREFIX }}-${{ matrix.environment }} \
+              -n "$NAMESPACE" \
               -o jsonpath='{.subsets[*].addresses[*].ip}')
             
             if [ -z "$endpoints" ]; then
