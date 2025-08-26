@@ -100,13 +100,6 @@ jobs:
         id: test
         run: |
           make test
-      - name: Set Codecov branch name with prefix if pull request
-        id: codecov_branch
-        if: github.event_name == 'pull_request'
-        env:
-          HEAD_REF: ${{ github.head_ref }}
-        run: |
-          echo "CODECOV_BRANCH=${HEAD_REF}" >> $GITHUB_OUTPUT
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         env:
@@ -116,7 +109,6 @@ jobs:
           name: codecov-analytics-api
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          override_branch: ${{ steps.codecov_branch.outputs.CODECOV_BRANCH || null }}
           fail_ci_if_error: true
 
   build-check:
