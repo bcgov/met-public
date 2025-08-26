@@ -154,6 +154,7 @@ jobs:
     strategy:
       matrix:
         chart: ${{ fromJson(needs.setup.outputs.charts) }}
+        environment: ${{ fromJson(needs.setup.outputs.environments) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -162,13 +163,13 @@ jobs:
         run: |
           cd "${{ matrix.chart.dir }}"
           helm dependency update
-          helm lint .
-          helm template . --dry-run > /dev/null
+          helm lint . --values values-${{ matrix.environment }}.yaml
+          helm template . --values values-${{ matrix.environment }}.yaml --dry-run > /dev/null
 
       - name: Validate with kubeval
         run: |
           cd "${{ matrix.chart.dir }}"
-          helm template . | kubeval --strict --ignore-missing-schemas
+          helm template . --values values-${{ matrix.environment }}.yaml | kubeval --strict --ignore-missing-schemas
 
   deploy:
     needs: [setup, lint-and-test]
