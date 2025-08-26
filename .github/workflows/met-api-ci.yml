@@ -124,6 +124,8 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
+        env:
+          CC_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           flags: metapi
           name: codecov-met-api
