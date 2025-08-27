@@ -1,5 +1,10 @@
 ## August 25, 2025
 
+- **Feature** Implement new CI/CD logic for Helm charts [🎟️ DESENG-849](https://citz-gdx.atlassian.net/browse/DESENG-849)
+  - Remove old manual deployment scripts.
+  - Introduced a new GitHub Actions workflow for CI/CD of Helm charts.
+  - Added linting and testing steps for Helm charts.
+  - Implemented deployment steps with OpenShift CLI.
 - **Chore** Move Widgets out of old view folder [🎟️ DESENG-801](https://citz-gdx.atlassian.net/browse/DESENG-801)
   - Move the refreshed widget components from `components/engagement/old-view/` to `components/engagement/widgets/`, as they are being reused in the new engagement view.
 - **Chore** Updated the versions of several packages to resolve additional [Dependabot vulnerabilities](https://github.com/bcgov/met-public/security/dependabot) (internal link).
@@ -7,9 +12,8 @@
 ## August 22, 2025
 
 - **Chore** Resolve Dependabot vulnerability reports [🎟️ DESENG-845](https://citz-gdx.atlassian.net/browse/DESENG-845)
-  - Update several packages to the latest version, resolving Dependabot PRs that are too old to be rebased.
 
-## August 22, 2025
+  - Update several packages to the latest version, resolving Dependabot PRs that are too old to be rebased.
 
 - **Bugfix** Finish upgrading DeploymentConfigs -> Deployments cross-app [🎟️ DESENG-847](https://citz-gdx.atlassian.net/browse/DESENG-847)
   - Completed the replacement of all deprecated DeploymentConfigs with Deployments across the application.
