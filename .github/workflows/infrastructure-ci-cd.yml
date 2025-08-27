@@ -1,5 +1,7 @@
 name: Helm Chart CI/CD
-
+permissions: read-all
+# [Deploying/Linting for] [<chart>/all charts] in [dev/test/prod/all environments]
+run-name: ${{ inputs.run_cd && 'Deploying ' || 'Linting for' }} ${{ github.event.action =='workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} in ${{ inputs.environment == 'all' && 'all environments' || inputs.environment }}
 on:
   push:
     branches: [main]
@@ -71,16 +73,11 @@ jobs:
         id: set-env-matrix
         run: |
           # Default environments
-          environments=("dev" "test" "prod")
+          environments=("${{ inputs.environment }}")
 
-          # Handle workflow_dispatch event
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            if [[ "${{ inputs.environment }}" != "all" ]]; then
-              environments=("${{ inputs.environment }}")
-            fi
-          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            # For PRs, only test against dev environment
-            environments=("dev")
+          # Handle "all" case
+          if [[ "${{ inputs.environment }}" == "all" ]]; then
+            environments=("dev" "test" "prod")
           fi
 
           # Convert to compact JSON array
