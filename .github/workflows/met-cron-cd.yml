@@ -1,5 +1,5 @@
 name: MET CRON DEV CD
-
+run-name: Build Cron image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:

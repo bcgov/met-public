@@ -1,4 +1,5 @@
 name: MET ANALYTICS API CD
+run-name: Build Analytics API image and push to ${{ github.event.inputs.environment || 'dev' }}
 
 on:
   push:

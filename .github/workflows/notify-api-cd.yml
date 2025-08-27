@@ -1,5 +1,5 @@
 name: MET NOTIFY API DEV CD
-
+run-name: Build Notify API image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:

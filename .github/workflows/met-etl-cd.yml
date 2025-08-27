@@ -1,5 +1,5 @@
 name: MET ETL CD
-
+run-name: Build ETL image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:
