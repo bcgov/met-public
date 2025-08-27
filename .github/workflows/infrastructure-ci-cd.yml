@@ -226,11 +226,12 @@ jobs:
 
           # Check rollout status for all deployments and statefulsets
           oc get deployments,statefulsets -n "$NAMESPACE" \
-            -l app.kubernetes.io/instance=${{ matrix.chart.name }} \
+            -l app=${{ matrix.chart.name }} \
             -o name | while read resource; do
             oc rollout status $resource \
               --namespace "$NAMESPACE" \
               --timeout 300s
+          done
       - name: Verify service endpoints
         # Only critical for production
         continue-on-error: ${{ matrix.environment != 'prod' }}
