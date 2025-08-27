@@ -147,6 +147,7 @@ jobs:
 
           echo "charts=${charts_json}" >> $GITHUB_OUTPUT
           echo -e "## Charts to process: \n\n\`\`\`json\n$(echo $charts_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+
   lint-and-test:
     needs: setup
     runs-on: ubuntu-latest
@@ -252,7 +253,7 @@ jobs:
         run: |
           # Get all services for this chart
           services=$(oc get services -n "$NAMESPACE" \
-            -l app.kubernetes.io/instance=${{ matrix.chart.name }} \
+            -l app=${{ matrix.chart.name }} \
             -o jsonpath='{.items[*].metadata.name}')
 
           if [[ -z $services ]]; then

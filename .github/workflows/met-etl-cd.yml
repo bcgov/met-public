@@ -40,8 +40,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'
-    environment:
-      name: "dev"
+    environment: ${{github.event.inputs.environment || 'dev' }}
 
     steps:
       - uses: actions/checkout@v5
