@@ -9,7 +9,7 @@ import { PreviewBanner } from './PreviewBanner';
 import { useAppSelector } from 'hooks';
 import { useNavigate, useLocation } from 'react-router';
 import { RouteState } from './types';
-import WidgetBlock from './widgets/WidgetBlock';
+import WidgetBlock from '../widgets/WidgetBlock';
 import { Else, If, Then } from 'react-if';
 import { getAvailableTranslationLanguages } from 'services/engagementService';
 import { EngagementBanner } from './EngagementBanner';
