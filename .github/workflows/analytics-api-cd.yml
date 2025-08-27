@@ -1,4 +1,4 @@
-name: MET ANALYTICS API DEV CD
+name: MET ANALYTICS API CD
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
 
     if: github.repository == 'bcgov/met-public'
     environment:
-      name: "dev"
+      name: ${{ github.event.inputs.environment || 'dev' }}
 
     steps:
       - uses: actions/checkout@v5
