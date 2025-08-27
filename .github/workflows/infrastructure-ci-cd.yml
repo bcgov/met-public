@@ -87,7 +87,7 @@ jobs:
           environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s -c .)
 
           echo "environments=${environments_json}" >> $GITHUB_OUTPUT
-          echo -e "#Environments to process: \n\`\`\`yaml\n\n$(echo $environments_json | yq -y)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo -e "#Environments to process: \n\n\`\`\`json\n$(echo $environments_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Set matrix for changed charts
         id: set-chart-matrix
@@ -146,14 +146,14 @@ jobs:
           charts_json=$(printf '%s\n' "${charts[@]}" | jq -s -c '.')
 
           echo "charts=${charts_json}" >> $GITHUB_OUTPUT
-          echo -e "#Charts to process: \n\`\`\`yaml\n\n$(echo $charts_json | yq -y)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo -e "#Charts to process: \n\n\`\`\`json\n$(echo $charts_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
   lint-and-test:
     needs: setup
     runs-on: ubuntu-latest
     if: needs.setup.outputs.charts != '[]'
     concurrency:
-      group: ${{ github.ref }}
+      group: ${{ github.ref }}-${{ matrix.environment.name }}-${{ matrix.chart.name }}-lint-and-test
       cancel-in-progress: true
     strategy:
       fail-fast: false
