@@ -1,4 +1,4 @@
-name: MET WEB DEV CD
+name: MET WEB CD
 run-name: Build Web image and push to ${{ github.event.inputs.environment || 'dev' }}
 
 on:
