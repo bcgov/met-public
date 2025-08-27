@@ -186,12 +186,12 @@ jobs:
       matrix:
         chart: ${{ fromJson(needs.setup.outputs.charts) }}
         environment: ${{ fromJson(needs.setup.outputs.environments) }}
-    env:
-      NAMESPACE: ${PROJECT_NAMESPACE_PREFIX}-${{ matrix.environment }}
     environment: ${{ matrix.environment }} # Link to environment-specific secrets
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Set namespace
+        run: echo "NAMESPACE=${PROJECT_NAMESPACE_PREFIX}-${{ matrix.environment }}" >> $GITHUB_ENV
 
       - name: Install OpenShift CLI
         uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
@@ -205,9 +205,8 @@ jobs:
           openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
 
       - name: Deploy Helm chart
+        working-directory: "${{ matrix.chart.dir }}"
         run: |
-          cd "${{ matrix.chart.dir }}"
-
           # Update dependencies
           helm dependency update
 
