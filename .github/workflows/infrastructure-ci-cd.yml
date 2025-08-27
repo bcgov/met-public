@@ -1,7 +1,7 @@
 name: Helm Chart CI/CD
 permissions: read-all
 # [Deploying/Linting for] [<chart>/all charts] in [dev/test/prod/all environments]
-run-name: ${{ inputs.run_cd && 'Deploying ' || 'Linting for' }} ${{ github.event.action =='workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} in ${{ inputs.environment == 'all' && 'all environments' || inputs.environment }}
+run-name: ${{ inputs.run_cd && 'Deploying ' || 'Linting for' }} ${{ github.event_name =='workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} in ${{ inputs.environment == 'all' && 'all environments' || inputs.environment }}
 on:
   push:
     branches: [main]
