@@ -1,7 +1,7 @@
 name: Helm Chart CI/CD
 permissions: read-all
 # [Deploying/Linting for] [<chart>/all charts] in [dev/test/prod/all environments]
-run-name: ${{ inputs.run_cd && 'Deploying ' || 'Linting for' }} ${{ github.event_name =='workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} in ${{ inputs.environment == 'all' && 'all environments' || inputs.environment }}
+run-name: ${{ ((inputs.run_cd && github.event_name == 'workflow_dispatch') || github.event_name == 'push') && 'Deploying ' || 'Linting for' }} ${{ github.event_name =='workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} in ${{ inputs.environment == 'all' && 'all environments' || inputs.environment }}
 on:
   push:
     branches: [main]
@@ -75,8 +75,11 @@ jobs:
           # Default environments
           environments=("${{ inputs.environment }}")
 
-          # Handle "all" case
-          if [[ "${{ inputs.environment }}" == "all" ]]; then
+          # If "all" is selected or we are linting a PR, we include all environments
+          if [[ "${{ inputs.environment }}" == "all" || "${{ github.event_name }}" == "pull_request" ]]; then
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "Linting this PR. All environments will be included." >> $GITHUB_STEP_SUMMARY
+            fi
             environments=("dev" "test" "prod")
           fi
 
@@ -84,7 +87,7 @@ jobs:
           environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s -c .)
 
           echo "environments=${environments_json}" >> $GITHUB_OUTPUT
-          echo -e "#Environments to process: \n```json\n${environments_json}\n```" >> $GITHUB_STEP_SUMMARY
+          echo -e "#Environments to process: \n\`\`\`json\n${environments_json}\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Set matrix for changed charts
         id: set-chart-matrix
@@ -132,23 +135,28 @@ jobs:
             fi
           fi
 
-          # If no charts selected, default to all
+          # If no charts selected, skip the rest of the steps
           if [[ ${#charts[@]} -eq 0 ]]; then
-            for chart_name in "${!chart_dirs[@]}"; do
-              charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
-            done
+            echo "No charts eligible for processing." >> $GITHUB_STEP_SUMMARY
+            echo "charts=[]" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
           # Convert to JSON array
           charts_json=$(printf '%s\n' "${charts[@]}" | jq -s -c '.')
 
           echo "charts=${charts_json}" >> $GITHUB_OUTPUT
-          echo -e "#Charts to process: \n```json\n${charts_json}\n```" >> $GITHUB_STEP_SUMMARY
+          echo -e "#Charts to process: \n\`\`\`json\n${charts_json}\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
   lint-and-test:
     needs: setup
     runs-on: ubuntu-latest
+    if: needs.setup.outputs.charts != '[]'
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
     strategy:
+      fail-fast: false
       matrix:
         chart: ${{ fromJson(needs.setup.outputs.charts) }}
         environment: ${{ fromJson(needs.setup.outputs.environments) }}
