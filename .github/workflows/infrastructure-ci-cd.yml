@@ -73,14 +73,14 @@ jobs:
         id: set-env-matrix
         run: |
           # Default environments
-          environments=("${{ inputs.environment }}")
+          environments=("${{ inputs.environment || 'dev'}}")
 
           # If "all" is selected or we are linting a PR, we include all environments
           if [[ "${{ inputs.environment }}" == "all" || "${{ github.event_name }}" == "pull_request" ]]; then
+            environments=("dev" "test" "prod")
             if [[ "${{ github.event_name }}" == "pull_request" ]]; then
               echo "Linting this PR. All environments will be included." >> $GITHUB_STEP_SUMMARY
             fi
-            environments=("dev" "test" "prod")
           fi
 
           # Convert to compact JSON array
@@ -147,13 +147,13 @@ jobs:
 
           echo "charts=${charts_json}" >> $GITHUB_OUTPUT
           echo -e "## Charts to process: \n\n\`\`\`json\n$(echo $charts_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
-
   lint-and-test:
     needs: setup
     runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
     if: needs.setup.outputs.charts != '[]'
     concurrency:
-      group: ${{ github.ref }}-${{ matrix.environment.name }}-${{ matrix.chart.name }}-lint-and-test
+      group: ${{ github.ref }}-${{ matrix.environment }}-${{ matrix.chart.name }}-lint-and-test
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -163,16 +163,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Install OpenShift CLI
         uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
         with:
           oc: ${{ env.OC_VERSION }}
           skip_cache: true
+
       - name: Log in to OpenShift
         uses: redhat-actions/oc-login@5eb45e848b168b6bf6b8fe7f1561003c12e3c99d #v1.3
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
           openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
+          namespace: ${{env.PROJECT_NAMESPACE_PREFIX}}-${{matrix.environment}}
+
       - name: Lint Helm chart
         working-directory: "${{ matrix.chart.dir }}"
         run: |
@@ -196,8 +200,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set namespace
-        run: echo "NAMESPACE=${PROJECT_NAMESPACE_PREFIX}-${{ matrix.environment }}" >> $GITHUB_ENV
+        run: echo "NAMESPACE=${{env.PROJECT_NAMESPACE_PREFIX}}-${{ matrix.environment }}" >> $GITHUB_ENV
 
       - name: Install OpenShift CLI
         uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
@@ -224,6 +229,7 @@ jobs:
             --values values_${{ matrix.environment }}.yaml \
             --atomic \
             --timeout 10m \
+
       - name: Verify deployment
         run: |
           # Run helm tests if defined
@@ -232,7 +238,6 @@ jobs:
               --namespace "$NAMESPACE" \
               --timeout 300s
           fi
-
           # Check rollout status for all deployments and statefulsets
           oc get deployments,statefulsets -n "$NAMESPACE" \
             -l app=${{ matrix.chart.name }} \
@@ -241,6 +246,7 @@ jobs:
               --namespace "$NAMESPACE" \
               --timeout 300s
           done
+
       - name: Verify service endpoints
         # Only critical for production
         continue-on-error: ${{ matrix.environment != 'prod' }}
@@ -249,6 +255,10 @@ jobs:
           services=$(oc get services -n "$NAMESPACE" \
             -l app.kubernetes.io/instance=${{ matrix.chart.name }} \
             -o jsonpath='{.items[*].metadata.name}')
+
+          if [[ -z $services ]]; then
+            echo "No services found."
+          fi
 
           for service in $services; do
             echo "Checking service endpoints for $service"
