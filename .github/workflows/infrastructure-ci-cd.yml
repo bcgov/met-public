@@ -175,7 +175,6 @@ jobs:
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
           openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
-          namespace: ${{env.PROJECT_NAMESPACE_PREFIX}}-${{matrix.environment}}
 
       - name: Lint Helm chart
         working-directory: "${{ matrix.chart.dir }}"
