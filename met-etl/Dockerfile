@@ -1,6 +1,6 @@
 FROM python:3.9.23-bullseye
 
-ARG DAGSTER_LIBRARIES_VERSION=0.23.15
+ARG DAGSTER_LIBRARIES_VERSION=0.26.16
 
 # Install the requirements
 COPY ./requirements.txt .
@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y git && \
     dagster-celery[flower,redis,kubernetes]==${DAGSTER_LIBRARIES_VERSION} \
     dagster-k8s==${DAGSTER_LIBRARIES_VERSION} \
     dagster-postgres==${DAGSTER_LIBRARIES_VERSION} \
-    dagster==1.7.15 && \
+    dagster-docker==${DAGSTER_LIBRARIES_VERSION} && \
     # ==> Install other dependencies
     pip install --no-cache-dir -r requirements.txt
 
