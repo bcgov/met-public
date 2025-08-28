@@ -82,7 +82,7 @@ const config: Config.InitialOptions = {
         'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
         'dnd-core': 'dnd-core-cjs',
         '\\.(css|scss)$': '<rootDir>/tests/unit/components/styleMock.tsx',
-        "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/__mocks__/fileMock.ts",
+        '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.ts',
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -122,7 +122,11 @@ const config: Config.InitialOptions = {
     // runner: "jest-runner",
 
     // The paths to modules that run some code to configure or set up the testing environment before each test
-    setupFiles: ['<rootDir>/tests/unit/components/setEnvVars.tsx', '<rootDir>/public/config/config.js'],
+    setupFiles: [
+        '<rootDir>/tests/unit/components/polyfillTextEncoding.ts',
+        '<rootDir>/tests/unit/components/setEnvVars.tsx',
+        '<rootDir>/public/config/config.js',
+    ],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
     setupFilesAfterEnv: ['jest-extended/all', '@testing-library/jest-dom'],
