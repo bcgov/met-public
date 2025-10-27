@@ -53,7 +53,7 @@ jobs:
       environments: ${{ steps.set-env-matrix.outputs.environments }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Fetch all history for changed-files detection
 
@@ -163,7 +163,7 @@ jobs:
         environment: ${{ fromJson(needs.setup.outputs.environments) }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install OpenShift CLI
         uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
@@ -199,7 +199,7 @@ jobs:
     environment: ${{ matrix.environment }} # Link to environment-specific secrets
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set namespace
         run: echo "NAMESPACE=${{env.PROJECT_NAMESPACE_PREFIX}}-${{ matrix.environment }}" >> $GITHUB_ENV
