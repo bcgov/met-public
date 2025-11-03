@@ -8,7 +8,7 @@ jobs:
     name: Scan the analytics application
     steps:
       - name: zap_scan_analytics
-        uses: zaproxy/action-api-scan@v0.9.0
+        uses: zaproxy/action-api-scan@v0.10.0
         with:
           allow_issue_writing: false
           token: ${{ secrets.GITHUB_TOKEN }}
