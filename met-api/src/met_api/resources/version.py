@@ -33,7 +33,7 @@ class Version(Resource):
         build_date = os.getenv('MET_BUILD_DATE', 'unknown')
         branch = os.getenv('MET_BUILD_BRANCH', 'unknown')
         repo_url = os.getenv('MET_GITHUB_REPO', 'https://github.com/bcgov/met-public')
-        
+
         return jsonify({
             'commit': commit_hash,
             'build_date': build_date,
