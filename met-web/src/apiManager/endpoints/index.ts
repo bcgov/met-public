@@ -208,6 +208,9 @@ const Endpoints = {
         GET_TENANT_LANGUAGES: `${AppConfig.apiUrl}/languages/tenant/tenant_id`,
         CREATE_OR_DELETE_TENANT_MAPPING: `${AppConfig.apiUrl}/languages/language_id/tenant/tenant_id`,
     },
+    Version: {
+        GET: `${AppConfig.apiUrl}/version/`,
+    },
 };
 
 export default Endpoints;

@@ -25,6 +25,12 @@ const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONM
 const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
 const DEFAULT_LANGUAGE_ID = getEnv('REACT_APP_DEFAULT_LANGUAGE_ID');
 
+// version config
+const BUILD_COMMIT_HASH = getEnv('REACT_APP_BUILD_COMMIT_HASH', 'dev');
+const BUILD_DATE = getEnv('REACT_APP_BUILD_DATE', 'unknown');
+const BUILD_BRANCH = getEnv('REACT_APP_BUILD_BRANCH', 'unknown');
+const GITHUB_REPO = getEnv('REACT_APP_GITHUB_REPO', 'https://github.com/bcgov/met-public');
+
 export const AppConfig = {
     apiUrl: API_URL,
     analyticsApiUrl: REACT_APP_ANALYTICS_API_URL,
@@ -41,5 +47,12 @@ export const AppConfig = {
     },
     language: {
         defaultLanguageId: DEFAULT_LANGUAGE_ID || 'en',
+    },
+    version: {
+        commit: BUILD_COMMIT_HASH,
+        buildDate: BUILD_DATE,
+        branch: BUILD_BRANCH,
+        version: BUILD_COMMIT_HASH === 'dev' ? 'dev' : BUILD_COMMIT_HASH.substring(0, 7),
+        commitUrl: BUILD_COMMIT_HASH === 'dev' ? undefined : `${GITHUB_REPO}/commit/${BUILD_COMMIT_HASH}`,
     },
 };

@@ -66,6 +66,7 @@ from .subscribe_item_translation import API as SUBSCRIBE_ITEM_TRANSLATION_API
 from .timeline_event_translation import API as TIMELINE_EVENT_TRANSLATION_API
 from .engagement_translation import API as ENGAGEMENT_TRANSLATION_API
 from .engagement_content_translation import API as ENGAGEMENT_CONTENT_TRANSLATION_API
+from .version import API as VERSION_API
 
 __all__ = ('API_BLUEPRINT',)
 
@@ -119,3 +120,4 @@ API.add_namespace(SUBSCRIBE_ITEM_TRANSLATION_API, path='/subscribe/<int:widget_s
 API.add_namespace(TIMELINE_EVENT_TRANSLATION_API, path='/timelines/<int:timeline_id>/translations')
 API.add_namespace(ENGAGEMENT_TRANSLATION_API, path='/engagement/<int:engagement_id>/translations')
 API.add_namespace(ENGAGEMENT_CONTENT_TRANSLATION_API, path='/engagement_content/<int:content_id>/translations')
+API.add_namespace(VERSION_API, path='/version')

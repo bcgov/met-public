@@ -73,6 +73,10 @@ jobs:
           docker build . --file Dockerfile \
             --secret id=artifactory_username,src=/tmp/artifactory_username \
             --secret id=artifactory_password,src=/tmp/artifactory_password \
+            --build-arg REACT_APP_BUILD_COMMIT_HASH=${{ github.sha }} \
+            --build-arg REACT_APP_BUILD_DATE=$(date -u +'%b %d, %Y @ %H:%M') \
+            --build-arg REACT_APP_BUILD_BRANCH=${{ github.ref_name }} \
+            --build-arg REACT_APP_GITHUB_REPO=https://github.com/${{ github.repository }} \
             --tag image
 
       - name: Push image
