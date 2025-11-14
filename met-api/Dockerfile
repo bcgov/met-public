@@ -6,6 +6,18 @@ USER root
 RUN mkdir /opt/app-root && chmod 755 /opt/app-root
 WORKDIR /opt/app-root
 
+# Accept build arguments for version information
+ARG MET_BUILD_COMMIT_HASH=unknown
+ARG MET_BUILD_DATE=unknown
+ARG MET_BUILD_BRANCH=unknown
+ARG MET_GITHUB_REPO=https://github.com/bcgov/met-public
+
+# Set environment variables from build arguments
+ENV MET_BUILD_COMMIT_HASH=${MET_BUILD_COMMIT_HASH}
+ENV MET_BUILD_DATE=${MET_BUILD_DATE}
+ENV MET_BUILD_BRANCH=${MET_BUILD_BRANCH}
+ENV MET_GITHUB_REPO=${MET_GITHUB_REPO}
+
 # Install the requirements
 COPY ./requirements.txt .
 

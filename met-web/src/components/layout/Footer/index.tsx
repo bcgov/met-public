@@ -1,18 +1,21 @@
 import { Divider, Grid, Stack, useMediaQuery, Theme } from '@mui/material';
-import { MetLabel } from 'components/common';
-import React from 'react';
+import { BodyText } from 'components/common/Typography';
+import React, { Suspense, useState } from 'react';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDarkCropped.svg';
 import { Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faUniversalAccess } from '@fortawesome/pro-solid-svg-icons';
+import { faUniversalAccess, faCodePullRequest, faCodeFork } from '@fortawesome/pro-solid-svg-icons';
 import UserService from 'services/userService';
-import { useAppSelector } from 'hooks';
-import { Unless } from 'react-if';
-import { useAppTranslation } from 'hooks';
+import { useAppSelector, useAppTranslation } from 'hooks';
+import { Unless, When } from 'react-if';
 import { getBaseUrl } from 'helper';
 import { Link } from 'components/common/Navigation';
 import { SocialLinkIconProps } from './types';
+import { VersionInfo } from 'services/versionService';
+import { AppConfig } from 'config';
+import { IconButton } from 'components/common/Input';
+import { useRouteLoaderData, Await } from 'react-router-dom';
 
 const LinkArrow = () => {
     return <span style={{ fontWeight: 'bold', marginLeft: '0.8rem' }}>&gt;</span>;
@@ -49,11 +52,78 @@ const SocialLinkIcon = ({ iconLink, fontAwesomeIcon }: SocialLinkIconProps) => {
     );
 };
 
+interface VersionInfoProps {
+    label: string;
+    version?: string;
+    branch?: string;
+    commitUrl?: string;
+    buildDate?: string;
+    isExpanded: boolean;
+    onToggle?: () => void;
+}
+const VersionInfoDisplay = ({
+    label,
+    version,
+    branch,
+    commitUrl,
+    buildDate,
+    isExpanded,
+    onToggle,
+}: VersionInfoProps) => {
+    return (
+        <Stack direction="row" width={{ xs: '100%', sm: 'auto' }} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+            <Grid
+                item
+                px="0.5rem"
+                display="inline-flex"
+                alignItems="baseline"
+                justifyContent="center"
+                order={{ xs: 2, sm: 1 }}
+                sx={{ transform: { xs: 'scaleX(-1)', sm: 'none' } }}
+            >
+                {onToggle && (
+                    <IconButton
+                        backgroundColor={Palette.blue[10]}
+                        icon={isExpanded ? faCodePullRequest : faCodeFork}
+                        onClick={onToggle}
+                        title={isExpanded ? 'Collapse version info' : 'Expand version info'}
+                    />
+                )}
+            </Grid>
+            <BodyText width="max-content" order={{ xs: 1, sm: 2 }}>
+                {label}:{' '}
+                <Link
+                    color={Palette.gray[90]}
+                    bgcolor={Palette.blue[10]}
+                    padding="0.1rem 0.3rem"
+                    borderRadius="4px"
+                    fontFamily="monospace"
+                    underline="hover"
+                    sx={{ '&:hover': { bgcolor: Palette.blue[20] } }}
+                    href={commitUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {version}
+                    {branch !== 'unknown' && `@${branch}`}
+                </Link>{' '}
+                <BodyText width="fit-content" display={isExpanded ? { xs: 'block', md: 'inline-block' } : 'none'}>
+                    {buildDate && buildDate !== 'unknown' && `built ${buildDate}`}
+                </BodyText>
+            </BodyText>
+        </Stack>
+    );
+};
+
 const Footer = () => {
     const baseURL = getBaseUrl();
     const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isMediumScreenOrLarger: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
+    const loaderData = useRouteLoaderData('authenticated-root') as { apiVersion: Promise<VersionInfo> } | undefined;
+    const [isVersionExpanded, setIsVersionExpanded] = useState(false);
+
     const linkStyles = {
         color: Palette.text.primary,
         textDecoration: 'none',
@@ -77,7 +147,7 @@ const Footer = () => {
             </Grid>
 
             {/* Footer main container */}
-            <Grid item xs={12} padding={{ xs: '2em 1em', md: '2em 2em', lg: '2em 3em' }} container rowSpacing={4}>
+            <Grid item xs={12} padding={{ xs: '2em 1em', md: '2em 2em', lg: '2em 3em' }} container rowSpacing={2}>
                 <Grid
                     item
                     columns={10}
@@ -146,7 +216,7 @@ const Footer = () => {
                     }}
                 >
                     <Stack spacing={3}>
-                        <MetLabel>{translate('footer.moreInfo')}</MetLabel>
+                        <BodyText bold>{translate('footer.moreInfo')}</BodyText>
                         <Link href="#" sx={linkStyles}>
                             {translate('footer.aboutEngageBC')}
                             <LinkArrow />
@@ -168,7 +238,7 @@ const Footer = () => {
                     sx={{ height: isMediumScreenOrLarger ? '15.625rem' : 'auto' }}
                 >
                     <Stack spacing={3}>
-                        <MetLabel>{translate('footer.connectWithUs')}</MetLabel>
+                        <BodyText bold>{translate('footer.connectWithUs')}</BodyText>
                         <Link href="#" sx={linkStyles}>
                             {translate('footer.contactInformation')}
                             <LinkArrow />
@@ -192,24 +262,9 @@ const Footer = () => {
                     <Divider sx={{ borderColor: Palette.text.primary }} />
                 </Grid>
 
-                {/* Footer copyright date and admin login */}
+                {/* Footer copyright date */}
                 <Grid item xs={12} sm={6} container justifyContent={'flex-start'} alignItems="flex-start">
                     <p style={{ margin: '0' }}>{translate('footer.copyrightNotice')}</p>
-                    <Unless condition={isLoggedIn}>
-                        <Grid item xs={12} sx={{ pt: '1rem' }}>
-                            <Link
-                                href="/"
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    UserService.doLogin(baseURL);
-                                }}
-                                sx={linkStyles}
-                            >
-                                {translate('footer.login')}
-                                <LinkArrow />
-                            </Link>
-                        </Grid>
-                    </Unless>
                 </Grid>
 
                 {/* Footer copyright, privacy, and disclaimer links */}
@@ -226,6 +281,56 @@ const Footer = () => {
                         </Link>
                     </Stack>
                 </Grid>
+
+                {/* Footer admin login */}
+                <Grid item xs={12} sm={6} container justifyContent={'flex-start'} alignItems="baseline">
+                    <Unless condition={isLoggedIn}>
+                        <Grid item xs={12}>
+                            <Link
+                                href="/"
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    UserService.doLogin(baseURL);
+                                }}
+                                sx={linkStyles}
+                            >
+                                {translate('footer.login')}
+                                <LinkArrow />
+                            </Link>
+                        </Grid>
+                    </Unless>
+                </Grid>
+
+                {/* Footer version info */}
+                <When condition={isLoggedIn}>
+                    <Grid item container xs={12} sm={6} gap={1} justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}>
+                        <VersionInfoDisplay
+                            label={translate('footer.appVersion')}
+                            version={AppConfig.version.version}
+                            branch={AppConfig.version.branch}
+                            commitUrl={AppConfig.version.commitUrl}
+                            buildDate={AppConfig.version.buildDate}
+                            isExpanded={isVersionExpanded}
+                            onToggle={() => setIsVersionExpanded(!isVersionExpanded)}
+                        />
+                        <When condition={isVersionExpanded}>
+                            <Suspense fallback={<BodyText>Loading...</BodyText>}>
+                                <Await resolve={loaderData?.apiVersion}>
+                                    {(apiVersionInfo: VersionInfo) => (
+                                        <VersionInfoDisplay
+                                            label={translate('footer.apiVersion')}
+                                            version={apiVersionInfo?.version}
+                                            branch={apiVersionInfo?.branch}
+                                            commitUrl={apiVersionInfo?.commit_url}
+                                            buildDate={apiVersionInfo?.build_date}
+                                            isExpanded={isVersionExpanded}
+                                        />
+                                    )}
+                                </Await>
+                            </Suspense>
+                        </When>
+                    </Grid>
+                </When>
             </Grid>
         </Grid>
     );

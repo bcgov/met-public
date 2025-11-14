@@ -1,3 +1,9 @@
+## November 14, 2025
+
+- **Feature** Added app and API version info to footer [🎟️ DESENG-820](https://citz-gdx.atlassian.net/browse/DESENG-820)
+  - Adjusted GitHub Actions workflow to embed version information into webapp and API at build time.
+  - Version information displays in the footer of the admin view only, for now.
+
 ## August 25, 2025
 
 - **Feature** Implement new CI/CD logic for Helm charts [🎟️ DESENG-849](https://citz-gdx.atlassian.net/browse/DESENG-849)
