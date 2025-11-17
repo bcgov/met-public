@@ -70,7 +70,8 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          TZ='America/Vancouver' docker build . --file Dockerfile \
+          export TZ='America/Vancouver' && 
+            docker build . --file Dockerfile \
             --secret id=artifactory_username,src=/tmp/artifactory_username \
             --secret id=artifactory_password,src=/tmp/artifactory_password \
             --build-arg REACT_APP_BUILD_COMMIT_HASH=${{ github.sha }} \

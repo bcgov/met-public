@@ -60,7 +60,8 @@ jobs:
 
       - name: Build image
         run: |
-          TZ='America/Vancouver' docker build . --file Dockerfile \
+          export TZ='America/Vancouver' && 
+            docker build . --file Dockerfile \
             --build-arg MET_BUILD_COMMIT_HASH=${{ github.sha }} \
             --build-arg MET_BUILD_DATE="$(date +'%b %d, %Y @ %H:%M')" \
             --build-arg MET_BUILD_BRANCH=${{ github.ref_name }} \
