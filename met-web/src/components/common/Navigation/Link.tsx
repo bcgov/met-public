@@ -30,15 +30,7 @@ interface FocusableNavLinkProps extends MuiLinkProps {
  * </Link>
  * @see {@link https://mui.com/material-ui/api/link/} for more details on the MuiLink component.
  */
-export const Link: React.FC<FocusableNavLinkProps> = ({
-    children,
-    size = 'regular',
-    to,
-    href,
-    onClick,
-    color,
-    ...props
-}) => {
+export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regular', to, href, onClick, ...props }) => {
     const fontSize = {
         small: '14px',
         regular: '16px',
@@ -49,7 +41,6 @@ export const Link: React.FC<FocusableNavLinkProps> = ({
         regular: '1.5',
         large: '1.625',
     }[size];
-    const textColor = color ?? undefined;
     return (
         <MuiLink
             onClick={onClick}
@@ -57,8 +48,6 @@ export const Link: React.FC<FocusableNavLinkProps> = ({
             to={to}
             href={href}
             sx={{
-                color: textColor,
-                textDecorationColor: textColor,
                 '&:focus-visible': {
                     outline: `2px solid ${colors.focus.regular.outer}`,
                     outlineOffset: '2px',

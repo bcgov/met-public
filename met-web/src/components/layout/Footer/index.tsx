@@ -84,9 +84,13 @@ const VersionInfoDisplay = ({
                 {onToggle && (
                     <IconButton
                         backgroundColor={Palette.blue[10]}
+                        hoverBackgroundColor={Palette.blue[20]}
                         icon={isExpanded ? faCodePullRequest : faCodeFork}
+                        size="24px"
+                        iconSize="16px"
                         onClick={onToggle}
                         title={isExpanded ? 'Collapse version info' : 'Expand version info'}
+                        iconProps={{ transform: { rotate: 180 } }}
                     />
                 )}
             </Grid>
@@ -105,8 +109,8 @@ const VersionInfoDisplay = ({
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {version}
-                    {branch !== 'unknown' && `@${branch}`}
+                    {version || 'unknown'}
+                    {branch && branch !== 'unknown' && `@${branch}`}
                 </Link>{' '}
                 <BodyText width="fit-content" display={isExpanded ? { xs: 'block', md: 'inline-block' } : 'none'}>
                     {buildDate && buildDate !== 'unknown' && `built ${buildDate}`}
@@ -314,7 +318,7 @@ const Footer = () => {
                             onToggle={() => setIsVersionExpanded(!isVersionExpanded)}
                         />
                         <When condition={isVersionExpanded}>
-                            <Suspense fallback={<BodyText>Loading...</BodyText>}>
+                            <Suspense>
                                 <Await resolve={loaderData?.apiVersion}>
                                     {(apiVersionInfo: VersionInfo) => (
                                         <VersionInfoDisplay

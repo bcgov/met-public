@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Button as MuiButton,
     ButtonProps as MuiButtonProps,
-    Stack,
     IconButton as MuiIconButton,
     useTheme,
 } from '@mui/material';
 import { globalFocusShadow, colors, elevations } from '../../common';
 import { isDarkColor } from 'utils';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { IconParams, IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { styled } from '@mui/system';
 import { RouterLinkRenderer } from '../Navigation/Link';
 
 const buttonStyles = {
@@ -213,7 +211,7 @@ const TertiaryButton = ({
 }: ButtonProps) => {
     const height: string = sizeMap[size];
     const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
-    const activeColor = color !== 'default' ? `color-mix(in srgb, ${customColor}, white 90%)` : colors.surface.blue[10];
+    const activeColor = color == 'default' ? colors.surface.blue[10] : `color-mix(in srgb, ${customColor}, white 90%)`;
 
     return (
         <MuiButton
@@ -284,58 +282,77 @@ type IconButtonProps = {
     icon: IconProp;
     onClick?: () => void;
     title?: string;
-    sx?: React.CSSProperties; // Add sx prop
+    sx?: React.CSSProperties;
+    size?: string;
+    iconSize?: string;
+    color?: string;
     backgroundColor?: string;
+    hoverBackgroundColor?: string;
+    disabled?: boolean;
+    iconProps?: IconParams;
 };
-
-const StyledIconButton = styled(MuiIconButton)(() => ({
-    color: '#494949',
-    borderRadius: '50%', // Make it round
-    width: '40px', // Set width to maintain circle shape
-    height: '40px', // Set height to maintain circle shape
-}));
 
 /**
  * IconButton component that renders a circular button with an icon.
- * It supports focus styles and hover effects.
+ * Provides full customization of size, colors, and positioning while maintaining
+ * consistent focus and hover behavior.
+ *
  * @param {IconButtonProps} props - The properties for the icon button.
  * @param {IconProp} props.icon - The icon to display in the button.
  * @param {() => void} props.onClick - The function to call when the button is clicked.
  * @param {string} props.title - The title for the button, used for accessibility.
  * @param {React.CSSProperties} props.sx - Additional styles to apply to the button.
- * @param {string} props.backgroundColor - Optional background color for the button.
+ * @param {string} props.size - Button diameter (e.g., '40px', '3rem'). Default is '40px'.
+ * @param {string} props.iconSize - Icon font size (e.g., '20px', '1.5rem'). Default is '20px'.
+ * @param {string} props.color - Icon color. Default is '#494949'.
+ * @param {string} props.backgroundColor - Button background color. Default is colors.focus.regular.inner.
+ * @param {string} props.hoverBackgroundColor - Background color on hover/focus. Default is '#F2F2F2'.
+ * @param {boolean} props.disabled - Whether the button is disabled.
+ * @param {IconParams} props.iconProps - Additional properties for the FontAwesomeIcon.
  * @returns A styled icon button component.
  */
-export const IconButton: React.FC<IconButtonProps> = ({ icon, onClick, title, sx, backgroundColor }) => {
-    const [focused, setFocused] = useState(false);
-
+export const IconButton: React.FC<IconButtonProps> = ({
+    icon,
+    onClick,
+    title,
+    sx,
+    size = '40px',
+    iconSize = '20px',
+    color = '#494949',
+    backgroundColor = colors.focus.regular.inner,
+    hoverBackgroundColor = '#F2F2F2',
+    disabled = false,
+    iconProps,
+}) => {
     return (
-        <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
+        <MuiIconButton
+            onClick={onClick}
+            title={title}
+            aria-label={title}
+            disabled={disabled}
             sx={{
-                backgroundColor: backgroundColor ?? `${colors.focus.regular.inner}`,
-                cursor: 'pointer',
+                width: size,
+                height: size,
                 borderRadius: '50%',
-                boxShadow: focused ? `0 0 0 2px white, 0 0 0 4px ${colors.focus.regular.outer}` : 'none',
+                backgroundColor: backgroundColor,
+                color: color,
                 '&:hover': {
-                    backgroundColor: '#F2F2F2',
+                    backgroundColor: hoverBackgroundColor,
                 },
                 '&:focus-visible': {
-                    backgroundColor: '#F2F2F2',
-                    outline: 'white 2px dashed', // Remove default outline
+                    backgroundColor: hoverBackgroundColor,
+                    outline: `2px solid ${colors.focus.regular.outer}`,
                     outlineOffset: '2px',
+                    boxShadow: globalFocusShadow,
+                },
+                '&:disabled': {
+                    backgroundColor: colors.surface.gray[40],
+                    color: colors.type.regular.disabled,
                 },
                 ...sx,
             }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            tabIndex={focused ? 0 : -1} // Set tabIndex to -1 when not focused
         >
-            <StyledIconButton onClick={onClick} title={title} aria-label={title}>
-                <FontAwesomeIcon icon={icon} style={{ fontSize: '20px', color: '#494949' }} />
-            </StyledIconButton>
-        </Stack>
+            <FontAwesomeIcon icon={icon} style={{ fontSize: iconSize }} {...iconProps} />
+        </MuiIconButton>
     );
 };
