@@ -62,9 +62,9 @@ jobs:
         run: |
           docker build . --file Dockerfile \
             --build-arg MET_BUILD_COMMIT_HASH=${{ github.sha }} \
-            --build-arg MET_BUILD_DATE=$(date -u +'%b %d, %Y') \
+            --build-arg MET_BUILD_DATE="$(date -u +'%b %d, %Y')" \
             --build-arg MET_BUILD_BRANCH=${{ github.ref_name }} \
-            --build-arg MET_GITHUB_REPO=https://github.com/${{ github.repository }} \
+            --build-arg MET_GITHUB_REPO="https://github.com/${{ github.repository }}" \
             --tag image
 
       - name: Push image
