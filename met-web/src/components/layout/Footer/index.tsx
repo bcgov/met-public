@@ -58,7 +58,7 @@ interface VersionInfoProps {
     branch?: string;
     commitUrl?: string;
     buildDate?: string;
-    isExpanded: boolean;
+    isExpanded?: boolean;
     onToggle?: () => void;
 }
 const VersionInfoDisplay = ({
@@ -319,7 +319,10 @@ const Footer = () => {
                         />
                         <When condition={isVersionExpanded}>
                             <Suspense>
-                                <Await resolve={loaderData?.apiVersion}>
+                                <Await
+                                    resolve={loaderData?.apiVersion}
+                                    errorElement={<VersionInfoDisplay label={translate('footer.apiVersion')} />}
+                                >
                                     {(apiVersionInfo: VersionInfo) => (
                                         <VersionInfoDisplay
                                             label={translate('footer.apiVersion')}
