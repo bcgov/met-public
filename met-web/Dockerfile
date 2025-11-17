@@ -2,6 +2,18 @@
 # pull official base image
 FROM node:20-alpine AS build-stage
 
+# Accept build arguments for version information to pass to runtime
+ARG REACT_APP_BUILD_COMMIT_HASH=dev
+ARG REACT_APP_BUILD_DATE=unknown
+ARG REACT_APP_BUILD_BRANCH=unknown
+ARG REACT_APP_GITHUB_REPO=https://github.com/bcgov/met-public
+
+# Set as environment variables for runtime access
+ENV REACT_APP_BUILD_COMMIT_HASH=${REACT_APP_BUILD_COMMIT_HASH}
+ENV REACT_APP_BUILD_DATE=${REACT_APP_BUILD_DATE}
+ENV REACT_APP_BUILD_BRANCH=${REACT_APP_BUILD_BRANCH}
+ENV REACT_APP_GITHUB_REPO=${REACT_APP_GITHUB_REPO}
+
 # set working directory
 WORKDIR /app
 
@@ -31,18 +43,6 @@ RUN npm run build
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
 FROM nginx:1.17 AS production-stage
-
-# Accept build arguments for version information to pass to runtime
-ARG REACT_APP_BUILD_COMMIT_HASH=dev
-ARG REACT_APP_BUILD_DATE=unknown
-ARG REACT_APP_BUILD_BRANCH=unknown
-ARG REACT_APP_GITHUB_REPO=https://github.com/bcgov/met-public
-
-# Set as environment variables for runtime access
-ENV REACT_APP_BUILD_COMMIT_HASH=${REACT_APP_BUILD_COMMIT_HASH}
-ENV REACT_APP_BUILD_DATE=${REACT_APP_BUILD_DATE}
-ENV REACT_APP_BUILD_BRANCH=${REACT_APP_BUILD_BRANCH}
-ENV REACT_APP_GITHUB_REPO=${REACT_APP_GITHUB_REPO}
 
 RUN mkdir /app
 
