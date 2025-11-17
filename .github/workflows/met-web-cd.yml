@@ -66,11 +66,7 @@ jobs:
           echo -n "${ARTIFACTORY_USERNAME}" > /tmp/artifactory_username
           echo -n "${ARTIFACTORY_PASSWORD}" > /tmp/artifactory_password
 
-      - name: Set image version
-        run: |
-          echo IMAGE_SHORT_VERSION=$(git rev-parse --short HEAD) >> $GITHUB_ENV
-
-      - name: Build image ${{ github.env.IMAGE_SHORT_VERSION }}
+      - name: Build image
         env:
           DOCKER_BUILDKIT: 1
         run: |

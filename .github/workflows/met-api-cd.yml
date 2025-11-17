@@ -58,11 +58,7 @@ jobs:
           echo "${OPENSHIFT_SA_TOKEN}" | 
           docker login ${OPENSHIFT_IMAGE_REGISTRY} -u ${OPENSHIFT_SA_NAME} --password-stdin
 
-      - name: Set image version
-        run: |
-          echo IMAGE_SHORT_VERSION=$(git rev-parse --short HEAD) >> $GITHUB_ENV
-
-      - name: Build image ${{ github.env.IMAGE_SHORT_VERSION }}
+      - name: Build image
         run: |
           export TZ='America/Vancouver' && 
             docker build . --file Dockerfile \
