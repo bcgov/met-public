@@ -90,4 +90,6 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
+          # Restart the deployment to apply the new image and wait for it to complete
+          oc rollout restart deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME}
           oc rollout status deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w

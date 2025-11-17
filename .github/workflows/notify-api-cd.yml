@@ -73,4 +73,4 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
-          oc rollout status deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w
+          oc rollout restart deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w

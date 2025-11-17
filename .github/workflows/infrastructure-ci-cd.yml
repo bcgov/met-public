@@ -242,9 +242,11 @@ jobs:
           oc get deployments,statefulsets -n "$NAMESPACE" \
             -l app=${{ matrix.chart.name }} \
             -o name | while read resource; do
+            oc rollout restart $resource \
+              --namespace "$NAMESPACE"
             oc rollout status $resource \
               --namespace "$NAMESPACE" \
-              --timeout 300s
+              --timeout 300s -w
           done
 
       - name: Verify service endpoints

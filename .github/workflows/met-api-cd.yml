@@ -62,7 +62,7 @@ jobs:
         run: |
           docker build . --file Dockerfile \
             --build-arg MET_BUILD_COMMIT_HASH=${{ github.sha }} \
-            --build-arg MET_BUILD_DATE="$(date -u +'%b %d, %Y')" \
+            --build-arg MET_BUILD_DATE="$(date -u +'%b %d, %Y @ %H:%M')" \
             --build-arg MET_BUILD_BRANCH=${{ github.ref_name }} \
             --build-arg MET_GITHUB_REPO="https://github.com/${{ github.repository }}" \
             --tag image
@@ -78,4 +78,5 @@ jobs:
       - name: Rollout
         shell: bash
         run: |
+          oc rollout restart deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME}
           oc rollout status deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME} -w
