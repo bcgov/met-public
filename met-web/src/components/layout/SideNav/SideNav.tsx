@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
     ListItemButton,
     List,
@@ -149,6 +149,26 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
 
 const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
     const currentUser = useAppSelector((state) => state.user.userDetail.user);
+    const [sideNavOffset, setSideNavOffset] = useState(0);
+
+    useLayoutEffect(() => {
+        if (!isMediumScreen) return;
+        const handleScroll = () => {
+            const footerBox = document.querySelector('footer')?.getBoundingClientRect();
+            if (!footerBox) return;
+            // How far down the side nav can be in "absolute" mode and not overlap the footer
+            const footerClearance = footerBox.top - (document.querySelector('#sidenav-drawer')?.clientHeight ?? 0);
+            setSideNavOffset(footerClearance);
+        };
+        globalThis.addEventListener('scroll', handleScroll, { passive: true });
+        globalThis.addEventListener('resize', handleScroll, { passive: true });
+        handleScroll(); // Initial run on load
+        return () => {
+            globalThis.removeEventListener('scroll', handleScroll);
+            globalThis.removeEventListener('resize', handleScroll);
+        };
+    }, [isMediumScreen]);
+
     if (isMediumScreen)
         return (
             <Drawer
@@ -156,12 +176,15 @@ const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
                     hideBackdrop: true,
                 }}
                 PaperProps={{
+                    id: 'sidenav-drawer',
                     sx: {
                         border: 'none',
                         width: '300px',
                         boxSizing: 'border-box',
                         background: 'transparent',
-                        height: '48.75rem',
+                        height: '49rem',
+                        position: sideNavOffset <= 0 ? 'absolute' : 'fixed',
+                        top: sideNavOffset <= 0 ? sideNavOffset + globalThis.scrollY : 'auto',
                     },
                 }}
                 hideBackdrop
