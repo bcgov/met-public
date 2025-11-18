@@ -1,0 +1,23 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: notify-api
+    role: api
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      role: api
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow from met-api
+  - from:
+    - podSelector:
+        matchLabels:
+          app: met-api
+          role: api
+          app-group: met-app

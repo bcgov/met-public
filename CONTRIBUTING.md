@@ -65,13 +65,28 @@ Examples of when to Request Changes
 
 ## Style Guide
 
-- Avoid using CSS directly. Instead, style through Material UI theming or with CSS-in-JS
+### CSS
+
+- Avoid using CSS directly where possible. Instead, style through Material UI theming or with CSS-in-JS
+
+### Helm & Openshift
+
+- Use Helm charts for deploying applications to Openshift.
+- Deployments to Openshift should be handled by Github Actions. If you need to test, only manually deploy to the `-dev` namespace.
+- Resources for a specific project should be named the same thing as the Helm chart (`{{ .Release.Name }}`).
+  ...Unless there are multiple resources of a type, in which case they should be suffixed with a unique identifier (e.g. `{{ .Release.Name }}-api`).
+- Define all environment-specific variables in the `values_dev.yaml`, `values_test.yaml`, or `values_prod.yaml` files.
+- Use Vault instead of Secrets for managing sensitive data.
+- Use ConfigMaps for managing non-sensitive configuration data, especially that which might change frequently.
+- You may use hardcoded values in templates if configurability is not predicted to be a concern.
+- NetworkPolicies should be defined for all applications to control traffic flow.
+  NetworkPolicies should be defined in the _same_ Helm chart as the application they are _protecting_. (It will not matter if your selectors refer to resources that have not yet been deployed.)
 
 ## Common Components/Utilities
 
 ### MET API
 
-- `@transational`: Database method decorator. If there is an exception during execution, the entire DB session will be safely rolled back to a point in time just before the decorated function was called. If not, the session will be saved, unless autocommit is set to False. This helps replace most session management boilerplate.
+- `@transactional`: Database method decorator. If there is an exception during execution, the entire DB session will be safely rolled back to a point in time just before the decorated function was called. If not, the session will be saved, unless autocommit is set to False. This helps replace most session management boilerplate.
 - `authorization.check_auth`: Checks a user for one or more roles and for the correct engagement.
 - `schema_utils.validate`: The most commonly used method for validating request data in resources. This method takes the request JSON data and compares it to a JSON file that acts as a schema for incoming requests of that type.
 

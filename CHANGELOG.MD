@@ -1,3 +1,8 @@
+## November 17, 2025
+
+- **Feature** Increase Openshift security with NetworkPolicies [🎟️ DESENG-860](https://citz-gdx.atlassian.net/browse/DESENG-860)
+  - Defined NetworkPolicies for all applications to control traffic flow. Traffic is only allowed between pods that need to communicate.
+
 ## November 14, 2025
 
 - **Feature** Added app and API version info to footer [🎟️ DESENG-820](https://citz-gdx.atlassian.net/browse/DESENG-820)

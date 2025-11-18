@@ -5,7 +5,27 @@ app:
   name: met-db
   licenseplate: "e903c2"
 
+db:
+  allowIngressPodselectors:
+    - app.kubernetes.io/instance: dagster
+      component: user-deployments
+    - app.kubernetes.io/instance: dagster
+      component: dagster-daemon
+    - app.kubernetes.io/instance: dagster
+      component: dagster-webserver
+    - app: analytics-api
+      role: api
+    - app-group: met-app
+      role: worker
+    - app: met-api
+      role: api
+    - app: met-api
+      role: cron
+    - app: met-db
+      role: backup
+
 backup:
+  role: backup
   enabled: true
   image:
     repository: "ghcr.io"

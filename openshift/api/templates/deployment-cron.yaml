@@ -11,11 +11,13 @@ spec:
   replicas: {{ .Values.app_cron.deployment.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.app_cron.name }}
+      app: {{ .Values.app.name }}
+      role: cron
   template:
     metadata:
       labels:
-        app: {{ .Values.app_cron.name }}
+        app: {{ .Values.app.name }}
+        role: cron
         app-group: met-app
         environment: {{ .Values.environment }}
       annotations:
