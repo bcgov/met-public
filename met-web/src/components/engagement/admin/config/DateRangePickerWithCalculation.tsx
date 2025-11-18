@@ -140,6 +140,8 @@ export const DateRangePickerWithCalculation = () => {
                                     showDaysOutsideCurrentMonth
                                     disablePast
                                     displayStaticWrapperAs="desktop"
+                                    slots={{ actionBar: () => null }}
+                                    fixedWeekNumber={6}
                                 />
                             )}
                         />
@@ -168,6 +170,8 @@ export const DateRangePickerWithCalculation = () => {
                                     disablePast
                                     displayStaticWrapperAs="desktop"
                                     minDate={disableDatesBefore}
+                                    slots={{ actionBar: () => null }}
+                                    fixedWeekNumber={6}
                                 />
                             )}
                         />
