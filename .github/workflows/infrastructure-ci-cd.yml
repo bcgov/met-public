@@ -75,12 +75,13 @@ jobs:
           # Default environments
           environments=("${{ inputs.environment || 'dev'}}")
 
-          # If "all" is selected or we are linting a PR, we include all environments
-          if [[ "${{ inputs.environment }}" == "all" || "${{ github.event_name }}" == "pull_request" ]]; then
+          # If "all" is selected, we include all environments
+          # For PR linting, only use dev environment (due to branch protection)
+          if [[ "${{ inputs.environment }}" == "all" ]]; then
             environments=("dev" "test" "prod")
-            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-              echo "Linting this PR. All environments will be included." >> $GITHUB_STEP_SUMMARY
-            fi
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            environments=("dev")
+            echo "Linting this PR using dev environment. Test/prod will be linted client-side." >> $GITHUB_STEP_SUMMARY
           fi
 
           # Convert to compact JSON array
@@ -181,12 +182,34 @@ jobs:
         working-directory: "${{ matrix.chart.dir }}"
         run: |
           helm dependency update
-          VALUES=""
-          if [[ -f values_${{ matrix.environment }}.yaml ]]; then
-            VALUES="--values values_${{ matrix.environment }}.yaml"
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # For PR linting: lint all environments
+            # (dev on server, test/prod with client - this is due to environment/branch protection rules)
+            for env in dev test prod; do
+              echo "Linting for environment: $env"
+              VALUES=""
+              if [[ -f values_${env}.yaml ]]; then
+                VALUES="--values values_${env}.yaml"
+              fi
+              helm lint . $VALUES
+              
+              # Only dev uses dry-run=server (requires cluster access)
+              if [[ "$env" == "dev" ]]; then
+                helm template . $VALUES --dry-run=server > /dev/null
+              else
+                helm template . $VALUES --dry-run=client > /dev/null
+              fi
+            done
+          else
+            # For push/dispatch: lint only the matrix environment with server
+            VALUES=""
+            if [[ -f values_${{ matrix.environment }}.yaml ]]; then
+              VALUES="--values values_${{ matrix.environment }}.yaml"
+            fi
+            helm lint . $VALUES
+            helm template . $VALUES --dry-run=server > /dev/null
           fi
-          helm lint . $VALUES
-          helm template . $VALUES --dry-run=server > /dev/null
 
   deploy:
     needs: [setup, lint-and-test]
