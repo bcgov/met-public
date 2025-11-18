@@ -129,7 +129,7 @@ jobs:
             else
               # Find changed charts
               for chart_name in "${!chart_dirs[@]}"; do
-                if echo "$changed_files" | grep -q "^${chart_dirs[$chart_name]}/"; then
+                if echo "$changed_files" | tr ' ' '\n' | grep -q "^${chart_dirs[$chart_name]}/"; then
                   charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
                 fi
               done
