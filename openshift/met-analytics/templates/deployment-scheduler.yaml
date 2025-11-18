@@ -2,19 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: "{{ .Chart.Name }}-scheduler"
   name: "{{ .Chart.Name }}-scheduler"
+  labels:
+    app: "{{ .Chart.Name }}"
+    app-group: met-app
+    role: scheduler
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ .Chart.Name }}-scheduler"
+      app: "{{ .Chart.Name }}"
+      app-group: met-app
+      role: scheduler
   strategy:
   template:
     metadata:
       labels:
-        app: "{{ .Chart.Name }}-scheduler"
+        app: "{{ .Chart.Name }}"
+        app-group: met-app
+        role: scheduler
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'

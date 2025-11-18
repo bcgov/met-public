@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
+      role: api
   strategy:
     type: RollingUpdate
   template:

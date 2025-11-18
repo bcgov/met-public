@@ -1,6 +1,7 @@
 app:
   name: met-web
-  defaultLang: 'en'
+  defaultLang: "en"
+  licenseplate: e903c2
 
 deployment:
   minReplicas: 2
@@ -9,7 +10,11 @@ deployment:
 image:
   tag: latest
   namespace: e903c2-tools
-  repository: 'image-registry.openshift-image-registry.svc:5000/e903c2-tools'
+  repository: "image-registry.openshift-image-registry.svc:5000/e903c2-tools"
 
 tenants:
   default: "GDX"
+
+vault:
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"

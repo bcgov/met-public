@@ -1,0 +1,21 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: met-web
+    app-group: met-app
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      app-group: met-app
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    # Allow from OpenShift router/ingress controller
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress

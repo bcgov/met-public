@@ -12,6 +12,7 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.app.name }}
+      role: api
   strategy:
     type: RollingUpdate
   template:
@@ -20,6 +21,7 @@ spec:
         app: {{ .Values.app.name }}
         environment: {{ .Values.environment }}
         role: api
+        app-group: notify-api
       annotations:
         image.openshift.io/triggers: >
           [

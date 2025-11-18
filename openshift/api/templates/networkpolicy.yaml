@@ -1,0 +1,32 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: met-api
+    role: api
+spec:
+  podSelector:
+    matchLabels:
+      app: met-api
+      role: api
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    # Allow from OpenShift router/ingress controller
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+    # Allow from met-cron (same app, different role)
+    - podSelector:
+        matchLabels:
+          app: met-api
+          role: cron
+          app-group: met-app
+  {{- range .Values.app.allowIngressPodselectors }}
+    - podSelector:
+        matchLabels:
+{{ toYaml . | indent 10 }}
+  {{- end }}

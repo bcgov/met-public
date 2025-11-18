@@ -2,19 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: "{{ .Chart.Name }}-worker"
   name: "{{ .Chart.Name }}-worker"
+  labels:
+    app: "{{ .Chart.Name }}"
+    app-group: met-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ .Chart.Name }}-worker"
-  strategy:    
+      app: "{{ .Chart.Name }}"
+      app-group: met-app
+      role: worker
+      sub-role: worker
+  strategy:
   template:
     metadata:
       labels:
-        app: "{{ .Chart.Name }}-worker"
+        app: "{{ .Chart.Name }}"
+        app-group: met-app
+        role: worker
+        sub-role: worker
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
