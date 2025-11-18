@@ -37,6 +37,7 @@ spec:
       containers:
         - name: {{ .Values.app.name }}
           image: {{ .Values.image.repository }}/{{ .Values.app.name }}:{{ .Values.image.tag }}
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
               protocol: TCP
