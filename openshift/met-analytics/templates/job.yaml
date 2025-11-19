@@ -40,6 +40,15 @@ spec:
         # Use a container with `oc` preinstalled
         image: quay.io/openshift/origin-cli:latest
         command: ["/bin/bash", "-c"]
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+            ephemeral-storage: 50Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+            ephemeral-storage: 100Mi
         volumeMounts:
         - name: tmp
           mountPath: /tmp
