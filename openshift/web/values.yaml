@@ -1,6 +1,5 @@
 app:
   name: met-web
-  defaultLang: "en"
   licenseplate: e903c2
 
 deployment:

@@ -2,10 +2,12 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ .Values.app.name }}-web-path
+  name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
     app-group: met-app
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
 spec:
   host: {{ .Values.site.url }}
   path: /api

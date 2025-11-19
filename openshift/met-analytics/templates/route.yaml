@@ -4,6 +4,8 @@ metadata:
   name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
 spec:
   name: {{ .Chart.Name }}
   host: "{{ tpl .Values.hostname . }}"

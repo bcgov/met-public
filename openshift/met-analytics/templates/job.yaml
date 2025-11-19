@@ -1,0 +1,100 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-ingress-protections-{{ .Chart.Name }}
+spec:
+  ttlSecondsAfterFinished: 100
+  backoffLimit: 4
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-init-first: 'true'
+        vault.hashicorp.com/agent-pre-populate-only: 'true'
+        vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
+        vault.hashicorp.com/role: {{ .Values.licenseplate }}
+        vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
+        vault.hashicorp.com/agent-inject-secret-ingress-ips: {{ .Values.licenseplate }}/met-app/openshift-ingress-ips
+        # Iterate over the secret data and export each key-value pair as an environment variable
+        vault.hashicorp.com/agent-inject-template-ingress-ips: |-
+          {{ `{{- with secret ` }}"{{ .Values.licenseplate }}/met-app/openshift-ingress-ips"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-pipeline: {{ .Values.licenseplate }}/met-app/pipeline-service-account
+        vault.hashicorp.com/agent-inject-template-pipeline: |-
+          {{ `{{- with secret ` }}"{{ .Values.licenseplate }}/met-app/pipeline-service-account"{{ ` }}
+          {{- range $k, $v := .Data.data }}
+          export {{ $k }}='{{ $v }}'
+          {{- end }}
+          {{- end }}` }}
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: {{ .Values.licenseplate }}-vault
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      containers:
+      - name: setup-ingress-protections
+        # Use a container with `oc` preinstalled
+        image: quay.io/openshift/origin-cli:latest
+        command: ["/bin/bash", "-c"]
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+            ephemeral-storage: 50Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+            ephemeral-storage: 100Mi
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        args:
+        - |
+            set -e pipefail
+            echo "Reading ingress IPs from Vault"
+            source /vault/secrets/ingress-ips
+            source /vault/secrets/pipeline
+            export KUBECONFIG=/tmp/.kubeconfig
+            echo "Logging into OpenShift"
+            oc login --token=$PIPELINE_TOKEN --server=$(oc whoami --show-server) --insecure-skip-tls-verify
+
+            echo "Getting route"
+            ROUTE_NAME=$(oc get route -n {{ .Release.Namespace }} -l app={{ .Chart.Name }} -o jsonpath='{.items[0].metadata.name}')
+            if [ -z "$ROUTE_NAME" ]; then
+              echo "No matching Route found!" >&2
+              exit 1
+            fi
+
+            echo "Building IP whitelist"
+            if [ -n "$ALLOW_PUBLIC" ]; then
+              echo "Removing IP whitelist annotation (public access)"
+              oc annotate route "$ROUTE_NAME" -n {{ .Release.Namespace }} haproxy.router.openshift.io/ip_whitelist- || true
+            else
+              IP_LIST=""
+              # Add Dev IPs (strip email prefix if present)
+              if [ -n "$DEV_IPS" ]; then
+                for dev_ip in $DEV_IPS; do
+                  ip=${dev_ip#*@}
+                  IP_LIST="$IP_LIST $ip"
+                done
+              fi
+              # Add VPN CIDRs
+              if [ -n "$VPN_CIDRS" ]; then
+                IP_LIST="$IP_LIST $VPN_CIDRS"
+              fi
+              
+              # Trim leading/trailing whitespace
+              IP_LIST=$(echo "$IP_LIST" | xargs)
+              
+              if [ -n "$IP_LIST" ]; then
+                echo "Setting IP whitelist: $IP_LIST"
+                oc annotate route "$ROUTE_NAME" -n {{ .Release.Namespace }} haproxy.router.openshift.io/ip_whitelist="$IP_LIST" --overwrite
+              else
+                echo "No IPs configured, setting deny-all whitelist"
+                oc annotate route "$ROUTE_NAME" -n {{ .Release.Namespace }} haproxy.router.openshift.io/ip_whitelist="0.0.0.0/32" --overwrite
+              fi
+            fi

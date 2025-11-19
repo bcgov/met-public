@@ -200,6 +200,73 @@ oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=app -p DATABA
 1. Initial database setup script is located at /tools/postgres/init/01_postgresql-schema-setup.sql
 1. Openshift secret yaml is located at ./database-users.secret.yml
 
+## IP Whitelist Management
+
+The DEP application uses IP-based access controls on OpenShift Routes to protect non-production environments from unauthorized access. IP whitelists are stored securely in HashiCorp Vault and automatically applied to routes during deployment.
+
+### Vault Secret Structure
+
+IP whitelists are stored in Vault at the following path:
+
+- Dev: `e903c2-nonprod/dev/openshift-ingress-ips`
+- Test: `e903c2-nonprod/test/openshift-ingress-ips`
+- Prod: `e903c2-prod/openshift-ingress-ips`
+
+The secret should contain the following keys (ALLOW_PUBLIC will be treated as false if not set):
+
+| Key            | Format                                                 | Description                                                 | Example                                |
+| -------------- | ------------------------------------------------------ | ----------------------------------------------------------- | -------------------------------------- |
+| `DEV_IPS`      | Space-separated IPs/CIDRs, prefixed with `(user)name@` | Individual developer IP addresses                           | `developer@192.168.1.100 10.0.0.50/32` |
+| `VPN_CIDRS`    | Space-separated CIDR blocks                            | VPN network ranges                                          | `142.34.0.0/16 142.35.0.0/16`          |
+| `ALLOW_PUBLIC` | Any non-empty value or omit entirely                   | Set to any value to disable IP restrictions (public access) | `true`                                 |
+
+### Updating IP Whitelists
+
+**Prerequisites:**
+
+- Access to the OpenShift project namespace
+- Appropriate Vault permissions
+
+#### Method 1: Update via web interface
+
+Log into the Vault web interface with role `e903c2` and navigate to the appropriate path for your environment (e.g., `e903c2-nonprod/dev/openshift-ingress-ips` for dev). Edit the keys as needed (see format above) and save the changes.
+
+#### Method 2: Update via CLI
+
+**Prerequisites:**
+
+- Access to the OpenShift project namespace
+- Appropriate Vault permissions
+- Vault CLI installed and configured
+
+Use the following commands to update the IP whitelist in Vault:
+
+```bash
+VAULT_ENGINE="e903c2-nonprod"
+VAULT_PATH="/dev"
+
+# read old values
+vault kv get ${VAULT_ENGINE}${VAULT_PATH}/openshift-ingress-ips
+
+# write new values
+vault kv put ${VAULT_ENGINE}${VAULT_PATH}/openshift-ingress-ips \
+  DEV_IPS="developer@127.0.0.1 developer2@127.0.0.2" \
+  VPN_CIDRS="123.45.67.89/16 255.254.253.252/16" \
+
+```
+
+### Pipeline Service Account
+
+The IP whitelist jobs also require a `pipeline-service-account` secret in Vault containing:
+
+- `PIPELINE_TOKEN`: An OpenShift service account token with permissions to annotate routes
+
+This should be stored at:
+
+```
+{vault-engine}{vault-path}/pipeline-service-account
+```
+
 ## Restore Backup Script
 
 Backups are generated daily by the dc "backup" in the test and production realms and are composed by a SQL script containing the database structure + data.

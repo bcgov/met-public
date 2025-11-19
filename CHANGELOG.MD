@@ -1,3 +1,9 @@
+## November 18, 2025
+
+- **Feature** Implement route IP whitelisting for VPN and dev IPs [🎟️ DESENG-846](https://citz-gdx.atlassian.net/browse/DESENG-846)
+  - Added `haproxy.router.openshift.io/ip_whitelist` annotation to Route resources in Helm charts for public-facing services (met-api, met-web, met-analytics, and analytics-api).
+  - Configured whitelists to allow traffic only from known VPN and developer IP addresses.
+
 ## November 17, 2025
 
 - **Feature** Increase Openshift security with NetworkPolicies [🎟️ DESENG-860](https://citz-gdx.atlassian.net/browse/DESENG-860)
