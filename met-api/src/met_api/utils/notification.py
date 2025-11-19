@@ -20,6 +20,8 @@ def get_tenant_site_url(tenant_id, path=''):
         if tenant_id is None:
             raise ValueError('Missing tenant id.')
         tenant: Tenant = Tenant.find_by_id(tenant_id)
+        if tenant is None:
+            raise ValueError(f'Tenant with id {tenant_id} not found.')
         return site_url + f'/{tenant.short_name.lower()}' + path
     else:
         return site_url + path
@@ -36,6 +38,8 @@ def send_email(subject, email, html_body, args, template_id):
     sender = current_app.config['EMAIL_TEMPLATES']['FROM_ADDRESS']
     service_account_token = RestService.get_service_account_token()
     send_email_endpoint = current_app.config.get('NOTIFICATIONS_EMAIL_ENDPOINT')
+    if not send_email_endpoint:
+        raise ValueError('NOTIFICATIONS_EMAIL_ENDPOINT is not configured.')
     payload = {
         'bodyType': 'html',
         'body': html_body,
