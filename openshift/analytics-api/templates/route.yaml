@@ -5,6 +5,8 @@ metadata:
     app: {{ .Values.app.name }}
     app-group: met-analytics
   name: {{ .Values.app.name }}
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
 spec:
   host: {{ .Values.route.host }}
   path: {{ .Values.route.path }}

@@ -5,6 +5,8 @@ metadata:
   labels:
     app: {{ .Values.app.name }}
     app-group: met-app
+  annotations:
+    haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
 spec:
     host: {{ .Values.site.url | trimPrefix "https://" | trimSuffix "/" }}
     tls:

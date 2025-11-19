@@ -5,16 +5,15 @@
   "python.analysis.extraPaths": [
     "./analytics-api/src",
     "./met-cron/src",
-    "./met-api/src",
+    "./met-api/src"
   ],
-  "pylint.args": [
-    "--load-plugins",
-    "pylint_flask_sqlalchemy",
-    "pylint_flask"],
+  "pylint.args": ["--load-plugins", "pylint_flask_sqlalchemy", "pylint_flask"],
   "python.analysis.autoImportCompletions": true,
   "python-envs.pythonProjects": [],
   "sonarlint.connectedMode.project": {
     "connectionId": "bcgov-sonarcloud",
     "projectKey": "bcgov_met-public"
-  }
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:venv",
+  "helm-intellisense.customValueFileNames": ["values_dev.yaml", "values.yaml"]
 }

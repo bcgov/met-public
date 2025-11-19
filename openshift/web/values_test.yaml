@@ -9,3 +9,7 @@ image:
   # The image tag to use for the deployment.
   # Should match a valid image tag in the image repository.
   tag: "test"
+
+vault:
+  engine: "e903c2-nonprod"
+  path: "/test"
