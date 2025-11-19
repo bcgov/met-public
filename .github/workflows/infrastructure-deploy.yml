@@ -174,12 +174,13 @@ jobs:
           openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
           openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
 
+      - name: Update Helm dependencies
+        working-directory: "${{ matrix.chart.dir }}"
+        run: |
+          helm dependency update
       - name: Deploy Helm chart
         working-directory: "${{ matrix.chart.dir }}"
         run: |
-          # Update dependencies
-          helm dependency update
-
           # Deploy with atomic option for automatic rollback on failure
           helm upgrade --install \
             ${{ matrix.chart.name }} \
