@@ -1,235 +1,236 @@
 name: Helm Chart Deploy
 permissions:
-    contents: read
+  contents: read
 run-name: Deploying ${{ github.event_name == 'workflow_dispatch' && (inputs.chart == 'all' && 'all charts' || inputs.chart) || 'changed files'}} to ${{ inputs.environment == 'all' && 'all environments' || inputs.environment || 'dev' }}
 
 on:
-    push:
-        branches: [main]
-        paths: [openshift/**]
-    workflow_dispatch:
-        inputs:
-            environment:
-                description: "Select the environment to deploy"
-                required: true
-                default: "dev"
-                type: choice
-                options: [dev, test, prod, all]
-            chart:
-                description: "Select the chart to deploy"
-                required: true
-                default: "all"
-                type: choice
-                options:
-                    - met-db
-                    - notify-api
-                    - met-api
-                    - met-web
-                    - analytics-api
-                    - met-analytics
-                    - all
+  push:
+    branches: [main]
+    paths: [openshift/**]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select the environment to deploy"
+        required: true
+        default: "dev"
+        type: choice
+        options: [dev, test, prod, all]
+      chart:
+        description: "Select the chart to deploy"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - met-db
+          - notify-api
+          - met-api
+          - met-web
+          - analytics-api
+          - met-analytics
+          - all
 
 env:
-    OC_VERSION: "4.16"
-    PROJECT_NAMESPACE_PREFIX: "e903c2"
+  OC_VERSION: "4.16"
+  PROJECT_NAMESPACE_PREFIX: "e903c2"
 
 # Concurrency control to prevent simultaneous deployments to the same environment
 concurrency:
-    group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    lint:
-        uses: ./.github/workflows/infrastructure-lint.yml
+  lint:
+    uses: ./.github/workflows/infrastructure-lint.yml
+    with:
+      enable_server_lint: true
+      environments: ${{  inputs.environment || 'dev' }}
+      chart: ${{ inputs.chart || 'all' }}
+    secrets: inherit
+
+  setup:
+    needs: lint
+    runs-on: ubuntu-latest
+    outputs:
+      charts: ${{ steps.set-chart-matrix.outputs.charts }}
+      environments: ${{ steps.set-env-matrix.outputs.environments }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
         with:
-            enable_server_lint: true
-            environments: ${{  inputs.environment || 'dev' }}
-        secrets: inherit
+          fetch-depth: 0 # Fetch all history for changed-files detection
 
-    setup:
-        needs: lint
-        runs-on: ubuntu-latest
-        outputs:
-            charts: ${{ steps.set-chart-matrix.outputs.charts }}
-            environments: ${{ steps.set-env-matrix.outputs.environments }}
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 0 # Fetch all history for changed-files detection
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 #v47.0.0
+        with:
+          files: |
+            openshift/db/**
+            openshift/notify/**
+            openshift/api/**
+            openshift/web/**
+            openshift/analytics-api/**
+            openshift/met-analytics/**
 
-            - name: Get changed files
-              id: changed-files
-              uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 #v47.0.0
-              with:
-                  files: |
-                      openshift/db/**
-                      openshift/notify/**
-                      openshift/api/**
-                      openshift/web/**
-                      openshift/analytics-api/**
-                      openshift/met-analytics/**
+      - name: Set environment matrix
+        id: set-env-matrix
+        run: |
+          # Default environment for push events is dev
+          environments=("${{ inputs.environment || 'dev'}}")
 
-            - name: Set environment matrix
-              id: set-env-matrix
-              run: |
-                  # Default environment for push events is dev
-                  environments=("${{ inputs.environment || 'dev'}}")
+          # If "all" is selected, we include all environments
+          if [[ "${{ inputs.environment }}" == "all" ]]; then
+            environments=("dev" "test" "prod")
+          fi
 
-                  # If "all" is selected, we include all environments
-                  if [[ "${{ inputs.environment }}" == "all" ]]; then
-                    environments=("dev" "test" "prod")
-                  fi
+          # Convert to compact JSON array
+          environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s -c .)
 
-                  # Convert to compact JSON array
-                  environments_json=$(printf '%s\n' "${environments[@]}" | jq -R . | jq -s -c .)
+          echo "environments=${environments_json}" >> $GITHUB_OUTPUT
+          echo -e "## Environments to deploy: \n\n\`\`\`json\n$(echo $environments_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
-                  echo "environments=${environments_json}" >> $GITHUB_OUTPUT
-                  echo -e "## Environments to deploy: \n\n\`\`\`json\n$(echo $environments_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+      - name: Set matrix for changed charts
+        id: set-chart-matrix
+        run: |
+          # Define chart directories
+          declare -A chart_dirs=(
+            [met-db]="openshift/db"
+            [notify-api]="openshift/notify"
+            [met-api]="openshift/api"
+            [met-web]="openshift/web"
+            [analytics-api]="openshift/analytics-api"
+            [met-analytics]="openshift/met-analytics"
+          )
 
-            - name: Set matrix for changed charts
-              id: set-chart-matrix
-              run: |
-                  # Define chart directories
-                  declare -A chart_dirs=(
-                    [met-db]="openshift/db"
-                    [notify-api]="openshift/notify"
-                    [met-api]="openshift/api"
-                    [met-web]="openshift/web"
-                    [analytics-api]="openshift/analytics-api"
-                    [met-analytics]="openshift/met-analytics"
-                  )
+          # Initialize charts array
+          charts=()
 
-                  # Initialize charts array
-                  charts=()
+          # Handle workflow_dispatch event
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            if [[ "${{ inputs.chart }}" != "all" ]]; then
+              chart_name="${{ inputs.chart }}"
+              charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
+            else
+              # Add all charts
+              for chart_name in "${!chart_dirs[@]}"; do
+                charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
+              done
+            fi
+          else
+            # Handle push event
+            changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
+            
+            # If no files changed in push event, deploy all charts
+            if [[ -z "$changed_files" ]]; then
+              for chart_name in "${!chart_dirs[@]}"; do
+                charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
+              done
+            else
+              # Find changed charts
+              for chart_name in "${!chart_dirs[@]}"; do
+                if echo "$changed_files" | tr ' ' '\n' | grep -q "^${chart_dirs[$chart_name]}/"; then
+                  charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
+                fi
+              done
+            fi
+          fi
 
-                  # Handle workflow_dispatch event
-                  if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-                    if [[ "${{ inputs.chart }}" != "all" ]]; then
-                      chart_name="${{ inputs.chart }}"
-                      charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
-                    else
-                      # Add all charts
-                      for chart_name in "${!chart_dirs[@]}"; do
-                        charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
-                      done
-                    fi
-                  else
-                    # Handle push event
-                    changed_files="${{ steps.changed-files.outputs.all_changed_files }}"
-                    
-                    # If no files changed in push event, deploy all charts
-                    if [[ -z "$changed_files" ]]; then
-                      for chart_name in "${!chart_dirs[@]}"; do
-                        charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
-                      done
-                    else
-                      # Find changed charts
-                      for chart_name in "${!chart_dirs[@]}"; do
-                        if echo "$changed_files" | tr ' ' '\n' | grep -q "^${chart_dirs[$chart_name]}/"; then
-                          charts+=("{\"name\":\"$chart_name\",\"dir\":\"${chart_dirs[$chart_name]}\"}")
-                        fi
-                      done
-                    fi
-                  fi
+          # If no charts selected, skip the rest of the steps
+          if [[ ${#charts[@]} -eq 0 ]]; then
+            echo "No charts eligible for deployment." >> $GITHUB_STEP_SUMMARY
+            echo "charts=[]" >> $GITHUB_OUTPUT
+            exit 0
+          fi
 
-                  # If no charts selected, skip the rest of the steps
-                  if [[ ${#charts[@]} -eq 0 ]]; then
-                    echo "No charts eligible for deployment." >> $GITHUB_STEP_SUMMARY
-                    echo "charts=[]" >> $GITHUB_OUTPUT
-                    exit 0
-                  fi
+          # Convert to JSON array
+          charts_json=$(printf '%s\n' "${charts[@]}" | jq -s -c '.')
 
-                  # Convert to JSON array
-                  charts_json=$(printf '%s\n' "${charts[@]}" | jq -s -c '.')
+          echo "charts=${charts_json}" >> $GITHUB_OUTPUT
+          echo -e "## Charts to deploy: \n\n\`\`\`json\n$(echo $charts_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
 
-                  echo "charts=${charts_json}" >> $GITHUB_OUTPUT
-                  echo -e "## Charts to deploy: \n\n\`\`\`json\n$(echo $charts_json | jq)\n\`\`\`" >> $GITHUB_STEP_SUMMARY
+  deploy:
+    needs: [setup]
+    if: needs.setup.outputs.charts != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart: ${{ fromJson(needs.setup.outputs.charts) }}
+        environment: ${{ fromJson(needs.setup.outputs.environments) }}
+    environment: ${{ matrix.environment }} # Link to environment-specific secrets
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
 
-    deploy:
-        needs: [setup]
-        if: needs.setup.outputs.charts != '[]'
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                chart: ${{ fromJson(needs.setup.outputs.charts) }}
-                environment: ${{ fromJson(needs.setup.outputs.environments) }}
-        environment: ${{ matrix.environment }} # Link to environment-specific secrets
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v5
+      - name: Set namespace
+        run: echo "NAMESPACE=${{env.PROJECT_NAMESPACE_PREFIX}}-${{ matrix.environment }}" >> $GITHUB_ENV
 
-            - name: Set namespace
-              run: echo "NAMESPACE=${{env.PROJECT_NAMESPACE_PREFIX}}-${{ matrix.environment }}" >> $GITHUB_ENV
+      - name: Install OpenShift CLI
+        uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
+        with:
+          oc: ${{ env.OC_VERSION }}
 
-            - name: Install OpenShift CLI
-              uses: redhat-actions/openshift-tools-installer@144527c7d98999f2652264c048c7a9bd103f8a82 #v1.13.1
-              with:
-                  oc: ${{ env.OC_VERSION }}
+      - name: Log in to OpenShift
+        uses: redhat-actions/oc-login@5eb45e848b168b6bf6b8fe7f1561003c12e3c99d #v1.3
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
+          openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
 
-            - name: Log in to OpenShift
-              uses: redhat-actions/oc-login@5eb45e848b168b6bf6b8fe7f1561003c12e3c99d #v1.3
-              with:
-                  openshift_server_url: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
-                  openshift_token: ${{ secrets.OPENSHIFT_SA_TOKEN }}
+      - name: Deploy Helm chart
+        working-directory: "${{ matrix.chart.dir }}"
+        run: |
+          # Update dependencies
+          helm dependency update
 
-            - name: Deploy Helm chart
-              working-directory: "${{ matrix.chart.dir }}"
-              run: |
-                  # Update dependencies
-                  helm dependency update
+          # Deploy with atomic option for automatic rollback on failure
+          helm upgrade --install \
+            ${{ matrix.chart.name }} \
+            . \
+            --namespace "$NAMESPACE" \
+            --values values_${{ matrix.environment }}.yaml \
+            --atomic \
+            --timeout 10m \
 
-                  # Deploy with atomic option for automatic rollback on failure
-                  helm upgrade --install \
-                    ${{ matrix.chart.name }} \
-                    . \
-                    --namespace "$NAMESPACE" \
-                    --values values_${{ matrix.environment }}.yaml \
-                    --atomic \
-                    --timeout 10m \
+      - name: Verify deployment
+        run: |
+          # Run helm tests if defined
+          if helm test -h &> /dev/null; then
+            helm test ${{ matrix.chart.name }} \
+              --namespace "$NAMESPACE" \
+              --timeout 300s
+          fi
+          # Check rollout status for all deployments and statefulsets
+          oc get deployments,statefulsets -n "$NAMESPACE" \
+            -l app=${{ matrix.chart.name }} \
+            -o name | while read resource; do
+            oc rollout restart $resource \
+              --namespace "$NAMESPACE"
+            oc rollout status $resource \
+              --namespace "$NAMESPACE" \
+              --timeout 300s -w
+          done
 
-            - name: Verify deployment
-              run: |
-                  # Run helm tests if defined
-                  if helm test -h &> /dev/null; then
-                    helm test ${{ matrix.chart.name }} \
-                      --namespace "$NAMESPACE" \
-                      --timeout 300s
-                  fi
-                  # Check rollout status for all deployments and statefulsets
-                  oc get deployments,statefulsets -n "$NAMESPACE" \
-                    -l app=${{ matrix.chart.name }} \
-                    -o name | while read resource; do
-                    oc rollout restart $resource \
-                      --namespace "$NAMESPACE"
-                    oc rollout status $resource \
-                      --namespace "$NAMESPACE" \
-                      --timeout 300s -w
-                  done
+      - name: Verify service endpoints
+        # Only critical for production
+        continue-on-error: ${{ matrix.environment != 'prod' }}
+        run: |
+          # Get all services for this chart
+          services=$(oc get services -n "$NAMESPACE" \
+            -l app=${{ matrix.chart.name }} \
+            -o jsonpath='{.items[*].metadata.name}')
 
-            - name: Verify service endpoints
-              # Only critical for production
-              continue-on-error: ${{ matrix.environment != 'prod' }}
-              run: |
-                  # Get all services for this chart
-                  services=$(oc get services -n "$NAMESPACE" \
-                    -l app=${{ matrix.chart.name }} \
-                    -o jsonpath='{.items[*].metadata.name}')
+          if [[ -z $services ]]; then
+            echo "No services found."
+          fi
 
-                  if [[ -z $services ]]; then
-                    echo "No services found."
-                  fi
-
-                  for service in $services; do
-                    echo "Checking service endpoints for $service"
-                    endpoints=$(oc get endpoints $service \
-                      -n "$NAMESPACE" \
-                      -o jsonpath='{.subsets[*].addresses[*].ip}')
-                    
-                    if [ -z "$endpoints" ]; then
-                      echo "ERROR: No endpoints found for service $service"
-                      exit 1
-                    else
-                      echo "Service $service has endpoints: $endpoints"
-                    fi
-                  done
+          for service in $services; do
+            echo "Checking service endpoints for $service"
+            endpoints=$(oc get endpoints $service \
+              -n "$NAMESPACE" \
+              -o jsonpath='{.subsets[*].addresses[*].ip}')
+            
+            if [ -z "$endpoints" ]; then
+              echo "ERROR: No endpoints found for service $service"
+              exit 1
+            else
+              echo "Service $service has endpoints: $endpoints"
+            fi
+          done
