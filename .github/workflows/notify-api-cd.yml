@@ -41,7 +41,7 @@ jobs:
     environment: ${{github.event.inputs.environment || 'dev' }}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install Openshift Tooling
         uses: redhat-actions/openshift-tools-installer@v1.13.1
