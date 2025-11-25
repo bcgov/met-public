@@ -9,7 +9,7 @@
 
 set -e
 
-if [ $# -ne 2 ]; then
+if [[ $# -ne 2 ]]; then
     echo "Usage: $0 <backup-file.sql.gz> <database-name>"
     echo "Example: $0 /backups/daily/2025-11-25/met-patroni-app_2025-11-25_10-34-33.sql.gz app"
     exit 1
@@ -31,10 +31,10 @@ echo ""
 # Check if target database already exists and has data
 DB_EXISTS=$(psql -h met-patroni -U "$MET_PATRONI_USER" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE'" | grep -q 1 && echo "yes" || echo "no")
 
-if [ "$DB_EXISTS" = "yes" ]; then
+if [[ "$DB_EXISTS" = "yes" ]]; then
     TABLE_COUNT=$(psql -h met-patroni -U "$MET_PATRONI_USER" -d "$DATABASE" -tc "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema')" 2>/dev/null | xargs)
     
-    if [ "$TABLE_COUNT" -gt 0 ]; then
+    if [[ "$TABLE_COUNT" -gt 0 ]]; then
         echo "⚠️  WARNING: Database '$DATABASE' already exists with $TABLE_COUNT table(s)"
         echo ""
         echo "This script is designed for recovery from CATASTROPHIC scenarios:"
@@ -51,7 +51,7 @@ if [ "$DB_EXISTS" = "yes" ]; then
         echo ""
         read -p "Are you sure you want to proceed with restore? (yes/no): " CONFIRM
         
-        if [ "$CONFIRM" != "yes" ]; then
+        if [[ "$CONFIRM" != "yes" ]]; then
             echo "Restore cancelled."
             exit 1
         fi
@@ -85,9 +85,9 @@ gunzip -c "$BACKUP_FILE" | \
     psql -h met-patroni -U "$MET_PATRONI_USER" -d "$DATABASE" -v ON_ERROR_STOP=0
 
 echo ""
-echo "========================================"
+echo "======================================"
 echo "✓ Emergency restore complete"
-echo "========================================"
+echo "======================================"
 echo ""
 echo "Note: Role creation errors at the end are expected"
 echo "(roles were already created in step 1)"
