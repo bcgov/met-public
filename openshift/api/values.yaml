@@ -2,6 +2,10 @@ app:
   name: met-api
   licenseplate: "e903c2"
   allowIngressPodselectors: []
+  ratelimits:
+    enabled: true
+    http: 20
+    tcp: 25
 
 app_cron:
   name: met-cron

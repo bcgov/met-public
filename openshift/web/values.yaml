@@ -1,6 +1,10 @@
 app:
   name: met-web
   licenseplate: e903c2
+  ratelimits:
+    enabled: true
+    http: 10
+    tcp: 12
 
 deployment:
   minReplicas: 2

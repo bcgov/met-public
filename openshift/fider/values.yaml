@@ -10,6 +10,10 @@ app:
     memoryUtilization: 75
     httpRequestsPerSecond: 100
     responseTimeSeconds: 0.5
+  ratelimits:
+    enabled: true
+    http: 20
+    tcp: 25
 
 image:
   repository: "image-registry.openshift-image-registry.svc:5000"

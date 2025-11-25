@@ -1,3 +1,9 @@
+## November 25, 2025
+
+- **Feature** Implement route rate limiting to prevent abuse [🎟️ DESENG-871](https://citz-gdx.atlassian.net/browse/DESENG-871)
+  - Added `haproxy.router.openshift.io/rate-limit-connections` annotations to Route resources in Helm charts for public-facing services (met-api, met-web, met-analytics, analytics-api, and fider).
+  - Configured rate limits to restrict the number of connections per IP address over a 3 second interval.
+
 ## November 18, 2025
 
 - **Feature** Implement route IP whitelisting for VPN and dev IPs [🎟️ DESENG-846](https://citz-gdx.atlassian.net/browse/DESENG-846)
