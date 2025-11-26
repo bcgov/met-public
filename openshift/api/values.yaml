@@ -4,8 +4,8 @@ app:
   allowIngressPodselectors: []
   ratelimits:
     enabled: true
-    http: 20
-    tcp: 25
+    http: 50
+    tcp: 50
 
 app_cron:
   name: met-cron
