@@ -24,7 +24,7 @@ export DB_HOST="${DATABASE_SERVICE_NAME:-met-patroni}"
 
 # Check the file exists
 if [[ ! -f "$BACKUP_FILE" ]]; then
-    echo "Error: Backup file '$BACKUP_FILE' does not exist."
+    echo "Error: Backup file '$BACKUP_FILE' does not exist." >&2
     exit 1
 fi
 
