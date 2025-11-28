@@ -15,8 +15,15 @@ data:
   ENVIRONMENT_NAME: "{{ .Values.backup.environment }}"
   ENVIRONMENT_FRIENDLY_NAME: "{{ .Values.backup.environmentFriendlyName }}"
   CONTAINER_TYPE: "postgres"
-  DATABASE_SERVICE_NAME: "{{ .Values.backup.dbName }}-patroni"
+  POSTGRESQL_DATABASE: "{{ .Values.backup.databaseName }}"
+  # Verification-specific credentials to avoid postgres superuser conflict
+  # Corresponds to virtual "verify" connection spec in backup.conf
+  VERIFY_USER: "verify_user"
+  VERIFY_PASSWORD: "verify_pass_temp"
   
   backup.conf: |
-    0 1 * * * default ./backup.sh -s
-    0 4 * * * default ./backup.sh -s -v all
+{{ .Files.Get "files/backup.conf" | indent 4 }}
+
+
+  emergency-restore.sh: |
+{{ .Files.Get "files/emergency-restore.sh" | indent 4 }}
