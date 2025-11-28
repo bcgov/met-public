@@ -185,7 +185,7 @@ const App = () => {
         loadTranslation();
     }, [language.id, translations]);
 
-    if (authenticationLoading || tenant.loading || (!tenant.short_name && tenant.isLoaded)) {
+    if (authenticationLoading || tenant.loading) {
         return <MidScreenLoader />;
     }
 
