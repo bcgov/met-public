@@ -46,6 +46,7 @@ spec:
           export MET_PATRONI_USER='{{ index .Data.data "superuser-username" }}'
           export MET_PATRONI_PASSWORD='{{ index .Data.data "superuser-password" }}'
           export POSTGRESQL_DATABASE='{{ index .Data.data "met-app-db-name" }}'
+          export DATABASE_SERVICE_NAME='{{ index .Data.data "hostname" }}'
           {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
