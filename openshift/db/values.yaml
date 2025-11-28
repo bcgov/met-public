@@ -53,7 +53,8 @@ backup:
       ephemeralStorage: 2Gi
   dbName: met
   strategy: rolling
-  schema: public
+  schema: met
+  databaseName: app
   mountPath: "/backups/"
   environment: dev
   environmentFriendlyName: Development

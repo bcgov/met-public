@@ -6,8 +6,9 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: met-patroni
-      app.kubernetes.io/component: database
+      app.kubernetes.io/instance: met-patroni
+      app.kubernetes.io/name: patroni
+      cluster-name: met-patroni
   policyTypes:
   - Ingress
   ingress:

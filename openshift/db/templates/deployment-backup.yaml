@@ -43,9 +43,10 @@ spec:
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
         vault.hashicorp.com/agent-inject-template-met-patroni: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
-          export DATABASE_USER='{{ index .Data.data "superuser-username" }}'
-          export DATABASE_PASSWORD='{{ index .Data.data "superuser-password" }}'
+          export MET_PATRONI_USER='{{ index .Data.data "superuser-username" }}'
+          export MET_PATRONI_PASSWORD='{{ index .Data.data "superuser-password" }}'
           export POSTGRESQL_DATABASE='{{ index .Data.data "met-app-db-name" }}'
+          export DATABASE_SERVICE_NAME='{{ index .Data.data "hostname" }}'
           {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
@@ -62,6 +63,9 @@ spec:
             items:
               - key: backup.conf
                 path: backup.conf
+              - key: emergency-restore.sh
+                path: emergency-restore.sh
+                mode: 0755
       containers:
         - name: {{ .Values.app.name }}-backup
           {{- with .Values.backup.image }}         
@@ -95,3 +99,6 @@ spec:
             - name: backup-config-volume
               mountPath: /backup.conf
               subPath: backup.conf
+            - name: backup-config-volume
+              mountPath: /emergency-restore.sh
+              subPath: emergency-restore.sh
