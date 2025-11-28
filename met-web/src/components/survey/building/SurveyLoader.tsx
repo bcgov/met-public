@@ -1,4 +1,4 @@
-import { Params, defer } from 'react-router-dom';
+import { Params } from 'react-router-dom';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getEngagement } from 'services/engagementService';
 import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagementSlugService';
@@ -29,5 +29,5 @@ export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
         return getEngagement(response.engagement_id);
     });
     const slug = engagement.then((response) => response && getSlugByEngagementId(response.id));
-    return defer({ engagement, language, reportSettings, slug, submission, survey, surveyId, token, verification });
+    return { engagement, language, reportSettings, slug, submission, survey, surveyId, token, verification };
 };

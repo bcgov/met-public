@@ -129,7 +129,11 @@ const config: Config.InitialOptions = {
     ],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    setupFilesAfterEnv: ['jest-extended/all', '@testing-library/jest-dom'],
+    setupFilesAfterEnv: [
+        '<rootDir>/tests/unit/components/polyfills/jsdomSelectorPatch.ts',
+        'jest-extended/all',
+        '@testing-library/jest-dom',
+    ],
 
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,

@@ -26,7 +26,6 @@ import { Languages } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
 import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
-import { PublicLayout } from 'components/appLayouts/PublicLayout';
 import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
 
 interface Translations {
@@ -186,7 +185,7 @@ const App = () => {
         loadTranslation();
     }, [language.id, translations]);
 
-    if (authenticationLoading || tenant.loading || !tenant.short_name) {
+    if (authenticationLoading || tenant.loading || (!tenant.short_name && tenant.isLoaded)) {
         return <MidScreenLoader />;
     }
 
@@ -204,16 +203,10 @@ const App = () => {
 
     // Otherwise, if the user is not authenticated, show the public layout.
     if (!isAuthenticated) {
-        const router = createBrowserRouter(
-            [
-                {
-                    element: <PublicLayout />,
-                    errorElement: <NotFound />,
-                    children: createRoutesFromElements(UnauthenticatedRoutes()),
-                },
-            ],
-            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
-        );
+        const router = createBrowserRouter(createRoutesFromElements(UnauthenticatedRoutes), {
+            basename: `/${basename}`,
+            future: { v7_relativeSplatPath: true },
+        });
         return <RouterProvider router={router} />;
     }
 
@@ -223,12 +216,7 @@ const App = () => {
             [
                 {
                     element: <AuthenticatedLayout />,
-                    children: [
-                        {
-                            path: '*',
-                            element: <NoAccess />,
-                        },
-                    ],
+                    children: [{ path: '*', element: <NoAccess /> }],
                     loader: authenticatedRootLoader,
                     id: 'authenticated-root',
                 },
@@ -239,20 +227,10 @@ const App = () => {
     }
 
     // Otherwise, display the admin area.
-    const router = createBrowserRouter(
-        [
-            {
-                element: <AuthenticatedLayout />,
-                children: createRoutesFromElements(AuthenticatedRoutes()),
-                handle: {
-                    crumb: () => ({ name: 'Dashboard', link: '/home' }),
-                },
-                id: 'authenticated-root',
-                loader: authenticatedRootLoader,
-            },
-        ],
-        { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
-    );
+    const router = createBrowserRouter(createRoutesFromElements(AuthenticatedRoutes), {
+        basename: `/${basename}`,
+        future: { v7_relativeSplatPath: true },
+    });
 
     return <RouterProvider router={router} />;
 };

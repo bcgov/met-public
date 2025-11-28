@@ -52,7 +52,7 @@
         "jsonwebtoken": "^9.0.0",
         "jspdf": "^3.0.2",
         "keycloak-js": "^25.0.6",
-        "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
         "mapbox-gl": "^2.13.0",
         "maplibre-gl": "^4.0.0",
         "met-formio": "^1.0.16-rc.2",
@@ -77,12 +77,14 @@
         "redux": "^4.1.2",
         "sass": "^1.90.0",
         "sass-loader": "^16.0.5",
+        "source-map-explorer": "^2.5.3",
         "typescript": "^5.0.0 <5.2.0",
         "universal-cookie": "^8.0.1",
         "web-vitals": "^5.1.0",
         "yup": "^0.32.11"
     },
     "scripts": {
+        "analyze": "source-map-explorer 'build/static/js/*.js' --no-border-checks",
         "start": "react-app-rewired start",
         "build": "react-app-rewired build",
         "test": "jest",

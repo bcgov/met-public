@@ -1,4 +1,4 @@
-import { Params, defer } from 'react-router-dom';
+import { Params } from 'react-router-dom';
 import { getEngagementContent } from 'services/engagementContentService';
 import { getEngagement } from 'services/engagementService';
 import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagementSlugService';
@@ -51,7 +51,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
 
     const taxa = taxaData.then((taxa) => Object.values(taxa));
 
-    return defer({
+    return {
         engagement,
         slug,
         widgets,
@@ -59,5 +59,5 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         metadata,
         taxa,
         teamMembers,
-    });
+    };
 };

@@ -10,3 +10,5 @@ export const RedirectLogin = () => {
     }, []);
     return <MidScreenLoader />;
 };
+
+export default RedirectLogin;
