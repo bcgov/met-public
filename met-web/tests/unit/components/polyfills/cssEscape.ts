@@ -9,7 +9,8 @@ type CssNamespace = {
 };
 
 const ensureCssEscape = () => {
-    const globalObject = typeof window !== 'undefined' ? window : (globalThis as Window & typeof globalThis);
+    const globalObject =
+        typeof globalThis.window === 'undefined' ? (globalThis as Window & typeof globalThis) : globalThis.window;
     const cssNamespace: CssNamespace = globalObject.CSS ?? {};
 
     if (typeof cssNamespace.escape !== 'function') {
