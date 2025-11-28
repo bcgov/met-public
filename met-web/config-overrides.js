@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require('node:path');
 const webpack = require('webpack');
 module.exports = function override(config) {
     
     config.resolve.fallback = {
-        ...(config.resolve.fallback || {}),
+        ...(config.resolve.fallback),
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
         assert: require.resolve('assert'),
@@ -15,7 +15,7 @@ module.exports = function override(config) {
     
     // Alias lodash to lodash-es for better tree-shaking
     config.resolve.alias = {
-        ...(config.resolve.alias || {}),
+        ...(config.resolve.alias),
         lodash: 'lodash-es',
         engagements: path.resolve(__dirname, 'src/components/engagement'),
     };
