@@ -9,3 +9,5 @@ export const FormCAC = () => {
         </FormContextProvider>
     );
 };
+
+export default FormCAC;

@@ -1,261 +1,238 @@
 import React from 'react';
-import { Params, defer, Navigate, Route } from 'react-router-dom';
-import NotFound from './NotFound';
-import EngagementForm from '../components/engagement/form';
-import EngagementListing from '../components/engagement/listing';
-import { Engagement as OldEngagementView } from '../components/engagement/old-view';
-import { AdminEngagementView } from 'components/engagement/admin/view';
-import SurveyListing from 'components/survey/listing';
-import CreateSurvey from 'components/survey/create';
-import SurveyFormBuilder from 'components/survey/building';
-import SurveySubmit from 'components/survey/submit';
-import MetadataManagement from 'components/metadataManagement';
-import CommentReview from 'components/comments/admin/review/CommentReview';
-import CommentReviewListing from 'components/comments/admin/reviewListing';
-import CommentTextListing from 'components/comments/admin/textListing';
-import PublicDashboard from 'components/publicDashboard';
-import EngagementComments from '../components/engagement/dashboard/comment';
-import UnderConstruction from './UnderConstruction';
-import FeedbackListing from 'components/feedback/listing';
-import UserManagementListing from 'components/userManagement/listing';
-import Dashboard from 'components/dashboard';
-import Unauthorized from './Unauthorized';
-import AuthGate from './AuthGate';
-import { USER_ROLES } from 'services/userService/constants';
-import UserProfile from 'components/userManagement/userDetails';
-import ReportSettings from 'components/survey/report';
-import TenantListingPage from 'components/tenantManagement/Listing';
-import TenantCreationPage from 'components/tenantManagement/Create';
-import TenantEditPage from 'components/tenantManagement/Edit';
-import TenantDetail from 'components/tenantManagement/Detail';
-import Language from 'components/language';
-import { Tenant } from 'models/tenant';
+import { Params, Navigate, Route } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
+import { Tenant } from 'models/tenant';
+import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
+import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
 import { getAllTenants, getTenant } from 'services/tenantService';
-import { engagementLoader, engagementListLoader } from 'components/engagement/public/view';
+import { engagementLoader, engagementListLoader } from 'engagements/public/view';
 import { SurveyLoader } from 'components/survey/building/SurveyLoader';
-import { languageLoader } from 'components/engagement/admin/config/LanguageLoader';
+import { languageLoader } from 'engagements/admin/config/LanguageLoader';
 import { userSearchLoader } from 'components/userManagement/userSearchLoader';
-import EngagementCreationWizard from 'components/engagement/admin/config/wizard/CreationWizard';
-import engagementCreateAction from 'components/engagement/admin/config/EngagementCreateAction';
-import EngagementConfigurationWizard from 'components/engagement/admin/config/wizard/ConfigWizard';
-import engagementUpdateAction from 'components/engagement/admin/config/EngagementUpdateAction';
-import { ConfigSummary as ConfigTab } from 'components/engagement/admin/view/ConfigSummary';
-import { AuthoringTab } from 'components/engagement/admin/view/AuthoringTab';
-import AuthoringBanner from 'components/engagement/admin/create/authoring/AuthoringBanner';
-import { engagementAuthoringUpdateAction } from 'components/engagement/admin/create/authoring/engagementAuthoringUpdateAction';
-import { AuthoringContext } from 'components/engagement/admin/create/authoring/AuthoringContext';
-import AuthoringTemplate from 'components/engagement/admin/create/authoring/AuthoringTemplate';
-import AuthoringSummary from 'components/engagement/admin/create/authoring/AuthoringSummary';
-import AuthoringDetails from 'components/engagement/admin/create/authoring/AuthoringDetails';
-import AuthoringFeedback from 'components/engagement/admin/create/authoring/AuthoringFeedback';
-import AuthoringResults from 'components/engagement/admin/create/authoring/AuthoringResults';
-import AuthoringSubscribe from 'components/engagement/admin/create/authoring/AuthoringSubscribe';
-import AuthoringMore from 'components/engagement/admin/create/authoring/AuthoringMore';
+import engagementCreateAction from 'engagements/admin/config/EngagementCreateAction';
+import engagementUpdateAction from 'engagements/admin/config/EngagementUpdateAction';
+import { engagementAuthoringUpdateAction } from 'engagements/admin/create/authoring/engagementAuthoringUpdateAction';
+import { USER_ROLES } from 'services/userService/constants';
 
-const AuthenticatedRoutes = () => {
-    return (
-        <>
-            <Route path="/home" element={<Dashboard />} />
-            <Route path="/surveys">
-                <Route index element={<SurveyListing />} />
-                <Route path="create" element={<CreateSurvey />} />
+// Load these synchronously because they may be needed right away
+import NotFound from './NotFound';
+import AuthGate from './AuthGate';
+import Unauthorized from './Unauthorized';
+import UnderConstruction from './UnderConstruction';
 
-                <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
-                    <Route path="build" element={<SurveyFormBuilder />} />
-                    <Route path="report" element={<ReportSettings />} />
-                    <Route path="submit" element={<SurveySubmit />} />
-                    <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
-                        <Route path="comments" element={<CommentReviewListing />} />
-                        <Route path="comments/all" element={<CommentTextListing />} />
-                    </Route>
-                    <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
-                        <Route path="submissions/:submissionId/review" element={<CommentReview />} />
-                    </Route>
+// Deferred import helper function to grab default export from lazily imported module
+const df = function <T = React.ComponentType<unknown>>(
+    importFn: () => Promise<{ default: T }>,
+): () => Promise<{ Component: T }> {
+    return () => importFn().then((m) => ({ Component: m.default }));
+};
+
+const AuthenticatedRoutes = (
+    <Route
+        path="/"
+        element={<AuthenticatedLayout />}
+        id="authenticated-root"
+        loader={authenticatedRootLoader}
+        errorElement={<NotFound />}
+        handle={{
+            crumb: () => ({ name: 'Dashboard', link: '/home' }),
+        }}
+        shouldRevalidate={() => false} // Cache the root loader data for the authenticated area
+    >
+        <Route path="/home" lazy={df(() => import('components/dashboard'))} />
+        <Route path="/surveys">
+            <Route index lazy={df(() => import('components/survey/listing'))} />
+            <Route path="create" lazy={df(() => import('components/survey/create'))} />
+            <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
+                <Route path="build" lazy={df(() => import('components/survey/building'))} />
+                <Route path="report" lazy={df(() => import('components/survey/report'))} />
+                <Route path="submit" lazy={df(() => import('components/survey/submit'))} />
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
+                    <Route path="comments" lazy={df(() => import('components/comments/admin/reviewListing'))} />
+                    <Route path="comments/all" lazy={df(() => import('components/comments/admin/textListing'))} />
                 </Route>
-            </Route>
-            <Route
-                path="/engagements"
-                id="engagement-listing"
-                errorElement={<NotFound />}
-                handle={{ crumb: () => ({ name: 'Engagements' }) }}
-            >
-                <Route index element={<EngagementListing />} />
-                <Route path="search" element={<Navigate to="/engagements" />} loader={engagementListLoader} />
-                <Route
-                    path="create"
-                    action={engagementCreateAction}
-                    element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}
-                >
-                    <Route index element={<Navigate to="wizard" />} />
-                    <Route path="form" element={<EngagementForm />} />
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
                     <Route
-                        path="wizard"
-                        handle={{ crumb: () => ({ name: 'New Engagement' }) }}
-                        element={<EngagementCreationWizard />}
+                        path="submissions/:submissionId/review"
+                        lazy={df(() => import('components/comments/admin/review/CommentReview'))}
                     />
                 </Route>
+            </Route>
+        </Route>
+        <Route
+            path="/engagements"
+            id="engagement-listing"
+            errorElement={<NotFound />}
+            handle={{ crumb: () => ({ name: 'Engagements' }) }}
+        >
+            <Route index lazy={df(() => import('engagements/listing'))} />
+            <Route path="search" element={<Navigate to="/engagements" />} loader={engagementListLoader} />
+            <Route
+                path="create"
+                action={engagementCreateAction}
+                element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}
+            >
+                <Route index element={<Navigate to="wizard" />} />
+                <Route path="form" lazy={df(() => import('engagements/form'))} />
                 <Route
-                    path=":engagementId"
-                    id="single-engagement"
-                    errorElement={<NotFound />}
-                    loader={engagementLoader}
-                    handle={{
-                        crumb: async (data: { engagement: Promise<Engagement> }) => {
-                            return data.engagement.then((engagement) => ({
-                                name: engagement.name,
-                                link: `/engagements/${engagement.id}/details/config`,
-                            }));
-                        },
-                    }}
-                >
-                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                        <Route path="form" element={<EngagementForm />} />
+                    path="wizard"
+                    handle={{ crumb: () => ({ name: 'New Engagement' }) }}
+                    lazy={df(() => import('engagements/admin/config/wizard/CreationWizard'))}
+                />
+            </Route>
+            <Route
+                path=":engagementId"
+                id="single-engagement"
+                errorElement={<NotFound />}
+                loader={engagementLoader}
+                handle={{
+                    crumb: async (data: { engagement: Promise<Engagement> }) =>
+                        data.engagement.then((engagement) => ({
+                            name: engagement.name,
+                            link: `/engagements/${engagement.id}/details/authoring`,
+                        })),
+                }}
+                shouldRevalidate={({ currentParams, nextParams }) => {
+                    return currentParams.engagementId !== nextParams.engagementId;
+                }}
+            >
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                    <Route path="form" lazy={df(() => import('engagements/form'))} />
+                </Route>
+                <Route path="old-view" lazy={df(() => import('engagements/old-view'))} />
+                <Route index element={<Navigate to="details/config" />} />
+                <Route path="details">
+                    <Route index element={<Navigate to="config" />} />
+                    {/* Wraps the tabs with the engagement title and TabContext */}
+                    <Route lazy={df(() => import('engagements/admin/view'))} shouldRevalidate={() => false}>
+                        <Route path="config" lazy={df(() => import('engagements/admin/view/ConfigSummary'))} />
+                        <Route path="authoring" lazy={df(() => import('engagements/admin/view/AuthoringTab'))} />
+                        <Route path="*" element={<NotFound />} />
                     </Route>
-                    <Route path="old-view" element={<OldEngagementView />} />
-                    <Route index element={<Navigate to="details/config" />} />
-                    <Route path="details">
-                        <Route index element={<Navigate to="config" />} />
-                        {/* Wraps the tabs with the engagement title and TabContext */}
-                        <Route element={<AdminEngagementView />}>
-                            <Route path="config" element={<ConfigTab />} />
-                            <Route path="authoring" element={<AuthoringTab />}></Route>
-                            <Route path="*" element={<NotFound />} />
-                        </Route>
-                        <Route
-                            path="authoring"
-                            handle={{ crumb: () => ({ name: 'Authoring' }) }}
-                            element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
-                        >
-                            <Route element={<AuthoringContext />}>
-                                <Route element={<AuthoringTemplate />} id="authoring-loader">
-                                    <Route
-                                        path="banner"
-                                        element={<AuthoringBanner />}
-                                        action={engagementAuthoringUpdateAction}
-                                        handle={{ crumb: () => ({ name: 'Hero Banner' }) }}
-                                    />
-                                    <Route
-                                        path="summary"
-                                        action={engagementAuthoringUpdateAction}
-                                        loader={engagementLoader}
-                                        element={<AuthoringSummary />}
-                                        handle={{ crumb: () => ({ name: 'Summary' }) }}
-                                    />
-                                    <Route
-                                        path="details"
-                                        action={engagementAuthoringUpdateAction}
-                                        element={<AuthoringDetails />}
-                                        handle={{ crumb: () => ({ name: 'Details' }) }}
-                                    />
-                                    <Route
-                                        path="feedback"
-                                        action={engagementAuthoringUpdateAction}
-                                        element={<AuthoringFeedback />}
-                                        handle={{ crumb: () => ({ name: 'Provide Feedback' }) }}
-                                    />
-                                    <Route
-                                        path="results"
-                                        element={<AuthoringResults />}
-                                        handle={{ crumb: () => ({ name: 'View Results' }) }}
-                                    />
-                                    <Route
-                                        path="subscribe"
-                                        element={<AuthoringSubscribe />}
-                                        handle={{ crumb: () => ({ name: 'Subscribe' }) }}
-                                    />
-                                    <Route
-                                        path="more"
-                                        element={<AuthoringMore />}
-                                        handle={{ crumb: () => ({ name: 'More Engagements' }) }}
-                                    />
-                                </Route>
+                    <Route
+                        path="authoring"
+                        handle={{ crumb: () => ({ name: 'Authoring' }) }}
+                        element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
+                    >
+                        <Route lazy={df(() => import('engagements/admin/create/authoring/AuthoringContext'))}>
+                            <Route
+                                lazy={df(() => import('engagements/admin/create/authoring/AuthoringTemplate'))}
+                                id="authoring-loader"
+                            >
+                                <Route
+                                    path="banner"
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringBanner'))}
+                                    action={engagementAuthoringUpdateAction}
+                                    handle={{ crumb: () => ({ name: 'Hero Banner' }) }}
+                                />
+                                <Route
+                                    path="summary"
+                                    action={engagementAuthoringUpdateAction}
+                                    loader={engagementLoader}
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringSummary'))}
+                                    handle={{ crumb: () => ({ name: 'Summary' }) }}
+                                />
+                                <Route
+                                    path="details"
+                                    action={engagementAuthoringUpdateAction}
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringDetails'))}
+                                    handle={{ crumb: () => ({ name: 'Details' }) }}
+                                />
+                                <Route
+                                    path="feedback"
+                                    action={engagementAuthoringUpdateAction}
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringFeedback'))}
+                                    handle={{ crumb: () => ({ name: 'Provide Feedback' }) }}
+                                />
+                                <Route
+                                    path="results"
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringResults'))}
+                                    handle={{ crumb: () => ({ name: 'View Results' }) }}
+                                />
+                                <Route
+                                    path="subscribe"
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringSubscribe'))}
+                                    handle={{ crumb: () => ({ name: 'Subscribe' }) }}
+                                />
+                                <Route
+                                    path="more"
+                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringMore'))}
+                                    handle={{ crumb: () => ({ name: 'More Engagements' }) }}
+                                />
                             </Route>
                         </Route>
-                        <Route path="*" element={<NotFound />} />
-                        <Route
-                            path="config/edit"
-                            element={<EngagementConfigurationWizard />}
-                            action={engagementUpdateAction}
-                            handle={{ crumb: () => ({ name: 'Configure' }) }}
-                        />
                     </Route>
-                    <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                        <Route path="form" element={<EngagementForm />} />
-                    </Route>
-                    <Route path="comments/:dashboardType" element={<EngagementComments />} />
-                    <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
-                </Route>
-                <Route path=":slug">
-                    <Route index element={<OldEngagementView />} />
-                    <Route path="comments/:dashboardType" element={<EngagementComments />} />
-                    <Route path="dashboard/:dashboardType" element={<PublicDashboard />} />
-                </Route>
-            </Route>
-            <Route path="/metadatamanagement" element={<MetadataManagement />} />
-            <Route path="/languages" element={<Language />} loader={languageLoader} />
-            <Route
-                id="tenant-admin"
-                path="/tenantadmin"
-                errorElement={<NotFound />}
-                loader={async () => {
-                    return defer({ tenants: getAllTenants() });
-                }}
-                handle={{
-                    crumb: () => ({ name: 'Tenant Admin' }),
-                }}
-            >
-                <Route index element={<TenantListingPage />} />
-                <Route
-                    path="create"
-                    element={<TenantCreationPage />}
-                    handle={{
-                        crumb: () => ({ name: 'Create Tenant Instance' }),
-                    }}
-                />
-                <Route
-                    id="tenant"
-                    path=":tenantShortName"
-                    loader={async ({ params }: { params: Params<string> }) => {
-                        const tenant = getTenant(params.tenantShortName ?? '');
-                        return defer({ tenant: tenant });
-                    }}
-                    handle={{
-                        crumb: async (data: { tenant: Promise<Tenant> }) => {
-                            return data.tenant.then((tenant) => {
-                                return {
-                                    link: `/tenantadmin/${tenant.short_name}/detail`,
-                                    name: tenant.name,
-                                };
-                            });
-                        },
-                    }}
-                    errorElement={<NotFound />}
-                >
-                    <Route index element={<Navigate to="detail" />} />
-                    <Route path="detail" element={<TenantDetail />} />
+                    <Route path="*" element={<NotFound />} />
                     <Route
-                        path="edit"
-                        element={<TenantEditPage />}
-                        handle={{
-                            crumb: () => ({ name: 'Edit Instance' }),
-                        }}
+                        path="config/edit"
+                        lazy={df(() => import('engagements/admin/config/wizard/ConfigWizard'))}
+                        action={engagementUpdateAction}
+                        handle={{ crumb: () => ({ name: 'Configure' }) }}
                     />
                 </Route>
+                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                    <Route path="form" lazy={df(() => import('engagements/form'))} />
+                </Route>
+                <Route path="comments/:dashboardType" lazy={df(() => import('engagements/dashboard/comment'))} />
+                <Route path="dashboard/:dashboardType" lazy={df(() => import('components/publicDashboard'))} />
             </Route>
-            <Route path="/feedback" element={<FeedbackListing />} />
-            <Route path="/calendar" element={<UnderConstruction />} />
-            <Route path="/reporting" element={<UnderConstruction />} />
-            <Route path="/usermanagement">
-                <Route index element={<UserManagementListing />} />
-                <Route path="search" element={<Navigate to="/usermanagement" />} loader={userSearchLoader} />
-                <Route path=":userId/details" element={<UserProfile />} />
+            <Route path=":slug">
+                <Route index lazy={df(() => import('engagements/old-view'))} />
+                <Route path="comments/:dashboardType" lazy={df(() => import('engagements/dashboard/comment'))} />
+                <Route path="dashboard/:dashboardType" lazy={df(() => import('components/publicDashboard'))} />
             </Route>
-            <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="/not-found" element={<NotFound />} />
-            <Route path="*" element={<NotFound />} />
-        </>
-    );
-};
+        </Route>
+        <Route path="/metadatamanagement" lazy={df(() => import('components/metadataManagement'))} />
+        <Route path="/languages" loader={languageLoader} lazy={df(() => import('components/language'))} />
+        <Route
+            id="tenant-admin"
+            path="/tenantadmin"
+            errorElement={<NotFound />}
+            loader={async () => ({ tenants: getAllTenants() })}
+            handle={{ crumb: () => ({ name: 'Tenant Admin' }) }}
+        >
+            <Route index lazy={df(() => import('components/tenantManagement/Listing'))} />
+            <Route
+                path="create"
+                lazy={df(() => import('components/tenantManagement/Create'))}
+                handle={{ crumb: () => ({ name: 'Create Tenant Instance' }) }}
+            />
+            <Route
+                id="tenant"
+                path=":tenantShortName"
+                loader={({ params }: { params: Params<string> }) => ({
+                    tenant: getTenant(params.tenantShortName ?? ''),
+                })}
+                handle={{
+                    crumb: async (data: { tenant: Promise<Tenant> }) =>
+                        data.tenant.then((tenant) => ({
+                            link: `/tenantadmin/${tenant.short_name}/detail`,
+                            name: tenant.name,
+                        })),
+                }}
+                errorElement={<NotFound />}
+            >
+                <Route index element={<Navigate to="detail" />} />
+                <Route path="detail" lazy={df(() => import('components/tenantManagement/Detail'))} />
+                <Route
+                    path="edit"
+                    lazy={df(() => import('components/tenantManagement/Edit'))}
+                    handle={{ crumb: () => ({ name: 'Edit Instance' }) }}
+                />
+            </Route>
+        </Route>
+        <Route path="/feedback" lazy={df(() => import('components/feedback/listing'))} />
+        <Route path="/calendar" element={<UnderConstruction />} />
+        <Route path="/reporting" element={<UnderConstruction />} />
+        <Route path="/usermanagement">
+            <Route index lazy={df(() => import('components/userManagement/listing'))} />
+            <Route path="search" element={<Navigate to="/usermanagement" />} loader={userSearchLoader} />
+            <Route path=":userId/details" lazy={df(() => import('components/userManagement/userDetails'))} />
+        </Route>
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/not-found" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
+    </Route>
+);
 
 export default AuthenticatedRoutes;

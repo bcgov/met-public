@@ -1,4 +1,3 @@
-import { defer } from 'react-router-dom';
 import { getUserList, GetUserListParams } from 'services/userService/api';
 
 export const userSearchLoader = ({ request }: { request: Request }) => {
@@ -15,5 +14,5 @@ export const userSearchLoader = ({ request }: { request: Request }) => {
     };
 
     const users = getUserList(searchOptions);
-    return defer({ users });
+    return { users };
 };

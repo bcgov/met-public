@@ -228,6 +228,8 @@ const TeamMemberList = () => {
     );
 };
 
+export default ConfigSummary;
+
 const TeamMemberListSkeleton = () => {
     return (
         <>

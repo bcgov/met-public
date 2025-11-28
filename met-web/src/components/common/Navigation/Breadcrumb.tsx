@@ -57,8 +57,10 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface UIMatchWithCrumb
-    extends UIMatch<unknown, { crumb?: (data: unknown) => Promise<{ name: string; link?: string }> }> {}
+interface UIMatchWithCrumb extends UIMatch<
+    unknown,
+    { crumb?: (data: unknown) => Promise<{ name: string; link?: string }> }
+> {}
 
 /**
  * Automatically generates breadcrumbs based on the `handle.crumb` function of the current route and its parents.

@@ -30,7 +30,7 @@ jest.mock('react-router-dom', () => ({
     useRouteLoaderData: (routeId: string) => {
         if (routeId === 'authenticated-root') {
             return {
-                myTenants: [tenant, { ...tenant, name: 'Tenant 2', short_name: 'T2' }],
+                myTenants: Promise.resolve([tenant, { ...tenant, name: 'Tenant 2', short_name: 'T2' }]),
             };
         }
     },

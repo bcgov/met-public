@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate, useParams, useLoaderData, useRevalidator } from 'react-router-dom';
+import { useNavigate, useParams, useRouteLoaderData, useRevalidator } from 'react-router-dom';
 import { patchEngagement } from '../../../services/engagementService';
 import { createDefaultEngagement, Engagement } from '../../../models/engagement';
 import { useAppDispatch } from 'hooks';
@@ -74,7 +74,11 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
     const [content, setContent] = useState<EngagementContent[]>([]);
 
-    const { engagement, widgets, content: contentPromise } = useLoaderData() as EngagementLoaderData;
+    const {
+        engagement,
+        widgets,
+        content: contentPromise,
+    } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {

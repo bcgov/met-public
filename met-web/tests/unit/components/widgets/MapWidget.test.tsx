@@ -15,7 +15,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockMap, mapWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
-import { createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const mockEngagementSettings: EngagementSettings = {
     ...createDefaultEngagementSettings(),
@@ -171,7 +171,7 @@ describe('Map Widget tests', () => {
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
         mockCreateWidget.mockReturnValue(Promise.resolve(mapWidget));
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([mapWidget]));
-        const { container } = render(<EngagementForm />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await addMapWidget(container);
 

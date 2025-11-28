@@ -111,3 +111,5 @@ export const AdminEngagementView = () => {
         </ResponsiveContainer>
     );
 };
+
+export default AdminEngagementView;
