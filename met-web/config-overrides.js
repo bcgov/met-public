@@ -119,10 +119,10 @@ module.exports = function override(config) {
                     name: 'draftjs',
                     priority: 25,
                 },
-                moment: {
-                    test: /[\\/]node_modules[\\/]moment[\\/]/,
-                    name: 'moment',
-                    priority: 15,
+                lodash: {
+                    test: /[\\/]node_modules[\\/](lodash|lodash-es)[\\/]/,
+                    name: 'lodash',
+                    priority: 25,
                 },
                 helloPangea: {
                     test: /[\\/]node_modules[\\/](@hello-pangea)[\\/]/,
