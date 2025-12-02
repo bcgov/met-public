@@ -215,6 +215,7 @@ const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
             open={open}
             disableEnforceFocus
             disablePortal
+            swipeAreaWidth={64}
         >
             <Box>
                 <DrawerBox isMediumScreenOrLarger={isMediumScreen} setOpen={setOpen} />

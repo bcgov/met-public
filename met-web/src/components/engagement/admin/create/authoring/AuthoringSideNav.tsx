@@ -229,6 +229,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
             open={open}
             disableEnforceFocus
             disablePortal
+            swipeAreaWidth={64}
         >
             <Box>
                 <DrawerBox isMediumScreenOrLarger={isMediumScreen} setOpen={setOpen} engagementId={engagementId} />
