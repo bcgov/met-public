@@ -247,6 +247,8 @@ const TenantSelector = ({
     const currentTenant = useAppSelector((state) => state.tenant);
     const tenants = allTenants.filter((tenant) => tenant.short_name !== currentTenant.short_name);
     const noOtherTenants = tenants.length === 0;
+    const hasOtherTenants = tenants.length > 0;
+    const currentTenantName = currentTenant.name;
     const tenantDropdownButton = useRef<HTMLButtonElement>(null);
     const [tenantDrawerOpen, setTenantDrawerOpen] = useState(false);
 
@@ -298,7 +300,11 @@ const TenantSelector = ({
                         ...dropdownMenuStyles,
                     }}
                 >
-                    <TenantButtonContent isOpen={tenantDrawerOpen} tenants={allTenants} />
+                    <TenantButtonContent
+                        isOpen={tenantDrawerOpen}
+                        currentTenantName={currentTenantName}
+                        hasOtherTenants={hasOtherTenants}
+                    />
                 </ButtonBase>
                 <Drawer
                     anchor="top"
@@ -346,7 +352,13 @@ const TenantSelector = ({
         <DropdownMenu
             forNavigation
             name="Tenant Switcher"
-            buttonContent={({ isOpen }) => <TenantButtonContent isOpen={isOpen} tenants={allTenants} />}
+            buttonContent={({ isOpen }) => (
+                <TenantButtonContent
+                    isOpen={isOpen}
+                    currentTenantName={currentTenantName}
+                    hasOtherTenants={hasOtherTenants}
+                />
+            )}
             buttonProps={{
                 sx: {
                     marginLeft: '-16px' /*Visual alignment with nav bar*/,
@@ -365,9 +377,15 @@ const TenantSelector = ({
     );
 };
 
-const TenantButtonContent = ({ isOpen, tenants }: { isOpen: boolean; tenants: Tenant[] }) => {
-    const currentTenant = useAppSelector((state) => state.tenant);
-    const noOtherTenants = !tenants.some((tenant) => tenant.short_name !== currentTenant.short_name);
+const TenantButtonContent = ({
+    isOpen,
+    currentTenantName,
+    hasOtherTenants,
+}: {
+    isOpen: boolean;
+    currentTenantName: string;
+    hasOtherTenants: boolean;
+}) => {
     return (
         <Grid container data-testid="tenant-switcher-button" direction="row" alignItems="center" spacing={1}>
             <Grid item sx={{ flex: '1 1 auto' }}>
@@ -380,10 +398,10 @@ const TenantButtonContent = ({ isOpen, tenants }: { isOpen: boolean; tenants: Te
                         textOverflow: 'ellipsis',
                     }}
                 >
-                    {currentTenant.name}
+                    {currentTenantName}
                 </BodyText>
             </Grid>
-            <Grid item hidden={noOtherTenants} sx={{ flex: '0 0 auto' }}>
+            <Grid item hidden={!hasOtherTenants} sx={{ flex: '0 0 auto' }}>
                 <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
             </Grid>
         </Grid>
