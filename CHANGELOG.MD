@@ -4,11 +4,6 @@
   - Added `haproxy.router.openshift.io/rate-limit-connections` annotations to Route resources in Helm charts for public-facing services (met-api, met-web, met-analytics, analytics-api, and fider).
   - Configured rate limits to restrict the number of connections per IP address over a 3 second interval.
   - When rate limiting is triggered, the route will reply with empty responses until the rate limit period resets.
-- **Bugfix** Validate & Fix DB backup verification [🎟️ DESENG-843](https://citz-gdx.atlassian.net/browse/DESENG-843)
-  - Added separate connection spec for verification step to avoid role errors during verification (workaround for met-patroni role management).
-  - Updated `backup.conf` to schedule daily verification of backups using the new connection spec.
-  - Added `emergency-restore.sh` script for emergency restores to fresh PostgreSQL instances without existing roles.
-  - Updated documentation in `openshift/README.md` to reflect current backup and restore procedures.
 
 ## November 28, 2025
 
@@ -18,6 +13,14 @@
   - Configured Webpack to split code and CSS for large libraries (mui, formio, lodash, arcgis, maplibs, recharts, jspdf...) into separate chunks.
   - Added a new bundle analyzer script to visualize bundle composition and identify optimization opportunities.
   - Removed deprecated `defer` usage from route loaders and return promises directly, allowing React Router to handle loading states.
+
+## November 25, 2025
+
+- **Bugfix** Validate & Fix DB backup verification [🎟️ DESENG-843](https://citz-gdx.atlassian.net/browse/DESENG-843)
+  - Added separate connection spec for verification step to avoid role errors during verification (workaround for met-patroni role management).
+  - Updated `backup.conf` to schedule daily verification of backups using the new connection spec.
+  - Added `emergency-restore.sh` script for emergency restores to fresh PostgreSQL instances without existing roles.
+  - Updated documentation in `openshift/README.md` to reflect current backup and restore procedures.
 
 ## November 18, 2025
 
