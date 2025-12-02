@@ -5,3 +5,5 @@ export const languageLoader = async () => {
     const languages = getTenantLanguages(tenantId ?? '').then((response) => response);
     return { languages };
 };
+
+export default languageLoader;

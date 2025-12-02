@@ -13,3 +13,5 @@ export const authenticatedRootLoader = (): AuthenticatedRootLoaderData => {
     const apiVersion = fetchVersion();
     return { myTenants, apiVersion };
 };
+
+export default authenticatedRootLoader;

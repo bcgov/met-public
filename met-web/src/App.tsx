@@ -1,32 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
-import {
-    Route,
-    BrowserRouter as Router,
-    RouterProvider,
-    Routes,
-    createBrowserRouter,
-    createRoutesFromElements,
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from './hooks';
-import { MidScreenLoader } from './components/common';
 import UnauthenticatedRoutes from './routes/UnauthenticatedRoutes';
 import AuthenticatedRoutes from './routes/AuthenticatedRoutes';
 import { AppConfig } from 'config';
-import NoAccess from 'routes/NoAccess';
 import { getTenant } from 'services/tenantService';
-import NotFound from 'routes/NotFound';
 import { TenantState, loadingTenant, saveTenant } from 'reduxSlices/tenantSlice';
-import { LanguageState } from 'reduxSlices/languageSlice';
+import { LanguageState, loadingLanguage } from 'reduxSlices/languageSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import i18n from './i18n';
-import DocumentTitle from 'DocumentTitle';
 import { Languages } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
-import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
 import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
+const MidScreenLoaderLazy = React.lazy(() =>
+    import('components/common').then((module) => ({ default: module.MidScreenLoader })),
+);
 
 interface Translations {
     [languageId: string]: { [key: string]: string };
@@ -78,6 +69,7 @@ const App = () => {
                     hero_image_credit: tenant.hero_image_credit ?? '',
                 }),
             );
+            dispatch(loadingTenant(false));
         } catch {
             dispatch(loadingTenant(false));
             console.error('Error occurred while fetching Tenant information');
@@ -114,23 +106,31 @@ const App = () => {
     };
 
     const preloadTranslations = async () => {
-        if (!tenant.id) {
-            return;
-        }
         try {
-            const supportedLanguages: string[] = Object.values(Languages);
-            const translationPromises = supportedLanguages.map((languageId) => getTranslationFile(languageId));
-            const translationFiles = await Promise.all(translationPromises);
+            const fallbackLanguages = new Set<string>();
+            if (AppConfig.language.defaultLanguageId) {
+                fallbackLanguages.add(AppConfig.language.defaultLanguageId);
+            }
+            if (language.id) {
+                fallbackLanguages.add(language.id);
+            }
+
+            const languagesToLoad = tenant.id ? Object.values(Languages) : Array.from(fallbackLanguages);
+
+            const translationEntries = await Promise.all(
+                languagesToLoad.map(async (languageId) => {
+                    const file = await getTranslationFile(languageId);
+                    return [languageId, file] as const;
+                }),
+            );
 
             const translationsObj: Translations = {};
-
-            translationFiles.forEach((file, index) => {
+            translationEntries.forEach(([languageId, file]) => {
                 if (file) {
-                    translationsObj[supportedLanguages[index]] = file.default;
+                    translationsObj[languageId] = file.default;
                 }
             });
 
-            // Fetch the common.json file separately
             const commonTranslations = await getTranslationFile('common');
             if (commonTranslations) {
                 translationsObj['common'] = commonTranslations.default;
@@ -152,26 +152,26 @@ const App = () => {
         }
     };
 
-    useEffect(() => {
-        preloadTranslations();
-    }, [language.id, tenant.id]); // Preload translations when language id or tenant id changes
-
     const loadTranslation = async () => {
-        if (!tenant.id || !translations[language.id]) {
+        const preferredLanguageId = translations[language.id] ? language.id : AppConfig.language.defaultLanguageId;
+
+        if (!preferredLanguageId || !translations[preferredLanguageId]) {
             return;
         }
 
-        i18n.changeLanguage(language.id); // Set the language for react-i18next
+        i18n.changeLanguage(preferredLanguageId); // Set the language for react-i18next
 
         try {
             // adding language based translation resources to default namespace 'default'. like en.json, fr.json etc
-            i18n.addResourceBundle(language.id, 'default', translations[language.id]);
+            i18n.addResourceBundle(preferredLanguageId, 'default', translations[preferredLanguageId]);
             // adding common translation resource file (common.json) to namespace 'common'
-            i18n.addResourceBundle(language.id, 'common', translations['common']);
+            if (translations['common']) {
+                i18n.addResourceBundle(preferredLanguageId, 'common', translations['common']);
+            }
 
-            dispatch(loadingTenant(false));
+            dispatch(loadingLanguage(false));
         } catch {
-            dispatch(loadingTenant(false));
+            dispatch(loadingLanguage(false));
             dispatch(
                 openNotification({
                     text: 'Error while trying to load texts. Please try again later.',
@@ -182,23 +182,29 @@ const App = () => {
     };
 
     useEffect(() => {
+        preloadTranslations();
+    }, [language.id, tenant.id]); // Preload translations when language id or tenant id changes
+
+    useEffect(() => {
         loadTranslation();
     }, [language.id, translations]);
 
-    if (authenticationLoading || tenant.loading) {
-        return <MidScreenLoader />;
+    if (authenticationLoading || tenant.loading || language.loading) {
+        return <MidScreenLoaderLazy />;
     }
 
-    // If the tenant is not loaded and is not loading, display the "Not Found" page.
-    if (!tenant.isLoaded && !tenant.loading) {
-        return (
-            <Router>
-                <DocumentTitle />
-                <Routes>
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Router>
+    // If the tenant has failed to load, show the Not Found page.
+    if (!tenant.id) {
+        const router = createBrowserRouter(
+            [
+                {
+                    path: '/*',
+                    lazy: () => import('routes/NotFound').then((module) => ({ Component: module.default })),
+                },
+            ],
+            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
         );
+        return <RouterProvider router={router} />;
     }
 
     // Otherwise, if the user is not authenticated, show the public layout.
@@ -215,8 +221,21 @@ const App = () => {
         const router = createBrowserRouter(
             [
                 {
-                    element: <AuthenticatedLayout />,
-                    children: [{ path: '*', element: <NoAccess /> }],
+                    lazy: () => {
+                        return Promise.all([
+                            import('routes/AuthenticatedRootRouteLoader'),
+                            import('components/appLayouts/AuthenticatedLayout'),
+                        ]).then(([loaderModule, layoutModule]) => ({
+                            Component: layoutModule.default,
+                            loader: loaderModule.authenticatedRootLoader,
+                        }));
+                    },
+                    children: [
+                        {
+                            path: '*',
+                            lazy: () => import('routes/NoAccess').then((module) => ({ Component: module.default })),
+                        },
+                    ],
                     loader: authenticatedRootLoader,
                     id: 'authenticated-root',
                 },

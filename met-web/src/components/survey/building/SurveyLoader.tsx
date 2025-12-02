@@ -31,3 +31,5 @@ export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
     const slug = engagement.then((response) => response && getSlugByEngagementId(response.id));
     return { engagement, language, reportSettings, slug, submission, survey, surveyId, token, verification };
 };
+
+export default SurveyLoader;

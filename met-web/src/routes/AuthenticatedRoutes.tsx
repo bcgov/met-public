@@ -1,92 +1,84 @@
 import React from 'react';
-import { Params, Navigate, Route } from 'react-router-dom';
-import { Engagement } from 'models/engagement';
-import { Tenant } from 'models/tenant';
-import { AuthenticatedLayout } from 'components/appLayouts/AuthenticatedLayout';
-import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
-import { getAllTenants, getTenant } from 'services/tenantService';
-import { engagementLoader, engagementListLoader } from 'engagements/public/view';
-import { SurveyLoader } from 'components/survey/building/SurveyLoader';
-import { languageLoader } from 'engagements/admin/config/LanguageLoader';
-import { userSearchLoader } from 'components/userManagement/userSearchLoader';
-import engagementCreateAction from 'engagements/admin/config/EngagementCreateAction';
-import engagementUpdateAction from 'engagements/admin/config/EngagementUpdateAction';
-import { engagementAuthoringUpdateAction } from 'engagements/admin/create/authoring/engagementAuthoringUpdateAction';
+import { Navigate, Route } from 'react-router-dom';
+
 import { USER_ROLES } from 'services/userService/constants';
+import LazyRoute, { resolveLazyRouteTree } from './LazyRoute';
 
-// Load these synchronously because they may be needed right away
-import NotFound from './NotFound';
+// Load this synchronously because the route tree must be complete before rendering
 import AuthGate from './AuthGate';
-import Unauthorized from './Unauthorized';
-import UnderConstruction from './UnderConstruction';
 
-// Deferred import helper function to grab default export from lazily imported module
-const df = function <T = React.ComponentType<unknown>>(
-    importFn: () => Promise<{ default: T }>,
-): () => Promise<{ Component: T }> {
-    return () => importFn().then((m) => ({ Component: m.default }));
-};
-
-const AuthenticatedRoutes = (
-    <Route
-        path="/"
-        element={<AuthenticatedLayout />}
+const AuthenticatedRoutes = resolveLazyRouteTree(
+    <LazyRoute
         id="authenticated-root"
-        loader={authenticatedRootLoader}
-        errorElement={<NotFound />}
-        handle={{
-            crumb: () => ({ name: 'Dashboard', link: '/home' }),
-        }}
+        ComponentLazy={() => import('components/appLayouts/AuthenticatedLayout')}
+        ErrorBoundaryLazy={() => import('./NotFound')}
+        loaderLazy={() => import('routes/AuthenticatedRootRouteLoader')}
+        handle={{ crumb: () => ({ name: 'Dashboard', link: '/home' }) }}
         shouldRevalidate={() => false} // Cache the root loader data for the authenticated area
     >
-        <Route path="/home" lazy={df(() => import('components/dashboard'))} />
+        <LazyRoute path="/home" ComponentLazy={() => import('components/dashboard')} />
         <Route path="/surveys">
-            <Route index lazy={df(() => import('components/survey/listing'))} />
-            <Route path="create" lazy={df(() => import('components/survey/create'))} />
-            <Route path=":surveyId" errorElement={<NotFound />} id="survey" loader={SurveyLoader}>
-                <Route path="build" lazy={df(() => import('components/survey/building'))} />
-                <Route path="report" lazy={df(() => import('components/survey/report'))} />
-                <Route path="submit" lazy={df(() => import('components/survey/submit'))} />
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
-                    <Route path="comments" lazy={df(() => import('components/comments/admin/reviewListing'))} />
-                    <Route path="comments/all" lazy={df(() => import('components/comments/admin/textListing'))} />
-                </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
-                    <Route
-                        path="submissions/:submissionId/review"
-                        lazy={df(() => import('components/comments/admin/review/CommentReview'))}
+            <LazyRoute index ComponentLazy={() => import('components/survey/listing')} />
+            <LazyRoute path="create" ComponentLazy={() => import('components/survey/create')} />
+            <LazyRoute
+                path=":surveyId"
+                id="survey"
+                loaderLazy={() => import('components/survey/building/SurveyLoader')}
+                ErrorBoundaryLazy={() => import('routes/NotFound')}
+            >
+                <LazyRoute path="build" ComponentLazy={() => import('components/survey/building')} />
+                <LazyRoute path="report" ComponentLazy={() => import('components/survey/report')} />
+                <LazyRoute path="submit" ComponentLazy={() => import('components/survey/submit')} />
+                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.VIEW_APPROVED_COMMENTS]} />}>
+                    <LazyRoute
+                        path="comments"
+                        ComponentLazy={() => import('components/comments/admin/reviewListing')}
                     />
-                </Route>
-            </Route>
+                    <LazyRoute
+                        path="comments/all"
+                        ComponentLazy={() => import('components/comments/admin/textListing')}
+                    />
+                </LazyRoute>
+                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.REVIEW_COMMENTS]} />}>
+                    <LazyRoute
+                        path="submissions/:submissionId/review"
+                        ComponentLazy={() => import('components/comments/admin/review/CommentReview')}
+                    />
+                </LazyRoute>
+            </LazyRoute>
         </Route>
-        <Route
+        <LazyRoute
             path="/engagements"
             id="engagement-listing"
-            errorElement={<NotFound />}
+            ErrorBoundaryLazy={() => import('routes/NotFound')}
             handle={{ crumb: () => ({ name: 'Engagements' }) }}
         >
-            <Route index lazy={df(() => import('engagements/listing'))} />
-            <Route path="search" element={<Navigate to="/engagements" />} loader={engagementListLoader} />
-            <Route
+            <LazyRoute index ComponentLazy={() => import('engagements/listing')} />
+            <LazyRoute
+                path="search"
+                element={<Navigate to="/engagements" />}
+                loaderLazy={() => import('engagements/public/view').then((m) => m.engagementListLoader)}
+            />
+            <LazyRoute
                 path="create"
-                action={engagementCreateAction}
                 element={<AuthGate allowedRoles={[USER_ROLES.CREATE_ENGAGEMENT]} />}
+                actionLazy={() => import('engagements/admin/config/EngagementCreateAction')}
             >
-                <Route index element={<Navigate to="wizard" />} />
-                <Route path="form" lazy={df(() => import('engagements/form'))} />
-                <Route
+                <LazyRoute index element={<Navigate to="wizard" />} />
+                <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
+                <LazyRoute
                     path="wizard"
                     handle={{ crumb: () => ({ name: 'New Engagement' }) }}
-                    lazy={df(() => import('engagements/admin/config/wizard/CreationWizard'))}
+                    ComponentLazy={() => import('engagements/admin/config/wizard/CreationWizard')}
                 />
-            </Route>
-            <Route
+            </LazyRoute>
+            <LazyRoute
                 path=":engagementId"
                 id="single-engagement"
-                errorElement={<NotFound />}
-                loader={engagementLoader}
+                loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                ErrorBoundaryLazy={() => import('routes/NotFound')}
                 handle={{
-                    crumb: async (data: { engagement: Promise<Engagement> }) =>
+                    crumb: async (data: { engagement: Promise<{ name: string; id: number }> }) =>
                         data.engagement.then((engagement) => ({
                             name: engagement.name,
                             link: `/engagements/${engagement.id}/details/authoring`,
@@ -96,143 +88,177 @@ const AuthenticatedRoutes = (
                     return currentParams.engagementId !== nextParams.engagementId;
                 }}
             >
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <Route path="form" lazy={df(() => import('engagements/form'))} />
-                </Route>
-                <Route path="old-view" lazy={df(() => import('engagements/old-view'))} />
-                <Route index element={<Navigate to="details/config" />} />
-                <Route path="details">
-                    <Route index element={<Navigate to="config" />} />
+                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                    <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
+                </LazyRoute>
+                <LazyRoute path="old-view" ComponentLazy={() => import('engagements/old-view')} />
+                <LazyRoute index element={<Navigate to="details/config" />} />
+                <LazyRoute path="details">
+                    <LazyRoute index element={<Navigate to="config" />} />
                     {/* Wraps the tabs with the engagement title and TabContext */}
-                    <Route lazy={df(() => import('engagements/admin/view'))} shouldRevalidate={() => false}>
-                        <Route path="config" lazy={df(() => import('engagements/admin/view/ConfigSummary'))} />
-                        <Route path="authoring" lazy={df(() => import('engagements/admin/view/AuthoringTab'))} />
-                        <Route path="*" element={<NotFound />} />
-                    </Route>
-                    <Route
+                    <LazyRoute ComponentLazy={() => import('engagements/admin/view')} shouldRevalidate={() => false}>
+                        <LazyRoute path="config" ComponentLazy={() => import('engagements/admin/view/ConfigSummary')} />
+                        <LazyRoute
+                            path="authoring"
+                            ComponentLazy={() => import('engagements/admin/view/AuthoringTab')}
+                        />
+                        <LazyRoute path="activity" ComponentLazy={() => import('routes/UnderConstruction')} />
+                        <LazyRoute path="results" ComponentLazy={() => import('routes/UnderConstruction')} />
+                        <LazyRoute path="publish" ComponentLazy={() => import('routes/UnderConstruction')} />
+                        <LazyRoute
+                            path="*"
+                            lazy={() => import('routes/NotFound').then((module) => ({ Component: module.default }))}
+                        />
+                    </LazyRoute>
+                    <LazyRoute
                         path="authoring"
                         handle={{ crumb: () => ({ name: 'Authoring' }) }}
                         element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}
                     >
-                        <Route lazy={df(() => import('engagements/admin/create/authoring/AuthoringContext'))}>
-                            <Route
-                                lazy={df(() => import('engagements/admin/create/authoring/AuthoringTemplate'))}
+                        <LazyRoute ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringContext')}>
+                            <LazyRoute
+                                ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringTemplate')}
                                 id="authoring-loader"
                             >
-                                <Route
+                                <LazyRoute
                                     path="banner"
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringBanner'))}
-                                    action={engagementAuthoringUpdateAction}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringBanner')}
+                                    actionLazy={() =>
+                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                    }
                                     handle={{ crumb: () => ({ name: 'Hero Banner' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="summary"
-                                    action={engagementAuthoringUpdateAction}
-                                    loader={engagementLoader}
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringSummary'))}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringSummary')}
+                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                                    actionLazy={() =>
+                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                    }
                                     handle={{ crumb: () => ({ name: 'Summary' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="details"
-                                    action={engagementAuthoringUpdateAction}
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringDetails'))}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringDetails')}
+                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                                    actionLazy={() =>
+                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                    }
                                     handle={{ crumb: () => ({ name: 'Details' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="feedback"
-                                    action={engagementAuthoringUpdateAction}
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringFeedback'))}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringFeedback')}
+                                    actionLazy={() =>
+                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                    }
                                     handle={{ crumb: () => ({ name: 'Provide Feedback' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="results"
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringResults'))}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringResults')}
                                     handle={{ crumb: () => ({ name: 'View Results' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="subscribe"
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringSubscribe'))}
+                                    ComponentLazy={() =>
+                                        import('engagements/admin/create/authoring/AuthoringSubscribe')
+                                    }
                                     handle={{ crumb: () => ({ name: 'Subscribe' }) }}
                                 />
-                                <Route
+                                <LazyRoute
                                     path="more"
-                                    lazy={df(() => import('engagements/admin/create/authoring/AuthoringMore'))}
+                                    ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringMore')}
                                     handle={{ crumb: () => ({ name: 'More Engagements' }) }}
                                 />
-                            </Route>
-                        </Route>
-                    </Route>
-                    <Route path="*" element={<NotFound />} />
-                    <Route
+                            </LazyRoute>
+                        </LazyRoute>
+                    </LazyRoute>
+                    <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
+                    <LazyRoute
                         path="config/edit"
-                        lazy={df(() => import('engagements/admin/config/wizard/ConfigWizard'))}
-                        action={engagementUpdateAction}
+                        ComponentLazy={() => import('engagements/admin/config/wizard/ConfigWizard')}
+                        actionLazy={() => import('engagements/admin/config/EngagementUpdateAction')}
                         handle={{ crumb: () => ({ name: 'Configure' }) }}
                     />
-                </Route>
-                <Route element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <Route path="form" lazy={df(() => import('engagements/form'))} />
-                </Route>
-                <Route path="comments/:dashboardType" lazy={df(() => import('engagements/dashboard/comment'))} />
-                <Route path="dashboard/:dashboardType" lazy={df(() => import('components/publicDashboard'))} />
-            </Route>
-            <Route path=":slug">
-                <Route index lazy={df(() => import('engagements/old-view'))} />
-                <Route path="comments/:dashboardType" lazy={df(() => import('engagements/dashboard/comment'))} />
-                <Route path="dashboard/:dashboardType" lazy={df(() => import('components/publicDashboard'))} />
-            </Route>
-        </Route>
-        <Route path="/metadatamanagement" lazy={df(() => import('components/metadataManagement'))} />
-        <Route path="/languages" loader={languageLoader} lazy={df(() => import('components/language'))} />
-        <Route
+                </LazyRoute>
+                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+                    <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
+                </LazyRoute>
+                <LazyRoute
+                    path="comments/:dashboardType"
+                    ComponentLazy={() => import('engagements/dashboard/comment')}
+                />
+                <LazyRoute path="dashboard/:dashboardType" ComponentLazy={() => import('components/publicDashboard')} />
+            </LazyRoute>
+            <LazyRoute path=":slug">
+                <LazyRoute index ComponentLazy={() => import('engagements/old-view')} />
+                <LazyRoute
+                    path="comments/:dashboardType"
+                    ComponentLazy={() => import('engagements/dashboard/comment')}
+                />
+                <LazyRoute path="dashboard/:dashboardType" ComponentLazy={() => import('components/publicDashboard')} />
+            </LazyRoute>
+        </LazyRoute>
+        <LazyRoute path="/metadatamanagement" ComponentLazy={() => import('components/metadataManagement')} />
+        <LazyRoute
+            path="/languages"
+            loaderLazy={() => import('engagements/admin/config/LanguageLoader')}
+            ComponentLazy={() => import('components/language')}
+        />
+        <LazyRoute
             id="tenant-admin"
             path="/tenantadmin"
-            errorElement={<NotFound />}
-            loader={async () => ({ tenants: getAllTenants() })}
+            loaderLazy={() => import('components/tenantManagement/tenantLoader').then((m) => m.allTenantsLoader)}
+            ErrorBoundaryLazy={() => import('routes/NotFound')}
             handle={{ crumb: () => ({ name: 'Tenant Admin' }) }}
         >
-            <Route index lazy={df(() => import('components/tenantManagement/Listing'))} />
-            <Route
+            <LazyRoute index ComponentLazy={() => import('components/tenantManagement/Listing')} />
+            <LazyRoute
                 path="create"
-                lazy={df(() => import('components/tenantManagement/Create'))}
+                ComponentLazy={() => import('components/tenantManagement/Create')}
                 handle={{ crumb: () => ({ name: 'Create Tenant Instance' }) }}
             />
-            <Route
+            <LazyRoute
                 id="tenant"
                 path=":tenantShortName"
-                loader={({ params }: { params: Params<string> }) => ({
-                    tenant: getTenant(params.tenantShortName ?? ''),
-                })}
+                loaderLazy={() => import('components/tenantManagement/tenantLoader')}
+                ErrorBoundaryLazy={() => import('routes/NotFound')}
                 handle={{
-                    crumb: async (data: { tenant: Promise<Tenant> }) =>
-                        data.tenant.then((tenant) => ({
-                            link: `/tenantadmin/${tenant.short_name}/detail`,
-                            name: tenant.name,
-                        })),
+                    crumb: (data: { name: string; short_name: string }) => ({
+                        link: `/tenantadmin/${data.short_name}/detail`,
+                        name: data.name!,
+                    }),
                 }}
-                errorElement={<NotFound />}
+                shouldRevalidate={({ currentParams, nextParams }) => {
+                    return currentParams.tenantShortName !== nextParams.tenantShortName;
+                }}
             >
-                <Route index element={<Navigate to="detail" />} />
-                <Route path="detail" lazy={df(() => import('components/tenantManagement/Detail'))} />
-                <Route
+                <LazyRoute index element={<Navigate to="detail" />} />
+                <LazyRoute path="detail" ComponentLazy={() => import('components/tenantManagement/Detail')} />
+                <LazyRoute
                     path="edit"
-                    lazy={df(() => import('components/tenantManagement/Edit'))}
+                    ComponentLazy={() => import('components/tenantManagement/Edit')}
                     handle={{ crumb: () => ({ name: 'Edit Instance' }) }}
                 />
-            </Route>
-        </Route>
-        <Route path="/feedback" lazy={df(() => import('components/feedback/listing'))} />
-        <Route path="/calendar" element={<UnderConstruction />} />
-        <Route path="/reporting" element={<UnderConstruction />} />
-        <Route path="/usermanagement">
-            <Route index lazy={df(() => import('components/userManagement/listing'))} />
-            <Route path="search" element={<Navigate to="/usermanagement" />} loader={userSearchLoader} />
-            <Route path=":userId/details" lazy={df(() => import('components/userManagement/userDetails'))} />
-        </Route>
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/not-found" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-    </Route>
+            </LazyRoute>
+        </LazyRoute>
+        <LazyRoute path="/feedback" ComponentLazy={() => import('components/feedback/listing')} />
+        <LazyRoute path="/calendar" ComponentLazy={() => import('routes/UnderConstruction')} />
+        <LazyRoute path="/reporting" ComponentLazy={() => import('routes/UnderConstruction')} />
+        <LazyRoute path="/usermanagement">
+            <LazyRoute index ComponentLazy={() => import('components/userManagement/listing')} />
+            <LazyRoute
+                path="search"
+                element={<Navigate to="/usermanagement" />}
+                loaderLazy={() => import('components/userManagement/userSearchLoader')}
+            />
+            <LazyRoute path=":userId/details" ComponentLazy={() => import('components/userManagement/userDetails')} />
+        </LazyRoute>
+        <LazyRoute path="/unauthorized" ComponentLazy={() => import('routes/Unauthorized')} />
+        <LazyRoute path="/not-found" ComponentLazy={() => import('routes/NotFound')} />
+        <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
+    </LazyRoute>,
 );
 
 export default AuthenticatedRoutes;

@@ -16,8 +16,8 @@ export const EngagementHero = () => {
     const dateFormat = 'MMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
     const { engagement } = useLoaderData() as { engagement: Promise<Engagement> };
-    const startDate = engagement.then((engagement) => dayjs(engagement.start_date));
-    const endDate = engagement.then((engagement) => dayjs(engagement.end_date));
+    const startDate = engagement?.then((engagement) => dayjs(engagement.start_date));
+    const endDate = engagement?.then((engagement) => dayjs(engagement.end_date));
     const engagementInfo = Promise.all([engagement, startDate, endDate]);
 
     return (

@@ -44,3 +44,5 @@ export const PublicLayout = () => {
         </Box>
     );
 };
+
+export default PublicLayout;

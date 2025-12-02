@@ -32,19 +32,17 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
     const content = engagement.then((response) => getEngagementContent(response.id));
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
-    const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }));
+    const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }).catch(() => []));
 
-    const metadata = engagementMetadata.then((metaResponse) => {
-        taxaData.then((taxaResponse) => {
-            metaResponse.forEach((metaEntry) => {
-                const taxon = taxaResponse[metaEntry.taxon_id];
-                if (taxon) {
-                    if (taxon.entries === undefined) {
-                        taxon.entries = [];
-                    }
-                    taxon.entries.push(metaEntry);
+    const metadata = Promise.all([engagementMetadata, taxaData]).then(([metaResponse, taxaResponse]) => {
+        metaResponse.forEach((metaEntry) => {
+            const taxon = taxaResponse[metaEntry.taxon_id];
+            if (taxon) {
+                if (taxon.entries === undefined) {
+                    taxon.entries = [];
                 }
-            });
+                taxon.entries.push(metaEntry);
+            }
         });
         return metaResponse;
     });
@@ -61,3 +59,5 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         teamMembers,
     };
 };
+
+export default engagementLoader;

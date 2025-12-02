@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-light-svg-icons';
 import { globalFocusVisible } from 'components/common';
 import { getBaseUrl } from 'helper';
-import { Await, useAsyncValue } from 'react-router-dom';
-import { Engagement } from 'models/engagement';
+import { Await, useAsyncValue, useRouteLoaderData } from 'react-router-dom';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import dayjs from 'dayjs';
@@ -15,10 +14,11 @@ import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engag
 import { Button } from 'components/common/Input';
 import { faPen } from '@fortawesome/pro-regular-svg-icons';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
+import { EngagementLoaderData } from 'engagements/public/view';
 
 export const ConfigSummary = () => {
     const siteUrl = getBaseUrl();
-    const [engagement, teamMembers, slug] = useAsyncValue() as [Engagement, EngagementTeamMember[], string];
+    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
     const [tooltipOpen, setTooltipOpen] = React.useState(false);
 
     useEffect(() => {
@@ -45,108 +45,133 @@ export const ConfigSummary = () => {
                                 </BodyText>
                             </Grid>
                             <Grid item>
-                                <LiveAnnouncer>
-                                    <LiveMessage aria-live="assertive" message={tooltipOpen ? 'Copied!' : ''} />
-                                    <Tooltip arrow open={tooltipOpen} title="Copied!" placement="top">
-                                        <IconButton
-                                            size="small"
-                                            sx={{
-                                                backgroundColor: 'primary.light',
-                                                color: 'white',
-                                                width: '32px',
-                                                height: '32px',
-                                                '&:hover': {
-                                                    backgroundColor: 'primary.main',
-                                                },
-                                                ...globalFocusVisible,
-                                                display: 'inline-block',
-                                                marginRight: '0.5rem',
-                                            }}
-                                            onClick={() => {
-                                                navigator.clipboard.writeText(`${siteUrl}/${slug}`);
-                                                setTooltipOpen(true);
-                                            }}
-                                            aria-label="Press enter to copy engagement URL to clipboard"
-                                        >
-                                            <FontAwesomeIcon
-                                                fontSize={16}
-                                                icon={faCopy}
-                                                style={{ position: 'relative', bottom: '4px' }}
-                                            />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <BodyText sx={{ display: 'inline' }}>
-                                        <span style={{ fontWeight: 'bold' }}>{siteUrl}/</span>
-                                        {slug}
-                                    </BodyText>
-                                </LiveAnnouncer>
+                                <Suspense>
+                                    <Await resolve={slug}>
+                                        {(slug: string) => (
+                                            <LiveAnnouncer>
+                                                <LiveMessage
+                                                    aria-live="assertive"
+                                                    message={tooltipOpen ? 'Copied!' : ''}
+                                                />
+                                                <Tooltip arrow open={tooltipOpen} title="Copied!" placement="top">
+                                                    <IconButton
+                                                        size="small"
+                                                        sx={{
+                                                            backgroundColor: 'primary.light',
+                                                            color: 'white',
+                                                            width: '32px',
+                                                            height: '32px',
+                                                            '&:hover': {
+                                                                backgroundColor: 'primary.main',
+                                                            },
+                                                            ...globalFocusVisible,
+                                                            display: 'inline-block',
+                                                            marginRight: '0.5rem',
+                                                        }}
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText(`${siteUrl}/${slug}`);
+                                                            setTooltipOpen(true);
+                                                        }}
+                                                        aria-label="Press enter to copy engagement URL to clipboard"
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            fontSize={16}
+                                                            icon={faCopy}
+                                                            style={{ position: 'relative', bottom: '4px' }}
+                                                        />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <BodyText sx={{ display: 'inline' }}>
+                                                    <span style={{ fontWeight: 'bold' }}>{siteUrl}/</span>
+                                                    {slug}
+                                                </BodyText>
+                                            </LiveAnnouncer>
+                                        )}
+                                    </Await>
+                                </Suspense>
                             </Grid>
                         </Grid>
                     </OutlineBox>
                 </Grid>
                 <Grid item>
-                    <OutlineBox>
-                        <Grid container direction="row" spacing={1}>
-                            <Grid item xs={12}>
-                                <BodyText bold color="primary.main">
-                                    Engagement Feedback Dates
-                                </BodyText>
-                            </Grid>
-                            <Grid item xs="auto" container direction="column" spacing={2}>
-                                <Grid item container spacing={1}>
-                                    <Grid item width={{ xs: '100%', sm: '82px' }}>
-                                        <EngagementStatusChip
-                                            statusId={SubmissionStatus.Open}
-                                            sx={{ '&>span.MuiChip-label': { padding: '4px 12px' } }}
-                                        />
+                    <Suspense>
+                        <Await resolve={engagement}>
+                            {(engagement) => (
+                                <OutlineBox>
+                                    <Grid container direction="row" spacing={1}>
+                                        <Grid item xs={12}>
+                                            <BodyText bold color="primary.main">
+                                                Engagement Feedback Dates
+                                            </BodyText>
+                                        </Grid>
+                                        <Grid item xs="auto" container direction="column" spacing={2}>
+                                            <Grid item container spacing={1}>
+                                                <Grid item width={{ xs: '100%', sm: '82px' }}>
+                                                    <EngagementStatusChip
+                                                        statusId={SubmissionStatus.Open}
+                                                        sx={{ '&>span.MuiChip-label': { padding: '4px 12px' } }}
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <BodyText bold sx={{ display: 'inline' }}>
+                                                        {dayjs(engagement.start_date).format('MMMM D, YYYY')}
+                                                    </BodyText>{' '}
+                                                    <BodyText sx={{ display: { xs: 'block', sm: 'inline' } }}>
+                                                        (12:01 am)
+                                                    </BodyText>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid item container spacing={1}>
+                                                <Grid item width={{ xs: '100%', sm: '82px' }}>
+                                                    <EngagementStatusChip
+                                                        statusId={SubmissionStatus.Closed}
+                                                        sx={{ '&>span.MuiChip-label': { padding: '4px 12px' } }}
+                                                    />
+                                                </Grid>
+                                                <Grid item>
+                                                    <BodyText bold sx={{ display: 'inline' }}>
+                                                        {dayjs(engagement.end_date).format('MMMM D, YYYY')}
+                                                    </BodyText>{' '}
+                                                    <BodyText sx={{ display: { xs: 'block', sm: 'inline' } }}>
+                                                        (11:59 pm)
+                                                    </BodyText>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            xs="auto"
+                                            sx={{
+                                                width: '100%',
+                                                mb: 1,
+                                                mt: { xs: 1, sm: 0 },
+                                                maxWidth: { xs: '100%', sm: 'fit-content' },
+                                            }}
+                                        >
+                                            <BodyText
+                                                bold
+                                                size="large"
+                                                sx={{ color: 'primary.light', lineHeight: 0.8 }}
+                                            >
+                                                <span style={{ fontSize: '72px' }}>
+                                                    {dayjs(engagement.end_date)
+                                                        .clone()
+                                                        .add(1, 'second')
+                                                        .diff(dayjs(engagement.start_date), 'days')}
+                                                </span>
+                                                <span
+                                                    style={{ position: 'relative', bottom: '16px', fontSize: '24px' }}
+                                                >
+                                                    {' '}
+                                                    days
+                                                </span>
+                                            </BodyText>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item>
-                                        <BodyText bold sx={{ display: 'inline' }}>
-                                            {dayjs(engagement.start_date).format('MMMM D, YYYY')}
-                                        </BodyText>{' '}
-                                        <BodyText sx={{ display: { xs: 'block', sm: 'inline' } }}>(12:01 am)</BodyText>
-                                    </Grid>
-                                </Grid>
-                                <Grid item container spacing={1}>
-                                    <Grid item width={{ xs: '100%', sm: '82px' }}>
-                                        <EngagementStatusChip
-                                            statusId={SubmissionStatus.Closed}
-                                            sx={{ '&>span.MuiChip-label': { padding: '4px 12px' } }}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <BodyText bold sx={{ display: 'inline' }}>
-                                            {dayjs(engagement.end_date).format('MMMM D, YYYY')}
-                                        </BodyText>{' '}
-                                        <BodyText sx={{ display: { xs: 'block', sm: 'inline' } }}>(11:59 pm)</BodyText>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid
-                                item
-                                xs="auto"
-                                sx={{
-                                    width: '100%',
-                                    mb: 1,
-                                    mt: { xs: 1, sm: 0 },
-                                    maxWidth: { xs: '100%', sm: 'fit-content' },
-                                }}
-                            >
-                                <BodyText bold size="large" sx={{ color: 'primary.light', lineHeight: 0.8 }}>
-                                    <span style={{ fontSize: '72px' }}>
-                                        {dayjs(engagement.end_date)
-                                            .clone()
-                                            .add(1, 'second')
-                                            .diff(dayjs(engagement.start_date), 'days')}
-                                    </span>
-                                    <span style={{ position: 'relative', bottom: '16px', fontSize: '24px' }}>
-                                        {' '}
-                                        days
-                                    </span>
-                                </BodyText>
-                            </Grid>
-                        </Grid>
-                    </OutlineBox>
+                                </OutlineBox>
+                            )}
+                        </Await>
+                    </Suspense>
                 </Grid>
                 <Grid item>
                     <OutlineBox>
