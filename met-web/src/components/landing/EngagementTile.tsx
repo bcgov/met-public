@@ -130,7 +130,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     onMouseDown={() => setIsActive(true)}
                     onMouseUp={() => setIsActive(false)}
                     LinkComponent={RouterLinkRenderer}
-                    href={engagementUrl}
+                    href={slug && engagementUrl}
                     sx={{
                         '&:focus-visible': {
                             // focus visible styling is applied by the parent Card component
@@ -164,8 +164,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                     display: '-webkit-box',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
-                                    '-webkit-line-clamp': '3',
-                                    '-webkit-box-orient': 'vertical',
+                                    WebkitLineClamp: '3',
+                                    WebkitBoxOrient: 'vertical',
                                     m: 0,
                                     lineHeight: 'normal',
                                 }}

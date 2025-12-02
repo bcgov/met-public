@@ -23,12 +23,13 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useAsyncValue, useRouteLoaderData, useParams } from 'react-router-dom';
+import { Await, useRouteLoaderData, useParams } from 'react-router-dom';
 import { Tenant } from 'models/tenant';
 import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
+import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
 import TrapFocus from '@mui/base/TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
@@ -40,7 +41,6 @@ const InternalHeader = () => {
     const isMobileScreen = !useMediaQuery((theme: Theme) => theme.breakpoints.up('sm'));
     const [sideNavOpen, setSideNavOpen] = useState(false);
     const [secondaryMenuOpen, setSecondaryMenuOpen] = useState(false);
-    const tenant = useAppSelector((state) => state.tenant);
     const user = useAppSelector((state) => state.user);
     const canNavigate = user.roles.length !== 0; // If user has no roles in this tenant, don't show the side nav
     const [tenantDrawerOpen, setTenantDrawerOpen] = useState(false);
@@ -73,7 +73,7 @@ const InternalHeader = () => {
         }
     });
 
-    const { myTenants } = useRouteLoaderData('authenticated-root') as { myTenants: Tenant[] };
+    const { myTenants } = useRouteLoaderData('authenticated-root') as AuthenticatedRootLoaderData;
 
     const sidePadding = { xs: '0 1em', md: '0 1.5em 0 2em', lg: '0 3em 0 2em' };
 
@@ -188,18 +188,15 @@ const InternalHeader = () => {
                             }}
                         >
                             <ThemeProvider theme={DarkTheme}>
-                                <Suspense
-                                    fallback={
-                                        <Link to="/home">
-                                            <BodyText sx={{ userSelect: 'none' }}>{tenant.name}</BodyText>
-                                        </Link>
-                                    }
-                                >
+                                <Suspense>
                                     <Await resolve={myTenants}>
-                                        <TenantSelector
-                                            isVisible={isMediumScreenOrLarger || sideNavOpen}
-                                            onStateChange={handleTenantDrawerOpen}
-                                        />
+                                        {(tenants: Tenant[]) => (
+                                            <TenantSelector
+                                                isVisible={isMediumScreenOrLarger || sideNavOpen}
+                                                onStateChange={handleTenantDrawerOpen}
+                                                tenants={tenants}
+                                            />
+                                        )}
                                     </Await>
                                 </Suspense>
                                 <When condition={isMediumScreenOrLarger}>
@@ -240,13 +237,15 @@ const InternalHeader = () => {
 const TenantSelector = ({
     isVisible,
     onStateChange,
+    tenants: allTenants,
 }: {
     isVisible: boolean;
     onStateChange?: (isOpen: boolean) => void;
+    tenants: Tenant[];
 }) => {
     const shouldUseMobileView = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
     const currentTenant = useAppSelector((state) => state.tenant);
-    const tenants = (useAsyncValue() as Tenant[]).filter((tenant) => tenant.short_name !== currentTenant.short_name);
+    const tenants = allTenants.filter((tenant) => tenant.short_name !== currentTenant.short_name);
     const noOtherTenants = tenants.length === 0;
     const tenantDropdownButton = useRef<HTMLButtonElement>(null);
     const [tenantDrawerOpen, setTenantDrawerOpen] = useState(false);
@@ -299,7 +298,7 @@ const TenantSelector = ({
                         ...dropdownMenuStyles,
                     }}
                 >
-                    <TenantButtonContent isOpen={tenantDrawerOpen} />
+                    <TenantButtonContent isOpen={tenantDrawerOpen} tenants={allTenants} />
                 </ButtonBase>
                 <Drawer
                     anchor="top"
@@ -347,7 +346,7 @@ const TenantSelector = ({
         <DropdownMenu
             forNavigation
             name="Tenant Switcher"
-            buttonContent={TenantButtonContent}
+            buttonContent={({ isOpen }) => <TenantButtonContent isOpen={isOpen} tenants={allTenants} />}
             buttonProps={{
                 sx: {
                     marginLeft: '-16px' /*Visual alignment with nav bar*/,
@@ -366,11 +365,9 @@ const TenantSelector = ({
     );
 };
 
-const TenantButtonContent = ({ isOpen }: { isOpen: boolean }) => {
+const TenantButtonContent = ({ isOpen, tenants }: { isOpen: boolean; tenants: Tenant[] }) => {
     const currentTenant = useAppSelector((state) => state.tenant);
-    const noOtherTenants = !(useAsyncValue() as Tenant[]).some(
-        (tenant) => tenant.short_name !== currentTenant.short_name,
-    );
+    const noOtherTenants = !tenants.some((tenant) => tenant.short_name !== currentTenant.short_name);
     return (
         <Grid container data-testid="tenant-switcher-button" direction="row" alignItems="center" spacing={1}>
             <Grid item sx={{ flex: '1 1 auto' }}>

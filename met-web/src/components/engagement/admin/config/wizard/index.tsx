@@ -152,7 +152,7 @@ const EngagementForm = ({
                 >
                     {isNewEngagement ? 'Create Engagement' : 'Save Changes'}
                 </Button>
-                <Button href={isNewEngagement ? '/engagements' : '../view'}>Cancel</Button>
+                <Button href={isNewEngagement ? '/engagements' : '../'}>Cancel</Button>
             </Box>
             <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
         </Form>

@@ -7,23 +7,31 @@ import { AuthoringContextType, StatusLabelProps } from './types';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { Header1, Header2 } from 'components/common/Typography';
+import { BodyText, Header1, Header2 } from 'components/common/Typography';
 import { useAppSelector } from 'hooks';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
 import { Engagement } from 'models/engagement';
 import { getTenantLanguages } from 'services/languageService';
 import { EngagementLoaderData } from 'components/engagement/public/view';
+import { colors } from 'styles/Theme';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
-    const statusLabelStyle = {
-        background: true === completed ? '#42814A' : '#CE3E39',
-        padding: '0.2rem 0.75rem',
-        color: '#ffffff',
-        borderRadius: '3px',
-        fontSize: '0.8rem',
-    };
-    return <span style={statusLabelStyle}>{text}</span>;
+    const statusColor = completed ? colors.notification.success : colors.notification.error;
+    return (
+        <BodyText
+            size="small"
+            p="0.2rem 0.75rem"
+            bgcolor={statusColor.shade}
+            color="white"
+            borderRadius="3px"
+            fontSize="0.8rem"
+            display="inline"
+            lineHeight="unset"
+        >
+            {text}
+        </BodyText>
+    );
 };
 
 export const getLanguageValue = (currentLanguage: string, languages: Language[]) => {
