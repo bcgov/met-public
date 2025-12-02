@@ -54,14 +54,11 @@ const createRouteFromLazyProps = ({ ...routeProps }: LazyRouteProps): React.Reac
     const derivedLazy = (
         hasLazyProps
             ? async () => {
-                  const resolvedEntries = (await Promise.all(
+                  const resolvedEntries = await Promise.all(
                       activeResolvers.map(async ([key, resolver]) => [key, await resolver!()]),
-                  )) as Array<[LazyCapableKey, LazyResolvable<LazyCapableProps[LazyCapableKey]>]>;
-
+                  );
                   return resolvedEntries.reduce<LazyResult>((acc, [key, value]) => {
-                      acc[key as LazyCapableKey] = unwrapDefault(
-                          value as LazyResolvable<LazyCapableProps[LazyCapableKey]>,
-                      );
+                      acc[key as LazyCapableKey] = unwrapDefault(value);
                       return acc;
                   }, {}) as LazyResolvedRoute;
               }

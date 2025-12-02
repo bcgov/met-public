@@ -227,7 +227,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 handle={{
                     crumb: (data: { name: string; short_name: string }) => ({
                         link: `/tenantadmin/${data.short_name}/detail`,
-                        name: data.name!,
+                        name: data.name,
                     }),
                 }}
                 shouldRevalidate={({ currentParams, nextParams }) => {
