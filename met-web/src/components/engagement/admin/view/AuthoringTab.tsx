@@ -179,3 +179,5 @@ export const AuthoringTab = () => {
         </Grid>
     );
 };
+
+export default AuthoringTab;

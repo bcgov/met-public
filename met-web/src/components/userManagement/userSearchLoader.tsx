@@ -1,7 +1,6 @@
-import { defer } from 'react-router-dom';
 import { getUserList, GetUserListParams } from 'services/userService/api';
 
-export const userSearchLoader = ({ request }: { request: Request }) => {
+export const userSearchLoader = async ({ request }: { request: Request }) => {
     const url = new URL(request.url);
 
     const searchOptions: GetUserListParams = {
@@ -14,6 +13,8 @@ export const userSearchLoader = ({ request }: { request: Request }) => {
         include_inactive: url.searchParams.get('include_inactive') === 'true',
     };
 
-    const users = getUserList(searchOptions);
-    return defer({ users });
+    const users = await getUserList(searchOptions);
+    return { users };
 };
+
+export default userSearchLoader;

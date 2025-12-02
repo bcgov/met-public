@@ -1,14 +1,15 @@
 import { Grid, Toolbar, SvgIcon, Box } from '@mui/material';
-import { MetHeader1Old, MetHeader4 } from 'components/common';
+import { Header1, Header4 } from 'components/common/Typography';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
-import { Link } from 'react-router-dom';
+import { Link } from 'components/common/Navigation';
 import { useAppTranslation } from 'hooks';
+import { findTenantInPath } from 'utils';
 
 const listItemStyle = { marginBottom: 1 };
 const marginStyle = { mr: 2 };
 
-const tenantId = sessionStorage.getItem('tenantId');
+const wrongBasename = findTenantInPath().toLowerCase() !== sessionStorage.getItem('tenantId')?.toLowerCase();
 
 const SuggestionsList = ({ translate }: { translate: (key: string) => string }) => (
     <Box>
@@ -17,7 +18,7 @@ const SuggestionsList = ({ translate }: { translate: (key: string) => string }) 
             <li style={listItemStyle}>{translate('notFound.list.0')}</li>
             <li style={listItemStyle}>
                 {translate('notFound.list.1')}{' '}
-                <Link target="_blank" to={`/${tenantId}`}>
+                <Link href={(wrongBasename && '/') || undefined} to={(!wrongBasename && '/') || undefined}>
                     {translate('notFound.list.2')}
                 </Link>{' '}
                 {translate('notFound.list.3')}
@@ -43,9 +44,9 @@ const NotFound = () => {
                 padding={'2em 2em 1em 2em'}
             >
                 <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
-                    <MetHeader1Old bold sx={{ fontSize: '2em' }}>
+                    <Header1 weight="bold" fontSize="2em">
                         {translate('notFound.header.0')}
-                    </MetHeader1Old>
+                    </Header1>
                 </Grid>
                 <Grid item sx={{ marginStyle, marginBottom: 2 }}>
                     <SvgIcon
@@ -62,9 +63,9 @@ const NotFound = () => {
                     />
                 </Grid>
                 <Grid item xs={6} justifyContent="center" mb={4}>
-                    <MetHeader4 align="left" bold>
+                    <Header4 align="left" weight="bold">
                         {translate('notFound.header.1')}
-                    </MetHeader4>
+                    </Header4>
                 </Grid>
                 <Grid item xs={6} justifyContent={'left'}>
                     <SuggestionsList translate={translate} />

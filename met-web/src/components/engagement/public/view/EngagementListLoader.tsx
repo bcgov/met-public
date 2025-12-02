@@ -1,4 +1,3 @@
-import { defer } from 'react-router-dom';
 import { getEngagements, GetEngagementsParams } from 'services/engagementService';
 
 export const engagementListLoader = async ({ request }: { request: Request }) => {
@@ -16,6 +15,6 @@ export const engagementListLoader = async ({ request }: { request: Request }) =>
         published_to_date: searchParams.get('published_to_date') ?? undefined,
     };
 
-    const engagements = getEngagements(params);
-    return defer({ engagements });
+    const engagements = await getEngagements(params);
+    return { engagements };
 };

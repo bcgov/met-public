@@ -36,15 +36,12 @@ export const Header1 = ({ children, weight, component, ...props }: HeaderProps) 
         <Typography
             component={component || 'h1'}
             variant="h1"
+            lineHeight="1.5"
+            fontSize="2rem"
+            marginBottom="2rem"
+            marginTop="1.5rem"
+            fontWeight={fontWeight(weight)}
             {...props}
-            sx={{
-                lineHeight: '1.5',
-                fontSize: '2rem',
-                marginBottom: '2rem',
-                marginTop: '1.5rem',
-                fontWeight: fontWeight(weight),
-                ...props.sx,
-            }}
         >
             {children}
         </Typography>

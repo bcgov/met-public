@@ -42,7 +42,7 @@ export const ToggleNav = ({ isNav, children }: { isNav?: boolean; children: Reac
  * @param {MenuListProps} [props] - Additional properties for the MenuList component.
  * @param {string} [props.name] - The name of the dropdown menu, used for accessibility.
  * @param {boolean} [props.forNavigation=false] - If true, wraps the menu in a <nav> element for accessibility.
- * @param {function} [props.buttonContent] - A function that returns custom content for the dropdown button.
+ * @param {function} [props.renderButtonContent] - A function that returns custom content for the dropdown button.
  * @param {ButtonBaseProps} [props.buttonProps] - Additional properties for the button.
  * @param {PopperProps} [props.popperProps] - Additional properties for the Popper component.
  * @param {React.ReactNode} [props.children] - The menu items to display within the dropdown.
@@ -50,7 +50,7 @@ export const ToggleNav = ({ isNav, children }: { isNav?: boolean; children: Reac
  * @example
  * <DropdownMenu
  *   name="Options"
- *   buttonContent={({ isOpen }) => (
+ *   renderButtonContent={({ isOpen }) => (
  *     <span>{isOpen ? 'Close Menu' : 'Open Menu'}</span>
  *   )}
  *   buttonProps={{ color: 'primary' }}
@@ -68,7 +68,7 @@ export const ToggleNav = ({ isNav, children }: { isNav?: boolean; children: Reac
 export const DropdownMenu = ({
     name,
     forNavigation,
-    buttonContent,
+    renderButtonContent,
     buttonProps,
     children,
     popperProps,
@@ -76,7 +76,7 @@ export const DropdownMenu = ({
 }: {
     name?: string;
     forNavigation?: boolean;
-    buttonContent?: ({ isOpen }: { isOpen: boolean }) => React.ReactNode;
+    renderButtonContent?: ({ isOpen }: { isOpen: boolean }) => React.ReactNode;
     buttonProps?: ButtonBaseProps;
     popperProps?: Partial<PopperProps>;
     children?: React.ReactNode;
@@ -104,9 +104,9 @@ export const DropdownMenu = ({
                 }}
             >
                 {/* Pass the "open" state to the button contents in case they want to change based on dropdown state */}
-                <Unless condition={buttonContent === undefined}>{buttonContent?.({ isOpen: open })}</Unless>
+                <Unless condition={renderButtonContent === undefined}>{renderButtonContent?.({ isOpen: open })}</Unless>
                 {/* A basic button label if no custom content is provided */}
-                <When condition={buttonContent === undefined}>
+                <When condition={renderButtonContent === undefined}>
                     <Grid container direction="row" alignItems="center" spacing={1}>
                         <Grid item>
                             <BodyText sx={{ userSelect: 'none', textTransform: 'capitalize' }}>{name}</BodyText>
