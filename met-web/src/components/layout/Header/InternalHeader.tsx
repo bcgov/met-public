@@ -352,7 +352,7 @@ const TenantSelector = ({
         <DropdownMenu
             forNavigation
             name="Tenant Switcher"
-            buttonContent={({ isOpen }) => (
+            renderButtonContent={({ isOpen }) => (
                 <TenantButtonContent
                     isOpen={isOpen}
                     currentTenantName={currentTenantName}
@@ -414,7 +414,7 @@ const UserMenu = () => {
     return (
         <DropdownMenu
             name="Account Menu"
-            buttonContent={UserButtonContent}
+            renderButtonContent={UserButtonContent}
             buttonProps={{
                 sx: {
                     marginLeft: 'auto' /* float to the right */,
