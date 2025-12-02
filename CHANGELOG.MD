@@ -1,13 +1,4 @@
-## November 28, 2025
-
-- **Feature** Implement code splitting for routes and large libraries [🎟️ DESENG-875](https://citz-gdx.atlassian.net/browse/DESENG-875)
-  - Improved initial load times and application performance by reducing bundle size and loading only necessary code for each route.
-  - Used React Router's lazy loading and Suspense to dynamically load route components as needed.
-  - Configured Webpack to split code and CSS for large libraries (mui, formio, lodash, arcgis, maplibs, recharts, jspdf...) into separate chunks.
-  - Added a new bundle analyzer script to visualize bundle composition and identify optimization opportunities.
-  - Removed deprecated `defer` usage from route loaders and return promises directly, allowing React Router to handle loading states.
-
-## November 25, 2025
+## December 2, 2025
 
 - **Feature** Implement route rate limiting to prevent abuse [🎟️ DESENG-871](https://citz-gdx.atlassian.net/browse/DESENG-871)
   - Added `haproxy.router.openshift.io/rate-limit-connections` annotations to Route resources in Helm charts for public-facing services (met-api, met-web, met-analytics, analytics-api, and fider).
@@ -18,6 +9,15 @@
   - Updated `backup.conf` to schedule daily verification of backups using the new connection spec.
   - Added `emergency-restore.sh` script for emergency restores to fresh PostgreSQL instances without existing roles.
   - Updated documentation in `openshift/README.md` to reflect current backup and restore procedures.
+
+## November 28, 2025
+
+- **Feature** Implement code splitting for routes and large libraries [🎟️ DESENG-875](https://citz-gdx.atlassian.net/browse/DESENG-875)
+  - Improved initial load times and application performance by reducing bundle size and loading only necessary code for each route.
+  - Used React Router's lazy loading and Suspense to dynamically load route components as needed.
+  - Configured Webpack to split code and CSS for large libraries (mui, formio, lodash, arcgis, maplibs, recharts, jspdf...) into separate chunks.
+  - Added a new bundle analyzer script to visualize bundle composition and identify optimization opportunities.
+  - Removed deprecated `defer` usage from route loaders and return promises directly, allowing React Router to handle loading states.
 
 ## November 18, 2025
 
