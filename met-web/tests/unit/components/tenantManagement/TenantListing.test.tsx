@@ -27,6 +27,13 @@ const mockTenantTwo = {
     short_name: 'tenanttwo',
 };
 
+global['Request'] = jest.fn().mockImplementation(() => ({
+    signal: {
+        removeEventListener: () => {},
+        addEventListener: () => {},
+    },
+}));
+
 jest.mock('axios');
 
 jest.mock('@mui/material', () => ({
@@ -58,9 +65,6 @@ jest.mock('react-router-dom', () => ({
     useLocation: jest.fn(() => ({
         search: '',
     })),
-    useRouteLoaderData: jest.fn(() => ({
-        tenants: [mockTenantOne, mockTenantTwo],
-    })),
 }));
 
 describe('Tenant Listing Page tests', () => {
@@ -77,12 +81,13 @@ describe('Tenant Listing Page tests', () => {
         const router = createMemoryRouter(
             [
                 {
-                    path: '/tenantadmin/:tenantId/detail',
+                    path: '/tenantadmin',
                     element: <TenantListingPage />,
-                    id: 'tenant',
+                    id: 'tenant-admin',
+                    loader: () => Promise.resolve([mockTenantOne, mockTenantTwo]),
                 },
             ],
-            { initialEntries: ['/tenantadmin/1/detail'] },
+            { initialEntries: ['/tenantadmin'] },
         );
         render(<RouterProvider router={router} />);
 

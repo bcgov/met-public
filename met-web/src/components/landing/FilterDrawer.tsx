@@ -127,7 +127,7 @@ const FilterDrawer = () => {
                 </Stack>
 
                 {metadataFilters.map((metadataFilter) => (
-                    <>
+                    <React.Fragment key={metadataFilter.taxon_id}>
                         <Typography mt={3} variant="subtitle1">
                             {translate('landing.filters.drawer.filterHeader').replace(
                                 '{0}',
@@ -148,7 +148,7 @@ const FilterDrawer = () => {
                                 />
                             ))}
                         </Stack>
-                    </>
+                    </React.Fragment>
                 ))}
 
                 <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-end">

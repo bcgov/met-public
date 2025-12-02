@@ -116,3 +116,5 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
         return 'failure';
     }
 };
+
+export default engagementAuthoringUpdateAction;

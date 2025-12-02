@@ -72,7 +72,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
-    const { engagement, content, metadata, taxa } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement, content, metadata, taxa } = (useRouteLoaderData('single-engagement') ??
+        {}) as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {

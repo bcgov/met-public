@@ -71,12 +71,9 @@ jest.mock('react-redux', () => ({
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useParams: jest.fn(() => {
-        return { tenantId: mockTenant.short_name };
+        return { tenantShortName: mockTenant.short_name };
     }),
     useNavigate: jest.fn(),
-    useRouteLoaderData: jest.fn(() => ({
-        tenant: mockTenant,
-    })),
 }));
 
 jest.mock('services/tenantService', () => ({
@@ -102,12 +99,13 @@ jest.mock('components/common/Navigation/Breadcrumb', () => ({
 const router = createMemoryRouter(
     [
         {
-            path: '/tenantadmin/:tenantId/detail',
+            path: '/tenantadmin/:tenantShortName/detail',
             element: <TenantDetail />,
             id: 'tenant',
+            loader: () => Promise.resolve(mockTenant),
         },
     ],
-    { initialEntries: ['/tenantadmin/1/detail'] },
+    { initialEntries: ['/tenantadmin/tenantone/detail'] },
 );
 
 describe('Tenant Detail Page tests', () => {

@@ -1,18 +1,28 @@
 import React from 'react';
-import { Box, BoxProps, styled } from '@mui/material';
+import { Box, BoxProps } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 /**
  * A styled Box component that pads and outlines its content with the primary color of the theme.
  * Used to create visually distinct sections in the UI.
  */
-export const OutlineBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.primary.contrastText,
-    outline: `1px solid ${theme.palette.primary.light}`,
-    padding: '1em 1.5em',
-    borderRadius: '8px',
-}));
+export const OutlineBox = (props: BoxProps) => {
+    return (
+        <Box
+            {...props}
+            sx={{
+                backgroundColor: (theme) => theme.palette.background.paper,
+                color: (theme) => theme.palette.primary.contrastText,
+                outline: (theme) => `1px solid ${theme.palette.primary.light}`,
+                padding: '1em 1.5em',
+                borderRadius: '8px',
+                ...props.sx,
+            }}
+        >
+            {props.children}
+        </Box>
+    );
+};
 
 /**
  * A responsive container component that decreases its side padding on smaller screens.

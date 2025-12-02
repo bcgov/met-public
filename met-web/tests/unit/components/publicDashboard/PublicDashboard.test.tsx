@@ -10,6 +10,11 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 
 jest.mock('axios');
+
+jest.mock('jspdf', () => ({
+    jsPDF: jest.fn(),
+}));
+
 jest.mock('components/common', () => ({
     ...jest.requireActual('components/common'),
     PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
