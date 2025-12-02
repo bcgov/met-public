@@ -83,81 +83,63 @@ module.exports = function override(config) {
                     test: /[\\/]node_modules[\\/]@mui[\\/]/,
                     name: 'mui',
                     priority: 50, // If multiple groups match a regex, webpack chooses the higher priority
-                    reuseExistingChunk: true,
                 },
                 fontawesome: {
                     test: /[\\/]node_modules[\\/](@fortawesome|@bcgov-artifactory)[\\/]/,
                     name: 'fontawesome',
                     priority: 45,
-                    reuseExistingChunk: true,
                 },
                 maplibs: {
                     test: /[\\/]node_modules[\\/](mapbox-gl|maplibre-gl|react-map-gl|@maplibre)[\\/]/,
                     name: 'maplibs',
                     priority: 40,
-                    reuseExistingChunk: true,
                 },
                 coreJs:{
                     test: /[\\/]node_modules[\\/](core-js|core-js-pure|core-js-compat)[\\/]/,
                     name: 'core-js',
                     priority: 35,
-                    reuseExistingChunk: true,
                 },
                 formio: {
                     test: /[\\/]node_modules[\\/](@formio|formiojs|met-formio|inputmask)[\\/]/,
                     name: 'formio',
                     priority: 35,
-                    reuseExistingChunk: true,
                 },
                 recharts: {
                     test: /[\\/]node_modules[\\/](recharts|es-toolkit)[\\/]/,
                     name: 'recharts',
                     priority: 30,
-                    reuseExistingChunk: true,
                 },
                 jspdf: {
                     test: /[\\/]node_modules[\\/](jspdf|html2canvas|html-to-image|canvg|stackblur-canvas)[\\/]/,
                     name: 'jspdf',
                     priority: 30,
-                    reuseExistingChunk: true,
                 },
                 draftjs: {
                     test: /[\\/]node_modules[\\/](draft-js|draftjs-to-html|html-to-draftjs|draftjs-utils|react-draft-wysiwyg)[\\/]/,
                     name: 'draftjs',
                     priority: 25,
-                    reuseExistingChunk: true,
-                },
-                lodash: {
-                    test: /[\\/]node_modules[\\/](lodash|lodash-es)[\\/]/,
-                    name: 'lodash',
-                    priority: 25,
-                    reuseExistingChunk: true,
                 },
                 moment: {
                     test: /[\\/]node_modules[\\/]moment[\\/]/,
                     name: 'moment',
                     priority: 15,
-                    reuseExistingChunk: true,
                 },
                 helloPangea: {
                     test: /[\\/]node_modules[\\/](@hello-pangea)[\\/]/,
                     name: 'hello-pangea',
                     priority: 15,
-                    reuseExistingChunk: true,
                 },
                 // Remaining vendor libraries
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     priority: 10,
-                    reuseExistingChunk: true,
                 },
                 // Separate common code used across routes
                 common: {
                     minChunks: 2,
                     priority: 5,
                     name: 'app-common',
-                    reuseExistingChunk: true,
                     enforce: true,
                 },
             },
