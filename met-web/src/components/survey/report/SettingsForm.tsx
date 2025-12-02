@@ -11,18 +11,14 @@ import { Button, FormField, TextInput } from 'components/common/Input';
 import { Survey } from 'models/survey';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import MetTable from 'components/common/Table';
-import { Engagement } from 'models/engagement';
 import { updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { updatedDiff } from 'deep-object-diff';
+import { SurveyLoaderData } from '../building/SurveyLoader';
 
 const SettingsFormPage = () => {
-    const { survey, slug, engagement } = useRouteLoaderData('survey') as {
-        survey: Promise<Survey>;
-        slug: Promise<{ slug: string }>;
-        engagement: Promise<Engagement>;
-    };
+    const { survey, slug, engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     return (
         <MetPageGridContainer container spacing={1}>
@@ -45,7 +41,7 @@ const SettingsFormPage = () => {
 const SettingsForm = () => {
     const [survey, slug] = useAsyncValue() as [Survey, { slug: string }, SurveyReportSetting[]];
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const { reportSettings } = useRouteLoaderData('survey') as { reportSettings: Promise<SurveyReportSetting[]> };
+    const { reportSettings } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     const engagementSlug = slug?.slug;
 
@@ -65,6 +61,7 @@ const SettingsForm = () => {
 
     const handleSaveSettings = async () => {
         const surveyReportSettings = await reportSettings; // Should resolve immediately
+        if (!surveyReportSettings) return;
         const currentSettings = surveyReportSettings.map((setting) => {
             return {
                 ...setting,

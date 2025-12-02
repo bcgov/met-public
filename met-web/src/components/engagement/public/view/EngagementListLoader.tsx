@@ -1,4 +1,11 @@
+import { Engagement } from 'models/engagement';
 import { getEngagements, GetEngagementsParams } from 'services/engagementService';
+import { Page } from 'services/type';
+
+export type EngagementListLoaderData = {
+    engagements: Page<Engagement>;
+    params: GetEngagementsParams;
+};
 
 export const engagementListLoader = async ({ request }: { request: Request }) => {
     const { searchParams } = new URL(request.url);
@@ -16,5 +23,5 @@ export const engagementListLoader = async ({ request }: { request: Request }) =>
     };
 
     const engagements = await getEngagements(params);
-    return { engagements };
+    return { engagements, params };
 };

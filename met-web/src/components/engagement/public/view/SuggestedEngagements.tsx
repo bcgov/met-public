@@ -10,9 +10,10 @@ import { faArrowLeft } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
 import { Await, useLoaderData } from 'react-router-dom';
 import { RepeatedGrid } from 'components/common';
+import { EngagementLoaderData } from './EngagementLoader';
 
 export const SuggestedEngagements = () => {
-    const { engagement } = useLoaderData() as { engagement: Promise<Engagement> };
+    const { engagement } = useLoaderData() as EngagementLoaderData;
     const suggestedEngagementsPromise = getEngagements({ size: 5, page: 1, include_banner_url: true }).then(
         async (response) => {
             const currentEngagement = await engagement;
