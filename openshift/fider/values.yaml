@@ -12,8 +12,8 @@ app:
     responseTimeSeconds: 0.5
   ratelimits:
     enabled: true
-    http: 20
-    tcp: 25
+    http: 40
+    tcp: 45
 
 image:
   repository: "image-registry.openshift-image-registry.svc:5000"

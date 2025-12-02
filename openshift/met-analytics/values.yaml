@@ -5,8 +5,8 @@ licenseplate: e903c2
 app:
   ratelimits:
     enabled: true
-    http: 20
-    tcp: 25
+    http: 60
+    tcp: 65
 
 ingress:
   port: 5000

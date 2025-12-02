@@ -3,8 +3,8 @@ app:
   licenseplate: e903c2
   ratelimits:
     enabled: true
-    http: 10
-    tcp: 12
+    http: 60
+    tcp: 65
 
 deployment:
   minReplicas: 2
