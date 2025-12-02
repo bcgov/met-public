@@ -74,8 +74,11 @@ module.exports = function override(config) {
             // Split async chunks only - this saves on # of requests during initial load
             // If main.js is too large, make sure imports from App.tsx and routes are lazy-loaded
             chunks: 'async',
-            maxSize: 300 * 1024, // Aim for chunks around 300KB (before gzip)
-            minSize: 100 * 1024, // Try to avoid chunks smaller than 100KB
+            minSize: 150 * 1024, // Try to make chunks larger to reduce # of files
+            maxSize: 350 * 1024, // Try to keep chunks under 350KB each
+            enforceSizeThreshold: 450 * 1024, // Allow some flexibility for libraries that are hard to split
+            maxAsyncRequests: 20, // Number of possible parallel requests for async chunks
+            maxInitialRequests: 10, // Number of possible parallel requests at initial load
             cacheGroups: {
                 // Separate large libraries into their own JS chunks
                 // to be delivered separately for better performance
