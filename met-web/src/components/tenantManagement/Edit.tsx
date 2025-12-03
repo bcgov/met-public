@@ -17,7 +17,7 @@ const TenantEditPage = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const revalidator = useRevalidator();
-    const { tenant } = useRouteLoaderData('tenant') as { tenant: Tenant };
+    const tenant = useRouteLoaderData('tenant') as Promise<Tenant>;
 
     return (
         <Suspense fallback={<MidScreenLoader />}>

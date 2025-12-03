@@ -36,6 +36,44 @@ jest.mock('react', () => ({
     }),
 }));
 
+jest.mock('react-router-dom', () => {
+    const actual = jest.requireActual('react-router-dom');
+    return {
+        ...actual,
+        Await: ({ children, resolve }: { children: any; resolve: any }) => {
+            // Resolve the promise immediately and call children with the result
+            // If resolve is a Promise that would resolve to an array or object, use it directly
+            // Otherwise default to mockTenant or array
+            let resolvedData = resolve;
+            if (resolve && typeof resolve.then === 'function') {
+                // It's a promise, we need to handle it synchronously in tests
+                // For tenant-admin, it returns array; for tenant, it returns single object
+                resolvedData = resolve;
+            }
+            return children(resolvedData);
+        },
+        useParams: jest.fn(() => {
+            return { tenantShortName: mockTenant.short_name };
+        }),
+        useNavigate: jest.fn(() => navigate),
+        useRouteLoaderData: jest.fn((id) => {
+            if (id === 'tenant-admin') {
+                return [mockTenant]; // Return array directly, not as promise
+            }
+            if (id === 'tenant') {
+                return mockTenant; // Return single tenant directly
+            }
+            return {
+                tenant: mockTenant,
+                tenants: [mockTenant],
+            };
+        }),
+        useRevalidator: jest.fn(() => ({
+            revalidate,
+        })),
+    };
+});
+
 jest.mock('axios');
 
 jest.mock('@mui/material', () => ({
@@ -70,21 +108,6 @@ jest.mock('react-redux', () => ({
 const navigate = jest.fn();
 const revalidate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useParams: jest.fn(() => {
-        return { tenantShortName: mockTenant.short_name };
-    }),
-    useNavigate: jest.fn(() => navigate),
-    useRouteLoaderData: jest.fn(() => ({
-        tenant: mockTenant,
-        tenants: [mockTenant],
-    })),
-    useRevalidator: jest.fn(() => ({
-        revalidate,
-    })),
-}));
-
 jest.mock('services/tenantService', () => ({
     updateTenant: jest.fn(),
 }));
@@ -105,12 +128,12 @@ jest.mock('components/common/Navigation/Breadcrumb', () => ({
 const router = createMemoryRouter(
     [
         {
-            path: '/tenantadmin/:tenantId/edit',
+            path: '/tenantadmin/:tenantShortName/edit',
             element: <TenantEditPage />,
             id: 'tenant',
         },
     ],
-    { initialEntries: ['/tenantadmin/1/edit'] },
+    { initialEntries: ['/tenantadmin/tenantone/edit'] },
 );
 
 describe('Tenant Editing Page tests', () => {

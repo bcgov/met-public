@@ -37,6 +37,31 @@ jest.mock('react', () => ({
     }),
 }));
 
+jest.mock('react-router-dom', () => {
+    const actual = jest.requireActual('react-router-dom');
+    return {
+        ...actual,
+        Await: ({ children, resolve }: { children: any; resolve: any }) => {
+            // Resolve the promise immediately and call children with the result
+            return children(resolve);
+        },
+        useParams: jest.fn(() => {
+            return { tenantShortName: mockTenant.short_name };
+        }),
+        useNavigate: jest.fn(() => navigate),
+        useRouteLoaderData: jest.fn((id) => {
+            if (id === 'tenant-admin') {
+                return [mockTenant]; // Return array directly for tenant list
+            }
+            return { tenants: [mockTenant] };
+        }),
+        useBlocker: jest.fn((fn) => {
+            shouldBlockNavigation = fn;
+            return blocker;
+        }),
+    };
+});
+
 jest.mock('axios');
 
 jest.mock('@mui/material', () => ({
@@ -78,20 +103,6 @@ const blocker = {
     reset: blockerReset,
     proceed: blockerProceed,
 };
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useParams: jest.fn(() => {
-        return { tenantShortName: mockTenant.short_name };
-    }),
-    useNavigate: jest.fn(() => navigate),
-    useRouteLoaderData: jest.fn(() => ({
-        tenants: [mockTenant],
-    })),
-    useBlocker: jest.fn((fn) => {
-        shouldBlockNavigation = fn;
-        return blocker;
-    }),
-}));
 
 jest.mock('services/tenantService', () => ({
     createTenant: jest.fn(),

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-python manage.py db upgrade && python wsgi.py
+python3 -m flask db upgrade && python wsgi.py

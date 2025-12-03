@@ -88,17 +88,55 @@ const InternalHeader = () => {
                 }}
             >
                 <CssBaseline />
+                <Unless condition={isMediumScreenOrLarger || !canNavigate}>
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            setSideNavOpen(!sideNavOpen);
+                        }}
+                        icon={
+                            <FontAwesomeIcon
+                                icon={sideNavOpen ? faClose : faBars}
+                                fontSize={20}
+                                style={{
+                                    width: '20px',
+                                    transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
+                                    transition: 'transform 0.3s',
+                                    position: isMobileScreen ? 'relative' : undefined,
+                                    right: isMobileScreen && sideNavOpen ? '6px' : undefined,
+                                    left: isMobileScreen && !sideNavOpen ? '6px' : undefined,
+                                }}
+                            />
+                        }
+                        iconPosition={sideNavOpen ? 'right' : 'left'}
+                        sx={{
+                            zIndex: (theme: Theme) => theme.zIndex.drawer + 5, // render above PrivateSwipeArea
+                            position: 'fixed',
+                            right: '1em',
+                            top: '0.5em',
+                            minWidth: 'unset',
+                            alignContent: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Unless condition={isMobileScreen}>
+                            <BodyText>Menu</BodyText>
+                        </Unless>
+                    </Button>
+                </Unless>
                 <AppBar
                     position="fixed"
                     sx={{
                         zIndex: (theme: Theme) => theme.zIndex.drawer + 4, // render above sidenav
                         backgroundColor: 'transparent',
                         color: Palette.internalHeader.color,
-                        borderBottomRightRadius: '16px',
                         backgroundClip: 'padding-box',
                         overflow: 'hidden',
                         left: 0,
                         boxShadow: tenantDrawerOpen ? 'none' : elevations.default,
+                        borderRadius: 0,
+                        borderBottomLeftRadius: '1em',
+                        borderBottomRightRadius: '1em',
                     }}
                     data-testid="appbar-header"
                 >
@@ -133,39 +171,6 @@ const InternalHeader = () => {
                             engage{/*no space*/}
                             <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
                         </BodyText>
-                        <Unless condition={isMediumScreenOrLarger || !canNavigate}>
-                            <Button
-                                variant="secondary"
-                                onClick={() => {
-                                    setSideNavOpen(!sideNavOpen);
-                                }}
-                                icon={
-                                    <FontAwesomeIcon
-                                        icon={sideNavOpen ? faClose : faBars}
-                                        fontSize={20}
-                                        style={{
-                                            width: '20px',
-                                            transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
-                                            transition: 'transform 0.3s',
-                                            position: isMobileScreen ? 'relative' : undefined,
-                                            right: isMobileScreen && sideNavOpen ? '6px' : undefined,
-                                            left: isMobileScreen && !sideNavOpen ? '6px' : undefined,
-                                        }}
-                                    />
-                                }
-                                iconPosition={sideNavOpen ? 'right' : 'left'}
-                                sx={{
-                                    marginLeft: 'auto',
-                                    minWidth: 'unset',
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Unless condition={isMobileScreen}>
-                                    <BodyText>Menu</BodyText>
-                                </Unless>
-                            </Button>
-                        </Unless>
                     </Toolbar>
                     <Collapse
                         in={secondaryMenuOpen}
@@ -318,7 +323,6 @@ const TenantSelector = ({
                             padding: '1rem',
                             top: '6.5rem',
                             backgroundImage: 'none',
-                            borderBottomRightRadius: '16px',
                         },
                     }}
                 >

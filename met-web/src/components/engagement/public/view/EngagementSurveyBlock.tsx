@@ -16,7 +16,7 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'components/engagement/old-view/EmailModal';
-import { EngagementViewSections } from '.';
+import { EngagementLoaderData, EngagementViewSections } from '.';
 
 const gridContainerStyles = {
     width: '100%',
@@ -33,7 +33,7 @@ const gridContainerStyles = {
 };
 
 export const EngagementSurveyBlock = () => {
-    const { engagement, widgets } = useLoaderData() as { engagement: Promise<Engagement>; widgets: Promise<Widget[]> };
+    const { engagement, widgets } = useLoaderData() as EngagementLoaderData;
     const surveyBlockContents = Promise.all([engagement, widgets]);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { t: translate } = useAppTranslation();

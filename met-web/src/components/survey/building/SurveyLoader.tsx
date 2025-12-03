@@ -1,3 +1,8 @@
+import { EmailVerification } from 'models/emailVerification';
+import { Engagement } from 'models/engagement';
+import { Survey } from 'models/survey';
+import { SurveyReportSetting } from 'models/surveyReportSetting';
+import { SurveySubmission } from 'models/surveySubmission';
 import { Params } from 'react-router-dom';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getEngagement } from 'services/engagementService';
@@ -5,6 +10,18 @@ import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagemen
 import { getSubmissionByToken } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';
 import { fetchSurveyReportSettings } from 'services/surveyService/reportSettingsService';
+
+export type SurveyLoaderData = {
+    engagement: Promise<Engagement | null>;
+    language: string | undefined;
+    reportSettings: Promise<SurveyReportSetting[] | null>;
+    slug: Promise<string | null>;
+    submission: Promise<SurveySubmission | null>;
+    survey: Promise<Survey>;
+    surveyId: string | undefined;
+    token: string | undefined;
+    verification: Promise<EmailVerification | null>;
+};
 
 export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
     const { surveyId, token, language, engagementId, slug: urlSlug } = params;

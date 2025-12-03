@@ -6,18 +6,11 @@ import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { EngagementLink } from './EngagementLink';
 import { PreviewBanner } from './PreviewBanner';
-import { Survey } from 'models/survey';
 import { useRouteLoaderData, Await } from 'react-router-dom';
-import { EmailVerification } from 'models/emailVerification';
-import { Engagement } from 'models/engagement';
+import { SurveyLoaderData } from '../building/SurveyLoader';
 
 const SurveySubmit = () => {
-    const { survey, slug, verification, engagement } = useRouteLoaderData('survey') as {
-        survey: Promise<Survey>;
-        slug: Promise<{ slug: string }>;
-        verification: Promise<EmailVerification>;
-        engagement: Engagement;
-    };
+    const { survey, slug, verification, engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
             <Grid item xs={12}>
