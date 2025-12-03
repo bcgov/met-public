@@ -1,3 +1,11 @@
+## December 2, 2025
+
+- **Feature** Enable S3 storage for PosgreSQL backups [🎟️ DESENG-844](https://citz-gdx.atlassian.net/browse/DESENG-844)
+  - Updated backup scripts to support S3-compatible storage for PostgreSQL backups.
+  - Added new buckets in S3 for storing backups.
+  - Modified OpenShift deployment configuration to inject S3 backup credentials from Vault (also new).
+  - Tested backup and restore processes to ensure compatibility with S3 storage.
+
 ## November 28, 2025
 
 - **Feature** Implement code splitting for routes and large libraries [🎟️ DESENG-875](https://citz-gdx.atlassian.net/browse/DESENG-875)

@@ -273,6 +273,30 @@ Backups are generated daily by the "backup" deployment in each namespace and are
 
 Backups are verified nightly at 4 AM by creating a temporary database instance, restoring the backup into it, and checking for tables in the restored database. This is configured in the `backup.conf` file, mounted from the `met-db-backup-config` ConfigMap.
 
+Backups are also uploaded to S3-compatible storage for offsite retention.
+
+## Restoring from S3
+
+**Note**: The backup container does not support restoring directly from S3. If a backup has already been removed from the local FS, you must download it from S3 to the local `/backups/` directory first, then restore using the standard process.
+
+To restore a backup stored in S3:
+
+```bash
+# Connect to backup container
+oc rsh deploy/met-db-backup
+
+# Source S3 credentials
+source /vault/secrets/s3
+
+# List backups in S3 bucket
+mc ls minio_s3/engagement-dev-backup/
+
+# Download the desired backup file
+mc cp minio_s3/engagement-dev-backup/met-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
+
+# Now proceed with normal restore process (see scenarios below)
+```
+
 ## Scenarios
 
 ### 1. Normal Production Restore (Roles Exist)

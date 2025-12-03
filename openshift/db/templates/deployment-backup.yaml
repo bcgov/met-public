@@ -48,6 +48,15 @@ spec:
           export POSTGRESQL_DATABASE='{{ index .Data.data "met-app-db-name" }}'
           export DATABASE_SERVICE_NAME='{{ index .Data.data "hostname" }}'
           {{- end }}` }}
+        vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
+        vault.hashicorp.com/agent-inject-template-s3: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/s3"{{ ` }}
+          export S3_ENDPOINT='https://{{ index .Data.data "S3_HOST" }}'
+          export S3_USER='{{ index .Data.data "S3_ACCESS_KEY_ID" }}'
+          export S3_PASSWORD='{{ index .Data.data "S3_SECRET_ACCESS_KEY" }}'
+          export S3_BUCKET='{{ index .Data.data "S3_BACKUP_BUCKET" }}'
+          {{- end }}` }}
+
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
       volumes:
@@ -78,6 +87,7 @@ spec:
             - |
               set -euo pipefail && \
               . /vault/secrets/met-patroni && \
+              . /vault/secrets/s3 && \
               bash ./backup.sh
           envFrom:
             - configMapRef:
