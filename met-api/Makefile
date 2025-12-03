@@ -142,10 +142,10 @@ run: db ## Run the project in local
 	. venv/bin/activate && python -m flask run -p 5000
 
 db: ## Update the local database
-	. venv/bin/activate && python manage.py db upgrade
+	. venv/bin/activate && flask db upgrade
 
 db-downgrade: ## Update the local database to the previous migration
-	. venv/bin/activate && python manage.py db downgrade
+	. venv/bin/activate && flask db downgrade
 
 db-migrate: ## Create a new migration
 	. venv/bin/activate && flask db migrate -m "$(message)"
