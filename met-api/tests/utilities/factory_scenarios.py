@@ -377,7 +377,8 @@ class TestJwtClaims(dict, Enum):
     """Test scenarios of jwt claims."""
 
     no_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302065',
         'firstname': fake.first_name(),
         'lastname': fake.last_name(),
@@ -387,7 +388,8 @@ class TestJwtClaims(dict, Enum):
     }
 
     public_user_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'given_name': fake.first_name(),
         'family_name': fake.last_name(),
@@ -400,7 +402,8 @@ class TestJwtClaims(dict, Enum):
     }
 
     met_admin_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'preferred_username': f'{fake.user_name()}@idir',
@@ -415,7 +418,8 @@ class TestJwtClaims(dict, Enum):
     }
 
     staff_admin_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'preferred_username': f'{fake.user_name()}@idir',
@@ -427,7 +431,8 @@ class TestJwtClaims(dict, Enum):
         'client_roles': []
     }
     team_member_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'preferred_username': f'{fake.user_name()}@idir',
@@ -440,7 +445,8 @@ class TestJwtClaims(dict, Enum):
     }
 
     reviewer_role = {
-        'iss': CONFIG.JWT_OIDC_TEST_ISSUER,
+        'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
+        'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'idp_userid': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',
         'preferred_username': f'{fake.user_name()}@idir',
