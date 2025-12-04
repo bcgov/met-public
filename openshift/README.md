@@ -6,6 +6,42 @@ Notes and example commands to deploy MET in an Openshift environment.
 
 In this project, we use Helm charts to deploy the applications. The charts are located in the `openshift` folder, with subfolders for each application.
 
+### Configurable Parameters
+
+Many parameters can be configured via the `values.yaml` files located in each chart folder. Environment-specific values files are used for values that differ between environments (e.g. `values_dev.yaml`, `values_test.yaml`, `values_prod.yaml`). Not all parameters listed below will be present in every chart.
+
+The following is a non-exhaustive list of configurable parameters.
+
+**General Configuration**
+Most charts will have at least these 2 parameters:
+
+- `app.name`: The name of the application.
+- `app.licenseplate`: The license plate for the environment (e.g. `e903c2`).
+  Other common parameters include:
+- `(<app-name>.)resources`: Resource requests and limits for the application pods.
+
+**Image Configuration**
+
+- `image.repository`: The image repository for the application.
+- `image.namespace`: The namespace to pull the image from.
+- `image.tag`: The image tag to use.
+
+**Access Control Configuration**
+
+- `app.allowIngressPodselectors`: A list of pod selectors that are allowed to access the application via ingress.
+  **NOTE**: Dev IP whitelisting is managed via Vault and the setup job, not directly through this parameter.
+- `app.ratelimits.enabled`: Enable or disable rate limiting on the application route.
+- `app.ratelimits.http`: Maximum number of HTTP connections per IP address over a 3 second interval.
+- `app.ratelimits.tcp`: Maximum number of TCP connections per IP address over a 3 second interval.
+
+**Autoscaling Configuration**
+Some charts may include parameters for configuring Horizontal Pod Autoscalers (HPA):
+
+- `deployment.minReplicas`: Minimum number of replicas for the HPA.
+- `deployment.maxReplicas`: Maximum number of replicas for the HPA.
+
+### Deployment Examples
+
 **Deploy the `Web` application**:
 
 > Accessible to the public: _Yes_
@@ -111,47 +147,6 @@ Currently the chart creates the following:
 1. **Vault Service Account RoleBinding**: This rolebinding allows the vault service account to pull images from the tools namespace.
    > The {licenseplate}-vault service account should be used on Deployments that need access to Vault.
    > In order for the Vault service account to be able to pull images from the tools namespace, this rolebinding must be created.
-
-### Additional NetworkPolicies
-
-Setting this ingress policy on all pods allows incoming connections from pods within the same environment (API pods can connect to the database pods):
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-same-namespace
-  namespace: e903c2-<dev/test/prod>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              environment: <dev/test/prod>
-              name: e903c2
-  policyTypes:
-    - Ingress
-```
-
-Allow public access to your deployed routes by creating the following network policy:
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-openshift-ingress
-  namespace: e903c2-<ENV>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              network.openshift.io/policy-group: ingress
-  policyTypes:
-    - Ingress
-```
 
 ## Image Puller Configuration
 

@@ -1,24 +1,31 @@
 Domain: apps.gold.devops.gov.bc.ca
 hostname: '{{ .Chart.Name }}-{{ .Release.Namespace | splitList "-" | last }}.{{ .Values.Domain }}' # the hostname for the ingress
 licenseplate: e903c2
+
+app:
+  ratelimits:
+    enabled: true # Enable or disable rate limiting
+    http: 60 # Max HTTP requests per 3 seconds
+    tcp: 65 # Max TCP connections per 3 seconds
+
 ingress:
   port: 5000
 
 redisExporter:
   exporter:
-    image:  
+    image:
       registry: docker.io
       repository: oliver006/redis_exporter
       tag: v1.14.0-alpine
   redis:
     exporter:
       hostname: redis-exporter
-    image:  
+    image:
       registry: docker.io
       repository: redis
       tag: 7.0-rc3-alpine
   persistentVolumeClaim:
-    size: 2Gi  
+    size: 2Gi
     storageClass: ""
   resources:
     limits:
@@ -28,12 +35,11 @@ redisExporter:
       cpu: 50m
       memory: 256Mi
 redash:
-  image:  
+  image:
     registry: image-registry.openshift-image-registry.svc:5000
     namespace: e903c2-tools
     repository: e903c2-tools/met-analytics
     tag: latest
-
 
 resources:
   limits:
@@ -46,5 +52,5 @@ resources:
     ephemeralStorage: 1Gi
 
 vault:
-  namespace: 'platform-services'
-  authPath: 'auth/k8s-gold'
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"
