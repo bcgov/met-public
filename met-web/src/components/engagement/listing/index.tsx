@@ -64,10 +64,10 @@ const EngagementListing = () => {
         // Default to open if any of the advanced search fields are set
         Boolean(
             searchParams.get('engagement_status')?.length ||
-            searchParams.get('created_from_date') ||
-            searchParams.get('created_to_date') ||
-            searchParams.get('published_from_date') ||
-            searchParams.get('published_to_date'),
+                searchParams.get('created_from_date') ||
+                searchParams.get('created_to_date') ||
+                searchParams.get('published_from_date') ||
+                searchParams.get('published_to_date'),
         ),
     );
 

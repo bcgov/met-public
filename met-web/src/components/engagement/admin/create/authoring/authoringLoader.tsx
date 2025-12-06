@@ -11,7 +11,7 @@ export type AuthoringLoaderData = {
     detailsTabs: Promise<EngagementDetailsTab[]>;
 };
 
-export const authoringLoader = async ({ params }: { params: Params<string> }) => {
+const authoringLoader = async ({ params }: { params: Params<string> }) => {
     const { engagementId } = params;
     const id = Number(engagementId);
 
@@ -23,3 +23,5 @@ export const authoringLoader = async ({ params }: { params: Params<string> }) =>
         detailsTabs: detailsTabsPromise,
     };
 };
+
+export default authoringLoader;
