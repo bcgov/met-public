@@ -1,10 +1,11 @@
-import { Control, SubmitHandler, UseFormGetValues, UseFormReset, UseFormSetValue, UseFormWatch } from 'react-hook-form';
+import { SubmitHandler } from 'react-hook-form';
 import { EngagementUpdateData } from './AuthoringContext';
 import { Dispatch, SetStateAction } from 'react';
 import { Language } from 'models/language';
 import { Engagement } from 'models/engagement';
 import { EditorState } from 'draft-js';
 import { FetcherWithComponents } from 'react-router-dom';
+import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
 export interface AuthoringNavProps {
     open: boolean;
@@ -35,14 +36,11 @@ export interface LanguageSelectorProps {
 }
 
 export interface AuthoringBottomNavProps {
-    isDirty: boolean;
-    isValid: boolean;
-    isSubmitting: boolean;
     currentLanguage: string;
     setCurrentLanguage: Dispatch<SetStateAction<string>>;
     languages: Language[];
     pageTitle: string;
-    setValue: UseFormSetValue<EngagementUpdateData>;
+    pageName: string;
 }
 
 export interface StatusLabelProps {
@@ -51,40 +49,13 @@ export interface StatusLabelProps {
 }
 
 export interface AuthoringTemplateOutletContext {
-    setValue: UseFormSetValue<EngagementUpdateData>;
-    getValues: UseFormGetValues<EngagementUpdateData>;
-    watch: UseFormWatch<EngagementUpdateData>;
-    control: Control<EngagementUpdateData, object>;
     engagement: Engagement;
-    isDirty: boolean;
-    reset: UseFormReset<EngagementUpdateData>;
     defaultValues: EngagementUpdateData;
     setDefaultValues: Dispatch<SetStateAction<EngagementUpdateData>>;
     fetcher: FetcherWithComponents<object>;
     pageName: string;
-    contentTabsEnabled: string;
-    tabs: TabValues[];
-    setTabs: Dispatch<SetStateAction<TabValues[]>>;
-    setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
-    setContentTabsEnabled: Dispatch<SetStateAction<string>>;
-    singleContentValues: TabValues;
-    defaultTabValues: TabValues;
 }
 
-export interface DetailsTabProps {
-    setValue: UseFormSetValue<EngagementUpdateData>;
-    setTabs: Dispatch<SetStateAction<TabValues[]>>;
-    setCurrentTab: Dispatch<SetStateAction<TabValues>>;
-    setSingleContentValues: Dispatch<SetStateAction<TabValues>>;
-    tabs: TabValues[];
-    tabIndex: number;
-    singleContentValues: TabValues;
-    defaultTabValues: TabValues;
-}
-
-export interface TabValues {
-    heading: string;
-    bodyCopyPlainText: string;
-    bodyCopyEditorState: EditorState;
-    widget: string;
-}
+export type FormDetailsTab = Omit<EngagementDetailsTab, 'body'> & {
+    body: EditorState;
+};

@@ -53,15 +53,7 @@ const AuthoringTemplate = () => {
         return pathArray[pathArray.length - 1] === pageName;
     })?.name;
 
-    const {
-        handleSubmit,
-        setValue,
-        getValues,
-        watch,
-        reset,
-        control,
-        formState: { isDirty, isValid, isSubmitting, errors },
-    } = useFormContext<EngagementUpdateData>();
+    const { handleSubmit } = useFormContext<EngagementUpdateData>();
 
     return (
         <ResponsiveContainer>
@@ -98,17 +90,11 @@ const AuthoringTemplate = () => {
                         {(engagement: Engagement) => (
                             <Outlet
                                 context={{
-                                    setValue,
-                                    watch,
-                                    getValues,
                                     setDefaultValues,
-                                    reset,
                                     engagement,
-                                    control,
-                                    isDirty,
-                                    errors,
                                     defaultValues,
                                     fetcher,
+                                    pageName,
                                 }}
                             />
                         )}
@@ -118,14 +104,11 @@ const AuthoringTemplate = () => {
                     <Await resolve={languages}>
                         {(languages: Language[]) => (
                             <AuthoringBottomNav
-                                isDirty={isDirty}
-                                isValid={isValid}
-                                isSubmitting={isSubmitting}
                                 currentLanguage={currentLanguage}
                                 setCurrentLanguage={setCurrentLanguage}
                                 languages={languages}
-                                pageTitle={pageTitle || 'untitled'}
-                                setValue={setValue}
+                                pageTitle={pageTitle || 'untitled'} // Full title
+                                pageName={pageName || 'untitled'} // Slug
                             />
                         )}
                     </Await>

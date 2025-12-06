@@ -2,17 +2,56 @@ import React, { useEffect, useMemo, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createSearchParams, useFetcher, Outlet, useMatch } from 'react-router-dom';
-import { EditorState } from 'draft-js';
+import { convertToRaw, EditorState } from 'draft-js';
 import * as yup from 'yup';
 import { EngagementViewSections } from 'components/engagement/public/view';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { saveObject } from 'services/objectStorageService';
+import { FormDetailsTab } from './types';
+
+const tabSchema = yup.object({
+    id: yup.number().required(),
+    engagement_id: yup.number().required(),
+    label: yup.string().required('Label is required').max(20, 'Label text must be 20 characters or less'),
+    slug: yup.string().required(),
+    sort_index: yup.number().required(),
+    heading: yup.string().required('Heading is required').max(60, 'Eyebrow text must be 60 characters or less'),
+    body: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
+        return value && value.getCurrentContent().hasText();
+    }),
+});
+
+const detailsTabsSchema = yup.object({
+    id: yup.number().required(),
+    form_source: yup.string().required(),
+    details_tabs: yup
+        .array()
+        .default([])
+        .when('form_source', (form_source, schema) => {
+            if (form_source === 'details') {
+                return schema.of(tabSchema).min(1, 'At least one tab is required');
+            }
+            return schema;
+        }),
+});
+
+const summarySchema = yup.object({
+    id: yup.number().required(),
+    rich_description: yup.string().required(),
+    description_title: yup.string().required(),
+    description: yup.string().required(),
+    summary_editor_state: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
+        return value && value.getCurrentContent().hasText();
+    }),
+    form_source: yup.string().required(),
+});
 
 const authoringTemplateSchema = yup.object({
     name: yup.string().required('Engagement title is required'),
     eyebrow: yup.string().nullable().max(40, 'Eyebrow text must be 40 characters or less'),
+    form_source: yup.string().required(),
     image_url: yup
         .string()
         .url('Image URL must be a valid URL')
@@ -80,6 +119,8 @@ export interface EngagementUpdateData extends yup.TypeOf<typeof authoringTemplat
     text_content: string;
     json_content: string;
     summary_editor_state: EditorState;
+    details_tabs: FormDetailsTab[];
+    form_source: string;
 }
 
 export const defaultValuesObject = {
@@ -120,6 +161,10 @@ export const defaultValuesObject = {
     view_results_link_type: 'internal',
     view_results_section_link: EngagementViewSections.PROVIDE_FEEDBACK,
     view_results_external_link: '',
+    // Details fields
+    details_tabs: [],
+    // Determines which page the form is being sent from
+    form_source: '',
 } as EngagementUpdateData;
 
 export const AuthoringContext = () => {
@@ -153,6 +198,10 @@ export const AuthoringContext = () => {
             case 'banner':
                 // on the banner page, we need inter-field validation so we use the yup resolver
                 return yupResolver(authoringTemplateSchema);
+            case 'summary':
+                return yupResolver(summarySchema);
+            case 'details':
+                return yupResolver(detailsTabsSchema);
             default:
                 return undefined;
         }
@@ -191,6 +240,7 @@ export const AuthoringContext = () => {
                 request_type: data.request_type,
                 text_content: data.text_content,
                 json_content: data.json_content,
+                form_source: data.form_source || '',
 
                 banner_filename: savedImageDetails?.uniquefilename || '',
 
@@ -207,6 +257,13 @@ export const AuthoringContext = () => {
                 view_results_link_type: data.view_results_link_type || '',
                 view_results_section_link: data.view_results_section_link || '',
                 view_results_external_link: data.view_results_external_link || '',
+
+                details_tabs: JSON.stringify(
+                    data.details_tabs.map((tab) => ({
+                        ...tab,
+                        body: convertToRaw(tab.body.getCurrentContent()),
+                    })),
+                ),
             }),
             {
                 method: 'post',

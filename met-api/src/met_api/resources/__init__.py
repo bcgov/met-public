@@ -31,6 +31,7 @@ from .contact import API as CONTACT_API
 from .document import API as DOCUMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
 from .engagement_content import API as ENGAGEMENT_CONTENT_API
+from .engagement_details_tab import API as ENGAGEMENT_DETAILS_TAB_API
 from .engagement import API as ENGAGEMENT_API
 from .engagement_metadata import API as ENGAGEMENT_METADATA_API
 from .metadata_taxon import API as METADATA_TAXON_API
@@ -89,6 +90,7 @@ API.add_namespace(SUBSCRIPTION_API)
 API.add_namespace(COMMENT_API)
 API.add_namespace(EMAIL_VERIFICATION_API)
 API.add_namespace(ENGAGEMENT_CONTENT_API, path='/engagement/<int:engagement_id>/content')
+API.add_namespace(ENGAGEMENT_DETAILS_TAB_API, path='/engagement/<int:engagement_id>/details')
 API.add_namespace(FEEDBACK_API)
 API.add_namespace(WIDGET_API)
 API.add_namespace(CONTACT_API)

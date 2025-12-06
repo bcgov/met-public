@@ -22,7 +22,7 @@ const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
 const AuthoringBanner = () => {
     // Access the form functions and values from the authoring template
-    const { engagement, setDefaultValues }: AuthoringTemplateOutletContext = useOutletContext();
+    const { engagement, setDefaultValues, pageName }: AuthoringTemplateOutletContext = useOutletContext();
     const {
         setValue,
         getValues,
@@ -59,6 +59,7 @@ const AuthoringBanner = () => {
 
     useEffect(() => {
         reset(defaultValuesObject);
+        setValue('form_source', pageName);
         setValue('id', Number(engagement.id));
         setValue('name', engagement.name);
         setValue('image_url', engagement.banner_url);

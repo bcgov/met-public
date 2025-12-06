@@ -20,6 +20,7 @@ import {
  * @param {string} props.header - The main title of the modal.
  * @param {string} [props.subHeader] - An optional secondary title for additional context.
  * @param {Array<{ text: string; bold?: boolean }>} props.subText - An array of objects containing text to display in the modal, with optional bold styling.
+ * @param {string} props.subTextId - An optional string that matches the aria-describedby label from the parent <Modal> component to this child component.
  * @param {() => void} props.handleConfirm - A function to call when the user confirms the action.
  * @param {() => void} props.handleClose - A function to call when the user cancels the action or closes the modal.
  * @param {string} [props.confirmButtonText="Confirm"] - The text for the confirm button.
@@ -31,6 +32,7 @@ import {
  *     header="Delete Item"
  *     subHeader="Are you sure?"
  *     subText={[{ text: 'This action cannot be undone.', bold: true }]}
+ *     subTextId="delete-files-modal-subtext"
  *     handleConfirm={() => console.log('Confirmed')}
  *     handleClose={() => console.log('Cancelled')}
  *     confirmButtonText="Yes, Delete"
@@ -42,6 +44,7 @@ const ConfirmModal = ({
     header,
     subHeader,
     subText,
+    subTextId,
     handleConfirm,
     handleClose,
     confirmButtonText = 'Confirm',
@@ -61,6 +64,7 @@ const ConfirmModal = ({
             justifyContent="flex-start"
             alignItems="flex-start"
             sx={{ ...modalStyle, borderColor: palette.shade }}
+            aria-label={`${header} ${subHeader}`}
         >
             <Grid item xs={1} sx={{ pt: 1.25, fontSize: '16px' }}>
                 <FontAwesomeIcon icon={iconMap[style]} color={palette.icon} size="2x" />
@@ -84,7 +88,7 @@ const ConfirmModal = ({
                         <BodyText bold>{subHeader}</BodyText>
                     </Grid>
                 )}
-                <Grid container direction="row" item xs={12} sx={{ mt: '1em' }}>
+                <Grid container id={subTextId ?? undefined} direction="row" item xs={12} sx={{ mt: '1em' }}>
                     {subText.map((subtext, index) => (
                         <Grid key={index} item xs={12}>
                             <BodyText bold={subtext.bold} sx={{ mb: 1 }}>
@@ -102,7 +106,7 @@ const ConfirmModal = ({
                         sx={{ mt: '1em' }}
                     >
                         <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
-                            <Button variant="secondary" onClick={handleClose}>
+                            <Button type="button" variant="secondary" onClick={handleClose}>
                                 {cancelButtonText}
                             </Button>
                             <Button variant="primary" color={style} onClick={handleConfirm} type="submit">

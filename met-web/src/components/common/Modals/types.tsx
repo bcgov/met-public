@@ -10,6 +10,7 @@ export interface NotificationModalProps {
     header: string;
     subHeader?: string;
     subText: ModalSubtext[];
+    subTextId?: string;
     handleConfirm?: () => void;
     handleClose?: () => void;
     cancelButtonText?: string;
