@@ -4,28 +4,42 @@ import { useOutletContext, useLoaderData } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import { MetHeader3, MetLabel as MetBigLabel } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
-import { Controller } from 'react-hook-form';
-import { defaultValuesObject } from './AuthoringContext';
+import { Controller, useFormContext } from 'react-hook-form';
+import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { EngagementLoaderData } from 'components/engagement/public/view';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 
 const AuthoringSummary = () => {
-    const { setValue, control, reset, getValues, setDefaultValues }: AuthoringTemplateOutletContext =
-        useOutletContext(); // Access the form functions and values from the authoring template.
+    const { setDefaultValues, fetcher, pageName }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template.
+    const {
+        setValue,
+        getValues,
+        reset,
+        control,
+        formState: { errors },
+    } = useFormContext<EngagementUpdateData>();
 
     // Must be a loader assigned to this route or data won't be refreshed on page change.
     const { engagement } = useLoaderData() as EngagementLoaderData;
 
+    // Set current values to default state after saving form
+    useEffect(() => {
+        const newDefaults = getValues();
+        setDefaultValues(newDefaults);
+        reset(newDefaults);
+    }, [fetcher.data]);
+
     // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {
-        reset(defaultValuesObject);
         engagement.then((eng) => {
+            reset(defaultValuesObject);
+            setValue('form_source', pageName);
             setValue('id', Number(eng.id));
             // Make sure it is valid JSON.
             if (tryParse(eng.rich_description)) {
@@ -37,7 +51,7 @@ const AuthoringSummary = () => {
             // Update default values so that our loaded values are default.
             setDefaultValues(getValues());
         });
-    }, [engagement]);
+    }, []);
 
     // Define the styles
     const metBigLabelStyles = {
@@ -113,6 +127,7 @@ const AuthoringSummary = () => {
                                     counter
                                     maxLength={60}
                                     placeholder="Section heading text"
+                                    error={errors.description_title?.message ?? ''}
                                 />
                             );
                         }}
@@ -130,6 +145,7 @@ const AuthoringSummary = () => {
                         Body copy for the summary section of your engagement should provide a short overview of what
                         your engagement is about and describe what you are asking your audience to do.
                     </FormDescriptionText>
+                    <ErrorMessage error={errors.summary_editor_state?.message ?? ''} />
                     <Controller
                         control={control}
                         name="summary_editor_state"

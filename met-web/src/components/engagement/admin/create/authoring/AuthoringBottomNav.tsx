@@ -11,16 +11,14 @@ import { StatusCircle } from '../../view/AuthoringTab';
 import pagePreview from 'assets/images/pagePreview.png';
 import { AuthoringBottomNavProps, LanguageSelectorProps } from './types';
 import { getLanguageValue } from './AuthoringTemplate';
+import { useFormContext } from 'react-hook-form';
+import { EngagementUpdateData } from './AuthoringContext';
 
-const AuthoringBottomNav = ({
-    isDirty,
-    isSubmitting,
-    currentLanguage,
-    setCurrentLanguage,
-    languages,
-    pageTitle,
-    setValue,
-}: AuthoringBottomNavProps) => {
+const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pageTitle }: AuthoringBottomNavProps) => {
+    const {
+        setValue,
+        formState: { isDirty, isSubmitting },
+    } = useFormContext<EngagementUpdateData>();
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
 
@@ -40,6 +38,8 @@ const AuthoringBottomNav = ({
             sx={{
                 backgroundColor: 'transparent',
                 borderTopRightRadius: '16px',
+                borderBottomLeftRadius: '0',
+                borderBottomRightRadius: '0',
                 minHeight: '5rem',
                 backgroundClip: 'padding-box',
                 overflow: 'hidden',

@@ -1,3 +1,13 @@
+## December 5, 2025
+
+- **Feature** Admin authoring details page [🎟️ DESENG-672](https://citz-gdx.atlassian.net/browse/DESENG-672)
+  - Remade authoring details component with aria labels, form validation, navigate away modal, delete tab modal, and tab mode switch modal
+  - Implemented service, types, and API endpoints for authoring details tabs in met-web
+  - Created model, resource, schema, service, and db update for API
+  - Optimized authoring form, loader, and action
+  - Tested and updated existing authoring section pages to ensure continued functionality
+    - Added form validation for Summary page
+
 ## November 18, 2025
 
 - **Feature** Implement route IP whitelisting for VPN and dev IPs [🎟️ DESENG-846](https://citz-gdx.atlassian.net/browse/DESENG-846)

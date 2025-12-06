@@ -21,6 +21,7 @@ from .db import db, ma, migrate
 from .email_verification import EmailVerification
 from .engagement import Engagement
 from .engagement_content import EngagementContent
+from .engagement_details_tab import EngagementDetailsTab
 from .engagement_status import EngagementStatus
 from .engagement_status_block import EngagementStatusBlock
 from .engagement_settings import EngagementSettingsModel

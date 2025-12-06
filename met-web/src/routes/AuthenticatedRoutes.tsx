@@ -52,6 +52,7 @@ import AuthoringFeedback from 'components/engagement/admin/create/authoring/Auth
 import AuthoringResults from 'components/engagement/admin/create/authoring/AuthoringResults';
 import AuthoringSubscribe from 'components/engagement/admin/create/authoring/AuthoringSubscribe';
 import AuthoringMore from 'components/engagement/admin/create/authoring/AuthoringMore';
+import { authoringLoader } from 'components/engagement/admin/create/authoring/authoringLoader';
 
 const AuthenticatedRoutes = () => {
     return (
@@ -145,6 +146,7 @@ const AuthenticatedRoutes = () => {
                                     <Route
                                         path="details"
                                         action={engagementAuthoringUpdateAction}
+                                        loader={authoringLoader}
                                         element={<AuthoringDetails />}
                                         handle={{ crumb: () => ({ name: 'Details' }) }}
                                     />

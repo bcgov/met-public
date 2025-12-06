@@ -45,6 +45,11 @@ const Endpoints = {
         UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
         DELETE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
     },
+    EngagementDetailsTab: {
+        GET_LIST: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
+        CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
+        UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
+    },
     User: {
         GET: `${AppConfig.apiUrl}/user/user_id`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
