@@ -8,6 +8,35 @@
   - Tested and updated existing authoring section pages to ensure continued functionality
     - Added form validation for Summary page
 
+## December 2, 2025
+
+- **Feature** Implement route rate limiting to prevent abuse [🎟️ DESENG-871](https://citz-gdx.atlassian.net/browse/DESENG-871)
+  - Added `haproxy.router.openshift.io/rate-limit-connections` annotations to Route resources in Helm charts for public-facing services (met-api, met-web, met-analytics, analytics-api, and fider).
+  - Configured rate limits to restrict the number of connections per IP address over a 3 second interval.
+  - When rate limiting is triggered, the route will reply with empty responses until the rate limit period resets.
+- **Feature** Enable S3 storage for PosgreSQL backups [🎟️ DESENG-844](https://citz-gdx.atlassian.net/browse/DESENG-844)
+  - Updated backup scripts to support S3-compatible storage for PostgreSQL backups.
+  - Added new buckets in S3 for storing backups.
+  - Modified OpenShift deployment configuration to inject S3 backup credentials from Vault (also new).
+  - Tested backup and restore processes to ensure compatibility with S3 storage.
+
+## November 28, 2025
+
+- **Feature** Implement code splitting for routes and large libraries [🎟️ DESENG-875](https://citz-gdx.atlassian.net/browse/DESENG-875)
+  - Improved initial load times and application performance by reducing bundle size and loading only necessary code for each route.
+  - Used React Router's lazy loading and Suspense to dynamically load route components as needed.
+  - Configured Webpack to split code and CSS for large libraries (mui, formio, lodash, arcgis, maplibs, recharts, jspdf...) into separate chunks.
+  - Added a new bundle analyzer script to visualize bundle composition and identify optimization opportunities.
+  - Removed deprecated `defer` usage from route loaders and return promises directly, allowing React Router to handle loading states.
+
+## November 25, 2025
+
+- **Bugfix** Validate & Fix DB backup verification [🎟️ DESENG-843](https://citz-gdx.atlassian.net/browse/DESENG-843)
+  - Added separate connection spec for verification step to avoid role errors during verification (workaround for met-patroni role management).
+  - Updated `backup.conf` to schedule daily verification of backups using the new connection spec.
+  - Added `emergency-restore.sh` script for emergency restores to fresh PostgreSQL instances without existing roles.
+  - Updated documentation in `openshift/README.md` to reflect current backup and restore procedures.
+
 ## November 18, 2025
 
 - **Feature** Implement route IP whitelisting for VPN and dev IPs [🎟️ DESENG-846](https://citz-gdx.atlassian.net/browse/DESENG-846)

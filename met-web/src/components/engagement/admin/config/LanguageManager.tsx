@@ -11,6 +11,8 @@ import { useFormContext } from 'react-hook-form';
 import { Language } from 'models/language';
 import MultiSelect from './MultiSelect';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
+import { LanguageLoaderData } from './LanguageLoader';
+import { Awaited } from 'utils';
 
 export const LanguageManager = () => {
     const SINGLE_LANGUAGE = [{ code: 'en', name: 'English' }] as Language[];
@@ -24,7 +26,7 @@ export const LanguageManager = () => {
     const { setValue, watch } = engagementForm;
     const selectedLanguages = watch('languages') as Language[];
     const fetcher = useFetcher();
-    const fetcherData = fetcher.data as { languages: Language[] } | undefined;
+    const fetcherData = fetcher.data as Awaited<LanguageLoaderData>;
     const { languages: availableLanguages } = fetcherData ?? { languages: [] };
 
     const [searchTerm, setSearchTerm] = React.useState('');

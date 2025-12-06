@@ -1,5 +1,11 @@
-import { defer } from 'react-router-dom';
+import { Engagement } from 'models/engagement';
 import { getEngagements, GetEngagementsParams } from 'services/engagementService';
+import { Page } from 'services/type';
+
+export type EngagementListLoaderData = {
+    engagements: Page<Engagement>;
+    params: GetEngagementsParams;
+};
 
 export const engagementListLoader = async ({ request }: { request: Request }) => {
     const { searchParams } = new URL(request.url);
@@ -16,6 +22,6 @@ export const engagementListLoader = async ({ request }: { request: Request }) =>
         published_to_date: searchParams.get('published_to_date') ?? undefined,
     };
 
-    const engagements = getEngagements(params);
-    return defer({ engagements });
+    const engagements = await getEngagements(params);
+    return { engagements, params };
 };

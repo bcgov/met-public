@@ -6,6 +6,42 @@ Notes and example commands to deploy MET in an Openshift environment.
 
 In this project, we use Helm charts to deploy the applications. The charts are located in the `openshift` folder, with subfolders for each application.
 
+### Configurable Parameters
+
+Many parameters can be configured via the `values.yaml` files located in each chart folder. Environment-specific values files are used for values that differ between environments (e.g. `values_dev.yaml`, `values_test.yaml`, `values_prod.yaml`). Not all parameters listed below will be present in every chart.
+
+The following is a non-exhaustive list of configurable parameters.
+
+**General Configuration**
+Most charts will have at least these 2 parameters:
+
+- `app.name`: The name of the application.
+- `app.licenseplate`: The license plate for the environment (e.g. `e903c2`).
+  Other common parameters include:
+- `(<app-name>.)resources`: Resource requests and limits for the application pods.
+
+**Image Configuration**
+
+- `image.repository`: The image repository for the application.
+- `image.namespace`: The namespace to pull the image from.
+- `image.tag`: The image tag to use.
+
+**Access Control Configuration**
+
+- `app.allowIngressPodselectors`: A list of pod selectors that are allowed to access the application via ingress.
+  **NOTE**: Dev IP whitelisting is managed via Vault and the setup job, not directly through this parameter.
+- `app.ratelimits.enabled`: Enable or disable rate limiting on the application route.
+- `app.ratelimits.http`: Maximum number of HTTP connections per IP address over a 3 second interval.
+- `app.ratelimits.tcp`: Maximum number of TCP connections per IP address over a 3 second interval.
+
+**Autoscaling Configuration**
+Some charts may include parameters for configuring Horizontal Pod Autoscalers (HPA):
+
+- `deployment.minReplicas`: Minimum number of replicas for the HPA.
+- `deployment.maxReplicas`: Maximum number of replicas for the HPA.
+
+### Deployment Examples
+
 **Deploy the `Web` application**:
 
 > Accessible to the public: _Yes_
@@ -111,47 +147,6 @@ Currently the chart creates the following:
 1. **Vault Service Account RoleBinding**: This rolebinding allows the vault service account to pull images from the tools namespace.
    > The {licenseplate}-vault service account should be used on Deployments that need access to Vault.
    > In order for the Vault service account to be able to pull images from the tools namespace, this rolebinding must be created.
-
-### Additional NetworkPolicies
-
-Setting this ingress policy on all pods allows incoming connections from pods within the same environment (API pods can connect to the database pods):
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-same-namespace
-  namespace: e903c2-<dev/test/prod>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              environment: <dev/test/prod>
-              name: e903c2
-  policyTypes:
-    - Ingress
-```
-
-Allow public access to your deployed routes by creating the following network policy:
-
-```yaml
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-from-openshift-ingress
-  namespace: e903c2-<ENV>
-spec:
-  podSelector: {}
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              network.openshift.io/policy-group: ingress
-  policyTypes:
-    - Ingress
-```
 
 ## Image Puller Configuration
 
@@ -267,100 +262,94 @@ This should be stored at:
 {vault-engine}{vault-path}/pipeline-service-account
 ```
 
-## Restore Backup Script
+## Database Backup / Restore Guide
 
-Backups are generated daily by the dc "backup" in the test and production realms and are composed by a SQL script containing the database structure + data.
+Backups are generated daily by the "backup" deployment in each namespace and are saved as a gzipped SQL script containing the database structure + data.
 
-To restore the backup follow these steps:
+Backups are verified nightly at 4 AM by creating a temporary database instance, restoring the backup into it, and checking for tables in the restored database. This is configured in the `backup.conf` file, mounted from the `met-db-backup-config` ConfigMap.
 
-1. Connect to openshift using the terminal/bash and set the project (test/prod).
-1. Transfer the backup file to your local using the command below:
+Backups are also uploaded to S3-compatible storage for offsite retention.
 
-   ```bash
-   oc rsync <backup-pod-name>:/backups/daily/<date> <local-folder>
-   ```
+## Restoring from S3
 
-   This copies the folder and contents from the pod to the local folder.
+**Note**: The backup container does not support restoring directly from S3. If a backup has already been removed from the local FS, you must download it from S3 to the local `/backups/` directory first, then restore using the standard process.
 
-1. Extract backup script using gzip:
+To restore a backup stored in S3:
 
-   ```bash
-   gzip -d <file-name>
-   ```
+```bash
+# Connect to backup container
+oc rsh deploy/met-db-backup
 
-1. Connect to the patroni database pod using port-forward:
+# Source S3 credentials
+source /vault/secrets/s3
 
-   ```bash
-   oc port-forward met-patroni-<master_pod> 5432:5432
-   ```
+# List backups in S3 bucket
+mc ls minio_s3/engagement-dev-backup/
 
-1. Manually create the database (drop if necessary):
+# Download the desired backup file
+mc cp minio_s3/engagement-dev-backup/met-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
 
-   ```bash
-   psql -h localhost -p 5432 -U postgres -c 'create database app;'
-   ```
-
-1. Manually update with passwords and run the users setup script (if new server):
-
-   ```bash
-   psql -h localhost -U postgres -p 5432 -a -q -f ./postgresql-user-setup.sql
-   ```
-
-1. Execute the script to restore the database:
-
-   ```bash
-   psql -h localhost -d app -U postgres -p 5432 -a -q -f <path-to-file>
-   ```
-
-   **Note:** Should the restore fail due to roles not being found, the following psql commands can be run from within the database pod to alter the roles
-
-   ```
-     alter role met WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-         PASSWORD 'met';
-
-     alter role analytics WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-         PASSWORD 'analytics';
-
-     alter role keycloak WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-         PASSWORD 'keycloak';
-
-     alter role redash WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-         PASSWORD 'redash';
-
-     alter role dagster WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION
-         PASSWORD 'dagster';
-
-   ```
-
-   Once the roles are altered the restore script can be run again.
-
-## Build Configuration
-
-Github actions are being used for building images but **\*\***IF NECESSARY**\*\*** to use openshift,
-follow the steps below:
-
-In the tools namespace use the following to create the build configurations:
-
-```
-    oc process -f ./buildconfigs/web.bc.yml | oc create -f -
+# Now proceed with normal restore process (see scenarios below)
 ```
 
-```
-    oc process -f ./buildconfigs/api.bc.yml | oc create -f -
+## Scenarios
+
+### 1. Normal Production Restore (Roles Exist)
+
+**Use case**: Restoring to existing Patroni cluster where roles are already defined.
+
+```bash
+# Connect to backup container
+oc rsh deploy/met-db-backup
+
+# Add credentials to environment
+source /vault/secrets/met-patroni
+
+# List available backups
+./backup.sh -l # press Enter if prompted for password
+
+# Restore with -I flag to ignore duplicate role errors
+./backup.sh -I -r postgres=met-patroni:5432/app -f /backups/<period>/<YYYY-MM-DD>/met-patroni-app_<YYYY-MM-DD_HH-MM-SS>.sql.gz
 ```
 
-```
-    oc process -f ./buildconfigs/notify-api.bc.yml | oc create -f -
+**Why `-I`?**: The backup contains `CREATE ROLE` statements at the end. Since roles already exist in production, these will fail but can be safely ignored.
+
+---
+
+### 2. Emergency Restore (Fresh Database)
+
+**Use case**: Restoring to a completely new PostgreSQL instance that has no existing roles.
+
+```bash
+# Connect to backup container
+oc rsh deploy/met-db-backup
+
+# Source credentials
+source /vault/secrets/met-patroni
+
+# Use the emergency restore script
+./emergency-restore.sh /backups/daily/YYYY-MM-DD/met-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz app
 ```
 
-```
-    oc process -f ./buildconfigs/cron.bc.yml | oc create -f -
-```
+**What it does**:
 
-```
-    oc process -f ./buildconfigs/met-analytics.bc.yml | oc create -f -
-```
+1. Extracts `CREATE ROLE` statements from the backup
+2. Creates all roles first (analytics, app, backup, dagster, met, redash, replication)
+3. Restores the full backup (object ownership now works correctly)
+4. Ignores duplicate role creation errors at the end of the backup
 
-```
-    oc process -f ./buildconfigs/analytics-api.bc.yml | oc create -f -
+Note: the users are created without passwords; you will need to set passwords manually after the restore as needed. Existing passwords are stored in Vault but are not extracted by this script. The exception is the superuser account, which has its password set from Vault during db startup.
+
+```bash
+# Connect as superuser
+oc rsh pod/met-patroni-0
+psql -U postgres -d app
+
+# Set passwords for each role
+ALTER ROLE analytics WITH PASSWORD 'foo';
+ALTER ROLE dagster WITH PASSWORD 'bar';
+ALTER ROLE met WITH PASSWORD 'baz';
+ALTER ROLE redash WITH PASSWORD 'qux';
+ALTER ROLE backup WITH PASSWORD 'quux';
+ALTER ROLE replication WITH PASSWORD 'corge';
 ```

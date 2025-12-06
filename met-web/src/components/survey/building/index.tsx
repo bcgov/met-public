@@ -42,6 +42,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { Else, If, Then } from 'react-if';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
+import { SurveyLoaderData } from './SurveyLoader';
 
 interface SurveyForm {
     id: string;
@@ -434,10 +435,7 @@ const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: bo
 };
 
 const SurveyFormBuilder = () => {
-    const { survey: surveyPromise, engagement: engagementPromise } = useRouteLoaderData('survey') as {
-        survey: Promise<Survey>;
-        engagement: Promise<Engagement>;
-    };
+    const { survey: surveyPromise, engagement: engagementPromise } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     const surveyDataPromise = Promise.all([surveyPromise, engagementPromise]);
 

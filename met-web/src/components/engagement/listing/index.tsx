@@ -30,7 +30,7 @@ import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
-import { Page } from 'services/type';
+import { EngagementListLoaderData } from 'engagements/public/view/EngagementListLoader';
 
 interface SearchFilter {
     key?: string;
@@ -46,7 +46,7 @@ const EngagementListing = () => {
         value: '',
     });
     const fetcher = useFetcher();
-    const fetcherData = fetcher.data as { engagements: Page<Engagement> } | undefined;
+    const fetcherData = fetcher.data as EngagementListLoaderData;
     const engagementPage = fetcherData?.engagements;
 
     const [paginationOptions, setPaginationOptions] = useState<PaginationOptions<Engagement>>({
@@ -64,10 +64,10 @@ const EngagementListing = () => {
         // Default to open if any of the advanced search fields are set
         Boolean(
             searchParams.get('engagement_status')?.length ||
-                searchParams.get('created_from_date') ||
-                searchParams.get('created_to_date') ||
-                searchParams.get('published_from_date') ||
-                searchParams.get('published_to_date'),
+            searchParams.get('created_from_date') ||
+            searchParams.get('created_to_date') ||
+            searchParams.get('published_from_date') ||
+            searchParams.get('published_to_date'),
         ),
     );
 

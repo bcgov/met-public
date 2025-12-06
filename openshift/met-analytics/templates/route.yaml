@@ -5,7 +5,12 @@ metadata:
   labels:
     app: {{ .Chart.Name }}
   annotations:
+    # Managed by setup job - do not modify manually
     haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
+    # Limits the number (per 3 seconds) of connections from a single IP address, to prevent abuse
+    haproxy.router.openshift.io/rate-limit-connections: {{ .Values.app.ratelimits.enabled | quote }}
+    haproxy.router.openshift.io/rate-limit-connections.rate-http: "{{ .Values.app.ratelimits.http }}"
+    haproxy.router.openshift.io/rate-limit-connections.rate-tcp: "{{ .Values.app.ratelimits.tcp }}"
 spec:
   name: {{ .Chart.Name }}
   host: "{{ tpl .Values.hostname . }}"

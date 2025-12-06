@@ -16,7 +16,7 @@ import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { globalFocusVisible } from 'components/common';
 
 const TenantDetail = () => {
-    const { tenant } = useRouteLoaderData('tenant') as { tenant: Tenant };
+    const tenant = useRouteLoaderData('tenant') as Promise<Tenant>;
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const revalidator = useRevalidator();
@@ -68,7 +68,7 @@ const TenantDetail = () => {
         );
     };
 
-    const copyEmail = () => {
+    const copyEmail = (tenant: Tenant) => {
         navigator.clipboard.writeText(tenant.contact_email ?? '');
         dispatch(openNotification({ text: 'Copied to clipboard', severity: 'info' }));
     };
@@ -249,11 +249,11 @@ const TenantDetail = () => {
                                                         display: { xs: 'none', sm: 'block' },
                                                         ...globalFocusVisible,
                                                     }}
-                                                    onClick={copyEmail}
+                                                    onClick={() => copyEmail(resolvedTenant)}
                                                     onKeyDown={(e: React.KeyboardEvent<HTMLAnchorElement>) => {
                                                         if (e.key === 'Enter' || e.key === ' ') {
                                                             e.preventDefault();
-                                                            copyEmail();
+                                                            copyEmail(resolvedTenant);
                                                         }
                                                     }}
                                                 >

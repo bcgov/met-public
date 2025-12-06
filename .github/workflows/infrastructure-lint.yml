@@ -57,7 +57,7 @@ jobs:
       environments: ${{ steps.set-env-matrix.outputs.environments }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for changed-files detection
 
@@ -169,7 +169,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install OpenShift CLI
         if: inputs.enable_server_lint == true

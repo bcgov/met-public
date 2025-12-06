@@ -22,7 +22,7 @@ import { Await, useNavigate, useRouteLoaderData } from 'react-router-dom';
 const TenantListingPage = () => {
     const navigate = useNavigate();
     const circlePlusIcon = <FontAwesomeIcon icon={faPlus} />;
-    const { tenants } = useRouteLoaderData('tenant-admin') as { tenants: Tenant[] };
+    const tenants = useRouteLoaderData('tenant-admin') as Promise<Tenant[]>;
 
     return (
         <ResponsiveContainer>

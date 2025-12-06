@@ -278,3 +278,5 @@ export const AuthoringContext = () => {
         </FormProvider>
     );
 };
+
+export default AuthoringContext;

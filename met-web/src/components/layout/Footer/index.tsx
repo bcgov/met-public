@@ -16,6 +16,7 @@ import { VersionInfo } from 'services/versionService';
 import { AppConfig } from 'config';
 import { IconButton } from 'components/common/Input';
 import { useRouteLoaderData, Await } from 'react-router-dom';
+import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
 
 const LinkArrow = () => {
     return <span style={{ fontWeight: 'bold', marginLeft: '0.8rem' }}>&gt;</span>;
@@ -125,7 +126,7 @@ const Footer = () => {
     const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isMediumScreenOrLarger: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const loaderData = useRouteLoaderData('authenticated-root') as { apiVersion: Promise<VersionInfo> } | undefined;
+    const loaderData = useRouteLoaderData('authenticated-root') as AuthenticatedRootLoaderData | undefined;
     const [isVersionExpanded, setIsVersionExpanded] = useState(false);
 
     const linkStyles = {

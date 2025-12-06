@@ -55,7 +55,7 @@ jobs:
       environments: ${{ steps.set-env-matrix.outputs.environments }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # Fetch all history for changed-files detection
 
@@ -158,7 +158,7 @@ jobs:
     environment: ${{ matrix.environment }} # Link to environment-specific secrets
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set namespace
         run: echo "NAMESPACE=${{env.PROJECT_NAMESPACE_PREFIX}}-${{ matrix.environment }}" >> $GITHUB_ENV

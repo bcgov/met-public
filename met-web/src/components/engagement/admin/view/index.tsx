@@ -3,14 +3,16 @@ import { useRouteLoaderData, Await, useMatches, UIMatch, Outlet } from 'react-ro
 import { Engagement } from 'models/engagement';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { Tab } from '@mui/material';
+import { Box, Skeleton, Tab } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { EngagementLoaderData } from 'components/engagement/public/view';
 import { RouterLinkRenderer } from 'components/common/Navigation/Link';
+import { Header1 } from 'components/common/Typography';
+import { StatusLabel } from '../create/authoring/AuthoringTemplate';
 
-export const AdminEngagementView = () => {
-    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+const AdminEngagementView = () => {
+    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     const EngagementViewTabs = {
         config: 'Configuration',
@@ -26,26 +28,28 @@ export const AdminEngagementView = () => {
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
-            <Suspense>
-                <Await resolve={engagement}>
-                    {(engagement: Engagement) => (
-                        <div style={{ marginTop: '2rem' }}>
-                            <span
-                                style={{
-                                    background: '#CE3E39',
-                                    padding: '0.2rem 0.75rem',
-                                    color: 'white',
-                                    borderRadius: '3px',
-                                    fontSize: '0.8rem',
-                                }}
-                            >
-                                {EngagementStatus[engagement?.status_id]}
-                            </span>
-                            <h1 style={{ marginTop: '0.5rem' }}>{engagement?.name}</h1>
-                        </div>
-                    )}
-                </Await>
-            </Suspense>
+            <Box mt={4}>
+                <Suspense fallback={<StatusLabel completed={false} text="Loading..." />}>
+                    <Await resolve={engagement}>
+                        {(engagement: Engagement) => (
+                            <StatusLabel completed={false} text={EngagementStatus[engagement?.status_id]} />
+                        )}
+                    </Await>
+                </Suspense>
+                <Suspense
+                    fallback={
+                        <Skeleton variant="text">
+                            <Header1 mt={1} mb={3}>
+                                Loading...
+                            </Header1>
+                        </Skeleton>
+                    }
+                >
+                    <Header1 mt={1} mb={3}>
+                        <Await resolve={engagement}>{(engagement: Engagement) => engagement?.name}</Await>
+                    </Header1>
+                </Suspense>
+            </Box>
             <TabContext value={currentTab}>
                 <TabList
                     component="nav"
@@ -55,7 +59,10 @@ export const AdminEngagementView = () => {
                     sx={{
                         '& .MuiTabs-flexContainer': {
                             justifyContent: 'flex-start',
-                            width: 'max-content',
+                            borderBottom: '2px solid',
+                            borderBottomColor: 'gray.60',
+                            width: 'calc(100% - 7.75rem)',
+                            minWidth: 'max-content',
                         },
                     }}
                 >
@@ -75,8 +82,6 @@ export const AdminEngagementView = () => {
                                 padding: '4px 24px 2px 18px',
                                 fontSize: '14px',
                                 borderRadius: '0px 16px 0px 0px',
-                                borderBottom: '2px solid',
-                                borderBottomColor: 'gray.60',
                                 boxShadow:
                                     '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
                                 backgroundColor: 'gray.10',
@@ -100,14 +105,12 @@ export const AdminEngagementView = () => {
                         />
                     ))}
                 </TabList>
-                <Suspense>
-                    <TabPanel value={currentTab}>
-                        <Await resolve={Promise.all([engagement, teamMembers, slug])}>
-                            <Outlet />
-                        </Await>
-                    </TabPanel>
-                </Suspense>
+                <TabPanel value={currentTab} sx={{ padding: '2rem 0' }}>
+                    <Outlet />
+                </TabPanel>
             </TabContext>
         </ResponsiveContainer>
     );
 };
+
+export default AdminEngagementView;

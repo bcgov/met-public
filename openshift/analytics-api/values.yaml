@@ -1,6 +1,10 @@
 app:
   name: analytics-api
   licenseplate: e903c2
+  ratelimits:
+    enabled: true # Enable or disable rate limiting
+    http: 40 # Max HTTP requests per 3 seconds
+    tcp: 45 # Max TCP connections per 3 seconds
 
 hpa:
   minReplicas: 2
@@ -10,8 +14,8 @@ hpa:
 image:
   tag: latest
   namespace: e903c2-tools
-  repository: 'image-registry.openshift-image-registry.svc:5000/e903c2-tools'
+  repository: "image-registry.openshift-image-registry.svc:5000/e903c2-tools"
 
 vault:
-  namespace: 'platform-services'
-  authPath: 'auth/k8s-gold'
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"

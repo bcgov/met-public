@@ -1,8 +1,8 @@
 import { Breadcrumbs } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import { BodyText } from '../Typography';
 import { Link } from '../Navigation';
-import { UIMatch, useLocation, useMatches } from 'react-router-dom';
+import { Await, UIMatch, useLocation, useMatches } from 'react-router-dom';
 
 type BreadcrumbProps = {
     name: string;
@@ -56,9 +56,14 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
     );
 };
 
+type UICrumbFunction = (data: unknown) => Promise<BreadcrumbProps> | BreadcrumbProps;
+
+interface UIRouteHandle {
+    crumb?: UICrumbFunction;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface UIMatchWithCrumb
-    extends UIMatch<unknown, { crumb?: (data: unknown) => Promise<{ name: string; link?: string }> }> {}
+interface UIMatchWithCrumb extends UIMatch<unknown, UIRouteHandle> {}
 
 /**
  * Automatically generates breadcrumbs based on the `handle.crumb` function of the current route and its parents.
@@ -73,43 +78,40 @@ export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ small
     const crumbs = useMemo(() => {
         return matches.map((match) => {
             const data = match.data as unknown;
-            const handle = match.handle as {
-                crumb?: (data: unknown) => Promise<{ name: string; link?: string }>;
-            };
-            return handle?.crumb ? handle.crumb(data) : Promise.resolve({ name: '', link: '' });
+            const handle = match.handle as UIRouteHandle;
+            return handle?.crumb?.(data) ?? Promise.resolve({ name: '', link: '' });
         });
-    }, [location.pathname]);
-
-    const [resolvedCrumbs, setResolvedCrumbs] = React.useState<{ name: string; link?: string }[]>(
-        new Array(matches.length).fill({ name: 'Loading...', link: '' }),
-    );
-
-    React.useEffect(() => {
-        Promise.all(crumbs).then((results) => {
-            setResolvedCrumbs(results);
-        });
-    }, [crumbs]);
+    }, [location.pathname, matches]);
 
     return (
         <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
-            {resolvedCrumbs.map((resolvedCrumb, index) => {
-                const name = resolvedCrumb?.name;
-                const link = index < matches.length - 1 ? (resolvedCrumb?.link ?? matches[index].pathname) : undefined;
-                return link ? (
-                    <Link size="small" key={matches[index].pathname + name} to={link}>
-                        {name}
-                    </Link>
-                ) : (
-                    <BodyText
-                        size="small"
-                        bold={index == matches.length - 1}
-                        key={matches[index].pathname + name}
-                        sx={{ lineHeight: '24px' }}
-                    >
-                        {name}
-                    </BodyText>
-                );
-            })}
+            {crumbs.map((unresolvedCrumb, index) => (
+                <Suspense>
+                    <Await resolve={unresolvedCrumb}>
+                        {(resolvedCrumb: BreadcrumbProps) => {
+                            const name = resolvedCrumb?.name;
+                            const link =
+                                index < matches.length - 1
+                                    ? (resolvedCrumb?.link ?? matches[index].pathname)
+                                    : undefined;
+                            return link ? (
+                                <Link size="small" key={matches[index].pathname + name} to={link}>
+                                    {name}
+                                </Link>
+                            ) : (
+                                <BodyText
+                                    size="small"
+                                    bold={index == matches.length - 1}
+                                    key={matches[index].pathname + name}
+                                    sx={{ lineHeight: '24px' }}
+                                >
+                                    {name}
+                                </BodyText>
+                            );
+                        }}
+                    </Await>
+                </Suspense>
+            ))}
         </Breadcrumbs>
     );
 };

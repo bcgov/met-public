@@ -10,6 +10,10 @@ app:
     memoryUtilization: 75
     httpRequestsPerSecond: 100
     responseTimeSeconds: 0.5
+  ratelimits:
+    enabled: true # Enable or disable rate limiting
+    http: 40 # Max HTTP requests per 3 seconds
+    tcp: 45 # Max TCP connections per 3 seconds
 
 image:
   repository: "image-registry.openshift-image-registry.svc:5000"

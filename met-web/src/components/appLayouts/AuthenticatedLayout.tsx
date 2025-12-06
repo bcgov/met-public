@@ -51,3 +51,5 @@ export const AuthenticatedLayout = () => {
         </>
     );
 };
+
+export default AuthenticatedLayout;

@@ -7,6 +7,7 @@ import { USER_ROLES } from 'services/userService/constants';
 import { Header1 } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
 import { Survey } from 'models/survey';
+import { SurveyLoaderData } from '../building/SurveyLoader';
 
 const Banner = (survey: Survey) => {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Banner = (survey: Survey) => {
 };
 
 export const PreviewBanner = () => {
-    const { survey } = useRouteLoaderData('survey') as { survey: Promise<Survey> };
+    const { survey } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     return (
         <Suspense fallback={<Skeleton variant="rectangular" height="10em" width="100%" />}>

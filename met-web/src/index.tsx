@@ -5,15 +5,10 @@ import { store } from './store';
 import { Provider } from 'react-redux';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import { BaseTheme } from 'styles/Theme';
-import { Formio } from '@formio/react';
-import MetFormioComponents from 'met-formio';
 import '@bcgov/bc-sans/css/BCSans.css';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthKeyCloakContextProvider } from 'components/auth/AuthKeycloakContext';
 import { LanguageProvider } from 'components/common/LanguageContext';
-
-Formio.use(MetFormioComponents);
-Formio.Utils.Evaluator.noeval = false;
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
