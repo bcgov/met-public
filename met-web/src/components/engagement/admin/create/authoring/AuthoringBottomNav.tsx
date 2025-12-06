@@ -86,13 +86,14 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                         }}
                     >
                         <ThemeProvider theme={BaseTheme}>
-                            <LanguageSelector
+                            {/* TODO: Restore language selector when for multi language editing ticket*/}
+                            {/* <LanguageSelector
                                 currentLanguage={currentLanguage}
                                 setCurrentLanguage={setCurrentLanguage}
                                 languages={languages}
                                 isDirty={isDirty}
                                 isSubmitting={isSubmitting}
-                            />
+                            /> */}
                         </ThemeProvider>
 
                         <Button

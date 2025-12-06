@@ -100,6 +100,8 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
         }
     }
 
+    // Also need to delete
+
     // Update engagement metadata if necessary.
     if (formData.get('metadata_value') && formData.get('taxon_id')) {
         try {

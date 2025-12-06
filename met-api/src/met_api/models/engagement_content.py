@@ -19,10 +19,12 @@ class EngagementContent(BaseModel):
 
     __tablename__ = 'engagement_content'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(50), unique=False, nullable=False)
+    title = db.Column(db.String(50), unique=False, nullable=True)
+    heading = db.Column(db.String(60), unique=False, nullable=False)
     text_content = db.Column(db.Text, unique=False, nullable=True)
     json_content = db.Column(db.JSON, unique=False, nullable=True)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    widget_id = db.Column(db.Integer, ForeignKey('widget.id', ondelete='CASCADE'))
     sort_index = db.Column(db.Integer, nullable=False, default=1)
     is_internal = db.Column(db.Boolean, nullable=False)
 

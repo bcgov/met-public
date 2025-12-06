@@ -70,6 +70,7 @@ class EngagementContentService:
         engagement_content_model: EngagementContentModel = EngagementContentModel()
         engagement_content_model.engagement_id = engagement_id
         engagement_content_model.title = engagement_content_data.get('title')
+        engagement_content_model.heading = engagement_content_data.get('heading')
         engagement_content_model.text_content = engagement_content_data.get('text_content')
         engagement_content_model.json_content = engagement_content_data.get('json_content')
         engagement_content_model.sort_index = engagement_content_data.get('sort_index')
