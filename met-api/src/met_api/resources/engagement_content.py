@@ -15,9 +15,8 @@
 
 from http import HTTPStatus
 
-from flask import jsonify, request, current_app
+from flask import jsonify, request
 from flask_cors import cross_origin
-from flask_migrate import current
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
