@@ -69,12 +69,12 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
             const parsedTabs = JSON.parse(tabs) as unknown as EngagementDetailsTab[];
             const typedTabs = parsedTabs?.map((t) => ({
                 id: Number(t.id) >= 0 ? Number(t.id) : -1,
-                engagement_id: engagementId as unknown as number,
-                label: (t.label as string) || undefined,
-                slug: (t.slug as string) || undefined,
-                heading: (t.heading as string) || undefined,
-                body: (t.body as string) || undefined,
-                sort_index: (Number(t.sort_index) as unknown as number) || undefined,
+                engagement_id: engagementId,
+                label: t.label || undefined,
+                slug: t.slug || undefined,
+                heading: t.heading || undefined,
+                body: t.body || undefined,
+                sort_index: t.sort_index || undefined,
             })) as unknown as EngagementDetailsTab[];
             await patchDetailsTabs(engagementId, typedTabs);
         } catch (e) {

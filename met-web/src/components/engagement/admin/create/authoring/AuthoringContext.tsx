@@ -19,7 +19,7 @@ const tabSchema = yup.object({
     sort_index: yup.number().required(),
     heading: yup.string().required('Heading is required').max(60, 'Eyebrow text must be 60 characters or less'),
     body: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
-        return value && value.getCurrentContent().hasText();
+        return value?.getCurrentContent()?.hasText();
     }),
 });
 
@@ -43,7 +43,7 @@ const summarySchema = yup.object({
     description_title: yup.string().required(),
     description: yup.string().required(),
     summary_editor_state: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
-        return value && value.getCurrentContent().hasText();
+        return value?.getCurrentContent()?.hasText();
     }),
     form_source: yup.string().required(),
 });
