@@ -4,7 +4,7 @@ import { MetDescription, MetLabel } from 'components/common';
 import { FormContext } from './FormContext';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input/Button';
@@ -26,7 +26,7 @@ export const SecondTab = () => {
     const [submittingForm, setSubmittingForm] = useState(false);
 
     const methods = useForm<SecondCACTabForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<SecondCACTabForm>,
         defaultValues: {
             firstName: '',
             lastName: '',

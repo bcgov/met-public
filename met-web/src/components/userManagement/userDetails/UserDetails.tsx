@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { JSX, useContext } from 'react';
 import { Grid, Stack, Link } from '@mui/material';
 import { useAppSelector } from 'hooks';
 import { MetLabel, MetParagraphOld, MetPageGridContainer, PrimaryButtonOld } from 'components/common';

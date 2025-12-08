@@ -15,7 +15,7 @@ export type SurveyLoaderData = {
     engagement: Promise<Engagement | null>;
     language: string | undefined;
     reportSettings: Promise<SurveyReportSetting[] | null>;
-    slug: Promise<string | null>;
+    slug: Promise<{ slug: string } | null>;
     submission: Promise<SurveySubmission | null>;
     survey: Promise<Survey>;
     surveyId: string | undefined;

@@ -415,7 +415,7 @@ const AuthoringDetails = () => {
                             >
                                 {authoringDetailsTabs.map((value, key) => (
                                     <Tab
-                                        key={key}
+                                        key={String(key)}
                                         value={String(key)}
                                         // Add an X when appropriate: not on first tab, only if there are 3 or more tabs.
                                         label={

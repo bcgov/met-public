@@ -324,7 +324,7 @@ const Footer = () => {
                                     resolve={loaderData?.apiVersion}
                                     errorElement={<VersionInfoDisplay label={translate('footer.apiVersion')} />}
                                 >
-                                    {(apiVersionInfo: VersionInfo) => (
+                                    {(apiVersionInfo?: VersionInfo) => (
                                         <VersionInfoDisplay
                                             label={translate('footer.apiVersion')}
                                             version={apiVersionInfo?.version}

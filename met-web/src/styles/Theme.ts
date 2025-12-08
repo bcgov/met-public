@@ -1,4 +1,5 @@
 import { PaletteMode, createTheme } from '@mui/material';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 export const colors = {
     type: {
         regular: {
@@ -274,6 +275,18 @@ export const BaseTheme = createTheme({
         MuiSkeleton: {
             defaultProps: {
                 animation: 'wave',
+            },
+        },
+        MuiStaticDatePicker: {
+            defaultProps: {
+                showDaysOutsideCurrentMonth: true,
+                displayStaticWrapperAs: 'desktop',
+                slots: { actionBar: () => null },
+                sx: {
+                    paddingBottom: '1em',
+                    '& .MuiDateCalendar-root': { maxHeight: '24em', height: 'max-content' },
+                    '& .MuiPickersSlideTransition-root': { minHeight: '16em' },
+                },
             },
         },
     },

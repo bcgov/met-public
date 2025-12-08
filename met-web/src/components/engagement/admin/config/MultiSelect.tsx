@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useId, ReactFragment, SyntheticEvent } from 'react';
+import React, { HTMLAttributes, useId, SyntheticEvent, JSX } from 'react';
 import {
     Autocomplete,
     AutocompleteProps,
@@ -36,14 +36,14 @@ interface OptionalMultiSelectProps<T> extends AutocompleteProps<T, false, false,
         props: HTMLAttributes<HTMLLIElement>,
         option: T,
         state: AutocompleteRenderOptionState,
-    ) => ReactFragment | JSX.Element;
+    ) => JSX.Element | JSX.Element[];
     getOptionLabel: (option: T) => string;
     isOptionEqualToValue: (option: T, value: T) => boolean;
     renderOption: (
         props: HTMLAttributes<HTMLLIElement>,
         option: T,
         state: AutocompleteRenderOptionState,
-    ) => ReactFragment | JSX.Element;
+    ) => JSX.Element | JSX.Element[];
     renderInput: (params: AutocompleteRenderInputParams) => JSX.Element;
     options: readonly T[];
     searchPlaceholder?: string;
@@ -115,9 +115,9 @@ const MultiSelect = <T,>({
 
     const defaultRenderSelectedOption = (_: HTMLAttributes<HTMLLIElement>, option: T) => {
         if (typeof option === 'string') {
-            return option;
+            return <>{option}</>;
         }
-        return JSON.stringify(option);
+        return <>{JSON.stringify(option)}</>;
     };
 
     renderSelectedOption = renderSelectedOption ?? renderOption ?? defaultRenderSelectedOption;

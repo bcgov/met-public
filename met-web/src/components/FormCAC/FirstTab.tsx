@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
@@ -34,7 +34,7 @@ export const FirstTab: React.FC = () => {
         formState: { errors },
         trigger,
     } = useForm<FormData>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<FormData>,
         defaultValues: {
             understand: false,
             termsOfReference: false,

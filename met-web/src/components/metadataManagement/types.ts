@@ -1,5 +1,6 @@
 import { SvgIconComponent } from '@mui/icons-material';
 import { MetadataTaxon, MetadataTaxonModify } from 'models/engagement';
+import { JSX } from 'react';
 import { ControllerRenderProps, FieldErrorsImpl, FieldValues } from 'react-hook-form';
 import * as yup from 'yup';
 

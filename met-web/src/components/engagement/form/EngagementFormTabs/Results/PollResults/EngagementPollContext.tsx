@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, JSX, useContext, useEffect, useState } from 'react';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getWidgets } from 'services/widgetService';
 import { fetchPollWidgets, fetchPollResults } from 'services/widgetService/PollService/index';

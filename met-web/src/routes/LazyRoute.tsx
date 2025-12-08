@@ -95,17 +95,18 @@ function resolveLazyChildren(children: React.ReactNode): React.ReactNode {
 }
 
 function resolveLazyElement(element: React.ReactElement): React.ReactElement {
-    const resolvedChildren = resolveLazyChildren(element.props?.children);
+    const props = element.props as { children?: React.ReactNode };
+    const resolvedChildren = resolveLazyChildren(props.children);
 
     if (element.type === LazyRoute) {
         return createRouteFromLazyProps({ ...(element.props as LazyRouteProps), children: resolvedChildren });
     }
 
-    if (resolvedChildren === element.props?.children) {
+    if (resolvedChildren === props.children) {
         return element;
     }
 
-    return React.cloneElement(element, element.props, resolvedChildren);
+    return React.cloneElement(element, undefined, resolvedChildren);
 }
 
 export const resolveLazyRouteTree = (node: React.ReactElement): React.ReactElement => {

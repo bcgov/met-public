@@ -9,7 +9,7 @@ import {
     MetWidgetPaper,
     MetDescription,
 } from 'components/common';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch } from 'hooks';
@@ -61,7 +61,7 @@ const Form = () => {
     const [calculatingZoom, setCalculatingZoom] = useState(false);
 
     const methods = useForm<DetailsForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<DetailsForm>,
     });
 
     useEffect(() => {

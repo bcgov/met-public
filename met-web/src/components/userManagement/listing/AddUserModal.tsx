@@ -10,7 +10,7 @@ import {
     SecondaryButtonOld,
 } from 'components/common';
 import { UserManagementContext } from './UserManagementContext';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { getEngagements } from 'services/engagementService';
@@ -47,7 +47,7 @@ export const AddUserModal = () => {
     const theme = useTheme();
 
     const methods = useForm<AddUserForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<AddUserForm>,
     });
 
     const {

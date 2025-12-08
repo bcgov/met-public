@@ -30,7 +30,7 @@ import { Button } from 'components/common/Input';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
 import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
-import TrapFocus from '@mui/base/TrapFocus';
+import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
 import AuthoringSideNav from '../../engagement/admin/create/authoring/AuthoringSideNav';

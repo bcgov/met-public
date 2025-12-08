@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Grid, Divider, Typography, Avatar, Chip } from '@mui/material';
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler, Resolver } from 'react-hook-form';
 import { MetHeader4 } from 'components/common';
 import { EngagementTabsContext } from '../../EngagementTabsContext';
 import { EngagementMetadata as EngagementMetadataModel, MetadataTaxon } from 'models/engagement';
@@ -68,7 +68,7 @@ const EngagementMetadata = forwardRef((_props, ref) => {
         formState: { errors },
     } = useForm<TaxonFormValues>({
         defaultValues: initialValues,
-        resolver: yupResolver(validationSchema),
+        resolver: yupResolver(validationSchema) as unknown as Resolver<TaxonFormValues>,
     });
 
     const cleanArray = (arr: string[]) => arr.map((v) => v.toString().trim()).filter(Boolean);

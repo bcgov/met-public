@@ -6,7 +6,6 @@ import { FormField, FormFieldProps } from './FormField';
 import { BodyText } from '../Typography';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SxProps, Theme } from '@mui/system';
 
 export type TextInputProps = {
     value?: string;
@@ -241,7 +240,6 @@ export const TextAreaField = ({ ...textFieldProps }: Omit<TextFieldProps, 'multi
 
 interface CustomTextFieldProps extends Omit<MuiTextFieldProps, 'variant'> {
     customLabel?: string;
-    sx?: SxProps<Theme>;
 }
 
 export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }) => {
@@ -249,39 +247,41 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
     return (
         <MuiTextField
             {...props}
-            sx={{
-                '& .MuiOutlinedInput-root': {
-                    display: 'flex',
-                    height: '48px',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px',
-                    alignSelf: 'stretch',
-                    borderRadius: '8px',
-                    boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
-                    caretColor: colors.surface.blue[90],
-                    '& .MuiOutlinedInput-notchedOutline': {
-                        borderWidth: '1px', // Default outline
-                        borderColor: colors.surface.gray[80],
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderWidth: '2px', // 2px black outline on hover
-                        borderColor: theme.palette.text.primary,
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderWidth: '0px', // No outline when focused
-                        borderColor: 'transparent',
-                    },
-                    '&.Mui-focused': {
-                        boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
-                    },
-                    '&:has(:disabled) .MuiOutlinedInput-notchedOutline': {
-                        borderWidth: '1px', // Ensure outline for disabled state
-                        borderColor: colors.surface.gray[80],
+            sx={[
+                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                {
+                    '& .MuiOutlinedInput-root': {
+                        display: 'flex',
+                        height: '48px',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                        alignSelf: 'stretch',
+                        borderRadius: '8px',
+                        boxShadow: `0 0 0 1px ${colors.surface.gray[80]} inset`,
+                        caretColor: colors.surface.blue[90],
+                        '& .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1px', // Default outline
+                            borderColor: colors.surface.gray[80],
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '2px', // 2px black outline on hover
+                            borderColor: theme.palette.text.primary,
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '0px', // No outline when focused
+                            borderColor: 'transparent',
+                        },
+                        '&.Mui-focused': {
+                            boxShadow: `0 0 0 4px ${colors.focus.regular.outer}`,
+                        },
+                        '&:has(:disabled) .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1px', // Ensure outline for disabled state
+                            borderColor: colors.surface.gray[80],
+                        },
                     },
                 },
-                ...sx,
-            }}
+            ]}
         />
     );
 };

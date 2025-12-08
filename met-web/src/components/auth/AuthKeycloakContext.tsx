@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, JSX } from 'react';
 import { useAppDispatch } from 'hooks';
 import UserService from '../../services/userService';
 import { KeycloakClient } from 'constants/tenantConstants';

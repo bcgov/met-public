@@ -202,7 +202,7 @@ const App = () => {
                     lazy: () => import('routes/NotFound').then((module) => ({ Component: module.default })),
                 },
             ],
-            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
+            { basename: `/${basename}` },
         );
         return <RouterProvider router={router} />;
     }
@@ -211,7 +211,6 @@ const App = () => {
     if (!isAuthenticated) {
         const router = createBrowserRouter(createRoutesFromElements(UnauthenticatedRoutes), {
             basename: `/${basename}`,
-            future: { v7_relativeSplatPath: true },
         });
         return <RouterProvider router={router} />;
     }
@@ -240,7 +239,7 @@ const App = () => {
                     id: 'authenticated-root',
                 },
             ],
-            { basename: `/${basename}`, future: { v7_relativeSplatPath: true } },
+            { basename: `/${basename}` },
         );
         return <RouterProvider router={router} />;
     }
@@ -248,7 +247,6 @@ const App = () => {
     // Otherwise, display the admin area.
     const router = createBrowserRouter(createRoutesFromElements(AuthenticatedRoutes), {
         basename: `/${basename}`,
-        future: { v7_relativeSplatPath: true },
     });
 
     return <RouterProvider router={router} />;

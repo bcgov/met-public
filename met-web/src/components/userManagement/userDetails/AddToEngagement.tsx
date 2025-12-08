@@ -24,7 +24,7 @@ import {
 } from 'components/common';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserDetailsContext } from './UserDetailsContext';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { getEngagements } from 'services/engagementService';
@@ -66,7 +66,7 @@ export const AddToEngagementModal = () => {
     const theme = useTheme();
 
     const methods = useForm<AddUserForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<AddUserForm>,
     });
 
     const {

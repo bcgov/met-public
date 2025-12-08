@@ -1,5 +1,5 @@
 import { Widget, WidgetType } from 'models/widget';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, JSX } from 'react';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { PreviewMap, GeoJSONInput } from './types';
 import { fetchMaps } from 'services/widgetService/MapService';

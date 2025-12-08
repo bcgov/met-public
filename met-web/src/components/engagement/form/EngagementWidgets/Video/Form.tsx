@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch } from 'hooks';
@@ -36,7 +36,7 @@ const Form = () => {
     const [isCreating, setIsCreating] = React.useState(false);
 
     const methods = useForm<DetailsForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<DetailsForm>,
     });
 
     const { handleSubmit, reset } = methods;

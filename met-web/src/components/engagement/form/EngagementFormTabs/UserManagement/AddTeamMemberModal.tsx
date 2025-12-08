@@ -10,7 +10,7 @@ import {
     SecondaryButtonOld,
 } from 'components/common';
 import { User } from 'models/user';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { getUserList } from 'services/userService/api';
@@ -45,7 +45,7 @@ export const AddTeamMemberModal = () => {
     const teamMembersIds = useMemo(() => teamMembers.map((teamMember) => teamMember.user_id), [teamMembers]);
 
     const methods = useForm<AddTeamMemberForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<AddTeamMemberForm>,
     });
 
     const {

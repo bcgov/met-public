@@ -2,7 +2,7 @@ import { Breadcrumbs } from '@mui/material';
 import React, { Suspense, useMemo } from 'react';
 import { BodyText } from '../Typography';
 import { Link } from '../Navigation';
-import { Await, UIMatch, useLocation, useMatches } from 'react-router-dom';
+import { Await, UIMatch, useMatches } from 'react-router-dom';
 
 type BreadcrumbProps = {
     name: string;
@@ -72,16 +72,15 @@ interface UIMatchWithCrumb extends UIMatch<unknown, UIRouteHandle> {}
  * @returns A list of breadcrumbs.
  */
 export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ smallScreenOnly }) => {
-    const location = useLocation();
     const matches = (useMatches() as UIMatchWithCrumb[]).filter((match) => match.handle?.crumb);
-
+    const matchKey = matches.map((m) => m.pathname).join('-');
     const crumbs = useMemo(() => {
         return matches.map((match) => {
             const data = match.data as unknown;
             const handle = match.handle as UIRouteHandle;
             return handle?.crumb?.(data) ?? Promise.resolve({ name: '', link: '' });
         });
-    }, [location.pathname, matches]);
+    }, [matchKey]); // Recompute only when matches change
 
     return (
         <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
