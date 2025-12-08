@@ -9,7 +9,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { TextField } from 'components/common/Input/TextInput';
 import { colors, Palette } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { AuthoringTemplateOutletContext } from './types';
+import { AuthoringTemplateOutletContext, FormDetailsTab } from './types';
 import { EditorState } from 'draft-js';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
@@ -20,7 +20,6 @@ import { AuthoringLoaderData } from './authoringLoader';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
-import { FormDetailsTab } from './types';
 
 const AuthoringDetails = () => {
     const { setDefaultValues, engagement, fetcher, pageName }: AuthoringTemplateOutletContext = useOutletContext();
@@ -63,19 +62,16 @@ const AuthoringDetails = () => {
         setValue('form_source', pageName);
         setValue('id', engagementId);
         detailsTabs.then((tabs) => {
-            if (tabs && Array.isArray(tabs) && tabs.length > 0 && tabs[0].engagement_id === engagementId) {
-                const parsedTabs: FormDetailsTab[] = [];
-                tabs.forEach((t) => {
-                    parsedTabs.push({
-                        id: t.id || -1,
-                        engagement_id: t.engagement_id || engagementId,
-                        label: t.label || '',
-                        slug: t.slug || '',
-                        heading: t.heading || '',
-                        body: getEditorStateFromRaw(JSON.stringify(t.body) || ''),
-                        sort_index: t.sort_index || -1,
-                    });
-                });
+            if (Array.isArray(tabs) && tabs.length > 0 && tabs[0].engagement_id === engagementId) {
+                const parsedTabs: FormDetailsTab[] = tabs.map((t) => ({
+                    id: t.id || -1,
+                    engagement_id: t.engagement_id || engagementId,
+                    label: t.label || '',
+                    slug: t.slug || '',
+                    heading: t.heading || '',
+                    body: getEditorStateFromRaw(JSON.stringify(t.body) || ''),
+                    sort_index: t.sort_index || -1,
+                }));
                 // Sort by sort_index value
                 const sortedTabs = [...parsedTabs].sort((a, b) => a.sort_index - b.sort_index);
                 updateTabs(sortedTabs, false);
@@ -176,13 +172,14 @@ const AuthoringDetails = () => {
         setValue('details_tabs', newTabs, { shouldDirty: dirtied });
     };
 
-    const tabsEnabledChange = (tabsAreEnabled: boolean) => {
-        if (tabsAreEnabled) {
-            // Enable tabs and add a second tab
-            setTabsEnabled(true);
-            addTab();
-        } else if (getValues('details_tabs')?.length > 1) {
-            // Make sure the user wants to delete their tabs
+    const enableTabs = () => {
+        setTabsEnabled(true);
+        addTab();
+    };
+
+    const disableTabs = () => {
+        if (getValues('details_tabs')?.length > 1) {
+            // Don't directly set tabs to disabled if there are multiple tabs - confirm first.
             setNoTabsModalOpen(true);
         }
     };
@@ -368,7 +365,9 @@ const AuthoringDetails = () => {
                             id="tab_mode_selector"
                             sx={tabRadioContainerStyles}
                             value={tabsEnabled ? 'true' : 'false'}
-                            onChange={(event, value) => tabsEnabledChange(value === 'true')}
+                            onChange={(_, value) => {
+                                value === 'true' ? enableTabs() : disableTabs();
+                            }}
                         >
                             <FormControlLabel
                                 value="false"
@@ -462,7 +461,7 @@ const AuthoringDetails = () => {
 
                             {/* Tab contents */}
                             {authoringDetailsTabs.map((tab, key) => (
-                                <TabPanel sx={tabPanelStyles} value={String(key)} key={key}>
+                                <TabPanel sx={tabPanelStyles} value={String(key)} key={tab.id}>
                                     <AuthoringFormSection
                                         name={`Tab ${key + 1} Label`}
                                         required={true}
