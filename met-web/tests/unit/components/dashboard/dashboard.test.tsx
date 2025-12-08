@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import Dashboard from 'components/dashboard';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as engagementService from 'services/engagementService';
 import * as aggregatorService from 'services/analytics/aggregatorService';
 import * as userResponseDetailService from 'services/analytics/userResponseDetailService';
@@ -36,8 +35,12 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
+
 describe('Dashboard page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagements')

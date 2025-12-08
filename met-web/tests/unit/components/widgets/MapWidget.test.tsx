@@ -3,7 +3,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
@@ -35,6 +34,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -124,7 +124,6 @@ const router = createMemoryRouter(
 );
 
 describe('Map Widget tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -137,6 +136,11 @@ describe('Map Widget tests', () => {
 
     beforeEach(() => {
         setupEnv();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(async () => {
+            getWidgetsMock.mockResolvedValue([mapWidget]);
+            return mapWidget;
+        });
     });
 
     async function addMapWidget(container: HTMLElement) {
@@ -168,9 +172,6 @@ describe('Map Widget tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(mapWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([mapWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addMapWidget(container);

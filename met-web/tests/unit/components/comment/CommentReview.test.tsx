@@ -9,7 +9,6 @@ import { createDefaultComment } from 'models/comment';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultSubmission } from 'models/surveySubmission';
 import { USER_ROLES } from 'services/userService/constants';
-import * as reactRedux from 'react-redux';
 import { setupEnv } from '../setEnvVars';
 
 // Mocking the external modules and services used in CommentReview
@@ -42,17 +41,21 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [
-                USER_ROLES.REVIEW_COMMENTS,
-                USER_ROLES.EXPORT_ALL_TO_CSV,
-                USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET,
-                USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET,
-            ],
+    useSelector: jest.fn((callback) =>
+        callback({
+            user: {
+                roles: [
+                    USER_ROLES.REVIEW_COMMENTS,
+                    USER_ROLES.EXPORT_ALL_TO_CSV,
+                    USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET,
+                    USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET,
+                ],
+            },
             assignedEngagements: [1],
-        };
-    }),
+            tenant: 'test',
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('hooks', () => {
@@ -63,7 +66,7 @@ jest.mock('hooks', () => {
             t: (key: string) => translations[key] || key,
         }),
         useAppDispatch: () => jest.fn(),
-        useAppSelector: jest.fn(() => true), // mock useAppSelector here if needed
+        useAppSelector: jest.fn(() => true),
     };
 });
 
@@ -133,7 +136,6 @@ describe('CommentReview Component', () => {
     // Setup before each test to initialize mock returns
     beforeEach(() => {
         setupEnv();
-        jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
         jest.spyOn(submissionService, 'getSubmission').mockReturnValue(Promise.resolve(mockSubmission1));
         jest.spyOn(surveyService, 'getSurvey').mockReturnValue(Promise.resolve(mockSurveyOne));
     });

@@ -3,7 +3,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
@@ -115,6 +114,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [engagement.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -136,7 +136,6 @@ jest.mock('components/map', () => () => {
 });
 
 describe('Document widget in engagement page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(engagement));
     const fetchDocumentsMock = jest

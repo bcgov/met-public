@@ -3,7 +3,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
@@ -108,6 +107,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -168,7 +168,6 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
 jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve([engagementMetadata]));
 
 describe('Who is Listening widget  tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
         Promise.resolve([engagementMetadata]),
     );
@@ -186,6 +185,13 @@ describe('Who is Listening widget  tests', () => {
 
     beforeEach(() => {
         setupEnv();
+        mockCreateWidget.mockReset();
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(async () => {
+            getWidgetsMock.mockResolvedValue([whoIsListeningWidget]);
+            return whoIsListeningWidget;
+        });
     });
 
     async function addWhosIsListeningWidget(container: HTMLElement) {
@@ -216,9 +222,6 @@ describe('Who is Listening widget  tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addWhosIsListeningWidget(container);
@@ -242,10 +245,6 @@ describe('Who is Listening widget  tests', () => {
                 surveys: surveys,
             }),
         );
-
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(whoIsListeningWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([whoIsListeningWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addWhosIsListeningWidget(container);

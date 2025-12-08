@@ -20,7 +20,7 @@ jest.mock('hooks', () => ({
     useAppTranslation: () => ({
         t: (key: string) => key, // return the key itself (i.e. no translation)
     }),
-    useAppSelector: (callback: any) =>
+    useAppSelector: (callback: (state: unknown) => unknown) =>
         callback({
             user: {
                 ...staffUserState,

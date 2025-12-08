@@ -1,19 +1,27 @@
-import React, { ReactNode, SuspenseProps } from 'react';
+import React, { JSX, ReactNode, SuspenseProps } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantDetail from '../../../../src/components/tenantManagement/Detail';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
+import { NotificationModalState } from 'services/notificationModalService/types';
 
-global['Request'] = jest.fn().mockImplementation(() => ({
-    signal: {
-        removeEventListener: () => {},
-        addEventListener: () => {},
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
     },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
 }));
 
 const mockTenant = {
@@ -65,7 +73,7 @@ jest.mock('react-redux', () => ({
             roles: [USER_ROLES.SUPER_ADMIN],
         };
     }),
-    useDispatch: jest.fn(),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -84,9 +92,9 @@ jest.mock('services/notificationService/notificationSlice', () => ({
     openNotification: jest.fn(),
 }));
 
-let capturedNotification: any;
+let capturedNotification: NotificationModalState;
 jest.mock('services/notificationModalService/notificationModalSlice', () => ({
-    openNotificationModal: jest.fn((notification: any) => {
+    openNotificationModal: jest.fn((notification: NotificationModalState) => {
         capturedNotification = notification;
     }),
 }));
@@ -109,12 +117,10 @@ const router = createMemoryRouter(
 );
 
 describe('Tenant Detail Page tests', () => {
-    const dispatch = jest.fn();
     const navigate = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
     });
 
@@ -143,7 +149,7 @@ describe('Tenant Detail Page tests', () => {
         await waitFor(() => {
             expect(openNotificationModal).toHaveBeenCalledTimes(1);
             expect(capturedNotification.data.header).toBe('Delete Tenant Instance?');
-            capturedNotification.data.handleConfirm();
+            capturedNotification.data.handleConfirm?.();
             // Test that the deleteTenant function was called
             expect(tenantService.deleteTenant).toHaveBeenCalledTimes(1);
         });

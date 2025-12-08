@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import EngagementView from 'components/engagement/old-view';
 import { Contact } from 'models/contact';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementSlugService from 'services/engagementSlugService';
@@ -109,6 +108,12 @@ jest.mock('components/permissionsGate', () => ({
 
 jest.mock('axios');
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
+
 const router = createMemoryRouter(
     [
         {
@@ -167,8 +172,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('Engagement View page tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useLocation').mockReturnValue(mockLocationData);
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ engagementId: '1' });

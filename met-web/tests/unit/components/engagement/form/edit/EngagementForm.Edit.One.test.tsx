@@ -3,7 +3,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../../../src/components/engagement/form';
 import { setupEnv } from '../../../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
@@ -34,12 +33,16 @@ jest.mock('axios');
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: { name: 'test' },
+            user: {
+                roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+            },
             assignedEngagements: [draftEngagement.id],
-        };
-    }),
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('components/common/Dragdrop', () => ({
@@ -92,6 +95,20 @@ jest.mock('react-router-dom', () => ({
     },
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: 'test',
+            user: {
+                roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+            },
+            assignedEngagements: [draftEngagement.id],
+        }),
+    ),
+}));
+
 const router = createMemoryRouter(
     [
         {
@@ -104,15 +121,7 @@ const router = createMemoryRouter(
     },
 );
 
-// Mocking window.location.pathname in Jest
-Object.defineProperty(window, 'location', {
-    value: {
-        pathname: '/engagements/1/form',
-    },
-});
-
 describe('Engagement form page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const openNotificationModalMock = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());
@@ -125,9 +134,7 @@ describe('Engagement form page tests', () => {
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
-    const getEngagementSlugMock = jest
-        .spyOn(engagementSlugService, 'getSlugByEngagementId')
-        .mockReturnValue(Promise.resolve(engagementSlugData));
+    jest.spyOn(engagementSlugService, 'getSlugByEngagementId').mockReturnValue(Promise.resolve(engagementSlugData));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));

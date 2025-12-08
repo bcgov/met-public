@@ -3,25 +3,26 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../../../src/components/engagement/form';
 import { setupEnv } from '../../../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
-import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as engagementSettingService from 'services/engagementSettingService';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
-import { createMemoryRouter } from 'react-router-dom';
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: 'test',
+            user: {
+                roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+            },
             assignedEngagements: [draftEngagement.id],
-        };
-    }),
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('axios');
@@ -75,16 +76,7 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
-// Mocking window.location.pathname in Jest
-Object.defineProperty(window, 'location', {
-    value: {
-        pathname: '/engagements/create/form',
-    },
-});
-
 describe('Engagement form page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')

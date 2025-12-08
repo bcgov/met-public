@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import Dashboard from 'components/publicDashboard/Dashboard';
 import { setupEnv } from '../setEnvVars';
 import { DashboardContext } from 'components/publicDashboard/DashboardContext';
-import * as reactRedux from 'react-redux';
 import { closedEngagement } from '../factory';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -58,8 +57,12 @@ jest.mock('maplibre-gl/dist/maplibre-gl', () => ({
     Map: () => ({}),
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
+
 describe('Public Dashboard page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     beforeEach(() => {
         setupEnv();
         render(
@@ -88,7 +91,9 @@ describe('Public Dashboard page tests', () => {
         const returnLink = screen.getByText(`<<Return to ${closedEngagement.name} Engagement`);
         expect(returnLink).toBeInTheDocument();
         userEvent.click(returnLink);
-        expect(window.location.pathname).toBe(`/engagements/${closedEngagement.id}/view`);
+        await waitFor(() => {
+            expect(window.location.pathname).toBe(`/engagements/${closedEngagement.id}/view`);
+        });
     });
 
     test('Public Dashboard has sub components', async () => {

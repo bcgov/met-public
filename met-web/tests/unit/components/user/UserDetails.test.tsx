@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as userService from 'services/userService/api';
 import * as membershipService from 'services/membershipService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
@@ -56,11 +55,15 @@ jest.mock('components/common', () => ({
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [USER_ROLES.TOGGLE_USER_STATUS],
-        };
-    }),
+    useSelector: jest.fn((callback) =>
+        callback({
+            user: {
+                userDetail: { ...mockUser1 },
+                roles: [USER_ROLES.TOGGLE_USER_STATUS],
+            },
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -70,7 +73,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('User Details tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const mockOpenNotificationModal = jest
         .spyOn(notificationModalSlice, 'openNotificationModal')
         .mockImplementation(jest.fn());

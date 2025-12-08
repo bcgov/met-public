@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import TabContext from '@mui/lab/TabContext/TabContext';
-import TabPanel from '@mui/lab/TabPanel/TabPanel';
+import TabContext from '@mui/lab/TabContext';
+import TabPanel from '@mui/lab/TabPanel';
 import { FormContext } from './FormContext';
 import { FirstTab } from './FirstTab';
 import { TAB_ONE, TAB_TWO } from './constants';

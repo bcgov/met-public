@@ -2,7 +2,6 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as feedbackService from 'services/feedbackService/index';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum, FeedbackStatusEnum } from 'models/feedback';
@@ -59,10 +58,10 @@ jest.mock('react-redux', () => ({
             roles: [USER_ROLES.CREATE_ENGAGEMENT],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 describe('Feedback Listing tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getFeedbackPageMock = jest.spyOn(feedbackService, 'getFeedbacksPage');
 
@@ -89,7 +88,6 @@ describe('Feedback Listing tests', () => {
     });
 
     test('Feedback table is empty', async () => {
-        jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
         render(<FeedbackListing />);
         const feedbackListing = screen.getByTestId('listing-table');
 
@@ -120,7 +118,7 @@ describe('Feedback Listing tests', () => {
         });
 
         await waitFor(() => {
-            expect(getFeedbackPageMock).lastCalledWith({
+            expect(getFeedbackPageMock).toHaveBeenLastCalledWith({
                 page: 1,
                 size: 10,
                 sort_key: 'rating',
@@ -148,7 +146,7 @@ describe('Feedback Listing tests', () => {
         fireEvent.click(GoToPreviousPageButton);
 
         await waitFor(() => {
-            expect(getFeedbackPageMock).lastCalledWith({
+            expect(getFeedbackPageMock).toHaveBeenLastCalledWith({
                 page: 1,
                 size: 10,
                 sort_key: 'rating',

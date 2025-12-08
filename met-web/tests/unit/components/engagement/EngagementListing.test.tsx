@@ -3,7 +3,6 @@ import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import EngagementListing from '../../../../src/components/engagement/listing';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultSurvey } from 'models/survey';
 import { createDefaultEngagement } from 'models/engagement';
@@ -13,7 +12,20 @@ import assert from 'assert';
 import { USER_ROLES } from 'services/userService/constants';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
-window.Request = jest.fn();
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
+    },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
+}));
 
 const mockSurvey = {
     ...createDefaultSurvey(),
@@ -100,7 +112,7 @@ let mockFetcherData = {
     engagements: { items: [mockEngagementOne, mockEngagementTwo], total: 2 },
 };
 
-let mockFetcher = {
+const mockFetcher = {
     load: jest.fn(),
     data: mockFetcherData,
     state: 'idle',
@@ -122,6 +134,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 const router = createMemoryRouter(
@@ -137,7 +150,6 @@ const router = createMemoryRouter(
 );
 
 describe('Engagement listing page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
 
     beforeEach(() => {

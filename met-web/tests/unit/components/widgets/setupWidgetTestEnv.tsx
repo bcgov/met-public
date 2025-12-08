@@ -1,7 +1,6 @@
 import { setupEnv } from '../setEnvVars';
 import React from 'react';
 import '@testing-library/jest-dom';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
@@ -47,9 +46,21 @@ export const setupWidgetTestEnvSpy = (): void => {
         Promise.resolve([engagementMetadata]),
     );
 
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => ({
-        roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
-        assignedEngagements: [draftEngagement.id],
+    jest.mock('react-redux', () => ({
+        ...jest.requireActual('react-redux'),
+        useSelector: jest.fn((callback) =>
+            callback({
+                user: {
+                    roles: [
+                        USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS,
+                        USER_ROLES.EDIT_ENGAGEMENT,
+                        USER_ROLES.CREATE_ENGAGEMENT,
+                    ],
+                },
+                assignedEngagements: [draftEngagement.id],
+            }),
+        ),
+        useDispatch: jest.fn(() => jest.fn()),
     }));
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ projectId: '' });
     jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(jest.fn());
@@ -61,5 +72,4 @@ export const setupWidgetTestEnvSpy = (): void => {
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),
     );
-    jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(jest.fn());
 };

@@ -3,7 +3,6 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import SurveyListing from '../../../../src/components/survey/listing';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as surveyService from 'services/surveyService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultSurvey } from 'models/survey';
@@ -107,6 +106,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -118,7 +118,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('Survey form page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getSurveysPageMock = jest.spyOn(surveyService, 'getSurveysPage');
 
@@ -167,7 +166,7 @@ describe('Survey form page tests', () => {
         fireEvent.click(screen.getByTestId('survey/listing/search-button'));
 
         await waitFor(() => {
-            expect(getSurveysPageMock).lastCalledWith({
+            expect(getSurveysPageMock).toHaveBeenLastCalledWith({
                 page: 1,
                 size: 10,
                 sort_key: 'survey.created_date',
