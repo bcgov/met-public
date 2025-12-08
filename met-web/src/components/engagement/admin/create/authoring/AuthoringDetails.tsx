@@ -1,288 +1,199 @@
-import { Grid, IconButton, MenuItem, Select, SelectChangeEvent, Tab, Tabs } from '@mui/material';
-import { EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import { colors, MetLabel, MetHeader3, MetLabel as MetBigLabel } from 'components/common';
-import { Button, TextField } from 'components/common/Input';
-import React, { SyntheticEvent, useState } from 'react';
+import { Button, FormControlLabel, Grid, Modal, Radio, RadioGroup, Tab } from '@mui/material';
+import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import React, { useEffect, useState } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
+import { Header3 } from 'components/common/Typography/Headers';
+import { useLoaderData, useOutletContext } from 'react-router-dom';
+import { Controller, useFormContext } from 'react-hook-form';
+import { TextField } from 'components/common/Input/TextInput';
+import { colors, Palette } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { AuthoringTemplateOutletContext, DetailsTabProps, TabValues } from './types';
-import { useOutletContext } from 'react-router-dom';
-import { Palette } from 'styles/Theme';
-import { Unless, When } from 'react-if';
-import { TabContext, TabPanel } from '@mui/lab';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faX } from '@fortawesome/pro-regular-svg-icons';
+import { AuthoringTemplateOutletContext, FormDetailsTab } from './types';
 import { EditorState } from 'draft-js';
-
-const handleDuplicateTabNames = (newTabs: TabValues[], newTabName: string) => {
-    // Will add a sequencial number suffix for up to 10 numbers if there is a duplicate, then add (copy) if none of those are available.
-    for (let i = 2; i < 12; i++) {
-        if (!newTabs.find((tab) => tab.heading === `${newTabName} (${i})`)) {
-            return `${newTabName} (${i})`;
-        }
-    }
-    return `${newTabName} (copy)`;
-};
+import WidgetPicker from '../widgets';
+import { WidgetLocation } from 'models/widget';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/pro-light-svg-icons';
+import ConfirmModal from 'components/common/Modals/ConfirmModal';
+import { AuthoringLoaderData } from './authoringLoader';
+import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
+import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 const AuthoringDetails = () => {
+    const { setDefaultValues, engagement, fetcher, pageName }: AuthoringTemplateOutletContext = useOutletContext();
     const {
         setValue,
-        contentTabsEnabled,
-        tabs,
-        setTabs,
-        setSingleContentValues,
-        setContentTabsEnabled,
-        singleContentValues,
-        defaultTabValues,
-    }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template
-    const [currentTab, setCurrentTab] = useState(tabs[0]);
-
-    const tabsStyles = {
-        borderBottom: `2px solid ${colors.surface.gray[60]}`,
-        overflow: 'hidden',
-        '& .MuiTabs-flexContainer': {
-            justifyContent: 'flex-start',
-            width: 'max-content',
-        },
-    };
-    const tabStyles = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '48px',
-        padding: '4px 18px 2px 18px',
-        fontSize: '14px',
-        borderRadius: '0px 16px 0px 0px',
-        border: `1px solid ${colors.surface.gray[60]}`,
-        borderBottom: 'none',
-        boxShadow:
-            '0px 2px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
-        backgroundColor: 'gray.10',
-        color: 'text.secondary',
-        fontWeight: 'normal',
-        '&.Mui-selected': {
-            backgroundColor: 'primary.main',
-            borderColor: 'primary.main',
-            color: 'white',
-            fontWeight: 'bold',
-        },
-        outlineOffset: '-4px',
-        '&:focus-visible': {
-            outline: `2px solid`,
-            outlineColor: '#12508F',
-            border: '4px solid',
-            borderColor: '#12508F',
-            padding: '0px 20px 0px 14px',
-        },
+        getValues,
+        reset,
+        watch,
+        control,
+        formState: { errors, isDirty, isSubmitting },
+    } = useFormContext<EngagementUpdateData>();
+    const { detailsTabs } = useLoaderData() as AuthoringLoaderData; // Get fresh data to avoid DB sync issues
+    const [tabsEnabled, setTabsEnabled] = useState<boolean | undefined>(undefined);
+    const [currentTab, setCurrentTab] = useState<string | undefined>(undefined);
+    const [delTabIndex, setDelTabIndex] = useState(-1);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [noTabsModalOpen, setNoTabsModalOpen] = useState(false);
+    const hasUnsavedWork = isDirty && !isSubmitting;
+    const engagementId = engagement.id;
+    const authoringDetailsTabs = watch('details_tabs');
+    const defaultDetailsTabValues = {
+        id: -1,
+        engagement_id: engagementId,
+        label: 'Tab 1',
+        slug: 'tab_1',
+        heading: '',
+        body: EditorState.createEmpty(),
+        sort_index: 1,
     };
 
-    const handleCloseTab = (e: React.MouseEvent, tab: TabValues) => {
-        e.stopPropagation();
-        const index = tabs.findIndex((t) => t.heading === tab.heading);
-        if (-1 < index) {
-            const newTabs = [...tabs];
-            newTabs.splice(index, 1);
-            if (1 === newTabs.length) {
-                // If we're switching back to single content mode
-                if (tabs[0].heading !== 'Tab 1') {
-                    setSingleContentValues(tabs[0]);
-                } else {
-                    setSingleContentValues({ ...tabs[0], heading: '' }); // If the current Section Heading is "Tab 1" then change it to a blank value.
-                }
-                setTabs([tabs[0]]);
-                setContentTabsEnabled('false');
+    // Set current values to default state after saving form
+    useEffect(() => {
+        const newDefaults = getValues();
+        setDefaultValues(newDefaults);
+        reset(newDefaults);
+    }, [fetcher.data]);
+
+    useEffect(() => {
+        reset(defaultValuesObject);
+        setValue('form_source', pageName);
+        setValue('id', engagementId);
+        detailsTabs.then((tabs) => {
+            if (Array.isArray(tabs) && tabs.length > 0 && tabs[0].engagement_id === engagementId) {
+                const parsedTabs: FormDetailsTab[] = tabs.map((t) => ({
+                    id: t.id || -1,
+                    engagement_id: t.engagement_id || engagementId,
+                    label: t.label || '',
+                    slug: t.slug || '',
+                    heading: t.heading || '',
+                    body: getEditorStateFromRaw(JSON.stringify(t.body) || ''),
+                    sort_index: t.sort_index || -1,
+                }));
+                // Sort by sort_index value
+                const sortedTabs = [...parsedTabs].sort((a, b) => a.sort_index - b.sort_index);
+                updateTabs(sortedTabs, false);
             } else {
-                setTabs(newTabs);
-                if (tab === currentTab) setCurrentTab(newTabs[index - 1]); // Switch tabs if you're closing the current one
+                setValue('details_tabs', [defaultDetailsTabValues]);
             }
+            // Pick single or tab mode based on the number of tabs
+            if (getValues()?.details_tabs?.length < 2) {
+                setTabsEnabled(false);
+            } else {
+                setTabsEnabled(true);
+            }
+            setDefaultValues(getValues());
+            setCurrentTab('0');
+        });
+    }, []);
+
+    const addTab = () => {
+        const newTabs = [...getValues('details_tabs')];
+        if (newTabs.length > 9) {
+            return; // Maximum 10 tabs
+        }
+        const renumberedTabs = renumberTabs(newTabs);
+        const newTab: FormDetailsTab = {
+            id: -1,
+            engagement_id: engagementId,
+            label: `Tab ${newTabs.length + 1}`,
+            slug: `tab_${newTabs.length + 1}`,
+            heading: '',
+            body: getEditorStateFromRaw(''),
+            sort_index: newTabs.length + 1,
+        };
+        updateTabs([...renumberedTabs, newTab], true);
+        setCurrentTab(String(newTabs.length));
+    };
+
+    const renumberTabs = (tabs: FormDetailsTab[]): FormDetailsTab[] => {
+        return tabs.map((tab, index) => {
+            if (tab.label.includes('Tab ') && !tab.label.includes(` ${String(index + 1)}`)) {
+                tab.label = `Tab ${index + 1}`;
+                tab.slug = `tab_${index + 1}`;
+                tab.sort_index = index + 1;
+            }
+            return tab;
+        });
+    };
+
+    const removeTab = (event: React.SyntheticEvent, index: number) => {
+        event.stopPropagation();
+        const newTabs = getValues('details_tabs');
+        if (index !== -1 && newTabs?.[index]) {
+            setDelTabIndex(index);
+            setDeleteModalOpen(true);
         }
     };
 
-    const handleAddTab = () => {
-        const newTabs = [...tabs];
-        const newTabName = 'Tab ' + (newTabs.length + 1);
-        if (newTabs.find((tab) => tab.heading === newTabName)) {
-            newTabs.push({ ...defaultTabValues, heading: handleDuplicateTabNames(newTabs, newTabName) });
-        } else {
-            newTabs.push({ ...defaultTabValues, heading: newTabName }); // Don't create duplicate entries
+    const labelChange = (value: string, index: number) => {
+        const newTabs = [...getValues('details_tabs')];
+        // Search for duplicate label names and rename new label if necessary
+        let newValue = value;
+        let suffixCounter = 1;
+        while (newTabs.some((tab, i) => tab.label === newValue && i !== index)) {
+            newValue = `${value} (${suffixCounter++})`;
         }
-        setTabs(newTabs);
-        setCurrentTab(newTabs[newTabs.length - 1]);
+        newTabs[index].label = newValue;
+        newTabs[index].slug = newValue.toLowerCase().replace(/\s+/g, '_');
+        updateTabs(newTabs, true);
     };
 
-    return (
-        <Grid item sx={{ maxWidth: '700px' }} direction="column">
-            <When condition={'true' === contentTabsEnabled && 1 < tabs.length}>
-                <Grid sx={{ borderBottom: '1', borderColor: 'divider' }} item>
-                    <TabContext
-                        value={
-                            tabs.find((tab) => tab.heading === currentTab.heading)
-                                ? tabs[tabs.findIndex((t) => t.heading === currentTab.heading)].heading
-                                : tabs[tabs.length - 1].heading
-                        }
-                    >
-                        <Tabs
-                            component="nav"
-                            variant="scrollable"
-                            aria-label="Admin Engagement View Tabs"
-                            TabIndicatorProps={{ sx: { display: 'none' } }}
-                            sx={tabsStyles}
-                            value={
-                                tabs.find((tab) => tab.heading === currentTab.heading)
-                                    ? tabs[tabs.findIndex((t) => t.heading === currentTab.heading)].heading
-                                    : tabs[tabs.length - 1].heading
-                            }
-                            onChange={(event: SyntheticEvent<Element, Event>, value: string) =>
-                                tabs.find((tab) => tab.heading === value) &&
-                                setCurrentTab(tabs[tabs.findIndex((tab) => tab.heading === value)])
-                            }
-                        >
-                            {tabs.map((tab, key) => {
-                                return (
-                                    <Tab
-                                        sx={tabStyles}
-                                        label={
-                                            <span>
-                                                <span style={{ marginRight: '1rem' }}>{tab.heading}</span>
-                                                <When condition={0 !== key}>
-                                                    <IconButton
-                                                        size="small"
-                                                        component="span"
-                                                        onClick={(e: React.MouseEvent) => handleCloseTab(e, tab)}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faX}
-                                                            style={{
-                                                                fontSize: '0.9rem',
-                                                                marginTop: '-4px',
-                                                                color:
-                                                                    currentTab.heading === tab.heading
-                                                                        ? colors.surface.white
-                                                                        : Palette.text.primary,
-                                                            }}
-                                                        />
-                                                    </IconButton>
-                                                </When>
-                                            </span>
-                                        }
-                                        key={key}
-                                        value={tab.heading}
-                                        disableFocusRipple
-                                    />
-                                );
-                            })}
-                            <Button
-                                sx={{
-                                    border: 'none !important',
-                                    boxShadow: 'none !important',
-                                    backgroundColor: 'transparent !important',
-                                    color: '#12508F !important',
-                                    fontSize: '0.9rem',
-                                }}
-                                onClick={() => {
-                                    handleAddTab();
-                                }}
-                            >
-                                + Add Tab
-                            </Button>
-                        </Tabs>
-                        {tabs.map((tab, key) => {
-                            return (
-                                <TabPanel value={tab.heading} key={key} sx={{ padding: '1rem 0' }}>
-                                    <DetailsTab
-                                        setValue={setValue}
-                                        setTabs={setTabs}
-                                        setCurrentTab={setCurrentTab}
-                                        setSingleContentValues={setSingleContentValues}
-                                        tabs={tabs}
-                                        tabIndex={key}
-                                        singleContentValues={singleContentValues}
-                                        defaultTabValues={defaultTabValues}
-                                    />
-                                </TabPanel>
-                            );
-                        })}
-                    </TabContext>
-                </Grid>
-            </When>
-            <Unless condition={'true' === contentTabsEnabled}>
-                <DetailsTab
-                    setValue={setValue}
-                    setTabs={setTabs}
-                    setCurrentTab={setCurrentTab}
-                    setSingleContentValues={setSingleContentValues}
-                    tabs={tabs}
-                    tabIndex={0}
-                    singleContentValues={singleContentValues}
-                    defaultTabValues={defaultTabValues}
-                />
-            </Unless>
-        </Grid>
-    );
-};
+    const editorChange = (newEditorState: EditorState, key: number): EditorState => {
+        const newTabs = [...getValues('details_tabs')];
+        newTabs[key].body = newEditorState;
+        updateTabs(newTabs, true);
+        return newEditorState;
+    };
 
-export default AuthoringDetails;
+    const deleteConfirm = () => {
+        const newTabs = [...getValues('details_tabs')];
+        newTabs.splice(delTabIndex, 1);
+        const renumberedTabs = renumberTabs(newTabs);
+        if (String(delTabIndex) === currentTab) {
+            // If the selected tab was deleted, select the tab before it.
+            setCurrentTab(String(Math.max(0, delTabIndex - 1)));
+        } else if (!renumberedTabs[Number(currentTab)]) {
+            // If the tab no longer exists because of renumbering, choose the new last tab.
+            setCurrentTab(String(renumberedTabs.length - 1));
+        }
+        updateTabs(renumberedTabs, true);
+        deleteModalClose();
+    };
 
-const DetailsTab = ({
-    setValue,
-    setTabs,
-    setCurrentTab,
-    setSingleContentValues,
-    tabs,
-    tabIndex,
-    singleContentValues,
-    defaultTabValues,
-}: DetailsTabProps) => {
-    // Define the styles
-    const metBigLabelStyles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-        lineHeight: 1.167,
-        color: '#292929',
-        fontWeight: '700',
+    const deleteModalClose = () => {
+        setDeleteModalOpen(false);
+        setDelTabIndex(-1);
     };
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
+
+    const updateTabs = (newTabs: FormDetailsTab[], dirtied: boolean) => {
+        setValue('details_tabs', newTabs, { shouldDirty: dirtied });
     };
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
+
+    const enableTabs = () => {
+        setTabsEnabled(true);
+        addTab();
     };
-    const formItemContainerStyles = {
-        padding: '2rem 1.4rem !important',
-        margin: '1rem 0',
-        borderRadius: '16px',
+
+    const disableTabs = () => {
+        if (getValues('details_tabs')?.length > 1) {
+            // Don't directly set tabs to disabled if there are multiple tabs - confirm first.
+            setNoTabsModalOpen(true);
+        }
     };
-    const metLabelStyles = {
-        fontSize: '0.95rem',
+
+    const noTabsConfirm = () => {
+        setTabsEnabled(false);
+        const newTabs = getValues('details_tabs');
+        // Remove subsequent tabs when switching to no-tab mode. This action dirties the form.
+        updateTabs([newTabs[0]], true);
+        setNoTabsModalOpen(false);
+        setCurrentTab('0');
     };
-    const conditionalSelectStyles = {
-        width: '100%',
-        backgroundColor: colors.surface.white,
-        borderRadius: '8px',
-        boxShadow: '0 0 0 1px #7A7876 inset',
-        lineHeight: '1.4375em',
-        height: '48px',
-        marginTop: '8px',
-        padding: '0',
-    };
-    const widgetPreviewStyles = {
-        margin: '2rem 4rem 4rem',
-        display: 'flex',
-        minHeight: '18rem',
-        border: '2px dashed rgb(122, 120, 118)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '16px',
-    };
-    const buttonStyles = {
-        height: '2.6rem',
-        borderRadius: '8px',
-        border: 'none',
-        padding: '0 1rem',
-        minWidth: '8.125rem',
-        fontSize: '0.9rem',
-    };
+
+    // WYSIWYG text editor toolbar items
 
     const toolbar = {
         options: ['inline', 'list', 'link', 'blockType', 'history'],
@@ -293,181 +204,382 @@ const DetailsTab = ({
         list: { options: ['unordered', 'ordered'] },
     };
 
-    const handleSectionHeadingChange = (value: string) => {
-        const newHeading = value;
-        if (2 > tabs.length && 0 === tabIndex) {
-            // If there are no tabs
-            setSingleContentValues({ ...singleContentValues, heading: newHeading });
-            setTabs([{ ...defaultTabValues, heading: newHeading }]);
-        } else {
-            // If there are tabs
-            const newTabs = [...tabs];
-            newTabs[tabIndex].heading = newTabs.find((tab) => tab.heading === newHeading)
-                ? handleDuplicateTabNames(newTabs, newHeading)
-                : newHeading; // If the new name is the same as an existing one, rename it
-            setSingleContentValues(newTabs[0]);
-            setTabs([...newTabs]);
-            setCurrentTab(newTabs[tabIndex]);
-        }
+    // Styles
+
+    const heading3Styles = {
+        pb: '1rem',
+        fontWeight: 'bold',
     };
 
-    const handleWidgetChange = (event: SelectChangeEvent<string>) => {
-        const newWidget = event.target.value;
-        const newTabs = [...tabs];
-        newTabs[tabIndex].widget = newWidget;
-        setTabs(newTabs);
+    const formDescriptionTextStyles = {
+        fontSize: '0.9rem',
     };
 
-    const handleRemoveWidget = () => {
-        if ('' === tabs[tabIndex].widget) {
-            return;
-        } else {
-            const newTabs = [...tabs];
-            newTabs[tabIndex].widget = '';
-            setTabs(newTabs);
-        }
+    const tabRadioContainerStyles = {
+        display: 'flex',
+        width: '100%',
+        flexWrap: 'nowrap',
+        mt: '1rem',
+        fontWeight: 'bold',
     };
 
-    const handleBodyTextChange = (newEditorState: EditorState) => {
-        const plainText = newEditorState.getCurrentContent().getPlainText();
-        const newTabs = [...tabs];
-        newTabs[tabIndex].bodyCopyEditorState = newEditorState;
-        newTabs[tabIndex].bodyCopyPlainText = plainText;
-        setTabs(newTabs);
+    const radioStyles = {
+        flexBasis: '50%',
+    };
+
+    const tabListStyles = {
+        display: tabsEnabled ? 'flex' : 'none',
+        borderBottom: `1px solid ${Palette.primary.main}`,
+        margin: '1rem 0',
+        '& .MuiTabs-flexContainer': {
+            flexWrap: 'wrap', // For 7-10 tabs, a second line of tabs is required.
+            marginBottom: '-12px',
+        },
+    };
+
+    const tabStyles = {
+        display: 'flex',
+        flexWrap: 'nowrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '48px',
+        mt: '0.5rem',
+        padding: '4px 18px 2px 18px',
+        fontSize: '14px',
+        borderRadius: '0px 16px 0px 0px',
+        borderBottom: '2px solid',
+        borderBottomColor: 'gray.60',
+        boxShadow:
+            '0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.20)',
+        color: 'text.secondary',
+        fontWeight: 'normal',
+        outlineOffset: '-4px',
+        '&:focus-visible': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '4px solid',
+            borderColor: 'focus.outer',
+            padding: '0px 20px 0px 14px',
+        },
+    };
+
+    const addTabButtonStyles = {
+        border: 'none',
+        background: 'transparent',
+        fontWeight: 'normal',
+        fontSize: '0.9rem',
+        height: '65px',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        width: '90px',
+    };
+
+    const tabPanelStyles = {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0,
+        padding: 0,
+    };
+
+    const fontAwesomeXStyles: React.CSSProperties = {
+        fontSize: '16px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        marginLeft: '1.125rem',
+        position: 'relative',
+        top: '1px',
+    };
+
+    const labelSectionStyles: React.CSSProperties = {
+        display: tabsEnabled ? 'flex' : 'none',
+    };
+
+    const authoringFormContainerStyles = {
+        gap: 0,
+        '& .met-input-form-field-title': { fontSize: '0.875rem' },
+        '& .met-input-text': { background: 'white' },
+        '& #image-upload-section .MuiGrid-container': { background: 'white' },
     };
 
     return (
-        <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-            <Grid item sx={{ mt: '1rem' }}>
-                <MetHeader3 style={metHeader3Styles}>Primary Content (Required)</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
-                    Primary content will display on the left two thirds of the page on large screens and full width on
-                    small screens. (If you add optional supporting content in the section below, on small screens, your
-                    primary content will display first (on top) followed by your supporting content (underneath).
-                </FormDescriptionText>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="section_heading">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Section Heading <span style={{ fontWeight: 'normal' }}>(Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your section heading should be descriptive, short and succinct.
-                    </FormDescriptionText>
-                    <TextField
-                        sx={{ backgroundColor: colors.surface.white }}
-                        value={1 < tabs.length ? tabs[tabIndex].heading : singleContentValues.heading}
-                        id="section_heading"
-                        counter
-                        maxLength={60}
-                        placeholder="Section heading message"
-                        onChange={handleSectionHeadingChange}
-                    />
-                </label>
-            </Grid>
-
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="description">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Body Copy
-                        <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        If the content you add for this tab is quite long, a “read more” expander will be added to your
-                        content at approximately xx (large screens) and xx (small screens). In this case, you will want
-                        to ensure that the most important body copy is first so that your audience will see it even if
-                        they do not interact with the Read More expander.
-                    </FormDescriptionText>
-                    <RichTextArea
-                        ariaLabel="Body copy: If the content you add for this tab is quite long, a “read more” expander will be added to your
-                        content at approximately xx (large screens) and xx (small screens). In this case, you will want
-                        to ensure that the most important body copy is first so that your audience will see it even if
-                        they do not interact with the Read More expander."
-                        spellCheck
-                        editorState={tabs[tabIndex].bodyCopyEditorState}
-                        onEditorStateChange={handleBodyTextChange}
-                        handlePastedText={() => false}
-                        editorStyle={{
-                            height: '40em',
-                            padding: '1em',
-                            resize: 'vertical',
-                            backgroundColor: colors.surface.white,
-                        }}
-                        toolbar={toolbar}
-                    />
-                </label>
-            </Grid>
-
-            <Grid item sx={{ mt: '1rem' }}>
-                <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
-                    You may use a widget to add supporting content to your primary content. On large screens this
-                    content will be displayed to the right of your primary content. On small screens this content will
-                    be displayed below your primary content.
-                </FormDescriptionText>
-            </Grid>
-
-            <Grid item>
-                <label htmlFor="widget_select">
-                    <MetLabel style={metLabelStyles}>Widgets</MetLabel>
-                    <Select
-                        sx={{ ...conditionalSelectStyles, maxWidth: '300px' }}
-                        id="widget_select"
-                        onChange={handleWidgetChange}
-                        value={tabs[tabIndex].widget}
-                    >
-                        <MenuItem value="Video">Video</MenuItem>
-                        <MenuItem value="Other">Other</MenuItem>
-                    </Select>
-                </label>
-            </Grid>
-
-            <Grid
-                sx={{
-                    ...formItemContainerStyles,
-                    backgroundColor: colors.surface.blue[10],
-                    border: '2px dashed rgb(122, 120, 118)',
-                    minHeight: '33rem',
-                }}
-                item
-            >
-                <MetLabel style={{ minHeight: '1.5rem' }}>
-                    {tabs[tabIndex].widget} {tabs[tabIndex].widget && 'Widget'}
-                </MetLabel>
-                <Grid xs={12} sx={widgetPreviewStyles} item>
-                    {/* todo: show a preview of the widget here */}
-                    Widget Preview
-                </Grid>
-                <Button
-                    name="edit_widget"
-                    id="edit_widget"
-                    sx={{
-                        ...buttonStyles,
-                        background: Palette.primary.main,
-                        color: colors.surface.white,
-                        marginRight: '1rem',
-                        '&:hover': {
-                            background: Palette.primary.main,
-                            color: colors.surface.white,
+        <>
+            {/* prevent user from accidentally deleting a tab */}
+            <Modal open={deleteModalOpen} aria-describedby="delete-tab-modal-subtext">
+                <ConfirmModal
+                    style="danger"
+                    header={`Are you sure you want to delete ${authoringDetailsTabs[delTabIndex]?.label || 'this tab'}?`}
+                    subHeader="The tab will not be recoverable."
+                    subTextId="delete-tab-modal-subtext"
+                    subText={[
+                        {
+                            text: `If you delete ${authoringDetailsTabs[delTabIndex]?.label || 'this tab'}, its content (in all languages if multilingual) will be `,
+                            bold: false,
                         },
-                        // todo: Hook up the widget edit modal dialog to this button
-                    }}
-                >
-                    Edit Widget
-                </Button>
-                <Button
-                    name="remove_widget"
-                    id="remove_widget"
-                    onClick={handleRemoveWidget}
-                    sx={{
-                        ...buttonStyles,
-                        boxShadow: '0 0 0 1px #7A7876 inset',
-                    }}
-                >
-                    Remove Widget
-                </Button>
-            </Grid>
-        </Grid>
+                        { text: 'deleted permanently.', bold: true },
+                    ]}
+                    handleConfirm={deleteConfirm}
+                    handleClose={deleteModalClose}
+                    confirmButtonText={`Delete ${authoringDetailsTabs[delTabIndex]?.label || 'This Tab'}`}
+                    cancelButtonText={'Cancel & Go Back'}
+                />
+            </Modal>
+
+            {/* prevent user from accidentally deleting all tabs after 1 when switching to No Tabs mode */}
+            <Modal open={noTabsModalOpen} aria-describedby="no-tabs-mode-modal-subtext">
+                <ConfirmModal
+                    style="danger"
+                    header={`Are you sure you want to switch to No Tabs mode?`}
+                    subHeader="Your tabbed content will be deleted."
+                    subTextId="no-tabs-mode-modal-subtext"
+                    subText={[
+                        {
+                            text: 'This includes all tabs and their translations, except for tab one.',
+                            bold: false,
+                        },
+                    ]}
+                    handleConfirm={noTabsConfirm}
+                    handleClose={() => setNoTabsModalOpen(false)}
+                    confirmButtonText={'Delete Tabs'}
+                    cancelButtonText={'Cancel & Go Back'}
+                />
+            </Modal>
+
+            {/* prevent navigating away when the user has unsaved work */}
+            <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
+
+            {/* Tabs and form */}
+            <AuthoringFormContainer sx={authoringFormContainerStyles}>
+                {/* Tabs mode radio selector */}
+                {tabsEnabled !== undefined && (
+                    <Grid item sx={{ margin: '1rem 0' }}>
+                        <FormDescriptionText style={formDescriptionTextStyles}>
+                            {'In the Details Section of your engagement, you have the option to display your content in a ' +
+                                'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
+                                'to use tabs if your content is quite lengthy so you can organize it into smaller, more ' +
+                                'digestible chunks and reduce the length of your engagement page.'}
+                        </FormDescriptionText>
+                        <RadioGroup
+                            row
+                            aria-label="Tab Mode Selector"
+                            id="tab_mode_selector"
+                            sx={tabRadioContainerStyles}
+                            value={tabsEnabled ? 'true' : 'false'}
+                            onChange={(_, value) => {
+                                value === 'true' ? enableTabs() : disableTabs();
+                            }}
+                        >
+                            <FormControlLabel
+                                value="false"
+                                control={<Radio />}
+                                label={<span style={{ fontWeight: 'bold' }}>No Tabs</span>}
+                                style={radioStyles}
+                            />
+                            <FormControlLabel
+                                value="true"
+                                control={<Radio />}
+                                label={
+                                    <>
+                                        <span style={{ fontWeight: 'bold' }}>Tabs </span>
+                                        <span>(2 Minimum)</span>
+                                    </>
+                                }
+                                style={radioStyles}
+                            />
+                        </RadioGroup>
+                    </Grid>
+                )}
+
+                {/* Tab instructions */}
+                {tabsEnabled && (
+                    <Grid item sx={{ margin: '1rem 0' }}>
+                        <Header3 sx={heading3Styles}>Tabs Configuration</Header3>
+                        <FormDescriptionText style={formDescriptionTextStyles}>
+                            {'If your audience will need additional context to interpret the topic of your ' +
+                                'engagement, or it is important for them to understand who, within BC Gov, is ' +
+                                'requesting feedback, you may wish to add two to five words of eyebrow text.'}
+                        </FormDescriptionText>
+                    </Grid>
+                )}
+
+                {currentTab && (
+                    <Grid item>
+                        <TabContext value={currentTab}>
+                            {/* Tab labels */}
+                            <TabList
+                                sx={tabListStyles}
+                                TabIndicatorProps={{ style: { display: 'none' } }}
+                                onChange={(event: React.SyntheticEvent, value: number) => {
+                                    setCurrentTab(String(value));
+                                }}
+                            >
+                                {authoringDetailsTabs.map((value, key) => (
+                                    <Tab
+                                        key={key}
+                                        value={String(key)}
+                                        // Add an X when appropriate: not on first tab, only if there are 3 or more tabs.
+                                        label={
+                                            <span>
+                                                {value.label}
+                                                {key !== 0 && authoringDetailsTabs.length > 2 ? (
+                                                    <FontAwesomeIcon
+                                                        icon={faXmark}
+                                                        style={fontAwesomeXStyles}
+                                                        onClick={(event: React.SyntheticEvent) => {
+                                                            removeTab(event, key);
+                                                        }}
+                                                    />
+                                                ) : null}
+                                            </span>
+                                        }
+                                        disableFocusRipple
+                                        // Colour the tab labels red if they contain errors so the user sees them from another tab.
+                                        sx={{
+                                            ...tabStyles,
+                                            backgroundColor: errors.details_tabs?.[key]
+                                                ? colors.button.error.tint
+                                                : 'gray.10',
+                                            '&.Mui-selected': {
+                                                backgroundColor: errors.details_tabs?.[key]
+                                                    ? colors.button.error.shade
+                                                    : 'primary.main',
+                                                borderColor: 'primary.main',
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                            },
+                                        }}
+                                    ></Tab>
+                                ))}
+                                <Button
+                                    sx={addTabButtonStyles}
+                                    onClick={addTab}
+                                    disabled={authoringDetailsTabs.length > 9}
+                                >
+                                    + Add Tab
+                                </Button>
+                            </TabList>
+
+                            {/* Tab contents */}
+                            {authoringDetailsTabs.map((tab, key) => (
+                                <TabPanel sx={tabPanelStyles} value={String(key)} key={tab.id}>
+                                    <AuthoringFormSection
+                                        name={`Tab ${key + 1} Label`}
+                                        required={true}
+                                        labelFor={`details_tabs.${key}.label`}
+                                        style={labelSectionStyles}
+                                    >
+                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                            Your tab label should be one or two words (maximum three).
+                                        </FormDescriptionText>
+                                        <Controller
+                                            name={`details_tabs.${key}.label`}
+                                            control={control}
+                                            render={({ field }) => (
+                                                <TextField
+                                                    {...field}
+                                                    sx={{ backgroundColor: colors.surface.white }}
+                                                    id={`details_tabs.${key}.label`}
+                                                    aria-label={`Tab ${key + 1} Label`}
+                                                    onChange={(value) => {
+                                                        field.onChange(value);
+                                                        labelChange(value, key);
+                                                    }}
+                                                    counter
+                                                    maxLength={20}
+                                                    placeholder={`${tab.label} Label`}
+                                                    error={errors.details_tabs?.[key]?.label?.message ?? ''}
+                                                />
+                                            )}
+                                        />
+                                    </AuthoringFormSection>
+
+                                    <Grid item sx={{ margin: '1rem 0' }}>
+                                        <Header3 sx={heading3Styles}>Primary Content (Required)</Header3>
+                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                            {'Primary content will display on the left two thirds of the page on large screens ' +
+                                                'and full width on small screens. (If you add optional supporting content in the section ' +
+                                                'below, on small screens, your primary content will display first (on top) followed ' +
+                                                'by your supporting content (underneath).'}
+                                        </FormDescriptionText>
+                                    </Grid>
+
+                                    <AuthoringFormSection
+                                        name="Heading"
+                                        required={true}
+                                        labelFor={`details_tabs.${key}.heading`}
+                                    >
+                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                            Your heading should be descriptive, short and succinct.
+                                        </FormDescriptionText>
+                                        <Controller
+                                            name={`details_tabs.${key}.heading`}
+                                            control={control}
+                                            render={({ field }) => (
+                                                <TextField
+                                                    {...field}
+                                                    sx={{ backgroundColor: colors.surface.white }}
+                                                    id={`details_tabs.${key}.heading`}
+                                                    aria-label={`Tab ${key + 1} Heading`}
+                                                    counter
+                                                    maxLength={60}
+                                                    placeholder="Heading"
+                                                    error={errors.details_tabs?.[key]?.heading?.message ?? ''}
+                                                />
+                                            )}
+                                        />
+                                    </AuthoringFormSection>
+
+                                    <AuthoringFormSection
+                                        name="Body Copy"
+                                        required={true}
+                                        labelFor={`details_tabs.${key}.body`}
+                                    >
+                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                            {'If the content you add for this tab is quite long, a "read more" expander will be ' +
+                                                'added to your content at approximately xx (large screens) and xx (small screens). ' +
+                                                'In this case, you will want to ensure that the most important body copy is first so ' +
+                                                'that your audience will see it even if they do not interact with the Read More expander.'}
+                                        </FormDescriptionText>
+                                        <ErrorMessage error={errors.details_tabs?.[key]?.body?.message ?? ''} />
+                                        <Controller
+                                            name={`details_tabs.${key}.body`}
+                                            control={control}
+                                            render={({ field }) => (
+                                                <RichTextArea
+                                                    spellCheck
+                                                    editorState={field.value}
+                                                    aria-label={`Tab ${key + 1} Body`}
+                                                    onEditorStateChange={(value) => {
+                                                        field.onChange(editorChange(value, key));
+                                                    }}
+                                                    handlePastedText={() => false}
+                                                    toolbar={toolbar}
+                                                    placeholder="Body Copy"
+                                                />
+                                            )}
+                                        />
+                                    </AuthoringFormSection>
+
+                                    {/* Todo: Replace with streamlined widget selector that saves on form save */}
+                                    <Grid item sx={{ mt: '1rem' }}>
+                                        <Header3 sx={heading3Styles}>Supporting Content (Optional)</Header3>
+                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                            {'You may use a widget to add supporting content to your primary content. On large screens ' +
+                                                'this content will be displayed to the right of your primary content. On small screens this ' +
+                                                'content will be displayed below your primary content.'}
+                                        </FormDescriptionText>
+                                        <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                                            <WidgetPicker location={WidgetLocation.Details} />
+                                        </Grid>
+                                    </Grid>
+                                </TabPanel>
+                            ))}
+                        </TabContext>
+                    </Grid>
+                )}
+            </AuthoringFormContainer>
+        </>
     );
 };
+
+export default AuthoringDetails;

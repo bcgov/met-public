@@ -64,28 +64,28 @@ export const AuthoringFormSection = ({
 } & BoxProps) => {
     return (
         <UnnamedAuthoringFormSection required={required} gridItemProps={gridItemProps} {...formSectionProps}>
-            {name && (
-                <Box
-                    className="met-layout-authoring-form-section-title"
-                    display="flex"
-                    flexDirection="column"
-                    gap="8px"
-                    component={labelFor ? 'label' : 'div'}
-                    htmlFor={labelFor}
-                >
+            <Box
+                className="met-layout-authoring-form-section-title"
+                display="flex"
+                flexDirection="column"
+                gap="8px"
+                component={labelFor ? 'label' : 'div'}
+                htmlFor={labelFor}
+            >
+                {name && (
                     <Box fontSize="1.05rem" lineHeight="1.5" color="text.primary" fontWeight="700">
                         {name}
                         <BodyText fontWeight="400" display="inline">
                             {required ? ' (Required)' : ' (Optional)'}
                         </BodyText>
                     </Box>
-                    {details && (
-                        <Box fontSize="0.875rem" lineHeight={12 / 7}>
-                            {details}
-                        </Box>
-                    )}
-                </Box>
-            )}
+                )}
+                {details && (
+                    <Box fontSize="0.875rem" lineHeight={12 / 7}>
+                        {details}
+                    </Box>
+                )}
+            </Box>
             {children}
         </UnnamedAuthoringFormSection>
     );

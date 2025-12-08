@@ -5,11 +5,14 @@ import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
 import { EngagementStatusBlock } from 'models/engagementStatusBlock';
+import { patchDetailsTabs } from 'services/engagementDetailsTabService';
+import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
-export const engagementAuthoringUpdateAction: ActionFunction = async ({ request, context }) => {
+export const engagementAuthoringUpdateAction: ActionFunction = async ({ request, params }) => {
     const formData = (await request.formData()) as FormData;
     const errors = [];
     const requestType = formData.get('request_type') as string;
+    const engagementId = Number(formData.get('id'));
     const statusBlock = [
         {
             survey_status: 'Open',
@@ -37,27 +40,56 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
         },
     ] as EngagementStatusBlock[];
 
-    const engagement = await patchEngagement({
-        id: Number(formData.get('id')) as unknown as number,
-        name: (formData.get('name') as string) || undefined,
-        sponsor_name: (formData.get('eyebrow') as string) || undefined,
-        start_date: (formData.get('start_date') as string) || undefined,
-        status_id: (Number(formData.get('status_id')) as unknown as number) || undefined,
-        end_date: (formData.get('end_date') as string) || undefined,
-        description: (formData.get('description') as string) || undefined,
-        rich_description: (formData.get('rich_description') as string) || undefined,
-        description_title: (formData.get('description_title') as string) || undefined,
-        banner_filename: (formData.get('banner_filename') as string) || undefined,
-        status_block: statusBlock,
-    });
+    // Update engagement if necessary.
+    if (formData.get('form_source') === 'banner' || formData.get('form_source') === 'summary') {
+        try {
+            await patchEngagement({
+                id: Number(formData.get('id')) as unknown as number,
+                name: (formData.get('name') as string) || undefined,
+                sponsor_name: (formData.get('eyebrow') as string) || undefined,
+                start_date: (formData.get('start_date') as string) || undefined,
+                status_id: (Number(formData.get('status_id')) as unknown as number) || undefined,
+                end_date: (formData.get('end_date') as string) || undefined,
+                description: (formData.get('description') as string) || undefined,
+                rich_description: (formData.get('rich_description') as string) || undefined,
+                description_title: (formData.get('description_title') as string) || undefined,
+                banner_filename: (formData.get('banner_filename') as string) || undefined,
+                status_block: statusBlock,
+            });
+        } catch (e) {
+            console.error('Error updating engagement', e);
+            errors.push(e);
+        }
+    }
+
+    // Update engagement details tabs if necessary.
+    if (formData.get('form_source') === 'details' && formData.get('details_tabs') !== '[]') {
+        try {
+            const tabs = formData.get('details_tabs') as unknown as string;
+            const parsedTabs = JSON.parse(tabs) as unknown as EngagementDetailsTab[];
+            const typedTabs = parsedTabs?.map((t) => ({
+                id: Number(t.id) >= 0 ? Number(t.id) : -1,
+                engagement_id: engagementId,
+                label: t.label || undefined,
+                slug: t.slug || undefined,
+                heading: t.heading || undefined,
+                body: t.body || undefined,
+                sort_index: t.sort_index || undefined,
+            })) as unknown as EngagementDetailsTab[];
+            await patchDetailsTabs(engagementId, typedTabs);
+        } catch (e) {
+            console.error('Error updating engagement details tabs', e);
+            errors.push(e);
+        }
+    }
 
     // Update engagement content if necessary.
     if (
         (formData.get('title') || formData.get('text_content') || formData.get('json_content')) &&
-        '0' !== formData.get('content_id')
+        formData.get('content_id')
     ) {
         try {
-            await patchEngagementContent(engagement.id, Number(formData.get('content_id')) as unknown as number, {
+            await patchEngagementContent(engagementId, Number(formData.get('content_id')) as unknown as number, {
                 title: (formData.get('title') as string) || undefined,
                 text_content: (formData.get('text_content') as string) || undefined,
                 json_content: (formData.get('json_content') as string) || undefined,
@@ -74,7 +106,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
             await patchEngagementMetadata({
                 value: formData.get('metadata_value') as string,
                 taxon_id: Number(formData.get('taxon_id')) as unknown as number,
-                engagement_id: engagement.id,
+                engagement_id: engagementId,
             });
         } catch (e) {
             console.error('Error updating engagement metadata', e);
@@ -86,7 +118,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
     if (formData.get('send_report')) {
         try {
             await patchEngagementSettings({
-                engagement_id: engagement.id,
+                engagement_id: engagementId,
                 send_report: 'true' === formData.get('send_report') ? true : false,
             });
         } catch (e) {
@@ -99,7 +131,7 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
     if (formData.get('slug')) {
         try {
             await patchEngagementSlug({
-                engagement_id: engagement.id,
+                engagement_id: engagementId,
                 slug: formData.get('slug') as string,
             });
         } catch (e) {
