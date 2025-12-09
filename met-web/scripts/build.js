@@ -53,14 +53,14 @@ const config = configFactory('production');
 // browserslist defaults.
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
 
-(async () => {
+async function main() {
   try {
     await checkBrowsers(paths.appPath, isInteractive);
-    
+
     // First, read the current file sizes in build directory.
     // This lets us display how much they changed later.
     const previousFileSizes = await measureFileSizesBeforeBuild(paths.appBuild);
-    
+
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
@@ -68,7 +68,7 @@ const { checkBrowsers } = require('react-dev-utils/browsersHelper');
     copyPublicFolder();
     // Start the webpack build
     const { stats, previousFileSizes: prevSizes, warnings } = await build(previousFileSizes);
-    
+
     if (warnings.length) {
       console.log(chalk.yellow('Compiled with warnings.\n'));
       console.log(warnings.join('\n\n'));
@@ -125,7 +125,9 @@ const { checkBrowsers } = require('react-dev-utils/browsersHelper');
       process.exit(1);
     }
   }
-})();
+}
+
+main();
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {

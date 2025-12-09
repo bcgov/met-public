@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const webpack = require('webpack');
 const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -51,7 +51,7 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 const emitErrorsAsWarnings = process.env.ESLINT_NO_DEV_ERRORS === 'true';
 const disableESLintPlugin = process.env.DISABLE_ESLINT_PLUGIN === 'true';
 
-const imageInlineSizeLimit = parseInt(
+const imageInlineSizeLimit = Number.parseInt(
   process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
 );
 
@@ -187,6 +187,8 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
+  const sourceMapTool = shouldUseSourceMap ? 'source-map' : false;
+
   return {
     target: 'web',
     // Webpack noise constrained to errors and warnings
@@ -195,9 +197,7 @@ module.exports = function (webpackEnv) {
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: isEnvProduction
-      ? shouldUseSourceMap
-        ? 'source-map'
-        : false
+      ? sourceMapTool
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
@@ -657,13 +657,12 @@ module.exports = function (webpackEnv) {
     plugins: [
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
+        {
+          ...{
             inject: true,
             template: paths.appHtml,
           },
-          isEnvProduction
+          ...(isEnvProduction
             ? {
                 minify: {
                   removeComments: true,
@@ -678,8 +677,8 @@ module.exports = function (webpackEnv) {
                   minifyURLs: true,
                 },
               }
-            : undefined
-        )
+            : {})
+        }
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
