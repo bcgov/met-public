@@ -1,3 +1,10 @@
+## December 9, 2025
+- **Feature** Add CI pipeline for ETL workflow [🎟️ DESENG-880](https://citz-gdx.atlassian.net/browse/DESENG-880)
+  - Added a basic smoke test for the ETL Dagster pipeline to ensure that it can be linted and tested successfully.
+  - Brought requirements.txt up to date, and added a dev requirements file for linting and testing dependencies.
+  - Created a GitHub Actions workflow to lint and test the etl codebase on each pull request.
+  - Added steps to install dependencies, run linting with flake8, and execute tests with pytest.
+
 ## December 5, 2025
 
 - **Feature** Admin authoring details page [🎟️ DESENG-672](https://citz-gdx.atlassian.net/browse/DESENG-672)

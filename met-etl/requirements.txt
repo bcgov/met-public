@@ -8,9 +8,10 @@ marshmallow==3.21.1
 marshmallow-sqlalchemy==1.0.0
 dagster==1.10.16
 dagit==1.10.16
+dagster-postgres==0.26.16
 SQLAlchemy-Utils==0.38.3
 SQLAlchemy==1.4.52
-packaging==21.3
+packaging==25.0
 python-dotenv==0.21.0
 pytz==2022.5
 -e git+https://github.com/bcgov/met-public.git#egg=met-api&subdirectory=met-api
