@@ -46,7 +46,7 @@ jobs:
                   PYTHONPATH: ./src
               run: |
                   # Limit to error-level checks to mirror existing lightweight lint
-                  pylint --disable=all --enable=E,F src
+                  pylint --disable=all --enable=E,F src/etl_project
             - name: Lint for syntax errors (flake8)
               env:
                   PYTHONPATH: ./src
