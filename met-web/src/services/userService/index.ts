@@ -15,7 +15,7 @@ import { User } from 'models/user';
 import { getMembershipsByUser } from 'services/membershipService';
 import { USER_ROLES, USER_STATUS } from 'services/userService/constants';
 import { getBaseUrl } from 'helper';
-import Keycloak from 'keycloak-js';
+import Keycloak from 'keycloak';
 
 let KeycloakData: Keycloak;
 
@@ -72,7 +72,7 @@ const setAuthData = async (dispatch: Dispatch<AnyAction>) => {
     }
 };
 
-let refreshInterval: NodeJS.Timer;
+let refreshInterval: NodeJS.Timeout;
 const refreshToken = (dispatch: Dispatch<Action>) => {
     refreshInterval = setInterval(async () => {
         if (KeycloakData) {

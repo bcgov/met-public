@@ -15,5 +15,7 @@
     "projectKey": "bcgov_met-public"
   },
   "python-envs.defaultEnvManager": "ms-python.python:venv",
-  "helm-intellisense.customValueFileNames": ["values_dev.yaml", "values.yaml"]
+  "helm-intellisense.customValueFileNames": ["values_dev.yaml", "values.yaml"],
+  "jest.jestCommandLine": "npm test --",
+  "jest.rootPath": "met-web/"
 }

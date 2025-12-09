@@ -76,7 +76,7 @@ const initialFormError = {
 export interface EngagementTabsContextState {
     engagementFormData: EngagementFormData;
     setEngagementFormData: React.Dispatch<React.SetStateAction<EngagementFormData>>;
-    metadataFormRef: React.RefObject<HTMLFormElement> | null;
+    metadataFormRef: React.RefObject<HTMLFormElement | null> | null;
     handleSaveAndContinueEngagement: () => Promise<void | EngagementForm>;
     handlePreviewEngagement: () => Promise<void>;
     handleSaveAndExitEngagement: () => Promise<void>;

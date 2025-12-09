@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactMapGL, { Marker, NavigationControl, Source, Layer, MapLib } from 'react-map-gl';
+import ReactMapGL, { Marker, NavigationControl, Source, Layer, MapLib } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import maplibregl from 'maplibre-gl';
+import maplibregl, { type LayerSpecification } from 'maplibre-gl';
 import { GeoJSON } from 'geojson';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
 import { MetSmallTextOld } from 'components/common';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
-import mapboxgl, { AnyLayer } from 'mapbox-gl';
 import { colors, Palette } from 'styles/Theme';
 
 interface MapProps {
@@ -19,9 +18,10 @@ interface MapProps {
     zoom: number;
 }
 
-const layerStyle: AnyLayer = {
+const layerStyle: LayerSpecification = {
     id: 'fill-layer',
     type: 'fill',
+    source: 'geojson-data',
     paint: {
         'fill-color': `${Palette.primary.main}`,
         'fill-opacity': 0.5,
@@ -30,9 +30,10 @@ const layerStyle: AnyLayer = {
 };
 
 //filter enforces that only geojson features that are linestrings use this styling
-const lineStyle: AnyLayer = {
+const lineStyle: LayerSpecification = {
     id: 'lines',
     type: 'line',
+    source: 'geojson-data',
     filter: ['all', ['==', ['geometry-type'], 'LineString'], ['!=', ['get', 'type'], 'platform']],
     layout: {
         'line-join': 'round',
@@ -55,7 +56,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                 latitude: latitude,
                 zoom: zoom,
             }}
-            mapLib={maplibregl as unknown as MapLib<mapboxgl.Map>}
+            mapLib={maplibregl as unknown as MapLib}
             mapStyle={MAP_STYLE}
             style={{
                 width: '100%',
@@ -64,7 +65,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
         >
             <NavigationControl />
             <When condition={Boolean(geojson)}>
-                <Source id="geojson-data" type="geojson" data={geojson}>
+                <Source id="geojson-data" type="geojson" data={geojson ?? { type: 'FeatureCollection', features: [] }}>
                     <Layer {...layerStyle} />
                     <Layer {...lineStyle} />
                 </Source>
