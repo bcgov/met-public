@@ -16,12 +16,12 @@ process.on('unhandledRejection', err => {
 require('../config/env');
 
 const jest = require('jest');
-const execSync = require('child_process').execSync;
+const execSync = require('node:child_process').execSync;
 let argv = process.argv.slice(2);
 
 function isInGitRepository() {
   try {
-    execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
+    execSync('/usr/bin/git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
     return true;
   } catch (e) {
     return false;
@@ -30,7 +30,7 @@ function isInGitRepository() {
 
 function isInMercurialRepository() {
   try {
-    execSync('hg --cwd . root', { stdio: 'ignore' });
+    execSync('/usr/bin/hg --cwd . root', { stdio: 'ignore' });
     return true;
   } catch (e) {
     return false;
@@ -40,8 +40,8 @@ function isInMercurialRepository() {
 // Watch unless on CI or explicitly running all tests
 if (
   !process.env.CI &&
-  argv.indexOf('--watchAll') === -1 &&
-  argv.indexOf('--watchAll=false') === -1
+  argv.includes('--watchAll') &&
+  argv.includes('--watchAll=false')
 ) {
   // https://github.com/facebook/create-react-app/issues/5210
   const hasSourceControl = isInGitRepository() || isInMercurialRepository();

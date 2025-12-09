@@ -1,7 +1,7 @@
 'use strict';
-const { createHash } = require('crypto');
+const { createHash } = require('node:crypto');
 
-module.exports = env => {
+module.exports = function exports (env) {
   const hash = createHash('md5');
   hash.update(JSON.stringify(env));
 

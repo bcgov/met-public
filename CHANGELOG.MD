@@ -1,11 +1,11 @@
 ## December 8, 2025
 
-- **Feature** Eject from create-react-app
-- Ejected the MET Web application from create-react-app to gain more control over the build and development configuration.
-- Set up custom Webpack configuration for development and production builds.
-- Configured Babel to handle JSX, TypeScript, and modern JavaScript features.
-- Updated scripts in package.json to use the new Webpack configuration.
-- Tested the application to ensure it works correctly after ejection.
+- **Feature** Eject from create-react-app [🎟️ DESENG-903](https://citz-gdx.atlassian.net/browse/DESENG-903)
+  - Ejected the MET Web application from create-react-app to gain more control over the build and development configuration.
+  - Set up custom Webpack configuration for development and production builds.
+  - Configured Babel to handle JSX, TypeScript, and modern JavaScript features.
+  - Updated scripts in package.json to use the new Webpack configuration.
+  - Tested the application to ensure it works correctly after ejection.
 
 ## December 5, 2025
 
