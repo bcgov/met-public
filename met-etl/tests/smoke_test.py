@@ -29,11 +29,6 @@ def test_repository_registers_expected_jobs_and_schedules():
     job_names = {job.name for job in get_jobs()}
     assert expected_jobs.issubset(job_names)
 
-    expected_schedules = {
-        "met_data_ingestion_schedule",
-        "cleanup_old_logs_schedule",
-        "vacuum_met_db_schedule",
-    }
     schedule_defs = (
         getattr(repo_def, "get_all_schedule_defs", None)
         or getattr(repo_def, "schedule_defs", None)
