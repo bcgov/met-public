@@ -28,6 +28,10 @@ const compat = new FlatCompat({
  */
 module.exports = [
     {
+        // Ignore build/config files
+        ignores: ['config/', 'scripts/', 'build/', 'node_modules/', '*.config.js', '*.config.ts', '.eslintrc.js'],
+    },
+    {
         // General config for all files
         languageOptions: {
             parser: tsParser, // Specifies the ESLint parser
