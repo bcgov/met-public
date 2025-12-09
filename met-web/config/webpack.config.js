@@ -59,7 +59,7 @@ const imageInlineSizeLimit = Number.parseInt(
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 // Check if Tailwind config exists
-const useTailwind = fs.existsSync(
+const ignoreTailwind = !fs.existsSync(
   path.join(paths.appPath, 'tailwind.config.js')
 );
 
@@ -87,7 +87,7 @@ const hasJsxRuntime = (() => {
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function (webpackEnv) {
+module.exports = function exports (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -131,7 +131,7 @@ module.exports = function (webpackEnv) {
             // https://github.com/facebook/create-react-app/issues/2677
             ident: 'postcss',
             config: false,
-            plugins: !useTailwind
+            plugins: ignoreTailwind
               ? [
                   'postcss-flexbugs-fixes',
                   [
@@ -226,9 +226,9 @@ module.exports = function (webpackEnv) {
         ? info =>
             path
               .relative(paths.appSrc, info.absoluteResourcePath)
-              .replace(/\\/g, '/')
+              .replaceAll(/\\/g, '/')
         : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+          (info => path.resolve(info.absoluteResourcePath).replaceAll(/\\/g, '/')),
     },
     cache: {
       type: 'filesystem',
@@ -404,7 +404,7 @@ module.exports = function (webpackEnv) {
           'react-dom$': 'react-dom/profiling',
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
-        ...(modules.webpackAliases || {}),
+        ...(modules.webpackAliases),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -658,10 +658,8 @@ module.exports = function (webpackEnv) {
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         {
-          ...{
-            inject: true,
-            template: paths.appHtml,
-          },
+          inject: true,
+          template: paths.appHtml,
           ...(isEnvProduction
             ? {
                 minify: {
