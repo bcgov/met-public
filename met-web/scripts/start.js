@@ -129,16 +129,16 @@ async function start() {
     openBrowser(urls.localUrlForBrowser);
 
     ['SIGINT', 'SIGTERM'].forEach(function (sig) {
-      process.on(sig, function () {
-        devServer.stop();
+      process.on(sig, async function () {
+        await devServer.stop();
         process.exit();
       });
     });
 
     if (process.env.CI !== 'true') {
       // Gracefully exit when stdin ends
-      process.stdin.on('end', function () {
-        devServer.stop();
+      process.stdin.on('end', async function () {
+        await devServer.stop();
         process.exit();
       });
     }
