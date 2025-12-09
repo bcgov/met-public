@@ -127,8 +127,8 @@ async function main() {
   }
 }
 
-// NOSONAR: top-level await is unavailable in CommonJS; async wrapper is required
-main();
+
+main(); // NOSONAR: top-level await is unavailable in CommonJS; async wrapper is required
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {

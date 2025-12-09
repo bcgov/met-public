@@ -150,5 +150,4 @@ async function start() {
   }
 }
 
-// NOSONAR: top-level await is unavailable in CommonJS; async wrapper required
-start();
+start(); // NOSONAR: top-level await is unavailable in CommonJS; async wrapper required

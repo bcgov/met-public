@@ -226,9 +226,9 @@ module.exports = function exports (webpackEnv) {
         ? info =>
             path
               .relative(paths.appSrc, info.absoluteResourcePath)
-              .replaceAll(/\\/g, '/')
+              .replaceAll('\\', '/')
         : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replaceAll(/\\/g, '/')),
+          (info => path.resolve(info.absoluteResourcePath).replaceAll('\\', '/')),
     },
     cache: {
       type: 'filesystem',
