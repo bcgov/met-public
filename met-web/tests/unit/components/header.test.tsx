@@ -34,6 +34,7 @@ jest.mock('react-router-dom', () => ({
             };
         }
     },
+    useNavigation: jest.fn(() => ({ state: 'idle' })),
 }));
 
 jest.mock('@mui/material', () => ({

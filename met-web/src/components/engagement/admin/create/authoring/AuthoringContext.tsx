@@ -273,7 +273,7 @@ export const AuthoringContext = () => {
     };
 
     return (
-        <FormProvider {...engagementUpdateForm}>
+        <FormProvider key={pageName || 'authoring-form'} {...engagementUpdateForm}>
             <Outlet context={{ onSubmit, defaultValues, setDefaultValues, fetcher }} />
         </FormProvider>
     );

@@ -54,6 +54,7 @@ const AuthoringTemplate = () => {
     })?.name;
 
     const { handleSubmit } = useFormContext<EngagementUpdateData>();
+    const outletKey = pageName || 'authoring';
 
     return (
         <ResponsiveContainer>
@@ -89,6 +90,7 @@ const AuthoringTemplate = () => {
                     <Await resolve={engagement}>
                         {(engagement: Engagement) => (
                             <Outlet
+                                key={outletKey}
                                 context={{
                                     setDefaultValues,
                                     engagement,
