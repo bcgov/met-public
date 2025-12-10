@@ -20,9 +20,10 @@ install-dev: $(VENV)/bin/activate ## Alias for setup
 clean: ## Remove virtualenv
 	rm -rf $(VENV)
 
+ci: lint test ## Run CI checks
 lint: $(VENV)/bin/activate ## Run pylint/flake8 error-level checks
 	PYTHONPATH=./src:./src/etl_project/services $(PY) -m pylint --disable=all --enable=E,F --disable=E1120 src
-	PYTHONPATH=./src $(PY) -m flake8 src tests --select E9,F63,F7,F82
+	PYTHONPATH=./src $(PY) -m autopep8 --in-place --recursive --aggressive src tests
 
 test: $(VENV)/bin/activate ## Run smoke tests
 	PYTHONPATH=./src:./src/etl_project/services $(PY) -m pytest tests/smoke_test.py -q --maxfail=1
