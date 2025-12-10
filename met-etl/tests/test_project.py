@@ -19,28 +19,35 @@ def docker_service_up(docker_compose_file):
         return
 
     try:
-        subprocess.check_output(["docker-compose", "-f", docker_compose_file, "stop"])
-        subprocess.check_output(["docker-compose", "-f", docker_compose_file, "rm", "-f"])
+        subprocess.check_output(
+            ["docker-compose", "-f", docker_compose_file, "stop"])
+        subprocess.check_output(
+            ["docker-compose", "-f", docker_compose_file, "rm", "-f"])
     except subprocess.CalledProcessError:
         pass
 
-    build_process = subprocess.Popen([file_relative_path(docker_compose_file, "./build.sh")])
+    build_process = subprocess.Popen(
+        [file_relative_path(docker_compose_file, "./build.sh")])
     build_process.wait()
     assert build_process.returncode == 0
 
-    up_process = subprocess.Popen(["docker-compose", "-f", docker_compose_file, "up", "--no-start"])
+    up_process = subprocess.Popen(
+        ["docker-compose", "-f", docker_compose_file, "up", "--no-start"])
     up_process.wait()
     assert up_process.returncode == 0
 
-    start_process = subprocess.Popen(["docker-compose", "-f", docker_compose_file, "start"])
+    start_process = subprocess.Popen(
+        ["docker-compose", "-f", docker_compose_file, "start"])
     start_process.wait()
     assert start_process.returncode == 0
 
     try:
         yield
     finally:
-        subprocess.check_output(["docker-compose", "-f", docker_compose_file, "stop"])
-        subprocess.check_output(["docker-compose", "-f", docker_compose_file, "rm", "-f"])
+        subprocess.check_output(
+            ["docker-compose", "-f", docker_compose_file, "stop"])
+        subprocess.check_output(
+            ["docker-compose", "-f", docker_compose_file, "rm", "-f"])
 
 
 PIPELINES_OR_ERROR_QUERY = """
@@ -131,11 +138,13 @@ def test_deploy_docker():
 
         while True:
             if time.time() - start_time > 15:
-                raise Exception("Timed out waiting for dagit server to be available")
+                raise Exception(
+                    "Timed out waiting for dagit server to be available")
 
             try:
                 sanity_check = requests.get(
-                    "http://{dagit_host}:3000/dagit_info".format(dagit_host=dagit_host)
+                    "http://{dagit_host}:3000/dagit_info".format(
+                        dagit_host=dagit_host)
                 )
                 assert "dagit" in sanity_check.text
                 break
@@ -179,8 +188,7 @@ def test_deploy_docker():
                 dagit_host=dagit_host,
                 query_string=LAUNCH_PIPELINE_MUTATION,
                 variables=json.dumps(variables),
-            )
-        ).json()
+            )).json()
 
         assert launch_res["data"]["launchPipelineExecution"]["__typename"] == "LaunchRunSuccess"
 
@@ -208,8 +216,7 @@ def test_deploy_docker():
                 dagit_host=dagit_host,
                 query_string=LAUNCH_PIPELINE_MUTATION,
                 variables=json.dumps(variables),
-            )
-        ).json()
+            )).json()
 
         assert launch_res["data"]["launchPipelineExecution"]["__typename"] == "LaunchRunSuccess"
 
@@ -236,15 +243,15 @@ def test_deploy_docker():
                 dagit_host=dagit_host,
                 query_string=LAUNCH_PIPELINE_MUTATION,
                 variables=json.dumps(variables),
-            )
-        ).json()
+            )).json()
 
         assert launch_res["data"]["launchPipelineExecution"]["__typename"] == "LaunchRunSuccess"
 
         run = launch_res["data"]["launchPipelineExecution"]["run"]
         hanging_run_id = run["runId"]
 
-        _wait_for_run_status(hanging_run_id, dagit_host, DagsterRunStatus.STARTED)
+        _wait_for_run_status(hanging_run_id, dagit_host,
+                             DagsterRunStatus.STARTED)
 
         terminate_res = requests.post(
             "http://{dagit_host}:3000/graphql?query={query_string}&variables={variables}".format(
@@ -259,7 +266,8 @@ def test_deploy_docker():
             == "TerminateRunSuccess"
         ), str(terminate_res)
 
-        _wait_for_run_status(hanging_run_id, dagit_host, DagsterRunStatus.CANCELED)
+        _wait_for_run_status(hanging_run_id, dagit_host,
+                             DagsterRunStatus.CANCELED)
 
 
 def _wait_for_run_status(run_id, dagit_host, desired_status):
@@ -268,7 +276,8 @@ def _wait_for_run_status(run_id, dagit_host, desired_status):
 
     while True:
         if time.time() - start_time > 60:
-            raise Exception(f"Timed out waiting for run to reach status {desired_status}")
+            raise Exception(
+                f"Timed out waiting for run to reach status {desired_status}")
 
         run_res = requests.get(
             "http://{dagit_host}:3000/graphql?query={query_string}&variables={variables}".format(

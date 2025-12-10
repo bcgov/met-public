@@ -5,9 +5,11 @@ from etl_project.services.ops.cleanup_logs_service import (
 )
 from etl_project.services.resources.db import dagster_db_session
 
+
 @job(resource_defs={"dagster_db_session": dagster_db_session})
 def cleanup_old_logs():
     cleanup_old_event_and_run_logs()
+
 
 @job(resource_defs={"dagster_db_session": dagster_db_session})
 def vacuum_met_db():

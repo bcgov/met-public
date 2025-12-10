@@ -1,3 +1,4 @@
+from etl_project.services.repo import etl_project
 import sys
 from pathlib import Path
 
@@ -12,7 +13,6 @@ for path in (SRC_ROOT, SERVICES_ROOT):
     if path.as_posix() not in sys.path:
         sys.path.insert(0, path.as_posix())
 
-from etl_project.services.repo import etl_project
 
 def test_repository_registers_expected_jobs_and_schedules():
     """Basic smoke test to ensure Dagster repository loads expected assets."""
@@ -24,7 +24,8 @@ def test_repository_registers_expected_jobs_and_schedules():
         "cleanup_old_logs",
         "vacuum_met_db",
     }
-    get_jobs = getattr(repo_def, "get_all_jobs", None) or getattr(repo_def, "get_all_pipelines", None)
+    get_jobs = getattr(repo_def, "get_all_jobs", None) or getattr(
+        repo_def, "get_all_pipelines", None)
     assert get_jobs, "Dagster RepositoryDefinition API unexpected: missing job accessor"
     job_names = {job.name for job in get_jobs()}
     assert expected_jobs.issubset(job_names)

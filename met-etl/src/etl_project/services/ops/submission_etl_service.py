@@ -6,8 +6,12 @@ from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from met_api.models.submission import Submission as MetSubmissionModel
 from met_api.models.survey import Survey as MetSurveyModel
 from met_api.models.participant import Participant as MetParticipantModel
-from analytics_api.models.response_type_option import ResponseTypeOption as EtlResponseTypeOptionModel
-from analytics_api.models.user_response_detail import UserResponseDetail as EtlUserResponseDetailModel
+from analytics_api.models.response_type_option import (
+    ResponseTypeOption as EtlResponseTypeOptionModel
+)
+from analytics_api.models.user_response_detail import (
+    UserResponseDetail as EtlUserResponseDetailModel
+)
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from analytics_api.utils.util import FormIoComponentType
 
@@ -16,33 +20,45 @@ from analytics_api.utils.util import FormIoComponentType
 # 1.Extract data out of submission.
 # 2.Iterate form_json.components.
 # 3.Check Type and save to db
+DEFAULT_DATETIME = datetime(2022, 8, 1, 0, 0, 0, 0)
+DECORATION = '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'
+REVERSE_DECORATION = DECORATION.replace('<', '>')
 
 # get the last run cycle id for submission etl
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"},
-    out={"submission_last_run_cycle_time": Out(), "submission_new_runcycleid": Out()})
-def get_submission_last_run_cycle_time(context, flag_to_run_step_after_setting):
+
+
+@op(required_resource_keys={"met_db_session",
+    "met_etl_db_session"},
+    out={"submission_last_run_cycle_time": Out(),
+         "submission_new_runcycleid": Out()})
+def get_submission_last_run_cycle_time(
+        context, flag_to_run_step_after_setting):
     met_etl_db_session = context.resources.met_etl_db_session
     # default date to load the whole data on first run
-    default_datetime = datetime(2022, 8, 1, 0, 0, 0, 0)
 
     submission_last_run_cycle_time = met_etl_db_session.query(
-        func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
-        EtlRunCycleModel.packagename == 'submission', EtlRunCycleModel.success == True).first()
+        func.coalesce(func.max(EtlRunCycleModel.enddatetime), DEFAULT_DATETIME)).filter(
+        EtlRunCycleModel.packagename == 'submission', EtlRunCycleModel.success).first()
 
-    # get the latest record id from the run cycle table, in case of first run its considered as zero
-    max_run_cycle_id = met_etl_db_session.query(func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
+    # get the latest record id from the run cycle table, in case of first run
+    # its considered as zero
+    max_run_cycle_id = met_etl_db_session.query(
+        func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
 
     for last_run_cycle_time in submission_last_run_cycle_time:
 
         for run_cycle_id in max_run_cycle_id:
-            # insert the current run cycle details to the table with the success status as false. 
+            # insert the current run cycle details to the table with the success status as false.
             # This will be set to true once the job completes
             new_run_cycle_id = run_cycle_id + 1
             met_etl_db_session.add(
-                EtlRunCycleModel(id=new_run_cycle_id, packagename='submission', startdatetime=datetime.utcnow(),
-                                 enddatetime=None,
-                                 description='started the load for tables user response detail and responses',
-                                 success=False))
+                EtlRunCycleModel(
+                    id=new_run_cycle_id,
+                    packagename='submission',
+                    startdatetime=datetime.utcnow(),
+                    enddatetime=None,
+                    description='started the load for tables user response detail and responses',
+                    success=False))
             met_etl_db_session.commit()
 
     met_etl_db_session.close()
@@ -53,11 +69,16 @@ def get_submission_last_run_cycle_time(context, flag_to_run_step_after_setting):
 
 
 # extract the submissions that have been created or updated after the last run
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"},
-    out={"new_submission": Out(), "updated_submission": Out(), "submission_new_runcycleid": Out()})
-def extract_submission(context, submission_last_run_cycle_time, submission_new_runcycleid):
+@op(required_resource_keys={"met_db_session",
+    "met_etl_db_session"},
+    out={"new_submission": Out(),
+    "updated_submission": Out(),
+         "submission_new_runcycleid": Out()})
+def extract_submission(
+        context,
+        submission_last_run_cycle_time,
+        submission_new_runcycleid):
     session = context.resources.met_db_session
-    default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
     new_submission = []
     updated_submission = []
 
@@ -68,11 +89,15 @@ def extract_submission(context, submission_last_run_cycle_time, submission_new_r
             MetSubmissionModel.created_date > last_run_cycle_time).all()
 
 # commenting out the logic for updated submission, this is not needed as of now
-#       if last_run_cycle_time > default_datetime:
-#           context.log.info("started extracting updated data from submission table")
-#           updated_submission = session.query(MetSubmissionModel).filter(MetSubmissionModel.updated_date >
-#                                                                         last_run_cycle_time,
-#                                                                         MetSubmissionModel.updated_date != MetSubmissionModel.created_date).all()
+        if last_run_cycle_time > DEFAULT_DATETIME:
+            context.log.info(
+                "started extracting updated data from submission table")
+            updated_submission = session.query(
+                MetSubmissionModel
+            ).filter(MetSubmissionModel.updated_date >
+                     last_run_cycle_time,
+                     MetSubmissionModel.updated_date !=
+                     MetSubmissionModel.created_date).all()
 
     yield Output(new_submission, "new_submission")
 
@@ -87,9 +112,16 @@ def extract_submission(context, submission_last_run_cycle_time, submission_new_r
     session.close()
 
 
-# load the sumissions created or updated after last run to the analytics database
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"submission_new_runcycleid": Out()})
-def load_submission(context, new_submission, updated_submission, submission_new_runcycleid):
+# load the sumissions created or updated after last run to the analytics
+# database
+@op(required_resource_keys={"met_db_session",
+    "met_etl_db_session"},
+    out={"submission_new_runcycleid": Out()})
+def load_submission(
+        context,
+        new_submission,
+        updated_submission,
+        submission_new_runcycleid):
     all_submissions = new_submission + updated_submission
     metsession = context.resources.met_db_session
     met_etl_session = context.resources.met_etl_db_session
@@ -100,18 +132,21 @@ def load_submission(context, new_submission, updated_submission, submission_new_
         # go thru each submission.
         for submission in all_submissions:
 
-            met_survey = metsession.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
+            met_survey = metsession.query(MetSurveyModel).filter(
+                MetSurveyModel.id == submission.survey_id).first()
             etl_survey = met_etl_session.query(EtlSurveyModel).filter(
                 EtlSurveyModel.source_survey_id == submission.survey_id,
-                EtlSurveyModel.is_active == True).first()
+                EtlSurveyModel.is_active).first()
 
             context.log.info(
-                '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Extraction starting for Submission id %s . Survey : %s.',
-                submission.id, met_survey.id)
+                f'{DECORATION}Extraction starting for Submission id %s. Survey: %s.',
+                submission.id,
+                met_survey.id)
 
             if not etl_survey or not met_survey:
                 context.log.info(
-                    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Skipping Extraction  for Submission id %s . Survey Not Found in Analytics DB : %s.Probably a very old survey',
+                    f'{DECORATION}Skipping extraction for Submission id %s. '
+                    'Survey Not Found in Analytics DB: %s. Probably a very old survey',
                     submission.id,
                     met_survey.id)
                 continue
@@ -121,16 +156,30 @@ def load_submission(context, new_submission, updated_submission, submission_new_
             # check and load data for single page survey.
             if form_type == 'form':
                 form_questions = met_survey.form_json.get('components', None)
-                _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
-                                    submission_new_runcycleid, etl_survey)
+                _extract_submission(
+                    form_questions,
+                    met_survey,
+                    metsession,
+                    submission,
+                    met_etl_session,
+                    context,
+                    submission_new_runcycleid,
+                    etl_survey)
 
             # check and load data for multi page survey.
             if form_type == 'wizard':
                 pages = met_survey.form_json.get('components', None)
                 for page in pages:
                     form_questions = page.get('components', None)
-                    _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
-                                        submission_new_runcycleid, etl_survey)
+                    _extract_submission(
+                        form_questions,
+                        met_survey,
+                        metsession,
+                        submission,
+                        met_etl_session,
+                        context,
+                        submission_new_runcycleid,
+                        etl_survey)
 
     metsession.close()
 
@@ -140,83 +189,168 @@ def load_submission(context, new_submission, updated_submission, submission_new_
 
 
 # load data to table response_type_textarea
-def _extract_submission(form_questions, met_survey, metsession, submission, met_etl_session, context,
-                        submission_new_runcycleid, etl_survey):
-            if (form_questions) is None:
-                # throw error or notify by logging
-                context.log.info(
-                    'Survey Found without any component in form_json: %s.Skipping it',
-                    met_survey.id)
-                return
+def _extract_submission(
+        form_questions,
+        met_survey,
+        metsession,
+        submission,
+        met_etl_session,
+        context,
+        submission_new_runcycleid,
+        etl_survey):
+    if (form_questions) is None:
+        # throw error or notify by logging
+        context.log.info(
+            'Survey Found without any component in form_json: %s.Skipping it',
+            met_survey.id)
+        return
 
-            user = metsession.query(MetParticipantModel).filter(MetParticipantModel.id == submission.participant_id).first()
+    user = metsession.query(MetParticipantModel).filter(
+        MetParticipantModel.id == submission.participant_id).first()
 
-            context.log.info('User : %s Found for submission id : %s with mappedd user id %s', user,
-                             submission.id, submission.participant_id)
+    context.log.info(
+        'User : %s Found for submission id : %s with mappedd user id %s',
+        user,
+        submission.id,
+        submission.participant_id)
 
-            for component in form_questions:
-                # go thru each component type and check for answer in the submission_json.
-                # instead of going through each answer and iterate , we find the questions from the form and try to get the answer.
-                answer_key = submission.submission_json.get(component['key'])
+    for component in form_questions:
+        # go thru each component type and check for answer in the submission_json.
+        # instead of going through each answer and iterate , we find the
+        # questions from the form and try to get the answer.
+        answer_key = submission.submission_json.get(component['key'])
 
-                if not (answer_key):
-                    continue
+        if not (answer_key):
+            continue
 
-                # TODO comments related to category type question has a different format in the source system
-                # TODO the key needs to be finalized in the source system before doing a fix on the ETL.
-                # for now excluding the comment for a category type question as we are not using this data for analytics.
-                if component['key'] == 'categorycommentcontainer':
-                    continue
+        # TODO comments related to category type question has a different
+        # format in the source system
+        # TODO the key needs to be finalized in the source system before doing a fix on the ETL.
+        # for now excluding the comment for a category type question as we are
+        # not using this data for analytics.
+        if component['key'] == 'categorycommentcontainer':
+            continue
 
-                component_type = component['type'].lower()
-                context.log.info('Type for submission id : %s. is %s ', submission.id, component_type)
+        component_type = component['type'].lower()
+        context.log.info(
+            'Type for submission id : %s. is %s ',
+            submission.id,
+            component_type)
 
-                if component_type == FormIoComponentType.RADIO.value:
-                    _save_radio(met_etl_session, context, answer_key, component, etl_survey, user, submission,
-                                submission_new_runcycleid)
-                elif component_type == FormIoComponentType.CHECKBOX.value:
-                    _save_checkbox(met_etl_session, context, answer_key, component, etl_survey, user, submission,
-                                   submission_new_runcycleid)
-                elif component_type == FormIoComponentType.SELECTLIST.value:
-                    _save_select(met_etl_session, context, answer_key, component, etl_survey, user, submission,
-                                   submission_new_runcycleid)
-                elif component_type == FormIoComponentType.SURVEY.value:
-                    _save_survey(met_etl_session, context, answer_key, component, etl_survey, user, submission,
-                                   submission_new_runcycleid)
-                else:
-                    context.log.info('No Mapping Found for .Type for submission id : %s. is %s .Skipping',
-                                     submission.id, component_type)
-                context.log.info(
-                    '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Extraction Done for Submission id %s . Survey : %s.',
-                    submission.id, met_survey.id)
+        if component_type == FormIoComponentType.RADIO.value:
+            _save_radio(
+                met_etl_session,
+                context,
+                answer_key,
+                component,
+                etl_survey,
+                user,
+                submission,
+                submission_new_runcycleid)
+        elif component_type == FormIoComponentType.CHECKBOX.value:
+            _save_checkbox(
+                met_etl_session,
+                context,
+                answer_key,
+                component,
+                etl_survey,
+                user,
+                submission,
+                submission_new_runcycleid)
+        elif component_type == FormIoComponentType.SELECTLIST.value:
+            _save_select(
+                met_etl_session,
+                context,
+                answer_key,
+                component,
+                etl_survey,
+                user,
+                submission,
+                submission_new_runcycleid)
+        elif component_type == FormIoComponentType.SURVEY.value:
+            _save_survey(
+                met_etl_session,
+                context,
+                answer_key,
+                component,
+                etl_survey,
+                user,
+                submission,
+                submission_new_runcycleid)
+        else:
+            context.log.info(
+                'No Mapping Found for .Type for submission id : %s. is %s .Skipping',
+                submission.id,
+                component_type)
+        context.log.info(
+            f'{REVERSE_DECORATION}Extraction Done for Submission id %s. Survey: %s.',
+            submission.id,
+            met_survey.id)
 
-                met_etl_session.commit()
+        met_etl_session.commit()
 
 
 # load responses for a radio type question
-def _save_radio(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # radio responses just has the key to the value selected, so value has to be found from question
-    context.log.info('Input type Radio is created:survey id: %s. request_key is %s ',
-                     survey.id, component['key'])
+def _save_radio(
+        met_etl_session,
+        context,
+        answer_key,
+        component,
+        survey,
+        participant,
+        submission,
+        submission_new_runcycleid):
+    # radio responses just has the key to the value selected, so value has to
+    # be found from question
+    context.log.info(
+        'Input type Radio is created:survey id: %s. request_key is %s ',
+        survey.id,
+        component['key'])
     answer_key_str = str(answer_key)
-    answer = next((x for x in component.get('values') if x.get('value') == answer_key_str), None)
+    answer = next((x for x in component.get('values')
+                  if x.get('value') == answer_key_str), None)
 
     if not answer:
         return
 
     answer_value = answer.get('label')
-    context.log.info('Input type Radio is created:survey id: %s. request_key is %s value:%s request_id:%s',
-                     survey.id, component['key'], answer_value, component['id'])
+    context.log.info(
+        'Input type Radio is created:survey id: %s. request_key is %s value:%s request_id:%s',
+        survey.id,
+        component['key'],
+        answer_value,
+        component['id'])
 
-    _save_options(met_etl_session, survey, component, answer_value, getattr(participant, 'id', None),
-                  submission_new_runcycleid, submission)
+    _save_options(
+        met_etl_session,
+        survey,
+        component,
+        answer_value,
+        getattr(
+            participant,
+            'id',
+            None),
+        submission_new_runcycleid,
+        submission)
 
 
 # load responses for a checkbox type question
-def _save_checkbox(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # checkbox responses just has the key to the value selected, so value has to be found from question
-    context.log.info('Input type Selectbox is created:survey id: %s. request_key is %s  Answer Key %s',
-                     survey.id, component['key'], answer_key)
+def _save_checkbox(
+        met_etl_session,
+        context,
+        answer_key,
+        component,
+        survey,
+        participant,
+        submission,
+        submission_new_runcycleid):
+    # checkbox responses just has the key to the value selected, so value has
+    # to be found from question
+    context.log.info(
+        'Input type Selectbox is created:survey id: %s. request_key is %s  Answer Key %s',
+        survey.id,
+        component['key'],
+        answer_key)
 
     selectbox_mapping = {}
 
@@ -226,47 +360,96 @@ def _save_checkbox(met_etl_session, context, answer_key, component, survey, part
 
     if answer_key is not None:
         for key, value in answer_key.items():
-            # each answer is a row for simplecheckboxes. It belongs to answer in a multiple checkbox
+            # each answer is a row for simplecheckboxes. It belongs to answer
+            # in a multiple checkbox
             is_yes = _is_truthy(value)
 
             if is_yes:
                 # need to find the label of the drop down.
                 answer_label = selectbox_mapping.get(key)
 
-                context.log.info('Input type Selectbox is created:survey id: %s. '
-                                 'request_key is %s value:%s request_id:%s', survey.id, component['key'],
-                                 answer_label,
-                                 component['id'])
+                context.log.info(
+                    'Input type Selectbox is created:survey id: %s. '
+                    'request_key is %s value:%s request_id:%s',
+                    survey.id,
+                    component['key'],
+                    answer_label,
+                    component['id'])
 
-                _save_options(met_etl_session, survey, component, answer_label, getattr(participant, 'id', None),
-                              submission_new_runcycleid, submission)
+                _save_options(
+                    met_etl_session,
+                    survey,
+                    component,
+                    answer_label,
+                    getattr(
+                        participant,
+                        'id',
+                        None),
+                    submission_new_runcycleid,
+                    submission)
 
 
 # load responses for a select type question
-def _save_select(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # selected responses just has the key to the value selected, so value has to be found from question
-    context.log.info('Input type Select is created:survey id: %s. request_key is %s ',
-                     survey.id, component['key'])
+def _save_select(
+        met_etl_session,
+        context,
+        answer_key,
+        component,
+        survey,
+        participant,
+        submission,
+        submission_new_runcycleid):
+    # selected responses just has the key to the value selected, so value has
+    # to be found from question
+    context.log.info(
+        'Input type Select is created:survey id: %s. request_key is %s ',
+        survey.id,
+        component['key'])
     answer_key_str = str(answer_key)
     component_data = component.get('data')
-    answer = next((x for x in component_data.get('values') if x.get('value') == answer_key_str), None)
+    answer = next((x for x in component_data.get('values')
+                  if x.get('value') == answer_key_str), None)
 
     if not answer:
         return
 
     answer_value = answer.get('label')
-    context.log.info('Input type Select is created:survey id: %s. request_key is %s value:%s request_id:%s',
-                     survey.id, component['key'], answer_value, component['id'])
+    context.log.info(
+        'Input type Select is created:survey id: %s. request_key is %s value:%s request_id:%s',
+        survey.id,
+        component['key'],
+        answer_value,
+        component['id'])
 
-    _save_options(met_etl_session, survey, component, answer_value, getattr(participant, 'id', None),
-                  submission_new_runcycleid, submission)
+    _save_options(
+        met_etl_session,
+        survey,
+        component,
+        answer_value,
+        getattr(
+            participant,
+            'id',
+            None),
+        submission_new_runcycleid,
+        submission)
 
 
 # load responses for a survey type question
-def _save_survey(met_etl_session, context, answer_key, component, survey, participant, submission, submission_new_runcycleid):
-    # selected survey just has the key to the value selected, so value has to be found from question
-    context.log.info('Input type Survey is created:survey id: %s. request_key is %s ',
-                     survey.id, component['key'])
+def _save_survey(
+        met_etl_session,
+        context,
+        answer_key,
+        component,
+        survey,
+        participant,
+        submission,
+        submission_new_runcycleid):
+    # selected survey just has the key to the value selected, so value has to
+    # be found from question
+    context.log.info(
+        'Input type Survey is created:survey id: %s. request_key is %s ',
+        survey.id,
+        component['key'])
 
     survey_mapping = {}
 
@@ -278,17 +461,21 @@ def _save_survey(met_etl_session, context, answer_key, component, survey, partic
         for key, value in answer_key.items():
             answer_label = survey_mapping.get(value)
 
-            context.log.info('Input type Survey is created:survey id: %s. '
-                             'request_key is %s value:%s request_id:%s', survey.id, component['key'],
-                             answer_label, component['id'])
+            context.log.info(
+                'Input type Survey is created:survey id: %s. '
+                'request_key is %s value:%s request_id:%s',
+                survey.id,
+                component['key'],
+                answer_label,
+                component['id'])
 
-            # id for survey type question is same for all sub questions so request id is a combination of 
-            # id and the key
+            # id for survey type question is same for all sub questions so request id
+            # is a combination of id and the key
             radio_response = EtlResponseTypeOptionModel(
                 survey_id=survey.id,
-                request_key=component['key']+'-'+key,
+                request_key=component['key'] + '-' + key,
                 value=answer_label,
-                request_id=component['id']+'-'+key,
+                request_id=component['id'] + '-' + key,
                 participant_id=getattr(participant, 'id', None),
                 is_active=True,
                 runcycle_id=submission_new_runcycleid,
@@ -299,7 +486,14 @@ def _save_survey(met_etl_session, context, answer_key, component, survey, partic
             met_etl_session.add(radio_response)
 
 
-def _save_options(met_etl_session, survey, component, value, participant, submission_new_runcycleid, submission):
+def _save_options(
+        met_etl_session,
+        survey,
+        component,
+        value,
+        participant,
+        submission_new_runcycleid,
+        submission):
     radio_response = EtlResponseTypeOptionModel(
         survey_id=survey.id,
         request_key=component['key'],
@@ -316,16 +510,23 @@ def _save_options(met_etl_session, survey, component, value, participant, submis
 
 
 def _is_truthy(answer):
-    if type(answer) == 'str':
+    if isinstance(answer, 'str'):
         is_yes = answer.casefold() == 'yes' or answer.casefold() == 'true'
     else:
         is_yes = answer is True
     return is_yes
 
 
-# load the sumissions created or updated after last run to the user response details in analytics database
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"submission_new_runcycleid": Out()})
-def load_user_response_details(context, new_submission, updated_submission, submission_new_runcycleid):
+# load the sumissions created or updated after last run to the user
+# response details in analytics database
+@op(required_resource_keys={"met_db_session",
+    "met_etl_db_session"},
+    out={"submission_new_runcycleid": Out()})
+def load_user_response_details(
+        context,
+        new_submission,
+        updated_submission,
+        submission_new_runcycleid):
     session = context.resources.met_etl_db_session
 
     metsession = context.resources.met_db_session
@@ -336,21 +537,29 @@ def load_user_response_details(context, new_submission, updated_submission, subm
 
         for submission in all_submissions:
 
-            met_survey = metsession.query(MetSurveyModel).filter(MetSurveyModel.id == submission.survey_id).first()
-            etl_survey = session.query(EtlSurveyModel).filter(EtlSurveyModel.source_survey_id == submission.survey_id,
-                                                              EtlSurveyModel.is_active == True).first()
+            met_survey = metsession.query(MetSurveyModel).filter(
+                MetSurveyModel.id == submission.survey_id).first()
+            etl_survey = session.query(EtlSurveyModel).filter(
+                EtlSurveyModel.source_survey_id == submission.survey_id,
+                EtlSurveyModel.is_active).first()
             context.log.info(
-                '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<User Response Detail Extraction starting for Submission id %s . Survey : %s.',
-                submission.id, met_survey.id)
-            # submission without survey is probably an old updated survey not beiing loaded to analytics db.Wont happen in prod
+                f'{DECORATION}User Response Detail Extraction starting '
+                'for Submission id %s. Survey: %s.',
+                submission.id,
+                met_survey.id)
+            # submission without survey is probably an old updated survey not
+            # beiing loaded to analytics db.Wont happen in prod
             if not etl_survey or not met_survey:
                 context.log.info(
-                    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Skipping User Response Detail Extraction  for Submission id %s . Survey Not Found in Analytics DB : %s.Probably a very old survey',
+                    f'{DECORATION}Skipping User Response Detail Extractionfor Submission id %s. '
+                    'Survey Not Found in Analytics DB: %s. Probably a very old survey',
                     submission.id,
                     met_survey.id)
                 continue
 
-            context.log.info('Creating new EtlUserResponseDetailModel in Analytics DB: %s.', submission.id)
+            context.log.info(
+                'Creating new EtlUserResponseDetailModel in Analytics DB: %s.',
+                submission.id)
 
             user_response_detail = EtlUserResponseDetailModel(
                 survey_id=etl_survey.id,
@@ -374,14 +583,20 @@ def load_user_response_details(context, new_submission, updated_submission, subm
 
 
 # update the status for submission etl in run cycle table as successful
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"}, out={"flag_to_run_step_after_submission": Out()})
+@op(required_resource_keys={"met_db_session",
+    "met_etl_db_session"},
+    out={"flag_to_run_step_after_submission": Out()})
 def submission_end_run_cycle(context, submission_new_runcycleid):
     met_etl_db_session = context.resources.met_etl_db_session
 
     met_etl_db_session.query(EtlRunCycleModel).filter(
-        EtlRunCycleModel.id == submission_new_runcycleid, EtlRunCycleModel.packagename == 'submission',
-        EtlRunCycleModel.success == False).update({'success': True, 'enddatetime': datetime.utcnow(),
-                                                   'description': 'ended the load for tables user response detail and responses'})
+        EtlRunCycleModel.id == submission_new_runcycleid,
+        EtlRunCycleModel.packagename == 'submission',
+        not EtlRunCycleModel.success).update(
+        {
+            'success': True,
+            'enddatetime': datetime.utcnow(),
+            'description': 'ended the load for tables user response detail and responses'})
 
     context.log.info("run cycle ended for submission table")
 

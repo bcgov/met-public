@@ -10,9 +10,10 @@ from etl_project.services.schedules.cleanup_old_logs_schedule import (
     vacuum_met_db_schedule,
 )
 
+
 @repository
 def etl_project():
     return [job_sample_db_test,
             met_data_ingestion, met_data_ingestion_schedule,
             cleanup_old_logs, cleanup_old_logs_schedule,
-            vacuum_met_db,vacuum_met_db_schedule]
+            vacuum_met_db, vacuum_met_db_schedule]

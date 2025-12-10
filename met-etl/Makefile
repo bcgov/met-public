@@ -21,8 +21,11 @@ clean: ## Remove virtualenv
 	rm -rf $(VENV)
 
 ci: lint test ## Run CI checks
+
 lint: $(VENV)/bin/activate ## Run pylint/flake8 error-level checks
 	PYTHONPATH=./src:./src/etl_project/services $(PY) -m pylint --disable=all --enable=E,F --disable=E1120 src
+	PYTHONPATH=./src $(PY) -m flake8 src tests --max-line-length=100
+
 lintfix: $(VENV)/bin/activate ## Run autopep8 to fix linting issues
 	PYTHONPATH=./src $(PY) -m autopep8 --in-place --recursive --aggressive src tests
 
