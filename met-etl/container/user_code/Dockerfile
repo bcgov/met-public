@@ -1,6 +1,6 @@
 FROM python:3.8.5-buster
 
-ARG DAGSTER_LIBRARIES_VERSION=0.23.15
+ARG DAGSTER_LIBRARIES_VERSION=0.26.16
 
 RUN pip install --upgrade pip
 # ==> Add Dagster layer
