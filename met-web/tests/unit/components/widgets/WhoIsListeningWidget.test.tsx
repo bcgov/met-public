@@ -101,12 +101,15 @@ const router = createMemoryRouter(
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: 'test',
+            user: {
+                roles: [USER_ROLES.VIEW_PRIVATE_ENGAGEMENTS, USER_ROLES.EDIT_ENGAGEMENT, USER_ROLES.CREATE_ENGAGEMENT],
+            },
             assignedEngagements: [draftEngagement.id],
-        };
-    }),
+        }),
+    ),
     useDispatch: jest.fn(() => jest.fn()),
 }));
 

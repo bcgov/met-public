@@ -424,7 +424,7 @@ const AuthoringDetails = () => {
                                                 {key !== 0 && authoringDetailsTabs.length > 2 ? (
                                                     <FontAwesomeIcon
                                                         icon={faXmark}
-                                                        style={fontAwesomeXStyles}
+                                                        style={{ ...fontAwesomeXStyles }}
                                                         onClick={(event: React.SyntheticEvent) => {
                                                             removeTab(event, key);
                                                         }}
