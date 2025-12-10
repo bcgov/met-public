@@ -15,6 +15,7 @@ import { Engagement } from 'models/engagement';
 import { getTenantLanguages } from 'services/languageService';
 import { EngagementLoaderData } from 'components/engagement/public/view';
 import { colors } from 'styles/Theme';
+import { Skeleton } from '@mui/material';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     const statusColor = completed ? colors.notification.success : colors.notification.error;
@@ -75,15 +76,13 @@ const AuthoringTemplate = () => {
             {/* Portal target for anything that needs to be rendered before the section title + content */}
             <div id="pre-authoring-content" />
 
-            <Suspense>
-                <Await resolve={languages}>
-                    {(languages: Language[]) => (
-                        <Header2 decorated style={{ paddingTop: '1rem' }}>
-                            {`${getLanguageValue(currentLanguage, languages)} Content`}
-                        </Header2>
-                    )}
-                </Await>
-            </Suspense>
+            <Header2 decorated style={{ paddingTop: '1rem' }}>
+                <Suspense fallback={<Skeleton width={200} />}>
+                    <Await resolve={languages}>
+                        {(languages: Language[]) => `${getLanguageValue(currentLanguage, languages)} Content`}
+                    </Await>
+                </Suspense>
+            </Header2>
 
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <Suspense>
