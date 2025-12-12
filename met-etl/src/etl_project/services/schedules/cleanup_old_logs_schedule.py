@@ -1,5 +1,5 @@
 from dagster import ScheduleDefinition
-from jobs.cleanup_old_logs import cleanup_old_logs, vacuum_met_db
+from etl_project.services.jobs.cleanup_old_logs import cleanup_old_logs, vacuum_met_db
 cleanup_old_logs_schedule = ScheduleDefinition(
     job=cleanup_old_logs,
     cron_schedule="0 3 * * *",  # Every day at 3am

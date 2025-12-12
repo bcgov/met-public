@@ -1,0 +1,89 @@
+name: ETL CI
+
+on:
+    pull_request:
+        branches:
+            - main
+        paths:
+            - "met-etl/**"
+
+defaults:
+    run:
+        shell: bash
+        working-directory: ./met-etl
+
+jobs:
+    setup-job:
+        runs-on: ubuntu-24.04
+
+        if: github.repository == 'bcgov/met-public'
+
+        steps:
+            - uses: actions/checkout@v6
+            - run: "true"
+
+    linting:
+        needs: setup-job
+        runs-on: ubuntu-24.04
+
+        strategy:
+            matrix:
+                python-version: [3.12]
+
+        steps:
+            - uses: actions/checkout@v6
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v6
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install lint dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install "pylint==3.2.7" "flake8==7.1.1"
+            - name: Lint for syntax errors (pylint)
+              env:
+                  PYTHONPATH: ./src
+              run: |
+                  # Limit to error-level checks to mirror existing lightweight lint
+                  pylint --disable=all --enable=E,F src/etl_project
+            - name: Lint for syntax errors (flake8)
+              env:
+                  PYTHONPATH: ./src
+              run: |
+                  flake8 src/etl_project tests --max-line-length 100
+
+    build-check:
+        needs: setup-job
+        runs-on: ubuntu-24.04
+
+        steps:
+            - uses: actions/checkout@v6
+            - name: Build Docker image
+              run: |
+                  docker build . --file Dockerfile --tag met-etl-ci:latest
+
+    tests:
+        needs: setup-job
+        runs-on: ubuntu-24.04
+
+        strategy:
+            matrix:
+                python-version: [3.12]
+
+        steps:
+            - uses: actions/checkout@v6
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v6
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install -r requirements/dev.txt
+            - name: Run smoke tests
+              env:
+                  PYTHONPATH: ./src
+              run: |
+                  pytest tests/smoke_test.py -q --maxfail=1
