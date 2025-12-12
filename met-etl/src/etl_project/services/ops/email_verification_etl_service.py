@@ -152,11 +152,13 @@ def email_ver_end_run_cycle(context, email_ver_new_run_cycle_id):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == email_ver_new_run_cycle_id,
         EtlRunCycleModel.packagename == 'emailverification',
-        not EtlRunCycleModel.success).update(
+        EtlRunCycleModel.success.is_(False)).update(
         {
             'success': True,
             'enddatetime': datetime.now(timezone.utc),
-            'description': 'ended the load for table email_verification'})
+            'description': 'ended the load for table email_verification'
+        }
+    )
 
     context.log.info("run cycle ended for email_verification table")
 

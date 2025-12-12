@@ -132,11 +132,13 @@ def user_end_run_cycle(context, user_details_new_run_cycle_id):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == user_details_new_run_cycle_id,
         EtlRunCycleModel.packagename == 'userdetails',
-        not EtlRunCycleModel.success).update(
+        EtlRunCycleModel.success.is_(False)).update(
         {
             'success': True,
             'enddatetime': datetime.now(timezone.utc),
-            'description': 'ended the load for table user_details'})
+            'description': 'ended the load for table user_details'
+        }
+    )
 
     context.log.info("run cycle ended for user_details table")
 

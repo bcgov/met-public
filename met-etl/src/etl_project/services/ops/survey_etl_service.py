@@ -400,9 +400,12 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == survey_new_runcycleid,
         EtlRunCycleModel.packagename == 'survey',
-        not EtlRunCycleModel.success).update(
-        {'success': True, 'enddatetime': datetime.now(timezone.utc),
-         'description': 'ended the load for tables survey and requests'})
+        EtlRunCycleModel.success.is_(False)).update(
+        {
+            'success': True, 'enddatetime': datetime.now(timezone.utc),
+            'description': 'ended the load for tables survey and requests'
+        }
+    )
 
     context.log.info("run cycle ended for survey table")
 

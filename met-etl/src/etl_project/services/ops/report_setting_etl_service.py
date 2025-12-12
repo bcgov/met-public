@@ -140,11 +140,13 @@ def setting_end_run_cycle(context, setting_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == setting_new_runcycleid,
         EtlRunCycleModel.packagename == 'report_setting',
-        not EtlRunCycleModel.success).update(
+        EtlRunCycleModel.success.is_(False)).update(
         {
             'success': True,
             'enddatetime': datetime.now(timezone.utc),
-            'description': 'ended the load for table report_setting'})
+            'description': 'ended the load for table report_setting'
+        }
+    )
 
     context.log.info("run cycle ended for report setting table")
 

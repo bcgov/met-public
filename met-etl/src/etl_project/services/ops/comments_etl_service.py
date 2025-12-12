@@ -132,11 +132,13 @@ def comments_end_run_cycle(context, comments_new_run_cycle_id):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == comments_new_run_cycle_id,
         EtlRunCycleModel.packagename == 'userfeedback',
-        not EtlRunCycleModel.success).update(
+        EtlRunCycleModel.success.is_(False)).update(
         {
             'success': True,
             'enddatetime': datetime.now(timezone.utc),
-            'description': 'ended the load for table user_feedback'})
+            'description': 'ended the load for table user_feedback'
+        }
+    )
 
     context.log.info("run cycle ended for comments table")
 

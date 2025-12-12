@@ -161,7 +161,7 @@ def engagement_end_run_cycle(context, engagement_new_runcycleid):
     met_etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == engagement_new_runcycleid,
         EtlRunCycleModel.packagename == 'engagement',
-        not EtlRunCycleModel.success).update(
+        EtlRunCycleModel.success.is_(False)).update(
         {
             'success': True,
             'enddatetime': datetime.now(timezone.utc),
