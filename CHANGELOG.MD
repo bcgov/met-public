@@ -1,3 +1,14 @@
+## December 11, 2025
+
+- **Feature** Capture Patroni cluster in Helm charts [🎟️ DESENG-925](https://citz-gdx.atlassian.net/browse/DESENG-925)
+  - Updated Helm charts for `openshift/db` to include Patroni cluster configuration.
+  - Patroni cluster state is now managed by Helm via Github Actions CI/CD pipeline.
+  - Leverages https://github.com/bcgov/nr-patroni-chart/ as a subchart for Patroni deployment.
+  - Renamed DB to `engagement-patroni` to reflect ongoing branding changes.
+  - Updated backup and restore scripts to work with Patroni clusters.
+  - Updated backup/restore documentation in `openshift/README.md`.
+  - Confirmed app still runs correctly after DB reconfiguration.
+
 ## December 9, 2025
 
 - **Feature** Add CI pipeline for ETL workflow [🎟️ DESENG-880](https://citz-gdx.atlassian.net/browse/DESENG-880)
@@ -86,7 +97,6 @@
 ## August 22, 2025
 
 - **Chore** Resolve Dependabot vulnerability reports [🎟️ DESENG-845](https://citz-gdx.atlassian.net/browse/DESENG-845)
-
   - Update several packages to the latest version, resolving Dependabot PRs that are too old to be rebased.
 
 - **Bugfix** Finish upgrading DeploymentConfigs -> Deployments cross-app [🎟️ DESENG-847](https://citz-gdx.atlassian.net/browse/DESENG-847)
@@ -245,7 +255,6 @@
 - **Bugfix** Resolve conflicting versions for Dagster ETL pipeline [🎟️ DESENG-677](https://citz-gdx.atlassian.net/browse/DESENG-677)
   - Tweak dagster versions and python base image
 - **Feature** Redesign event widget [🎟️ DESENG-698](https://citz-gdx.atlassian.net/browse/DESENG-698)
-
   - Modified api to accomodate additional field required in event widget design
   - Modified forms and cards on admin side to show new field
   - Implemented front-end design
@@ -262,7 +271,6 @@
 ## April 22, 2025
 
 - **Feature** Redesign poll widget [🎟️ DESENG-697](https://citz-gdx.atlassian.net/browse/DESENG-697)
-
   - Refactor PollWidget.tsx implementing Figma design
     - Improved layout, similar to DocumentWidget
   - Load data more efficiently
@@ -272,7 +280,6 @@
 ## April 15, 2025
 
 - **Feature** Redesign document widget [🎟️ DESENG-696](https://citz-gdx.atlassian.net/browse/DESENG-696)
-
   - Significant refactor to DocumentWidget.tsx implementing Figma design
   - Use recursive rendering to support theoretically infinite subfolders in future
   - Many accessibility/QoL improvements
@@ -280,7 +287,6 @@
   - Improved skeleton while loading
 
 - **Chore** Update GitHub Actions workflows to use ubuntu-latest instead of ubuntu-20.04
-
   - This is to stay ahead of the deprecation of ubuntu-20.04 in GitHub Actions as of today's date
 
 ## _Interregnum break_: _October 2024 - March 2025_
@@ -290,7 +296,6 @@
 ## October 2, 2024
 
 - **Feature** New Who is Listening widget front end [🎟️ DESENG-695](https://citz-gdx.atlassian.net/browse/DESENG-695)
-
   - Implemented Figma design
   - Added widget_listening table to db for widget instance data
   - Added option to enter widget description text (below title, above contacts)
@@ -300,7 +305,6 @@
   - Updated Who is Listening widget form
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Changed icon colour from yellow to white to accomodate company branding requests
 
 - **Feature** New Map Widget front end [🎟️ DESENG-693](https://citz-gdx.atlassian.net/browse/DESENG-693)
@@ -315,7 +319,6 @@
 ## September 25, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Removed unneeded tables from db
   - Updated all other met_api and met_web logic to accomodate this
 
@@ -334,7 +337,6 @@
 ## September 18, 2024
 
 - **Feature** New Video Widget front end [🎟️ DESENG-692](https://citz-gdx.atlassian.net/browse/DESENG-692)
-
   - Implemented Figma design
   - Created custom layover bar for videos that shows video provider and has a custom logo
   - Transcripts will not be implemented at this time
@@ -392,7 +394,6 @@
 ## August 15, 2024
 
 - **Feature** Add engagement configuration summary [🎟️ DESENG-667](https://citz-gdx.atlassian.net/browse/DESENG-667)
-
   - Added a tabbed layout to the new engagement view page
   - Added a new "Configuration" tab to display the engagement's configuration details
     - The other tabs are blank for now, but will be filled in future tickets
@@ -432,7 +433,6 @@
 ## July 30, 2024
 
 - **Feature** New admin header [🎟️ DESENG-660](https://citz-gdx.atlassian.net/browse/DESENG-660)
-
   - Added a new API endpoint to fetch a list of a user's tenants, required for the new header
   - Redesigned the admin header to match the new design system
   - Added a new dropdown to the header to allow users to switch between tenants
@@ -450,7 +450,6 @@
 ## July 17, 2024
 
 - **Feature** Admin authoring experience - language selector [🎟️ DESENG-657](https://citz-gdx.atlassian.net/browse/DESENG-657)
-
   - Created loader for engagement creation wizard
   - Created language selector field in engagement creation wizard
 

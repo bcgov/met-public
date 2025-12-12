@@ -11,16 +11,16 @@ set -e
 
 if [[ $# -ne 2 ]]; then
     echo "Usage: $0 <backup-file.sql.gz> <database-name>"
-    echo "Example: $0 /backups/daily/2025-11-25/met-patroni-app_2025-11-25_10-34-33.sql.gz app"
+    echo "Example: $0 /backups/daily/2025-11-25/engagement-patroni-app_2025-11-25_10-34-33.sql.gz app"
     exit 1
 fi
 
 BACKUP_FILE="$1"
 DATABASE="$2"
 
-source /vault/secrets/met-patroni
+source /vault/secrets/engagement-patroni
 export PGPASSWORD="$MET_PATRONI_PASSWORD"
-export DB_HOST="${DATABASE_SERVICE_NAME:-met-patroni}"
+export DB_HOST="${DATABASE_SERVICE_NAME:-engagement-patroni}"
 
 # Check the file exists
 if [[ ! -f "$BACKUP_FILE" ]]; then

@@ -143,3 +143,6 @@ met-api/.DS_Store
 # VSCode config and Chrome extension user data
 .vscode/chrome
 met-web/.vscode/
+
+# Helm dependency files
+openshift/**/charts/

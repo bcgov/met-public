@@ -40,12 +40,12 @@ spec:
         vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
-        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
+        vault.hashicorp.com/agent-inject-secret-engagement-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni
+        vault.hashicorp.com/agent-inject-template-engagement-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni"{{ ` }}
           export MET_PATRONI_USER='{{ index .Data.data "superuser-username" }}'
           export MET_PATRONI_PASSWORD='{{ index .Data.data "superuser-password" }}'
-          export POSTGRESQL_DATABASE='{{ index .Data.data "met-app-db-name" }}'
+          export POSTGRESQL_DATABASE='{{ index .Data.data "app-db-name" }}'
           export DATABASE_SERVICE_NAME='{{ index .Data.data "hostname" }}'
           {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-s3: {{ .Values.vault.engine }}{{ .Values.vault.path }}/s3
@@ -86,7 +86,7 @@ spec:
             - -c
             - |
               set -euo pipefail && \
-              . /vault/secrets/met-patroni && \
+              . /vault/secrets/engagement-patroni && \
               . /vault/secrets/s3 && \
               bash ./backup.sh
           envFrom:

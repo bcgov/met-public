@@ -29,7 +29,7 @@ def check_auth(**kwargs):
     if not user_from_db:
         abort(HTTPStatus.FORBIDDEN, 'User not found')
 
-    # Retrieve tenant specific user roles from met-db
+    # Retrieve tenant specific user roles from OIDC token info
     user_roles = current_app.config['JWT_ROLE_CALLBACK'](user_from_context.token_info)
 
     if not user_roles:

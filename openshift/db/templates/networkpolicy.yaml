@@ -6,9 +6,9 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/instance: met-patroni
-      app.kubernetes.io/name: patroni
-      cluster-name: met-patroni
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ default "postgres" .Values.postgres.nameOverride }}
+      cluster-name: {{ .Release.Name }}
   policyTypes:
   - Ingress
   ingress:

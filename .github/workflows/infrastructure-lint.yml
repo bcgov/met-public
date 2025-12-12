@@ -15,7 +15,7 @@ on:
         default: "all"
         type: choice
         options:
-          - met-db
+          - engagement-db
           - notify-api
           - met-api
           - met-web
@@ -78,7 +78,7 @@ jobs:
         run: |
           # Define chart directories
           declare -A chart_dirs=(
-            [met-db]="openshift/db"
+            [engagement-db]="openshift/db"
             [notify-api]="openshift/notify"
             [met-api]="openshift/api"
             [met-web]="openshift/web"
