@@ -510,7 +510,7 @@ def _save_options(
 
 
 def _is_truthy(answer):
-    if isinstance(answer, 'str'):
+    if isinstance(answer, str):
         is_yes = answer.casefold() == 'yes' or answer.casefold() == 'true'
     else:
         is_yes = answer is True
