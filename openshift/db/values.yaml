@@ -17,6 +17,8 @@ db:
       component: dagster-daemon
     - app.kubernetes.io/instance: dagster
       component: dagster-webserver
+    - app.kubernetes.io/instance: dagster
+      app.kubernetes.io/component: run_worker
     - app: analytics-api
       role: api
     - app-group: met-app
