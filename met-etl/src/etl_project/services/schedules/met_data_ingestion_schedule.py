@@ -1,5 +1,5 @@
 from dagster import schedule
-from jobs.met_data_ingestion import met_data_ingestion
+from etl_project.services.jobs.met_data_ingestion import met_data_ingestion
 
 
 @schedule(

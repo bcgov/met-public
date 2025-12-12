@@ -4,6 +4,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+
 @resource
 @contextmanager
 def dagster_db_session(context):
@@ -13,7 +14,8 @@ def dagster_db_session(context):
         db = os.getenv("MET_DB_DB", "")
         host = os.getenv("MET_DB_HOST", "")
         port = int(os.getenv("MET_DB_PORT", 5432))
-        db_connection = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
+        db_connection = create_engine(
+            f'postgresql://{user}:{password}@{host}:{port}/{db}')
         session_maker = sessionmaker(bind=db_connection)
         session = session_maker()
         yield session
@@ -31,7 +33,8 @@ def met_db_session(context):
         db = os.getenv("MET_DB_DB", "")
         host = os.getenv("MET_DB_HOST", "")
         port = int(os.getenv("MET_DB_PORT", 54332))
-        db_connection = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
+        db_connection = create_engine(
+            f'postgresql://{user}:{password}@{host}:{port}/{db}')
         session_maker = sessionmaker(bind=db_connection)
         session = session_maker()
         yield session
@@ -49,7 +52,8 @@ def met_etl_db_session(context):
         db = os.getenv("MET_ANALYTICS_DB_DB", "")
         host = os.getenv("MET_ANALYTICS_DB_HOST", "")
         port = os.getenv("MET_ANALYTICS_DB_PORT", 54334)
-        db_connection = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
+        db_connection = create_engine(
+            f'postgresql://{user}:{password}@{host}:{port}/{db}')
         session_maker = sessionmaker(bind=db_connection)
         session = session_maker()
         yield session

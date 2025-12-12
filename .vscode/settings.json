@@ -5,7 +5,8 @@
   "python.analysis.extraPaths": [
     "./analytics-api/src",
     "./met-cron/src",
-    "./met-api/src"
+    "./met-api/src",
+    "./met-etl/src"
   ],
   "pylint.args": ["--load-plugins", "pylint_flask_sqlalchemy", "pylint_flask"],
   "python.analysis.autoImportCompletions": true,
