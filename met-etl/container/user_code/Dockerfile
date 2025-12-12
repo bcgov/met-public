@@ -23,8 +23,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the full ETL project so imports like `etl_project.*` resolve
 COPY src/etl_project/ /opt/dagster/app/etl_project/
-# PYTHONPATH must point to the directory that contains the `etl_project` package
-ENV PYTHONPATH=/opt/dagster/app
+# Ensure legacy path `/etl_project` exists for Dagster CLI defaults
+RUN ln -s /opt/dagster/app/etl_project /etl_project
+# PYTHONPATH must include the parent of the package (and the legacy path) so imports always resolve
+ENV PYTHONPATH=/opt/dagster/app:/etl_project
 
 WORKDIR /opt/dagster/app/etl_project
 
