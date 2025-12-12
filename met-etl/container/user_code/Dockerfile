@@ -22,11 +22,15 @@ RUN apt-get update && apt-get install -y git \
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the full ETL project so imports like `etl_project.*` resolve
-COPY src/etl_project/ /etl_project/
-ENV PYTHONPATH=/etl_project
+COPY src/etl_project/ /opt/dagster/app/etl_project/
+# PYTHONPATH must point to the directory that contains the `etl_project` package
+ENV PYTHONPATH=/opt/dagster/app
 
-WORKDIR /etl_project
+WORKDIR /opt/dagster/app/etl_project
 
 # Run dagster gRPC server on the service port used by the deployment
 EXPOSE 4000
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-d", "/etl_project", "-f", "/etl_project/services/repo.py"]
+CMD ["dagster", "api", "grpc", \
+    "-h", "0.0.0.0", "-p", "4000", \
+    "-d", "/opt/dagster/app/etl_project", \
+    "-f", "/opt/dagster/app/etl_project/services/repo.py"]
