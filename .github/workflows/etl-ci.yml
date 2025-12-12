@@ -51,7 +51,7 @@ jobs:
               env:
                   PYTHONPATH: ./src
               run: |
-                  flake8 src tests --max-line-length 100
+                  flake8 src/etl_project tests --max-line-length 100
 
     build-check:
         needs: setup-job
