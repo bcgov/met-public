@@ -1,9 +1,9 @@
-FROM python:3.8.5-buster
+FROM python:3.9-slim-bullseye
 
 ARG DAGSTER_LIBRARIES_VERSION=0.26.16
 
 RUN pip install --upgrade pip
-# ==> Add Dagster layer
+# Dagster + celery + k8s dependencies
 RUN \
     pip install \
     dagster==1.10.16 \
@@ -15,18 +15,18 @@ RUN \
 
 WORKDIR /opt/dagster/app
 
-# Install the requirements
-COPY ./requirements.txt .
-
-RUN apt-get update && apt-get install -y git
+# Install project requirements from repository root
+COPY requirements.txt ./requirements.txt
+RUN apt-get update && apt-get install -y git \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src/etl_project/services/ /opt/dagster/app
+# Copy the full ETL project so imports like `etl_project.*` resolve
+COPY src/etl_project/ /etl_project/
+ENV PYTHONPATH=/etl_project
 
-# Run dagster gRPC server on port 4000
+WORKDIR /etl_project
 
+# Run dagster gRPC server on the service port used by the deployment
 EXPOSE 4000
-
-# CMD allows this to be overridden from run launchers or executors that want
-# to run other commands against your repository
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-f", "repo.py"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-d", "/etl_project", "-f", "/etl_project/services/repo.py"]
