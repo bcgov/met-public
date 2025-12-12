@@ -10,13 +10,13 @@ def cleanup_old_event_and_run_logs(context):
     session = context.resources.dagster_db_session
 
     context.log.info(
-        f"[Cleanup] Starting cleanup of logs older than {
-            cutoff_date.isoformat()}")
+        "[Cleanup] Starting cleanup of logs older than "
+        f"{cutoff_date.isoformat()}")
 
     # Delete event logs with progress logging
     context.log.info(
-        f"[Cleanup] Deleting from dagster.event_logs where timestamp < {
-            cutoff_date.isoformat()}")
+        "[Cleanup] Deleting from dagster.event_logs where timestamp < "
+        f"{cutoff_date.isoformat()}")
     deleted_event = session.execute(
         """
         DELETE FROM dagster.event_logs WHERE timestamp < :cutoff_date
@@ -25,15 +25,14 @@ def cleanup_old_event_and_run_logs(context):
     )
     if deleted_event.rowcount:
         context.log.info(
-            f"[Cleanup] Deleted {
-                deleted_event.rowcount} event log records")
+            f"[Cleanup] Deleted {deleted_event.rowcount} event log records")
     else:
         context.log.info("[Cleanup] No event log records deleted")
 
     # Delete run logs with progress logging
     context.log.info(
-        f"[Cleanup] Deleting from dagster.runs where update_timestamp < {
-            cutoff_date.isoformat()}")
+        "[Cleanup] Deleting from dagster.runs where update_timestamp < "
+        f"{cutoff_date.isoformat()}")
     deleted_run = session.execute(
         """
         DELETE FROM dagster.runs WHERE update_timestamp < :cutoff_date
@@ -42,8 +41,7 @@ def cleanup_old_event_and_run_logs(context):
     )
     if deleted_run.rowcount:
         context.log.info(
-            f"[Cleanup] Deleted {
-                deleted_run.rowcount} run records")
+            f"[Cleanup] Deleted {deleted_run.rowcount} run records")
     else:
         context.log.info("[Cleanup] No run records deleted")
 
@@ -91,9 +89,8 @@ def vacuum_met_db_schema(context):
 
             vacuum_duration = datetime.now(timezone.utc) - vacuum_start
             context.log.info(
-                f"[Vacuum] VACUUMed {
-                    len(cmd)} tables in {
-                    vacuum_duration.total_seconds():.2f} seconds")
+                f"[Vacuum] VACUUMed {len(cmd)} tables in "
+                f"{vacuum_duration.total_seconds():.2f} seconds")
 
         context.log.info("[Vacuum] Starting REINDEX on 'dagster' schema...")
         reindex_start = datetime.now(timezone.utc)
@@ -111,16 +108,17 @@ def vacuum_met_db_schema(context):
 
         reindex_duration = datetime.now(timezone.utc) - reindex_start
         context.log.info(
-            f"[Vacuum] REINDEX completed in {
-                reindex_duration.total_seconds():.2f} seconds")
+            "[Vacuum] REINDEX completed in "
+            f"{reindex_duration.total_seconds():.2f} seconds")
 
         total_duration = datetime.now(timezone.utc) - start_time
         context.log.info(
-            f"[Vacuum] Schema maintenance completed in {
-                total_duration.total_seconds():.2f} seconds")
+            "[Vacuum] Schema maintenance completed in "
+            f"{total_duration.total_seconds():.2f} seconds")
 
     except Exception as e:
         context.log.error(
-            f"[Vacuum] Error during schema maintenance: {
-                str(e)}", exc_info=True)
+            "[Vacuum] Error during schema maintenance: "
+            f"{str(e)}", exc_info=True
+        )
         raise
