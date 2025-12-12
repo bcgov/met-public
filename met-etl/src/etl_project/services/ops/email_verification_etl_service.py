@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from met_api.models.email_verification import EmailVerification as MetEmailVerificationModel
 from met_api.models.survey import Survey as MetSurveyModel
@@ -37,7 +37,7 @@ def get_email_ver_last_run_cycle_time(
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='emailverification',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for table email_verification',
                     success=False))
@@ -155,7 +155,7 @@ def email_ver_end_run_cycle(context, email_ver_new_run_cycle_id):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for table email_verification'})
 
     context.log.info("run cycle ended for email_verification table")

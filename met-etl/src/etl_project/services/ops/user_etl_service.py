@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from met_api.models.participant import Participant as MetParticipantModel
 from analytics_api.models.user_details import UserDetails as EtlUserDetailsModel
@@ -31,7 +31,7 @@ def get_user_last_run_cycle_time(context):
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='userdetails',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for table user_details',
                     success=False))
@@ -135,7 +135,7 @@ def user_end_run_cycle(context, user_details_new_run_cycle_id):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for table user_details'})
 
     context.log.info("run cycle ended for user_details table")

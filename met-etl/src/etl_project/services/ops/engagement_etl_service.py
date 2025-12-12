@@ -5,7 +5,7 @@ from met_api.models.engagement_status import EngagementStatus as EngagementStatu
 from met_api.models.widget_map import WidgetMap as MetWidgetMap
 from analytics_api.models.engagement import Engagement as EtlEngagementModel
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
@@ -33,7 +33,7 @@ def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='engagement',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for table engagement',
                     success=False))
@@ -164,7 +164,7 @@ def engagement_end_run_cycle(context, engagement_new_runcycleid):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for table engagement'})
 
     context.log.info("run cycle ended for Engagement table")

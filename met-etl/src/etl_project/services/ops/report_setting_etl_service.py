@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOptionModel
@@ -36,7 +36,7 @@ def get_setting_last_run_cycle_time(context, flag_to_run_step_after_survey):
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='report_setting',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for table report_setting',
                     success=False))
@@ -143,7 +143,7 @@ def setting_end_run_cycle(context, setting_new_runcycleid):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for table report_setting'})
 
     context.log.info("run cycle ended for report setting table")

@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from met_api.models.comment import Comment as MetCommentModel
 from met_api.constants.comment_status import Status as CommentStatus
@@ -33,7 +33,7 @@ def get_comments_last_run_cycle_time(context, flag_to_trigger_comments_etl):
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='userfeedback',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for table user_feedback',
                     success=False))
@@ -135,7 +135,7 @@ def comments_end_run_cycle(context, comments_new_run_cycle_id):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for table user_feedback'})
 
     context.log.info("run cycle ended for comments table")

@@ -9,7 +9,7 @@ from analytics_api.models.response_type_option import (
 from analytics_api.models.survey import Survey as EtlSurveyModel
 from analytics_api.utils.util import FormIoComponentType
 from dagster import Out, Output, op
-from datetime import datetime
+from datetime import datetime, timezone
 from met_api.models.survey import Survey as MetSurveyModel
 from sqlalchemy import func
 
@@ -36,7 +36,7 @@ def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='survey',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for tables survey and requests',
                     success=False))
@@ -401,7 +401,7 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
         EtlRunCycleModel.id == survey_new_runcycleid,
         EtlRunCycleModel.packagename == 'survey',
         not EtlRunCycleModel.success).update(
-        {'success': True, 'enddatetime': datetime.utcnow(),
+        {'success': True, 'enddatetime': datetime.now(timezone.utc),
          'description': 'ended the load for tables survey and requests'})
 
     context.log.info("run cycle ended for survey table")

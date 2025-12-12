@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from met_api.models.submission import Submission as MetSubmissionModel
@@ -55,7 +55,7 @@ def get_submission_last_run_cycle_time(
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='submission',
-                    startdatetime=datetime.utcnow(),
+                    startdatetime=datetime.now(timezone.utc),
                     enddatetime=None,
                     description='started the load for tables user response detail and responses',
                     success=False))
@@ -595,7 +595,7 @@ def submission_end_run_cycle(context, submission_new_runcycleid):
         not EtlRunCycleModel.success).update(
         {
             'success': True,
-            'enddatetime': datetime.utcnow(),
+            'enddatetime': datetime.now(timezone.utc),
             'description': 'ended the load for tables user response detail and responses'})
 
     context.log.info("run cycle ended for submission table")

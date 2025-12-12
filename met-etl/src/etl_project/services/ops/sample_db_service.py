@@ -1,6 +1,6 @@
 from dagster import Out, Output, op
 from met_api.models.participant import Participant as ParticipantModel
-from datetime import datetime
+from datetime import datetime, timezone
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from sqlalchemy import func
 

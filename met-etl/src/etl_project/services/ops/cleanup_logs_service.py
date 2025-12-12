@@ -1,5 +1,5 @@
 from dagster import op
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta, timezone
 
 MAX_AGE_DAYS = 45  # Define the maximum age of logs to keep (in days)
 
