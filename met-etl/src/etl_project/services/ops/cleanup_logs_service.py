@@ -1,7 +1,7 @@
 from dagster import op
 from datetime import datetime, timezone, timedelta
 
-MAX_AGE_DAYS = 45  # Define the maximum age of logs to keep (in days)
+MAX_AGE_DAYS = 120  # Define the maximum age of logs to keep (in days)
 
 
 @op(required_resource_keys={"dagster_db_session"})
@@ -44,6 +44,22 @@ def cleanup_old_event_and_run_logs(context):
             f"[Cleanup] Deleted {deleted_run.rowcount} run records")
     else:
         context.log.info("[Cleanup] No run records deleted")
+
+    # Delete job ticks with progress logging
+    context.log.info(
+        "[Cleanup] Deleting from dagster.job_ticks where timestamp < "
+        f"{cutoff_date.isoformat()}")
+    deleted_job_ticks = session.execute(
+        """
+        DELETE FROM dagster.job_ticks WHERE timestamp < :cutoff_date
+        """,
+        {"cutoff_date": cutoff_date}
+    )
+    if deleted_job_ticks.rowcount:
+        context.log.info(
+            f"[Cleanup] Deleted {deleted_job_ticks.rowcount} job tick records")
+    else:
+        context.log.info("[Cleanup] No job tick records deleted")
 
     # Commit the changes
     session.commit()
