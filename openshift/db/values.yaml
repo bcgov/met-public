@@ -2,11 +2,15 @@
 # This file contains values for the backup deployment and can be overridden per environment
 
 app:
-  name: met-db
+  name: engagement-db
   licenseplate: "e903c2"
 
 db:
   allowIngressPodselectors:
+    # Allow Patroni peer traffic within the cluster
+    - app.kubernetes.io/instance: engagement-db
+      app.kubernetes.io/name: patroni
+      cluster-name: engagement-db
     - app.kubernetes.io/instance: dagster
       component: user-deployments
     - app.kubernetes.io/instance: dagster
@@ -21,7 +25,7 @@ db:
       role: api
     - app: met-api
       role: cron
-    - app: met-db
+    - app: engagement-db
       role: backup
 
 backup:
@@ -71,3 +75,36 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
+
+postgres:
+  enabled: true
+  nameOverride: patroni
+  fullnameOverride: engagement-patroni
+  networkPolicy:
+    enabled: false # We manage our own network policies
+  replicaCount: 3
+  image:
+    repository: artifacts.developer.gov.bc.ca/bcgov-docker-local
+    name: patroni-postgres
+    tag: 2.0.1-12.4-latest
+    pullPolicy: Always
+  serviceAccount:
+    create: true
+    name: engagement-patroni
+  podAntiAffinity: true
+  podAnnotations: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    annotations: {}
+    mountPath: /home/postgres/pgdata
+    size: 2Gi
+    storageClass: netapp-block-standard

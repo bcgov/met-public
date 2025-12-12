@@ -1,0 +1,6 @@
+dependencies:
+- name: patroni
+  repository: https://bcgov.github.io/nr-patroni-chart
+  version: 0.0.4
+digest: sha256:d7bc2a92b8b07c58f069af160f02486c5f1b6f8d80b00e016473501f84aee502
+generated: "2025-12-10T13:43:11.389446729-08:00"
