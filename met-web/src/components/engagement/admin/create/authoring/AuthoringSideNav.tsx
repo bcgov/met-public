@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
     ListItemButton,
     List,
@@ -186,19 +186,46 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
 
 const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: AuthoringNavProps) => {
     const currentUser = useAppSelector((state) => state.user.userDetail.user);
+    const [sideNavOffset, setSideNavOffset] = useState(0);
+
+    useLayoutEffect(() => {
+        if (!isMediumScreen) return;
+        const handleScroll = () => {
+            const footerBox = document.querySelector('footer')?.getBoundingClientRect();
+            if (!footerBox) return;
+            // How far down the side nav can be in "absolute" mode and not overlap the footer
+            const footerClearance =
+                footerBox.top - (document.querySelector('#authoring-sidenav-drawer')?.clientHeight ?? 0);
+            setSideNavOffset(footerClearance);
+            console.log('sideNavOffset set to:', footerClearance);
+        };
+        globalThis.addEventListener('scroll', handleScroll, { passive: true });
+        globalThis.addEventListener('resize', handleScroll, { passive: true });
+        handleScroll(); // Initial run on load
+        return () => {
+            globalThis.removeEventListener('scroll', handleScroll);
+            globalThis.removeEventListener('resize', handleScroll);
+        };
+    }, [isMediumScreen]);
+
     if (isMediumScreen)
         return (
             <Drawer
                 ModalProps={{
                     hideBackdrop: true,
                 }}
-                PaperProps={{
-                    sx: {
-                        border: 'none',
-                        width: '18.75rem',
-                        boxSizing: 'border-box',
-                        background: 'transparent',
-                        height: '50rem',
+                slotProps={{
+                    paper: {
+                        id: 'authoring-sidenav-drawer',
+                        sx: {
+                            border: 'none',
+                            width: '18.75rem',
+                            boxSizing: 'border-box',
+                            background: 'transparent',
+                            height: '55rem',
+                            position: sideNavOffset <= 0 ? 'absolute' : 'fixed',
+                            top: sideNavOffset <= 0 ? sideNavOffset + globalThis.scrollY : 'auto',
+                        },
                     },
                 }}
                 hideBackdrop

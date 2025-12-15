@@ -16,8 +16,10 @@ const SearchBar = ({
         <>
             <Stack direction="row" spacing={1} alignItems="flex-end">
                 <TextField
-                    id="engagement-name"
+                    id="question-name"
                     title="Search by name"
+                    inputProps={{ 'aria-label': 'Filter questions by name' }}
+                    sx={{ height: '48px', pr: 0 }}
                     name="searchText"
                     value={searchValue}
                     onChange={setSearchValue}

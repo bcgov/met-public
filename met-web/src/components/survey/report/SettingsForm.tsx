@@ -119,13 +119,16 @@ const SettingsForm = () => {
                 <FormField title="Link to Public Dashboard Report">
                     <Tooltip
                         title="Link copied!"
-                        PopperProps={{
-                            disablePortal: true,
-                            sx: {
-                                pointerEvents: 'none',
-                                '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+                        slotProps={{
+                            popper: {
+                                disablePortal: true,
+                                sx: {
+                                    pointerEvents: 'none',
+                                    '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+                                },
                             },
                         }}
+                        sx={{ height: '40px', pr: 0 }}
                         onClose={handleTooltipClose}
                         open={copyTooltip}
                         disableFocusListener
@@ -147,6 +150,7 @@ const SettingsForm = () => {
                                         padding: 0,
                                     },
                                 }}
+                                size="small"
                                 endAdornment={
                                     engagementSlug && (
                                         <ClickAwayListener onClickAway={handleTooltipClose}>

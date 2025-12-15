@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AppBar, Theme, ThemeProvider, Box, useMediaQuery, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { Palette, colors, DarkTheme, BaseTheme } from 'styles/Theme';
+import { Palette, colors, DarkTheme, BaseTheme, ZIndex } from 'styles/Theme';
 import { When, Unless } from 'react-if';
 import { BodyText } from 'components/common/Typography';
 import { elevations } from 'components/common';
@@ -21,6 +22,58 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
     } = useFormContext<EngagementUpdateData>();
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const padding = { xs: '1rem 1rem', md: '1rem 1.5rem 1rem 2rem', lg: '1rem 3rem 1rem 2rem' };
+    const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
+    const [atFooter, setAtFooter] = useState(false);
+    const navRef = useRef<HTMLDivElement | null>(null);
+    const placeholderRef = useRef<HTMLDivElement | null>(null);
+
+    useLayoutEffect(() => {
+        const footer = document.querySelector('footer');
+        const hostParent = footer?.parentElement ?? document.body;
+        const placeholder = document.createElement('div');
+        placeholder.id = 'authoring-bottom-nav-portal';
+        placeholder.style.position = 'relative';
+        placeholder.style.zIndex = `${ZIndex.sideNav}`; // keep above page content
+        placeholder.style.width = '100%';
+        placeholder.style.top = '2em'; // slight offset to avoid any potential overlap with footer content
+        hostParent.insertBefore(placeholder, footer ?? null);
+        placeholderRef.current = placeholder;
+        setPortalEl(placeholder);
+
+        let footerObserver: IntersectionObserver | null = null;
+        if (footer) {
+            footerObserver = new IntersectionObserver(
+                (entries) => {
+                    const intersecting = entries.some((entry) => entry.isIntersecting);
+                    setAtFooter(intersecting);
+                },
+                { threshold: 0 },
+            );
+            footerObserver.observe(footer);
+        }
+
+        return () => {
+            footerObserver?.disconnect();
+            placeholder.remove();
+            setPortalEl(null);
+            placeholderRef.current = null;
+        };
+    }, []);
+
+    useLayoutEffect(() => {
+        if (!portalEl || !navRef.current) return;
+        const updateHeight = () => {
+            portalEl.style.height = `${navRef.current?.offsetHeight ?? 0}px`;
+        };
+        updateHeight();
+        const resizeObserver = new ResizeObserver(updateHeight);
+        resizeObserver.observe(navRef.current);
+        globalThis.addEventListener('resize', updateHeight, { passive: true });
+        return () => {
+            resizeObserver.disconnect();
+            globalThis.removeEventListener('resize', updateHeight);
+        };
+    }, [portalEl]);
 
     const buttonStyles = {
         height: '2.6rem',
@@ -31,10 +84,28 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
         fontSize: '0.9rem',
     };
 
-    return (
+    if (!portalEl) return null;
+
+    const fixedPosition = {
+        position: 'fixed' as const,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+    };
+    const absolutePosition = {
+        position: 'absolute' as const,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+    };
+
+    return createPortal(
         <AppBar
             component={'nav'}
-            position="fixed"
+            position="static"
+            ref={navRef}
             sx={{
                 backgroundColor: 'transparent',
                 borderTopRightRadius: '16px',
@@ -44,9 +115,8 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                 backgroundClip: 'padding-box',
                 overflow: 'hidden',
                 top: 'auto',
-                left: 0,
-                bottom: 0,
                 boxShadow: elevations.default,
+                ...(atFooter ? absolutePosition : fixedPosition),
             }}
             data-testid="appbar-authoring-bottom-nav"
         >
@@ -130,7 +200,8 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                     <Box style={{ width: '25rem', display: 'flex' }}></Box>
                 </ThemeProvider>
             </Box>
-        </AppBar>
+        </AppBar>,
+        portalEl,
     );
 };
 
