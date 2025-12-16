@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import SurveyListing from '../../../../src/components/survey/listing';
 import { setupEnv } from '../setEnvVars';
 import * as surveyService from 'services/surveyService';
@@ -117,6 +118,16 @@ jest.mock('react-router-dom', () => ({
     })),
 }));
 
+const router = createMemoryRouter(
+    [
+        {
+            element: <SurveyListing />,
+            path: '/',
+        },
+    ],
+    { initialEntries: ['/'] },
+);
+
 describe('Survey form page tests', () => {
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getSurveysPageMock = jest.spyOn(surveyService, 'getSurveysPage');
@@ -124,7 +135,6 @@ describe('Survey form page tests', () => {
     beforeEach(() => {
         setupEnv();
     });
-
     test('Survey table is rendered and surveys are fetched', async () => {
         getSurveysPageMock.mockReturnValue(
             Promise.resolve({
@@ -132,7 +142,7 @@ describe('Survey form page tests', () => {
                 total: 2,
             }),
         );
-        render(<SurveyListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Survey One')).toBeInTheDocument();
@@ -153,7 +163,7 @@ describe('Survey form page tests', () => {
                 total: 1,
             }),
         );
-        const { container } = render(<SurveyListing />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Survey One')).toBeInTheDocument();
