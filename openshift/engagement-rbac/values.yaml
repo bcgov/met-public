@@ -1,7 +1,2 @@
 app:
   licenseplate: e903c2
-
-patroni:
-  serviceAccount:
-    create: true
-    name: patroni

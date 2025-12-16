@@ -91,7 +91,7 @@ postgres:
     tag: 2.0.1-12.4-latest
     pullPolicy: Always
   serviceAccount:
-    create: false
+    create: true
     name: engagement-patroni
   podAntiAffinity: true
   podAnnotations: {}
