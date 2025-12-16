@@ -300,10 +300,10 @@ source /vault/secrets/s3
 mc alias set dell_s3 $S3_ENDPOINT $S3_USER $S3_PASSWORD
 
 # List backups in S3 bucket
-mc ls dell_s3/engagement-dev-backup/
+mc ls dell_s3/engagement-<env>-backup/ # env is one of dev, test, prod
 
 # Download the desired backup file
-mc cp dell_s3/engagement-dev-backup/engagement-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
+mc cp dell_s3/engagement-<env>-backup/engagement-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
 
 # Now proceed with normal restore process (see scenarios below)
 ```
@@ -366,6 +366,5 @@ ALTER ROLE analytics WITH PASSWORD 'foo';
 ALTER ROLE dagster WITH PASSWORD 'bar';
 ALTER ROLE met WITH PASSWORD 'baz';
 ALTER ROLE redash WITH PASSWORD 'qux';
-ALTER ROLE backup WITH PASSWORD 'quux';
-ALTER ROLE replication WITH PASSWORD 'corge';
+ALTER ROLE replication WITH PASSWORD 'quux';
 ```
