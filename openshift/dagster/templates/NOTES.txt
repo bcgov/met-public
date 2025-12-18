@@ -1,0 +1,38 @@
+Dagster has been deployed!
+
+Environment: {{ .Values.environment }}
+
+1. Check the status of your Dagster deployment:
+
+   oc get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Access Dagster UI:
+
+   The Dagster web interface (Dagit) is available through the dagster-webserver service.
+   
+   To access locally:
+   oc port-forward svc/{{ .Release.Name }}-dagster-webserver 8080:8080
+
+   Then navigate to: http://localhost:8080
+
+3. Verify the ETL deployment:
+
+   oc get pods -l component=user-deployments
+
+4. View logs:
+
+   # Webserver logs
+   oc logs -l component=dagster-webserver
+   
+   # Daemon logs
+   oc logs -l component=dagster-daemon
+   
+   # User deployment logs
+   oc logs -l component=user-deployments
+
+5. Database connection:
+   
+   Dagster is configured to use the external PostgreSQL database (engagement-patroni).
+   Credentials are managed through Vault secrets.
+
+For more information, visit: https://docs.dagster.io/

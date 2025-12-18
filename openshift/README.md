@@ -137,6 +137,34 @@ helm dependency build
 helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
 ```
 
+**Deploy the `Dagster` application**:
+
+> Accessible to the public: _No_
+> This deployment uses the helm chart located in the `openshift/dagster` folder.
+> Dagster is used to orchestrate and schedule ETL jobs for the MET applications.
+> Use one of dev, test or prod and the corresponding values.yaml file to deploy the dagster application.
+
+```bash
+cd ./openshift/dagster
+# Update dependencies to pull the official Dagster chart
+helm dependency update
+### Dev
+oc project e903c2-dev
+helm upgrade --install dagster . --values values.yaml --values values_dev.yaml
+### Test
+oc project e903c2-test
+helm upgrade --install dagster . --values values.yaml --values values_test.yaml
+### Prod
+oc project e903c2-prod
+helm upgrade --install dagster . --values values.yaml --values values_prod.yaml
+```
+
+> **Note**: The Dagster chart wraps the official Dagster Helm chart (version 1.4.4) and adds OpenShift-specific resources including:
+>
+> - Network Policies for webserver, daemon, and user deployments
+> - Vault integration for database credentials
+> - Image puller role binding for user deployments
+
 **Deploying the MET RBAC chart**:
 
 > RBAC in this project is managed by the helm chart located in the `openshift/rbac` folder.
