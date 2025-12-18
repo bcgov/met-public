@@ -7,7 +7,6 @@ import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
-import * as engagementContentService from 'services/engagementContentService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import * as teamMemberService from 'services/membershipService';
@@ -17,7 +16,6 @@ import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { createDefaultEngagementContent } from 'models/engagementContent';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
@@ -104,7 +102,6 @@ jest.mock('react-router-dom', () => ({
                 engagement: Promise.resolve(draftEngagement),
                 widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
-                content: Promise.resolve([createDefaultEngagementContent()]),
             };
         }
     },
@@ -112,7 +109,6 @@ jest.mock('react-router-dom', () => ({
         engagement: Promise.resolve(draftEngagement),
         widgets: Promise.resolve([]),
         metadata: Promise.resolve([]),
-        content: Promise.resolve([createDefaultEngagementContent()]),
     }),
 }));
 
@@ -129,9 +125,6 @@ describe('Engagement form page tests', () => {
         Promise.resolve([engagementMetadata]),
     );
     jest.spyOn(engagementMetadataService, 'getMetadataTaxa').mockReturnValue(Promise.resolve([]));
-    jest.spyOn(engagementContentService, 'postEngagementContent').mockReturnValue(
-        Promise.resolve(createDefaultEngagementContent()),
-    );
     jest.spyOn(teamMemberService, 'getTeamMembers').mockReturnValue(Promise.resolve([]));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -367,25 +360,6 @@ describe('Engagement form page tests', () => {
         await waitFor(() => {
             expect(getByTestId('add-tab-button')).toBeVisible();
             expect(getByText('Tab Title:')).toBeInTheDocument();
-        });
-    });
-
-    test('Edit tab Modal appears', async () => {
-        useParamsMock.mockReturnValue({ engagementId: '1' });
-        const { getByTestId, container, getByText } = render(<RouterProvider router={router} />);
-
-        await waitFor(() => {
-            expect(screen.getByDisplayValue('Test Engagement')).toBeInTheDocument();
-            expect(container.querySelector('span.MuiSkeleton-root')).toBeNull();
-            expect(getByTestId('edit-tab-details')).toBeVisible();
-        });
-
-        const editTabDetailsButton = getByTestId('edit-tab-details');
-        fireEvent.click(editTabDetailsButton);
-
-        await waitFor(() => {
-            expect(getByTestId('update-tab-button')).toBeVisible();
-            expect(getByText('Edit the engagement content tab')).toBeInTheDocument();
         });
     });
 

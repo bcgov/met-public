@@ -12,7 +12,6 @@ import * as engagementSettingService from 'services/engagementSettingService';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata, engagementSetting } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
-import { createMemoryRouter } from 'react-router-dom';
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
@@ -84,7 +83,7 @@ Object.defineProperty(window, 'location', {
 
 describe('Engagement form page tests', () => {
     jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
-    const openNotificationMock = jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
+    jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMetadataMock = jest
         .spyOn(engagementMetadataService, 'getEngagementMetadata')

@@ -9,7 +9,6 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
-from met_api.models.engagement_content import EngagementContent as EngagementContentModel
 from met_api.models.language import Language as LanguageModel
 from met_api.schemas.language import LanguageSchema
 from met_api.schemas.engagement_translation import EngagementTranslationSchema
@@ -43,7 +42,6 @@ class EngagementTranslationService:
         """Create engagement translation."""
         try:
             engagement = EngagementModel.find_by_id(translation_data['engagement_id'])
-            content = EngagementContentModel.find_by_engagement_id(translation_data['engagement_id'])[0]
             if not engagement:
                 raise ValueError('Engagement to translate was not found')
 
@@ -60,7 +58,6 @@ class EngagementTranslationService:
             if pre_populate:
                 # prepopulate translation_date dict with base language data from engagement content
                 EngagementTranslationService._get_default_language_values(engagement,
-                                                                          content,
                                                                           translation_data)
 
             created_engagement_translation = EngagementTranslationModel.create_engagement_translation(
@@ -130,15 +127,13 @@ class EngagementTranslationService:
         return engagement_translation
 
     @staticmethod
-    def _get_default_language_values(engagement, content, translation_data):
+    def _get_default_language_values(engagement, translation_data):
         """Populate the default values."""
         engagement_id = engagement.id
         translation_data['name'] = engagement.name
         translation_data['description'] = engagement.description
         translation_data['rich_description'] = engagement.rich_description
         translation_data['description_title'] = engagement.description_title
-        translation_data['content'] = content.text_content
-        translation_data['rich_content'] = content.json_content
         translation_data['consent_message'] = engagement.consent_message
         translation_data['sponsor_name'] = engagement.sponsor_name
 

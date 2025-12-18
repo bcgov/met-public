@@ -14,6 +14,7 @@ import { EngagementLoaderData } from 'components/engagement/public/view';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 const AuthoringSummary = () => {
     const { setDefaultValues, fetcher, pageName }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template.
@@ -22,11 +23,12 @@ const AuthoringSummary = () => {
         getValues,
         reset,
         control,
-        formState: { errors },
+        formState: { errors, isDirty, isSubmitting },
     } = useFormContext<EngagementUpdateData>();
 
     // Must be a loader assigned to this route or data won't be refreshed on page change.
     const { engagement } = useLoaderData() as EngagementLoaderData;
+    const hasUnsavedWork = isDirty && !isSubmitting;
 
     // Set current values to default state after saving form
     useEffect(() => {
@@ -50,6 +52,7 @@ const AuthoringSummary = () => {
             setValue('summary_editor_state', getEditorStateFromRaw(eng.rich_description || ''));
             // Update default values so that our loaded values are default.
             setDefaultValues(getValues());
+            reset(getValues());
         });
     }, []);
 
@@ -104,80 +107,85 @@ const AuthoringSummary = () => {
     };
 
     return (
-        <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="description_title">
-                    <MetBigLabel style={metBigLabelStyles}>
-                        Section Heading
-                        <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your section heading should be descriptive, short and succinct.
-                    </FormDescriptionText>
-                    <Controller
-                        control={control}
-                        name="description_title"
-                        rules={{ required: true }}
-                        render={({ field }) => {
-                            return (
-                                <TextField
-                                    {...field}
-                                    sx={{ backgroundColor: colors.surface.white }}
-                                    id="description_title"
-                                    counter
-                                    maxLength={60}
-                                    placeholder="Section heading text"
-                                    error={errors.description_title?.message ?? ''}
-                                />
-                            );
-                        }}
-                    />
-                </label>
-            </Grid>
+        <>
+            {/* prevent navigating away when the user has unsaved work */}
+            <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
-            <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
-                <label htmlFor="summary_editor_state">
-                    <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
-                        Body Copy
-                        <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                    </MetBigLabel>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Body copy for the summary section of your engagement should provide a short overview of what
-                        your engagement is about and describe what you are asking your audience to do.
-                    </FormDescriptionText>
-                    <ErrorMessage error={errors.summary_editor_state?.message ?? ''} />
-                    <Controller
-                        control={control}
-                        name="summary_editor_state"
-                        rules={{ required: true }}
-                        render={({ field }) => {
-                            return (
-                                <RichTextArea
-                                    ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
-                                    spellCheck
-                                    editorState={field.value}
-                                    onEditorStateChange={(value) => {
-                                        field.onChange(handleEditorChange(value));
-                                    }}
-                                    handlePastedText={() => false}
-                                    toolbar={toolbar}
-                                />
-                            );
-                        }}
-                    />
-                </label>
-            </Grid>
+            <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+                    <label htmlFor="description_title">
+                        <MetBigLabel style={metBigLabelStyles}>
+                            Section Heading
+                            <span style={{ fontWeight: 'normal' }}> (Required)</span>
+                        </MetBigLabel>
+                        <FormDescriptionText style={formDescriptionTextStyles}>
+                            Your section heading should be descriptive, short and succinct.
+                        </FormDescriptionText>
+                        <Controller
+                            control={control}
+                            name="description_title"
+                            rules={{ required: true }}
+                            render={({ field }) => {
+                                return (
+                                    <TextField
+                                        {...field}
+                                        sx={{ backgroundColor: colors.surface.white }}
+                                        id="description_title"
+                                        counter
+                                        maxLength={60}
+                                        placeholder="Section heading text"
+                                        error={errors.description_title?.message ?? ''}
+                                    />
+                                );
+                            }}
+                        />
+                    </label>
+                </Grid>
 
-            <Grid sx={{ mt: '1rem' }} item>
-                <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
-                <FormDescriptionText style={formDescriptionTextStyles}>
-                    You may use a widget to add supporting content to your primary content.
-                </FormDescriptionText>
-                <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                    <WidgetPicker location={WidgetLocation.Summary} />
+                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+                    <label htmlFor="summary_editor_state">
+                        <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
+                            Body Copy
+                            <span style={{ fontWeight: 'normal' }}> (Required)</span>
+                        </MetBigLabel>
+                        <FormDescriptionText style={formDescriptionTextStyles}>
+                            Body copy for the summary section of your engagement should provide a short overview of what
+                            your engagement is about and describe what you are asking your audience to do.
+                        </FormDescriptionText>
+                        <ErrorMessage error={errors.summary_editor_state?.message ?? ''} />
+                        <Controller
+                            control={control}
+                            name="summary_editor_state"
+                            rules={{ required: true }}
+                            render={({ field }) => {
+                                return (
+                                    <RichTextArea
+                                        ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
+                                        spellCheck
+                                        editorState={field.value}
+                                        onEditorStateChange={(value) => {
+                                            field.onChange(handleEditorChange(value));
+                                        }}
+                                        handlePastedText={() => false}
+                                        toolbar={toolbar}
+                                    />
+                                );
+                            }}
+                        />
+                    </label>
+                </Grid>
+
+                <Grid sx={{ mt: '1rem' }} item>
+                    <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
+                        You may use a widget to add supporting content to your primary content.
+                    </FormDescriptionText>
+                    <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                        <WidgetPicker location={WidgetLocation.Summary} />
+                    </Grid>
                 </Grid>
             </Grid>
-        </Grid>
+        </>
     );
 };
 

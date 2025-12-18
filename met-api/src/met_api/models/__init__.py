@@ -20,7 +20,6 @@ from .contact import Contact
 from .db import db, ma, migrate
 from .email_verification import EmailVerification
 from .engagement import Engagement
-from .engagement_content import EngagementContent
 from .engagement_details_tab import EngagementDetailsTab
 from .engagement_status import EngagementStatus
 from .engagement_status_block import EngagementStatusBlock
@@ -68,6 +67,7 @@ from .poll_answer_translation import PollAnswerTranslation
 from .timeline_event_translation import TimelineEventTranslation
 from .subscribe_item_translation import SubscribeItemTranslation
 from .engagement_translation import EngagementTranslation
+from .engagement_details_tab_translation import EngagementDetailsTabTranslation
 from .user_group import UserGroup
 from .user_role import UserRole
 from .group_role_mapping import GroupRoleMapping

@@ -8,17 +8,15 @@ import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as engagementSettingService from 'services/engagementSettingService';
-import * as engagementSlugService from 'services/engagementSlugService';
 import * as notificationModalSlice from 'services/notificationModalService/notificationModalSlice';
 import * as widgetService from 'services/widgetService';
 import * as teamMemberService from 'services/membershipService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Box } from '@mui/material';
-import { draftEngagement, engagementMetadata, engagementSetting, engagementSlugData } from '../../../factory';
+import { draftEngagement, engagementMetadata, engagementSetting } from '../../../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import assert from 'assert';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { createDefaultEngagementContent } from 'models/engagementContent';
 
 const engagementId = 1;
 const survey: Survey = {
@@ -85,7 +83,6 @@ jest.mock('react-router-dom', () => ({
                 }),
                 widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
-                content: Promise.resolve([createDefaultEngagementContent()]),
                 taxa: Promise.resolve([]),
             };
         }
@@ -125,9 +122,6 @@ describe('Engagement form page tests', () => {
     jest.spyOn(engagementMetadataService, 'patchEngagementMetadata').mockReturnValue(
         Promise.resolve(engagementMetadata),
     );
-    const getEngagementSlugMock = jest
-        .spyOn(engagementSlugService, 'getSlugByEngagementId')
-        .mockReturnValue(Promise.resolve(engagementSlugData));
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
         .mockReturnValue(Promise.resolve(draftEngagement));
@@ -143,10 +137,6 @@ describe('Engagement form page tests', () => {
     test('Engagement form tabs and their titles should be populated correctly', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         render(<RouterProvider router={router} />);
-
-        await waitFor(() => {
-            expect(screen.getByText('Engagement Content')).toBeInTheDocument();
-        });
 
         expect(screen.getByText('Additional Details')).toBeInTheDocument();
         expect(screen.getByText('User Management')).toBeInTheDocument();

@@ -16,7 +16,6 @@ export interface Engagement {
     created_date: string;
     updated_date: string;
     scheduled_date: string;
-    content: string;
     rich_content: string;
     banner_url: string;
     banner_filename: string;
@@ -81,7 +80,6 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         updated_date: '',
         banner_url: '',
         banner_filename: '',
-        content: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
         surveys: [],

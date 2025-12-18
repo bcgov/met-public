@@ -24,7 +24,7 @@ from marshmallow import ValidationError
 from met_api.auth import jwt as _jwt
 from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
-from met_api.services.engagement_details_tab import EngagementDetailsTabService
+from met_api.services.engagement_details_tab_service import EngagementDetailsTabService
 from met_api.utils.token_info import TokenInfo
 from met_api.utils.util import allowedorigins, cors_preflight
 

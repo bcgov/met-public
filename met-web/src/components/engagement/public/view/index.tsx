@@ -1,13 +1,14 @@
 import React from 'react';
 import { EngagementHero } from './EngagementHero';
 import { EngagementDescription } from './EngagementDescription';
-import { EngagementContentTabs } from './EngagementContentTabs';
+import { EngagementDetailsTabs } from './EngagementDetailsTabs';
 import { EngagementSurveyBlock } from './EngagementSurveyBlock';
 import { SuggestedEngagements } from './SuggestedEngagements';
 
 export enum EngagementViewSections {
     HERO = 'hero',
     DESCRIPTION = 'description',
+    DETAILS_TABS = 'detailsTabs',
     CONTENT_TABS = 'contentTabs',
     PROVIDE_FEEDBACK = 'provideFeedback',
 }
@@ -17,7 +18,7 @@ export const PublicEngagementView = () => {
         <main>
             <EngagementHero />
             <EngagementDescription />
-            <EngagementContentTabs />
+            <EngagementDetailsTabs />
             <EngagementSurveyBlock />
             <SuggestedEngagements />
         </main>

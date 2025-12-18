@@ -1,6 +1,5 @@
 import { ActionFunction, redirect } from 'react-router-dom';
 import { patchEngagement } from 'services/engagementService';
-import { patchEngagementContent } from 'services/engagementContentService';
 import { patchEngagementMetadata } from 'services/engagementMetadataService';
 import { patchEngagementSettings } from 'services/engagementSettingService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
@@ -8,7 +7,7 @@ import { EngagementStatusBlock } from 'models/engagementStatusBlock';
 import { patchDetailsTabs } from 'services/engagementDetailsTabService';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
-export const engagementAuthoringUpdateAction: ActionFunction = async ({ request, params }) => {
+export const authoringUpdateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
     const errors = [];
     const requestType = formData.get('request_type') as string;
@@ -23,7 +22,6 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
         },
         {
             survey_status: 'ViewResults',
-            button_text: formData.get('view_results_cta') as string,
             link_type: formData.get('view_results_link_type') as string,
             internal_link: formData.get('view_results_section_link') as string,
             external_link: formData.get('view_results_external_link') as string,
@@ -83,23 +81,6 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
         }
     }
 
-    // Update engagement content if necessary.
-    if (
-        (formData.get('title') || formData.get('text_content') || formData.get('json_content')) &&
-        formData.get('content_id')
-    ) {
-        try {
-            await patchEngagementContent(engagementId, Number(formData.get('content_id')) as unknown as number, {
-                title: (formData.get('title') as string) || undefined,
-                text_content: (formData.get('text_content') as string) || undefined,
-                json_content: (formData.get('json_content') as string) || undefined,
-            });
-        } catch (e) {
-            console.error('Error updating engagement', e);
-            errors.push(e);
-        }
-    }
-
     // Update engagement metadata if necessary.
     if (formData.get('metadata_value') && formData.get('taxon_id')) {
         try {
@@ -149,4 +130,4 @@ export const engagementAuthoringUpdateAction: ActionFunction = async ({ request,
     }
 };
 
-export default engagementAuthoringUpdateAction;
+export default authoringUpdateAction;

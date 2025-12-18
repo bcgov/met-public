@@ -51,5 +51,5 @@ class EngagementViewSections(Enum):
 
     HERO = 'hero'
     DESCRIPTION = 'description'
-    CONTENT_TABS = 'contentTabs'
+    DETAILS_TABS = 'detailsTabs'
     PROVIDE_FEEDBACK = 'provideFeedback'
