@@ -15,13 +15,13 @@ for candidate in (PROJECT_ROOT, LEGACY_ROOT):
         if candidate_str not in sys.path:
             sys.path.insert(0, candidate_str)
 
-from etl_project.services.jobs.met_data_ingestion import met_data_ingestion
-from etl_project.services.jobs.test_db import job_sample_db_test
-from etl_project.services.jobs.cleanup_old_logs import cleanup_old_logs, vacuum_met_db
-from etl_project.services.schedules.met_data_ingestion_schedule import (
+from etl_project.services.jobs.met_data_ingestion import met_data_ingestion  # noqa: F402
+from etl_project.services.jobs.test_db import job_sample_db_test  # noqa: F402
+from etl_project.services.jobs.cleanup_old_logs import cleanup_old_logs, vacuum_met_db  # noqa: F402
+from etl_project.services.schedules.met_data_ingestion_schedule import (  # noqa: F402
     met_data_ingestion_schedule,
 )
-from etl_project.services.schedules.cleanup_old_logs_schedule import (
+from etl_project.services.schedules.cleanup_old_logs_schedule import (  # noqa: F402
     cleanup_old_logs_schedule,
     vacuum_met_db_schedule,
 )
