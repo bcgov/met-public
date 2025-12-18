@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button } from 'components/common/Input';
-import { StaticDatePicker } from '@mui/x-date-pickers';
+import { PickerDayOwnerState, StaticDatePicker } from '@mui/x-date-pickers';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Grid } from '@mui/material';
 import { BodyText } from 'components/common/Typography';
@@ -8,7 +8,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/pro-regular-svg-icons';
-import { PickersDayProps } from '@mui/lab';
 import { colors } from 'styles/Theme';
 import { Link } from 'components/common/Navigation';
 import { EngagementStatusChip } from 'components/common/Indicators';
@@ -54,7 +53,8 @@ export const DateRangePickerWithCalculation = () => {
         }
     }, [startDate, endDate]);
 
-    const getDayStyle = (props: PickersDayProps<Dayjs | null>) => {
+    const getDayStyle = (ownerState: PickerDayOwnerState) => {
+        const day = dayjs(ownerState.day as Dayjs);
         const standardStyle = {
             margin: 0,
             width: '40px',
@@ -63,8 +63,8 @@ export const DateRangePickerWithCalculation = () => {
         };
         if (
             getValues().start_date &&
-            dayjs(props.day).isSame(getValues().start_date, 'day') &&
-            (dayjs(props.day).isSame(getValues().end_date, 'day') || !getValues().end_date)
+            day.isSame(getValues().start_date, 'day') &&
+            (day.isSame(getValues().end_date, 'day') || !getValues().end_date)
         ) {
             // First and last day of the range - rounded corners
             return {
@@ -75,7 +75,7 @@ export const DateRangePickerWithCalculation = () => {
             };
         }
         if (!getValues().start_date) return standardStyle;
-        if (dayjs(props.day).isSame(getValues().start_date, 'day')) {
+        if (day.isSame(getValues().start_date, 'day')) {
             // First day of the range - rounded left side
             return {
                 ...standardStyle,
@@ -89,7 +89,7 @@ export const DateRangePickerWithCalculation = () => {
             };
         }
         if (!getValues().end_date) return standardStyle;
-        if (dayjs(props.day).isSame(getValues().end_date, 'day')) {
+        if (day.isSame(getValues().end_date, 'day')) {
             // Last day of the range - rounded right side
             return {
                 ...standardStyle,
@@ -103,7 +103,7 @@ export const DateRangePickerWithCalculation = () => {
                 },
             };
         }
-        if (dayjs(props.day).isAfter(getValues().start_date) && dayjs(props.day).isBefore(getValues().end_date)) {
+        if (day.isAfter(getValues().start_date) && day.isBefore(getValues().end_date)) {
             // Middle days of the range - no rounded corners
             return {
                 ...standardStyle,
@@ -130,10 +130,10 @@ export const DateRangePickerWithCalculation = () => {
                                 <StaticDatePicker
                                     {...field}
                                     slotProps={{
-                                        day: (props: PickersDayProps<Dayjs | null>) => {
+                                        day: (ownerState) => {
                                             return {
-                                                ...props,
-                                                sx: getDayStyle(props),
+                                                ...ownerState,
+                                                sx: getDayStyle(ownerState),
                                             };
                                         },
                                     }}
@@ -158,10 +158,10 @@ export const DateRangePickerWithCalculation = () => {
                                     value={field.value || undefined}
                                     disabled={!startDate}
                                     slotProps={{
-                                        day: (props: PickersDayProps<Dayjs | null>) => {
+                                        day: (ownerState) => {
                                             return {
-                                                ...props,
-                                                sx: getDayStyle(props),
+                                                ...ownerState,
+                                                sx: getDayStyle(ownerState),
                                             };
                                         },
                                     }}

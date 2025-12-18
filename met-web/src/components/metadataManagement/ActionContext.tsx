@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, JSX } from 'react';
 import { ActionContextProps } from './types';
 import { MetadataTaxon, MetadataTaxonModify } from 'models/engagement';
 import {

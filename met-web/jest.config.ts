@@ -77,8 +77,6 @@ const config: Config.InitialOptions = {
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
         // formiojs: '<rootDir>/node_modules/formiojs/providers/storage/indexeddb.js',
-        '^uuid$': require.resolve('uuid'),
-        'react-dnd': 'react-dnd-cjs',
         'react-dnd-html5-backend': 'react-dnd-html5-backend-cjs',
         'dnd-core': 'dnd-core-cjs',
         '\\.(css|scss)$': '<rootDir>/tests/unit/components/styleMock.tsx',
@@ -157,7 +155,7 @@ const config: Config.InitialOptions = {
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    testPathIgnorePatterns: ['/node_modules/', '/cypress/'],
+    testPathIgnorePatterns: ['/node_modules/', '/cypress/', '/scripts/', '/config/'],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
     // testRegex: [],
@@ -176,7 +174,8 @@ const config: Config.InitialOptions = {
 
     // A map from regular expressions to paths to transformers
     transform: {
-        '^.+\\.ts?$': 'ts-jest',
+        '^.+\\.(ts|tsx)?$': 'ts-jest',
+        '^.+\\.(js|jsx)$': 'babel-jest',
         '^.+\\.svg$': 'jest-transform-stub',
     },
 

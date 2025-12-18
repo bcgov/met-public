@@ -10,9 +10,11 @@ import {
     Box,
     CircularProgressProps,
     ToggleButton,
+    Theme,
+    SxProps,
+    styled,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { SxProps, styled } from '@mui/system';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
@@ -20,7 +22,6 @@ import { Palette, colors } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
 import { When } from 'react-if';
-import ReactPlayer from 'react-player';
 export { colors };
 
 export const elevations = {
@@ -351,12 +352,17 @@ export const ListItem = styled(Typography)(() => ({
 export const MetSmallTextOld = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
-            sx={{
-                ...sx,
-                fontSize: '13px',
-                fontFamily: MET_Header_Font_Family,
-                fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '13px',
+                        fontFamily: MET_Header_Font_Family,
+                        fontWeight: bold ? 'bold' : MET_Header_Font_Weight,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ] as any
+            }
             variant="subtitle1"
             {...rest}
         >
@@ -417,13 +423,18 @@ interface HeaderProps {
 export const MetHeader1Old = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
-            sx={{
-                ...sx,
-                fontSize: '1.5rem',
-                lineHeight: 1.25,
-                fontWeight: MET_Header_Font_Weight,
-                fontFamily: MET_Header_Font_Family,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '1.5rem',
+                        lineHeight: 1.25,
+                        fontWeight: MET_Header_Font_Weight,
+                        fontFamily: MET_Header_Font_Family,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ] as any
+            }
             variant="h1"
             {...rest}
         >
@@ -438,12 +449,17 @@ export const MetHeader1Old = ({ bold, children, sx, ...rest }: HeaderProps) => {
 export const MetHeader2Old = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
-            sx={{
-                ...sx,
-                fontSize: '1.9rem',
-                fontWeight: MET_Header_Font_Weight,
-                fontFamily: MET_Header_Font_Family,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '1.9rem',
+                        fontWeight: MET_Header_Font_Weight,
+                        fontFamily: MET_Header_Font_Family,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ] as any
+            }
             variant="h2"
             {...rest}
         >
@@ -458,12 +474,17 @@ export const MetHeader2Old = ({ bold, children, sx, ...rest }: HeaderProps) => {
 export const MetHeader3 = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
-            sx={{
-                ...sx,
-                fontSize: '1.5rem',
-                fontWeight: MET_Header_Font_Weight,
-                fontFamily: MET_Header_Font_Family,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '1.5rem',
+                        fontWeight: MET_Header_Font_Weight,
+                        fontFamily: MET_Header_Font_Family,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ] as any
+            }
             variant="h3"
             {...rest}
         >
@@ -479,12 +500,16 @@ export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) 
     return (
         <Typography
             color={color}
-            sx={{
-                ...sx,
-                fontSize: '1.3rem',
-                fontWeight: MET_Header_Font_Weight,
-                fontFamily: MET_Header_Font_Family,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '1.3rem',
+                        fontWeight: MET_Header_Font_Weight,
+                        fontFamily: MET_Header_Font_Family,
+                    },
+                ] as SxProps<Theme> | undefined
+            }
             variant="h4"
             {...rest}
         >
@@ -499,12 +524,17 @@ export const MetHeader4 = ({ bold, color, children, sx, ...rest }: HeaderProps) 
 export const MetBodyOld = ({ bold, children, sx, ...rest }: HeaderProps) => {
     return (
         <Typography
-            sx={{
-                ...sx,
-                fontSize: '16px',
-                fontFamily: MET_Header_Font_Family,
-                fontWeight: bold ? 'bold' : MET_Font_Weight,
-            }}
+            sx={
+                [
+                    ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                    {
+                        fontSize: '16px',
+                        fontFamily: MET_Header_Font_Family,
+                        fontWeight: bold ? 'bold' : MET_Font_Weight,
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ] as any
+            }
             {...rest}
         >
             {children}
@@ -568,12 +598,4 @@ export const AspectRatioContainer = styled('div')({
     position: 'relative',
     width: '100%',
     paddingTop: '56.25%' /* 16:9 aspect ratio (height / width * 100) */,
-});
-
-export const ReactPlayerWrapper = styled(ReactPlayer)({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
 });

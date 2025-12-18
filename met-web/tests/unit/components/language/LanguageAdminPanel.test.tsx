@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
-import { useDispatch } from 'react-redux';
 import LanguageAdminPanel, { addOrRemoveLanguage } from 'components/language';
 import * as languageService from 'services/languageService';
 
@@ -16,24 +15,20 @@ const mockSecondLanguage = {
     code: 'tlh',
     name: 'Klingon',
     right_to_left: null,
-}
+};
 
 const mockLanguageTenantMapping = {
     id: 14,
     language_id: 89,
     tenant_id: 3,
-}
+};
 
 // Mock useDispatch hook
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useDispatch: jest.fn(),
+    useDispatch: jest.fn(() => jest.fn()),
     useSelector: jest.fn(),
 }));
-
-// Mock useDispatch hook function
-const mockDispatch = jest.fn();
-(useDispatch as jest.Mock).mockReturnValue(mockDispatch);
 
 jest.mock('services/languageService', () => ({
     getLanguages: jest.fn(),
@@ -50,7 +45,6 @@ describe('LanguageAdminPanel component tests', () => {
         jest.spyOn(languageService, 'postTenantLanguage').mockResolvedValue([mockLanguageTenantMapping]);
         jest.spyOn(languageService, 'deleteTenantLanguage').mockResolvedValue({ message: '', status: 'success' });
     });
-
 
     test('Language view renders', async () => {
         await act(async () => {

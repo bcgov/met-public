@@ -9,7 +9,7 @@ import {
     ButtonBaseProps,
     PopperProps,
 } from '@mui/material';
-import TrapFocus from '@mui/base/TrapFocus';
+import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import { colors } from 'styles/Theme';
 import { BodyText } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

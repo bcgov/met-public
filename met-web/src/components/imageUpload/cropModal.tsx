@@ -1,11 +1,10 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Container, Grid, Paper } from '@mui/material';
+import { Container, Grid, Paper, Box } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input';
 import Cropper, { Area } from 'react-easy-crop';
 import { ImageUploadContext } from './imageUploadContext';
-import { Box } from '@mui/system';
 import getCroppedImg from './cropImage';
 import { blobToFile } from 'utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

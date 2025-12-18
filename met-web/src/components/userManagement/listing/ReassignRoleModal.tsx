@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, Stack } from '@mui/material';
 import { MetDescription, MetHeader3, PrimaryButtonOld, SecondaryButtonOld, modalStyle } from 'components/common';
 import { UserManagementContext } from './UserManagementContext';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
@@ -29,7 +29,7 @@ export const ReassignRoleModal = () => {
     const dispatch = useAppDispatch();
 
     const methods = useForm<AssignRoleForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<AssignRoleForm>,
     });
 
     const { reset, handleSubmit } = methods;

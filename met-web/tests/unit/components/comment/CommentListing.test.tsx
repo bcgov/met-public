@@ -2,7 +2,6 @@ import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React, { ReactNode } from 'react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as commentService from 'services/commentService';
 import * as surveyService from 'services/surveyService';
 import * as submissionService from 'services/submissionService';
@@ -13,6 +12,7 @@ import SubmissionListing from 'components/comments/admin/reviewListing';
 import CommentTextListing from 'components/comments/admin/textListing';
 import * as utils from 'utils';
 import { USER_ROLES } from 'services/userService/constants';
+import type { AxiosResponse } from 'axios';
 
 const mockSurveyOne = {
     ...createDefaultSurvey(),
@@ -68,21 +68,24 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
-            roles: [
-                USER_ROLES.REVIEW_COMMENTS,
-                USER_ROLES.EXPORT_ALL_TO_CSV,
-                USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET,
-                USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET,
-            ],
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: 'test',
+            user: {
+                roles: [
+                    USER_ROLES.REVIEW_COMMENTS,
+                    USER_ROLES.EXPORT_ALL_TO_CSV,
+                    USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET,
+                    USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET,
+                ],
+            },
             assignedEngagements: [mockSurveyOne.engagement_id],
-        };
-    }),
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 describe('Comment listing tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(surveyService, 'getSurvey').mockReturnValue(Promise.resolve(mockSurveyOne));
     jest.spyOn(submissionService, 'getSubmissionPage').mockReturnValue(
         Promise.resolve({
@@ -90,9 +93,15 @@ describe('Comment listing tests', () => {
             total: 1,
         }),
     );
-    const mockGetCommentsSheet = jest
-        .spyOn(commentService, 'getStaffCommentSheet')
-        .mockReturnValue(Promise.resolve({ data: new Blob(), status: 200, statusText: '', headers: {}, config: {} }));
+    const mockGetCommentsSheet = jest.spyOn(commentService, 'getStaffCommentSheet').mockReturnValue(
+        Promise.resolve({
+            data: new Blob(),
+            status: 200,
+            statusText: '',
+            headers: {},
+            config: { headers: {} },
+        } as AxiosResponse<Blob>),
+    );
     const mockDownloadFile = jest.spyOn(utils, 'downloadFile').mockImplementation(() => jest.fn());
 
     beforeEach(() => {

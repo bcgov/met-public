@@ -1,12 +1,13 @@
-import React, { ReactNode, SuspenseProps } from 'react';
+import React, { JSX, ReactNode, SuspenseProps } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantEditPage from 'components/tenantManagement/Edit';
-import { RouterProvider, createMemoryRouter, useRouteLoaderData } from 'react-router-dom';
 import { USER_ROLES } from 'services/userService/constants';
+
+const navigate = jest.fn();
+const revalidate = jest.fn();
 
 const mockTenant = {
     id: 1,
@@ -21,11 +22,19 @@ const mockTenant = {
     hero_image_description: 'Logo Description One',
 };
 
-global['Request'] = jest.fn().mockImplementation(() => ({
-    signal: {
-        removeEventListener: () => {},
-        addEventListener: () => {},
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
     },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
 }));
 
 jest.mock('react', () => ({
@@ -38,41 +47,34 @@ jest.mock('react', () => ({
 
 jest.mock('react-router-dom', () => {
     const actual = jest.requireActual('react-router-dom');
+    const useRouteLoaderDataMock = jest.fn((id: string) => {
+        if (id === 'tenant') {
+            return mockTenant;
+        }
+        if (id === 'tenant-admin') {
+            return [mockTenant];
+        }
+        return actual.useRouteLoaderData(id);
+    });
     return {
         ...actual,
-        Await: ({ children, resolve }: { children: any; resolve: any }) => {
-            // Resolve the promise immediately and call children with the result
-            // If resolve is a Promise that would resolve to an array or object, use it directly
-            // Otherwise default to mockTenant or array
-            let resolvedData = resolve;
-            if (resolve && typeof resolve.then === 'function') {
-                // It's a promise, we need to handle it synchronously in tests
-                // For tenant-admin, it returns array; for tenant, it returns single object
-                resolvedData = resolve;
-            }
-            return children(resolvedData);
-        },
         useParams: jest.fn(() => {
             return { tenantShortName: mockTenant.short_name };
         }),
         useNavigate: jest.fn(() => navigate),
-        useRouteLoaderData: jest.fn((id) => {
-            if (id === 'tenant-admin') {
-                return [mockTenant]; // Return array directly, not as promise
-            }
-            if (id === 'tenant') {
-                return mockTenant; // Return single tenant directly
-            }
-            return {
-                tenant: mockTenant,
-                tenants: [mockTenant],
-            };
-        }),
         useRevalidator: jest.fn(() => ({
             revalidate,
         })),
+        useRouteLoaderData: useRouteLoaderDataMock,
+        Await: ({ resolve, children }: { resolve: unknown; children: (value: unknown) => JSX.Element }) => (
+            <>{children(resolve)}</>
+        ),
+        __esModule: true,
+        __useRouteLoaderDataMock: useRouteLoaderDataMock,
     };
 });
+
+const useRouteLoaderDataMock = jest.requireMock('react-router-dom').__useRouteLoaderDataMock as jest.Mock;
 
 jest.mock('axios');
 
@@ -97,16 +99,14 @@ jest.mock('components/common/Layout', () => ({
 
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(() => {
-        return {
+    useSelector: jest.fn((callback) =>
+        callback({
+            tenant: 'test',
             roles: [USER_ROLES.SUPER_ADMIN],
-        };
-    }),
-    useDispatch: jest.fn(),
+        }),
+    ),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
-
-const navigate = jest.fn();
-const revalidate = jest.fn();
 
 jest.mock('services/tenantService', () => ({
     updateTenant: jest.fn(),
@@ -125,20 +125,14 @@ jest.mock('components/common/Navigation/Breadcrumb', () => ({
     AutoBreadcrumbs: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
-const router = createMemoryRouter(
-    [
-        {
-            path: '/tenantadmin/:tenantShortName/edit',
-            element: <TenantEditPage />,
-            id: 'tenant',
-        },
-    ],
-    { initialEntries: ['/tenantadmin/tenantone/edit'] },
-);
+jest.mock('components/common/Navigation/UnsavedWorkConfirmation', () => ({
+    __esModule: true,
+    default: () => null,
+}));
+
+const renderPage = () => render(<TenantEditPage />);
 
 describe('Tenant Editing Page tests', () => {
-    const dispatch = jest.fn();
-
     const editField = (placeholder: string, value: string) => {
         const field = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
         field.focus();
@@ -149,12 +143,11 @@ describe('Tenant Editing Page tests', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
-        render(<RouterProvider router={router} />);
     });
 
     test('Tenant edit page is rendered', async () => {
+        renderPage();
         await waitFor(() => {
             expect(screen.getByText('Edit Tenant Instance')).toBeVisible();
             expect(screen.getByText('Tenant Details')).toBeVisible();
@@ -162,7 +155,7 @@ describe('Tenant Editing Page tests', () => {
         });
 
         // The data should already be fetched if the header is displayed
-        expect(useRouteLoaderData).toHaveBeenCalledWith('tenant');
+        expect(useRouteLoaderDataMock).toHaveBeenCalledWith('tenant');
 
         // Check that the form is populated with the correct data
         await waitFor(() => {
@@ -186,6 +179,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Button is enabled after form is edited', async () => {
+        renderPage();
         await waitFor(() => {
             editField('Name', 'New Name');
             expect(screen.getByText('Update')).not.toBeDisabled();
@@ -193,6 +187,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Email throws error if invalid', async () => {
+        renderPage();
         await waitFor(() => {
             editField('Email', 'invalid-email');
             expect(screen.getByText("That doesn't look like a valid email...")).toBeVisible();
@@ -201,6 +196,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Short name throws error if invalid', async () => {
+        renderPage();
         await waitFor(() => {
             editField('shortname', 'invalid shortname');
             expect(screen.getByText('Your input contains invalid symbols')).toBeVisible();
@@ -209,6 +205,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Character limit is enforced on fields', async () => {
+        renderPage();
         editField('Title', 'a'.repeat(256));
         await waitFor(() => {
             expect(screen.getByText('This input is too long!')).toBeVisible();
@@ -217,6 +214,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Cancel button navigates back to tenant details page', async () => {
+        renderPage();
         fireEvent.click(screen.getByText('Cancel'));
         await waitFor(() => {
             expect(navigate).toHaveBeenCalledTimes(1);
@@ -225,6 +223,7 @@ describe('Tenant Editing Page tests', () => {
     });
 
     test('Update button calls updateTenant action', async () => {
+        renderPage();
         await waitFor(() => {
             editField('Name', 'New Name');
             expect(screen.getByText('Update')).not.toBeDisabled();
@@ -244,10 +243,10 @@ describe('Tenant Editing Page tests', () => {
         jest.spyOn(React, 'Suspense').mockImplementation((props: SuspenseProps) => {
             return props.fallback as JSX.Element;
         });
-        render(<RouterProvider router={router} />);
+        renderPage();
         await waitFor(() => {
             expect(screen.getByTestId('loader')).toBeVisible();
-            expect(useRouteLoaderData).toHaveBeenCalledWith('tenant');
+            expect(useRouteLoaderDataMock).toHaveBeenCalledWith('tenant');
         });
     });
 });

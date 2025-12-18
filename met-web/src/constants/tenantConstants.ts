@@ -1,5 +1,5 @@
 import { AppConfig } from 'config';
-import Keycloak from 'keycloak-js';
+import Keycloak from 'keycloak';
 import { ITenantDetail } from './types';
 
 // Keycloak Environment Variables

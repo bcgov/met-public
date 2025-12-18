@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid, FormControlLabel, Radio, FormControl, FormLabel, FormHelperText } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SubscribeContext } from './SubscribeContext';
@@ -53,7 +53,7 @@ const EmailListDrawer = () => {
     const subscribeItem = subscribeOptionToEdit ? subscribeOptionToEdit.subscribe_items[0] : null;
     const dispatch = useAppDispatch();
     const methods = useForm<EmailList>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<EmailList>,
     });
 
     useEffect(() => {

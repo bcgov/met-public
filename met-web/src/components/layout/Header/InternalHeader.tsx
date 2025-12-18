@@ -14,6 +14,7 @@ import {
     MenuList,
     Collapse,
     CssBaseline,
+    LinearProgress,
 } from '@mui/material';
 import { colors, DarkTheme, Palette } from 'styles/Theme';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
@@ -23,14 +24,14 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useRouteLoaderData, useParams } from 'react-router-dom';
+import { Await, useRouteLoaderData, useParams, useNavigation } from 'react-router-dom';
 import { Tenant } from 'models/tenant';
 import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
 import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
-import TrapFocus from '@mui/base/TrapFocus';
+import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import SideNav from '../SideNav/SideNav';
 import { USER_ROLES } from 'services/userService/constants';
 import AuthoringSideNav from '../../engagement/admin/create/authoring/AuthoringSideNav';
@@ -76,6 +77,8 @@ const InternalHeader = () => {
     const { myTenants } = useRouteLoaderData('authenticated-root') as AuthenticatedRootLoaderData;
 
     const sidePadding = { xs: '0 1em', md: '0 1.5em 0 2em', lg: '0 3em 0 2em' };
+    const navigation = useNavigation();
+    const isPending = navigation.state === 'loading' || navigation.state === 'submitting';
 
     return (
         // Keep focus within the app bar + sidenav when sidenav is open on mobile
@@ -171,7 +174,11 @@ const InternalHeader = () => {
                             engage{/*no space*/}
                             <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
                         </BodyText>
+                        <When condition={isMediumScreenOrLarger}></When>
                     </Toolbar>
+                    <If condition={isPending}>
+                        <LinearProgress sx={{ marginTop: '-0.25em' }} />
+                    </If>
                     <Collapse
                         in={secondaryMenuOpen}
                         timeout={{

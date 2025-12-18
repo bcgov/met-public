@@ -25,7 +25,7 @@ import { faCircleQuestion } from '@fortawesome/pro-regular-svg-icons/faCircleQue
 import { Palette } from 'styles/Theme';
 import { Save, FilterAltOff } from '@mui/icons-material';
 import * as yup from 'yup';
-import React, { useContext, useEffect } from 'react';
+import React, { JSX, useContext, useEffect } from 'react';
 import { MetadataTaxon } from 'models/engagement';
 import { ActionContext } from './ActionContext';
 import { useAppDispatch } from 'hooks';

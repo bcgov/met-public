@@ -2,7 +2,6 @@ import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as reportSettingsService from 'services/surveyService/reportSettingsService';
 import { createDefaultSurvey, Survey } from 'models/survey';
@@ -83,9 +82,13 @@ const router = createMemoryRouter(
     },
 );
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
+
 describe('Survey report settings tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useParams').mockReturnValue({ surveyId: String(survey.id) });
     const updateSurveyReportSettingsMock = jest

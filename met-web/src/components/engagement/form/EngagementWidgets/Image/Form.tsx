@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetLabel } from 'components/common';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAppDispatch } from 'hooks';
@@ -37,7 +37,7 @@ const Form = () => {
     const [isCreating, setIsCreating] = React.useState(false);
 
     const imageForm = useForm<ImageWidgetForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<ImageWidgetForm>,
     });
 
     const {

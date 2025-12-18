@@ -2,9 +2,7 @@ import React, { ReactNode } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
-import * as tenantService from 'services/tenantService';
 import TenantListingPage from '../../../../src/components/tenantManagement/Listing';
 import { USER_ROLES } from 'services/userService/constants';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
@@ -27,11 +25,19 @@ const mockTenantTwo = {
     short_name: 'tenanttwo',
 };
 
-global['Request'] = jest.fn().mockImplementation(() => ({
-    signal: {
-        removeEventListener: () => {},
-        addEventListener: () => {},
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
     },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
 }));
 
 jest.mock('axios');
@@ -57,6 +63,7 @@ jest.mock('react-redux', () => ({
             roles: [USER_ROLES.SUPER_ADMIN],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -65,13 +72,15 @@ jest.mock('react-router-dom', () => ({
     useLocation: jest.fn(() => ({
         search: '',
     })),
+    useRouteLoaderData: jest.fn((routeId) => {
+        if (routeId === 'tenant-admin') {
+            return Promise.resolve([mockTenantOne, mockTenantTwo]);
+        }
+    }),
 }));
 
 describe('Tenant Listing Page tests', () => {
-    jest.spyOn(reactRedux, 'useSelector').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    jest.spyOn(tenantService, 'getAllTenants').mockReturnValue(Promise.resolve([mockTenantOne, mockTenantTwo]));
 
     beforeEach(() => {
         setupEnv();

@@ -5,7 +5,7 @@ import Divider from '@mui/material/Divider';
 import { Grid } from '@mui/material';
 import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import ImageUpload from 'components/imageUpload';
-import { useForm, FormProvider, SubmitHandler } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
@@ -46,7 +46,7 @@ const AddContactDrawer = () => {
     const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
     const methods = useForm<ContactForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<ContactForm>,
     });
 
     useEffect(() => {

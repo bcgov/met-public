@@ -3,16 +3,18 @@ import { act, render, waitFor, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import PollWidgetView from 'components/engagement/widgets/Poll/PollWidgetView';
 import * as widgetService from 'services/widgetService/PollService';
-import * as reactRedux from 'react-redux';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 // Mock for useDispatch
-jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
 
 // Mock for useSubmittedPolls
 jest.mock('hooks', () => ({
     // mock useAppSelector
-    useAppSelector: (callback: any) =>
+    useAppSelector: (callback: (state: object) => unknown) =>
         callback({
             user: {
                 authentication: {

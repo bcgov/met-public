@@ -176,24 +176,37 @@ roleRef:
 
 ## Database Configuration
 
-Inntall an instance of patroni using helm chart:
+Create a highly available PostgreSQL database using Patroni:
 
-```
-helm repo add patroni-chart https://bcgov.github.io/nr-patroni-chart
-helm install -n <namespace> met-patroni patroni-chart/patroni
+```bash
+helm install engagement-db . --values values_<env>.yaml
 ```
 
-If HA is not necessary create a instance of a postgresql database:
+If the cluster is not starting, remove any existing ConfigMaps and PersistentVolumeClaims:
 
+```bash
+oc delete configmap -l app.kubernetes.io/instance=engagement-db
+oc delete pvc -l app.kubernetes.io/instance=engagement-db
 ```
-oc new-app --template=postgresql-persistent -p POSTGRESQL_DATABASE=app -p DATABASE_SERVICE_NAME=met-postgresql
+
+For technical reasons, we cannot load secrets from Vault during the initial database setup. Therefore, a Secret must be created in each namespace containing the initial database user passwords. These values should match those stored in Vault.
+
+```bash
+oc create secret generic engagement-patroni \
+--from-literal=superuser-username=postgres \
+--from-literal=superuser-password=<superuser-password> \
+--from-literal=replication-username=replicator \
+--from-literal=replication-password=<replication-password> \
+--from-literal=app-db-username=<app-username> \
+--from-literal=app-db-password=<app-password> \
+--from-literal=app-db-name=app \
+-n e903c2-<env>
 ```
 
 ### Setup
 
 1. Users Setup script is located at /tools/postgres/init/00_postgresql-user-setup.sql
 1. Initial database setup script is located at /tools/postgres/init/01_postgresql-schema-setup.sql
-1. Openshift secret yaml is located at ./database-users.secret.yml
 
 ## IP Whitelist Management
 
@@ -266,11 +279,11 @@ This should be stored at:
 
 Backups are generated daily by the "backup" deployment in each namespace and are saved as a gzipped SQL script containing the database structure + data.
 
-Backups are verified nightly at 4 AM by creating a temporary database instance, restoring the backup into it, and checking for tables in the restored database. This is configured in the `backup.conf` file, mounted from the `met-db-backup-config` ConfigMap.
+Backups are verified nightly at 4 AM by creating a temporary database instance, restoring the backup into it, and checking for tables in the restored database. This is configured in the `backup.conf` file, mounted from the `engagement-db-backup` ConfigMap.
 
 Backups are also uploaded to S3-compatible storage for offsite retention.
 
-## Restoring from S3
+### Restoring from S3
 
 **Note**: The backup container does not support restoring directly from S3. If a backup has already been removed from the local FS, you must download it from S3 to the local `/backups/` directory first, then restore using the standard process.
 
@@ -278,57 +291,60 @@ To restore a backup stored in S3:
 
 ```bash
 # Connect to backup container
-oc rsh deploy/met-db-backup
+oc rsh deploy/engagement-db-backup
 
 # Source S3 credentials
 source /vault/secrets/s3
 
+# Configure mc (MinIO Client) for S3 access
+mc alias set dell_s3 $S3_ENDPOINT $S3_USER $S3_PASSWORD
+
 # List backups in S3 bucket
-mc ls minio_s3/engagement-dev-backup/
+mc ls dell_s3/engagement-<env>-backup/ # env is one of dev, test, prod
 
 # Download the desired backup file
-mc cp minio_s3/engagement-dev-backup/met-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
+mc cp dell_s3/engagement-<env>-backup/engagement-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz /backups/
 
 # Now proceed with normal restore process (see scenarios below)
 ```
 
-## Scenarios
+### Scenarios
 
-### 1. Normal Production Restore (Roles Exist)
+#### 1. Normal Production Restore (Roles Exist)
 
 **Use case**: Restoring to existing Patroni cluster where roles are already defined.
 
 ```bash
 # Connect to backup container
-oc rsh deploy/met-db-backup
+oc rsh deploy/engagement-db-backup
 
 # Add credentials to environment
-source /vault/secrets/met-patroni
+source /vault/secrets/engagement-patroni
 
 # List available backups
 ./backup.sh -l # press Enter if prompted for password
 
 # Restore with -I flag to ignore duplicate role errors
-./backup.sh -I -r postgres=met-patroni:5432/app -f /backups/<period>/<YYYY-MM-DD>/met-patroni-app_<YYYY-MM-DD_HH-MM-SS>.sql.gz
+./backup.sh -I -r postgres=engagement-patroni:5432/app -f /backups/<period>/<YYYY-MM-DD>/engagement-patroni-app_<YYYY-MM-DD_HH-MM-SS>.sql.gz
 ```
 
 **Why `-I`?**: The backup contains `CREATE ROLE` statements at the end. Since roles already exist in production, these will fail but can be safely ignored.
 
 ---
 
-### 2. Emergency Restore (Fresh Database)
+#### 2. Emergency Restore (Fresh Database)
 
 **Use case**: Restoring to a completely new PostgreSQL instance that has no existing roles.
 
 ```bash
 # Connect to backup container
-oc rsh deploy/met-db-backup
+oc rsh deploy/engagement-db-backup
 
 # Source credentials
-source /vault/secrets/met-patroni
+source /vault/secrets/engagement-patroni
 
 # Use the emergency restore script
-./emergency-restore.sh /backups/daily/YYYY-MM-DD/met-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz app
+./emergency-restore.sh /backups/daily/YYYY-MM-DD/engagement-patroni-app_YYYY-MM-DD_HH-MM-SS.sql.gz app
 ```
 
 **What it does**:
@@ -342,7 +358,7 @@ Note: the users are created without passwords; you will need to set passwords ma
 
 ```bash
 # Connect as superuser
-oc rsh pod/met-patroni-0
+oc rsh pod/engagement-patroni-0
 psql -U postgres -d app
 
 # Set passwords for each role
@@ -350,6 +366,5 @@ ALTER ROLE analytics WITH PASSWORD 'foo';
 ALTER ROLE dagster WITH PASSWORD 'bar';
 ALTER ROLE met WITH PASSWORD 'baz';
 ALTER ROLE redash WITH PASSWORD 'qux';
-ALTER ROLE backup WITH PASSWORD 'quux';
-ALTER ROLE replication WITH PASSWORD 'corge';
+ALTER ROLE replication WITH PASSWORD 'quux';
 ```

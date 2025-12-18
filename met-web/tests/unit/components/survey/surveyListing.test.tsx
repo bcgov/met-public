@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import SurveyListing from '../../../../src/components/survey/listing';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as surveyService from 'services/surveyService';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import { createDefaultSurvey } from 'models/survey';
@@ -107,6 +107,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [mockEngagementOne.id, mockEngagementTwo.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -117,15 +118,23 @@ jest.mock('react-router-dom', () => ({
     })),
 }));
 
+const router = createMemoryRouter(
+    [
+        {
+            element: <SurveyListing />,
+            path: '/',
+        },
+    ],
+    { initialEntries: ['/'] },
+);
+
 describe('Survey form page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const getSurveysPageMock = jest.spyOn(surveyService, 'getSurveysPage');
 
     beforeEach(() => {
         setupEnv();
     });
-
     test('Survey table is rendered and surveys are fetched', async () => {
         getSurveysPageMock.mockReturnValue(
             Promise.resolve({
@@ -133,7 +142,7 @@ describe('Survey form page tests', () => {
                 total: 2,
             }),
         );
-        render(<SurveyListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Survey One')).toBeInTheDocument();
@@ -154,7 +163,7 @@ describe('Survey form page tests', () => {
                 total: 1,
             }),
         );
-        const { container } = render(<SurveyListing />);
+        const { container } = render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Survey One')).toBeInTheDocument();
@@ -167,7 +176,7 @@ describe('Survey form page tests', () => {
         fireEvent.click(screen.getByTestId('survey/listing/search-button'));
 
         await waitFor(() => {
-            expect(getSurveysPageMock).lastCalledWith({
+            expect(getSurveysPageMock).toHaveBeenLastCalledWith({
                 page: 1,
                 size: 10,
                 sort_key: 'survey.created_date',

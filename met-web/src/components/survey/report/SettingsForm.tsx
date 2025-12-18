@@ -8,8 +8,6 @@ import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
 import { getBaseUrl } from 'helper';
 import { Button, FormField, TextInput } from 'components/common/Input';
-import { Survey } from 'models/survey';
-import { SurveyReportSetting } from 'models/surveyReportSetting';
 import MetTable from 'components/common/Table';
 import { updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { useAppDispatch } from 'hooks';
@@ -18,7 +16,7 @@ import { updatedDiff } from 'deep-object-diff';
 import { SurveyLoaderData } from '../building/SurveyLoader';
 
 const SettingsFormPage = () => {
-    const { survey, slug, engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
+    const { survey, slug, engagement, reportSettings } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     return (
         <MetPageGridContainer container spacing={1}>
@@ -28,7 +26,7 @@ const SettingsFormPage = () => {
             <Grid item xs={12}>
                 <MetPaper sx={{ padding: '3rem' }}>
                     <Suspense fallback={SettingsFormSkeleton}>
-                        <Await resolve={Promise.all([survey, slug, engagement])}>
+                        <Await resolve={Promise.all([survey, slug, engagement, reportSettings])}>
                             <SettingsForm />
                         </Await>
                     </Suspense>
@@ -39,9 +37,13 @@ const SettingsFormPage = () => {
 };
 
 const SettingsForm = () => {
-    const [survey, slug] = useAsyncValue() as [Survey, { slug: string }, SurveyReportSetting[]];
+    const [survey, slug, , reportSettings] = useAsyncValue() as [
+        Awaited<SurveyLoaderData['survey']>,
+        Awaited<SurveyLoaderData['slug']>,
+        Awaited<SurveyLoaderData['engagement']>,
+        Awaited<SurveyLoaderData['reportSettings']>,
+    ];
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const { reportSettings } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     const engagementSlug = slug?.slug;
 
@@ -117,13 +119,16 @@ const SettingsForm = () => {
                 <FormField title="Link to Public Dashboard Report">
                     <Tooltip
                         title="Link copied!"
-                        PopperProps={{
-                            disablePortal: true,
-                            sx: {
-                                pointerEvents: 'none',
-                                '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+                        slotProps={{
+                            popper: {
+                                disablePortal: true,
+                                sx: {
+                                    pointerEvents: 'none',
+                                    '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+                                },
                             },
                         }}
+                        sx={{ height: '40px', pr: 0 }}
                         onClose={handleTooltipClose}
                         open={copyTooltip}
                         disableFocusListener
@@ -145,6 +150,7 @@ const SettingsForm = () => {
                                         padding: 0,
                                     },
                                 }}
+                                size="small"
                                 endAdornment={
                                     engagementSlug && (
                                         <ClickAwayListener onClickAway={handleTooltipClose}>

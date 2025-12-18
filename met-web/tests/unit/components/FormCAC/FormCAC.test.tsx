@@ -5,7 +5,7 @@ import { Form } from 'components/FormCAC/Form';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { FormContext } from 'components/FormCAC/FormContext';
 
-jest.mock('@mui/lab/TabContext/TabContext', () => {
+jest.mock('@mui/lab/TabContext', () => {
     // Create a mock component
     return {
         __esModule: true,
@@ -13,7 +13,7 @@ jest.mock('@mui/lab/TabContext/TabContext', () => {
     };
 });
 
-jest.mock('@mui/lab/TabPanel/TabPanel', () => {
+jest.mock('@mui/lab/TabPanel', () => {
     // Create a mock component
     return {
         __esModule: true,
@@ -38,7 +38,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('react-redux', () => ({
-    useDispatch: () => jest.fn(),
+    useDispatch: () => jest.fn(() => jest.fn()),
 }));
 
 jest.mock('hooks', () => {

@@ -31,7 +31,6 @@ RUN --mount=type=secret,id=artifactory_password \
     && export ARTIFACTORY_USERNAME=$(cat /run/secrets/artifactory_username) \
     && export ARTIFACTORY_PASSWORD=$(cat /run/secrets/artifactory_password) \
     && npm install --legacy-peer-deps --silent
-RUN npm install react-scripts@3.4.1 -g --silent
 
 # create and set user permissions to app folder
 RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache

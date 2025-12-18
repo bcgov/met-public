@@ -17,7 +17,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
         shouldRevalidate={() => false} // Cache the root loader data for the authenticated area
     >
         <LazyRoute path="/home" ComponentLazy={() => import('components/dashboard')} />
-        <Route path="/surveys">
+        <Route path="/surveys" handle={{ crumb: () => ({ name: 'Surveys', link: '/surveys' }) }}>
             <LazyRoute index ComponentLazy={() => import('components/survey/listing')} />
             <LazyRoute path="create" ComponentLazy={() => import('components/survey/create')} />
             <LazyRoute

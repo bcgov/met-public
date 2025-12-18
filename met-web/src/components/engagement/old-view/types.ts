@@ -1,5 +1,5 @@
 import { Engagement } from 'models/engagement';
-import React from 'react';
+import React, { JSX } from 'react';
 
 export interface BannerProps {
     imageUrl?: string;
@@ -13,7 +13,7 @@ export interface EmailModalProps {
     header?: string;
     subText?: string;
     email?: string;
-    termsOfService?: string | React.ReactFragment;
+    termsOfService?: string | React.FragmentProps;
     handleConfirm?: () => void;
     handleClose: () => void;
     updateEmail?: (email: string) => void;

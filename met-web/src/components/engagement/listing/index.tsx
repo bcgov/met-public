@@ -414,7 +414,7 @@ const EngagementListing = () => {
                             placeholder="Search by name"
                             name="searchText"
                             value={searchText}
-                            sx={{ height: '40px', pr: 0 }}
+                            sx={{ height: '40px', pr: 0, minWidth: '13em' }}
                             onChange={(value) => setSearchText(value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSearchBarClick(searchText);
@@ -435,7 +435,7 @@ const EngagementListing = () => {
                         <When condition={!isMediumScreen}>
                             <Button
                                 size="small"
-                                sx={{ minWidth: '200px' }}
+                                sx={{ minWidth: 'max-content' }}
                                 data-testid="engagement/listing/advancedSearch"
                                 name="advancedSearch"
                                 onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
@@ -457,7 +457,6 @@ const EngagementListing = () => {
                     <When condition={isMediumScreen}>
                         <Button
                             size="small"
-                            sx={{ width: '100%' }}
                             data-testid="engagement/listing/advancedSearch"
                             name="advancedSearch"
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
@@ -481,7 +480,7 @@ const EngagementListing = () => {
                             variant="primary"
                             icon={<FontAwesomeIcon icon={faPlus} />}
                             href="/engagements/create/wizard"
-                            sx={{ width: { xs: '100%', md: 'unset' } }}
+                            sx={{ minWidth: 'max-content' }}
                         >
                             Create Engagement
                         </Button>

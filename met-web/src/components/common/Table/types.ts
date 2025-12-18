@@ -1,3 +1,5 @@
+import { JSX } from 'react';
+
 export interface HeadCell<T> {
     disablePadding: boolean;
     key: keyof T;

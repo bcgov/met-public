@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import LandingComponent from 'components/landing/LandingComponent';
 import { setupEnv } from '../setEnvVars';
 import { LandingContext } from 'components/landing/LandingContext';
-import * as reactRedux from 'react-redux';
 import { openEngagement, closedEngagement } from '../factory';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
@@ -26,9 +25,12 @@ jest.mock('hooks', () => ({
     useAppTranslation: () => ({
         t: (key: string) => key, // return the key itself
     }),
-    useAppSelector: (callback: any) =>
+    useAppSelector: (callback: (state: unknown) => unknown) =>
         callback({
             tenant: MOCK_TENANT,
+            user: {
+                roles: [],
+            },
         }),
 }));
 
@@ -66,9 +68,12 @@ jest.mock('constants/engagementStatus', () => ({
     },
 }));
 
-describe('Landing page tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
 
+describe('Landing page tests', () => {
     beforeEach(() => {
         setupEnv();
     });

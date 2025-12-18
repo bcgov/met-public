@@ -1,6 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
-import * as reactRedux from 'react-redux';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import '@testing-library/jest-dom';
 import { setupEnv } from './setEnvVars';
@@ -12,10 +11,14 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
-jest.mock('axios')
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'), // Preserve original exports if needed
+    useDispatch: jest.fn(() => jest.fn()),
+}));
+
+jest.mock('axios');
 
 describe('Schedule modal tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
 
     beforeEach(() => {

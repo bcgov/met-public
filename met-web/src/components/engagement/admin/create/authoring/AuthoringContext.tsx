@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Resolver } from 'react-hook-form';
 import { createSearchParams, useFetcher, Outlet, useMatch } from 'react-router-dom';
 import { convertToRaw, EditorState } from 'draft-js';
 import * as yup from 'yup';
@@ -97,7 +97,11 @@ const authoringTemplateSchema = yup.object({
         }),
 });
 
-export interface EngagementUpdateData extends yup.TypeOf<typeof authoringTemplateSchema> {
+export interface EngagementUpdateData
+    extends
+        yup.TypeOf<typeof authoringTemplateSchema>,
+        yup.TypeOf<typeof summarySchema>,
+        yup.TypeOf<typeof detailsTabsSchema> {
     id: number;
     status_id: number;
     taxon_id: number;
@@ -193,15 +197,16 @@ export const AuthoringContext = () => {
     Using a global resolver is not recommended as required
     fields will still be validated on other pages.
      */
-    const resolver = useMemo(() => {
+
+    const resolver = useMemo<Resolver<EngagementUpdateData> | undefined>(() => {
         switch (pageName) {
             case 'banner':
                 // on the banner page, we need inter-field validation so we use the yup resolver
-                return yupResolver(authoringTemplateSchema);
+                return yupResolver(authoringTemplateSchema) as unknown as Resolver<EngagementUpdateData>;
             case 'summary':
-                return yupResolver(summarySchema);
+                return yupResolver(summarySchema) as unknown as Resolver<EngagementUpdateData>;
             case 'details':
-                return yupResolver(detailsTabsSchema);
+                return yupResolver(detailsTabsSchema) as unknown as Resolver<EngagementUpdateData>;
             default:
                 return undefined;
         }
@@ -273,7 +278,7 @@ export const AuthoringContext = () => {
     };
 
     return (
-        <FormProvider {...engagementUpdateForm}>
+        <FormProvider key={pageName || 'authoring-form'} {...engagementUpdateForm}>
             <Outlet context={{ onSubmit, defaultValues, setDefaultValues, fetcher }} />
         </FormProvider>
     );

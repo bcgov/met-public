@@ -2,12 +2,11 @@ import React, { useContext, useState } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { MetPageGridContainer, MetTooltip } from 'components/common';
 import { Survey } from 'models/survey';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink, Theme, useMediaQuery } from '@mui/material';
-import TextField from '@mui/material/TextField';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircleExclamation';
@@ -30,6 +29,9 @@ import { Palette } from 'styles/Theme';
 import { AdvancedSearch } from './AdvancedSearch';
 import { SurveyListingContext } from './SurveyListingContext';
 import { USER_ROLES } from 'services/userService/constants';
+import { Button, TextInput } from 'components/common/Input';
+import { faPlus } from '@fortawesome/pro-regular-svg-icons';
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
 const Surveys = () => {
     const {
@@ -395,31 +397,43 @@ const Surveys = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
+            <Grid item>
+                <AutoBreadcrumbs />
+            </Grid>
             <Grid item xs={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} alignItems="center">
                         <Stack direction="row" spacing={1} width={{ xs: '100%', md: 'auto' }}>
-                            <TextField
-                                id="engagement-name"
-                                variant="outlined"
-                                label="Search by name"
+                            <TextInput
+                                id="survey-name"
+                                inputProps={{ 'aria-label': 'Search by name' }}
+                                placeholder="Search by name"
                                 fullWidth
                                 name="searchText"
                                 value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
+                                sx={{ height: '40px', pr: 0, minWidth: '13em' }}
+                                onChange={(text) => setSearchText(text)}
                                 size="small"
+                                endAdornment={
+                                    <Button
+                                        variant="primary"
+                                        size="small"
+                                        data-testid="survey/listing/search-button"
+                                        onClick={() => handleSearchBarClick(searchText)}
+                                        sx={{ m: 0, borderRadius: '0px 8px 8px 0px' }}
+                                    >
+                                        <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                                    </Button>
+                                }
                             />
-                            <PrimaryButtonOld
-                                data-testid="survey/listing/search-button"
-                                onClick={() => handleSearchBarClick(searchText)}
-                            >
-                                <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                            </PrimaryButtonOld>
                         </Stack>
-                        <SecondaryButtonOld
+                        <Button
+                            variant="secondary"
+                            size="small"
                             data-testid="survey-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
-                            startIcon={
+                            sx={{ minWidth: 'max-content' }}
+                            icon={
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
@@ -432,12 +446,19 @@ const Surveys = () => {
                             fullWidth={isMediumScreen ? true : false}
                         >
                             Advanced Search
-                        </SecondaryButtonOld>
+                        </Button>
                     </Stack>
                     <PermissionsGate scopes={[USER_ROLES.CREATE_SURVEY]} errorProps={{ disabled: true }}>
-                        <PrimaryButtonOld component={Link} to="/surveys/create">
-                            + Create Survey
-                        </PrimaryButtonOld>
+                        <Button
+                            variant="primary"
+                            size="small"
+                            sx={{ minWidth: 'max-content' }}
+                            component={Link}
+                            icon={<FontAwesomeIcon icon={faPlus} />}
+                            href="/surveys/create"
+                        >
+                            Create Survey
+                        </Button>
                     </PermissionsGate>
                 </Stack>
             </Grid>

@@ -11,14 +11,10 @@ const DocumentForm = () => {
     const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { widget } = useContext(DocumentsContext);
 
-    if (!widget) {
-        return null;
-    }
-
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <WidgetTitle widget={widget} />
+                {widget && <WidgetTitle widget={widget} />}
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
 

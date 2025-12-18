@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import * as reactRouterDom from 'react-router-dom';
@@ -22,11 +21,19 @@ const mockTenant = {
     hero_image_description: 'Logo Description One',
 };
 
-global['Request'] = jest.fn().mockImplementation(() => ({
-    signal: {
-        removeEventListener: () => {},
-        addEventListener: () => {},
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
     },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
 }));
 
 jest.mock('react', () => ({
@@ -90,7 +97,7 @@ jest.mock('react-redux', () => ({
             roles: [USER_ROLES.SUPER_ADMIN],
         };
     }),
-    useDispatch: jest.fn(),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 const navigate = jest.fn();
@@ -128,9 +135,12 @@ const router = createMemoryRouter(
     { initialEntries: ['/tenantadmin/create'] },
 );
 
-describe('Tenant Creation Page tests', () => {
-    const dispatch = jest.fn();
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
 
+describe('Tenant Creation Page tests', () => {
     const editField = async (placeholder: string, value: string) => {
         const field = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
         field.focus();
@@ -141,7 +151,6 @@ describe('Tenant Creation Page tests', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jest.spyOn(reactRedux, 'useDispatch').mockReturnValue(dispatch);
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
         render(<RouterProvider router={router} />);
     });

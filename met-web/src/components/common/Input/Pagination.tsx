@@ -1,6 +1,5 @@
 import React from 'react';
-import { Pagination as MuiPagination, PaginationItem, PaginationProps } from '@mui/material';
-import { styled } from '@mui/system';
+import { Pagination as MuiPagination, PaginationItem, PaginationProps, styled } from '@mui/material';
 import { colors, elevations, globalFocusShadow } from '../../common';
 
 const PrimaryButtonStyles = {

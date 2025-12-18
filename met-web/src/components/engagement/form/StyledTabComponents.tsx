@@ -1,7 +1,6 @@
 import TabList from '@mui/lab/TabList';
-import Tab from '@mui/material/Tab';
 import TabPanel from '@mui/lab/TabPanel';
-import { styled } from '@mui/system';
+import { styled, Tab } from '@mui/material';
 import { Palette } from 'styles/Theme';
 
 export const MetTab = styled(Tab)(() => ({

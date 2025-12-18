@@ -3,7 +3,6 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
 import { setupEnv } from '../setEnvVars';
-import * as reactRedux from 'react-redux';
 import * as reactRouter from 'react-router';
 import * as engagementService from 'services/engagementService';
 import * as widgetService from 'services/widgetService';
@@ -35,6 +34,7 @@ jest.mock('react-redux', () => ({
             assignedEngagements: [draftEngagement.id],
         };
     }),
+    useDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('@reduxjs/toolkit/query/react', () => ({
@@ -113,7 +113,6 @@ const router = createMemoryRouter(
 );
 
 describe('Event Widget tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -129,6 +128,14 @@ describe('Event Widget tests', () => {
 
     beforeEach(() => {
         setupEnv();
+        mockCreateWidget.mockReset();
+        getWidgetsMock.mockReset();
+
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(async () => {
+            getWidgetsMock.mockResolvedValue([eventWidget]);
+            return eventWidget;
+        });
     });
 
     async function addEventWidget(container: HTMLElement) {
@@ -160,12 +167,13 @@ describe('Event Widget tests', () => {
                 surveys: surveys,
             }),
         );
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);
+
+        await waitFor(() => {
+            expect(mockCreateWidget).toHaveBeenCalled();
+        });
 
         expect(mockCreateWidget).toHaveBeenNthCalledWith(1, {
             widget_type_id: WidgetType.Events,
@@ -185,10 +193,6 @@ describe('Event Widget tests', () => {
                 surveys: surveys,
             }),
         );
-
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);
@@ -213,10 +217,6 @@ describe('Event Widget tests', () => {
                 surveys: surveys,
             }),
         );
-
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(eventWidget));
-        getWidgetsMock.mockReturnValueOnce(Promise.resolve([eventWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
         await addEventWidget(container);

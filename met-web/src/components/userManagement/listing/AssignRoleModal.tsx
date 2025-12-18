@@ -25,7 +25,7 @@ import {
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
-import { useForm, FormProvider, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
@@ -65,7 +65,7 @@ export const AssignRoleModal = () => {
     const theme = useTheme();
 
     const methods = useForm<AssignRoleForm>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema) as unknown as Resolver<AssignRoleForm>,
     });
 
     const {

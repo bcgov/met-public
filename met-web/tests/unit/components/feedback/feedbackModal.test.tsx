@@ -1,6 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
-import * as reactRedux from 'react-redux';
 import * as notificationSlice from 'services/notificationService/notificationSlice';
 import * as feedbackService from 'services/feedbackService';
 import '@testing-library/jest-dom';
@@ -8,10 +7,14 @@ import { setupEnv } from '../setEnvVars';
 import { FeedbackModal } from 'components/feedback/FeedbackModal';
 import { CommentTypeEnum, FeedbackStatusEnum, SourceTypeEnum } from 'models/feedback';
 
-jest.mock('axios')
+jest.mock('axios');
+
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: jest.fn(() => jest.fn()),
+}));
 
 describe('Feedback modal tests', () => {
-    jest.spyOn(reactRedux, 'useDispatch').mockImplementation(() => jest.fn());
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const createFeedbackMock = jest.spyOn(feedbackService, 'createFeedback');
 

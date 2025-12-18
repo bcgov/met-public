@@ -49,7 +49,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
                 },
                 condition:
                     hasNoRole() &&
-                    roles.includes(USER_ROLES.EDIT_MEMBERS) &&
+                    roles?.includes(USER_ROLES.EDIT_MEMBERS) &&
                     selectedUser.status_id == USER_STATUS.ACTIVE.value &&
                     selectedUser.id != userDetail?.user?.id,
             },
