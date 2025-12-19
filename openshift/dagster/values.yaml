@@ -11,6 +11,11 @@ vault:
   namespace: "platform-services"
   authPath: "auth/k8s-gold"
 
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: "latest"
+
 # Dagster chart configuration
 dagster:
   # Use external PostgreSQL (Patroni)
@@ -42,10 +47,6 @@ dagster:
   serviceAccount:
     create: true
     name: "dagster"
-
-  # Image pull secrets - needed to pull from internal OpenShift registry
-  # Note: The specific secret name is set in environment-specific values files
-  imagePullSecrets: []
 
   # RBAC - whether to create RBAC roles/rolebindings for Dagster service account
   rbacEnabled: true
@@ -119,6 +120,7 @@ dagster:
     serviceAccount:
       create: true
       name: "dagster-user-code"
+    imagePullSecrets: []
     deployments:
       - name: etl
         image:
