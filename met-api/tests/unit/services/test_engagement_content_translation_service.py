@@ -1,6 +1,6 @@
 """Tests for the EngagementContentTranslationService."""
 
-from met_api.services.engagement_content_translation_service import EngagementContentTranslationService
+from met_api.services.engagement_details_tab_translation_service import EngagementContentTranslationService
 from tests.utilities.factory_scenarios import TestEngagementContentTranslationInfo, TestJwtClaims
 from tests.utilities.factory_utils import (
     factory_enagement_content_model, factory_engagement_content_translation_model, factory_staff_user_model,

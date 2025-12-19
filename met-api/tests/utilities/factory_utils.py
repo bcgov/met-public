@@ -166,7 +166,7 @@ def factory_email_verification(survey_id, type=None, submission_id=None):
 
 
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
-    """Produce a engagement model."""
+    """Produce an engagement model."""
     engagement = EngagementModel(
         name=name if name else fake.name(),
         description=eng_info.get('description'),
@@ -866,7 +866,7 @@ def factory_engagement_translation_model(
 def factory_engagement_details_tab_model(
     engagement_details_tab: dict = TestEngagementDetailsTabsInfo.detailsTab1,
 ):
-    """Produce a engagement details tab model."""
+    """Produce an engagement details tab model."""
     engagement_details_tab = EngagementDetailsTabModel(
         engagement_id=factory_engagement_model().id,
         language_id=engagement_details_tab.get('language_id'),
@@ -882,7 +882,7 @@ def factory_engagement_details_tab_model(
 def factory_engagement_details_tab_translation_model(
     engagement_details_tab_translation: dict = TestEngagementDetailsTabTranslationInfo.translation_info1,
 ):
-    """Produce a engagement details tab translation model."""
+    """Produce an engagement details tab translation model."""
     engagement_details_tab_translation = EngagementDetailsTabTranslationModel(
         engagement_details_tab_id=engagement_details_tab_translation.get('engagement_details_tab_id'),
         language_id=engagement_details_tab_translation.get('language_id'),
