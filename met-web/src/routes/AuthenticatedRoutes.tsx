@@ -87,7 +87,6 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                     return currentParams.engagementId !== nextParams.engagementId;
                 }}
             >
-                <LazyRoute path="old-view" loaderLazy={() => import('engagements/public/view/EngagementLoader')} />
                 <LazyRoute index element={<Navigate to="details/config" />} />
                 <LazyRoute path="details">
                     <LazyRoute index element={<Navigate to="config" />} />

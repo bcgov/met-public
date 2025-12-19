@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import { ContentBlock, ContentState, Editor, EditorProps } from 'react-draft-wysiwyg';
 import { SxProps, Theme } from '@mui/material/styles';
 import { Box } from '@mui/material';
@@ -68,9 +68,9 @@ const setClampStyles = (target: HTMLElement, maxLines: number) => {
 
     // Firefox fallback: clamp by max-height, derived from computed line-height
     const cs = getComputedStyle(target);
-    let lineHeight = parseFloat(cs.lineHeight);
+    let lineHeight = Number.parseFloat(cs.lineHeight);
     if (!Number.isFinite(lineHeight) || lineHeight <= 0) {
-        const fontSize = parseFloat(cs.fontSize) || 16;
+        const fontSize = Number.parseFloat(cs.fontSize) || 16;
         lineHeight = fontSize * 1.4;
     }
     target.style.overflow = 'hidden';
@@ -143,26 +143,27 @@ export const RichTextArea = ({
         '&:hover, &:active, &:focus': { background: 'none' },
     };
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const root = rootRef.current;
         if (!root) return;
         const contentEl = findDraftContentElement(root);
         if (!contentEl) return;
-        const raf = requestAnimationFrame(() => apply(contentEl));
+        apply(contentEl);
+        const raf = globalThis.requestAnimationFrame(() => apply(contentEl));
         const onResize = () => {
             if (!expanded) apply(contentEl);
         };
-        window.addEventListener('resize', onResize);
+        globalThis.addEventListener('resize', onResize);
         let ro: ResizeObserver | null = null;
-        if ('ResizeObserver' in window) {
-            ro = new ResizeObserver(() => {
+        if ('ResizeObserver' in globalThis) {
+            ro = new globalThis.ResizeObserver(() => {
                 if (!expanded) apply(contentEl);
             });
             ro.observe(contentEl);
         }
         return () => {
-            cancelAnimationFrame(raf);
-            window.removeEventListener('resize', onResize);
+            globalThis.cancelAnimationFrame(raf);
+            globalThis.removeEventListener('resize', onResize);
             ro?.disconnect();
         };
     }, [maxLines, expanded, props.editorState]);
