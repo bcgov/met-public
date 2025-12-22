@@ -34,7 +34,7 @@ jaeger-client==4.8.0
 jsonschema-specifications==2023.12.1
 jsonschema==4.22.0
 marshmallow-sqlalchemy==1.0.0
-marshmallow==3.21.3
+marshmallow==3.26.2
 opentracing==2.4.0
 packaging==24.1
 psycopg2-binary==2.9.9
