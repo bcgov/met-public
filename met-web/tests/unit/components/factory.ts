@@ -16,10 +16,10 @@ import { PollWidget, PollAnswer } from 'models/pollWidget';
 import { VideoWidget } from 'models/videoWidget';
 import { TimelineWidget, TimelineEvent, EventStatus } from 'models/timelineWidget';
 import { Tenant } from 'models/tenant';
-import { EngagementContent } from 'models/engagementContent';
 import { UserState } from 'services/userService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { ImageWidget } from 'models/imageWidget';
+import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
 const tenant: Tenant = {
     name: 'Tenant 1',
@@ -42,9 +42,6 @@ const draftEngagement: Engagement = {
     id: 1,
     name: 'Test Engagement',
     created_date: '2022-09-14 20:16:29.846877',
-    rich_content:
-        '{"blocks":[{"key":"29p4m","text":"Test content","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
-    content: 'Test content',
     rich_description:
         '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
     description: 'Test description',
@@ -172,13 +169,6 @@ const mockMap: WidgetMap = {
     marker_label: 'test',
     geojson: '',
     file_name: 'test.zip',
-};
-
-const pollWidgetItem: WidgetItem = {
-    id: 1,
-    widget_id: 1,
-    widget_data_id: 1,
-    sort_index: 1,
 };
 
 const pollWidget: Widget = {
@@ -309,14 +299,14 @@ const engagementSlugData = {
     slug: 'test-engagement-slug',
 };
 
-const engagementContentData: EngagementContent = {
+const engagementDetailsTabData: EngagementDetailsTab = {
     id: 1,
-    title: '',
     engagement_id: 1,
+    label: 'Tab 1',
+    slug: 'tab_1',
+    heading: '',
+    body: '',
     sort_index: 1,
-    is_internal: true,
-    text_content: 'test',
-    json_content: '',
 };
 
 const staffUserState: Partial<UserState> = {
@@ -370,6 +360,6 @@ export {
     mockImage,
     mockTimeLine,
     subscribeWidget,
-    engagementContentData,
+    engagementDetailsTabData,
     staffUserState,
 };

@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/engagement_details_tab_translation",
+    "type": "object",
+    "title": "Engagement Details Tab Translation Schema",
+    "description": "Schema for Engagement Details Tab Translation data structure.",
+    "default": {},
+    "examples": [
+        {
+            "language_id": 1,
+            "engagement_details_tab_id": 1,
+            "label": "Translated Label",
+            "slug": "translated_label",
+            "heading": "This is the Translated Heading",
+            "body": "{\"blocks\":[{\"key\":\"aaa\",\"text\":\"Translated body goes here.\",\"type\":\"unstyled\"}],\"entityMap\":{}}"
+        }
+    ],
+    "required": ["language_id", "engagement_details_tab_id", "label", "slug", "heading", "body"],
+    "properties": {
+        "language_id": {
+            "$id": "#/properties/language_id",
+            "type": "number",
+            "title": "Language ID",
+            "description": "The ID of the language for the translation.",
+            "examples": [1, 5, 25, 934]
+        },
+        "engagement_details_tab_id": {
+            "$id": "#/properties/engagement_details_tab_id",
+            "type": "number",
+            "title": "Engagement Details Tab ID",
+            "description": "The ID of the engagement details tab being translated.",
+            "examples": [1, 5, 25, 934]
+        },
+        "label": {
+            "$id": "#/properties/label",
+            "type": "string",
+            "title": "Label",
+            "description": "The label of this details tab translation.",
+            "examples": ["Brief Overview", "Details", "Opportunities"]
+        },
+        "slug": {
+            "$id": "#/properties/slug",
+            "type": "string",
+            "title": "Slug",
+            "description": "The slug of this details tab translation.",
+            "examples": ["brief_overview", "details", "opportunities"]
+        },
+        "heading": {
+            "$id": "#/properties/heading",
+            "type": "string",
+            "title": "Heading",
+            "description": "The heading of this details tab translation.",
+            "examples": ["A Brief Overview", "Project Details", "Ongoing Opportunities"]
+        },
+        "body": {
+            "$id": "#/properties/body",
+            "type": "string",
+            "title": "Body",
+            "description": "The body of this details tab translation.",
+            "examples": ["{\"blocks\":[{\"key\":\"aaa\",\"text\":\"Text body translation here.\",\"type\":\"unstyled\"}],\"entityMap\":{}}"]
+        }
+    }
+}

@@ -30,7 +30,6 @@ from .comment import API as COMMENT_API
 from .contact import API as CONTACT_API
 from .document import API as DOCUMENT_API
 from .email_verification import API as EMAIL_VERIFICATION_API
-from .engagement_content import API as ENGAGEMENT_CONTENT_API
 from .engagement_details_tab import API as ENGAGEMENT_DETAILS_TAB_API
 from .engagement import API as ENGAGEMENT_API
 from .engagement_metadata import API as ENGAGEMENT_METADATA_API
@@ -66,7 +65,7 @@ from .event_item_translation import API as EVENT_ITEM_TRANSLATION_API
 from .subscribe_item_translation import API as SUBSCRIBE_ITEM_TRANSLATION_API
 from .timeline_event_translation import API as TIMELINE_EVENT_TRANSLATION_API
 from .engagement_translation import API as ENGAGEMENT_TRANSLATION_API
-from .engagement_content_translation import API as ENGAGEMENT_CONTENT_TRANSLATION_API
+from .engagement_details_tab_translation import API as ENGAGEMENT_DETAILS_TAB_TRANSLATION_API
 from .version import API as VERSION_API
 
 __all__ = ('API_BLUEPRINT',)
@@ -89,7 +88,6 @@ API.add_namespace(SUBMISSION_API)
 API.add_namespace(SUBSCRIPTION_API)
 API.add_namespace(COMMENT_API)
 API.add_namespace(EMAIL_VERIFICATION_API)
-API.add_namespace(ENGAGEMENT_CONTENT_API, path='/engagement/<int:engagement_id>/content')
 API.add_namespace(ENGAGEMENT_DETAILS_TAB_API, path='/engagement/<int:engagement_id>/details')
 API.add_namespace(FEEDBACK_API)
 API.add_namespace(WIDGET_API)
@@ -121,5 +119,5 @@ API.add_namespace(EVENT_ITEM_TRANSLATION_API, path='/events/<int:event_id>/trans
 API.add_namespace(SUBSCRIBE_ITEM_TRANSLATION_API, path='/subscribe/<int:widget_subscribe_id>/translations')
 API.add_namespace(TIMELINE_EVENT_TRANSLATION_API, path='/timelines/<int:timeline_id>/translations')
 API.add_namespace(ENGAGEMENT_TRANSLATION_API, path='/engagement/<int:engagement_id>/translations')
-API.add_namespace(ENGAGEMENT_CONTENT_TRANSLATION_API, path='/engagement_content/<int:content_id>/translations')
+API.add_namespace(ENGAGEMENT_DETAILS_TAB_TRANSLATION_API, path='/engagement/<int:engagement_id>/details/translations')
 API.add_namespace(VERSION_API, path='/version')

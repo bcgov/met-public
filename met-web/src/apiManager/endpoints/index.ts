@@ -38,13 +38,6 @@ const Endpoints = {
         GET: `${AppConfig.apiUrl}/slugs/slug_id`,
         GET_ENG_ID: `${AppConfig.apiUrl}/slugs/engagements/engagement_id`,
     },
-    EngagementContent: {
-        GET: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
-        CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/content`,
-        SORT: `${AppConfig.apiUrl}/engagement/engagement_id/content/sort_index`,
-        UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
-        DELETE: `${AppConfig.apiUrl}/engagement/engagement_id/content/content_id`,
-    },
     EngagementDetailsTab: {
         GET_LIST: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
         CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/details`,

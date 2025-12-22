@@ -1,4 +1,4 @@
-import { GenericInputProps as TaxonInputProps } from '../../../../../metadataManagement/types';
+import { GenericInputProps as TaxonInputProps } from './types';
 import { DatePicker, TimePicker, DateTimePicker } from '@mui/x-date-pickers';
 import React, { ReactElement, useState } from 'react';
 import {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Engagement, EngagementMetadata, MetadataTaxon } from '../../../models/engagement';
 import { EngagementStatusBlock } from '../../../models/engagementStatusBlock';
-import { EngagementContent } from 'models/engagementContent';
 
 export interface EngagementContext {
     handleCreateEngagementRequest: (_engagement: EngagementForm) => Promise<Engagement>;
@@ -19,8 +18,6 @@ export interface EngagementContext {
     loadingAuthorization: boolean;
     isNewEngagement: boolean;
     setIsNewEngagement: React.Dispatch<React.SetStateAction<boolean>>;
-    contentTabs: EngagementContent[];
-    setContentTabs: React.Dispatch<React.SetStateAction<EngagementContent[]>>;
 }
 
 export interface Widget {
@@ -37,8 +34,6 @@ export interface EngagementForm {
     description_title: string;
     start_date: string;
     end_date: string;
-    content: string;
-    rich_content: string;
     status_block: EngagementStatusBlock[];
     sponsor_name: string;
 }

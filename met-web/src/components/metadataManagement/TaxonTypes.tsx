@@ -14,11 +14,7 @@ import { TaxonType, GenericInputProps as TaxonInputProps } from './types';
 import * as yup from 'yup';
 import React from 'react';
 import { TextField } from '@mui/material';
-import {
-    TaxonPicker,
-    PickerTypes,
-    taxonSwitch,
-} from 'components/engagement/form/EngagementFormTabs/AdditionalDetails/Metadata/TaxonInputComponents';
+import { TaxonPicker, PickerTypes, taxonSwitch } from 'components/metadataManagement/TaxonInputComponents';
 import { MetadataFilterTypes } from './MetadataFilterTypes';
 
 export const TaxonTypes: { [key: string]: TaxonType } = {

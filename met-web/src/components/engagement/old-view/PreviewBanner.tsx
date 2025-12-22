@@ -23,7 +23,8 @@ export const PreviewBanner = () => {
     const navigate = useNavigate();
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [isUnpublishModalOpen, setIsUnpublishModalOpen] = useState(false);
-    const { content, isEngagementLoading, savedEngagement, updateMockStatus, mockStatus } = useContext(ActionContext);
+    const { detailsTabs, isEngagementLoading, savedEngagement, updateMockStatus, mockStatus } =
+        useContext(ActionContext);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const isDraft = savedEngagement.status_id === EngagementStatus.Draft;
     const engagementId = savedEngagement.id || '';
@@ -132,14 +133,14 @@ export const PreviewBanner = () => {
                                         </Grid>
                                     </Grid>
                                 </When>
-                                <When condition={!content}>
+                                <When condition={!detailsTabs}>
                                     <Grid container direction="row" alignItems="center" item xs={12} lg={10}>
                                         <Grid item>
                                             <IconButton
                                                 sx={{ padding: 0, margin: 0 }}
                                                 color="inherit"
                                                 onClick={() => navigate(`/engagements/${engagementId}/form`)}
-                                                aria-label="no content"
+                                                aria-label="no details tabs"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faFileCircleExclamation}

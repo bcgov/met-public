@@ -12,8 +12,6 @@ export interface PostEngagementRequest {
     description: string;
     rich_description: string;
     description_title: string;
-    content: string;
-    rich_content: string;
     banner_filename?: string;
     status_block?: EngagementStatusBlock[];
     is_internal?: boolean;

@@ -12,6 +12,16 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
     >
         <LazyRoute index ComponentLazy={() => import('components/landing')} />
         <LazyRoute
+            path=":slug/:language"
+            ComponentLazy={() => import('engagements/public/view').then((module) => withLanguageParam(module.default))}
+            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+        />
+        <LazyRoute
+            path=":engagementId/view/:language"
+            ComponentLazy={() => import('engagements/public/view').then((module) => withLanguageParam(module.default))}
+            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+        />
+        <LazyRoute
             path="/surveys/submit/:surveyId/:token/:language"
             id="survey"
             ComponentLazy={() => import('components/survey/submit').then((module) => withLanguageParam(module.default))}
@@ -30,7 +40,9 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
             />
             <LazyRoute
                 path=":engagementId/view/:language"
-                ComponentLazy={() => import('engagements/old-view').then((m) => withLanguageParam(m.default))}
+                ComponentLazy={() =>
+                    import('engagements/public/view').then((module) => withLanguageParam(module.default))
+                }
                 loaderLazy={() => import('engagements/public/view/EngagementLoader')}
             />
         </Route>
@@ -42,7 +54,9 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
             <Route path=":engagementId">
                 <LazyRoute
                     path="view/:language"
-                    ComponentLazy={() => import('engagements/old-view').then((m) => withLanguageParam(m.default))}
+                    ComponentLazy={() =>
+                        import('engagements/public/view').then((module) => withLanguageParam(module.default))
+                    }
                     loaderLazy={() => import('engagements/public/view/EngagementLoader')}
                 />
                 <LazyRoute
@@ -103,7 +117,9 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
             <LazyRoute
                 path=":language"
                 id="single-engagement"
-                ComponentLazy={() => import('engagements/old-view').then((m) => withLanguageParam(m.default))}
+                ComponentLazy={() =>
+                    import('engagements/public/view').then((module) => withLanguageParam(module.default))
+                }
                 loaderLazy={() => import('engagements/public/view/EngagementLoader')}
             />
             <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />

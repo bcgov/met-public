@@ -1,20 +1,20 @@
 import { Params } from 'react-router-dom';
-import { getEngagementContent } from 'services/engagementContentService';
 import { getEngagement } from 'services/engagementService';
 import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagementSlugService';
 import { getWidgets } from 'services/widgetService';
 import { getEngagementMetadata, getMetadataTaxa } from 'services/engagementMetadataService';
 import { Engagement, EngagementMetadata, MetadataTaxon } from 'models/engagement';
 import { Widget } from 'models/widget';
-import { EngagementContent } from 'models/engagementContent';
 import { getTeamMembers } from 'services/membershipService';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
+import { EngagementDetailsTab } from 'models/engagementDetailsTab';
+import { getDetailsTabs } from 'services/engagementDetailsTabService';
 
 export type EngagementLoaderData = {
     engagement: Promise<Engagement>;
     slug: Promise<string>;
     widgets: Promise<Widget[]>;
-    content: Promise<EngagementContent[]>;
+    details: Promise<EngagementDetailsTab[]>;
     metadata: Promise<EngagementMetadata[]>;
     taxa: Promise<MetadataTaxon[]>;
     teamMembers: Promise<EngagementTeamMember[]>;
@@ -29,7 +29,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         ? getEngagementIdBySlug(slugParam).then((response) => getEngagement(response.engagement_id))
         : getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
-    const content = engagement.then((response) => getEngagementContent(response.id));
+    const details = engagement.then((response) => getDetailsTabs(response.id));
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
     const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }).catch(() => []));
@@ -53,7 +53,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         engagement,
         slug,
         widgets,
-        content,
+        details,
         metadata,
         taxa,
         teamMembers,

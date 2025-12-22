@@ -65,7 +65,6 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 actionLazy={() => import('engagements/admin/config/EngagementCreateAction')}
             >
                 <LazyRoute index element={<Navigate to="wizard" />} />
-                <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
                 <LazyRoute
                     path="wizard"
                     handle={{ crumb: () => ({ name: 'New Engagement' }) }}
@@ -88,10 +87,6 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                     return currentParams.engagementId !== nextParams.engagementId;
                 }}
             >
-                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
-                </LazyRoute>
-                <LazyRoute path="old-view" ComponentLazy={() => import('engagements/old-view')} />
                 <LazyRoute index element={<Navigate to="details/config" />} />
                 <LazyRoute path="details">
                     <LazyRoute index element={<Navigate to="config" />} />
@@ -124,7 +119,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     path="banner"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringBanner')}
                                     actionLazy={() =>
-                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                        import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
                                     handle={{ crumb: () => ({ name: 'Hero Banner' }) }}
                                 />
@@ -133,7 +128,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringSummary')}
                                     loaderLazy={() => import('engagements/public/view/EngagementLoader')}
                                     actionLazy={() =>
-                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                        import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
                                     handle={{ crumb: () => ({ name: 'Summary' }) }}
                                 />
@@ -142,7 +137,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringDetails')}
                                     loaderLazy={() => import('engagements/admin/create/authoring/authoringLoader')}
                                     actionLazy={() =>
-                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                        import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
                                     handle={{ crumb: () => ({ name: 'Details' }) }}
                                 />
@@ -150,7 +145,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     path="feedback"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringFeedback')}
                                     actionLazy={() =>
-                                        import('engagements/admin/create/authoring/engagementAuthoringUpdateAction')
+                                        import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
                                     handle={{ crumb: () => ({ name: 'Provide Feedback' }) }}
                                 />
@@ -182,9 +177,6 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                         handle={{ crumb: () => ({ name: 'Configure' }) }}
                     />
                 </LazyRoute>
-                <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
-                    <LazyRoute path="form" ComponentLazy={() => import('engagements/form')} />
-                </LazyRoute>
                 <LazyRoute
                     path="comments/:dashboardType"
                     ComponentLazy={() => import('engagements/dashboard/comment')}
@@ -192,7 +184,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 <LazyRoute path="dashboard/:dashboardType" ComponentLazy={() => import('components/publicDashboard')} />
             </LazyRoute>
             <LazyRoute path=":slug">
-                <LazyRoute index ComponentLazy={() => import('engagements/old-view')} />
+                <LazyRoute index loaderLazy={() => import('engagements/public/view/EngagementLoader')} />
                 <LazyRoute
                     path="comments/:dashboardType"
                     ComponentLazy={() => import('engagements/dashboard/comment')}

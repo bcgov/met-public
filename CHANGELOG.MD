@@ -1,3 +1,15 @@
+## December 18, 2025
+
+- **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)
+  - Remade authoring details public component with aria labels and new design
+  - Modified RichTextArea component to include text clamping with custom line value
+  - Removed all references to EngagementContent and EngagementContentTranslation in API and front end
+  - Added a translation table and API functionality for details tab translations
+  - Made minor improvements to admin forms
+    - Navigate away modal on AuthoringBanner component
+    - Improved default state on AuthoringDetails and AuthoringSummary components
+    - Implemented scrolling and additional error for details tabs
+
 ## December 11, 2025
 
 - **Feature** Capture Patroni cluster in Helm charts [🎟️ DESENG-925](https://citz-gdx.atlassian.net/browse/DESENG-925)
