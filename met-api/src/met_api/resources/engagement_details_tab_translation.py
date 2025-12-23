@@ -37,7 +37,7 @@ class EngagementDetailsTabTranslationsByLanguage(Resource):
             )
             return jsonify(translations), HTTPStatus.OK
         except (KeyError, ValueError) as err:
-            return {'message': str(err)}, HTTPStatus.INTERNAL_SERVER_ERROR
+            return {'message': str(err)}, HTTPStatus.BAD_REQUEST
 
     @staticmethod
     @cross_origin(origins=allowedorigins())
@@ -60,14 +60,14 @@ class EngagementDetailsTabTranslationsByLanguage(Resource):
                         },
                         HTTPStatus.BAD_REQUEST,
                     )
-                created_translations = (
-                    EngagementDetailsTabTranslationService()
-                    .create_tabs(
-                        engagement_id,
-                        language_id,
-                        payload,
-                    )
+            created_translations = (
+                EngagementDetailsTabTranslationService()
+                .create_translations(
+                    engagement_id,
+                    language_id,
+                    payload,
                 )
+            )
             return jsonify(created_translations), HTTPStatus.CREATED
         except ValidationError as err:
             return {'message': err.messages}, HTTPStatus.BAD_REQUEST
@@ -93,13 +93,13 @@ class EngagementDetailsTabTranslationsByLanguage(Resource):
                         },
                         HTTPStatus.BAD_REQUEST,
                     )
-            EngagementDetailsTabTranslationService().sync_translations(
+            updated_translations = EngagementDetailsTabTranslationService().sync_translations(
                 engagement_id,
                 language_id,
                 payload,
                 user_id=TokenInfo.get_id(),
             )
-            return {'status': 'success'}, HTTPStatus.OK
+            return jsonify(updated_translations), HTTPStatus.OK
         except BusinessException as err:
             return {'status': 'failure', 'message': err.error}, HTTPStatus.BAD_REQUEST
         except ValidationError as err:

@@ -4,7 +4,7 @@ Manages the Engagement Details Tab Translations.
 """
 
 from __future__ import annotations
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import UniqueConstraint
 from .base_model import BaseModel
@@ -80,7 +80,7 @@ class EngagementDetailsTabTranslation(BaseModel):
         if not translation:
             return None
 
-        translation_data['updated_date'] = datetime.now(timezone.utc)
+        translation_data['updated_date'] = datetime.now()
         for k, v in translation_data.items():
             setattr(translation, k, v)
         db.session.commit()
@@ -96,11 +96,15 @@ class EngagementDetailsTabTranslation(BaseModel):
     @classmethod
     def delete_details_tab_translation(cls, engagement_id: int, translation_id: int) -> int:
         """Delete a single details tab translation by engagement ID and translation ID."""
-        q = (
+        translation = (
             db.session.query(cls)
             .join(EngagementDetailsTab, EngagementDetailsTab.id == cls.engagement_details_tab_id)
             .filter(cls.id == translation_id, EngagementDetailsTab.engagement_id == engagement_id)
+            .first()
         )
-        deleted_count = q.delete(synchronize_session=False)
+        if not translation:
+            return False
+
+        db.session.delete(translation)          # object-level delete (unit of work)
         db.session.commit()
-        return deleted_count
+        return True
