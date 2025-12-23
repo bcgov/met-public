@@ -5,7 +5,7 @@ Manages the Engagement Details Tab Translations.
 
 from __future__ import annotations
 from datetime import datetime
-from typing import Optional
+from typing import Iterable, Optional
 from sqlalchemy import UniqueConstraint
 from .base_model import BaseModel
 from .db import db
@@ -88,7 +88,7 @@ class EngagementDetailsTabTranslation(BaseModel):
         return translation
 
     @classmethod
-    def delete_translations_by_ids(cls, translation_ids: set) -> None:
+    def delete_translations_by_ids(cls, translation_ids: Iterable[int]) -> None:
         """Delete multiple translations by ID."""
         db.session.query(cls).filter(cls.id.in_(translation_ids)).delete(synchronize_session=False)
         db.session.commit()

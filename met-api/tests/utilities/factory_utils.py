@@ -898,5 +898,3 @@ def factory_engagement_details_tab_translation_model(
     )
     engagement_details_tab_translation.save()
     return engagement_details_tab_translation
-    engagement_details_tab_translation.save()
-    return engagement_details_tab_translation
