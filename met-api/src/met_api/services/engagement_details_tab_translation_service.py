@@ -1,6 +1,6 @@
 """Service for engagement details tab translation management."""
 
-from datetime import datetime, timezone
+from datetime import datetime
 from http import HTTPStatus
 
 from met_api.constants.membership_type import MembershipType
@@ -23,7 +23,7 @@ class EngagementDetailsTabTranslationService:
         return tabs_schema.dump(tab_records)
 
     @staticmethod
-    def create_tabs(engagement_id: int, language_id: int, translations_data: list) -> list[dict]:
+    def create_translations(engagement_id: int, language_id: int, translations_data: list) -> list[dict]:
         """Create one or more engagement details tab translations and return the persisted records."""
         EngagementDetailsTabTranslationService._authorize(engagement_id)
 
@@ -34,8 +34,9 @@ class EngagementDetailsTabTranslationService:
 
         inserts = []
         for td in translations_data:
-            EngagementDetailsTabTranslationService._validate_translation_data(td)
             td['language_id'] = language_id
+            td['created_date'] = datetime.now()
+            EngagementDetailsTabTranslationService._validate_translation_data(td)
             inserts.append(td)
         EDTTranslationModel.bulk_insert_details_tab_translations(inserts)
         created_records = EDTTranslationModel.find_by_engagement_and_language(engagement_id, language_id)
@@ -54,13 +55,14 @@ class EngagementDetailsTabTranslationService:
         updates = [t for t in translations_data if t.get('id') in existing_ids]
         for u in updates:
             u['updated_by'] = user_id
-            u['updated_date'] = datetime.now(timezone.utc)
+            u['updated_date'] = datetime.now()
             u['language_id'] = language_id
 
         inserts = [t for t in translations_data if not t.get('id') or t.get('id') == -1]
         for i in inserts:
             i.pop('id', None)
             i['language_id'] = language_id
+            i['created_date'] = datetime.now()
 
         to_delete = existing_ids - incoming_ids
 

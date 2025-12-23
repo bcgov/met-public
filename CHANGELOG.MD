@@ -1,3 +1,11 @@
+## December 22, 2025
+
+- **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)
+  - Made some small updates to the details tab translation model, resource, and service
+  - Updated failing API pytest unit tests for details tab translation
+  - Skipped some old Jest unit tests that rely on the old form
+  - Removed outdated Jest user input tab test from old form
+
 ## December 18, 2025
 
 - **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)

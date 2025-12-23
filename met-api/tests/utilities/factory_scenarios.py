@@ -191,10 +191,6 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
-        'content': 'Content Sample',
-        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-        \"type\":\"unstyled\",\"depth\":0,\
-        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description_title': 'My Test Description Title',
     }
 
@@ -915,8 +911,8 @@ class TestEngagementDetailsTabsInfo(dict, Enum):
     """Test scenarios of engagement details tabs."""
 
     details_tab1 = {
-        'id': 0,
-        'engagement_id': 0,
+        'id': 1,
+        'engagement_id': 1,
         'heading': 'This is a heading',
         'label': 'Tab Label',
         'slug': 'tab_label',
@@ -926,8 +922,8 @@ class TestEngagementDetailsTabsInfo(dict, Enum):
             "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
     details_tab2 = {
-        'id': 1,
-        'engagement_id': 0,
+        'id': 2,
+        'engagement_id': 1,
         'heading': 'This is another heading',
         'label': 'Tab Label 2',
         'slug': 'tab_label_2',
@@ -1035,8 +1031,8 @@ class TestEngagementDetailsTabTranslationInfo(dict, Enum):
     """Test scenarios of engagement details tab translation content."""
 
     translation_info1 = {
-        'engagement_details_tab_id': 5,
-        'language_id': 2,
+        'engagement_details_tab_id': 1,
+        'language_id': 49,
         'label': fake.text(max_nb_chars=20),
         'slug': fake.text(max_nb_chars=20),
         'heading': fake.text(max_nb_chars=60),

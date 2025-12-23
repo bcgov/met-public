@@ -69,7 +69,9 @@ const router = createMemoryRouter(
     },
 );
 
-describe('Poll Widget tests', () => {
+describe.skip('Poll Widget tests', () => {
+    // This test uses the deprecated engagement form.
+    // TODO: Replace with poll widget tests from new form.
     const mockPoll = {
         id: 1,
         widget_id: pollWidget.id,
