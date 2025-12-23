@@ -33,6 +33,9 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_details_tab import EngagementDetailsTab as EngagementDetailsTabModel
 from met_api.models.engagement_details_tab_translation import \
     EngagementDetailsTabTranslation as EngagementDetailsTabTranslationModel
+from met_api.models.engagement_details_tab import EngagementDetailsTab as EngagementDetailsTabModel
+from met_api.models.engagement_details_tab_translation import \
+    EngagementDetailsTabTranslation as EngagementDetailsTabTranslationModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
@@ -71,6 +74,7 @@ from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeM
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from tests.utilities.factory_scenarios import (
+    TestCommentInfo, TestEngagementDetailsTabsInfo, TestEngagementDetailsTabTranslationInfo, TestEngagementInfo,
     TestCommentInfo, TestEngagementDetailsTabsInfo, TestEngagementDetailsTabTranslationInfo, TestEngagementInfo,
     TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
     TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo,
@@ -166,6 +170,7 @@ def factory_email_verification(survey_id, type=None, submission_id=None):
 
 
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
+    """Produce an engagement model."""
     """Produce an engagement model."""
     engagement = EngagementModel(
         name=name if name else fake.name(),
@@ -891,5 +896,7 @@ def factory_engagement_details_tab_translation_model(
         heading=engagement_details_tab_translation.get('heading'),
         body=engagement_details_tab_translation.get('body'),
     )
+    engagement_details_tab_translation.save()
+    return engagement_details_tab_translation
     engagement_details_tab_translation.save()
     return engagement_details_tab_translation

@@ -909,6 +909,8 @@ class TestPollResponseInfo(dict, Enum):
 
 class TestEngagementDetailsTabsInfo(dict, Enum):
     """Test scenarios of engagement details tabs."""
+class TestEngagementDetailsTabsInfo(dict, Enum):
+    """Test scenarios of engagement details tabs."""
 
     details_tab1 = {
         'id': 1,
