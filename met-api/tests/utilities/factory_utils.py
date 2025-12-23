@@ -33,9 +33,6 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_details_tab import EngagementDetailsTab as EngagementDetailsTabModel
 from met_api.models.engagement_details_tab_translation import \
     EngagementDetailsTabTranslation as EngagementDetailsTabTranslationModel
-from met_api.models.engagement_details_tab import EngagementDetailsTab as EngagementDetailsTabModel
-from met_api.models.engagement_details_tab_translation import \
-    EngagementDetailsTabTranslation as EngagementDetailsTabTranslationModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
@@ -74,7 +71,6 @@ from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeM
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementDetailsTabsInfo, TestEngagementDetailsTabTranslationInfo, TestEngagementInfo,
     TestCommentInfo, TestEngagementDetailsTabsInfo, TestEngagementDetailsTabTranslationInfo, TestEngagementInfo,
     TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
     TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo,
