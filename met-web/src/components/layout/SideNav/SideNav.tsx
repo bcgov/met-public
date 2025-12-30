@@ -62,7 +62,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
 
     const renderListItem = (route: Route, itemType: string, key: number) => {
         return (
-            <>
+            <React.Fragment key={key}>
                 <When condition={'Tenant Admin' === route.name}>
                     <Divider sx={{ backgroundColor: Palette.primary.light, height: '0.2rem' }} />
                 </When>
@@ -119,7 +119,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                 <When condition={'User Admin' === route.name}>
                     <UserGuideNav />
                 </When>
-            </>
+            </React.Fragment>
         );
     };
 

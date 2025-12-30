@@ -248,7 +248,8 @@ export const TaxonEditor = () => {
                                                 />
                                             );
                                         })}
-                                    {isLoading && [...Array(8)].map(() => <TaxonCardSkeleton />)}
+                                    {isLoading &&
+                                        [...Array(8)].map((_, i) => <TaxonCardSkeleton key={`skeleton-${i}`} />)}
                                     {!isLoading && orderedMetadataTaxa.length === 0 && (
                                         <>
                                             <Typography variant="h6" color="textSecondary" align="center">

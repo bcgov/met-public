@@ -73,13 +73,11 @@ export const EngagementDescription = () => {
                                         <Header2 decorated id="description-header" sx={{ mb: 1 }}>
                                             {engagement.description_title}
                                         </Header2>
-                                        <BodyText>
-                                            <RichTextArea
-                                                toolbarHidden
-                                                readOnly
-                                                editorState={getEditorStateFromRaw(engagement.rich_description)}
-                                            />
-                                        </BodyText>
+                                        <RichTextArea
+                                            toolbarHidden
+                                            readOnly
+                                            editorState={getEditorStateFromRaw(engagement.rich_description)}
+                                        />
                                     </>
                                 )}
                             </Await>

@@ -168,6 +168,7 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                         <Button
                             disabled={!isDirty || isSubmitting}
                             type="submit"
+                            form="authoring-form"
                             onClick={() => setValue('request_type', 'update')}
                             sx={{
                                 ...buttonStyles,
@@ -179,6 +180,7 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                         <Button
                             disabled={!isDirty || isSubmitting}
                             type="submit"
+                            form="authoring-form"
                             onClick={() => setValue('request_type', 'preview')}
                             sx={{
                                 ...buttonStyles,

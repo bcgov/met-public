@@ -79,7 +79,7 @@ const authoringTemplateSchema = yup.object({
         }),
     closed_message: yup.string(),
     _closed_message_plain: yup.string().max(150, '"Closed" state message must be 150 characters or less'),
-    view_results_cta: yup.string().max(20, '"View Results" state CTA must be 20 characters or less'),
+    view_results_cta: yup.string().nullable().max(20, '"View Results" state CTA must be 20 characters or less'),
     view_results_link_type: yup.string().required('View results link type is required').oneOf(['internal', 'external']),
     view_results_section_link: yup
         .string()

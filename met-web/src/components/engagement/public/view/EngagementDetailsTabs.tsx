@@ -35,9 +35,6 @@ export const EngagementDetailsTabs = () => {
     const [tabs, setTabs] = useState<FormDetailsTabWithWidget[]>([]);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'), { noSsr: true });
 
-    // const tabs = details.then((tabs) => {
-    //     return parseAndSortTabs(tabs);
-    // });
     useEffect(() => {
         details.then((d) => {
             setTabs(parseAndSortTabs(d));
@@ -55,12 +52,11 @@ export const EngagementDetailsTabs = () => {
     };
 
     const tabListStyles = {
-        mb: isMobile ? 0 : '1rem',
+        mb: { xs: 0, md: '1rem' },
         width: '100%',
         '& .MuiTabs-scroller': {
-            width: isMobile ? '100%' : 'max-content',
-            pb: isMobile ? 0 : '1rem',
-
+            width: { xs: '100%', md: 'max-content' },
+            pb: { xs: 0, md: '1rem' },
             '.MuiTabs-indicator': {
                 display: 'flex',
                 justifyContent: 'center',
@@ -72,29 +68,29 @@ export const EngagementDetailsTabs = () => {
         },
         '& .MuiTabs-flexContainer': {
             justifyContent: 'flex-start',
-            width: isMobile ? '100%' : 'max-content',
-            flexDirection: isMobile ? 'column' : 'row',
+            width: { xs: '100%', md: 'max-content' },
+            flexDirection: { xs: 'column', md: 'row' },
         },
     };
 
     const tabStyles = {
-        width: isMobile ? '100%' : 'max-content',
+        width: { xs: '100%', md: 'max-content' },
         maxWidth: '100%',
         color: colors.type.regular.primary,
-        background: isMobile ? colors.surface.gray[20] : 'transparent',
+        background: { xs: colors.surface.gray[20], md: 'transparent' },
         minWidth: '3rem',
         fontSize: '14px',
         fontWeight: 'normal',
-        mr: isMobile ? 0 : '2rem',
-        padding: isMobile ? '0.75rem' : '1.25rem 0',
+        mr: { xs: 0, md: '2rem' },
+        padding: { xs: '0.75rem', md: '1.25rem 0' },
         mt: '0.75rem',
         '&:first-of-type': {
-            mt: isMobile ? '1rem' : '0.75rem',
+            mt: { xs: '1rem', md: '0.75rem' },
         },
-        alignItems: isMobile ? 'flex-start' : 'center',
+        alignItems: { xs: 'flex-start', md: 'center' },
         '&.Mui-selected': {
             fontWeight: 'bold',
-            background: isMobile ? colors.surface.blue['20'] : 'transparent',
+            background: { xs: colors.surface.blue['20'], md: 'transparent' },
         },
     };
 
@@ -102,7 +98,7 @@ export const EngagementDetailsTabs = () => {
 
     const tabLayoutStyles = {
         display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
+        flexDirection: { xs: 'column', md: 'row' },
         width: '100%',
         gap: '3rem',
     };
@@ -115,8 +111,8 @@ export const EngagementDetailsTabs = () => {
 
     const widgetContainerStyles = {
         display: 'flex',
-        flexBasis: isMobile ? '100%' : '30%',
-        mt: isMobile ? 0 : '1rem',
+        flexBasis: { xs: '100%', md: '30%' },
+        mt: { xs: 0, md: '1rem' },
         alignItems: 'center',
         justifyContent: 'center',
         border: '2px dashed gray',

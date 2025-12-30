@@ -62,7 +62,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
             marginBottom: '1rem',
         };
         return (
-            <>
+            <React.Fragment key={key}>
                 <When condition={'Hero Banner' === route.name || 'View Results' === route.name}>
                     <span style={navLabelTextStyles}>
                         {'Hero Banner' === route.name ? 'Required' : 'Optional'} Sections
@@ -132,7 +132,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                         </When>
                     </ListItemButton>
                 </ListItem>
-            </>
+            </React.Fragment>
         );
     };
 
@@ -170,12 +170,12 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                 <br />
                 {/* All other menu items */}
                 {allowedRoutes.map(
-                    (route, index) =>
-                        0 !== index &&
+                    (route, key) =>
+                        0 !== key &&
                         renderListItem(
                             route,
                             currentRoutePath === route.path ? 'selected' : 'other',
-                            index,
+                            key,
                             Number(engagementId),
                         ),
                 )}
@@ -197,7 +197,6 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
             const footerClearance =
                 footerBox.top - (document.querySelector('#authoring-sidenav-drawer')?.clientHeight ?? 0);
             setSideNavOffset(footerClearance);
-            console.log('sideNavOffset set to:', footerClearance);
         };
         globalThis.addEventListener('scroll', handleScroll, { passive: true });
         globalThis.addEventListener('resize', handleScroll, { passive: true });

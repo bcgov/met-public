@@ -118,6 +118,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                 <LazyRoute
                                     path="banner"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringBanner')}
+                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
                                     actionLazy={() =>
                                         import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }

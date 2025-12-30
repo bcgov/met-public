@@ -84,7 +84,7 @@ const AuthoringTemplate = () => {
                 </Suspense>
             </Header2>
 
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} id="authoring-form">
                 <Suspense>
                     <Await resolve={engagement}>
                         {(engagement: Engagement) => (

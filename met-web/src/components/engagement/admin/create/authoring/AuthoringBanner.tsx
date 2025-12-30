@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
-import { useOutletContext } from 'react-router-dom';
+import { Await, useLoaderData, useOutletContext } from 'react-router-dom';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
@@ -8,7 +8,7 @@ import { BodyText } from 'components/common/Typography';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
-import { EngagementViewSections } from 'components/engagement/public/view';
+import { EngagementLoaderData, EngagementViewSections } from 'components/engagement/public/view';
 import { Controller, useFormContext } from 'react-hook-form';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
@@ -17,13 +17,14 @@ import { convertToRaw, EditorState } from 'draft-js';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { ErrorMessage } from 'components/common/Typography/Body';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
+import { Engagement } from 'models/engagement';
 
 const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
 const AuthoringBanner = () => {
     // Access the form functions and values from the authoring template
-    const { engagement, setDefaultValues, pageName }: AuthoringTemplateOutletContext = useOutletContext();
+    const { setDefaultValues, pageName, fetcher }: AuthoringTemplateOutletContext = useOutletContext();
     const {
         setValue,
         getValues,
@@ -32,22 +33,10 @@ const AuthoringBanner = () => {
         control,
         formState: { errors, isDirty, isSubmitting },
     } = useFormContext<EngagementUpdateData>();
+    const { engagement } = useLoaderData() as EngagementLoaderData;
 
-    const open_section = engagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.OPEN);
-    const closed_section = engagement.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.CLOSED);
-    const upcoming_section = engagement.status_block.find(
-        (block) => block.survey_status === SUBMISSION_STATUS.UPCOMING,
-    );
-    const view_results_section = engagement.status_block.find(
-        (block) => block.survey_status === SUBMISSION_STATUS.VIEW_RESULTS,
-    );
-
-    const [upcomingEditorState, setUpcomingEditorState] = useState<EditorState>(
-        getEditorStateFromRaw(upcoming_section?.block_text || ''),
-    );
-    const [closedEditorState, setClosedEditorState] = useState<EditorState>(
-        getEditorStateFromRaw(closed_section?.block_text || ''),
-    );
+    const [upcomingEditorState, setUpcomingEditorState] = useState<EditorState>(getEditorStateFromRaw(''));
+    const [closedEditorState, setClosedEditorState] = useState<EditorState>(getEditorStateFromRaw(''));
     const hasUnsavedWork = isDirty && !isSubmitting;
 
     const handleAddBannerImage = (files: File[]) => {
@@ -60,26 +49,44 @@ const AuthoringBanner = () => {
     };
 
     useEffect(() => {
-        reset(defaultValuesObject);
-        setValue('form_source', pageName);
-        setValue('id', Number(engagement.id));
-        setValue('name', engagement.name);
-        setValue('image_url', engagement.banner_url);
-        setValue('eyebrow', engagement.sponsor_name);
-        setValue('open_cta', open_section?.button_text);
-        setValue('open_cta_link_type', open_section?.link_type || 'internal');
-        setValue('open_section_link', open_section?.internal_link);
-        setValue('open_external_link', open_section?.external_link);
-        setValue('view_results_cta', view_results_section?.button_text);
-        setValue('view_results_link_type', view_results_section?.link_type || 'internal');
-        setValue('view_results_section_link', view_results_section?.internal_link);
-        setValue('view_results_external_link', view_results_section?.external_link);
-        setValue('closed_message', closed_section?.block_text);
-        setValue('upcoming_message', upcoming_section?.block_text);
-        setUpcomingEditorState(getEditorStateFromRaw(upcoming_section?.block_text || ''));
-        setClosedEditorState(getEditorStateFromRaw(closed_section?.block_text || ''));
-        setDefaultValues(getValues());
+        engagement.then((eng) => {
+            reset(defaultValuesObject);
+            setValue('form_source', pageName);
+            setValue('id', Number(eng.id));
+            setValue('name', eng.name);
+            setValue('image_url', eng.banner_url);
+            setValue('eyebrow', eng.sponsor_name);
+            const openSection = eng.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.OPEN);
+            const closedSection = eng.status_block.find((block) => block.survey_status === SUBMISSION_STATUS.CLOSED);
+            const upcomingSection = eng.status_block.find(
+                (block) => block.survey_status === SUBMISSION_STATUS.UPCOMING,
+            );
+            const viewResultsSection = eng.status_block.find(
+                (block) => block.survey_status === SUBMISSION_STATUS.VIEW_RESULTS,
+            );
+            setValue('open_cta', openSection?.button_text);
+            setValue('open_cta_link_type', openSection?.link_type || 'internal');
+            setValue('open_section_link', openSection?.internal_link);
+            setValue('open_external_link', openSection?.external_link);
+            setValue('view_results_cta', viewResultsSection?.button_text);
+            setValue('view_results_link_type', viewResultsSection?.link_type || 'internal');
+            setValue('view_results_section_link', viewResultsSection?.internal_link);
+            setValue('view_results_external_link', viewResultsSection?.external_link);
+            setValue('closed_message', closedSection?.block_text);
+            setValue('upcoming_message', upcomingSection?.block_text);
+            setUpcomingEditorState(getEditorStateFromRaw(upcomingSection?.block_text || ''));
+            setClosedEditorState(getEditorStateFromRaw(closedSection?.block_text || ''));
+            setDefaultValues(getValues());
+            reset(getValues());
+        });
     }, [engagement]);
+
+    // Set current values to default state after saving form
+    useEffect(() => {
+        const newDefaults = getValues();
+        setDefaultValues(newDefaults);
+        reset(newDefaults);
+    }, [fetcher.data]);
 
     const updateEditorState = (editorState: EditorState, field: 'upcoming_message' | 'closed_message') => {
         const stateSetters = {
@@ -113,7 +120,6 @@ const AuthoringBanner = () => {
                     <Controller
                         name="name"
                         control={control}
-                        defaultValue={engagement.name}
                         render={({ field }) => (
                             <TextField
                                 {...field}
@@ -139,7 +145,6 @@ const AuthoringBanner = () => {
                     <Controller
                         name="eyebrow"
                         control={control}
-                        defaultValue={engagement.sponsor_name}
                         render={({ field }) => (
                             <TextField
                                 {...field}
@@ -164,15 +169,21 @@ const AuthoringBanner = () => {
                     }
                 >
                     <ErrorMessage error={errors.image_url?.message} />
-                    <ImageUpload
-                        margin={4}
-                        data-testid="engagement-form/image-upload"
-                        handleAddFile={handleAddBannerImage}
-                        savedImageUrl={engagement.banner_url}
-                        savedImageName={engagement.banner_filename}
-                        height={ENGAGEMENT_UPLOADER_HEIGHT}
-                        cropAspectRatio={ENGAGEMENT_CROPPER_ASPECT_RATIO}
-                    />
+                    <Suspense>
+                        <Await resolve={engagement}>
+                            {(eng: Engagement) => (
+                                <ImageUpload
+                                    margin={4}
+                                    data-testid="engagement-form/image-upload"
+                                    handleAddFile={handleAddBannerImage}
+                                    savedImageUrl={eng.banner_url}
+                                    savedImageName={eng.banner_filename}
+                                    height={ENGAGEMENT_UPLOADER_HEIGHT}
+                                    cropAspectRatio={ENGAGEMENT_CROPPER_ASPECT_RATIO}
+                                />
+                            )}
+                        </Await>
+                    </Suspense>
                 </AuthoringFormSection>
 
                 <Grid item sx={{ mt: '1rem' }}>
@@ -220,7 +231,6 @@ const AuthoringBanner = () => {
                     <Controller
                         name="open_cta"
                         control={control}
-                        defaultValue={open_section?.button_text}
                         render={({ field }) => (
                             <TextField
                                 {...field}
@@ -236,7 +246,6 @@ const AuthoringBanner = () => {
                     <Controller
                         name="open_cta_link_type"
                         control={control}
-                        defaultValue={open_section?.link_type}
                         render={({ field }) => (
                             <RadioGroup row id="cta_link_radio" {...field}>
                                 <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
@@ -249,7 +258,6 @@ const AuthoringBanner = () => {
                                     <Controller
                                         name="open_section_link"
                                         control={control}
-                                        defaultValue={open_section?.internal_link}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
@@ -279,7 +287,6 @@ const AuthoringBanner = () => {
                                         name="open_external_link"
                                         aria-label="External URL"
                                         control={control}
-                                        defaultValue={open_section?.external_link}
                                         render={({ field }) => (
                                             <TextField
                                                 {...field}
@@ -334,11 +341,11 @@ const AuthoringBanner = () => {
                     <Controller
                         name="view_results_cta"
                         control={control}
-                        defaultValue={view_results_section?.block_text}
                         render={({ field }) => (
                             <TextField
                                 {...field}
                                 id="cta_button_text"
+                                value={field.value || undefined}
                                 title="Button (Primary CTA) Text"
                                 counter
                                 maxLength={20}
@@ -349,7 +356,6 @@ const AuthoringBanner = () => {
                     <Controller
                         name="view_results_link_type"
                         control={control}
-                        defaultValue={view_results_section?.link_type}
                         render={({ field }) => (
                             <RadioGroup row id="cta_view_results_radio" defaultValue="internal" {...field}>
                                 <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
@@ -362,7 +368,6 @@ const AuthoringBanner = () => {
                                     <Controller
                                         name="view_results_section_link"
                                         control={control}
-                                        defaultValue={view_results_section?.internal_link}
                                         render={({ field }) => (
                                             <Select
                                                 {...field}
@@ -392,7 +397,6 @@ const AuthoringBanner = () => {
                                     <Controller
                                         name="view_results_external_link"
                                         control={control}
-                                        defaultValue={view_results_section?.external_link}
                                         render={({ field }) => (
                                             <TextField
                                                 {...field}

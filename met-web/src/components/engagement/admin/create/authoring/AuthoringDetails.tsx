@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Grid, Modal, Radio, RadioGroup, Tab } from '@mui/material';
+import { FormControlLabel, Grid2, Modal, Radio, RadioGroup, Tab } from '@mui/material';
 import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -62,7 +62,7 @@ const AuthoringDetails = () => {
 
     // Scroll to the tab label errors when there are tab errors, so they are obvious to the user
     useEffect(() => {
-        if (Array.isArray(errors?.details_tabs) && errors?.details_tabs?.length > 0) {
+        if (Array.isArray(errors?.details_tabs) && errors.details_tabs.length > 0) {
             scrollToTabErrors();
         }
     }, [errors.details_tabs]);
@@ -288,9 +288,12 @@ const AuthoringDetails = () => {
         fontSize: '0.9rem',
         height: '65px',
         display: 'flex',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
         width: '90px',
+        color: colors.button.default.shade,
+        cursor: 'pointer',
+        minWidth: '100px',
     };
 
     const tabPanelStyles = {
@@ -369,8 +372,8 @@ const AuthoringDetails = () => {
             {/* Tabs and form */}
             <AuthoringFormContainer sx={authoringFormContainerStyles}>
                 {/* Tabs mode radio selector */}
-                {tabsEnabled !== undefined && (
-                    <Grid item sx={{ margin: '1rem 0' }}>
+                {tabsEnabled && (
+                    <Grid2 sx={{ margin: '1rem 0' }}>
                         <FormDescriptionText style={formDescriptionTextStyles}>
                             {'In the Details Section of your engagement, you have the option to display your content in a ' +
                                 'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
@@ -405,12 +408,12 @@ const AuthoringDetails = () => {
                                 style={radioStyles}
                             />
                         </RadioGroup>
-                    </Grid>
+                    </Grid2>
                 )}
 
                 {/* Tab instructions */}
                 {tabsEnabled && (
-                    <Grid item sx={{ margin: '1rem 0' }}>
+                    <Grid2 sx={{ margin: '1rem 0' }}>
                         <div ref={tabErrorsRef}></div>
                         <Header3 sx={heading3Styles}>Tabs Configuration</Header3>
                         <FormDescriptionText style={formDescriptionTextStyles}>
@@ -418,16 +421,18 @@ const AuthoringDetails = () => {
                                 'engagement, or it is important for them to understand who, within BC Gov, is ' +
                                 'requesting feedback, you may wish to add two to five words of eyebrow text.'}
                         </FormDescriptionText>
-                    </Grid>
+                    </Grid2>
                 )}
 
                 {currentTab && (
-                    <Grid item>
+                    <Grid2>
                         <TabContext value={currentTab}>
                             {/* Tab labels */}
                             <ErrorMessage
                                 error={
-                                    Array.isArray(errors.details_tabs) && errors?.details_tabs?.length > 0
+                                    errors?.details_tabs &&
+                                    Array.isArray(errors.details_tabs) &&
+                                    errors.details_tabs.length > 0
                                         ? 'Your tabs contain errors. Please fix the tabs highlighted in red.'
                                         : ''
                                 }
@@ -435,8 +440,12 @@ const AuthoringDetails = () => {
                             <TabList
                                 sx={tabListStyles}
                                 TabIndicatorProps={{ style: { display: 'none' } }}
-                                onChange={(event: React.SyntheticEvent, value: number) => {
-                                    setCurrentTab(String(value));
+                                onChange={(_, value: string) => {
+                                    if (value === 'add') {
+                                        addTab();
+                                    } else {
+                                        setCurrentTab(String(value));
+                                    }
                                 }}
                             >
                                 {authoringDetailsTabs.map((value, key) => (
@@ -476,18 +485,19 @@ const AuthoringDetails = () => {
                                         }}
                                     ></Tab>
                                 ))}
-                                <Button
-                                    sx={addTabButtonStyles}
-                                    onClick={addTab}
+
+                                <Tab
+                                    value="add"
+                                    label="+ Add Tab"
                                     disabled={authoringDetailsTabs.length > 9}
-                                >
-                                    + Add Tab
-                                </Button>
+                                    disableRipple
+                                    sx={{ ...addTabButtonStyles }}
+                                />
                             </TabList>
 
                             {/* Tab contents */}
                             {authoringDetailsTabs.map((tab, key) => (
-                                <TabPanel sx={tabPanelStyles} value={String(key)} key={tab.id}>
+                                <TabPanel sx={tabPanelStyles} value={String(key)} key={key}>
                                     <AuthoringFormSection
                                         name={`Tab ${key + 1} Label`}
                                         required={true}
@@ -519,7 +529,7 @@ const AuthoringDetails = () => {
                                         />
                                     </AuthoringFormSection>
 
-                                    <Grid item sx={{ margin: '1rem 0' }}>
+                                    <Grid2 sx={{ margin: '1rem 0' }}>
                                         <Header3 sx={heading3Styles}>Primary Content (Required)</Header3>
                                         <FormDescriptionText style={formDescriptionTextStyles}>
                                             {'Primary content will display on the left two thirds of the page on large screens ' +
@@ -527,7 +537,7 @@ const AuthoringDetails = () => {
                                                 'below, on small screens, your primary content will display first (on top) followed ' +
                                                 'by your supporting content (underneath).'}
                                         </FormDescriptionText>
-                                    </Grid>
+                                    </Grid2>
 
                                     <AuthoringFormSection
                                         name="Heading"
@@ -549,7 +559,7 @@ const AuthoringDetails = () => {
                                                     counter
                                                     maxLength={60}
                                                     placeholder="Heading"
-                                                    error={errors.details_tabs?.[key]?.heading?.message ?? ''}
+                                                    error={errors?.details_tabs?.[key]?.heading?.message ?? ''}
                                                 />
                                             )}
                                         />
@@ -566,7 +576,7 @@ const AuthoringDetails = () => {
                                                 'In this case, you will want to ensure that the most important body copy is first so ' +
                                                 'that your audience will see it even if they do not interact with the Read More expander.'}
                                         </FormDescriptionText>
-                                        <ErrorMessage error={errors.details_tabs?.[key]?.body?.message ?? ''} />
+                                        <ErrorMessage error={errors?.details_tabs?.[key]?.body?.message ?? ''} />
                                         <Controller
                                             name={`details_tabs.${key}.body`}
                                             control={control}
@@ -587,21 +597,21 @@ const AuthoringDetails = () => {
                                     </AuthoringFormSection>
 
                                     {/* Todo: Replace with streamlined widget selector that saves on form save */}
-                                    <Grid item sx={{ mt: '1rem' }}>
+                                    <Grid2 sx={{ mt: '1rem' }}>
                                         <Header3 sx={heading3Styles}>Supporting Content (Optional)</Header3>
                                         <FormDescriptionText style={formDescriptionTextStyles}>
                                             {'You may use a widget to add supporting content to your primary content. On large screens ' +
                                                 'this content will be displayed to the right of your primary content. On small screens this ' +
                                                 'content will be displayed below your primary content.'}
                                         </FormDescriptionText>
-                                        <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                                        <Grid2 sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
                                             <WidgetPicker location={WidgetLocation.Details} />
-                                        </Grid>
-                                    </Grid>
+                                        </Grid2>
+                                    </Grid2>
                                 </TabPanel>
                             ))}
                         </TabContext>
-                    </Grid>
+                    </Grid2>
                 )}
             </AuthoringFormContainer>
         </>
