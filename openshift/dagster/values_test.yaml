@@ -1,0 +1,33 @@
+environment: test
+
+vault:
+  engine: "e903c2-nonprod"
+  path: "/test"
+
+route:
+  enabled: true
+  host: dagit-e903c2-test.apps.gold.devops.gov.bc.ca
+
+dagster:
+  # Pipeline run image - must match user deployment image
+  pipelineRun:
+    image:
+      repository: "image-registry.openshift-image-registry.svc:5000/e903c2-tools/dagster-etl"
+      tag: "test"
+
+  dagster-user-deployments:
+    deployments:
+      - name: etl
+        image:
+          repository: image-registry.openshift-image-registry.svc:5000/e903c2-tools/dagster-etl
+          tag: test
+          pullPolicy: Always
+        port: 3030
+        # Secrets loaded from synced K8s Secret
+        envSecrets:
+          - name: dagster-vault-secrets
+        env:
+          - name: MET_DB_PORT
+            value: "5432"
+          - name: MET_ANALYTICS_DB_PORT
+            value: "5432"

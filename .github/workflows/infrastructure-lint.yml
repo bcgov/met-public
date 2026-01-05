@@ -72,6 +72,7 @@ jobs:
             openshift/web/**
             openshift/analytics-api/**
             openshift/met-analytics/**
+            openshift/dagster/**
 
       - name: Set matrix for changed charts
         id: set-chart-matrix
@@ -84,6 +85,7 @@ jobs:
             [met-web]="openshift/web"
             [analytics-api]="openshift/analytics-api"
             [met-analytics]="openshift/met-analytics"
+            [dagster]="openshift/dagster"
           )
 
           # Initialize charts array
