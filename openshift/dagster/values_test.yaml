@@ -15,14 +15,6 @@ dagster:
       repository: "image-registry.openshift-image-registry.svc:5000/e903c2-tools/dagster-etl"
       tag: "test"
 
-  dagsterWebserver:
-    image:
-      tag: "1.4.4"
-
-  dagsterDaemon:
-    image:
-      tag: "1.4.4"
-
   dagster-user-deployments:
     deployments:
       - name: etl

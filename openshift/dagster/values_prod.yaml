@@ -17,12 +17,6 @@ dagster:
 
   dagsterWebserver:
     replicaCount: 2
-    image:
-      tag: "1.4.4"
-
-  dagsterDaemon:
-    image:
-      tag: "1.4.4"
 
   dagster-user-deployments:
     deployments:
