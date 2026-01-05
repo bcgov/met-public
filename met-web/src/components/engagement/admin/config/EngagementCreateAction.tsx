@@ -13,8 +13,6 @@ export const engagementCreateAction: ActionFunction = async ({ request }) => {
         description: '',
         rich_description: '',
         description_title: '',
-        content: '',
-        rich_content: '',
     });
     try {
         await patchEngagementSlug({

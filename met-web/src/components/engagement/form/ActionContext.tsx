@@ -11,12 +11,11 @@ import { updatedDiff } from 'deep-object-diff';
 import { PatchEngagementRequest } from 'services/engagementService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { EngagementContent, createDefaultEngagementContent } from 'models/engagementContent';
 import { TenantState } from 'reduxSlices/tenantSlice';
-import { getEngagementContent } from 'services/engagementContentService';
 import { EngagementLoaderData } from '../public/view';
 
 const CREATE = 'create';
+
 export const ActionContext = createContext<EngagementContext>({
     handleCreateEngagementRequest: (_engagement: EngagementForm): Promise<Engagement> => {
         return Promise.reject();
@@ -47,10 +46,6 @@ export const ActionContext = createContext<EngagementContext>({
     setIsNewEngagement: () => {
         /* empty default method  */
     },
-    contentTabs: [createDefaultEngagementContent()],
-    setContentTabs: () => {
-        return;
-    },
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element }) => {
@@ -70,10 +65,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [engagementMetadata, setEngagementMetadata] = useState<EngagementMetadata[]>([]);
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
-    const [contentTabs, setContentTabs] = useState<EngagementContent[]>([createDefaultEngagementContent()]);
     const isCreate = window.location.pathname.includes(CREATE);
-    const { engagement, content, metadata, taxa } = (useRouteLoaderData('single-engagement') ??
-        {}) as EngagementLoaderData;
+    const { engagement, metadata, taxa } = (useRouteLoaderData('single-engagement') ?? {}) as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -98,18 +91,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
 
         if (bannerImage) setBannerImage(null);
     };
-
-    // Load the engagement's content from the shared individual engagement loader and watch the content variable for any changes.
-    useEffect(() => {
-        if (engagementId) {
-            if (isCreate) {
-                return;
-            }
-            content?.then((result: EngagementContent[]) => {
-                setContentTabs(result);
-            });
-        }
-    }, [content, engagementId]);
 
     // Load the engagement's metadata and taxa from the shared individual engagement loader and watch the metadata and taxa variables for any changes.
     useEffect(() => {
@@ -181,8 +162,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 banner_filename: uploadedBannerImageFileName,
             });
             setEngagement(result);
-            const engagementContents = await getEngagementContent(Number(result.id));
-            setContentTabs(engagementContents);
             dispatch(openNotification({ severity: 'success', text: 'Engagement has been created' }));
             setSaving(false);
             navigate(`/engagements/${result.id}/form`);
@@ -262,8 +241,6 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
                 loadingAuthorization,
                 isNewEngagement,
                 setIsNewEngagement,
-                contentTabs,
-                setContentTabs,
             }}
         >
             {children}

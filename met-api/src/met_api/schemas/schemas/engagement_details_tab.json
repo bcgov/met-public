@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://met.gov.bc.ca/.well_known/schemas/engagement_details_tab",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+      {
+        "engagement_id": 1,
+        "label": "Resources",
+        "slug": "resources",
+        "heading": "Engagement Resources",
+        "body": "{\"blocks\":[{\"key\":\"aaa\",\"text\":\"Resources text body here.\",\"type\":\"unstyled\"}],\"entityMap\":{}}",
+        "sort_index": 1
+      }
+    ],
+    "required": ["engagement_id", "label", "slug", "title", "body", "sort_index"],
+    "properties": {
+      "engagement_id": {
+        "$id": "#/properties/engagement_id",
+        "type": "number",
+        "title": "Engagement id",
+        "description": "The engagement to which this details tab belongs.",
+        "examples": [1, 5, 25, 934]
+      },
+      "label": {
+        "$id": "#/properties/label",
+        "type": "string",
+        "title": "Label",
+        "description": "The label of this details tab.",
+        "examples": ["Brief Overview", "Details", "Opportunities"]
+      },
+      "slug": {
+        "$id": "#/properties/slug",
+        "type": "string",
+        "title": "Slug",
+        "description": "The slug of this details tab.",
+        "examples": ["brief_overview", "details", "opportunities"]
+      },
+      "heading": {
+        "$id": "#/properties/heading",
+        "type": "string",
+        "title": "Heading",
+        "description": "The heading of this details tab.",
+        "examples": ["A Brief Overview", "Project Details", "Ongoing Opportunities"]
+      },
+      "body": {
+        "$id": "#/properties/body",
+        "type": "string",
+        "title": "Body",
+        "description": "The body of this details tab.",
+        "examples": ["{\"blocks\":[{\"key\":\"aaa\",\"text\":\"Text body here.\",\"type\":\"unstyled\"}],\"entityMap\":{}}"]
+      },
+      "sort_index": {
+        "$id": "#/properties/sort_index",
+        "type": "number",
+        "title": "Sort Index",
+        "description": "The sort index of this details tab.",
+        "examples": [5, 9, 2, 0]
+      }
+    }
+  }
+  

@@ -30,9 +30,9 @@ from met_api.models import Tenant
 from met_api.models.comment import Comment as CommentModel
 from met_api.models.email_verification import EmailVerification as EmailVerificationModel
 from met_api.models.engagement import Engagement as EngagementModel
-from met_api.models.engagement_content import EngagementContent as EngagementContentModel
-from met_api.models.engagement_content_translation import \
-    EngagementContentTranslation as EngagementContentTranslationModel
+from met_api.models.engagement_details_tab import EngagementDetailsTab as EngagementDetailsTabModel
+from met_api.models.engagement_details_tab_translation import \
+    EngagementDetailsTabTranslation as EngagementDetailsTabTranslationModel
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxon
 from met_api.models.engagement_settings import EngagementSettingsModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
@@ -71,7 +71,7 @@ from met_api.models.widgets_subscribe import WidgetSubscribe as WidgetSubscribeM
 from met_api.utils.constants import TENANT_ID_HEADER
 from met_api.utils.enums import CompositeRoleId, MembershipStatus
 from tests.utilities.factory_scenarios import (
-    TestCommentInfo, TestEngagementContentInfo, TestEngagementContentTranslationInfo, TestEngagementInfo,
+    TestCommentInfo, TestEngagementDetailsTabsInfo, TestEngagementDetailsTabTranslationInfo, TestEngagementInfo,
     TestEngagementMetadataInfo, TestEngagementMetadataTaxonInfo, TestEngagementSlugInfo, TestEngagementTranslationInfo,
     TestEventItemTranslationInfo, TestEventnfo, TestFeedbackInfo, TestJwtClaims, TestParticipantInfo,
     TestPollAnswerInfo, TestPollAnswerTranslationInfo, TestPollResponseInfo, TestReportSettingInfo, TestSubmissionInfo,
@@ -166,7 +166,8 @@ def factory_email_verification(survey_id, type=None, submission_id=None):
 
 
 def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, name=None, status=None):
-    """Produce a engagement model."""
+    """Produce an engagement model."""
+    """Produce an engagement model."""
     engagement = EngagementModel(
         name=name if name else fake.name(),
         description=eng_info.get('description'),
@@ -857,39 +858,39 @@ def factory_engagement_translation_model(
         language_id=engagement_translation.get('language_id'),
         name=engagement_translation.get('name'),
         description=engagement_translation.get('description'),
-        content=engagement_translation.get('content'),
         rich_content=engagement_translation.get('rich_content'),
     )
     engagement_translation.save()
     return engagement_translation
 
 
-def factory_enagement_content_model(
-    engagement_id: int = None, engagement_content: dict = TestEngagementContentInfo.content1
+def factory_engagement_details_tab_model(
+    engagement_details_tab: dict = TestEngagementDetailsTabsInfo.details_tab1,
 ):
-    """Produce a engagement content model instance."""
-    if engagement_id is None:
-        engagement_id = factory_engagement_model().id
-
-    engagement_content = EngagementContentModel(
-        title=engagement_content.get('title'),
-        text_content=engagement_content.get('text_content'),
-        json_content=engagement_content.get('json_content'),
-        engagement_id=engagement_id,
-        is_internal=engagement_content.get('is_internal', False),
+    """Produce an engagement details tab model."""
+    engagement_details_tab = EngagementDetailsTabModel(
+        engagement_id=engagement_details_tab.get('engagement_id'),
+        label=engagement_details_tab.get('label'),
+        slug=engagement_details_tab.get('slug'),
+        heading=engagement_details_tab.get('heading'),
+        body=engagement_details_tab.get('body'),
+        sort_index=engagement_details_tab.get('sort_index'),
     )
-    engagement_content.save()
-    return engagement_content
+    engagement_details_tab.save()
+    return engagement_details_tab
 
 
-def factory_engagement_content_translation_model(
-    engagement_content_translation: dict = TestEngagementContentTranslationInfo.translation_info1,
+def factory_engagement_details_tab_translation_model(
+    engagement_details_tab_translation: dict = TestEngagementDetailsTabTranslationInfo.translation_info1,
 ):
-    """Produce a engagement content translation model."""
-    engagement_content_translation = EngagementContentTranslationModel(
-        engagement_content_id=engagement_content_translation.get('engagement_content_id'),
-        language_id=engagement_content_translation.get('language_id'),
-        content_title=engagement_content_translation.get('content_title'),
+    """Produce an engagement details tab translation model."""
+    engagement_details_tab_translation = EngagementDetailsTabTranslationModel(
+        engagement_details_tab_id=engagement_details_tab_translation.get('engagement_details_tab_id'),
+        language_id=engagement_details_tab_translation.get('language_id'),
+        label=engagement_details_tab_translation.get('label'),
+        slug=engagement_details_tab_translation.get('slug'),
+        heading=engagement_details_tab_translation.get('heading'),
+        body=engagement_details_tab_translation.get('body'),
     )
-    engagement_content_translation.save()
-    return engagement_content_translation
+    engagement_details_tab_translation.save()
+    return engagement_details_tab_translation

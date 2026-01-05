@@ -10,7 +10,7 @@ import { verifyEmailVerification } from 'services/emailVerificationService';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { getEngagementIdBySlug } from 'services/engagementSlugService';
 import { EngagementLoaderData } from '../public/view';
-import { EngagementContent } from 'models/engagementContent';
+import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
 interface EngagementSchedule {
     id: number;
@@ -32,7 +32,7 @@ export interface EngagementViewContext {
     engagementWidgets: Widget[];
     mockStatus: SubmissionStatus;
     updateMockStatus: (status: SubmissionStatus) => void;
-    content: EngagementContent[];
+    detailsTabs: EngagementDetailsTab[];
 }
 
 export type EngagementParams = {
@@ -56,7 +56,7 @@ export const ActionContext = createContext<EngagementViewContext>({
     updateMockStatus: (status: SubmissionStatus) => {
         /* nothing returned */
     },
-    content: [],
+    detailsTabs: [],
 });
 
 export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
@@ -72,13 +72,9 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     const [engagementWidgets, setEngagementWidgets] = useState<Widget[]>([]);
     const [isEngagementLoading, setEngagementLoading] = useState(true);
     const [isWidgetsLoading, setIsWidgetsLoading] = useState(true);
-    const [content, setContent] = useState<EngagementContent[]>([]);
+    const [detailsTabs, setDetailsTabs] = useState<EngagementDetailsTab[]>([]);
 
-    const {
-        engagement,
-        widgets,
-        content: contentPromise,
-    } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement, widgets, details } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {
@@ -112,10 +108,10 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
     }, [savedEngagement]);
 
     useEffect(() => {
-        contentPromise.then((result) => {
-            setContent(result);
+        details.then((result) => {
+            setDetailsTabs(result);
         });
-    }, [contentPromise]);
+    }, [details]);
 
     const verifySubscribeToken = async () => {
         try {
@@ -204,7 +200,7 @@ export const ActionProvider = ({ children }: { children: JSX.Element | JSX.Eleme
                 updateMockStatus,
                 mockStatus,
                 unpublishEngagement,
-                content,
+                detailsTabs,
             }}
         >
             {children}

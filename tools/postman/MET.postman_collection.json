@@ -1046,8 +1046,8 @@
             "type": "string"
         },
         {
-            "key": "ENGAGEMENT_CONTENT",
-            "value": "Content",
+            "key": "ENGAGEMENT_DETAILS_TABS",
+            "value": "[]",
             "type": "string"
         },
         {

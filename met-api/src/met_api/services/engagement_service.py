@@ -17,7 +17,6 @@ from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
 from met_api.services import authorization
-from met_api.services.engagement_content_service import EngagementContentService
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
 from met_api.services.object_storage_service import ObjectStorageService
@@ -169,9 +168,6 @@ class EngagementService:
         EngagementService.validate_fields(request_json)
         eng_model = EngagementService._create_engagement_model(request_json)
 
-        EngagementService.create_default_engagement_content(eng_model.id)
-        EngagementService.create_default_content(eng_model.id, request_json)
-
         if request_json.get('status_block'):
             EngagementService._create_eng_status_block(eng_model.id, request_json)
         eng_model.commit()
@@ -206,46 +202,6 @@ class EngagementService:
         )
         new_engagement.save()
         return new_engagement
-
-    @staticmethod
-    def create_default_engagement_content(eng_id):
-        """Create default engagement content for the given engagement ID."""
-        default_engagement_content = {'title': 'Summary', 'engagement_id': eng_id}
-        try:
-            eng_content = EngagementContentService.create_engagement_content(
-                default_engagement_content, eng_id
-            )
-        except Exception as exc:  # noqa: B902
-            current_app.logger.error('Failed to create default engagement content', exc)
-            raise BusinessException(
-                error='Failed to create default engagement content.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            ) from exc
-
-        return eng_content
-
-    @staticmethod
-    def create_default_content(eng_id: int, content_data: dict):
-        """Create default summary content for the engagement."""
-        default_summary_content = {
-            'title': 'Summary',
-            'engagement_id': eng_id,
-            'content': content_data.get('content', None),
-            'text_content': content_data.get('content', None),
-            'json_content': content_data.get('rich_content', None),
-        }
-        try:
-            EngagementContentService.create_engagement_content(
-                default_summary_content, eng_id
-            )
-        except Exception as exc:  # noqa: B902
-            current_app.logger.error(
-                'Failed to create default engagement summary content', exc
-            )
-            raise BusinessException(
-                error='Failed to create default engagement summary content.',
-                status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            ) from exc
 
     @staticmethod
     def _create_eng_status_block(eng_id, engagement_data: dict):

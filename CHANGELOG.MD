@@ -1,3 +1,23 @@
+## December 22, 2025
+
+- **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)
+  - Made some small updates to the details tab translation model, resource, and service
+  - Updated failing API pytest unit tests for details tab translation
+  - Skipped some old Jest unit tests that rely on the old form
+  - Removed outdated Jest user input tab test from old form
+
+## December 18, 2025
+
+- **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)
+  - Remade authoring details public component with aria labels and new design
+  - Modified RichTextArea component to include text clamping with custom line value
+  - Removed all references to EngagementContent and EngagementContentTranslation in API and front end
+  - Added a translation table and API functionality for details tab translations
+  - Made minor improvements to admin forms
+    - Navigate away modal on AuthoringBanner component
+    - Improved default state on AuthoringDetails and AuthoringSummary components
+    - Implemented scrolling and additional error for details tabs
+
 ## December 16, 2025
 
 - **Feature** Capture Dagster deployment as Helm chart [🎟️ DESENG-926](https://citz-gdx.atlassian.net/browse/DESENG-926)

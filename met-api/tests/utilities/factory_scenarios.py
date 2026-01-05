@@ -191,10 +191,6 @@ class TestEngagementInfo(dict, Enum):
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
-        'content': 'Content Sample',
-        'rich_content': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
-        \"type\":\"unstyled\",\"depth\":0,\
-        \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description_title': 'My Test Description Title',
     }
 
@@ -911,22 +907,28 @@ class TestPollResponseInfo(dict, Enum):
     }
 
 
-class TestEngagementContentInfo(dict, Enum):
-    """Test scenarios of engagement content."""
+class TestEngagementDetailsTabsInfo(dict, Enum):
+    """Test scenarios of engagement details tabs."""
 
-    content1 = {
-        'title': 'Summary',
-        'is_internal': False,
-        'text_content': fake.text(max_nb_chars=20),
-        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+    details_tab1 = {
+        'id': 1,
+        'engagement_id': 1,
+        'heading': 'This is a heading',
+        'label': 'Tab Label',
+        'slug': 'tab_label',
+        'sort_index': 0,
+        'body': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
             "type":"unstyled","depth":0,\
             "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
-    content2 = {
-        'title': 'Custom',
-        'is_internal': False,
-        'text_content': fake.text(max_nb_chars=20),
-        'json_content': '{"blocks":[{"key":"fclgj","text":"Rich Content Sample",\
+    details_tab2 = {
+        'id': 2,
+        'engagement_id': 1,
+        'heading': 'This is another heading',
+        'label': 'Tab Label 2',
+        'slug': 'tab_label_2',
+        'sort_index': 1,
+        'body': '{"blocks":[{"key":"fclgj","text":"Another Rich Content Sample",\
             "type":"unstyled","depth":0,\
             "inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}'
     }
@@ -1025,11 +1027,16 @@ class TestEngagementTranslationInfo(dict, Enum):
     }
 
 
-class TestEngagementContentTranslationInfo(dict, Enum):
-    """Test scenarios of engagement content translation content."""
+class TestEngagementDetailsTabTranslationInfo(dict, Enum):
+    """Test scenarios of engagement details tab translation content."""
 
     translation_info1 = {
-        'engagement_content_id': 1,
-        'language_id': 2,
-        'content_title': fake.text(max_nb_chars=20),
+        'engagement_details_tab_id': 1,
+        'language_id': 49,
+        'label': fake.text(max_nb_chars=20),
+        'slug': fake.text(max_nb_chars=20),
+        'heading': fake.text(max_nb_chars=60),
+        'body': '"{\"blocks\":[{\"key\":\"fclgj\",\"text\":\"Rich Content Sample\",\
+            \"type\":\"unstyled\",\"depth\":0,\
+            \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
     }

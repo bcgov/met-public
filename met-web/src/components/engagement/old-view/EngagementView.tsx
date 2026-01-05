@@ -2,7 +2,6 @@ import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { Grid, useMediaQuery, Theme } from '@mui/material';
 import { ActionContext } from './ActionContext';
 import { LanguageContext } from 'components/common/LanguageContext';
-import { EngagementContent } from './EngagementContent';
 import SurveyBlock from './SurveyBlock';
 import EmailModal from './EmailModal';
 import { PreviewBanner } from './PreviewBanner';
@@ -121,9 +120,6 @@ export const EngagementView = () => {
                                 rowSpacing={2}
                                 columnSpacing={1}
                             >
-                                <Grid data-testid={'engagement-content'} item xs={12}>
-                                    <EngagementContent />
-                                </Grid>
                                 <If condition={surveyId !== ''}>
                                     <Then>
                                         <Grid item xs={12}>
@@ -137,9 +133,6 @@ export const EngagementView = () => {
                             </Grid>
                         </Then>
                         <Else>
-                            <Grid data-testid={'engagement-content'} item xs={12}>
-                                <EngagementContent />
-                            </Grid>
                             <Grid item data-testid={'widget-block'} xs={12}>
                                 <WidgetBlock />
                             </Grid>

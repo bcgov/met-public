@@ -1,6 +1,6 @@
 import { Button, FormControlLabel, Grid, Modal, Radio, RadioGroup, Tab } from '@mui/material';
 import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
@@ -38,6 +38,7 @@ const AuthoringDetails = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [noTabsModalOpen, setNoTabsModalOpen] = useState(false);
     const hasUnsavedWork = isDirty && !isSubmitting;
+    const tabErrorsRef = useRef<HTMLDivElement>(null);
     const engagementId = engagement.id;
     const authoringDetailsTabs = watch('details_tabs');
     const defaultDetailsTabValues = {
@@ -52,10 +53,19 @@ const AuthoringDetails = () => {
 
     // Set current values to default state after saving form
     useEffect(() => {
-        const newDefaults = getValues();
-        setDefaultValues(newDefaults);
-        reset(newDefaults);
+        if (typeof fetcher.data === 'string' && fetcher.data === 'success') {
+            const newDefaults = getValues();
+            setDefaultValues(newDefaults);
+            reset(newDefaults);
+        }
     }, [fetcher.data]);
+
+    // Scroll to the tab label errors when there are tab errors, so they are obvious to the user
+    useEffect(() => {
+        if (Array.isArray(errors?.details_tabs) && errors?.details_tabs?.length > 0) {
+            scrollToTabErrors();
+        }
+    }, [errors.details_tabs]);
 
     useEffect(() => {
         reset(defaultValuesObject);
@@ -85,6 +95,7 @@ const AuthoringDetails = () => {
                 setTabsEnabled(true);
             }
             setDefaultValues(getValues());
+            reset(getValues());
             setCurrentTab('0');
         });
     }, []);
@@ -191,6 +202,13 @@ const AuthoringDetails = () => {
         updateTabs([newTabs[0]], true);
         setNoTabsModalOpen(false);
         setCurrentTab('0');
+    };
+
+    const scrollToTabErrors = () => {
+        tabErrorsRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
     };
 
     // WYSIWYG text editor toolbar items
@@ -393,6 +411,7 @@ const AuthoringDetails = () => {
                 {/* Tab instructions */}
                 {tabsEnabled && (
                     <Grid item sx={{ margin: '1rem 0' }}>
+                        <div ref={tabErrorsRef}></div>
                         <Header3 sx={heading3Styles}>Tabs Configuration</Header3>
                         <FormDescriptionText style={formDescriptionTextStyles}>
                             {'If your audience will need additional context to interpret the topic of your ' +
@@ -406,6 +425,13 @@ const AuthoringDetails = () => {
                     <Grid item>
                         <TabContext value={currentTab}>
                             {/* Tab labels */}
+                            <ErrorMessage
+                                error={
+                                    Array.isArray(errors.details_tabs) && errors?.details_tabs?.length > 0
+                                        ? 'Your tabs contain errors. Please fix the tabs highlighted in red.'
+                                        : ''
+                                }
+                            />
                             <TabList
                                 sx={tabListStyles}
                                 TabIndicatorProps={{ style: { display: 'none' } }}
