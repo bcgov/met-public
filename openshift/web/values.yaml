@@ -3,8 +3,8 @@ app:
   licenseplate: e903c2
   ratelimits:
     enabled: true # Enable or disable rate limiting
-    http: 60 # Max HTTP requests per 3 seconds
-    tcp: 65 # Max TCP connections per 3 seconds
+    http: 90 # Max HTTP requests per 3 seconds
+    tcp: 100 # Max TCP connections per 3 seconds
 
 deployment:
   minReplicas: 2
