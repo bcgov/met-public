@@ -159,6 +159,13 @@ dagster:
       k8sRunLauncher:
         imagePullPolicy: Always
         loadInclusterConfig: true
+        # Mount emptyDir volume for DAGSTER_HOME storage in run jobs
+        volumes:
+          - name: dagster-home
+            emptyDir: {}
+        volumeMounts:
+          - name: dagster-home
+            mountPath: /opt/dagster/dagster_home
 
   # Pipeline run configuration
   # This configures the dagster-daemon-env ConfigMap which the K8sRunLauncher uses
@@ -177,6 +184,13 @@ dagster:
       - name: dagster-pipeline-env
     envSecrets:
       - name: dagster-vault-secrets
+    # Mount emptyDir volume for DAGSTER_HOME storage in run jobs
+    volumes:
+      - name: dagster-home
+        emptyDir: {}
+    volumeMounts:
+      - name: dagster-home
+        mountPath: /opt/dagster/dagster_home
 
   # Compute log manager
   computeLogManager:
