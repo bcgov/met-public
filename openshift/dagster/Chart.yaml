@@ -3,9 +3,9 @@ name: dagster
 version: 0.1.0
 description: Helm chart for deploying Dagster ETL on OpenShift
 type: application
-appVersion: "1.12.6"
+appVersion: "1.12.8"
 
 dependencies:
   - name: dagster
-    version: "1.12.6"
+    version: "1.12.8"
     repository: "https://dagster-io.github.io/helm"
