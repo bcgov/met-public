@@ -62,7 +62,7 @@ jobs:
 
       - name: Build image
         run: |
-          docker build . --file Dockerfile --tag image
+          docker build . --file container/user_code/Dockerfile --tag image
 
       - name: Push image
         run: |
