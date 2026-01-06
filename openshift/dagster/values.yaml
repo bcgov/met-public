@@ -129,9 +129,9 @@ dagster:
           pullPolicy: Always
         dagsterApiGrpcArgs:
           - -d
-          - /etl_project/services
+          - /opt/dagster/app/etl_project
           - --python-file
-          - /etl_project/services/repo.py
+          - /opt/dagster/app/etl_project/services/repo.py
           - -p
           - "3030"
         port: 3030
