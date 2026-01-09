@@ -1,3 +1,16 @@
+## January 8, 2026
+
+- **Feature** Admin publishing tab in engagement details section. [🎟️ DESENG-709](https://citz-gdx.atlassian.net/browse/DESENG-709)
+    - Adapted design from original publishing dialog
+    - Added dynamic messages, update/cancel scheduled date functionality
+- Resolved any remaining console errors
+- Fixed broken authoring form submit by reconnecting it
+- Fixed authoring bottom nav flickering (on route change)
+    - Shifted language name to language slice instead of calculating on-the-fly
+    - Shifted languages list to single engagement loader
+- Added refresh/navigate away warning in authoring section for unsaved changes on a form
+- Added better modal window for language selection change warning with unsaved changes
+
 ## December 22, 2025
 
 - **Feature** Public authoring details page [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)

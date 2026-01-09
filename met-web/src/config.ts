@@ -24,6 +24,7 @@ const KC_ADMIN_ROLE = getEnv('REACT_APP_KEYCLOAK_ADMIN_ROLE');
 const IS_SINGLE_TENANT_ENVIRONMENT = getEnv('REACT_APP_IS_SINGLE_TENANT_ENVIRONMENT', 'true') === 'true';
 const DEFAULT_TENANT = getEnv('REACT_APP_DEFAULT_TENANT');
 const DEFAULT_LANGUAGE_ID = getEnv('REACT_APP_DEFAULT_LANGUAGE_ID');
+const DEFAULT_LANGUAGE_NAME = getEnv('REACT_APP_DEFAULT_LANGUAGE_NAME');
 
 // version config
 const BUILD_COMMIT_HASH = getEnv('REACT_APP_BUILD_COMMIT_HASH', 'dev');
@@ -47,6 +48,7 @@ export const AppConfig = {
     },
     language: {
         defaultLanguageId: DEFAULT_LANGUAGE_ID || 'en',
+        defaultLanguageName: DEFAULT_LANGUAGE_NAME || 'English',
     },
     version: {
         commit: BUILD_COMMIT_HASH,

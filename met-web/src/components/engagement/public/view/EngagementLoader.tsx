@@ -9,6 +9,8 @@ import { getTeamMembers } from 'services/membershipService';
 import { EngagementTeamMember } from 'models/engagementTeamMember';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
+import { getTenantLanguages } from 'services/languageService';
+import { Language } from 'models/language';
 
 export type EngagementLoaderData = {
     engagement: Promise<Engagement>;
@@ -18,10 +20,17 @@ export type EngagementLoaderData = {
     metadata: Promise<EngagementMetadata[]>;
     taxa: Promise<MetadataTaxon[]>;
     teamMembers: Promise<EngagementTeamMember[]>;
+    languages: Promise<Language[]>;
 };
 
 export const engagementLoader = async ({ params }: { params: Params<string> }) => {
     const { slug: slugParam, engagementId } = params;
+
+    const tenantId =
+        typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined'
+            ? window.sessionStorage.getItem('tenantId')
+            : null;
+    const languages = tenantId ? getTenantLanguages(tenantId) : Promise.resolve([]);
     const slug = slugParam
         ? Promise.resolve(slugParam)
         : getSlugByEngagementId(Number(engagementId)).then((response) => response.slug);
@@ -57,6 +66,7 @@ export const engagementLoader = async ({ params }: { params: Params<string> }) =
         metadata,
         taxa,
         teamMembers,
+        languages,
     };
 };
 

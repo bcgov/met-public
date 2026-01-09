@@ -99,7 +99,12 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                         />
                         <LazyRoute path="activity" ComponentLazy={() => import('routes/UnderConstruction')} />
                         <LazyRoute path="results" ComponentLazy={() => import('routes/UnderConstruction')} />
-                        <LazyRoute path="publish" ComponentLazy={() => import('routes/UnderConstruction')} />
+                        <LazyRoute
+                            path="publish"
+                            ComponentLazy={() => import('engagements/admin/view/PublishingTab')}
+                            actionLazy={() => import('engagements/admin/view/publishingAction')}
+                            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                        />
                         <LazyRoute
                             path="*"
                             lazy={() => import('routes/NotFound').then((module) => ({ Component: module.default }))}
@@ -118,6 +123,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                 <LazyRoute
                                     path="banner"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringBanner')}
+                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
                                     actionLazy={() =>
                                         import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }

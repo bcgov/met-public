@@ -81,8 +81,8 @@ export const TextInput: React.FC<TextInputProps> = ({
                     : `0 0 0 1px ${colors.surface.gray[80]} inset`,
                 ...sx,
             }}
+            error={error || undefined}
             inputProps={{
-                error: error,
                 ...inputProps,
                 sx: {
                     fontSize: '16px',
@@ -183,22 +183,24 @@ export const TextField = ({
     onChange,
     disabled,
     formFieldProps,
+    counter,
+    value,
     ...textInputProps
 }: TextFieldProps) => {
-    const [value, setValue] = React.useState(textInputProps.value || '');
+    const [fieldValue, setFieldValue] = React.useState(value || '');
 
     useEffect(() => {
-        setValue(textInputProps.value || '');
-    }, [textInputProps.value]);
+        setFieldValue(value || '');
+    }, [value]);
 
     const handleSetValue = (newValue: string) => {
-        if (onChange === undefined) return setValue(newValue);
+        if (onChange === undefined) return setFieldValue(newValue);
         onChange?.(newValue, name);
-        return setValue(newValue);
+        return setFieldValue(newValue);
     };
 
     const isError = !!error;
-    const length = value.length;
+    const length = fieldValue.length;
     return (
         <FormField
             className="met-input-text-field met-input-form-field"
@@ -214,17 +216,17 @@ export const TextField = ({
             <TextInput
                 fullWidth
                 error={isError}
-                value={value}
+                value={fieldValue}
                 name={name}
                 required={required}
                 disabled={disabled}
-                endAdornment={clearable && value ? clearInputButton(() => handleSetValue('')) : undefined}
+                endAdornment={clearable && fieldValue ? clearInputButton(() => handleSetValue('')) : undefined}
                 {...textInputProps}
                 inputProps={{ ...textInputProps.inputProps, maxLength: textInputProps.maxLength }}
                 onChange={handleSetValue}
             />
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', gap: '8px', pt: '0.25em' }}>
-                {textInputProps.counter && textInputProps.maxLength && (
+                {counter && textInputProps.maxLength && (
                     <BodyText size="small" sx={{ color: colors.type.regular.secondary }}>
                         {length}/{textInputProps.maxLength}
                     </BodyText>

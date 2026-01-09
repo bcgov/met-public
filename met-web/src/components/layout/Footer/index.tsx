@@ -95,7 +95,7 @@ const VersionInfoDisplay = ({
                     />
                 )}
             </Grid>
-            <BodyText width="max-content" order={{ xs: 1, sm: 2 }}>
+            <BodyText component="div" width="max-content" order={{ xs: 1, sm: 2 }}>
                 {label}:{' '}
                 <Link
                     color={Palette.gray[90]}

@@ -177,7 +177,9 @@ const InternalHeader = () => {
                         <When condition={isMediumScreenOrLarger}></When>
                     </Toolbar>
                     <If condition={isPending}>
-                        <LinearProgress sx={{ marginTop: '-0.25em' }} />
+                        <Then>
+                            <LinearProgress sx={{ marginTop: '-0.25em' }} />
+                        </Then>
                     </If>
                     <Collapse
                         in={secondaryMenuOpen}

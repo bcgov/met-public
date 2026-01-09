@@ -34,8 +34,9 @@ export interface PatchEngagementRequest {
     id: number;
     name?: string;
     start_date?: string;
-    status_id?: number;
     end_date?: string;
+    status_id?: number;
+    scheduled_date?: string;
     description?: string;
     rich_description?: string;
     description_title?: string;

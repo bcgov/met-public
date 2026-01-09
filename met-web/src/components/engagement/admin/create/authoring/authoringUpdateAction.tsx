@@ -22,6 +22,7 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         },
         {
             survey_status: 'ViewResults',
+            button_text: formData.get('view_results_cta') as string,
             link_type: formData.get('view_results_link_type') as string,
             internal_link: formData.get('view_results_section_link') as string,
             external_link: formData.get('view_results_external_link') as string,
@@ -100,7 +101,7 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         try {
             await patchEngagementSettings({
                 engagement_id: engagementId,
-                send_report: 'true' === formData.get('send_report') ? true : false,
+                send_report: 'true' === formData.get('send_report'),
             });
         } catch (e) {
             console.error('Error updating engagement settings', e);

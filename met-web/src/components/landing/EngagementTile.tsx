@@ -32,7 +32,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const dateFormat = 'MMMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = `/new-look/${slug}`;
+    const engagementPath = `/new-look${slug ? '/' + slug : ''}`;
     const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
 
     const loadEngagement = async () => {
@@ -130,7 +130,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     onMouseDown={() => setIsActive(true)}
                     onMouseUp={() => setIsActive(false)}
                     LinkComponent={RouterLinkRenderer}
-                    href={slug && engagementUrl}
+                    href={engagementUrl}
                     sx={{
                         '&:focus-visible': {
                             // focus visible styling is applied by the parent Card component

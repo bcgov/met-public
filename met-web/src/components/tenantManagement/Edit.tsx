@@ -11,7 +11,10 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useRouteLoaderData, useNavigate, Await, useRevalidator } from 'react-router-dom';
 import { MidScreenLoader } from 'components/common';
-import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+// Prevents page load fail due to waiting for engagement title on refresh
+const AutoBreadcrumbs = React.lazy(() =>
+    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
+);
 
 const TenantEditPage = () => {
     const dispatch = useAppDispatch();
