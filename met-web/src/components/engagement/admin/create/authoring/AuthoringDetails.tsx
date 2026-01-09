@@ -1,4 +1,4 @@
-import { FormControlLabel, Grid2, Modal, Radio, RadioGroup, Tab } from '@mui/material';
+import { FormControlLabel, Grid2 as Grid, Modal, Radio, RadioGroup, Tab } from '@mui/material';
 import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -372,7 +372,7 @@ const AuthoringDetails = () => {
             {/* Tabs and form */}
             <AuthoringFormContainer sx={authoringFormContainerStyles}>
                 {/* Tabs mode radio selector */}
-                <Grid2 sx={{ margin: '1rem 0' }}>
+                <Grid sx={{ margin: '1rem 0' }}>
                     <FormDescriptionText style={formDescriptionTextStyles}>
                         {'In the Details Section of your engagement, you have the option to display your content in a ' +
                             'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
@@ -407,11 +407,11 @@ const AuthoringDetails = () => {
                             style={radioStyles}
                         />
                     </RadioGroup>
-                </Grid2>
+                </Grid>
 
                 {/* Tab instructions */}
                 {tabsEnabled && (
-                    <Grid2 sx={{ margin: '1rem 0' }}>
+                    <Grid sx={{ margin: '1rem 0' }}>
                         <div ref={tabErrorsRef}></div>
                         <Header3 sx={heading3Styles}>Tabs Configuration</Header3>
                         <FormDescriptionText style={formDescriptionTextStyles}>
@@ -419,11 +419,11 @@ const AuthoringDetails = () => {
                                 'engagement, or it is important for them to understand who, within BC Gov, is ' +
                                 'requesting feedback, you may wish to add two to five words of eyebrow text.'}
                         </FormDescriptionText>
-                    </Grid2>
+                    </Grid>
                 )}
 
                 {currentTab && (
-                    <Grid2>
+                    <Grid>
                         <TabContext value={currentTab}>
                             {/* Tab labels */}
                             <ErrorMessage
@@ -527,7 +527,7 @@ const AuthoringDetails = () => {
                                         />
                                     </AuthoringFormSection>
 
-                                    <Grid2 sx={{ margin: '1rem 0' }}>
+                                    <Grid sx={{ margin: '1rem 0' }}>
                                         <Header3 sx={heading3Styles}>Primary Content (Required)</Header3>
                                         <FormDescriptionText style={formDescriptionTextStyles}>
                                             {'Primary content will display on the left two thirds of the page on large screens ' +
@@ -535,7 +535,7 @@ const AuthoringDetails = () => {
                                                 'below, on small screens, your primary content will display first (on top) followed ' +
                                                 'by your supporting content (underneath).'}
                                         </FormDescriptionText>
-                                    </Grid2>
+                                    </Grid>
 
                                     <AuthoringFormSection
                                         name="Heading"
@@ -595,21 +595,21 @@ const AuthoringDetails = () => {
                                     </AuthoringFormSection>
 
                                     {/* Todo: Replace with streamlined widget selector that saves on form save */}
-                                    <Grid2 sx={{ mt: '1rem' }}>
+                                    <Grid sx={{ mt: '1rem' }}>
                                         <Header3 sx={heading3Styles}>Supporting Content (Optional)</Header3>
                                         <FormDescriptionText style={formDescriptionTextStyles}>
                                             {'You may use a widget to add supporting content to your primary content. On large screens ' +
                                                 'this content will be displayed to the right of your primary content. On small screens this ' +
                                                 'content will be displayed below your primary content.'}
                                         </FormDescriptionText>
-                                        <Grid2 sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
+                                        <Grid sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
                                             <WidgetPicker location={WidgetLocation.Details} />
-                                        </Grid2>
-                                    </Grid2>
+                                        </Grid>
+                                    </Grid>
                                 </TabPanel>
                             ))}
                         </TabContext>
-                    </Grid2>
+                    </Grid>
                 )}
             </AuthoringFormContainer>
         </>

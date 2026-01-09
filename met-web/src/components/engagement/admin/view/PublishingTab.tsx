@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Header2, EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import { Box, Grid2, Modal } from '@mui/material';
+import { Box, Grid2 as Grid, Modal } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Controller, Resolver, useForm } from 'react-hook-form';
 import { Await, createSearchParams, Form, useFetcher, useLoaderData } from 'react-router-dom';
@@ -221,7 +221,7 @@ export const PublishingTab = () => {
                 />
             </Modal>
 
-            <Grid2 id="admin-authoring-section" direction="column" maxWidth={'700px'}>
+            <Grid id="admin-authoring-section" direction="column" maxWidth={'700px'}>
                 <Header2 decorated>Publishing</Header2>
                 <Suspense>
                     <Await resolve={engagement}>
@@ -344,7 +344,7 @@ export const PublishingTab = () => {
                         )}
                     </Await>
                 </Suspense>
-            </Grid2>
+            </Grid>
         </>
     );
 };

@@ -140,7 +140,6 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                     background: colors.surface.blue[90],
                     minHeight: '5rem',
                     justifyContent: 'flex-start',
-                    // padding: padding,
                     display: 'flex',
                     alignItems: 'center',
                     flexWrap: isMediumScreenOrLarger ? 'nowrap' : 'wrap',
