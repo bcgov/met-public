@@ -1,0 +1,214 @@
+app:
+  name: dagster
+  licenseplate: e903c2
+
+image:
+  namespace: e903c2-tools
+  repository: "image-registry.openshift-image-registry.svc:5000"
+  tag: latest
+
+vault:
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"
+
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: "latest"
+
+# Dagster chart configuration
+dagster:
+  # Use external PostgreSQL (Patroni)
+  postgresql:
+    enabled: false
+    # Connection details managed through Vault-synced secrets
+    # Note: postgresqlUsername and postgresqlPassword are used by the Dagster chart
+    # to generate configuration, but the actual runtime credentials come from
+    # the dagster-vault-secrets Secret created by the vault-sync Job
+    postgresqlHost: engagement-patroni
+    postgresqlUsername: dagster
+    postgresqlDatabase: app
+    service:
+      port: 5432
+
+  # Disable internal Redis and RabbitMQ
+  redis:
+    enabled: false
+  rabbitmq:
+    enabled: false
+
+  # Disable automatic generation of postgresql password secret
+  # We create this secret via the vault-sync Job with credentials from Vault
+  generatePostgresqlPasswordSecret: false
+
+  # Service account configuration
+  # Dagster creates its own service account for K8s operations (creating Jobs, Pods, etc.)
+  # Vault secrets are synced via a separate Job that uses e903c2-vault service account
+  serviceAccount:
+    create: true
+    name: "dagster"
+
+  # RBAC - whether to create RBAC roles/rolebindings for Dagster service account
+  rbacEnabled: true
+
+  # Dagster webserver configuration
+  dagsterWebserver:
+    replicaCount: 1
+    image:
+      repository: docker.io/dagster/dagster-celery-k8s
+      tag: "1.12.6"
+      pullPolicy: Always
+    nameOverride: dagit
+    service:
+      type: ClusterIP
+      port: 8080
+    # Secrets are loaded from K8s Secret synced by vault-sync Job
+    envSecrets:
+      - name: dagster-vault-secrets
+    readinessProbe:
+      httpGet:
+        path: /server_info
+        port: 8080
+      periodSeconds: 20
+      timeoutSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+    workspace:
+      enabled: false
+      servers:
+        - host: dagster-etl
+          name: dagster-etl
+          port: 3030
+
+  # Dagster daemon configuration
+  dagsterDaemon:
+    enabled: true
+    image:
+      repository: docker.io/dagster/dagster-celery-k8s
+      tag: "1.4.4"
+      pullPolicy: Always
+    # Secrets are loaded from K8s Secret synced by vault-sync Job
+    envSecrets:
+      - name: dagster-vault-secrets
+    runCoordinator:
+      enabled: true
+      type: QueuedRunCoordinator
+      config:
+        queuedRunCoordinator:
+          dequeueNumWorkers: 4
+          dequeueUseThreads: true
+    runMonitoring:
+      enabled: true
+      pollIntervalSeconds: 120
+      startTimeoutSeconds: 300
+    runRetries:
+      enabled: true
+      maxRetries: 0
+    schedules:
+      numWorkers: 4
+      useThreads: true
+    sensors:
+      numWorkers: 4
+      useThreads: true
+
+  # User deployments configuration
+  "dagster-user-deployments":
+    enabled: true
+    enableSubchart: true
+    # Enable RBAC so user deployments have necessary permissions
+    rbacEnabled: true
+    serviceAccount:
+      create: true
+      name: "dagster-user-code"
+    imagePullSecrets: []
+    deployments:
+      - name: etl
+        image:
+          repository: image-registry.openshift-image-registry.svc:5000/e903c2-tools/dagster-etl
+          tag: latest
+          pullPolicy: Always
+        dagsterApiGrpcArgs:
+          - -d
+          - /opt/dagster/app/etl_project
+          - --python-file
+          - /opt/dagster/app/etl_project/services/repo.py
+          - -p
+          - "3030"
+        port: 3030
+        # Secrets are loaded from K8s Secret synced by vault-sync Job
+        envSecrets:
+          - name: dagster-vault-secrets
+        env:
+          - name: MET_DB_PORT
+            value: "5432"
+          - name: MET_ANALYTICS_DB_PORT
+            value: "5432"
+        includeConfigInLaunchedRuns:
+          enabled: true
+        readinessProbe:
+          enabled: true
+          periodSeconds: 20
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 15
+
+  # Run launcher configuration
+  runLauncher:
+    type: K8sRunLauncher
+    config:
+      k8sRunLauncher:
+        imagePullPolicy: Always
+        loadInclusterConfig: true
+        # Mount emptyDir volume for DAGSTER_HOME storage in run jobs
+        volumes:
+          - name: dagster-home
+            emptyDir: {}
+        volumeMounts:
+          - name: dagster-home
+            mountPath: /opt/dagster/dagster_home
+
+  # Pipeline run configuration
+  # This configures the dagster-daemon-env ConfigMap which the K8sRunLauncher uses
+  # when creating run pods. Since we use user-deployments with gRPC servers,
+  # runs should use the same image as our user deployments.
+  pipelineRun:
+    image:
+      repository: "image-registry.openshift-image-registry.svc:5000"
+      tag: "latest"
+      pullPolicy: Always
+    env:
+      # These will be added to all pipeline run pods
+      MET_DB_PORT: "5432"
+      MET_ANALYTICS_DB_PORT: "5432"
+    envConfigMaps:
+      - name: dagster-pipeline-env
+    envSecrets:
+      - name: dagster-vault-secrets
+    # Mount emptyDir volume for DAGSTER_HOME storage in run jobs
+    volumes:
+      - name: dagster-home
+        emptyDir: {}
+    volumeMounts:
+      - name: dagster-home
+        mountPath: /opt/dagster/dagster_home
+
+  # Compute log manager
+  computeLogManager:
+    type: NoOpComputeLogManager
+    config: {}
+
+  # Telemetry
+  telemetry:
+    enabled: false
+
+# OpenShift Route configuration for Dagit UI
+route:
+  enabled: false
+  name: dagit
+  host: ""
+  annotations: {}
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  ipRestrictions:
+    enabled: true

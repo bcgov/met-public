@@ -31,6 +31,18 @@
     - Improved default state on AuthoringDetails and AuthoringSummary components
     - Implemented scrolling and additional error for details tabs
 
+## December 16, 2025
+
+- **Feature** Capture Dagster deployment as Helm chart [🎟️ DESENG-926](https://citz-gdx.atlassian.net/browse/DESENG-926)
+  - Created new Helm chart at `openshift/dagster/` to deploy Dagster ETL orchestration.
+  - Allow VPN access to Dagster UI via OpenShift Route with IP whitelisting. Access is blocked for non-dev, non-VPN IPs.
+  - Chart wraps official Dagster Helm chart (v1.4.4) as a dependency with OpenShift-specific customizations.
+  - Includes template for a Job that syncs Vault secrets to a Kubernetes Secret prior to installation.
+    - This was required because the official Dagster chart does not support Vault integration natively.
+    - The secret will remain up-to-date with Vault data when the vault-sync Job is run on upgrade.
+  - Supports environment-specific values files (dev/test/prod) for different deployment configurations.
+  - Updated `openshift/README.md` with deployment instructions for the new Dagster chart.
+
 ## December 11, 2025
 
 - **Feature** Capture Patroni cluster in Helm charts [🎟️ DESENG-925](https://citz-gdx.atlassian.net/browse/DESENG-925)

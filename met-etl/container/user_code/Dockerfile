@@ -30,9 +30,14 @@ ENV PYTHONPATH=/opt/dagster/app:/etl_project
 
 WORKDIR /opt/dagster/app/etl_project
 
+# Copy and set up entrypoint script that sources Vault secrets
+COPY container/user_code/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Run dagster gRPC server on the service port used by the deployment
-EXPOSE 4000
+EXPOSE 3030
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["dagster", "api", "grpc", \
-    "-h", "0.0.0.0", "-p", "4000", \
+    "-h", "0.0.0.0", "-p", "3030", \
     "-d", "/opt/dagster/app/etl_project", \
     "-f", "/opt/dagster/app/etl_project/services/repo.py"]

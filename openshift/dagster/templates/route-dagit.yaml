@@ -1,0 +1,33 @@
+{{- if .Values.route.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Values.route.name | default "dagit" }}
+  namespace: {{ .Values.app.licenseplate }}-{{ .Values.environment }}
+  labels:
+    app: {{ .Values.app.name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    {{- if .Values.route.ipRestrictions.enabled }}
+    # Managed by setup-ingress-protections job - do not modify manually
+    haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"
+    {{- end }}
+    {{- if .Values.route.annotations }}
+    {{- toYaml .Values.route.annotations | nindent 4 }}
+    {{- end }}
+spec:
+  host: {{ .Values.route.host }}
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-dagit
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: {{ .Values.route.tls.termination | default "edge" }}
+    {{- if eq .Values.route.tls.termination "reencrypt" }}
+    destinationCACertificate: {{ .Values.route.tls.destinationCACertificate | default "" }}
+    {{- end }}
+    insecureEdgeTerminationPolicy: {{ .Values.route.tls.insecureEdgeTerminationPolicy | default "Redirect" }}
+  wildcardPolicy: None
+{{- end }}
