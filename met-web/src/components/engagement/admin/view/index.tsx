@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { useRouteLoaderData, Await, useMatches, UIMatch, Outlet } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
-import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Box, Skeleton, Tab } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
@@ -10,6 +9,10 @@ import { EngagementLoaderData } from 'components/engagement/public/view';
 import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 import { Header1 } from 'components/common/Typography';
 import { StatusLabel } from '../create/authoring/AuthoringTemplate';
+// Prevents page load fail due to waiting for engagement title on refresh
+const AutoBreadcrumbs = React.lazy(() =>
+    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
+);
 
 const AdminEngagementView = () => {
     const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;

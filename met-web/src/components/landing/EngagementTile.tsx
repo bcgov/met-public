@@ -32,7 +32,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const dateFormat = 'MMMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = `/new-look/${slug}`;
+    const engagementPath = `/new-look${slug ? '/' + slug : ''}`;
     const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
 
     const loadEngagement = async () => {
@@ -119,86 +119,84 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     },
                 }}
             >
-                {slug && (
-                    <CardActionArea
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => {
-                            setIsHovered(false);
-                            setIsActive(false);
-                        }}
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
-                        onMouseDown={() => setIsActive(true)}
-                        onMouseUp={() => setIsActive(false)}
-                        LinkComponent={RouterLinkRenderer}
-                        href={engagementUrl}
-                        sx={{
-                            '&:focus-visible': {
-                                // focus visible styling is applied by the parent Card component
-                                border: 'none',
-                                outline: 'none',
-                                boxShadow: 'none',
-                                padding: 'unset',
-                                margin: 'unset',
-                            },
-                        }}
-                    >
-                        {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
-                        <CardContent sx={{ height: '260px', p: '40px 32px' }}>
-                            <Box
+                <CardActionArea
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => {
+                        setIsHovered(false);
+                        setIsActive(false);
+                    }}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    onMouseDown={() => setIsActive(true)}
+                    onMouseUp={() => setIsActive(false)}
+                    LinkComponent={RouterLinkRenderer}
+                    href={engagementUrl}
+                    sx={{
+                        '&:focus-visible': {
+                            // focus visible styling is applied by the parent Card component
+                            border: 'none',
+                            outline: 'none',
+                            boxShadow: 'none',
+                            padding: 'unset',
+                            margin: 'unset',
+                        },
+                    }}
+                >
+                    {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
+                    <CardContent sx={{ height: '260px', p: '40px 32px' }}>
+                        <Box
+                            sx={{
+                                height: '96px',
+                                mb: '32px',
+                                width: '100%',
+                                display: 'flex',
+                            }}
+                        >
+                            <Header2
+                                weight="thin"
+                                component="p"
                                 sx={{
-                                    height: '96px',
-                                    mb: '32px',
-                                    width: '100%',
-                                    display: 'flex',
+                                    // Required for multi-line text truncation
+                                    // https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
+                                    // Works on: Chrome, Firefox, Safari, Opera, Edge
+                                    // On unsupported browsers, displays as 3 lines with no ellipsis
+                                    flexGrow: 1,
+                                    display: '-webkit-box',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    WebkitLineClamp: '3',
+                                    WebkitBoxOrient: 'vertical',
+                                    m: 0,
+                                    lineHeight: 'normal',
                                 }}
                             >
-                                <Header2
-                                    weight="thin"
-                                    component="p"
-                                    sx={{
-                                        // Required for multi-line text truncation
-                                        // https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
-                                        // Works on: Chrome, Firefox, Safari, Opera, Edge
-                                        // On unsupported browsers, displays as 3 lines with no ellipsis
-                                        flexGrow: 1,
-                                        display: '-webkit-box',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        WebkitLineClamp: '3',
-                                        WebkitBoxOrient: 'vertical',
-                                        m: 0,
-                                        lineHeight: 'normal',
-                                    }}
-                                >
-                                    {name}
-                                    <FontAwesomeIcon
-                                        style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
-                                        icon={faArrowRight}
-                                    />
-                                </Header2>
-                            </Box>
-                            <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
-                                <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
-                                    <EngagementStatusChip statusId={loadedEngagement.submission_status} />
-                                </Grid>
-                                <Grid item xs container flexDirection="column">
-                                    <BodyText bold size="small" sx={{ lineHeight: 1 }}>
-                                        <time dateTime={`${startDate.format(semanticDateFormat)}`}>
-                                            {startDate.format(dateFormat)}
-                                        </time>{' '}
-                                        to
-                                    </BodyText>
-                                    <BodyText bold size="small" sx={{ lineHeight: 2 }}>
-                                        <time dateTime={`${endDate.format(semanticDateFormat)}`}>
-                                            {endDate.format(dateFormat)}
-                                        </time>
-                                    </BodyText>
-                                </Grid>
+                                {name}
+                                <FontAwesomeIcon
+                                    style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
+                                    icon={faArrowRight}
+                                />
+                            </Header2>
+                        </Box>
+                        <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
+                            <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
+                                <EngagementStatusChip statusId={loadedEngagement.submission_status} />
                             </Grid>
-                        </CardContent>
-                    </CardActionArea>
-                )}
+                            <Grid item xs container flexDirection="column">
+                                <BodyText bold size="small" sx={{ lineHeight: 1 }}>
+                                    <time dateTime={`${startDate.format(semanticDateFormat)}`}>
+                                        {startDate.format(dateFormat)}
+                                    </time>{' '}
+                                    to
+                                </BodyText>
+                                <BodyText bold size="small" sx={{ lineHeight: 2 }}>
+                                    <time dateTime={`${endDate.format(semanticDateFormat)}`}>
+                                        {endDate.format(dateFormat)}
+                                    </time>
+                                </BodyText>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </CardActionArea>
             </Card>
         </ThemeProvider>
     );

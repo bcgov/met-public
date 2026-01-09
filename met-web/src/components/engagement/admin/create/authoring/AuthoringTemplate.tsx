@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useOutletContext, Form, useParams, Await, Outlet, useMatch, useRouteLoaderData } from 'react-router-dom';
 import AuthoringBottomNav from './AuthoringBottomNav';
 import { EngagementUpdateData } from './AuthoringContext';
@@ -8,14 +8,13 @@ import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { BodyText, Header1, Header2 } from 'components/common/Typography';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
 import { Engagement } from 'models/engagement';
-import { getTenantLanguages } from 'services/languageService';
 import { EngagementLoaderData } from 'components/engagement/public/view';
 import { colors } from 'styles/Theme';
-import { Skeleton } from '@mui/material';
+import { saveLanguage } from 'reduxSlices/languageSlice';
 
 export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     const statusColor = completed ? colors.notification.success : colors.notification.error;
@@ -35,18 +34,23 @@ export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
     );
 };
 
-export const getLanguageValue = (currentLanguage: string, languages: Language[]) => {
-    return languages.find((language) => language.code === currentLanguage)?.name;
+export const getLanguageValue = (languageCode: string, languages: Language[]) => {
+    if (languageCode === 'en') {
+        return 'English';
+    }
+    return languages.find((language) => language.code === languageCode)?.name || '';
 };
 
 const AuthoringTemplate = () => {
     const { onSubmit, defaultValues, setDefaultValues, fetcher }: AuthoringContextType = useOutletContext();
     const { engagementId } = useParams() as { engagementId: string }; // We need the engagement ID quickly, so let's grab it from useParams
-    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
-    const [currentLanguage, setCurrentLanguage] = useState(useAppSelector((state) => state.language.id));
-
-    const tenant = useAppSelector((state) => state.tenant);
-    const languages = useMemo(() => getTenantLanguages(tenant.id), [tenant.id]); // todo: Using tenant language list until language data is integrated with the engagement.
+    const { engagement, languages } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const dispatch = useAppDispatch();
+    const currentLanguage = useAppSelector((state) => state.language);
+    const setCurrentLanguage = React.useCallback(
+        (code: string, name: string) => dispatch(saveLanguage({ id: code, name: name })),
+        [dispatch],
+    );
     const authoringRoutes = getAuthoringRoutes(Number(engagementId));
     const pageName = useMatch('/engagements/:engagementId/details/authoring/:page')?.params.page;
     const pageTitle = authoringRoutes.find((route) => {
@@ -54,8 +58,21 @@ const AuthoringTemplate = () => {
         return pathArray[pathArray.length - 1] === pageName;
     })?.name;
 
-    const { handleSubmit } = useFormContext<EngagementUpdateData>();
+    const {
+        handleSubmit,
+        formState: { isDirty },
+    } = useFormContext<EngagementUpdateData>();
     const outletKey = pageName || 'authoring';
+
+    // Prevent refresh/navigation if there are unsaved changes
+    useEffect(() => {
+        if (!isDirty) return;
+        const handler = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+        };
+        window.addEventListener('beforeunload', handler);
+        return () => window.removeEventListener('beforeunload', handler);
+    }, [isDirty]);
 
     return (
         <ResponsiveContainer>
@@ -77,11 +94,7 @@ const AuthoringTemplate = () => {
             <div id="pre-authoring-content" />
 
             <Header2 decorated style={{ paddingTop: '1rem' }}>
-                <Suspense fallback={<Skeleton width={200} />}>
-                    <Await resolve={languages}>
-                        {(languages: Language[]) => `${getLanguageValue(currentLanguage, languages)} Content`}
-                    </Await>
-                </Suspense>
+                {currentLanguage.name}
             </Header2>
 
             <Form onSubmit={handleSubmit(onSubmit)} id="authoring-form">
@@ -101,19 +114,13 @@ const AuthoringTemplate = () => {
                         )}
                     </Await>
                 </Suspense>
-                <Suspense>
-                    <Await resolve={languages}>
-                        {(languages: Language[]) => (
-                            <AuthoringBottomNav
-                                currentLanguage={currentLanguage}
-                                setCurrentLanguage={setCurrentLanguage}
-                                languages={languages}
-                                pageTitle={pageTitle || 'untitled'} // Full title
-                                pageName={pageName || 'untitled'} // Slug
-                            />
-                        )}
-                    </Await>
-                </Suspense>
+                <AuthoringBottomNav
+                    currentLanguage={currentLanguage}
+                    setCurrentLanguage={setCurrentLanguage}
+                    languages={languages}
+                    pageTitle={pageTitle || 'untitled'} // Full title
+                    pageName={pageName || 'untitled'} // Slug
+                />
             </Form>
         </ResponsiveContainer>
     );

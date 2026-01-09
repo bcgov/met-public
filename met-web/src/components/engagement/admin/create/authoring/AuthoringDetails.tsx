@@ -372,44 +372,42 @@ const AuthoringDetails = () => {
             {/* Tabs and form */}
             <AuthoringFormContainer sx={authoringFormContainerStyles}>
                 {/* Tabs mode radio selector */}
-                {tabsEnabled && (
-                    <Grid2 sx={{ margin: '1rem 0' }}>
-                        <FormDescriptionText style={formDescriptionTextStyles}>
-                            {'In the Details Section of your engagement, you have the option to display your content in a ' +
-                                'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
-                                'to use tabs if your content is quite lengthy so you can organize it into smaller, more ' +
-                                'digestible chunks and reduce the length of your engagement page.'}
-                        </FormDescriptionText>
-                        <RadioGroup
-                            row
-                            aria-label="Tab Mode Selector"
-                            id="tab_mode_selector"
-                            sx={tabRadioContainerStyles}
-                            value={tabsEnabled ? 'true' : 'false'}
-                            onChange={(_, value) => {
-                                value === 'true' ? enableTabs() : disableTabs();
-                            }}
-                        >
-                            <FormControlLabel
-                                value="false"
-                                control={<Radio />}
-                                label={<span style={{ fontWeight: 'bold' }}>No Tabs</span>}
-                                style={radioStyles}
-                            />
-                            <FormControlLabel
-                                value="true"
-                                control={<Radio />}
-                                label={
-                                    <>
-                                        <span style={{ fontWeight: 'bold' }}>Tabs </span>
-                                        <span>(2 Minimum)</span>
-                                    </>
-                                }
-                                style={radioStyles}
-                            />
-                        </RadioGroup>
-                    </Grid2>
-                )}
+                <Grid2 sx={{ margin: '1rem 0' }}>
+                    <FormDescriptionText style={formDescriptionTextStyles}>
+                        {'In the Details Section of your engagement, you have the option to display your content in a ' +
+                            'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
+                            'to use tabs if your content is quite lengthy so you can organize it into smaller, more ' +
+                            'digestible chunks and reduce the length of your engagement page.'}
+                    </FormDescriptionText>
+                    <RadioGroup
+                        row
+                        aria-label="Tab Mode Selector"
+                        id="tab_mode_selector"
+                        sx={tabRadioContainerStyles}
+                        value={tabsEnabled ? 'true' : 'false'}
+                        onChange={(_, value) => {
+                            value === 'true' ? enableTabs() : disableTabs();
+                        }}
+                    >
+                        <FormControlLabel
+                            value="false"
+                            control={<Radio />}
+                            label={<span style={{ fontWeight: 'bold' }}>No Tabs</span>}
+                            style={radioStyles}
+                        />
+                        <FormControlLabel
+                            value="true"
+                            control={<Radio />}
+                            label={
+                                <>
+                                    <span style={{ fontWeight: 'bold' }}>Tabs </span>
+                                    <span>(2 Minimum)</span>
+                                </>
+                            }
+                            style={radioStyles}
+                        />
+                    </RadioGroup>
+                </Grid2>
 
                 {/* Tab instructions */}
                 {tabsEnabled && (

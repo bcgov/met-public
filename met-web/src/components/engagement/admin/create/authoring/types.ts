@@ -6,6 +6,7 @@ import { Engagement } from 'models/engagement';
 import { EditorState } from 'draft-js';
 import { FetcherWithComponents } from 'react-router-dom';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
+import { LanguageState } from 'reduxSlices/languageSlice';
 
 export interface AuthoringNavProps {
     open: boolean;
@@ -28,17 +29,17 @@ export interface AuthoringContextType {
 }
 
 export interface LanguageSelectorProps {
-    currentLanguage: string;
-    setCurrentLanguage: Dispatch<SetStateAction<string>>;
-    languages: Language[];
+    currentLanguage: LanguageState;
+    setCurrentLanguage: (code: string, name: string) => void;
+    languages: Promise<Language[]>;
     isDirty: boolean;
     isSubmitting: boolean;
 }
 
 export interface AuthoringBottomNavProps {
-    currentLanguage: string;
-    setCurrentLanguage: Dispatch<SetStateAction<string>>;
-    languages: Language[];
+    currentLanguage: LanguageState;
+    setCurrentLanguage: (code: string, name: string) => void;
+    languages: Promise<Language[]>;
     pageTitle: string;
     pageName: string;
 }

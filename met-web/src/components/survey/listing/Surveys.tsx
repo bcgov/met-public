@@ -31,7 +31,10 @@ import { SurveyListingContext } from './SurveyListingContext';
 import { USER_ROLES } from 'services/userService/constants';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
-import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
+// Prevents page load fail due to waiting for engagement title on refresh
+const AutoBreadcrumbs = React.lazy(() =>
+    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
+);
 
 const Surveys = () => {
     const {

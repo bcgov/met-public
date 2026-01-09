@@ -3,12 +3,14 @@ import { AppConfig } from 'config';
 
 export interface LanguageState {
     id: string;
+    name: string;
     loading: boolean;
     isLoaded: boolean;
 }
 
 const initialState: LanguageState = {
     id: AppConfig.language.defaultLanguageId,
+    name: AppConfig.language.defaultLanguageName,
     loading: true,
     isLoaded: false,
 };
@@ -22,6 +24,7 @@ export const languageSlice = createSlice({
         },
         saveLanguage: (state, action) => {
             state.id = action.payload.id;
+            state.name = action.payload.name;
             state.isLoaded = true;
         },
     },

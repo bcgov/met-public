@@ -16,8 +16,11 @@ import {
 
 import React, { Suspense } from 'react';
 import { Tenant } from 'models/tenant';
-import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { Await, useNavigate, useRouteLoaderData } from 'react-router-dom';
+// Prevents page load fail due to waiting for engagement title on refresh
+const AutoBreadcrumbs = React.lazy(() =>
+    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
+);
 
 const TenantListingPage = () => {
     const navigate = useNavigate();
