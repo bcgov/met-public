@@ -106,7 +106,7 @@ const ConfirmModal = ({
                         sx={{ mt: '1em' }}
                     >
                         <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
-                            <Button type="button" variant="secondary" onClick={handleClose}>
+                            <Button type="button" variant="secondary" onClick={handleClose} autoFocus>
                                 {cancelButtonText}
                             </Button>
                             <Button variant="primary" color={style} onClick={handleConfirm} type="submit">

@@ -71,6 +71,14 @@ export const EngagementDetailsTabs = () => {
             width: { xs: '100%', md: 'max-content' },
             flexDirection: { xs: 'column', md: 'row' },
         },
+        '& .Mui-focusVisible': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '4px solid',
+            borderColor: 'focus.outer',
+            padding: '0px 20px 0px 14px',
+            borderRadius: { xs: '0', md: '0 1rem 0 0' },
+        },
     };
 
     const tabStyles = {
@@ -133,6 +141,7 @@ export const EngagementDetailsTabs = () => {
                                 scrollButtons={false}
                                 TabIndicatorProps={{ sx: tabIndicatorStyles }}
                                 sx={tabListStyles}
+                                selectionFollowsFocus
                             >
                                 {tabs.map((tab, key) => (
                                     <Tab

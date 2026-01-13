@@ -1,3 +1,10 @@
+## January 13, 2026
+
+- Added keyboard navigation to the details tabs on the admin and public sides. 
+    - The following tickets are affected:
+        - [🎟️ DESENG-672](https://citz-gdx.atlassian.net/browse/DESENG-672)
+        - [🎟️ DESENG-710](https://citz-gdx.atlassian.net/browse/DESENG-710)
+
 ## January 8, 2026
 
 - **Feature** Admin publishing tab in engagement details section. [🎟️ DESENG-709](https://citz-gdx.atlassian.net/browse/DESENG-709)
