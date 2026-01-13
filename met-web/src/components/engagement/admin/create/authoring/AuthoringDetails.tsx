@@ -384,6 +384,12 @@ const AuthoringDetails = () => {
         justifyItems: 'center',
         marginLeft: '1.125rem',
         borderRadius: '4px',
+        '&.activated-x': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '2px solid',
+            borderColor: 'focus.outer',
+        },
     };
 
     const fontAwesomeXStyles: React.CSSProperties = {
@@ -520,6 +526,7 @@ const AuthoringDetails = () => {
                                 {authoringDetailsTabs.map((value, key) => (
                                     <Tab
                                         component="button"
+                                        aria-label={`${value.label || 'Tab ' + key} is selected. Press the delete key to remove.`}
                                         key={String(key)}
                                         value={String(key)}
                                         onKeyDown={(event) => {
@@ -534,12 +541,13 @@ const AuthoringDetails = () => {
                                                 {key !== 0 && authoringDetailsTabs.length > 2 ? (
                                                     <IconButton
                                                         component="span"
+                                                        focusVisibleClassName="activated-x"
                                                         sx={iconButtonStyles}
                                                         disableRipple
-                                                        tabIndex={-1}
+                                                        tabIndex={currentTab === String(key) ? 0 : -1}
                                                         size="small"
                                                         edge="end"
-                                                        aria-label={`Close tab ${value.label}`}
+                                                        aria-label={`Remove tab: ${value.label || key + 1}.`}
                                                         onClick={(event) => {
                                                             event.stopPropagation();
                                                             removeTab(event, key);
@@ -574,6 +582,7 @@ const AuthoringDetails = () => {
                                 <Tab
                                     value="add"
                                     label="+ Add Tab"
+                                    aria-label="Add a new tab."
                                     disabled={authoringDetailsTabs.length > 9}
                                     disableRipple
                                     sx={{ ...addTabButtonStyles }}
