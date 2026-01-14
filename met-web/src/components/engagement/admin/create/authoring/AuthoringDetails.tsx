@@ -395,7 +395,8 @@ const AuthoringDetails = () => {
         alignContent: 'center',
         justifyItems: 'center',
         marginLeft: '1.125rem',
-        borderRadius: '4px',
+        width: '1.5rem',
+        height: '1.5rem',
         '&.activated-x': {
             outline: `2px solid`,
             outlineColor: 'focus.inner',
@@ -528,7 +529,7 @@ const AuthoringDetails = () => {
                                 id="details-tab-list"
                                 sx={tabListStyles}
                                 selectionFollowsFocus
-                                TabIndicatorProps={{ style: { display: 'none' } }}
+                                slotProps={{ indicator: { style: { display: 'none' } } }}
                                 onChange={(_, value: string) => {
                                     if (value !== 'add') {
                                         setCurrentTab(String(value));
