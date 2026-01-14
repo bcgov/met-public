@@ -1,4 +1,4 @@
-import { FormControlLabel, Grid2 as Grid, Modal, Radio, RadioGroup, Tab } from '@mui/material';
+import { Box, FormControlLabel, Grid2 as Grid, IconButton, Modal, Radio, RadioGroup, Tab } from '@mui/material';
 import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -37,7 +37,9 @@ const AuthoringDetails = () => {
     const [delTabIndex, setDelTabIndex] = useState(-1);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [noTabsModalOpen, setNoTabsModalOpen] = useState(false);
+    const [updateFocus, setUpdateFocus] = useState(false);
     const hasUnsavedWork = isDirty && !isSubmitting;
+    const selectedTabRef = useRef<HTMLButtonElement | null>(null);
     const tabErrorsRef = useRef<HTMLDivElement>(null);
     const engagementId = engagement.id;
     const authoringDetailsTabs = watch('details_tabs');
@@ -50,6 +52,13 @@ const AuthoringDetails = () => {
         body: EditorState.createEmpty(),
         sort_index: 1,
     };
+
+    // Return focus to the newly selected element after an update focus request.
+    useEffect(() => {
+        if (!updateFocus) return;
+        selectedTabRef.current?.focus();
+        setUpdateFocus(false);
+    }, [updateFocus]);
 
     // Set current values to default state after saving form
     useEffect(() => {
@@ -116,7 +125,7 @@ const AuthoringDetails = () => {
             sort_index: newTabs.length + 1,
         };
         updateTabs([...renumberedTabs, newTab], true);
-        setCurrentTab(String(newTabs.length));
+        setCurrentTab(String(renumberedTabs.length));
     };
 
     const renumberTabs = (tabs: FormDetailsTab[]): FormDetailsTab[] => {
@@ -135,7 +144,7 @@ const AuthoringDetails = () => {
         const newTabs = getValues('details_tabs');
         if (index !== -1 && newTabs?.[index]) {
             setDelTabIndex(index);
-            setDeleteModalOpen(true);
+            openModal('delete tab');
         }
     };
 
@@ -171,12 +180,7 @@ const AuthoringDetails = () => {
             setCurrentTab(String(renumberedTabs.length - 1));
         }
         updateTabs(renumberedTabs, true);
-        deleteModalClose();
-    };
-
-    const deleteModalClose = () => {
-        setDeleteModalOpen(false);
-        setDelTabIndex(-1);
+        closeModal('delete tab');
     };
 
     const updateTabs = (newTabs: FormDetailsTab[], dirtied: boolean) => {
@@ -191,7 +195,7 @@ const AuthoringDetails = () => {
     const disableTabs = () => {
         if (getValues('details_tabs')?.length > 1) {
             // Don't directly set tabs to disabled if there are multiple tabs - confirm first.
-            setNoTabsModalOpen(true);
+            openModal('disable tabs');
         }
     };
 
@@ -200,8 +204,7 @@ const AuthoringDetails = () => {
         const newTabs = getValues('details_tabs');
         // Remove subsequent tabs when switching to no-tab mode. This action dirties the form.
         updateTabs([newTabs[0]], true);
-        setNoTabsModalOpen(false);
-        setCurrentTab('0');
+        closeModal('disable tabs');
     };
 
     const scrollToTabErrors = () => {
@@ -209,6 +212,53 @@ const AuthoringDetails = () => {
             behavior: 'smooth',
             block: 'start',
         });
+    };
+
+    const openModal = (source: string) => {
+        switch (source) {
+            case 'delete tab':
+                setDeleteModalOpen(true);
+                break;
+            case 'disable tabs':
+                setNoTabsModalOpen(true);
+                break;
+        }
+    };
+
+    const closeModal = (source: string) => {
+        switch (source) {
+            case 'delete tab':
+                setDeleteModalOpen(false);
+                setDelTabIndex(-1);
+                break;
+            case 'disable tabs':
+                setNoTabsModalOpen(false);
+                setCurrentTab('0');
+                break;
+        }
+        setUpdateFocus(true);
+    };
+
+    const tabKeyDown = (
+        event: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement | HTMLSpanElement>,
+        source: string,
+        index = -1,
+    ) => {
+        if (source === 'add' && (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ')) {
+            event.preventDefault();
+            addTab();
+        } else if (source === 'tab' && (event.key === 'Delete' || event.key === 'Backspace')) {
+            event.preventDefault();
+            removeTab(event, index);
+        } else if (source === 'tabx' && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+            event.preventDefault();
+            const newTab = Number(currentTab) + (event.key === 'ArrowRight' ? +1 : -1);
+            const newString = String(newTab);
+            if (authoringDetailsTabs[newTab]) {
+                setCurrentTab(newString);
+                setUpdateFocus(true);
+            }
+        }
     };
 
     // WYSIWYG text editor toolbar items
@@ -253,6 +303,13 @@ const AuthoringDetails = () => {
             flexWrap: 'wrap', // For 7-10 tabs, a second line of tabs is required.
             marginBottom: '-12px',
         },
+        '&:focus-visible': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '4px solid',
+            borderColor: 'focus.outer',
+            padding: '0px 20px 0px 14px',
+        },
     };
 
     const tabStyles = {
@@ -261,7 +318,6 @@ const AuthoringDetails = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '48px',
-        mt: '0.5rem',
         padding: '4px 18px 2px 18px',
         fontSize: '14px',
         borderRadius: '0px 16px 0px 0px',
@@ -283,17 +339,26 @@ const AuthoringDetails = () => {
 
     const addTabButtonStyles = {
         border: 'none',
+        borderRadius: '0px 16px 0px 0px',
         background: 'transparent',
         fontWeight: 'normal',
         fontSize: '0.9rem',
-        height: '65px',
+        padding: '0',
+        mb: '0.75rem',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         width: '90px',
         color: colors.button.default.shade,
         cursor: 'pointer',
-        minWidth: '100px',
+        minWidth: '120px',
+        '&:focus-visible': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '2px solid',
+            borderColor: 'focus.outer',
+            padding: '0px 20px 0px 14px',
+        },
     };
 
     const tabPanelStyles = {
@@ -301,15 +366,6 @@ const AuthoringDetails = () => {
         flexDirection: 'column',
         gap: 0,
         padding: 0,
-    };
-
-    const fontAwesomeXStyles: React.CSSProperties = {
-        fontSize: '16px',
-        display: 'inline-flex',
-        alignItems: 'center',
-        marginLeft: '1.125rem',
-        position: 'relative',
-        top: '1px',
     };
 
     const labelSectionStyles: React.CSSProperties = {
@@ -321,6 +377,40 @@ const AuthoringDetails = () => {
         '& .met-input-form-field-title': { fontSize: '0.875rem' },
         '& .met-input-text': { background: 'white' },
         '& #image-upload-section .MuiGrid-container': { background: 'white' },
+    };
+
+    const closeTabXContainer = {
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'nowrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+    };
+
+    const iconButtonStyles = {
+        color: 'inherit',
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'noWrap',
+        alignContent: 'center',
+        justifyItems: 'center',
+        marginLeft: '1.125rem',
+        width: '1.5rem',
+        height: '1.5rem',
+        '&.activated-x': {
+            outline: `2px solid`,
+            outlineColor: 'focus.inner',
+            border: '2px solid',
+            borderColor: 'focus.outer',
+        },
+    };
+
+    const fontAwesomeXStyles: React.CSSProperties = {
+        fontSize: '16px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        position: 'relative',
+        top: '1px',
     };
 
     return (
@@ -340,7 +430,7 @@ const AuthoringDetails = () => {
                         { text: 'deleted permanently.', bold: true },
                     ]}
                     handleConfirm={deleteConfirm}
-                    handleClose={deleteModalClose}
+                    handleClose={() => closeModal('delete tab')}
                     confirmButtonText={`Delete ${authoringDetailsTabs[delTabIndex]?.label || 'This Tab'}`}
                     cancelButtonText={'Cancel & Go Back'}
                 />
@@ -360,7 +450,7 @@ const AuthoringDetails = () => {
                         },
                     ]}
                     handleConfirm={noTabsConfirm}
-                    handleClose={() => setNoTabsModalOpen(false)}
+                    handleClose={() => closeModal('disable tabs')}
                     confirmButtonText={'Delete Tabs'}
                     cancelButtonText={'Cancel & Go Back'}
                 />
@@ -436,36 +526,57 @@ const AuthoringDetails = () => {
                                 }
                             />
                             <TabList
+                                id="details-tab-list"
                                 sx={tabListStyles}
-                                TabIndicatorProps={{ style: { display: 'none' } }}
+                                selectionFollowsFocus
+                                slotProps={{ indicator: { style: { display: 'none' } } }}
                                 onChange={(_, value: string) => {
-                                    if (value === 'add') {
-                                        addTab();
-                                    } else {
+                                    if (value !== 'add') {
                                         setCurrentTab(String(value));
                                     }
                                 }}
                             >
                                 {authoringDetailsTabs.map((value, key) => (
                                     <Tab
+                                        component="button"
+                                        aria-label={`${value.label || 'Tab ' + key} is selected. Press the delete key to remove.`}
                                         key={String(key)}
                                         value={String(key)}
+                                        onKeyDown={(event) => {
+                                            tabKeyDown(event, 'tab', key);
+                                        }}
+                                        disableFocusRipple
+                                        ref={currentTab === String(key) ? selectedTabRef : null}
                                         // Add an X when appropriate: not on first tab, only if there are 3 or more tabs.
                                         label={
-                                            <span>
-                                                {value.label}
+                                            <Box sx={closeTabXContainer}>
+                                                <span>{value.label}</span>
                                                 {key !== 0 && authoringDetailsTabs.length > 2 ? (
-                                                    <FontAwesomeIcon
-                                                        icon={faXmark}
-                                                        style={{ ...fontAwesomeXStyles }}
-                                                        onClick={(event: React.SyntheticEvent) => {
+                                                    <IconButton
+                                                        component="span"
+                                                        focusVisibleClassName="activated-x"
+                                                        sx={iconButtonStyles}
+                                                        disableRipple
+                                                        tabIndex={currentTab === String(key) ? 0 : -1}
+                                                        size="small"
+                                                        edge="end"
+                                                        aria-label={`Remove tab: ${value.label || key + 1}.`}
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
                                                             removeTab(event, key);
                                                         }}
-                                                    />
+                                                        onKeyDown={(event) => {
+                                                            tabKeyDown(event, 'tabx', key);
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            style={{ ...fontAwesomeXStyles }}
+                                                            icon={faXmark}
+                                                        />
+                                                    </IconButton>
                                                 ) : null}
-                                            </span>
+                                            </Box>
                                         }
-                                        disableFocusRipple
                                         // Colour the tab labels red if they contain errors so the user sees them from another tab.
                                         sx={{
                                             ...tabStyles,
@@ -487,9 +598,12 @@ const AuthoringDetails = () => {
                                 <Tab
                                     value="add"
                                     label="+ Add Tab"
+                                    aria-label="Add a new tab."
                                     disabled={authoringDetailsTabs.length > 9}
                                     disableRipple
                                     sx={{ ...addTabButtonStyles }}
+                                    onClick={() => addTab()}
+                                    onKeyDown={(event) => tabKeyDown(event, 'add')}
                                 />
                             </TabList>
 
