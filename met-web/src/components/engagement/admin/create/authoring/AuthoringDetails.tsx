@@ -239,13 +239,25 @@ const AuthoringDetails = () => {
         setUpdateFocus(true);
     };
 
-    const tabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement>, source: string, index = -1) => {
+    const tabKeyDown = (
+        event: React.KeyboardEvent<HTMLButtonElement | HTMLDivElement | HTMLSpanElement>,
+        source: string,
+        index = -1,
+    ) => {
         if (source === 'add' && (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ')) {
             event.preventDefault();
             addTab();
         } else if (source === 'tab' && (event.key === 'Delete' || event.key === 'Backspace')) {
             event.preventDefault();
             removeTab(event, index);
+        } else if (source === 'tabx' && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+            event.preventDefault();
+            const newTab = Number(currentTab) + (event.key === 'ArrowRight' ? +1 : -1);
+            const newString = String(newTab);
+            if (authoringDetailsTabs[newTab]) {
+                setCurrentTab(newString);
+                setUpdateFocus(true);
+            }
         }
     };
 
@@ -551,6 +563,9 @@ const AuthoringDetails = () => {
                                                         onClick={(event) => {
                                                             event.stopPropagation();
                                                             removeTab(event, key);
+                                                        }}
+                                                        onKeyDown={(event) => {
+                                                            tabKeyDown(event, 'tabx', key);
                                                         }}
                                                     >
                                                         <FontAwesomeIcon
