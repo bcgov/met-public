@@ -60,10 +60,9 @@ jobs:
         steps:
             - uses: actions/checkout@v6
             - name: Build Docker image
-              working-directory: ./met-etl
               id: build
               run: |
-                  docker build . --file Dockerfile --tag met-etl-ci:latest
+                  docker build . --file container/user_code/Dockerfile --tag met-etl-ci:latest
 
     tests:
         needs: setup-job
