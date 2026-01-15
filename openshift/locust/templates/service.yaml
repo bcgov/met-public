@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.master.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: locust
+    component: master
+spec:
+  type: {{ .Values.master.service.type }}
+  ports:
+  - port: {{ .Values.master.service.webPort }}
+    targetPort: web
+    protocol: TCP
+    name: web
+  - port: {{ .Values.master.service.masterPort }}
+    targetPort: master
+    protocol: TCP
+    name: master
+  - port: {{ .Values.master.service.workerPort }}
+    targetPort: worker
+    protocol: TCP
+    name: worker
+  selector:
+    app: locust
+    component: master

@@ -1,0 +1,87 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: locust-network-policy
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: locust
+spec:
+  podSelector:
+    matchLabels:
+      app: locust
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow web UI access from OpenShift router/ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+  # Allow worker-to-master communication
+  - from:
+    - podSelector:
+        matchLabels:
+          app: locust
+          component: worker
+    ports:
+    - protocol: TCP
+      port: {{ .Values.master.service.masterPort }}
+    - protocol: TCP
+      port: {{ .Values.master.service.workerPort }}
+  # Allow master-to-worker communication
+  - from:
+    - podSelector:
+        matchLabels:
+          app: locust
+          component: master
+  egress:
+  # Allow DNS resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: openshift-dns
+    ports:
+    - protocol: UDP
+      port: 5353
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          dns.operator.openshift.io/daemonset-dns: default
+    ports:
+    - protocol: UDP
+      port: 5353
+    - protocol: TCP
+      port: 5353
+  # Allow worker-to-master communication
+  - to:
+    - podSelector:
+        matchLabels:
+          app: locust
+          component: master
+    ports:
+    - protocol: TCP
+      port: {{ .Values.master.service.masterPort }}
+    - protocol: TCP
+      port: {{ .Values.master.service.workerPort }}
+  # Allow master-to-worker communication
+  - to:
+    - podSelector:
+        matchLabels:
+          app: locust
+          component: worker
+  {{- if .Values.networkPolicy.allowInternet }}
+  # Allow traffic to target host for load testing
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 8080
+  {{- end }}
+{{- end }}

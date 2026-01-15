@@ -1,0 +1,58 @@
+# Locust Configuration for Production Environment (e903c2-prod)
+# This file extends the base values.yaml with production-specific settings
+
+# Namespace for production environment
+namespace: e903c2-prod
+
+# Application metadata
+app:
+  name: locust
+  licenseplate: e903c2
+
+# Vault configuration (Gold cluster)
+vault:
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"
+  engine: "e903c2-prod"
+  path: "" # Root path for production
+
+# Route configuration with IP restrictions
+# DO NOT disable IP restrictions in production!
+route:
+  enabled: true
+  host: "" # Auto-generated
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  ipRestrictions:
+    enabled: true
+
+# Master configuration
+master:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  config:
+    targetHost: "https://met-web-demo.apps.gold.devops.gov.bc.ca/"
+
+# Worker configuration
+worker:
+  replicas: 5
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+# NetworkPolicy enabled - strict for production
+networkPolicy:
+  enabled: true
+  allowInternet: true
