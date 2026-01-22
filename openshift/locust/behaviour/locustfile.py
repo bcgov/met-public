@@ -29,11 +29,19 @@ def GET(url, name=None, annotation=None):
     return name
 
 
+FROM_ENGAGEMENT_ANNOTATION = "from engagement"
 JSON_CONTENT_TYPE = "application/json"
 HOMEPAGE_NAME = GET("/", annotation="HTML")
 CONFIG_JS_URL = "/config/config.js"
 FAVICON_URL = "/BCFavIcon.png"
 MANIFEST_URL = "/manifest.json"
+ENGAGEMENT_API_URL = "/api/engagements"
+ENGAGEMENT_DETAILS_API_URL = "/api/engagement/[id]/details"
+WIDGET_ENGAGEMENT_API_URL = "/api/widgets/engagement/[id]"
+OIDC_CONFIG_URL = "/api/oidc_config/config.js"
+ENGAGEMENTS_URL = "/engagements"
+SURVEYS_URL = "/surveys"
+METADATA_URL = "/metadata"
 
 # ============================================================================
 # REALISTIC API USER - Production-Like API Patterns
@@ -81,7 +89,7 @@ class RealisticAPIUser(HttpUser):
         with self.client.get(
             f"/api/engagements?page={page}&size=10&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
             headers=self.headers,
-            name=GET("/api/engagements", annotation="paginated"),
+            name=GET(ENGAGEMENT_API_URL, annotation="paginated"),
             catch_response=True
         ) as response:
             if response.status_code == 200:
@@ -140,8 +148,8 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name=GET("/api/widgets/engagement/[id]",
-                     annotation="from engagement")
+            name=GET(WIDGET_ENGAGEMENT_API_URL,
+                     annotation=FROM_ENGAGEMENT_ANNOTATION)
         )
 
         # Sometimes loads metadata
@@ -150,7 +158,7 @@ class RealisticAPIUser(HttpUser):
                 f"/api/engagements/{engagement_id}/metadata",
                 headers=self.headers,
                 name=GET("/api/engagements/[id]/metadata",
-                         annotation="from engagement")
+                         annotation=FROM_ENGAGEMENT_ANNOTATION)
             )
 
         # Sometimes loads details tabs
@@ -158,8 +166,8 @@ class RealisticAPIUser(HttpUser):
             self.client.get(
                 f"/api/engagement/{engagement_id}/details",
                 headers=self.headers,
-                name=GET("/api/engagement/[id]/details",
-                         annotation="from engagement")
+                name=GET(ENGAGEMENT_DETAILS_API_URL,
+                         annotation=FROM_ENGAGEMENT_ANNOTATION)
             )
 
     @task(5)
@@ -172,7 +180,7 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page=1&size=10&search_text={term}&sort_key=engagement.created_date&sort_order=desc",
             headers=self.headers,
-            name=GET("/api/engagements", annotation="search")
+            name=GET(ENGAGEMENT_API_URL, annotation="search")
         )
 
     @task(3)
@@ -231,8 +239,8 @@ class RealisticFrontendUser(HttpUser):
 
         # Bootstrap assets
         self.client.get(CONFIG_JS_URL, name=GET(CONFIG_JS_URL))
-        self.client.get("/api/oidc_config/config.js",
-                        name=GET("/api/oidc_config/config.js"))
+        self.client.get(OIDC_CONFIG_URL,
+                        name=GET(OIDC_CONFIG_URL))
         self.client.get(FAVICON_URL, name=GET(FAVICON_URL))
         self.client.get(MANIFEST_URL, name=GET(MANIFEST_URL))
         # Discover routes
@@ -243,7 +251,7 @@ class RealisticFrontendUser(HttpUser):
         response = self.client.get(
             "/api/engagements?page=1&size=10",
             headers={"Accept": JSON_CONTENT_TYPE},
-            name=GET("/api/engagements")
+            name=GET(ENGAGEMENT_API_URL)
         )
         if response.status_code == 200:
             try:
@@ -254,7 +262,6 @@ class RealisticFrontendUser(HttpUser):
             except Exception as e:
                 if type(e) in [KeyboardInterrupt, BaseException, SystemExit]:
                     raise e
-                pass
 
     @task(10)
     def browse_homepage(self):
@@ -264,7 +271,7 @@ class RealisticFrontendUser(HttpUser):
     @task(8)
     def browse_engagements_page(self):
         """Navigate to engagements list page"""
-        self.client.get("/engagements", name=GET("/engagements"))
+        self.client.get(ENGAGEMENTS_URL, name=GET(ENGAGEMENTS_URL))
 
     @task(6)
     def view_engagement_page(self):
@@ -281,12 +288,12 @@ class RealisticFrontendUser(HttpUser):
     @task(3)
     def navigate_surveys(self):
         """Navigate to surveys page"""
-        self.client.get("/surveys", name=GET("/surveys"))
+        self.client.get(SURVEYS_URL, name=GET(SURVEYS_URL))
 
     @task(2)
     def navigate_metadata(self):
         """Navigate to metadata page"""
-        self.client.get("/metadata", name=GET("/metadata"))
+        self.client.get(METADATA_URL, name=GET(METADATA_URL))
 
     @task(1)
     def reload_page(self):
@@ -351,7 +358,7 @@ class HeavyAPIUser(HttpUser):
             with self.client.get(
                 f"/api/engagements?page={page}&size=50&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
                 headers=self.headers,
-                name=GET("/api/engagements", annotation="large page"),
+                name=GET(ENGAGEMENT_API_URL, annotation="large page"),
                 catch_response=True
             ) as response:
                 if response.status_code == 200:
@@ -371,7 +378,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page={page}&size={size}&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
             headers=self.headers,
-            name=GET("/api/engagements", annotation="varied")
+            name=GET(ENGAGEMENT_API_URL, annotation="varied")
         )
 
     @task(15)
@@ -411,8 +418,8 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name=GET("/api/widgets/engagement/[id]",
-                     annotation="from engagement")
+            name=GET(WIDGET_ENGAGEMENT_API_URL,
+                     annotation=FROM_ENGAGEMENT_ANNOTATION)
         )
 
         # Metadata
@@ -420,15 +427,15 @@ class HeavyAPIUser(HttpUser):
             f"/api/engagements/{engagement_id}/metadata",
             headers=self.headers,
             name=GET("/api/engagements/[id]/metadata",
-                     annotation="from engagement")
+                     annotation=FROM_ENGAGEMENT_ANNOTATION)
         )
 
         # Details tabs
         self.client.get(
             f"/api/engagement/{engagement_id}/details",
             headers=self.headers,
-            name=GET("/api/engagement/[id]/details",
-                     annotation="from engagement")
+            name=GET(ENGAGEMENT_DETAILS_API_URL,
+                     annotation=FROM_ENGAGEMENT_ANNOTATION)
         )
 
     @task(10)
@@ -450,7 +457,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name=GET("/api/widgets/engagement/[id]")
+            name=GET(WIDGET_ENGAGEMENT_API_URL)
         )
 
     @task(5)
@@ -463,7 +470,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagement/{engagement_id}/details",
             headers=self.headers,
-            name=GET("/api/engagement/[id]/details")
+            name=GET(ENGAGEMENT_DETAILS_API_URL)
         )
 
     @task(3)
@@ -482,7 +489,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page=1&size=20&search_text={random.choice(search_terms)}&{status_params}",
             headers=self.headers,
-            name=GET("/api/engagements", annotation="search")
+            name=GET(ENGAGEMENT_API_URL, annotation="search")
         )
 
 
@@ -536,17 +543,17 @@ class HeavyFrontendUser(HttpUser):
     def _load_bootstrap_assets(self):
         """Load initial static assets"""
         self.client.get(CONFIG_JS_URL, name=GET(CONFIG_JS_URL))
-        self.client.get("/api/oidc_config/config.js",
-                        name=GET("/api/oidc_config/config.js"))
-        self.client.get("/BCFavIcon.png", name=GET("/BCFavIcon.png"))
-        self.client.get("/manifest.json", name=GET("/manifest.json"))
+        self.client.get(OIDC_CONFIG_URL,
+                        name=GET(OIDC_CONFIG_URL))
+        self.client.get(FAVICON_URL, name=GET(FAVICON_URL))
+        self.client.get(MANIFEST_URL, name=GET(MANIFEST_URL))
 
     def _discover_routes(self):
         """Discover engagement slugs for navigation"""
         response = self.client.get(
             "/api/engagements?page=1&size=20",
             headers={"Accept": JSON_CONTENT_TYPE},
-            name=GET("/api/engagements", annotation="discovery")
+            name=GET(ENGAGEMENT_API_URL, annotation="discovery")
         )
         if response.status_code == 200:
             try:
@@ -557,16 +564,15 @@ class HeavyFrontendUser(HttpUser):
             except Exception as e:
                 if type(e) in [KeyboardInterrupt, BaseException, SystemExit]:
                     raise e
-                pass
 
     @task(20)
     def rapid_route_navigation(self):
         """Navigate between routes rapidly"""
         routes = [
             "/",
-            "/engagements",
-            "/surveys",
-            "/metadata",
+            ENGAGEMENTS_URL,
+            SURVEYS_URL,
+            METADATA_URL,
         ]
 
         if self.slug_cache:
@@ -579,18 +585,18 @@ class HeavyFrontendUser(HttpUser):
 
         route = random.choice(routes)
         self.client.get(route, headers=self.headers,
-                        name=fGET("{route if len(route) < 30 else '[route]'}"))
+                        name=GET(f"{route if len(route) < 30 else '[route]'}"))
 
     @task(10)
     def reload_static_assets(self):
         """Repeatedly load static assets (tests caching)"""
         assets = [
             CONFIG_JS_URL,
-            "/BCFavIcon.png",
-            "/manifest.json",
+            FAVICON_URL,
+            MANIFEST_URL,
         ]
         asset = random.choice(assets)
-        self.client.get(asset, name=fGET("{asset}"))
+        self.client.get(asset, name=GET(f"{asset}"))
 
     @task(5)
     def load_engagement_route(self):
