@@ -46,7 +46,7 @@ helm uninstall locust
 
 1. Access the Locust UI (see below)
 2. Click "New test"
-3. **Select user classes** from the dropdown
+3. **Select user classes** from the checkboxes (see "Selecting User Behaviours" below)
 4. Set number of users and spawn rate
 5. Start the test
 
@@ -74,6 +74,8 @@ When you start a test in the Locust UI, you'll see these user types optimized fo
 3. HeavyAPIUser - Hammers API endpoints for HPA tuning and stress testing (DISABLED by default)
 4. HeavyFrontendUser - Heavy frontend load (DISABLED by default)
 
+Disabling all but 1 class will run only that class at 100% weight.
+
 **Default behaviour (no user class specified)**
 
 ```bash
@@ -87,6 +89,9 @@ Runs: `RealisticAPIUser` (70%) + `RealisticFrontendUser` (30%) — typical produ
 ```bash
 # API HPA tuning
 locust -f locustfile.py HeavyAPIUser --host https://...
+
+# Web server HPA tuning
+locust -f locustfile.py HeavyFrontendUser --host https://...
 
 # Full system stress test
 locust -f locustfile.py HeavyAPIUser HeavyFrontendUser --host https://...
@@ -102,8 +107,8 @@ locust -f locustfile.py --tags heavy --host https://...
 locust -f locustfile.py --tags realistic --host https://...
 ```
 
-**From the web UI**, simply check the desired user classes before starting the test.
-You may have to adjust the weights to achieve the desired workload distribution.
+**From the web UI**, simply check the desired user classes before starting the test, and unselect the others.
+If you notice that some user(s) aren't running, you may have to adjust the weights to achieve the desired workload distribution.
 
 ## Installation
 
