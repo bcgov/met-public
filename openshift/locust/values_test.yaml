@@ -27,8 +27,8 @@ route:
   ipRestrictions:
     enabled: true # Enable IP whitelisting for test
 
-# Master configuration
-master:
+# main configuration
+main:
   replicas: 1
   resources:
     requests:

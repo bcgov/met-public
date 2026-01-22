@@ -19,7 +19,7 @@ spec:
     - namespaceSelector:
         matchLabels:
           network.openshift.io/policy-group: ingress
-  # Allow worker-to-master communication
+  # Allow worker-to-main communication
   - from:
     - podSelector:
         matchLabels:
@@ -27,15 +27,15 @@ spec:
           component: worker
     ports:
     - protocol: TCP
-      port: {{ .Values.master.service.masterPort }}
+      port: {{ .Values.main.service.mainPort }}
     - protocol: TCP
-      port: {{ .Values.master.service.workerPort }}
-  # Allow master-to-worker communication
+      port: {{ .Values.main.service.workerPort }}
+  # Allow main-to-worker communication
   - from:
     - podSelector:
         matchLabels:
           app: locust
-          component: master
+          component: main
   egress:
   # Allow DNS resolution
   - to:
@@ -55,18 +55,18 @@ spec:
       port: 5353
     - protocol: TCP
       port: 5353
-  # Allow worker-to-master communication
+  # Allow worker-to-main communication
   - to:
     - podSelector:
         matchLabels:
           app: locust
-          component: master
+          component: main
     ports:
     - protocol: TCP
-      port: {{ .Values.master.service.masterPort }}
+      port: {{ .Values.main.service.mainPort }}
     - protocol: TCP
-      port: {{ .Values.master.service.workerPort }}
-  # Allow master-to-worker communication
+      port: {{ .Values.main.service.workerPort }}
+  # Allow main-to-worker communication
   - to:
     - podSelector:
         matchLabels:

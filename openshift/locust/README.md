@@ -54,10 +54,10 @@ helm uninstall locust
 
 ```bash
 # Get route URL
-oc get route locust-master -n e903c2-dev
+oc get route locust-main -n e903c2-dev
 
 # Or port-forward (if route is IP-restricted)
-oc port-forward service/locust-master 8089:8089 -n e903c2-dev
+oc port-forward service/locust-main 8089:8089 -n e903c2-dev
 # Then open http://localhost:8089
 ```
 
@@ -150,8 +150,8 @@ Key configuration options in `values.yaml`:
 | `vault.authPath`               | Vault auth path             | `auth/k8s-gold`                                       |
 | `vault.engine`                 | Vault KV engine             | `e903c2_kv2`                                          |
 | `vault.path`                   | Vault secret path           | `/data/e903c2`                                        |
-| `master.replicas`              | Number of master pods       | `1`                                                   |
-| `master.config.target-host`    | Target URL for load testing | `https://met-web-dev.apps.gold.devops.gov.bc.ca/gdx/` |
+| `main.replicas`                | Number of main pods         | `1`                                                   |
+| `main.config.target-host`      | Target URL for load testing | `https://met-web-dev.apps.gold.devops.gov.bc.ca/gdx/` |
 | `worker.replicas`              | Number of worker pods       | `2`                                                   |
 | `networkPolicy.enabled`        | Enable NetworkPolicy        | `true`                                                |
 | `route.enabled`                | Enable OpenShift Route      | `true`                                                |
@@ -162,14 +162,14 @@ Key configuration options in `values.yaml`:
 After installation, get the route URL:
 
 ```bash
-oc get route locust-master -n e903c2-dev
+oc get route locust-main -n e903c2-dev
 ```
 
 **Note:** If IP restrictions are enabled, you must access the UI from an allowed IP address or VPN. The ingress protection job automatically applies IP whitelisting based on Vault configuration.
 If you cannot access the route, use port-forwarding:
 
 ```bash
-oc port-forward deployment/locust-master 8089:8089 -n e903c2-dev
+oc port-forward deployment/locust-main 8089:8089 -n e903c2-dev
 # Locust is now accessible at http://localhost:8089
 ```
 
@@ -214,8 +214,8 @@ ALLOW_PUBLIC: "" # Set to any value to allow public access
 # Check pod status
 oc get pods -l app=locust -n e903c2-dev
 
-# View master logs
-oc logs -l app=locust,component=master -n e903c2-dev -f
+# View main logs
+oc logs -l app=locust,component=main -n e903c2-dev -f
 
 # View worker logs
 oc logs -l app=locust,component=worker -n e903c2-dev -f

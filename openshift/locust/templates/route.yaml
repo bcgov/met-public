@@ -2,11 +2,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ .Values.master.name }}
+  name: {{ .Values.main.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: {{ .Values.app.name }}
-    component: master
+    component: main
   annotations:
     {{- if .Values.route.ipRestrictions.enabled }}
     haproxy.router.openshift.io/ip_whitelist: 0.0.0.0/32
@@ -20,7 +20,7 @@ spec:
   {{- end }}
   to:
     kind: Service
-    name: {{ .Values.master.name }}
+    name: {{ .Values.main.name }}
     weight: 100
   port:
     targetPort: web

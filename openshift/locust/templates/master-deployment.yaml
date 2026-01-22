@@ -1,61 +1,61 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.master.name }}
+  name: {{ .Values.main.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: locust
-    component: master
+    component: main
 spec:
-  replicas: {{ .Values.master.replicas }}
+  replicas: {{ .Values.main.replicas }}
   selector:
     matchLabels:
       app: locust
-      component: master
+      component: main
   template:
     metadata:
       labels:
         app: locust
-        component: master
+        component: main
     spec:
       containers:
-      - name: locust-master
-        image: "{{ .Values.master.image.repository }}:{{ .Values.master.image.tag }}"
-        imagePullPolicy: {{ .Values.master.image.pullPolicy }}
+      - name: locust-main
+        image: "{{ .Values.main.image.repository }}:{{ .Values.main.image.tag }}"
+        imagePullPolicy: {{ .Values.main.image.pullPolicy }}
         env:
         - name: LOCUST_HOST
-          value: "{{ .Values.master.config.targetHost }}"
+          value: "{{ .Values.main.config.targetHost }}"
         args:
         - "--master"
-        - "--web-port={{ .Values.master.service.webPort }}"
+        - "--web-port={{ .Values.main.service.webPort }}"
         - "--host=$(LOCUST_HOST)"
-        - "--locustfile={{ .Values.master.config.locustFile }}"
+        - "--locustfile={{ .Values.main.config.locustFile }}"
         - "--class-picker"
         ports:
-        - containerPort: {{ .Values.master.service.webPort }}
+        - containerPort: {{ .Values.main.service.webPort }}
           name: web
           protocol: TCP
-        - containerPort: {{ .Values.master.service.masterPort }}
-          name: master
+        - containerPort: {{ .Values.main.service.mainPort }}
+          name: main
           protocol: TCP
-        - containerPort: {{ .Values.master.service.workerPort }}
+        - containerPort: {{ .Values.main.service.workerPort }}
           name: worker
           protocol: TCP
         resources:
-          {{- toYaml .Values.master.resources | nindent 10 }}
+          {{- toYaml .Values.main.resources | nindent 10 }}
         volumeMounts:
         - name: locustfile
           mountPath: /mnt/locust
         livenessProbe:
           httpGet:
             path: /
-            port: {{ .Values.master.service.webPort }}
+            port: {{ .Values.main.service.webPort }}
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /
-            port: {{ .Values.master.service.webPort }}
+            port: {{ .Values.main.service.webPort }}
           initialDelaySeconds: 10
           periodSeconds: 5
       volumes:

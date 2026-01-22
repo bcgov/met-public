@@ -10,9 +10,9 @@ vault:
   namespace: "platform-services"
   authPath: "auth/k8s-gold"
 
-# Locust master configuration
-master:
-  name: locust-master
+# Locust main configuration
+main:
+  name: locust-main
   replicas: 1
   image:
     repository: locustio/locust
@@ -36,7 +36,7 @@ master:
   service:
     type: ClusterIP
     webPort: 8089
-    masterPort: 5557
+    mainPort: 5557
     workerPort: 5558
 
 # Locust worker configuration

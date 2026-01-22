@@ -24,12 +24,12 @@ spec:
         imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
         env:
         - name: LOCUST_HOST
-          value: "{{ .Values.master.config.targetHost }}"
+          value: "{{ .Values.main.config.targetHost }}"
         args:
         - "--worker"
         - "--host=$(LOCUST_HOST)"
-        - "--master-host={{ .Values.master.name }}"
-        - "--master-port={{ .Values.master.service.masterPort }}"
+        - "--master-host={{ .Values.main.name }}"
+        - "--master-port={{ .Values.main.service.mainPort }}"
         - "--locustfile=-"
         resources:
           {{- toYaml .Values.worker.resources | nindent 10 }}

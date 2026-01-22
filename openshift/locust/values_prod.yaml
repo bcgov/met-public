@@ -28,8 +28,8 @@ route:
   ipRestrictions:
     enabled: true
 
-# Master configuration
-master:
+# main configuration
+main:
   replicas: 1
   resources:
     requests:
