@@ -20,9 +20,25 @@ from locust import HttpUser, task, between, events, tag  # type: ignore
 import random
 
 
+def GET(url, name=None, annotation=None):
+    """Helper to format GET request names with optional annotation"""
+    if name is None:
+        name = f"/GET {url}"
+    if annotation:
+        name += f" ({annotation})"
+    return name
+
+
+JSON_CONTENT_TYPE = "application/json"
+HOMEPAGE_NAME = GET("/", annotation="HTML")
+CONFIG_JS_URL = "/config/config.js"
+FAVICON_URL = "/BCFavIcon.png"
+MANIFEST_URL = "/manifest.json"
+
 # ============================================================================
 # REALISTIC API USER - Production-Like API Patterns
 # ============================================================================
+
 
 @tag('realistic', 'api', 'production')
 class RealisticAPIUser(HttpUser):
@@ -53,8 +69,8 @@ class RealisticAPIUser(HttpUser):
     def on_start(self):
         """User lands on site - initial browse"""
         self.headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
+            "Content-Type": JSON_CONTENT_TYPE,
+            "Accept": JSON_CONTENT_TYPE,
             "tenant-id": "GDX"
         }
         # Initial landing page data load
@@ -65,7 +81,7 @@ class RealisticAPIUser(HttpUser):
         with self.client.get(
             f"/api/engagements?page={page}&size=10&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
             headers=self.headers,
-            name="GET /api/engagements (paginated)",
+            name=GET("/api/engagements", annotation="paginated"),
             catch_response=True
         ) as response:
             if response.status_code == 200:
@@ -97,7 +113,7 @@ class RealisticAPIUser(HttpUser):
         with self.client.get(
             f"/api/engagementslugs/{slug}",
             headers=self.headers,
-            name="GET /api/engagementslugs/[slug]",
+            name=GET("/api/engagementslugs/[slug]"),
             catch_response=True
         ) as response:
             if response.status_code == 200:
@@ -117,14 +133,15 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements/{engagement_id}",
             headers=self.headers,
-            name="GET /api/engagements/[id]"
+            name=GET("/api/engagements/[id]")
         )
 
         # User looks at widgets
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name="GET /api/widgets/engagement/[id]"
+            name=GET("/api/widgets/engagement/[id]",
+                     annotation="from engagement")
         )
 
         # Sometimes loads metadata
@@ -132,7 +149,8 @@ class RealisticAPIUser(HttpUser):
             self.client.get(
                 f"/api/engagements/{engagement_id}/metadata",
                 headers=self.headers,
-                name="GET /api/engagements/[id]/metadata"
+                name=GET("/api/engagements/[id]/metadata",
+                         annotation="from engagement")
             )
 
         # Sometimes loads details tabs
@@ -140,7 +158,8 @@ class RealisticAPIUser(HttpUser):
             self.client.get(
                 f"/api/engagement/{engagement_id}/details",
                 headers=self.headers,
-                name="GET /api/engagement/[id]/details"
+                name=GET("/api/engagement/[id]/details",
+                         annotation="from engagement")
             )
 
     @task(5)
@@ -153,7 +172,7 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page=1&size=10&search_text={term}&sort_key=engagement.created_date&sort_order=desc",
             headers=self.headers,
-            name="GET /api/engagements (search)"
+            name=GET("/api/engagements", annotation="search")
         )
 
     @task(3)
@@ -162,7 +181,7 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             "/api/engagement_metadata/taxa/filters/",
             headers=self.headers,
-            name="GET /api/engagement_metadata/taxa/filters"
+            name=GET("/api/engagement_metadata/taxa/filters")
         )
 
     @task(2)
@@ -171,7 +190,7 @@ class RealisticAPIUser(HttpUser):
         self.client.get(
             "/api/version/",
             headers=self.headers,
-            name="GET /api/version"
+            name=GET("/api/version")
         )
 
 
@@ -208,15 +227,14 @@ class RealisticFrontendUser(HttpUser):
     def on_start(self):
         """User lands on homepage"""
         # Initial HTML load
-        self.client.get("/", name="GET / (HTML)")
+        self.client.get("/", name=HOMEPAGE_NAME)
 
         # Bootstrap assets
-        self.client.get("/config/config.js", name="GET /config/config.js")
+        self.client.get(CONFIG_JS_URL, name=GET(CONFIG_JS_URL))
         self.client.get("/api/oidc_config/config.js",
-                        name="GET /api/oidc_config/config.js")
-        self.client.get("/BCFavIcon.png", name="GET /BCFavIcon.png")
-        self.client.get("/manifest.json", name="GET /manifest.json")
-
+                        name=GET("/api/oidc_config/config.js"))
+        self.client.get(FAVICON_URL, name=GET(FAVICON_URL))
+        self.client.get(MANIFEST_URL, name=GET(MANIFEST_URL))
         # Discover routes
         self._discover_engagements()
 
@@ -224,8 +242,8 @@ class RealisticFrontendUser(HttpUser):
         """Discover available engagements"""
         response = self.client.get(
             "/api/engagements?page=1&size=10",
-            headers={"Accept": "application/json"},
-            name="GET /api/engagements"
+            headers={"Accept": JSON_CONTENT_TYPE},
+            name=GET("/api/engagements")
         )
         if response.status_code == 200:
             try:
@@ -233,18 +251,20 @@ class RealisticFrontendUser(HttpUser):
                 for item in data.get('items', []):
                     if item.get('slug'):
                         self.slug_cache.append(item['slug'])
-            except:
+            except Exception as e:
+                if type(e) in [KeyboardInterrupt, BaseException, SystemExit]:
+                    raise e
                 pass
 
     @task(10)
     def browse_homepage(self):
         """Return to homepage / refresh"""
-        self.client.get("/", name="GET / (HTML)")
+        self.client.get("/", name=HOMEPAGE_NAME)
 
     @task(8)
     def browse_engagements_page(self):
         """Navigate to engagements list page"""
-        self.client.get("/engagements", name="GET /engagements")
+        self.client.get("/engagements", name=GET("/engagements"))
 
     @task(6)
     def view_engagement_page(self):
@@ -255,25 +275,25 @@ class RealisticFrontendUser(HttpUser):
         slug = random.choice(self.slug_cache)
         self.client.get(
             f"/{slug}/en",
-            name="GET /[slug]/[lang]"
+            name=GET("/[slug]/[lang]")
         )
 
     @task(3)
     def navigate_surveys(self):
         """Navigate to surveys page"""
-        self.client.get("/surveys", name="GET /surveys")
+        self.client.get("/surveys", name=GET("/surveys"))
 
     @task(2)
     def navigate_metadata(self):
         """Navigate to metadata page"""
-        self.client.get("/metadata", name="GET /metadata")
+        self.client.get("/metadata", name=GET("/metadata"))
 
     @task(1)
     def reload_page(self):
         """User refreshes current page"""
         # Simulate a refresh (reload static assets)
-        self.client.get("/config/config.js",
-                        name="GET /config/config.js (refresh)")
+        self.client.get(CONFIG_JS_URL,
+                        name=f"{GET(CONFIG_JS_URL)} (refresh)")
 
 
 # ============================================================================
@@ -310,12 +330,20 @@ class HeavyAPIUser(HttpUser):
     def on_start(self):
         """Initialize with aggressive data loading"""
         self.headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
+            "Content-Type": JSON_CONTENT_TYPE,
+            "Accept": JSON_CONTENT_TYPE,
             "tenant-id": "GDX"
         }
         # Preload large dataset
         self._aggressive_load_engagements()
+
+    def _cache_engagement_data(self, items):
+        """Helper to cache engagement IDs and slugs from items list"""
+        for item in items:
+            if item.get('id') and item['id'] not in self.engagement_cache:
+                self.engagement_cache.append(item['id'])
+            if item.get('slug') and item['slug'] not in self.slug_cache:
+                self.slug_cache.append(item['slug'])
 
     def _aggressive_load_engagements(self):
         """Load multiple pages rapidly to populate cache"""
@@ -323,18 +351,14 @@ class HeavyAPIUser(HttpUser):
             with self.client.get(
                 f"/api/engagements?page={page}&size=50&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
                 headers=self.headers,
-                name="GET /api/engagements (large page)",
+                name=GET("/api/engagements", annotation="large page"),
                 catch_response=True
             ) as response:
                 if response.status_code == 200:
                     try:
                         data = response.json()
                         items = data.get('items', [])
-                        for item in items:
-                            if item.get('id') and item['id'] not in self.engagement_cache:
-                                self.engagement_cache.append(item['id'])
-                            if item.get('slug') and item['slug'] not in self.slug_cache:
-                                self.slug_cache.append(item['slug'])
+                        self._cache_engagement_data(items)
                         response.success()
                     except Exception as e:
                         response.failure(f"Parse failed: {e}")
@@ -347,7 +371,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page={page}&size={size}&sort_key=engagement.created_date&sort_order=desc&include_banner_url=true",
             headers=self.headers,
-            name="GET /api/engagements (varied)"
+            name=GET("/api/engagements", annotation="varied")
         )
 
     @task(15)
@@ -360,7 +384,7 @@ class HeavyAPIUser(HttpUser):
         with self.client.get(
             f"/api/engagementslugs/{slug}",
             headers=self.headers,
-            name="GET /api/engagementslugs/[slug]",
+            name=GET("/api/engagementslugs/[slug]"),
             catch_response=True
         ) as response:
             if response.status_code == 200:
@@ -380,28 +404,31 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements/{engagement_id}",
             headers=self.headers,
-            name="GET /api/engagements/[id]"
+            name=GET("/api/engagements/[id]")
         )
 
         # Widgets
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name="GET /api/widgets/engagement/[id]"
+            name=GET("/api/widgets/engagement/[id]",
+                     annotation="from engagement")
         )
 
         # Metadata
         self.client.get(
             f"/api/engagements/{engagement_id}/metadata",
             headers=self.headers,
-            name="GET /api/engagements/[id]/metadata"
+            name=GET("/api/engagements/[id]/metadata",
+                     annotation="from engagement")
         )
 
         # Details tabs
         self.client.get(
             f"/api/engagement/{engagement_id}/details",
             headers=self.headers,
-            name="GET /api/engagement/[id]/details"
+            name=GET("/api/engagement/[id]/details",
+                     annotation="from engagement")
         )
 
     @task(10)
@@ -410,7 +437,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             "/api/engagement_metadata/taxa/filters/",
             headers=self.headers,
-            name="GET /api/engagement_metadata/taxa/filters"
+            name=GET("/api/engagement_metadata/taxa/filters")
         )
 
     @task(8)
@@ -423,7 +450,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/widgets/engagement/{engagement_id}",
             headers=self.headers,
-            name="GET /api/widgets/engagement/[id]"
+            name=GET("/api/widgets/engagement/[id]")
         )
 
     @task(5)
@@ -436,7 +463,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagement/{engagement_id}/details",
             headers=self.headers,
-            name="GET /api/engagement/[id]/details"
+            name=GET("/api/engagement/[id]/details")
         )
 
     @task(3)
@@ -455,7 +482,7 @@ class HeavyAPIUser(HttpUser):
         self.client.get(
             f"/api/engagements?page=1&size=20&search_text={random.choice(search_terms)}&{status_params}",
             headers=self.headers,
-            name="GET /api/engagements (search)"
+            name=GET("/api/engagements", annotation="search")
         )
 
 
@@ -498,8 +525,7 @@ class HeavyFrontendUser(HttpUser):
         }
 
         # Initial page load
-        response = self.client.get(
-            "/", name="GET / (HTML)", headers=self.headers)
+        self.client.get("/", name=HOMEPAGE_NAME, headers=self.headers)
 
         # Load bootstrap resources
         self._load_bootstrap_assets()
@@ -509,18 +535,18 @@ class HeavyFrontendUser(HttpUser):
 
     def _load_bootstrap_assets(self):
         """Load initial static assets"""
-        self.client.get("/config/config.js", name="GET /config/config.js")
+        self.client.get(CONFIG_JS_URL, name=GET(CONFIG_JS_URL))
         self.client.get("/api/oidc_config/config.js",
-                        name="GET /api/oidc_config/config.js")
-        self.client.get("/BCFavIcon.png", name="GET /BCFavIcon.png")
-        self.client.get("/manifest.json", name="GET /manifest.json")
+                        name=GET("/api/oidc_config/config.js"))
+        self.client.get("/BCFavIcon.png", name=GET("/BCFavIcon.png"))
+        self.client.get("/manifest.json", name=GET("/manifest.json"))
 
     def _discover_routes(self):
         """Discover engagement slugs for navigation"""
         response = self.client.get(
             "/api/engagements?page=1&size=20",
-            headers={"Accept": "application/json"},
-            name="GET /api/engagements (discovery)"
+            headers={"Accept": JSON_CONTENT_TYPE},
+            name=GET("/api/engagements", annotation="discovery")
         )
         if response.status_code == 200:
             try:
@@ -528,7 +554,9 @@ class HeavyFrontendUser(HttpUser):
                 for item in data.get('items', []):
                     if item.get('slug') and item['slug'] not in self.slug_cache:
                         self.slug_cache.append(item['slug'])
-            except:
+            except Exception as e:
+                if type(e) in [KeyboardInterrupt, BaseException, SystemExit]:
+                    raise e
                 pass
 
     @task(20)
@@ -551,18 +579,18 @@ class HeavyFrontendUser(HttpUser):
 
         route = random.choice(routes)
         self.client.get(route, headers=self.headers,
-                        name=f"GET {route if len(route) < 30 else '[route]'}")
+                        name=fGET("{route if len(route) < 30 else '[route]'}"))
 
     @task(10)
     def reload_static_assets(self):
         """Repeatedly load static assets (tests caching)"""
         assets = [
-            "/config/config.js",
+            CONFIG_JS_URL,
             "/BCFavIcon.png",
             "/manifest.json",
         ]
         asset = random.choice(assets)
-        self.client.get(asset, name=f"GET {asset}")
+        self.client.get(asset, name=fGET("{asset}"))
 
     @task(5)
     def load_engagement_route(self):
@@ -574,7 +602,7 @@ class HeavyFrontendUser(HttpUser):
         self.client.get(
             f"/{slug}/en",
             headers=self.headers,
-            name="GET /[slug]/[lang]"
+            name=GET("/[slug]/[lang]")
         )
 
 

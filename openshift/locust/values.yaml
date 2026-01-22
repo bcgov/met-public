@@ -23,9 +23,11 @@ main:
     requests:
       cpu: 100m
       memory: 256Mi
+      "ephemeral-storage": "1Gi"
     limits:
       cpu: 500m
       memory: 512Mi
+      "ephemeral-storage": "2Gi"
 
   config:
     # Target host to load test
@@ -52,9 +54,11 @@ worker:
     requests:
       cpu: 200m
       memory: 256Mi
+      ephemeral-storage: 1Gi
     limits:
       cpu: 1000m
       memory: 512Mi
+      ephemeral-storage: 2Gi
 
 # Route configuration
 route:
