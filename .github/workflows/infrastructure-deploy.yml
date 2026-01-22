@@ -27,6 +27,7 @@ on:
           - met-web
           - analytics-api
           - met-analytics
+          - locust
           - all
 
 env:
@@ -71,6 +72,7 @@ jobs:
             openshift/analytics-api/**
             openshift/met-analytics/**
             openshift/dagster/**
+            openshift/locust/**
 
       - name: Set environment matrix
         id: set-env-matrix
@@ -101,6 +103,7 @@ jobs:
             [analytics-api]="openshift/analytics-api"
             [met-analytics]="openshift/met-analytics"
             [dagster]="openshift/dagster"
+            [locust]="openshift/locust"
           )
 
           # Initialize charts array

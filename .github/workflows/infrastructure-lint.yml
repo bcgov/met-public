@@ -21,6 +21,7 @@ on:
           - met-web
           - analytics-api
           - met-analytics
+          - locust
           - all
   workflow_call:
     inputs:
@@ -73,6 +74,7 @@ jobs:
             openshift/analytics-api/**
             openshift/met-analytics/**
             openshift/dagster/**
+            openshift/locust/**
 
       - name: Set matrix for changed charts
         id: set-chart-matrix
@@ -86,6 +88,7 @@ jobs:
             [analytics-api]="openshift/analytics-api"
             [met-analytics]="openshift/met-analytics"
             [dagster]="openshift/dagster"
+            [locust]="openshift/locust"
           )
 
           # Initialize charts array

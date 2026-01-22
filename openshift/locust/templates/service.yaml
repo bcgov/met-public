@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.main.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: locust
+    component: main
+spec:
+  type: {{ .Values.main.service.type }}
+  ports:
+  - port: {{ .Values.main.service.webPort }}
+    targetPort: web
+    protocol: TCP
+    name: web
+  - port: {{ .Values.main.service.mainPort }}
+    targetPort: main
+    protocol: TCP
+    name: main
+  - port: {{ .Values.main.service.workerPort }}
+    targetPort: worker
+    protocol: TCP
+    name: worker
+  selector:
+    app: locust
+    component: main

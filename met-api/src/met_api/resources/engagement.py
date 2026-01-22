@@ -75,8 +75,8 @@ class Engagements(Resource):
             external_user_id = TokenInfo.get_id()
 
             pagination_options = PaginationOptions(
-                page=args.get('page', None, int),
-                size=args.get('size', None, int),
+                page=args.get('page', 1, int),
+                size=args.get('size', 10, int),
                 sort_key=args.get('sort_key', 'name', str),
                 sort_order=args.get('sort_order', 'asc', str),
             )
@@ -85,12 +85,15 @@ class Engagements(Resource):
             if external_user_id is None:
                 exclude_internal = True
 
-            if metadata := args.get('metadata', []):
-                metadata = json.loads(metadata)
-                if not isinstance(metadata, list) or not all(isinstance(item, dict) for item in metadata):
+            metadata = []
+            metadata_param = args.get('metadata')
+            if isinstance(metadata_param, str) and metadata_param:
+                parsed_metadata = json.loads(metadata_param)
+                if not isinstance(parsed_metadata, list) or not all(isinstance(item, dict) for item in parsed_metadata):
                     # if metadata is not a list of dictionaries, it is in the wrong format.
                     # blank it to avoid any issues.
-                    metadata = []
+                    parsed_metadata = []
+                metadata = parsed_metadata
 
             search_options = {
                 'search_text': args.get('search_text', '', type=str),

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.main.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: locust
+    component: main
+spec:
+  replicas: {{ .Values.main.replicas }}
+  selector:
+    matchLabels:
+      app: locust
+      component: main
+  template:
+    metadata:
+      labels:
+        app: locust
+        component: main
+    spec:
+      containers:
+      - name: locust-main
+        image: "{{ .Values.main.image.repository }}:{{ .Values.main.image.tag }}"
+        imagePullPolicy: {{ .Values.main.image.pullPolicy }}
+        env:
+        - name: LOCUST_HOST
+          value: "{{ .Values.main.config.targetHost }}"
+        args:
+        - "--master"
+        - "--web-port={{ .Values.main.service.webPort }}"
+        - "--host=$(LOCUST_HOST)"
+        - "--locustfile={{ .Values.main.config.locustFile }}"
+        - "--class-picker"
+        ports:
+        - containerPort: {{ .Values.main.service.webPort }}
+          name: web
+          protocol: TCP
+        - containerPort: {{ .Values.main.service.mainPort }}
+          name: main
+          protocol: TCP
+        - containerPort: {{ .Values.main.service.workerPort }}
+          name: worker
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.main.resources | nindent 10 }}
+        volumeMounts:
+        - name: locustfile
+          mountPath: /mnt/locust
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.main.service.webPort }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.main.service.webPort }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: locustfile
+        configMap:
+          name: locust-config

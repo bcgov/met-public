@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.worker.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: locust
+    component: worker
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      app: locust
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: locust
+        component: worker
+    spec:
+      containers:
+      - name: locust-worker
+        image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+        imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+        env:
+        - name: LOCUST_HOST
+          value: "{{ .Values.main.config.targetHost }}"
+        args:
+        - "--worker"
+        - "--host=$(LOCUST_HOST)"
+        - "--master-host={{ .Values.main.name }}"
+        - "--master-port={{ .Values.main.service.mainPort }}"
+        - "--locustfile=-"
+        resources:
+          {{- toYaml .Values.worker.resources | nindent 10 }}
+        volumeMounts:
+        - name: locustfile
+          mountPath: /mnt/locust
+      volumes:
+      - name: locustfile
+        configMap:
+          name: locust-config

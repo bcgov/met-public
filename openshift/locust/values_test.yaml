@@ -1,0 +1,57 @@
+# Locust Configuration for Test Environment (e903c2-test)
+# This file extends the base values.yaml with test-specific settings
+
+# Namespace for test environment
+namespace: e903c2-test
+
+# Application metadata
+app:
+  name: locust
+  licenseplate: e903c2
+
+# Vault configuration (Gold cluster)
+vault:
+  namespace: "platform-services"
+  authPath: "auth/k8s-gold"
+  engine: "e903c2-nonprod"
+  path: "/test/"
+
+# Route configuration with IP restrictions enabled for test
+route:
+  enabled: true
+  host: "" # Auto-generated
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  ipRestrictions:
+    enabled: true # Enable IP whitelisting for test
+
+# main configuration
+main:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  config:
+    targetHost: "https://met-web-test.apps.gold.devops.gov.bc.ca"
+
+# Worker configuration - more workers for test environment
+worker:
+  replicas: 3
+  resources:
+    requests:
+      cpu: 300m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+# NetworkPolicy enabled
+networkPolicy:
+  enabled: true
+  allowInternet: true

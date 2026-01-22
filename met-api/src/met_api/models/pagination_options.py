@@ -9,5 +9,5 @@ class PaginationOptions:  # pylint: disable=too-many-instance-attributes
 
     page: int
     size: int
-    sort_key: int
+    sort_key: str
     sort_order: str
