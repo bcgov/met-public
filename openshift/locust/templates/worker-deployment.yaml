@@ -7,7 +7,6 @@ metadata:
     app: locust
     component: worker
 spec:
-  replicas: {{ .Values.worker.replicas }}
   selector:
     matchLabels:
       app: locust
