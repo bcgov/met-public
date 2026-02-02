@@ -1,3 +1,12 @@
+## February 2, 2026
+
+- **Security** Implemented automatic sensitive data masking in API logs. [🎟️ DEP-161](https://citz-gdx.atlassian.net/browse/DEP-161)
+  - Added logging filter to automatically mask passwords, tokens, API keys, and database credentials
+  - Replaced print() statements with logger calls to ensure masking coverage
+  - Added linting rules (pylint + flake8) to prevent print statements and enforce logging
+  - Updated logging configuration to apply masking app-wide
+  - See `met_api.utils.logging_masker` for implementation details
+
 ## January 22, 2026
 
 - Added Helm chart for Locust load testing tool [🎟️ DEP-152](https://citz-gdx.atlassian.net/browse/DEP-152)

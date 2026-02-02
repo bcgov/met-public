@@ -198,7 +198,7 @@ class UserTenants(Resource):
         if user_id == 'me':
             user_data = TokenInfo.get_user_data()
             user_id = user_data.get('external_id')
-            print('User ID: ', user_id)
+            current_app.logger.debug('User ID: %s', user_id)
             user_roles = current_app.config['JWT_ROLE_CALLBACK'](g.jwt_oidc_token_info)
             if Role.SUPER_ADMIN.value in user_roles:
                 return TenantService.get_all(), HTTPStatus.OK

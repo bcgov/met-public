@@ -4,6 +4,7 @@ This module is for the initiation of the flask app.
 """
 
 import os
+import logging
 
 import secure
 from flask import Flask, current_app, g, request
@@ -18,6 +19,7 @@ from met_api.services.user_group_membership_service import UserGroupMembershipSe
 from met_api.utils import constants
 from met_api.utils.cache import cache
 from met_api.utils.roles import Role
+from met_api.utils.logging_masker import setup_logging_masking
 
 # Security Response headers
 csp = (
@@ -52,6 +54,12 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
     # Configure app from config.py
     app.config.from_object(get_named_config(run_mode))
+
+    # Set up logging with sensitive data masking
+    # Automatically masks passwords, tokens, API keys, database credentials
+    # Applied to both Flask app logger and root logger for full coverage
+    setup_logging_masking(app.logger)
+    setup_logging_masking()
 
     CORS(app, origins=app.config['CORS_ORIGINS'], supports_credentials=True)
 

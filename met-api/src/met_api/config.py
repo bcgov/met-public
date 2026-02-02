@@ -85,8 +85,6 @@ class Config:  # pylint: disable=too-few-public-methods
         Performs more advanced configuration logic that is not possible
         in the normal class definition.
         """
-        # If extending this class, call super().__init__() in your constructor.
-        print(f'SQLAlchemy URL: {self.SQLALCHEMY_DATABASE_URI}')
 
         # apply configs to _Config in the format that flask_jwt_oidc expects
         # this flattens the JWT_CONFIG dict into individual attributes

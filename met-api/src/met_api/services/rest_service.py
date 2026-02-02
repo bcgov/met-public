@@ -22,6 +22,7 @@ from requests.exceptions import ConnectTimeout, HTTPError
 from requests.exceptions import ConnectionError as ReqConnectionError
 
 from met_api.utils.enums import AuthHeaderType, ContentType
+from met_api.utils.logging_masker import mask_dict
 
 
 class RestService:
@@ -53,7 +54,8 @@ class RestService:
             data = json.dumps(data)
 
         current_app.logger.debug(f'Endpoint : {endpoint}')
-        current_app.logger.debug(f'headers : {headers}')
+        # Mask Authorization headers and other sensitive keys before logging
+        current_app.logger.debug(f'headers : {mask_dict(headers)}')
         response = None
         try:
             invoke_rest_method = getattr(requests, rest_method)
