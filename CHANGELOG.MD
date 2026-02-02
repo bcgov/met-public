@@ -1,3 +1,8 @@
+## January 28, 2026
+
+- Added documentation for enabling and logging into the Sysdig monitoring platform for OpenShift projects. [🎟️ DEP-160](https://citz-gdx.atlassian.net/browse/DEP-160)
+  - Created `docs/Sysdig_Login.md` with step-by-step instructions on logging in, finding your project, viewing and creating dashboards, and managing permissions.
+
 ## January 22, 2026
 
 - Added Helm chart for Locust load testing tool [🎟️ DEP-152](https://citz-gdx.atlassian.net/browse/DEP-152)
