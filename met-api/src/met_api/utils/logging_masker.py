@@ -77,7 +77,7 @@ class SensitiveDataFilter(logging.Filter):
         # Bearer tokens in Authorization headers
         {
             'pattern': re.compile(
-                r'(Authorization:\s*Bearer\s+)([A-Za-z0-9\-_\.]+)',
+                r'(Authorization:\s*Bearer\s+)([A-Z0-9\-_\.]+)',
                 re.IGNORECASE
             ),
             'replacement': r'\1***REDACTED***',
