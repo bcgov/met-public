@@ -61,6 +61,7 @@ class SensitiveDataFilter(logging.Filter):
 
     # Mask string to replace sensitive data
     MASK = '***REDACTED***'
+    DEFAULT_REPLACEMENT = r'\1' + MASK + r'\3'
 
     # Regex patterns for common sensitive data
     DEFAULT_PATTERNS: List[Dict[str, Any]] = [
@@ -88,7 +89,7 @@ class SensitiveDataFilter(logging.Filter):
                 r"('Authorization':\s*')([^']+)(')",
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'Authorization header value'
         },
         # API keys (various formats)
@@ -97,7 +98,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(api[_-]?key\s*[:=]\s*["\']?)([A-Z0-9_\-]{20,})(["\']?)',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'API key'
         },
         # AWS/S3 access keys
@@ -106,7 +107,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(access[_-]?key[_-]?id\s*[:=]\s*["\']?)([A-Z0-9]{20})(["\']?)',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'AWS access key'
         },
         # AWS/S3 secret keys
@@ -115,7 +116,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(secret[_-]?access[_-]?key\s*[:=]\s*["\']?)([A-Z0-9/+=]{40})(["\']?)',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'AWS secret key'
         },
         # Generic secret/password patterns
@@ -124,7 +125,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(password\s*[:=]\s*["\']?)([^"\'\s,}]{3,})(["\'\s,}])',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'Password field (key=value format)'
         },
         {
@@ -140,7 +141,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(secret\s*[:=]\s*["\']?)([^"\'\s,}]{3,})(["\'\s,}])',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'Secret field'
         },
         # JWT tokens (three base64url segments separated by dots)
@@ -157,7 +158,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(token["\']?\s*[:=]\s*["\']?)([A-Z0-9_\-\.]{20,})(["\']?)',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'Generic token'
         },
         # Client secrets
@@ -166,7 +167,7 @@ class SensitiveDataFilter(logging.Filter):
                 r'(client[_-]?secret\s*[:=]\s*["\']?)([^"\'\s,}]{10,})(["\'\s,}])',
                 re.IGNORECASE
             ),
-            'replacement': r'\1***REDACTED***\3',
+            'replacement': SensitiveDataFilter.DEFAULT_REPLACEMENT,
             'description': 'Client secret'
         },
         # Private keys (PEM format)
