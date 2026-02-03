@@ -39,7 +39,7 @@ WHAT GETS MASKED:
     - Private keys in PEM format
 
 ADDING NEW PATTERNS:
-    Add to SensitiveDataFilter.PATTERNS list with:
+    Add to SensitiveDataFilter.DEFAULT_PATTERNS list with:
     - 'pattern': compiled regex pattern
     - 'replacement': replacement string with capture groups
     - 'description': human-readable description
@@ -63,7 +63,7 @@ class SensitiveDataFilter(logging.Filter):
     MASK = '***REDACTED***'
 
     # Regex patterns for common sensitive data
-    PATTERNS: List[Dict[str, Any]] = [
+    DEFAULT_PATTERNS: List[Dict[str, Any]] = [
         # Database connection strings (postgresql, mysql, etc.)
         {
             'pattern': re.compile(
@@ -180,16 +180,16 @@ class SensitiveDataFilter(logging.Filter):
         },
     ]
 
-    def __init__(self, name: str = '', patterns: List[Dict[str, Any]] = None):
+    def __init__(self, name: str = '', custom_patterns: List[Dict[str, Any]] = None):
         """
         Initialize the filter.
 
         Args:
             name: Name of the filter
-            patterns: Optional custom patterns to use instead of defaults
+            custom_patterns: Optional custom patterns to use instead of defaults
         """
         super().__init__(name)
-        self.patterns = patterns if patterns is not None else self.PATTERNS
+        self.patterns = custom_patterns if custom_patterns is not None else self.DEFAULT_PATTERNS
 
     def filter(self, record: logging.LogRecord) -> bool:
         """
