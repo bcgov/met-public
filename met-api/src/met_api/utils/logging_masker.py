@@ -172,7 +172,7 @@ class SensitiveDataFilter(logging.Filter):
         # Private keys (PEM format)
         {
             'pattern': re.compile(
-                r'-----BEGIN[A-Z\s]+PRIVATE KEY-----[A-Za-9+/=\s]+-----END[A-Z\s]+PRIVATE KEY-----',
+                r'-----BEGIN[A-Z\s]+PRIVATE KEY-----[A-Za-z0-9+/=\s]+-----END[A-Z\s]+PRIVATE KEY-----',
                 re.MULTILINE
             ),
             'replacement': r'***REDACTED_PRIVATE_KEY***',
