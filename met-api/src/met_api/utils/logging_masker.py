@@ -73,15 +73,6 @@ class SensitiveDataFilter(logging.Filter):
             'replacement': r'\1://***REDACTED***:***REDACTED***@',
             'description': 'Database connection string with credentials'
         },
-        # SQLAlchemy URLs
-        {
-            'pattern': re.compile(
-                r'(SQLAlchemy URL:.*?://[^:]+:)([^@]+)(@)',
-                re.IGNORECASE
-            ),
-            'replacement': r'\1***REDACTED***\3',
-            'description': 'SQLAlchemy connection URL'
-        },
         # Bearer tokens in Authorization headers
         {
             'pattern': re.compile(
