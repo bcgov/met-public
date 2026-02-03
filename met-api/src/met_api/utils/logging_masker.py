@@ -89,7 +89,7 @@ class SensitiveDataFilter(logging.Filter):
                 r"('Authorization':\s*')([^']+)(')",
                 re.IGNORECASE
             ),
-            'replacement': DEFAULT_REPLACEMENT
+            'replacement': DEFAULT_REPLACEMENT,
             'description': 'Authorization header value'
         },
         # API keys (various formats)

@@ -17,7 +17,7 @@
 A simple decorator to validate roles with in the tenant.
 """
 from functools import wraps
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from flask import current_app, g
 
@@ -25,7 +25,7 @@ from met_api.auth import jwt as _jwt
 from met_api.utils.roles import Role
 
 
-def require_role(required_roles: List[str] | str) -> callable:
+def require_role(required_roles: Union[List[str], str]) -> callable:
     """Validate a token for roles and against tenant as well.
 
     Args:

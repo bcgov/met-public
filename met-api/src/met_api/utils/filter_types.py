@@ -1,7 +1,7 @@
 """Filters used to filter by metadata contents in various ways."""
+from sqlalchemy import func
 
 from met_api.models.engagement_metadata import EngagementMetadata, MetadataTaxonFilterType
-from sqlalchemy import func
 
 
 def list_match_all(query, values):
@@ -29,10 +29,7 @@ def list_match_any(query, values):
     return metadata_subq
 
 
-"""
-Provide a mapping from each filter type to the function that should be used
-to filter by that type.
-"""
+# Mapping from each filter type to the function that should be used to filter by that type
 filter_map = {
     MetadataTaxonFilterType.CHIPS_ALL: list_match_all,
     MetadataTaxonFilterType.CHIPS_ANY: list_match_any,

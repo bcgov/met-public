@@ -64,3 +64,4 @@ class Role(Enum):
     MANAGE_METADATA = 'manage_metadata'
     VIEW_LANGUAGES = 'view_languages'
     EDIT_LANGUAGES = 'edit_languages'
+    SYSTEM = 'system'  # System user role for EPIC connections

@@ -15,13 +15,14 @@
 
 from http import HTTPStatus
 
-from flask import request
+from flask import current_app, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
 
 from met_api.auth import auth
 from met_api.auth import jwt as _jwt
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas import utils as schema_utils
 from met_api.schemas.tenant import TenantSchema
 from met_api.services.tenant_service import TenantService
@@ -61,7 +62,6 @@ class Tenants(Resource):
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'tenant')
             if not valid_format:
-                from flask import current_app
                 current_app.logger.error('Tenant validation errors: %s', errors)
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
