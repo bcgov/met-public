@@ -3,8 +3,9 @@
 This module is for the initiation of the flask app.
 """
 
+import builtins
 import os
-import logging
+import warnings
 
 import secure
 from flask import Flask, current_app, g, request
@@ -20,6 +21,37 @@ from met_api.utils import constants
 from met_api.utils.cache import cache
 from met_api.utils.roles import Role
 from met_api.utils.logging_masker import setup_logging_masking
+
+
+# Store reference to original print function
+_original_print = builtins.print
+
+
+class PrintDeprecationWarning(DeprecationWarning):
+    """Custom warning category for deprecated print() usage."""
+
+
+def _deprecated_print(*args, **kwargs):
+    """
+    Deprecated print function with warning message.
+
+    Using print() bypasses the logging masking system and may expose sensitive data.
+    Use logging instead: current_app.logger.info(), logger.debug(), etc.
+    """
+    warnings.warn(
+        'print() is deprecated in this application. '
+        'Use logging instead (e.g., current_app.logger.info()) to ensure '
+        'sensitive data is automatically masked. '
+        'See met_api/utils/logging_masker.py for details.',
+        PrintDeprecationWarning,
+        stacklevel=2
+    )
+    # Still call original print to not break existing code during transition
+    _original_print(*args, **kwargs)
+
+
+# Replace built-in print with deprecated version
+builtins.print = _deprecated_print
 
 # Security Response headers
 csp = (
@@ -54,6 +86,11 @@ def create_app(run_mode=os.getenv('FLASK_ENV', 'development')):
 
     # Configure app from config.py
     app.config.from_object(get_named_config(run_mode))
+
+    # Replace built-in print with deprecated version AFTER config loads
+    # (config.py prints during initialization before logging is set up)
+    warnings.filterwarnings('default', category=PrintDeprecationWarning)
+    builtins.print = _deprecated_print
 
     # Set up logging with sensitive data masking
     # Automatically masks passwords, tokens, API keys, database credentials
