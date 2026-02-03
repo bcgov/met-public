@@ -29,8 +29,10 @@ def test_logging_masker():
     url = 'postgresql://user:secretpassword@localhost:5432/metdb'
     masked_url = mask_url(url)
     assert 'secretpassword' not in masked_url
-    assert '***REDACTED***' in masked_url
-    assert 'user' in masked_url
+    assert 'user' not in masked_url
+    # Count occurrences of redaction to ensure we are masking both username and password
+    assert masked_url.count('***REDACTED***') == 2
+    
     
     # Test dictionary masking with various sensitive keys
     data = {
