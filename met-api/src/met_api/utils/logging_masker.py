@@ -21,13 +21,13 @@ including passwords, tokens, API keys, and other credentials.
 USAGE:
     Automatic masking is enabled app-wide via logging configuration.
     No code changes needed for existing logging statements.
-    
+
     For explicit masking:
         from met_api.utils.logging_masker import mask_url, mask_dict
-        
+
         # Mask URLs
         safe_url = mask_url(database_url)
-        
+
         # Mask dictionaries
         safe_headers = mask_dict(request.headers)
 
@@ -147,7 +147,7 @@ class SensitiveDataFilter(logging.Filter):
         # JWT tokens (three base64url segments separated by dots)
         {
             'pattern': re.compile(
-                r'\b(eyJ[A-Z0-9_-]+\.eyJ[A-Z0-9_-]+\.[A-Z0-9_-]+)\b'
+                r'\b(eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)\b'
             ),
             'replacement': r'***REDACTED_JWT***',
             'description': 'JWT token'
