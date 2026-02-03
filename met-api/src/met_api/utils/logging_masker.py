@@ -94,7 +94,7 @@ class SensitiveDataFilter(logging.Filter):
         # API keys (various formats)
         {
             'pattern': re.compile(
-                r'(api[_-]?key\s*[:=]\s*["\']?)([A-Za-z0-9_\-]{20,})(["\']?)',
+                r'(api[_-]?key\s*[:=]\s*["\']?)([A-Z0-9_\-]{20,})(["\']?)',
                 re.IGNORECASE
             ),
             'replacement': r'\1***REDACTED***\3',
@@ -112,7 +112,7 @@ class SensitiveDataFilter(logging.Filter):
         # AWS/S3 secret keys
         {
             'pattern': re.compile(
-                r'(secret[_-]?access[_-]?key\s*[:=]\s*["\']?)([A-Za-z0-9/+=]{40})(["\']?)',
+                r'(secret[_-]?access[_-]?key\s*[:=]\s*["\']?)([A-Z0-9/+=]{40})(["\']?)',
                 re.IGNORECASE
             ),
             'replacement': r'\1***REDACTED***\3',
@@ -146,7 +146,7 @@ class SensitiveDataFilter(logging.Filter):
         # JWT tokens (three base64url segments separated by dots)
         {
             'pattern': re.compile(
-                r'\b(eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)\b'
+                r'\b(eyJ[A-Z0-9_-]+\.eyJ[A-Z0-9_-]+\.[A-Z0-9_-]+)\b'
             ),
             'replacement': r'***REDACTED_JWT***',
             'description': 'JWT token'
@@ -154,7 +154,7 @@ class SensitiveDataFilter(logging.Filter):
         # Generic tokens (token=value or "token": "value")
         {
             'pattern': re.compile(
-                r'(token["\']?\s*[:=]\s*["\']?)([A-Za-z0-9_\-\.]{20,})(["\']?)',
+                r'(token["\']?\s*[:=]\s*["\']?)([A-Z0-9_\-\.]{20,})(["\']?)',
                 re.IGNORECASE
             ),
             'replacement': r'\1***REDACTED***\3',
@@ -172,7 +172,7 @@ class SensitiveDataFilter(logging.Filter):
         # Private keys (PEM format)
         {
             'pattern': re.compile(
-                r'-----BEGIN[A-Z\s]+PRIVATE KEY-----[A-Za-z0-9+/=\s]+-----END[A-Z\s]+PRIVATE KEY-----',
+                r'-----BEGIN[A-Z\s]+PRIVATE KEY-----[A-Za-9+/=\s]+-----END[A-Z\s]+PRIVATE KEY-----',
                 re.MULTILINE
             ),
             'replacement': r'***REDACTED_PRIVATE_KEY***',
@@ -300,7 +300,7 @@ def mask_url(url: str) -> str:
 
     match = pattern.match(url)
     if match:
-        protocol, username, password, rest = match.groups()
+        protocol, _username, _password, rest = match.groups()
         return f'{protocol}***REDACTED***:***REDACTED***@{rest}'
 
     return url
