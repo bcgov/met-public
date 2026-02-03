@@ -85,7 +85,6 @@ class Config:  # pylint: disable=too-few-public-methods
         Performs more advanced configuration logic that is not possible
         in the normal class definition.
         """
-
         # apply configs to _Config in the format that flask_jwt_oidc expects
         # this flattens the JWT_CONFIG dict into individual attributes
         for key, value in self.JWT_CONFIG.items():

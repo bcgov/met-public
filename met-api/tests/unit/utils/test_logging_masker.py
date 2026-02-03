@@ -16,11 +16,7 @@
 
 import logging
 
-from met_api.utils.logging_masker import (
-    SensitiveDataFilter,
-    mask_dict,
-    mask_url,
-)
+from met_api.utils.logging_masker import SensitiveDataFilter, mask_dict, mask_url
 
 
 def test_logging_masker():
@@ -32,8 +28,7 @@ def test_logging_masker():
     assert 'user' not in masked_url
     # Count occurrences of redaction to ensure we are masking both username and password
     assert masked_url.count('***REDACTED***') == 2
-    
-    
+
     # Test dictionary masking with various sensitive keys
     data = {
         'username': 'admin',
@@ -52,10 +47,10 @@ def test_logging_masker():
     assert masked_data['config']['secret'] == '***REDACTED***'
     assert masked_data['username'] == 'admin'
     assert masked_data['email'] == 'test@example.com'
-    
+
     # Test SensitiveDataFilter with various patterns
     filter_obj = SensitiveDataFilter()
-    
+
     # Test SQLAlchemy URL
     log_record = logging.LogRecord(
         name='test', level=logging.INFO, pathname='', lineno=0,
@@ -65,7 +60,7 @@ def test_logging_masker():
     filter_obj.filter(log_record)
     assert 'complexP@ss123' not in str(log_record.msg)
     assert '***REDACTED***' in str(log_record.msg)
-    
+
     # Test JWT token
     jwt_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0.abc123'
     log_record = logging.LogRecord(
@@ -76,7 +71,7 @@ def test_logging_masker():
     filter_obj.filter(log_record)
     assert jwt_token not in str(log_record.msg)
     assert '***REDACTED_JWT***' in str(log_record.msg)
-    
+
     # Test normal content preservation
     normal_message = 'Processing user request for engagement ID 123'
     log_record = logging.LogRecord(
