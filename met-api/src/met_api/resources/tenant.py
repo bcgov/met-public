@@ -15,7 +15,7 @@
 
 from http import HTTPStatus
 
-from flask import request
+from flask import current_app, request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 from marshmallow import ValidationError
@@ -61,7 +61,7 @@ class Tenants(Resource):
             request_json = request.get_json()
             valid_format, errors = schema_utils.validate(request_json, 'tenant')
             if not valid_format:
-                print(errors)
+                current_app.logger.error('Tenant validation errors: %s', errors)
                 return {'message': schema_utils.serialize(errors)}, HTTPStatus.BAD_REQUEST
 
             tenant = TenantSchema().load(request_json)

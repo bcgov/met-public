@@ -23,8 +23,7 @@ def get_tenant_site_url(tenant_id, path=''):
         if tenant is None:
             raise ValueError(f'Tenant with id {tenant_id} not found.')
         return site_url + f'/{tenant.short_name.lower()}' + path
-    else:
-        return site_url + path
+    return site_url + path
 
 
 def send_email(subject, email, html_body, args, template_id):
@@ -53,7 +52,8 @@ def send_email(subject, email, html_body, args, template_id):
                              headers={
                                  'Content-Type': 'application/json',
                                  'Authorization': f'Bearer {service_account_token}'},
-                             data=json.dumps(payload))
+                             data=json.dumps(payload),
+                             timeout=30)
     response.raise_for_status()
 
 

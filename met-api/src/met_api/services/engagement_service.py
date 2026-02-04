@@ -147,10 +147,10 @@ class EngagementService:
         engagements = EngagementModel.publish_scheduled_engagements_due()
 
         if not engagements:
-            print('There are no engagements scheduled for publication')
+            current_app.logger.info('There are no engagements scheduled for publication')
             return None
 
-        print('Engagements published: ', engagements)
+        current_app.logger.info('Engagements published: %s', engagements)
         for engagement in engagements:
             email_util.publish_to_email_queue(
                 SourceType.ENGAGEMENT.value,
@@ -158,7 +158,7 @@ class EngagementService:
                 SourceAction.PUBLISHED.value,
                 True,
             )
-            print('Engagements published added to email queue: ', engagement.id)
+            current_app.logger.info('Engagement published added to email queue: %s', engagement.id)
         return engagements
 
     @staticmethod

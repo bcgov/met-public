@@ -69,7 +69,6 @@ class CdogsApiService:
             template = {'template': ('template', file_handle, 'multipart/form-data')}
 
             current_app.logger.info('Uploading template %s', template_file_path)
-            print('Uploading template %s', template_file_path)
             response = self._post_upload_template(headers, url, template)
 
             if response.status_code == HTTPStatus.OK:
@@ -77,7 +76,6 @@ class CdogsApiService:
                     raise ValueError('Data not found')
 
                 current_app.logger.info('Returning new hash %s', response.headers['X-Template-Hash'])
-                print('Returning new hash %s', response.headers['X-Template-Hash'])
                 return response.headers['X-Template-Hash']
 
             response_json = json.loads(response.content)
@@ -86,7 +84,6 @@ class CdogsApiService:
                 match = re.findall(r"Hash '(.*?)'", response_json['detail'])
                 if match:
                     current_app.logger.info('Template already hashed with code %s', match[0])
-                    print('Template already hashed with code %s', match[0])
                     return match[0]
 
                 raise ValueError('Data not found')
