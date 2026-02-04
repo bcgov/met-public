@@ -33,7 +33,7 @@ class PrintDeprecationWarning(DeprecationWarning):
 
 def _deprecated_print(*args, **kwargs):
     """
-    Deprecated print function with warning message.
+    Issue a deprecation warning when print() is used.
 
     Using print() bypasses the logging masking system and may expose sensitive data.
     Use logging instead: current_app.logger.info(), logger.debug(), etc.
