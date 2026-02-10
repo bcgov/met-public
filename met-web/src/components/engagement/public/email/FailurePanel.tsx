@@ -2,9 +2,9 @@ import React from 'react';
 import { Grid2 as Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
 import { modalStyle } from 'components/common';
-import { Button } from 'components/common/Input';
-import { Header1 as MetHeader1Old, BodyText as MetBodyOld } from 'components/common/Typography';
+import { BodyText, Header1 } from 'components/common/Typography';
 import { When } from 'react-if';
+import { Button } from 'components/common/Input/Button';
 
 const FailurePanel = ({ email, handleClose, tryAgain, isInternal }: FailurePanelProps) => {
     return (
@@ -17,33 +17,31 @@ const FailurePanel = ({ email, handleClose, tryAgain, isInternal }: FailurePanel
             spacing={2}
         >
             <Grid size={12}>
-                <MetHeader1Old weight="bold">We are sorry</MetHeader1Old>
+                <Header1 weight="bold">We are sorry</Header1>
             </Grid>
             <Grid size={12}>
-                <MetBodyOld>There was a problem with the email address you provided:</MetBodyOld>
+                <BodyText>There was a problem with the email address you provided:</BodyText>
             </Grid>
 
             <Grid size={12}>
-                <MetBodyOld>{email}</MetBodyOld>
+                <BodyText>{email}</BodyText>
             </Grid>
             <When condition={isInternal}>
                 <Grid size={12}>
-                    <MetBodyOld>
+                    <BodyText color="error">
                         <strong>This is an internal engagement.</strong> Make sure you are using a government email.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
             </When>
             <Grid size={12}>
-                <MetBodyOld>Please verify your email and try again.</MetBodyOld>
+                <BodyText>Please verify your email and try again.</BodyText>
             </Grid>
             <Grid size={12}>
-                <MetBodyOld>If this problem persists, contact sample@gmail.com</MetBodyOld>
+                <BodyText>If this problem persists, contact sample@gmail.com</BodyText>
             </Grid>
-            <Grid container size={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+            <Grid size={12} container direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <Button variant="secondary" onClick={handleClose}>
-                        Go back to Engagement
-                    </Button>
+                    <Button onClick={handleClose}>Go back to Engagement</Button>
                     <Button variant="primary" onClick={tryAgain}>
                         Try Again
                     </Button>

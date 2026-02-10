@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid2 as Grid, Typography } from '@mui/material';
 import { modalStyle } from 'components/common';
-import { BodyText, Header1 as MetHeader1Old, BodyText as MetBodyOld } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
+import { BodyText, Header1 } from 'components/common/Typography';
 import { ThankYouPanelProps } from 'engagements/public/email/types';
 import { useAsyncValue } from 'react-router-dom';
 import { Engagement } from 'models/engagement';
-
 const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
     const savedEngagement = (useAsyncValue() as [Engagement] | undefined)?.[0];
     return (
@@ -20,9 +19,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
         >
             <Grid container size={12}>
                 <Grid size={12}>
-                    <MetHeader1Old weight="bold" sx={{ mb: 2 }}>
+                    <Header1 weight="bold" sx={{ mb: 2 }}>
                         Thank you
-                    </MetHeader1Old>
+                    </Header1>
                 </Grid>
                 <Grid size={12}>
                     <Typography id="modal-modal-header"></Typography>
@@ -30,14 +29,15 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
             </Grid>
             <Grid container direction="row" size={12}>
                 <Grid size={12}>
-                    <MetBodyOld sx={{ mb: 1 }}>Your submission was successful.</MetBodyOld>
+                    <BodyText sx={{ mb: 1 }}>Your submission was successful.</BodyText>
                 </Grid>
                 <Grid size={12}>
-                    <MetBodyOld sx={{ mb: 1 }}>
-                        We appreciate you take the time to voice your opinion about savedEngagement.name. When the
-                        engagement period is over (savedEngagement.end_date), you will receive a link to access the full
-                        survey report and view all the comments we received.
-                    </MetBodyOld>
+                    <BodyText sx={{ mb: 1 }}>
+                        We appreciate you take the time to voice your opinion about{' '}
+                        {savedEngagement?.name || 'this engagement'}. When the engagement period is over
+                        {savedEngagement?.end_date ? ` (on ${savedEngagement.end_date})` : ''}, you will receive a link
+                        to access the full survey report and view all the comments we received.
+                    </BodyText>
                 </Grid>
 
                 <Grid
