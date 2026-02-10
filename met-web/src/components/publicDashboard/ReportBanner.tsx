@@ -2,7 +2,7 @@ import React from 'react';
 import { Skeleton } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { Engagement } from 'models/engagement';
-import EngagementInfoSection from 'components/engagement/old-view/EngagementInfoSection';
+import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
 
 interface ReportBannerProps {
     engagement: Engagement;

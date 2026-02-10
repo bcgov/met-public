@@ -1,6 +1,6 @@
 import React from 'react';
 import withLanguageParam from './LanguageParam';
-import { Navigate, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import LazyRoute, { resolveLazyRouteTree } from './LazyRoute';
 
 const UnauthenticatedRoutes = resolveLazyRouteTree(
@@ -10,42 +10,37 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
         ErrorBoundaryLazy={() => import('routes/NotFound')}
         id="public-root"
     >
-        <LazyRoute index ComponentLazy={() => import('components/landing')} />
-        <LazyRoute
-            path=":slug/:language"
-            ComponentLazy={() => import('engagements/public/view').then((module) => withLanguageParam(module.default))}
-            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
-        />
-        <LazyRoute
-            path=":engagementId/view/:language"
-            ComponentLazy={() => import('engagements/public/view').then((module) => withLanguageParam(module.default))}
-            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
-        />
-        <LazyRoute
-            path="/surveys/submit/:surveyId/:token/:language"
-            id="survey"
-            ComponentLazy={() => import('components/survey/submit').then((module) => withLanguageParam(module.default))}
-            loaderLazy={() =>
-                import('components/survey/building/SurveyLoader').then((loaderModule) => loaderModule.SurveyLoader)
-            }
-        />
-        <Route path="/new-look">
-            <Route index element={<Navigate to="/" />} />
+        <Route path=":slug">
             <LazyRoute
-                path=":slug/:language"
+                path=":language"
+                id="single-engagement"
                 ComponentLazy={() =>
                     import('engagements/public/view').then((module) => withLanguageParam(module.default))
                 }
                 loaderLazy={() => import('engagements/public/view/EngagementLoader')}
             />
             <LazyRoute
-                path=":engagementId/view/:language"
-                ComponentLazy={() =>
-                    import('engagements/public/view').then((module) => withLanguageParam(module.default))
-                }
-                loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                path="dashboard/:dashboardType/:language"
+                ComponentLazy={() => import('components/publicDashboard').then((m) => withLanguageParam(m.default))}
             />
+            <LazyRoute
+                path="comments/:dashboardType/:language"
+                ComponentLazy={() => import('engagements/dashboard/comment').then((m) => withLanguageParam(m.default))}
+            />
+            <LazyRoute
+                path="edit/:token/:language"
+                ComponentLazy={() =>
+                    import('components/survey/edit').then((module) => withLanguageParam(module.default))
+                }
+                loaderLazy={() => import('components/survey/building/SurveyLoader')}
+            />
+            <LazyRoute
+                path="cacform/:widgetId/:language"
+                ComponentLazy={() => import('components/FormCAC').then((m) => withLanguageParam(m.default))}
+            />
+            <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
         </Route>
+        <LazyRoute index ComponentLazy={() => import('components/landing')} />
         <Route path="/engagements">
             <LazyRoute
                 path="create/form/:language"
@@ -94,36 +89,14 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
                 />
             </Route>
         </Route>
-        <Route path=":slug">
-            <LazyRoute
-                path="dashboard/:dashboardType/:language"
-                ComponentLazy={() => import('components/publicDashboard').then((m) => withLanguageParam(m.default))}
-            />
-            <LazyRoute
-                path="comments/:dashboardType/:language"
-                ComponentLazy={() => import('engagements/dashboard/comment').then((m) => withLanguageParam(m.default))}
-            />
-            <LazyRoute
-                path="edit/:token/:language"
-                ComponentLazy={() =>
-                    import('components/survey/edit').then((module) => withLanguageParam(module.default))
-                }
-                loaderLazy={() => import('components/survey/building/SurveyLoader')}
-            />
-            <LazyRoute
-                path="cacform/:widgetId/:language"
-                ComponentLazy={() => import('components/FormCAC').then((m) => withLanguageParam(m.default))}
-            />
-            <LazyRoute
-                path=":language"
-                id="single-engagement"
-                ComponentLazy={() =>
-                    import('engagements/public/view').then((module) => withLanguageParam(module.default))
-                }
-                loaderLazy={() => import('engagements/public/view/EngagementLoader')}
-            />
-            <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
-        </Route>
+        <LazyRoute
+            path="/surveys/submit/:surveyId/:token/:language"
+            id="survey"
+            ComponentLazy={() => import('components/survey/submit').then((module) => withLanguageParam(module.default))}
+            loaderLazy={() =>
+                import('components/survey/building/SurveyLoader').then((loaderModule) => loaderModule.SurveyLoader)
+            }
+        />
         <LazyRoute path="/not-available" ComponentLazy={() => import('routes/NotAvailable')} />
         <LazyRoute path="/not-found" ComponentLazy={() => import('routes/NotFound')} />
         <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />

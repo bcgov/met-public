@@ -209,9 +209,12 @@ const App = () => {
 
     // Otherwise, if the user is not authenticated, show the public layout.
     if (!isAuthenticated) {
-        const router = createBrowserRouter(createRoutesFromElements(UnauthenticatedRoutes), {
-            basename: `/${basename}`,
-        });
+        const router = createBrowserRouter(
+            createRoutesFromElements(UnauthenticatedRoutes as Parameters<typeof createRoutesFromElements>[0]),
+            {
+                basename: `/${basename}`,
+            },
+        );
         return <RouterProvider router={router} />;
     }
 
@@ -245,9 +248,12 @@ const App = () => {
     }
 
     // Otherwise, display the admin area.
-    const router = createBrowserRouter(createRoutesFromElements(AuthenticatedRoutes), {
-        basename: `/${basename}`,
-    });
+    const router = createBrowserRouter(
+        createRoutesFromElements(AuthenticatedRoutes as Parameters<typeof createRoutesFromElements>[0]),
+        {
+            basename: `/${basename}`,
+        },
+    );
 
     return <RouterProvider router={router} />;
 };

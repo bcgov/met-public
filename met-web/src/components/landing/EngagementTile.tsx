@@ -32,12 +32,11 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const dateFormat = 'MMMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = `/new-look${slug ? '/' + slug : ''}`;
+    const engagementPath = slug ? `/${slug}` : `/engagement/${engagementId}`;
     const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
-            setIsLoadingEngagement(false);
             setLoadedEngagement(passedEngagement);
             return;
         }
@@ -66,8 +65,10 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
         try {
             const response = await getSlugByEngagementId(loadedEngagement.id);
             setSlug(response.slug);
+            setIsLoadingEngagement(false);
         } catch {
             setSlug('');
+            setIsLoadingEngagement(false);
         }
     };
 
@@ -90,9 +91,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             <Card
                 className={isActive ? 'active' : ''}
                 sx={{
+                    cursor: isLoadingEngagement ? 'not-allowed' : 'pointer',
                     borderRadius: '24px',
                     width: '320px',
-                    cursor: 'pointer',
                     '&:hover, &:has(:hover)': {
                         boxShadow: elevations.hover,
                         background: colors.surface.blue[90],
@@ -130,7 +131,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     onMouseDown={() => setIsActive(true)}
                     onMouseUp={() => setIsActive(false)}
                     LinkComponent={RouterLinkRenderer}
-                    href={engagementUrl}
+                    href={isLoadingEngagement ? '#' : engagementUrl}
                     sx={{
                         '&:focus-visible': {
                             // focus visible styling is applied by the parent Card component

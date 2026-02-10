@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import EmailModal from 'components/engagement/old-view/EmailModal';
+import EmailModal from 'engagements/public/email/EmailModal';
 import { EngagementLoaderData, EngagementViewSections } from '.';
 
 const gridContainerStyles = {

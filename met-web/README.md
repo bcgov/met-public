@@ -10,7 +10,7 @@ React.js frontend application for The Modern Engagement Tool project.
     -   [Node.js](https://nodejs.org/en/)
 -   Install Dependencies
     -   Login to artifactory package registry
-        `npm login --registry=https://artifacts.developer.gov.bc.ca/artifactory/api/npm/ee90-font-awesome-pro-dev/ --auth-type=web --scope=@bcgov`
+        `npm login --registry=https://artifacts.developer.gov.bc.ca/artifactory/api/npm/ee90-font-awesome-pro-dev/ --auth-type=web --scope=@bcgov-artifactory`
         -   Alternatively, edit your .npmrc with a username and password from a ServiceAccount
     -   Run `npm install` in the root of the project (met-web)
 

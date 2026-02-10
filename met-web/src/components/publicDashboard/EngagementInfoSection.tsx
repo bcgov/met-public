@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Stack } from '@mui/material';
 import { MetHeader1Old, MetLabel } from 'components/common';
-import { EngagementStatusChip } from '../status';
+import { EngagementStatusChip } from 'components/common/Indicators';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
-import { ActionContext } from './ActionContext';
 import { Engagement } from 'models/engagement';
-import { useAppSelector } from 'hooks';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { When } from 'react-if';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
@@ -16,11 +14,7 @@ interface EngagementInfoSectionProps {
     children?: React.ReactNode;
 }
 const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSectionProps) => {
-    const { name, end_date, start_date, rich_description, submission_status } = savedEngagement;
-    const { mockStatus } = useContext(ActionContext);
-    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const isPreview = isLoggedIn;
-    const statusName = isPreview ? mockStatus : submission_status;
+    const { name, end_date, start_date, rich_description, submission_status: statusId } = savedEngagement;
     const dateFormat = 'MMM DD, YYYY';
 
     const EngagementDate =
@@ -71,9 +65,9 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 <Grid item xs={12}>
                     <Stack direction="row" spacing={1}>
                         <MetLabel>Status:</MetLabel>
-                        <EngagementStatusChip submissionStatus={statusName} />
+                        <EngagementStatusChip statusId={statusId} />
                         <When condition={savedEngagement.status_id === EngagementStatus.Unpublished}>
-                            <EngagementStatusChip submissionStatus={SubmissionStatus.Unpublished} />
+                            <EngagementStatusChip statusId={SubmissionStatus.Unpublished} />
                         </When>
                     </Stack>
                 </Grid>

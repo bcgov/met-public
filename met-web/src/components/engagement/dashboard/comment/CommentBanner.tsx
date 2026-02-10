@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Skeleton } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { CommentViewContext } from './CommentViewContext';
-import EngagementInfoSection from 'components/engagement/old-view/EngagementInfoSection';
+import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
 
 export const CommentBanner = () => {
     const { isEngagementLoading, engagement } = useContext(CommentViewContext);

@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, Suspense } from 'react';
 import { MetDisclaimer } from 'components/common';
-import { ActionContext } from '../../old-view/ActionContext';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -11,16 +10,20 @@ import { SubscriptionType } from 'constants/subscriptionType';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { LanguageState } from 'reduxSlices/languageSlice';
+import { Await, useRouteLoaderData } from 'react-router-dom';
+import { EngagementLoaderData } from 'engagements/public/view';
+import { CircularProgress } from '@mui/material';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
-    const { savedEngagement } = useContext(ActionContext);
+    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
     const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const language: LanguageState = useAppSelector((state) => state.language);
 
     const sendEmail = async () => {
+        const savedEngagement = await engagement;
         try {
             setIsSaving(true);
             const email_verification = await createSubscribeEmailVerification(
@@ -107,11 +110,17 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
             isSaving={isSaving}
             termsOfService={
                 <MetDisclaimer>
-                    <Editor
-                        editorState={getEditorStateFromRaw(savedEngagement.consent_message)}
-                        readOnly={true}
-                        toolbarHidden
-                    />
+                    <Suspense fallback={<CircularProgress />}>
+                        <Await resolve={engagement}>
+                            {(resolvedEngagement) => (
+                                <Editor
+                                    editorState={getEditorStateFromRaw(resolvedEngagement.consent_message)}
+                                    readOnly={true}
+                                    toolbarHidden
+                                />
+                            )}
+                        </Await>
+                    </Suspense>
                 </MetDisclaimer>
             }
             header={'Sign Up for Updates'}
