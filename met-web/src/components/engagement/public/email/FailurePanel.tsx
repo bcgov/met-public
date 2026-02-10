@@ -37,6 +37,7 @@ const FailurePanel = ({ email, handleClose, tryAgain, isInternal }: FailurePanel
                 <BodyText>Please verify your email and try again.</BodyText>
             </Grid>
             <Grid size={12}>
+                {/* TODO: Populate this with the tenant configuration from the API */}
                 <BodyText>If this problem persists, contact sample@gmail.com</BodyText>
             </Grid>
             <Grid size={12} container direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
