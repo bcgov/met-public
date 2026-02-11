@@ -116,7 +116,7 @@
     "typescript": "^5.9.3",
     "universal-cookie": "^8.0.1",
     "web-vitals": "^5.1.0",
-    "webpack": "^5.103.0",
+    "webpack": "^5.105.0",
     "webpack-dev-server": "^5.2.2",
     "webpack-manifest-plugin": "^6.0.1",
     "workbox-webpack-plugin": "^7.4.0",
