@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { BannerProps } from '../engagement/old-view/types';
+import { BannerProps } from 'components/banner/types';
 
 const BannerWithoutImage = ({ children }: BannerProps) => {
     return (

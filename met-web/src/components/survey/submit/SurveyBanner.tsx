@@ -1,6 +1,6 @@
 import React from 'react';
 import { Banner } from 'components/banner/Banner';
-import EngagementInfoSection from 'components/engagement/old-view/EngagementInfoSection';
+import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
 import { Engagement } from 'models/engagement';
 import { useAsyncValue } from 'react-router-dom';
 

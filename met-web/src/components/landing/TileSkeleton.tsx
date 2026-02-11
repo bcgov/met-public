@@ -6,7 +6,7 @@ import { colors } from 'styles/Theme';
 
 export const TileSkeleton = () => {
     return (
-        <Card sx={{ borderRadius: '24px', width: '320px' }}>
+        <Card sx={{ borderRadius: '24px', width: '320px', cursor: 'not-allowed' }}>
             <CardActionArea>
                 <Skeleton height="172px" variant="rectangular" sx={{ bgcolor: colors.surface.blue[30] }} />
                 <CardContent sx={{ height: '260px', p: '40px 32px' }}>

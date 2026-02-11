@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import BannerWithoutImage from './BannerWithoutImage';
-import { BannerProps } from '../engagement/old-view/types';
+import { BannerProps } from 'components/banner/types';
 
 const BannerWithImage = ({ height, imageUrl, children }: BannerProps) => {
     const [imageError, setImageError] = useState(false);

@@ -1,27 +1,24 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Modal } from '@mui/material';
-import SuccessPanel from './SuccessPanel';
+import SuccessPanel from 'components/engagement/public/email/SuccessPanel';
 import FailurePanel from './FailurePanel';
-import EmailPanel from './EmailPanel';
+import EmailPanel from 'components/engagement/public/email/EmailPanel';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import { EmailModalProps } from './types';
+import { EmailModalProps } from 'engagements/public/email/types';
 import { checkEmail } from 'utils';
 import { createEmailVerification } from 'services/emailVerificationService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useAppDispatch, useAppSelector } from 'hooks';
-import { ActionContext } from './ActionContext';
 import ThankYouPanel from './ThankYouPanel';
 import { EmailVerificationType } from 'models/emailVerification';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { LanguageState } from 'reduxSlices/languageSlice';
 
-const EmailModal = ({ defaultPanel, open, handleClose, engagement }: EmailModalProps) => {
+const EmailModal = ({ defaultPanel, open, handleClose, engagement: savedEngagement }: EmailModalProps) => {
     const dispatch = useAppDispatch();
     const [formIndex, setFormIndex] = useState(defaultPanel);
     const [email, setEmail] = useState('');
-    const { savedEngagement: engagementFromContext } = useContext(ActionContext);
-    const savedEngagement = engagement || engagementFromContext;
     const [isSaving, setSaving] = useState(false);
     const language: LanguageState = useAppSelector((state) => state.language);
 

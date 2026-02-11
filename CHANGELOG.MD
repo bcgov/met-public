@@ -1,3 +1,15 @@
+## February 10, 2026
+
+- **Chore** Move new look route from `/new-look` to base path `/` [🎟️ DEP-217](https://citz-gdx.atlassian.net/browse/DEP-217)
+  - Updated the route for the new engagement view from `/new-look` to `/` to make it the default view for engagements.
+  - Updated all links and redirects to point to the new base path.
+  - Restructured UnauthenticatedRoutes.tsx to remove duplicated paths
+  - Removed several components that were only used by the old engagement view, as they are no longer needed.
+  - Refactored other components to separate them from the old view logic
+  - Updated Engagement Tile component to point to the new base path for engagements, and to disable the link and show a not-allowed cursor when the engagement is loading.
+
+- Updates to NPM config to remove outdated settings and document correct scope and registry settings for devs to install the Font Awesome Pro package
+
 ## February 2, 2026
 
 - **Security** Implemented automatic sensitive data masking in API logs. [🎟️ DEP-161](https://citz-gdx.atlassian.net/browse/DEP-161)
