@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import EnvironmentBanner from './EnvironmentBanner';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Palette } from 'styles/Theme';
 import LanguageSelector from 'components/common/LanguageSelector';
 import { LanguageContext } from 'components/common/LanguageContext';

@@ -1,7 +1,7 @@
 import { Avatar, Grid } from '@mui/material';
 import { User, USER_COMPOSITE_ROLE } from 'models/user';
 import React, { useEffect, useRef } from 'react';
-import { useFetcher } from 'react-router-dom';
+import { useFetcher } from 'react-router';
 import { BodyText } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';

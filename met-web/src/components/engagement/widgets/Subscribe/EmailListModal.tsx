@@ -10,7 +10,7 @@ import { SubscriptionType } from 'constants/subscriptionType';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { LanguageState } from 'reduxSlices/languageSlice';
-import { Await, useRouteLoaderData } from 'react-router-dom';
+import { Await, useRouteLoaderData } from 'react-router';
 import { EngagementLoaderData } from 'engagements/public/view';
 import { CircularProgress } from '@mui/material';
 

@@ -6,7 +6,7 @@ import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from '../submit/InvalidTokenModal';
 import { When } from 'react-if';
 import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
-import { Await, useAsyncValue, useNavigate } from 'react-router-dom';
+import { Await, useAsyncValue, useNavigate } from 'react-router';
 import { EmailVerification } from 'models/emailVerification';
 import { Engagement } from 'models/engagement';
 import { SurveySubmission } from 'models/surveySubmission';

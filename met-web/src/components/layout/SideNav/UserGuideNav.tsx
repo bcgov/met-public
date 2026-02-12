@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListItemButton, ListItem } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { levenshteinDistance } from 'helper';
 import { Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

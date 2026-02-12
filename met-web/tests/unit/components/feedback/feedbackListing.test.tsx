@@ -7,6 +7,7 @@ import * as notificationSlice from 'services/notificationService/notificationSli
 import { createDefaultFeedback, CommentTypeEnum, SourceTypeEnum, FeedbackStatusEnum } from 'models/feedback';
 import FeedbackListing from 'components/feedback/listing';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 const mockFeedbackOne = {
     ...createDefaultFeedback(),
@@ -44,8 +45,8 @@ jest.mock('components/common', () => ({
     },
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({
         search: '',
     })),
@@ -60,6 +61,18 @@ jest.mock('react-redux', () => ({
     }),
     useDispatch: jest.fn(() => jest.fn()),
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/feedback',
+            element: <FeedbackListing />,
+        },
+    ],
+    {
+        initialEntries: ['/feedback'],
+    },
+);
 
 describe('Feedback Listing tests', () => {
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
@@ -76,7 +89,7 @@ describe('Feedback Listing tests', () => {
                 total: 2,
             }),
         );
-        render(<FeedbackListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Feedback One')).toBeInTheDocument();
@@ -88,7 +101,7 @@ describe('Feedback Listing tests', () => {
     });
 
     test('Feedback table is empty', async () => {
-        render(<FeedbackListing />);
+        render(<RouterProvider router={router} />);
         const feedbackListing = screen.getByTestId('listing-table');
 
         getFeedbackPageMock.mockReturnValue(
@@ -97,7 +110,7 @@ describe('Feedback Listing tests', () => {
                 total: 0,
             }),
         );
-        render(<FeedbackListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(feedbackListing).toBeVisible();
@@ -111,7 +124,7 @@ describe('Feedback Listing tests', () => {
                 total: 1,
             }),
         );
-        render(<FeedbackListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Feedback One')).toBeInTheDocument();
@@ -137,7 +150,7 @@ describe('Feedback Listing tests', () => {
                 total: 11,
             }),
         );
-        render(<FeedbackListing />);
+        render(<RouterProvider router={router} />);
 
         const GoToNextPageButton = screen.getByLabelText('Go to next page');
         const GoToPreviousPageButton = screen.getByLabelText('Go to previous page');

@@ -1,5 +1,5 @@
 import { EngagementStatus } from 'constants/engagementStatus';
-import { ActionFunction } from 'react-router-dom';
+import { ActionFunction } from 'react-router';
 import { patchEngagement } from 'services/engagementService';
 
 export const publishingAction: ActionFunction = async ({ request }) => {

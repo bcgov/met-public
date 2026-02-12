@@ -5,7 +5,7 @@ import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useLazyGetDocumentsQuery } from 'apiManager/apiSlices/documents';
 import { BodyText, Header3 } from 'components/common/Typography';
 import { BaseTheme } from 'styles/Theme';
-import { Await } from 'react-router-dom';
+import { Await } from 'react-router';
 import TreeView from '@mui/lab/TreeView';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TreeItem from '@mui/lab/TreeItem';

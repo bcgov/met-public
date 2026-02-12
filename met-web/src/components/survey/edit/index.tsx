@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import SurveySubmitWrapped from './FormWrapped';
-import { Await, useLoaderData } from 'react-router-dom';
+import { Await, useLoaderData } from 'react-router';
 import { Skeleton } from '@mui/material';
 import { SurveyLoaderData } from '../building/SurveyLoader';
 

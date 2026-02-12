@@ -4,7 +4,7 @@ import { useAppDispatch } from 'hooks';
 import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSurveysPage } from 'services/surveyService';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 import dayjs from 'dayjs';
 import { formatToUTC } from 'components/common/dateHelper';

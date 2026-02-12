@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router';
 
 import { USER_ROLES } from 'services/userService/constants';
 import LazyRoute, { resolveLazyRouteTree } from './LazyRoute';

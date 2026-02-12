@@ -8,7 +8,7 @@ import { EngagementStatusChip } from 'components/common/Indicators';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
-import { Await, useLoaderData } from 'react-router-dom';
+import { Await, useLoaderData } from 'react-router';
 import { StatusChipSkeleton } from 'components/common/Indicators/StatusChip';
 import { EngagementLoaderData, EngagementViewSections } from '.';
 

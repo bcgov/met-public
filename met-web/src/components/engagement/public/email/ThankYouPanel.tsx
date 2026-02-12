@@ -4,7 +4,7 @@ import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input';
 import { BodyText, Header1 } from 'components/common/Typography';
 import { ThankYouPanelProps } from 'engagements/public/email/types';
-import { useAsyncValue } from 'react-router-dom';
+import { useAsyncValue } from 'react-router';
 import { Engagement } from 'models/engagement';
 const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
     const savedEngagement = (useAsyncValue() as [Engagement] | undefined)?.[0];

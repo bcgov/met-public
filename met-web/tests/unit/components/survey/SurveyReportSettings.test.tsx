@@ -8,7 +8,7 @@ import { createDefaultSurvey, Survey } from 'models/survey';
 import { draftEngagement } from '../factory';
 import ReportSettings from 'components/survey/report';
 import assert from 'assert';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 
 const survey: Survey = {
@@ -44,6 +44,21 @@ const engagementSlug = {
     slug: 'engagement-name',
 };
 
+global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
+    // React Router data APIs call toUpperCase on request.method; default to GET
+    method: (init.method || 'GET').toUpperCase(),
+    url: input,
+    headers: {
+        get: jest.fn(),
+        has: jest.fn(),
+    },
+    signal: {
+        removeEventListener: jest.fn(),
+        addEventListener: jest.fn(),
+    },
+    clone: jest.fn(),
+}));
+
 jest.mock('axios');
 
 jest.mock('hooks', () => ({
@@ -56,8 +71,8 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useParams: jest.fn(() => {
         return { surveyId: '1' };
     }),
@@ -76,6 +91,10 @@ const router = createMemoryRouter(
             element: <ReportSettings />,
             id: 'survey',
         },
+        {
+            path: '/engagements/:engagementId/form',
+            element: <div>Engagement Form</div>,
+        },
     ],
     {
         initialEntries: ['/surveys/1/report'],
@@ -86,11 +105,12 @@ jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(),
     useDispatch: jest.fn(() => jest.fn()),
+    useParams: jest.fn(() => {
+        return { surveyId: String(survey.id) };
+    }),
 }));
 
 describe('Survey report settings tests', () => {
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-    jest.spyOn(reactRouter, 'useParams').mockReturnValue({ surveyId: String(survey.id) });
     const updateSurveyReportSettingsMock = jest
         .spyOn(reportSettingsService, 'updateSurveyReportSettings')
         .mockReturnValue(Promise.resolve(SurveyReportSettings));

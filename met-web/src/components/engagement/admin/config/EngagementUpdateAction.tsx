@@ -1,5 +1,5 @@
 import { ENGAGEMENT_MEMBERSHIP_STATUS } from 'models/engagementTeamMember';
-import { ActionFunction, redirect } from 'react-router-dom';
+import { ActionFunction, redirect } from 'react-router';
 import { patchEngagement } from 'services/engagementService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
 import {

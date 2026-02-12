@@ -1,6 +1,6 @@
 import { Engagement } from 'models/engagement';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
-import { Params } from 'react-router-dom';
+import { Params } from 'react-router';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
 
 export type AuthoringLoaderData = {

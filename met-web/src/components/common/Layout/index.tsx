@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, BoxProps } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 /**
  * A styled Box component that pads and outlines its content with the primary color of the theme.

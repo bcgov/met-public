@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Grid } from '@mui/material';
 import { CommentBanner } from './CommentBanner';
 import CommentsBlock from './CommentsBlock';

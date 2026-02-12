@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { Grid } from '@mui/material';
 import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
 import { Banner } from 'components/banner/Banner';

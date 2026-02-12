@@ -25,7 +25,7 @@ import { getLanguageValue } from './AuthoringTemplate';
 import { useFormContext } from 'react-hook-form';
 import { EngagementUpdateData } from './AuthoringContext';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Await } from 'react-router-dom';
+import { Await } from 'react-router';
 import ConfirmModal from 'components/common/Modals/ConfirmModal';
 import { Language } from 'models/language';
 

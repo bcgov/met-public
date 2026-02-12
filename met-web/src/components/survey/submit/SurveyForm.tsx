@@ -5,7 +5,7 @@ import { FormSubmissionData } from 'components/Form/types';
 import { useAppDispatch, useAppSelector, useAppTranslation } from 'hooks';
 import { When } from 'react-if';
 import { submitSurvey } from 'services/submissionService';
-import { useAsyncValue, useNavigate } from 'react-router-dom';
+import { useAsyncValue, useNavigate } from 'react-router';
 import { EmailVerification } from 'models/emailVerification';
 import { Survey } from 'models/survey';
 import { Button } from 'components/common/Input';

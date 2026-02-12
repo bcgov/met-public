@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Grid, TextField, Stack, Autocomplete } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { fetchSurveys, linkSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';

@@ -13,7 +13,7 @@ import { updatedDiff } from 'deep-object-diff';
 import { WidgetTitle } from '../WidgetTitle';
 import { Widget, WidgetLocation } from 'models/widget';
 import ImageUpload from 'components/imageUpload';
-import { useAsyncValue } from 'react-router-dom';
+import { useAsyncValue } from 'react-router';
 import { ImageWidget } from 'models/imageWidget';
 import { Button, TextField } from 'components/common/Input';
 import { saveObject } from 'services/objectStorageService';

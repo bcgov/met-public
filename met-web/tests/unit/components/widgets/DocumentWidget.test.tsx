@@ -22,7 +22,7 @@ import { Widget, WidgetType } from 'models/widget';
 import { DocumentItem } from 'models/document';
 import { USER_ROLES } from 'services/userService/constants';
 import { engagementMetadata } from '../factory';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 const engagement: Engagement = {
     ...createDefaultEngagement(),
@@ -72,8 +72,8 @@ const documentWidget: Widget = {
 
 jest.mock('axios');
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
         return { projectId: '', engagementId: '1' };

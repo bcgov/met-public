@@ -47,23 +47,16 @@ jest.mock('@mui/material', () => ({
 
 jest.mock('axios');
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children }: { children: ReactNode }) => {
-        return <button>{children}</button>;
-    },
-    SecondaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
-        return <button onClick={onClick}>{children}</button>;
-    },
-}));
-
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
         return { surveyId: 1 };
     }),
     useNavigate: jest.fn(),
+    Link: ({ children, to }: { children: ReactNode; to: string }) => {
+        return <a href={to}>{children}</a>;
+    },
 }));
 
 jest.mock('react-redux', () => ({

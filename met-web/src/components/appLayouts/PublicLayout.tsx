@@ -1,6 +1,6 @@
 import React from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Variables will be within scope within PublicLayout and its children
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import PublicHeader from '../layout/Header/PublicHeader';
 import { Notification } from 'components/common/notification';
 import PageViewTracker from 'routes/PageViewTracker';

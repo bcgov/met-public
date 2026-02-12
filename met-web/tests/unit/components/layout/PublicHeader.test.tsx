@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import LanguageSelector from 'components/common/LanguageSelector';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router';
 import userEvent from '@testing-library/user-event';
 
 const mockState = { language: { id: 'en' } }; // Initial state

@@ -6,7 +6,7 @@ import { setupEnv } from '../setEnvVars';
 import { DashboardContext } from 'components/publicDashboard/DashboardContext';
 import { closedEngagement } from '../factory';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 
 jest.mock('axios');
 
@@ -14,15 +14,8 @@ jest.mock('jspdf', () => ({
     jsPDF: jest.fn(),
 }));
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
-        return <button {...rest}>{children}</button>;
-    },
-}));
-
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
         return { slug: '' };
@@ -52,6 +45,36 @@ jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
     useMediaQuery: jest.fn(() => true),
 }));
+
+jest.mock('components/publicDashboard/KPI/SurveyEmailsSent', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Survey Emails Sent');
+});
+
+jest.mock('components/publicDashboard/KPI/SurveysCompleted', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Surveys Completed');
+});
+
+jest.mock('components/publicDashboard/KPI/ProjectLocation', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Project Location');
+});
+
+jest.mock('components/publicDashboard/SubmissionTrend/SubmissionTrend', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Live Activity - Engagement');
+});
+
+jest.mock('components/publicDashboard/SurveyBar', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Survey Bar');
+});
+
+jest.mock('components/publicDashboard/SurveyBarPrintable', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Survey Bar Printable');
+});
 
 jest.mock('maplibre-gl/dist/maplibre-gl', () => ({
     Map: () => ({}),
@@ -90,7 +113,8 @@ describe('Public Dashboard page tests', () => {
     test('Navigation links work correctly', async () => {
         const returnLink = screen.getByText(`<<Return to ${closedEngagement.name} Engagement`);
         expect(returnLink).toBeInTheDocument();
-        userEvent.click(returnLink);
+        const user = userEvent.setup();
+        await user.click(returnLink);
         await waitFor(() => {
             expect(window.location.pathname).toBe(`/engagements/${closedEngagement.id}/view`);
         });

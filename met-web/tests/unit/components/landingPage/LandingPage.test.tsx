@@ -5,7 +5,7 @@ import LandingComponent from 'components/landing/LandingComponent';
 import { setupEnv } from '../setEnvVars';
 import { LandingContext } from 'components/landing/LandingContext';
 import { openEngagement, closedEngagement } from '../factory';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router';
 
 const MOCK_TENANT = {
     title: 'Mock Tenant',

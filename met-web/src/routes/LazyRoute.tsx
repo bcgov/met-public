@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, RouteProps } from 'react-router-dom';
+import { Route, RouteProps } from 'react-router';
 
 // Props of Route that must be defined statically (cannot be lazy)
 type ImmutableRouteKey = 'lazy' | 'caseSensitive' | 'path' | 'id' | 'index' | 'children';

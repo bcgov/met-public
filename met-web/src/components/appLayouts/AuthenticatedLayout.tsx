@@ -1,6 +1,6 @@
 import React from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Variables will be within scope within AuthenticatedLayout and its children
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import { Box } from '@mui/material';
 import InternalHeader from '../layout/Header/InternalHeader';
 import { Notification } from 'components/common/notification';

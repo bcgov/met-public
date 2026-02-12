@@ -3,7 +3,7 @@ import { act, render, waitFor, fireEvent, screen } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import PollWidgetView from 'components/engagement/widgets/Poll/PollWidgetView';
 import * as widgetService from 'services/widgetService/PollService';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 // Mock for useDispatch
 jest.mock('react-redux', () => ({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BaseTheme } from '../../../src/styles/Theme';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router';
 import { Provider } from 'react-redux';
 import { store } from '../../../src/store';
 

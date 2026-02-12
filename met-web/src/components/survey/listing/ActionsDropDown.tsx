@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import { MenuItem, Select } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
 import { Palette } from 'styles/Theme';

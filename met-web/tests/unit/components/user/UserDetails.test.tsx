@@ -10,6 +10,7 @@ import { draftEngagement } from '../factory';
 import { EngagementTeamMember, initialDefaultTeamMember } from 'models/engagementTeamMember';
 import UserProfile from 'components/userManagement/userDetails';
 import { USER_ROLES } from 'services/userService/constants';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 const mockUser1: User = {
     ...createDefaultUser,
@@ -46,13 +47,6 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
-        return <button onClick={onClick}>{children}</button>;
-    },
-}));
-
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn((callback) =>
@@ -66,11 +60,23 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
     useParams: jest.fn(() => ({ userId: '1' })),
 }));
+
+const router = createMemoryRouter(
+    [
+        {
+            path: '/usermanagement/:userId/details',
+            element: <UserProfile />,
+        },
+    ],
+    {
+        initialEntries: ['/usermanagement/1/details'],
+    },
+);
 
 describe('User Details tests', () => {
     const mockOpenNotificationModal = jest
@@ -84,7 +90,7 @@ describe('User Details tests', () => {
     });
 
     test('User details page is rendered', async () => {
-        render(<UserProfile />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText(draftEngagement.name)).toBeVisible();
@@ -95,7 +101,7 @@ describe('User Details tests', () => {
     });
 
     test('Confirmation model appears when toggling status', async () => {
-        render(<UserProfile />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Deactivate User')).toBeVisible();

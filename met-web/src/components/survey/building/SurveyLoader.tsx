@@ -3,7 +3,7 @@ import { Engagement } from 'models/engagement';
 import { Survey } from 'models/survey';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import { SurveySubmission } from 'models/surveySubmission';
-import { Params } from 'react-router-dom';
+import { Params } from 'react-router';
 import { getEmailVerification } from 'services/emailVerificationService';
 import { getEngagement } from 'services/engagementService';
 import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagementSlugService';

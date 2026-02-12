@@ -24,7 +24,7 @@ import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
-import { Await, useRouteLoaderData, useParams, useNavigation } from 'react-router-dom';
+import { Await, useRouteLoaderData, useParams, useNavigation } from 'react-router';
 import { Tenant } from 'models/tenant';
 import { When, Unless, If, Else, Then } from 'react-if';
 import { Button } from 'components/common/Input';

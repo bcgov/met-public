@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { Engagement, createDefaultEngagement } from 'models/engagement';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { getEngagement } from 'services/engagementService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getErrorMessage } from 'utils';

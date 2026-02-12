@@ -6,7 +6,7 @@ import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from './InvalidTokenModal';
 import { EngagementLink } from './EngagementLink';
 import { PreviewBanner } from './PreviewBanner';
-import { useRouteLoaderData, Await } from 'react-router-dom';
+import { useRouteLoaderData, Await } from 'react-router';
 import { SurveyLoaderData } from '../building/SurveyLoader';
 
 const SurveySubmit = () => {

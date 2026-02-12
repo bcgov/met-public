@@ -10,7 +10,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import assert from 'assert';
 import { USER_ROLES } from 'services/userService/constants';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
     // React Router data APIs call toUpperCase on request.method; default to GET
@@ -117,8 +117,8 @@ const mockFetcher = {
     data: mockFetcherData,
     state: 'idle',
 };
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
     useLocation: jest.fn(() => ({
         search: '',

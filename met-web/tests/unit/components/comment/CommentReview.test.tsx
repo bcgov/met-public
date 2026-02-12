@@ -29,9 +29,9 @@ jest.mock('services/surveyService', () => ({
 jest.mock('services/notificationService/notificationSlice', () => ({
     openNotification: jest.fn(),
 }));
-// Extend the react-router-dom mock
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+// Extend the react-router mock
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
     useParams: jest.fn(() => ({
         submissionId: '1', // Mock submissionId here

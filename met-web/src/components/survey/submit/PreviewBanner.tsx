@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Box, Grid, Skeleton, Stack } from '@mui/material';
-import { useNavigate, Await, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, Await, useRouteLoaderData } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';

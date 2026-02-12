@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { Language } from 'models/language';
 import { Engagement } from 'models/engagement';
 import { EditorState } from 'draft-js';
-import { FetcherWithComponents } from 'react-router-dom';
+import { FetcherWithComponents } from 'react-router';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { LanguageState } from 'reduxSlices/languageSlice';
 

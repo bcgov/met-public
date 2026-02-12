@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, FormControlLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
 import { textInputStyles } from 'components/common/Input/TextInput';
-import { useFetcher } from 'react-router-dom';
+import { useFetcher } from 'react-router';
 import { BodyText } from 'components/common/Typography';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

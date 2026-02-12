@@ -11,7 +11,7 @@ import EmailListSection from './EmailListSection';
 import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
 import { Header2 } from 'components/common/Typography';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useRouteLoaderData } from 'react-router';
 import { EngagementLoaderData } from 'engagements/public/view';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {

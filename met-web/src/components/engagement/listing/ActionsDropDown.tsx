@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
 import { CircularProgress, MenuItem, Select } from '@mui/material';
 import { Engagement } from 'models/engagement';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
 import { Palette } from 'styles/Theme';

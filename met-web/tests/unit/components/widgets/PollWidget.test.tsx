@@ -8,7 +8,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, mockPoll, pollWidget } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { setupWidgetTestEnvMock, setupWidgetTestEnvSpy } from './setupWidgetTestEnv';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
@@ -42,8 +42,8 @@ jest.mock('services/widgetService/PollService', () => ({
     patchPoll: jest.fn(),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
         return { projectId: '', engagementId: '1' };

@@ -3,7 +3,7 @@ import { Divider, FormControl, FormControlLabel, FormLabel, Grid, RadioGroup, St
 import { MetPageGridContainer, PrimaryButtonOld, SecondaryButtonOld, MetHeader3 } from 'components/common';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Palette } from 'styles/Theme';
 import LinkOptions from './LinkOptions';
 import { CreateSurveyContext } from './CreateSurveyContext';

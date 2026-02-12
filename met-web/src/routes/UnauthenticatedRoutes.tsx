@@ -1,6 +1,6 @@
 import React from 'react';
 import withLanguageParam from './LanguageParam';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 import LazyRoute, { resolveLazyRouteTree } from './LazyRoute';
 
 const UnauthenticatedRoutes = resolveLazyRouteTree(

@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react';
-import { Await, useAsyncValue, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Await, useAsyncValue, useNavigate, useRouteLoaderData } from 'react-router';
 import { ClickAwayListener, Grid, Stack, InputAdornment, Tooltip, Skeleton } from '@mui/material';
 import { MetHeader3, MetLabel, MetPageGridContainer, MetPaper } from 'components/common';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

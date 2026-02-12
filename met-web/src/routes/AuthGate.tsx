@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppSelector } from 'hooks';
-import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 
 const AuthGate = ({ allowedRoles }: { allowedRoles: string[] }) => {

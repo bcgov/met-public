@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Modal } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import { useAsyncValue, useNavigate } from 'react-router-dom';
+import { useAsyncValue, useNavigate } from 'react-router';
 import { EmailVerification } from 'models/emailVerification';
 import { Button } from 'components/common/Input';
 import { BodyText } from 'components/common/Typography';

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch, useAppTranslation, useAppSelector } from 'hooks';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import {
     MetLabel,

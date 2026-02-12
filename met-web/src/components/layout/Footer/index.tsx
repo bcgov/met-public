@@ -15,7 +15,7 @@ import { SocialLinkIconProps } from './types';
 import { VersionInfo } from 'services/versionService';
 import { AppConfig } from 'config';
 import { IconButton } from 'components/common/Input';
-import { useRouteLoaderData, Await } from 'react-router-dom';
+import { useRouteLoaderData, Await } from 'react-router';
 import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
 
 const LinkArrow = () => {
