@@ -300,15 +300,15 @@ class EngagementService:
 
             if survey.engagement_id != engagement_id:
                 raise ValueError('selected survey does not belong to this engagement')
-            
+
         return survey_id
 
     @staticmethod
     def _update_external_engagement_data(
-        eng_id: int, 
-        status_block: object, 
-        surveys: object, 
-        epic_fields, 
+        eng_id: int,
+        status_block: object,
+        surveys: object,
+        epic_fields,
         new_eng: EngagementModel
     ):
         if epic_fields:
@@ -349,10 +349,10 @@ class EngagementService:
                 raise ValueError(engagement)
 
             EngagementService._update_external_engagement_data(
-                engagement_id, 
-                status_block, 
-                surveys, 
-                epic_fields, 
+                engagement_id,
+                status_block,
+                surveys,
+                epic_fields,
                 updated_engagement
             )
 
