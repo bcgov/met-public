@@ -13,9 +13,22 @@ import CommentTextListing from 'components/comments/admin/textListing';
 import * as utils from 'utils';
 import { USER_ROLES } from 'services/userService/constants';
 import type { AxiosResponse } from 'axios';
+import { createDefaultEngagement } from 'models/engagement';
+
+const defaultSurvey = {
+    ...createDefaultSurvey(),
+    engagement: {
+        ...createDefaultEngagement(),
+        feedback_body:
+            '{"blocks":[{"key":"bqupg","text":"Test description","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}',
+        feedback_heading: 'Engagement 1',
+        surveys: [],
+        selected_survey_id: 1,
+    },
+};
 
 const mockSurveyOne = {
-    ...createDefaultSurvey(),
+    ...defaultSurvey,
     id: 1,
     name: 'Survey One',
     engagement_id: 1,

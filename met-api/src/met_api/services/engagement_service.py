@@ -288,12 +288,12 @@ class EngagementService:
             raise ValueError(
                 'Some fields cannot be updated after the engagement has been published'
             )
-        
+
     @staticmethod
     def _validate_and_assign_survey(survey_id: int, engagement_id: int):
         if survey_id == -1:
             return None
-        elif isinstance(survey_id, int) and survey_id > 0:
+        if isinstance(survey_id, int) and survey_id > 0:
             survey = SurveyModel.get_survey(survey_id)
             if not survey:
                 raise ValueError('selected survey does not exist')
@@ -301,15 +301,15 @@ class EngagementService:
             if survey.engagement_id != engagement_id:
                 raise ValueError('selected survey does not belong to this engagement')
             
-            return survey_id
-        
+        return survey_id
+
     @staticmethod
     def _update_external_engagement_data(
         eng_id: int, 
         status_block: object, 
         surveys: object, 
         epic_fields, 
-        new_eng: EngagementModel | None
+        new_eng: EngagementModel
     ):
         if epic_fields:
             ProjectService.update_project_info(new_eng.id)
@@ -347,7 +347,7 @@ class EngagementService:
 
             if not updated_engagement:
                 raise ValueError(engagement)
-            
+
             EngagementService._update_external_engagement_data(
                 engagement_id, 
                 status_block, 

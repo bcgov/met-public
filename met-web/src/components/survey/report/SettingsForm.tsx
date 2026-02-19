@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react';
-import { Await, useNavigate, useRouteLoaderData } from 'react-router';
+import { Await, useNavigate, useRouteLoaderData, useRevalidator } from 'react-router';
 import { ClickAwayListener, Grid2 as Grid, Stack, InputAdornment, Tooltip, Skeleton, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
@@ -21,14 +21,10 @@ const SettingsFormPage = () => {
             spacing={2}
             sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', mt: '3rem' }}
         >
-            <Grid>
-                <Header3>Report Settings</Header3>
-            </Grid>
-            <Grid>
-                <Paper elevation={0} sx={{ padding: '3rem', mr: '1rem' }}>
-                    <SettingsForm />
-                </Paper>
-            </Grid>
+            <Paper elevation={0} sx={{ padding: '3rem', mr: '1rem' }}>
+                <Header3 style={{ fontWeight: 'bold', marginBottom: '3rem' }}>Report Settings</Header3>
+                <SettingsForm />
+            </Paper>
         </Grid>
     );
 };
@@ -39,14 +35,15 @@ const SettingsForm = () => {
     const engagementSlug = slug?.slug;
     const [displayedSettings, setDisplayedSettings] = useState<{ [key: number]: boolean }>({});
     const [copyTooltip, setCopyTooltip] = useState(false);
-
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { revalidate } = useRevalidator();
+
     if (!reportSettings) navigate(-1);
 
     const handleNavigateOnSave = () => {
         if (survey?.engagement_id) {
-            navigate(`/engagements/${survey.engagement_id}/form`);
+            navigate(-1);
             return;
         }
         navigate(`/surveys`);
@@ -63,7 +60,6 @@ const SettingsForm = () => {
         const diff = updatedDiff(reportSettings, currentSettings);
         const diffKeys = Object.keys(diff);
         const updatedSettings = diffKeys.map((key) => currentSettings[Number(key)]);
-
         if (Array.isArray(reportSettings) && reportSettings?.length <= 0) {
             handleNavigateOnSave();
             return;
@@ -71,6 +67,7 @@ const SettingsForm = () => {
 
         try {
             await updateSurveyReportSettings(String(survey?.id), updatedSettings);
+            revalidate();
             dispatch(
                 openNotification({
                     severity: 'success',

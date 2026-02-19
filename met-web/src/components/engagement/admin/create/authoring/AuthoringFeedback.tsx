@@ -6,7 +6,7 @@ import { RichTextArea } from 'components/common/Input/RichTextArea';
 import React, { Suspense, useEffect, useState } from 'react';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
-import { Await, useLoaderData, useOutletContext } from 'react-router-dom';
+import { Await, useLoaderData, useOutletContext } from 'react-router';
 import { Controller, useFormContext } from 'react-hook-form';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { AuthoringTemplateOutletContext } from './types';

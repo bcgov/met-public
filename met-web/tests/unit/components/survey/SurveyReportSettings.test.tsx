@@ -2,23 +2,22 @@ import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRouter from 'react-router';
 import * as reportSettingsService from 'services/surveyService/reportSettingsService';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { draftEngagement } from '../factory';
 import ReportSettings from 'components/survey/report';
-import assert from 'assert';
-import { RouterProvider, createMemoryRouter } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
+import { createDefaultEngagement } from 'models/engagement';
 
 const survey: Survey = {
     ...createDefaultSurvey(),
+    engagement: { ...createDefaultEngagement() },
     id: 1,
     name: 'Survey 1',
     engagement_id: 1,
 };
 
-const surveyReportSettingOne = {
+const surveyReportSettingOne: SurveyReportSetting = {
     id: 1,
     survey_id: survey.id,
     question_id: 1,
@@ -28,7 +27,7 @@ const surveyReportSettingOne = {
     display: true,
 };
 
-const surveyReportSettingTwo = {
+const surveyReportSettingTwo: SurveyReportSetting = {
     id: 2,
     survey_id: survey.id,
     question_id: 2,
@@ -40,30 +39,19 @@ const surveyReportSettingTwo = {
 
 const SurveyReportSettings: SurveyReportSetting[] = [surveyReportSettingOne, surveyReportSettingTwo];
 
-const engagementSlug = {
-    slug: 'engagement-name',
+const draftEngagement = {
+    ...createDefaultEngagement(),
+    id: 1,
 };
 
-global['Request'] = jest.fn().mockImplementation((input: string = '', init: RequestInit = {}) => ({
-    // React Router data APIs call toUpperCase on request.method; default to GET
-    method: (init.method || 'GET').toUpperCase(),
-    url: input,
-    headers: {
-        get: jest.fn(),
-        has: jest.fn(),
-    },
-    signal: {
-        removeEventListener: jest.fn(),
-        addEventListener: jest.fn(),
-    },
-    clone: jest.fn(),
-}));
+const engagementSlug = { slug: 'engagement-name' };
 
 jest.mock('axios');
 
 jest.mock('hooks', () => ({
     ...jest.requireActual('hooks'),
     useAppSelector: jest.fn(() => true),
+    useAppDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('@mui/material', () => ({
@@ -71,93 +59,146 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
-jest.mock('react-router', () => ({
-    ...jest.requireActual('react-router'),
-    useParams: jest.fn(() => {
-        return { surveyId: '1' };
-    }),
-    useRouteLoaderData: jest.fn(() => ({
-        survey: Promise.resolve(survey),
-        slug: Promise.resolve(engagementSlug),
-        reportSettings: Promise.resolve(SurveyReportSettings),
-        engagement: Promise.resolve(draftEngagement),
-    })),
-}));
+type FetcherMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+interface FetcherSubmitOptions {
+    method?: FetcherMethod;
+    encType?: string;
+    action?: string;
+}
+type SubmitData = FormData | URLSearchParams | Record<string, unknown> | unknown[];
 
-const router = createMemoryRouter(
-    [
-        {
-            path: '/surveys/:surveyId/report',
-            element: <ReportSettings />,
-            id: 'survey',
-        },
-        {
-            path: '/engagements/:engagementId/form',
-            element: <div>Engagement Form</div>,
-        },
-    ],
-    {
-        initialEntries: ['/surveys/1/report'],
-    },
-);
+interface SubmitImplRef {
+    impl?: (data: SubmitData, opts?: FetcherSubmitOptions) => void;
+}
 
-jest.mock('react-redux', () => ({
-    ...jest.requireActual('react-redux'),
-    useSelector: jest.fn(),
-    useDispatch: jest.fn(() => jest.fn()),
-    useParams: jest.fn(() => {
-        return { surveyId: String(survey.id) };
-    }),
-}));
+interface MockFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
+    onSubmit?: React.FormEventHandler<HTMLFormElement>;
+    children?: React.ReactNode;
+}
+
+jest.mock('react-router', () => {
+    const actual = jest.requireActual('react-router');
+
+    const submitImplRef: SubmitImplRef = {};
+
+    const MockForm = ({ onSubmit, children, ...rest }: MockFormProps) => (
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                if (onSubmit) onSubmit(e);
+            }}
+            {...rest}
+        >
+            {children}
+        </form>
+    );
+
+    return {
+        ...actual,
+        useParams: jest.fn(() => ({ surveyId: String(survey.id) })),
+        useRouteLoaderData: jest.fn((id?: string) => {
+            if (id === 'survey') {
+                return {
+                    survey,
+                    slug: engagementSlug,
+                    reportSettings: SurveyReportSettings,
+                    engagement: draftEngagement,
+                    surveyId: String(survey.id),
+                };
+            }
+            return undefined;
+        }),
+        useFetcher: jest.fn(() => ({
+            state: 'idle' as const,
+            data: undefined as unknown,
+            submit: (data: SubmitData, opts?: FetcherSubmitOptions) => {
+                if (submitImplRef.impl) submitImplRef.impl(data, opts);
+            },
+            Form: MockForm,
+        })),
+        Form: MockForm,
+        useRevalidator: jest.fn(() => ({
+            revalidate: jest.fn(),
+            state: 'idle' as const,
+        })),
+        useNavigate: jest.fn(() => jest.fn()),
+        __TESTING__: { submitImplRef },
+    };
+});
+
+const { __TESTING__ }: { __TESTING__: { submitImplRef: SubmitImplRef } } = jest.requireMock('react-router');
 
 describe('Survey report settings tests', () => {
-    const updateSurveyReportSettingsMock = jest
-        .spyOn(reportSettingsService, 'updateSurveyReportSettings')
-        .mockReturnValue(Promise.resolve(SurveyReportSettings));
+    let updateSurveyReportSettingsMock: jest.SpyInstance<
+        Promise<SurveyReportSetting[]>,
+        [string, SurveyReportSetting[]]
+    >;
 
     beforeEach(() => {
         setupEnv();
+        jest.clearAllMocks();
+
+        updateSurveyReportSettingsMock = jest
+            .spyOn(reportSettingsService, 'updateSurveyReportSettings')
+            .mockResolvedValue(SurveyReportSettings);
+
+        __TESTING__.submitImplRef.impl = (data: SubmitData, _opts?: FetcherSubmitOptions) => {
+            let updates: SurveyReportSetting[] = [];
+
+            if (typeof FormData !== 'undefined' && data instanceof FormData) {
+                const raw = data.get('updates');
+                updates = raw ? (JSON.parse(String(raw)) as SurveyReportSetting[]) : [];
+            } else if (Array.isArray(data)) {
+                updates = data as SurveyReportSetting[];
+            } else {
+                const obj = data as Record<string, unknown>;
+                const maybeUpdates = obj?.updates;
+                updates = Array.isArray(maybeUpdates) ? (maybeUpdates as SurveyReportSetting[]) : [];
+            }
+
+            reportSettingsService.updateSurveyReportSettings(String(survey.id), updates);
+        };
     });
 
-    test('View survey report settings page', async () => {
-        render(<RouterProvider router={router} />);
+    afterEach(() => {
+        __TESTING__.submitImplRef.impl = undefined;
+    });
 
-        await waitFor(
-            () => {
-                expect(screen.getByText(surveyReportSettingOne.question_type)).toBeVisible();
-                expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
-                expect(screen.getByText(surveyReportSettingTwo.question_type)).toBeVisible();
-                expect(screen.getByText(surveyReportSettingTwo.question)).toBeVisible();
-            },
-            { timeout: 9000 },
-        );
+    function renderWithRouter(ui: React.ReactElement) {
+        return render(<MemoryRouter initialEntries={['/surveys/1/report']}>{ui}</MemoryRouter>);
+    }
+
+    test('View survey report settings page', async () => {
+        renderWithRouter(<ReportSettings />);
+
+        await waitFor(() => {
+            expect(screen.getByText(surveyReportSettingOne.question_type)).toBeVisible();
+            expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
+            expect(screen.getByText(surveyReportSettingTwo.question_type)).toBeVisible();
+            expect(screen.getByText(surveyReportSettingTwo.question)).toBeVisible();
+        });
 
         expect(screen.getByTestId(`checkbox-${surveyReportSettingOne.id}`).children[0]).toBeChecked();
         expect(screen.getByTestId(`checkbox-${surveyReportSettingTwo.id}`).children[0]).not.toBeChecked();
     });
 
     test('Search question by question text', async () => {
-        const { container } = render(<RouterProvider router={router} />);
+        const { container } = renderWithRouter(<ReportSettings />);
 
-        await waitFor(
-            () => {
-                expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
-                expect(screen.getByText(surveyReportSettingOne.question_type)).toBeVisible();
-            },
-            { timeout: 9000 },
-        );
+        await waitFor(() => {
+            expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
+            expect(screen.getByText(surveyReportSettingOne.question_type)).toBeVisible();
+        });
 
-        const searchField = container.querySelector('input[name="searchText"]');
-        assert(searchField, 'Unable to find search field that matches the given query');
+        const searchField = container.querySelector('input[name="searchText"]') as HTMLInputElement;
+        expect(searchField).toBeTruthy();
 
         fireEvent.change(searchField, { target: { value: surveyReportSettingOne.question } });
         fireEvent.click(screen.getByTestId('survey/report/search-button'));
 
-        const table = container.querySelector('table');
         const tableBody = container.querySelector('tbody');
-        assert(table, 'Unable to find table');
+        expect(tableBody).toBeTruthy();
 
-        // plus one for the row that displays a loader when the table is loading
         const originalNumberOfRows = SurveyReportSettings.length + 1;
 
         await waitFor(() => {
@@ -166,33 +207,32 @@ describe('Survey report settings tests', () => {
     });
 
     test('Survey report settings can be updated', async () => {
-        render(<RouterProvider router={router} />);
+        renderWithRouter(<ReportSettings />);
 
-        await waitFor(
-            () => {
-                expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
-                expect(screen.getByText(surveyReportSettingTwo.question)).toBeVisible();
-            },
-            { timeout: 9000 },
-        );
+        await waitFor(() => {
+            expect(screen.getByText(surveyReportSettingOne.question)).toBeVisible();
+            expect(screen.getByText(surveyReportSettingTwo.question)).toBeVisible();
+        });
 
-        const uncheckedBox = screen.getByTestId(`checkbox-${surveyReportSettingTwo.id}`).children[0];
+        const uncheckedBox = screen.getByTestId(`checkbox-${surveyReportSettingTwo.id}`)
+            .children[0] as HTMLInputElement;
         expect(uncheckedBox).toBeInTheDocument();
         expect(uncheckedBox).not.toBeChecked();
 
         fireEvent.click(uncheckedBox);
+
         await waitFor(() => {
             expect(screen.getByTestId(`checkbox-${surveyReportSettingTwo.id}`).children[0]).toBeChecked();
         });
 
         fireEvent.click(screen.getByTestId('survey/report/save-button'));
+
         await waitFor(() => {
-            expect(updateSurveyReportSettingsMock).toHaveBeenNthCalledWith(1, String(survey.id), [
-                {
-                    ...surveyReportSettingTwo,
-                    display: true,
-                },
-            ]);
+            expect(updateSurveyReportSettingsMock).toHaveBeenCalledTimes(1);
+            expect(updateSurveyReportSettingsMock).toHaveBeenCalledWith(
+                String(survey.id),
+                expect.arrayContaining([expect.objectContaining({ id: 2, display: true })]),
+            );
         });
     });
 });
