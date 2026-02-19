@@ -144,7 +144,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     }}
                 >
                     {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
-                    <CardContent sx={{ height: '180px', p: '40px 32px' }}>
+                    <CardContent sx={{ height: '270px', p: '40px 32px', boxSizing: 'border-box' }}>
                         <Box
                             sx={{
                                 height: '96px',
