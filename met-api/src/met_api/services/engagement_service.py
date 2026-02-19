@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from http import HTTPStatus
+from typing import Mapping, Optional, Sequence, Union
 
 from flask import current_app
 
@@ -33,12 +34,20 @@ class EngagementService:
     """Engagement management service."""
 
     otherdateformat = '%Y-%m-%d'
+    JSONScalar = Union[str, int, float, bool, None]
+    JSONValue = Union[
+        JSONScalar,
+        Sequence['JSONValue'],          # e.g., list/tuple of JSONValue
+        Mapping[str, 'JSONValue'],      # e.g., dict[str, JSONValue]
+    ]
+
+    EngagementDump = Mapping[str, JSONValue]
 
     def __init__(self):
         """Initialize."""
         self.object_storage = ObjectStorageService()
 
-    def get_engagement(self, engagement_id) -> EngagementSchema:
+    def get_engagement(self, engagement_id) -> Optional[EngagementDump]:
         """Get Engagement by the id."""
         engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
 

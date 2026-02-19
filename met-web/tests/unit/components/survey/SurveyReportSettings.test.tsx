@@ -147,7 +147,7 @@ describe('Survey report settings tests', () => {
 
             if (typeof FormData !== 'undefined' && data instanceof FormData) {
                 const raw = data.get('updates');
-                updates = raw ? (JSON.parse(String(raw)) as SurveyReportSetting[]) : [];
+                updates = raw ? (JSON.parse(raw?.toString()) as SurveyReportSetting[]) : [];
             } else if (Array.isArray(data)) {
                 updates = data as SurveyReportSetting[];
             } else {
