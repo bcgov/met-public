@@ -31,7 +31,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), index=True)
     form_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
     comments = db.relationship('Comment', backref='survey', cascade='all, delete')
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
     # Survey templates might not need tenant id
@@ -39,13 +39,27 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     is_hidden = db.Column(db.Boolean, nullable=False)
     is_template = db.Column(db.Boolean, nullable=False)
     generate_dashboard = db.Column(db.Boolean, default=True)
+    engagement = db.relationship(
+        'Engagement',
+        back_populates='surveys',
+        foreign_keys=[engagement_id]
+    )
+
+    @classmethod
+    def get_survey(cls, survey_id) -> Survey:
+        """Get a single survey by ID, status agnostic."""
+        survey: Survey = db.session.query(Survey).filter_by(id=survey_id) \
+            .join(Survey.engagement) \
+            .join(EngagementStatus) \
+            .first()
+        return survey
 
     @classmethod
     def get_open(cls, survey_id) -> Survey:
         """Get an open survey."""
         now = datetime.now().date()  # Get the current date without the timestamp
         survey: Survey = db.session.query(Survey).filter_by(id=survey_id) \
-            .join(Engagement) \
+            .join(Survey.engagement) \
             .filter_by(status_id=Status.Published.value) \
             .filter(and_(func.date(Engagement.start_date) <= now, func.date(Engagement.end_date) >= now)) \
             .join(EngagementStatus) \
@@ -56,7 +70,18 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     def get_surveys_paginated(cls, pagination_options: PaginationOptions,
                               survey_search_options: SurveySearchOptions):
         """Get surveys paginated."""
-        query = db.session.query(Survey).join(Engagement, isouter=True).join(EngagementStatus, isouter=True)
+        query = (
+            db.session.query(Survey)
+            .outerjoin(
+                Engagement,
+                Survey.engagement_id == Engagement.id,
+            )
+            .outerjoin(
+                EngagementStatus,
+                Engagement.status_id == EngagementStatus.id,
+            )
+        )
+
         query = cls._add_tenant_filter(query)
 
         query = cls.filter_by_search_options(survey_search_options, query)

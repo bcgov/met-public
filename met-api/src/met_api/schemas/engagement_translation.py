@@ -26,3 +26,5 @@ class EngagementTranslationSchema(Schema):
     open_status_block_text = fields.Str(data_key='open_status_block_text')
     closed_status_block_text = fields.Str(data_key='closed_status_block_text')
     sponsor_name = fields.Str(data_key='sponsor_name')
+    feedback_heading = fields.Str(data_key='feedback_heading')
+    feedback_body = fields.Str(data_key='feedback_body')

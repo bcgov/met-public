@@ -5,12 +5,11 @@ import { FormSubmissionData } from 'components/Form/types';
 import { useAppDispatch, useAppSelector, useAppTranslation } from 'hooks';
 import { When } from 'react-if';
 import { submitSurvey } from 'services/submissionService';
-import { useAsyncValue, useNavigate } from 'react-router-dom';
-import { EmailVerification } from 'models/emailVerification';
-import { Survey } from 'models/survey';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Button } from 'components/common/Input';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
+import { SurveyLoaderData } from '../building/SurveyLoader';
 
 export const SurveyForm = () => {
     const { t: translate } = useAppTranslation();
@@ -24,13 +23,12 @@ export const SurveyForm = () => {
     const [isValid, setIsValid] = useState(false);
     const [isChanged, setIsChanged] = useState(false);
 
-    const [survey, verification, slug] = useAsyncValue() as [Survey, EmailVerification | null, { slug: string }];
+    const { survey, verification, slug } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     const token = verification?.verification_token;
 
     const handleChange = (filledForm: FormSubmissionData) => {
         if (!initialSet.current) {
-            console.log('setting initial state');
             initialSet.current = true;
         } else {
             setIsChanged(true);
@@ -40,7 +38,9 @@ export const SurveyForm = () => {
     };
 
     const navigateToEngagement = () => {
-        navigate(`/${slug.slug}/${languagePath}`);
+        if (slug) {
+            navigate(`/${slug.slug}/${languagePath}`);
+        }
     };
 
     const handleSubmit = async (submissionData: unknown) => {
@@ -65,11 +65,13 @@ export const SurveyForm = () => {
                     text: translate('surveySubmit.surveySubmitNotification.success'),
                 }),
             );
-            navigate(`/${slug.slug}/${languagePath}`, {
-                state: {
-                    open: true,
-                },
-            });
+            if (slug) {
+                navigate(`/${slug.slug}/${languagePath}`, {
+                    state: {
+                        open: true,
+                    },
+                });
+            }
         } catch {
             dispatch(
                 openNotification({

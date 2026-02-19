@@ -19,7 +19,10 @@ export interface Engagement {
     rich_content: string;
     banner_url: string;
     banner_filename: string;
+    feedback_heading: string;
+    feedback_body: string;
     surveys: Survey[];
+    selected_survey_id: number;
     engagement_status: Status;
     submission_status: SubmissionStatus;
     submissions_meta_data: SurveySubmissionData;
@@ -27,6 +30,7 @@ export interface Engagement {
     is_internal: boolean;
     consent_message: string;
     sponsor_name: string;
+    tenant_id: number;
 }
 
 export interface Status {
@@ -82,7 +86,10 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         banner_filename: '',
         rich_content: '',
         engagement_status: { id: 0, status_name: '' },
+        feedback_heading: '',
+        feedback_body: '',
         surveys: [],
+        selected_survey_id: 0,
         submission_status: SubmissionStatus.Upcoming,
         submissions_meta_data: {
             total: 0,
@@ -95,6 +102,7 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         is_internal: false,
         consent_message: '',
         sponsor_name: sponsorName ?? '',
+        tenant_id: 0,
     };
 };
 

@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
 import { Link, useNavigate } from 'react-router-dom';
-import { MetPageGridContainer, MetTooltip } from 'components/common';
+import { MetPageGridContainer } from 'components/common';
 import { Survey } from 'models/survey';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Collapse, Link as MuiLink, Theme, useMediaQuery } from '@mui/material';
+import { Collapse, Link as MuiLink, Theme, Tooltip, useMediaQuery } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { faCircleExclamation } from '@fortawesome/pro-regular-svg-icons/faCircleExclamation';
@@ -116,7 +116,7 @@ const Surveys = () => {
             renderCell: (row: Survey) => {
                 if (row.is_hidden) {
                     return (
-                        <MetTooltip
+                        <Tooltip
                             title={
                                 <>
                                     <strong>Hidden</strong>
@@ -130,13 +130,13 @@ const Surveys = () => {
                             arrow
                         >
                             <FontAwesomeIcon icon={faEyeSlash} style={{ fontSize: '20px' }} />
-                        </MetTooltip>
+                        </Tooltip>
                     );
                 }
 
                 if (row.is_template) {
                     return (
-                        <MetTooltip
+                        <Tooltip
                             title={
                                 <>
                                     <strong>Template</strong>
@@ -147,13 +147,13 @@ const Surveys = () => {
                             arrow
                         >
                             <FontAwesomeIcon icon={faObjectsColumn} style={{ fontSize: '22px' }} />
-                        </MetTooltip>
+                        </Tooltip>
                     );
                 }
 
                 if (row.engagement_id) {
                     return (
-                        <MetTooltip
+                        <Tooltip
                             title={
                                 <>
                                     <strong>Linked</strong>
@@ -167,12 +167,12 @@ const Surveys = () => {
                             arrow
                         >
                             <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '20px' }} />
-                        </MetTooltip>
+                        </Tooltip>
                     );
                 }
 
                 return (
-                    <MetTooltip
+                    <Tooltip
                         title={
                             <>
                                 <strong>Ready</strong>
@@ -186,7 +186,7 @@ const Surveys = () => {
                             icon={solidCheck}
                             style={{ fontSize: '20px', color: Palette.icons.surveyReady }}
                         />
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -229,7 +229,7 @@ const Surveys = () => {
                 }
                 const { approved } = row.comments_meta_data;
                 return (
-                    <MetTooltip title={'Approved'} disableInteractive placement="right" arrow>
+                    <Tooltip title={'Approved'} disableInteractive placement="right" arrow>
                         <span>
                             <ApprovedIcon
                                 onClick={() => {
@@ -243,7 +243,7 @@ const Surveys = () => {
                                 {approved || 0}
                             </ApprovedIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -272,7 +272,7 @@ const Surveys = () => {
                 }
                 const { needs_further_review } = row.comments_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'Need further review'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'Need further review'} placement="right" arrow>
                         <span>
                             <NFRIcon
                                 onClick={() => {
@@ -286,7 +286,7 @@ const Surveys = () => {
                                 {needs_further_review || 0}
                             </NFRIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -315,7 +315,7 @@ const Surveys = () => {
                 }
                 const { rejected } = row.comments_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'Rejected'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'Rejected'} placement="right" arrow>
                         <span>
                             <RejectedIcon
                                 onClick={() => {
@@ -329,7 +329,7 @@ const Surveys = () => {
                                 {rejected || 0}
                             </RejectedIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -358,7 +358,7 @@ const Surveys = () => {
                 }
                 const { pending } = row.comments_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'New comments'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'New comments'} placement="right" arrow>
                         <span>
                             <NewIcon
                                 onClick={() => {
@@ -372,7 +372,7 @@ const Surveys = () => {
                                 {pending || 0}
                             </NewIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -456,9 +456,9 @@ const Surveys = () => {
                             variant="primary"
                             size="small"
                             sx={{ minWidth: 'max-content' }}
-                            component={Link}
+                            type="button"
                             icon={<FontAwesomeIcon icon={faPlus} />}
-                            href="/surveys/create"
+                            onClick={() => navigate('/surveys/create')}
                         >
                             Create Survey
                         </Button>

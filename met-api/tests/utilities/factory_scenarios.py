@@ -89,6 +89,7 @@ class TestSurveyInfo(dict, Enum):
     """Test scenarios of Survey."""
 
     survey1 = {
+        'id': 123,
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -99,10 +100,12 @@ class TestSurveyInfo(dict, Enum):
         'is_template': False
     }
     survey2 = {
+        'id': 234,
         'name': fake.name(),
         'form_json': {'display': 'form', 'components': []}
     }
     survey3 = {
+        'id': 345,
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -114,6 +117,7 @@ class TestSurveyInfo(dict, Enum):
         'is_template': False
     }
     hidden_survey = {
+        'id': 456,
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -124,6 +128,7 @@ class TestSurveyInfo(dict, Enum):
         'is_template': False
     }
     survey_template = {
+        'id': 567,
         'name': fake.name(),
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
@@ -188,10 +193,16 @@ class TestEngagementInfo(dict, Enum):
         'status': EngagementStatus.Published.value,
         'is_internal': False,
         'description': 'My Test Engagement Description',
+        'feedback_heading': 'My Feedback Heading',
+        'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body\",\
+        \"type\":\"unstyled\",\
+        \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description_title': 'My Test Description Title',
+        'surveys': [TestSurveyInfo.survey1],
+        'selected_survey_id': TestSurveyInfo.survey1['id'],
     }
 
     engagement_draft = {
@@ -223,6 +234,12 @@ class TestEngagementInfo(dict, Enum):
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
         'is_internal': False,
+        'feedback_heading': 'My Feedback Heading',
+        'surveys': [TestSurveyInfo.survey1],
+        'selected_survey_id': TestSurveyInfo.survey1['id'],
+        'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body\",\
+        \"type\":\"unstyled\",\
+        \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
@@ -251,6 +268,12 @@ class TestEngagementInfo(dict, Enum):
         'updated_by': '123',
         'status': SubmissionStatus.Open.value,
         'is_internal': False,
+        'feedback_heading': 'My Feedback Heading',
+        'surveys': [TestSurveyInfo.survey1],
+        'selected_survey_id': TestSurveyInfo.survey1['id'],
+        'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body\",\
+        \"type\":\"unstyled\",\
+        \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description': 'My Test Engagement Description',
         'rich_description': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Rich Description Sample\",\
             \"type\":\"unstyled\",\
@@ -1024,6 +1047,12 @@ class TestEngagementTranslationInfo(dict, Enum):
             \"type\":\"unstyled\",\"depth\":0,\
             \"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description_title': 'My Test Description Title',
+        'feedback_heading': 'My Feedback Heading',
+        'surveys': [TestSurveyInfo.survey1],
+        'selected_survey_id': TestSurveyInfo.survey1['id'],
+        'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body\",\
+        \"type\":\"unstyled\",\
+        \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
     }
 
 

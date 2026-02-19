@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import { Link as MuiLink } from '@mui/material';
-import { Link, useAsyncValue, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
 import { When } from 'react-if';
 import { useDispatch } from 'react-redux';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { Engagement } from 'models/engagement';
+import { SurveyLoaderData } from '../building/SurveyLoader';
 
 export const EngagementLink = () => {
     const dispatch = useDispatch();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const engagement = useAsyncValue() as Engagement | null;
+    const { engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
     const navigate = useNavigate();
 
     const handleNavigate = useCallback(

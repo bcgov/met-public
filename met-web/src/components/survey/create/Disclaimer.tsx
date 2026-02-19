@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, FormControlLabel, FormHelperText, Grid } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, Grid2 as Grid } from '@mui/material';
 import { MetDisclaimer } from 'components/common';
 import React, { useContext } from 'react';
 import { CreateSurveyContext } from './CreateSurveyContext';
@@ -7,8 +7,8 @@ export const Disclaimer = () => {
     const { isDisclaimerChecked, setIsDisclaimerChecked, disclaimerError, setDisclaimerError } =
         useContext(CreateSurveyContext);
     return (
-        <Grid item xs={12} container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-            <Grid item xs={6}>
+        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+            <Grid>
                 <MetDisclaimer>
                     <strong>Disclaimer and statement of responsibility for Survey Designers:</strong>
                     <br />
@@ -23,7 +23,7 @@ export const Disclaimer = () => {
                 `}
                 </MetDisclaimer>
             </Grid>
-            <Grid item xs={12}>
+            <Grid>
                 <FormControl required error={disclaimerError} component="fieldset" variant="standard">
                     <FormControlLabel
                         control={

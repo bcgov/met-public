@@ -1,57 +1,49 @@
 import React, { Suspense, useState } from 'react';
-import { Await, useAsyncValue, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { ClickAwayListener, Grid, Stack, InputAdornment, Tooltip, Skeleton } from '@mui/material';
-import { MetHeader3, MetLabel, MetPageGridContainer, MetPaper } from 'components/common';
+import { Await, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { ClickAwayListener, Grid2 as Grid, Stack, InputAdornment, Tooltip, Skeleton, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';
 import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
 import { getBaseUrl } from 'helper';
 import { Button, FormField, TextInput } from 'components/common/Input';
-import MetTable from 'components/common/Table';
+// import MetTable from 'components/common/Table';
 import { updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { updatedDiff } from 'deep-object-diff';
 import { SurveyLoaderData } from '../building/SurveyLoader';
+import { BodyText, Header3 } from 'components/common/Typography';
 
 const SettingsFormPage = () => {
-    const { survey, slug, engagement, reportSettings } = useRouteLoaderData('survey') as SurveyLoaderData;
-
     return (
-        <MetPageGridContainer container spacing={1}>
-            <Grid item xs={12}>
-                <MetHeader3 bold>Report Settings</MetHeader3>
+        <Grid
+            container
+            spacing={2}
+            sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', mt: '3rem' }}
+        >
+            <Grid>
+                <Header3>Report Settings</Header3>
             </Grid>
-            <Grid item xs={12}>
-                <MetPaper sx={{ padding: '3rem' }}>
-                    <Suspense fallback={SettingsFormSkeleton}>
-                        <Await resolve={Promise.all([survey, slug, engagement, reportSettings])}>
-                            <SettingsForm />
-                        </Await>
-                    </Suspense>
-                </MetPaper>
+            <Grid>
+                <Paper elevation={0} sx={{ padding: '3rem', mr: '1rem' }}>
+                    <SettingsForm />
+                </Paper>
             </Grid>
-        </MetPageGridContainer>
+        </Grid>
     );
 };
 
 const SettingsForm = () => {
-    const [survey, slug, , reportSettings] = useAsyncValue() as [
-        Awaited<SurveyLoaderData['survey']>,
-        Awaited<SurveyLoaderData['slug']>,
-        Awaited<SurveyLoaderData['engagement']>,
-        Awaited<SurveyLoaderData['reportSettings']>,
-    ];
+    const { survey, slug, reportSettings } = useRouteLoaderData('survey') as SurveyLoaderData;
     const [searchTerm, setSearchTerm] = useState<string>('');
-
     const engagementSlug = slug?.slug;
+    const [displayedSettings, setDisplayedSettings] = useState<{ [key: number]: boolean }>({});
+    const [copyTooltip, setCopyTooltip] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-    const [displayedSettings, setDisplayedSettings] = useState<{ [key: number]: boolean }>({});
-    const [copyTooltip, setCopyTooltip] = useState(false);
+    if (!reportSettings) navigate(-1);
 
     const handleNavigateOnSave = () => {
         if (survey?.engagement_id) {
@@ -62,25 +54,24 @@ const SettingsForm = () => {
     };
 
     const handleSaveSettings = async () => {
-        const surveyReportSettings = await reportSettings; // Should resolve immediately
-        if (!surveyReportSettings) return;
-        const currentSettings = surveyReportSettings.map((setting) => {
+        if (!reportSettings || !Array.isArray(reportSettings) || reportSettings.length === 0) return;
+        const currentSettings = reportSettings.map((setting) => {
             return {
                 ...setting,
                 display: displayedSettings[setting.id],
             };
         });
-        const diff = updatedDiff(surveyReportSettings, currentSettings);
+        const diff = updatedDiff(reportSettings, currentSettings);
         const diffKeys = Object.keys(diff);
         const updatedSettings = diffKeys.map((key) => currentSettings[Number(key)]);
 
-        if (!surveyReportSettings.length) {
+        if (Array.isArray(reportSettings) && reportSettings?.length <= 0) {
             handleNavigateOnSave();
             return;
         }
 
         try {
-            await updateSurveyReportSettings(survey.id.toString(), updatedSettings);
+            await updateSurveyReportSettings(String(survey?.id), updatedSettings);
             dispatch(
                 openNotification({
                     severity: 'success',
@@ -115,70 +106,77 @@ const SettingsForm = () => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={6}>
-                <FormField title="Link to Public Dashboard Report">
-                    <Tooltip
-                        title="Link copied!"
-                        slotProps={{
-                            popper: {
-                                disablePortal: true,
-                                sx: {
-                                    pointerEvents: 'none',
-                                    '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+            <Grid sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', width: '100%', gap: '1rem' }}>
+                <Grid sx={{ width: 'calc(50% - 0.5rem)' }}>
+                    <FormField title="Link to Public Dashboard Report">
+                        <Tooltip
+                            title="Link copied!"
+                            slotProps={{
+                                popper: {
+                                    disablePortal: true,
+                                    sx: {
+                                        pointerEvents: 'none',
+                                        '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
+                                    },
                                 },
-                            },
-                        }}
-                        sx={{ height: '40px', pr: 0 }}
-                        onClose={handleTooltipClose}
-                        open={copyTooltip}
-                        disableFocusListener
-                        disableHoverListener
-                        disableTouchListener
-                        placement="top-end"
-                    >
-                        <div style={{ width: '100%' }}>
-                            <TextInput
-                                fullWidth
-                                id="engagement-name"
-                                disabled
-                                value={engagementUrl}
-                                sx={{
-                                    '.MuiInputBase-input': {
-                                        marginRight: 0,
-                                    },
-                                    '.MuiInputBase-root': {
-                                        padding: 0,
-                                    },
-                                }}
-                                size="small"
-                                endAdornment={
-                                    engagementSlug && (
-                                        <ClickAwayListener onClickAway={handleTooltipClose}>
-                                            <InputAdornment position="end" sx={{ height: '100%', maxHeight: '100%' }}>
-                                                <Button
-                                                    sx={{ borderRadius: '0 8px 8px 0px', marginRight: '-1rem' }}
-                                                    variant="secondary"
-                                                    disableElevation
-                                                    onClick={handleCopyUrl}
+                            }}
+                            sx={{ pr: 0 }}
+                            onClose={handleTooltipClose}
+                            open={copyTooltip}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            placement="top-end"
+                        >
+                            <div style={{ width: '100%' }}>
+                                <TextInput
+                                    fullWidth
+                                    id="engagement-name"
+                                    disabled
+                                    value={engagementUrl}
+                                    sx={{
+                                        pt: 0,
+                                        pb: 0,
+                                        '.MuiInputBase-input': {
+                                            marginRight: 0,
+                                        },
+                                        '.MuiInputBase-root': {
+                                            padding: 0,
+                                        },
+                                    }}
+                                    size="small"
+                                    endAdornment={
+                                        engagementSlug && (
+                                            <ClickAwayListener onClickAway={handleTooltipClose}>
+                                                <InputAdornment
+                                                    position="end"
+                                                    sx={{ height: '100%', maxHeight: '100%' }}
                                                 >
-                                                    <FontAwesomeIcon icon={faCopy} style={{ fontSize: '20px' }} />
-                                                </Button>
-                                            </InputAdornment>
-                                        </ClickAwayListener>
-                                    )
-                                }
-                            />
-                        </div>
-                    </Tooltip>
-                </FormField>
+                                                    <Button
+                                                        sx={{ borderRadius: '0 8px 8px 0px', marginRight: '-1rem' }}
+                                                        variant="secondary"
+                                                        disableElevation
+                                                        onClick={handleCopyUrl}
+                                                    >
+                                                        <FontAwesomeIcon icon={faCopy} style={{ fontSize: '20px' }} />
+                                                    </Button>
+                                                </InputAdornment>
+                                            </ClickAwayListener>
+                                        )
+                                    }
+                                />
+                            </div>
+                        </Tooltip>
+                    </FormField>
+                </Grid>
+                <Grid sx={{ width: 'calc(50% - 0.5rem)' }}>
+                    <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} sx={{ pr: '1rem' }} />
+                </Grid>
             </Grid>
-            <Grid item xs={6}>
-                <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <Grid>
+                <BodyText bold>Select the questions you would like to display on the public report</BodyText>
             </Grid>
-            <Grid item xs={12}>
-                <MetLabel>Select the questions you would like to display on the public report</MetLabel>
-            </Grid>
-            <Grid item xs={12}>
+            <Grid sx={{ width: '100%' }}>
                 <Suspense fallback={<Skeleton variant="rectangular" height="10em" width="100%" />}>
                     <Await resolve={reportSettings}>
                         <SettingsTable
@@ -189,7 +187,7 @@ const SettingsForm = () => {
                     </Await>
                 </Suspense>
             </Grid>
-            <Grid item xs={12}>
+            <Grid>
                 <Stack direction="row" spacing={2}>
                     <Button variant="primary" onClick={handleSaveSettings} data-testid="survey/report/save-button">
                         Save
@@ -202,34 +200,5 @@ const SettingsForm = () => {
         </Grid>
     );
 };
-
-const SettingsFormSkeleton = (
-    <Grid container spacing={2}>
-        <Grid item xs={6}>
-            <FormField title="Link to Public Dashboard Report">
-                <Skeleton variant="rectangular" style={{ width: '100%', borderRadius: '8px' }} height={48} />
-            </FormField>
-        </Grid>
-        <Grid item xs={6}>
-            <FormField title="Search by Name">
-                <Skeleton variant="rectangular" style={{ width: '100%', borderRadius: '8px' }} height={48} />
-            </FormField>
-        </Grid>
-        <Grid item xs={12}>
-            <MetLabel>Select the questions you would like to display on the public report</MetLabel>
-        </Grid>
-        <Grid item xs={12}>
-            <MetTable
-                headCells={[
-                    { label: 'Include in report', disablePadding: false, key: 1, numeric: false, allowSort: false },
-                    { label: 'Question', disablePadding: false, key: 2, numeric: false, allowSort: false },
-                    { label: 'Question Type', disablePadding: false, key: 3, numeric: false, allowSort: false },
-                ]}
-                rows={[]}
-                loading
-            ></MetTable>
-        </Grid>
-    </Grid>
-);
 
 export default SettingsFormPage;

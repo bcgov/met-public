@@ -1,119 +1,78 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Grid, TextField, Stack, Autocomplete, Typography } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Grid2 as Grid, TextField, Stack, Autocomplete, FormControl } from '@mui/material';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { useNavigate } from 'react-router-dom';
-import { cloneSurvey, getSurveysPage } from 'services/surveyService';
-import { getEngagements } from 'services/engagementService';
+import { cloneSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { Survey } from 'models/survey';
 import { Engagement } from 'models/engagement';
 import { Disclaimer } from './Disclaimer';
+import { BodyText } from 'components/common/Typography';
+import { Button, PrimaryButton } from 'components/common/Input/Button';
 
 export type EngagementParams = {
     engagementId: string;
 };
 
-const PAGE = 1;
-
-const PAGE_SIZE = 2000;
-
-const SORT_ORDER = 'asc';
-
 const CloneOptions = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const searchParams = new URLSearchParams(window.location.search);
-    const engagementId = searchParams.get('engagementId');
-    const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
-    const [selectedEngagement, setSelectedEngagement] = useState<Engagement | null>(null);
-    const [loadingSurveys, setLoadingSurveys] = useState(true);
-    const [loadingEngagements, setLoadingEngagements] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const {
         surveyForm,
         handleSurveyFormChange,
         availableSurveys,
-        setAvailableSurveys,
         availableEngagements,
-        setAvailableEngagements,
         isDisclaimerChecked,
         setDisclaimerError,
     } = useContext(CreateSurveyContext);
-    const { name } = surveyForm;
     const initialFormError = {
         name: false,
+        engagement_id: false,
+        survey_id: false,
     };
     const [formError, setFormError] = useState(initialFormError);
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        handleSurveyFormChange({
-            ...surveyForm,
-            [e.target.name]: e.target.value,
-        });
+
+    const surveyNameChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const newForm = { ...surveyForm, name: e.target.value };
+        handleSurveyFormChange(newForm);
     };
 
-    const validate = () => {
+    const surveyEngagementChange = (engagement: Engagement | null) => {
+        if (engagement) {
+            const newForm = { ...surveyForm, engagement_id: engagement.id };
+            handleSurveyFormChange(newForm);
+        }
+    };
+
+    const surveyCloneChange = (survey: Survey | null) => {
+        if (survey) {
+            const newForm = { ...surveyForm, survey_id: survey.id };
+            handleSurveyFormChange(newForm);
+        }
+    };
+
+    const validate = (newForm = surveyForm) => {
         setFormError({
-            name: !(surveyForm.name && surveyForm.name.length < 50),
+            name: newForm.name.length === 0 || newForm.name.length > 50,
+            engagement_id: newForm.engagement_id === -1,
+            survey_id: newForm.survey_id === -1,
         });
         return Object.values(formError).some((errorExists) => errorExists);
     };
 
     const getErrorMessage = () => {
-        if (name.length > 50) {
+        if (surveyForm.name.length > 50) {
             return 'Name must not exceed 50 characters';
-        } else if (formError.name) {
+        } else if (formError.name && !surveyForm.name) {
             return 'Name must be specified';
         }
         return '';
     };
 
-    const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
-        try {
-            const fetchedSurveys = await getSurveysPage({
-                page: page,
-                size: size,
-                sort_order: sort_order,
-                exclude_hidden: true,
-            });
-            setAvailableSurveys(fetchedSurveys.items);
-            setLoadingSurveys(false);
-        } catch {
-            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching available surveys' }));
-        }
-    };
-
-    const handleFetchEngagements = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
-        try {
-            const fetchedEngagements = await getEngagements({
-                page: page,
-                size: size,
-                sort_order: sort_order,
-            });
-            setAvailableEngagements(fetchedEngagements.items.filter((engagement) => engagement.surveys.length !== 0));
-            setLoadingEngagements(false);
-        } catch {
-            dispatch(
-                openNotification({ severity: 'error', text: 'Error occurred while fetching available engagements' }),
-            );
-        }
-    };
-
-    useEffect(() => {
-        handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
-    }, []);
-
-    useEffect(() => {
-        if (!availableEngagements) {
-            handleFetchEngagements(PAGE, PAGE_SIZE, SORT_ORDER);
-        } else {
-            setLoadingEngagements(false);
-        }
-    }, [availableEngagements]);
-
     const handleSave = async () => {
-        if (!selectedSurvey) {
+        if (!surveyForm.survey_id) {
             dispatch(openNotification({ severity: 'error', text: 'Please select a survey first' }));
             return;
         }
@@ -130,8 +89,8 @@ const CloneOptions = () => {
         try {
             const createdSurvey = await cloneSurvey({
                 name: surveyForm.name,
-                engagement_id: engagementId ? String(engagementId) : undefined,
-                survey_id: selectedSurvey.id,
+                engagement_id: String(surveyForm.engagement_id),
+                survey_id: surveyForm.survey_id,
             });
 
             dispatch(
@@ -153,21 +112,55 @@ const CloneOptions = () => {
     };
 
     return (
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" item xs={12} spacing={2}>
-            <Grid item xs={6}>
-                <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
-                    Select Engagement <Typography sx={{ ml: 1, color: '#ACA9A9' }}>(optional)</Typography>
-                </MetLabel>
+        <Grid sx={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
+            <FormControl sx={{ gap: '0.5rem' }}>
+                <BodyText bold sx={{ marginBottom: '2px' }}>
+                    Select Survey to Clone
+                </BodyText>
+                <Autocomplete
+                    disableClearable
+                    id="survey-selector"
+                    options={availableSurveys || []}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label=" "
+                            error={!!formError.survey_id}
+                            helperText={formError.survey_id ? 'Survey must be specified' : ''}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: false,
+                                },
+                            }}
+                            fullWidth
+                        />
+                    )}
+                    size="small"
+                    getOptionLabel={(survey: Survey) => survey.name}
+                    onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
+                        surveyCloneChange(survey)
+                    }
+                />
+            </FormControl>
+            <FormControl sx={{ gap: '0.5rem' }}>
+                <BodyText bold sx={{ marginBottom: '2px', display: 'flex' }}>
+                    Select Engagement
+                </BodyText>
 
                 <Autocomplete
+                    disableClearable
                     id="engagement-selector"
                     options={availableEngagements || []}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             label=" "
-                            InputLabelProps={{
-                                shrink: false,
+                            error={!!formError.engagement_id}
+                            helperText={formError.engagement_id ? 'Engagement must be specified' : ''}
+                            slotProps={{
+                                inputLabel: {
+                                    shrink: false,
+                                },
                             }}
                             fullWidth
                         />
@@ -175,69 +168,41 @@ const CloneOptions = () => {
                     size="small"
                     getOptionLabel={(engagement: Engagement) => engagement.name}
                     onChange={(_e: React.SyntheticEvent<Element, Event>, engagement: Engagement | null) => {
-                        setSelectedEngagement(engagement);
-                        if (engagement !== null) setSelectedSurvey(engagement.surveys[0]);
+                        surveyEngagementChange(engagement);
                     }}
-                    disabled={loadingEngagements}
                 />
-            </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={6}>
-                <MetLabel sx={{ marginBottom: '2px' }}>Select Survey</MetLabel>
-                <Autocomplete
-                    id="survey-selector"
-                    options={selectedEngagement ? selectedEngagement.surveys : availableSurveys || []}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label=" "
-                            InputLabelProps={{
-                                shrink: false,
-                            }}
-                            fullWidth
-                        />
-                    )}
+            </FormControl>
+            <FormControl sx={{ gap: '0.5rem' }}>
+                <BodyText bold>Enter Survey Name</BodyText>
+                <TextField
+                    id="survey-name"
                     size="small"
-                    getOptionLabel={(survey: Survey) => survey.name}
-                    value={selectedSurvey}
-                    onChange={(_e: React.SyntheticEvent<Element, Event>, survey: Survey | null) =>
-                        setSelectedSurvey(survey)
-                    }
-                    disabled={loadingSurveys}
-                />
-            </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={6}>
-                <Stack direction="column" spacing={2}>
-                    <MetLabel>Enter Survey Name</MetLabel>
-                    <TextField
-                        id="survey-name"
-                        size="small"
-                        variant="outlined"
-                        label=" "
-                        InputLabelProps={{
+                    variant="outlined"
+                    label=" "
+                    slotProps={{
+                        inputLabel: {
                             shrink: false,
-                        }}
-                        fullWidth
-                        name="name"
-                        value={name}
-                        onChange={handleChange}
-                        error={formError.name || name.length > 50}
-                        helperText={getErrorMessage()}
-                    />
-                </Stack>
-            </Grid>
-            <Grid item xs={12}>
+                        },
+                    }}
+                    fullWidth
+                    name="name"
+                    value={surveyForm.name}
+                    onChange={surveyNameChange}
+                    error={formError.name}
+                    helperText={getErrorMessage()}
+                />
+            </FormControl>
+            <FormControl>
                 <Disclaimer />
-            </Grid>
-            <Grid item xs={12}>
-                <Stack direction="row" spacing={2}>
-                    <PrimaryButtonOld onClick={handleSave} loading={isSaving}>
-                        {'Save & Continue'}
-                    </PrimaryButtonOld>
-                    <SecondaryButtonOld onClick={() => navigate(-1)}>Cancel</SecondaryButtonOld>
-                </Stack>
-            </Grid>
+            </FormControl>
+            <Stack direction="row" sx={{ mt: '1rem' }} spacing={2}>
+                <PrimaryButton onClick={handleSave} loading={isSaving}>
+                    {'Save & Continue'}
+                </PrimaryButton>
+                <Button variant="secondary" onClick={() => navigate(-1)}>
+                    Cancel
+                </Button>
+            </Stack>
         </Grid>
     );
 };

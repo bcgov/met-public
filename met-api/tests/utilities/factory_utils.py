@@ -179,6 +179,9 @@ def factory_engagement_model(eng_info: dict = TestEngagementInfo.engagement1, na
         start_date=eng_info.get('start_date'),
         end_date=eng_info.get('end_date'),
         is_internal=eng_info.get('is_internal'),
+        feedback_heading=eng_info.get('feedback_heading'),
+        feedback_body=eng_info.get('feedback_body'),
+        selected_survey_id=eng_info.get('selected_survey_id'),
     )
     if tenant_id := eng_info.get('tenant_id'):
         engagement.tenant_id = tenant_id

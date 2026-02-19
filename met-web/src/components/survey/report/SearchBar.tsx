@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import { InputAdornment, Stack } from '@mui/material';
+import { InputAdornment, Stack, SxProps } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { Button, TextField } from 'components/common/Input';
+import { deepmerge } from '@mui/utils';
 
 const SearchBar = ({
     searchTerm,
     setSearchTerm,
+    sx,
 }: {
     searchTerm: string;
     setSearchTerm: (searchTerm: string) => void;
+    sx?: SxProps;
 }) => {
     const [searchValue, setSearchValue] = useState(searchTerm);
+    const defaultStyles = { height: '48px', pr: 0 };
+    // User input styles should override old styles
+    const styles = sx ? deepmerge(defaultStyles, sx) : defaultStyles;
     return (
         <>
             <Stack direction="row" spacing={1} alignItems="flex-end">
@@ -19,7 +25,7 @@ const SearchBar = ({
                     id="question-name"
                     title="Search by name"
                     inputProps={{ 'aria-label': 'Filter questions by name' }}
-                    sx={{ height: '48px', pr: 0 }}
+                    sx={styles}
                     name="searchText"
                     value={searchValue}
                     onChange={setSearchValue}

@@ -1,20 +1,20 @@
-import React, { Suspense } from 'react';
-import { Box, Grid, Skeleton, Stack } from '@mui/material';
-import { useNavigate, Await, useRouteLoaderData } from 'react-router-dom';
+import React from 'react';
+import { Box, Grid, Stack } from '@mui/material';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
 import { Header1 } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
-import { Survey } from 'models/survey';
-import { SurveyLoaderData } from '../building/SurveyLoader';
 
-const Banner = (survey: Survey) => {
-    const navigate = useNavigate();
+export const PreviewBanner = () => {
+    const { survey } = useRouteLoaderData('survey');
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     if (!isLoggedIn || !survey) {
         return null;
     }
+
+    const navigate = useNavigate();
     return (
         <Box sx={{ backgroundColor: 'secondary.light' }}>
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
@@ -32,15 +32,5 @@ const Banner = (survey: Survey) => {
                 </Grid>
             </Grid>
         </Box>
-    );
-};
-
-export const PreviewBanner = () => {
-    const { survey } = useRouteLoaderData('survey') as SurveyLoaderData;
-
-    return (
-        <Suspense fallback={<Skeleton variant="rectangular" height="10em" width="100%" />}>
-            <Await resolve={survey}>{Banner}</Await>
-        </Suspense>
     );
 };

@@ -13,6 +13,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
+from met_api.models.survey import Survey as SurveyModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
 from met_api.schemas.engagement import EngagementSchema
@@ -199,6 +200,9 @@ class EngagementService:
             is_internal=engagement_data.get('is_internal', False),
             consent_message=engagement_data.get('consent_message', None),
             sponsor_name=engagement_data.get('sponsor_name', None),
+            feedback_heading=engagement_data.get('feedback_heading', None),
+            feedback_body=engagement_data.get('feedback_body', None),
+            selected_survey_id=engagement_data.get('selected_survey_id', None)
         )
         new_engagement.save()
         return new_engagement
@@ -250,8 +254,32 @@ class EngagementService:
                 new_status_block.save()
 
     @staticmethod
-    def _validate_engagement_edit_data(engagement_id: int, data: dict):
-        engagement = EngagementModel.find_by_id(engagement_id)
+    def _save_or_update_surveys(engagement_id, surveys):
+        for survey in surveys:
+            # Check for an existing status block with the same survey status
+            survey_block: SurveyModel = (
+                SurveyModel.find_by_id(survey.get('id'))
+            )
+            # If the status block exists, update it. Otherwise, create a new one.
+            if survey_block:
+                survey_block.engagement_id = engagement_id
+                survey_block.commit()
+            else:
+                new_survey_block: SurveyModel = (
+                    SurveyModel(
+                        name=survey.get('name', None),
+                        form_json=survey.get('form_json', None),
+                        engagement_id=engagement_id,
+                        is_hidden=survey.get('is_hidden', False),
+                        is_template=survey.get('is_template', False),
+                        generate_dashboard=survey.get('generate_dashboard', True),
+                    )
+                )
+
+                new_survey_block.save()
+
+    @staticmethod
+    def _validate_engagement_edit_data(engagement: EngagementModel, data: dict):
         draft_status_restricted_changes = (EngagementModel.is_internal.key,)
         engagement_has_been_opened = engagement.status_id != Status.Draft.value
         if engagement_has_been_opened and any(
@@ -264,25 +292,47 @@ class EngagementService:
     @staticmethod
     def edit_engagement(data: dict):
         """Update engagement partially."""
-        survey_block = data.pop('status_block', None)
+        status_block = data.pop('status_block', None)
+        surveys = data.pop('surveys', None)
+        selected_survey_id = data.get('selected_survey_id', None)
         engagement_id = data.get('id', None)
         authorization.check_auth(
             one_of_roles=(MembershipType.TEAM_MEMBER.name, Role.EDIT_ENGAGEMENT.value),
             engagement_id=engagement_id,
         )
 
-        EngagementService._validate_engagement_edit_data(engagement_id, data)
+        engagement = EngagementModel.find_by_id(engagement_id)
+        if not engagement:
+            raise ValueError('Engagement does not exist')
+
+        EngagementService._validate_engagement_edit_data(engagement, data)
         if data:
+            if selected_survey_id:
+                if selected_survey_id == -1:
+                    data['selected_survey_id'] = None
+                elif isinstance(selected_survey_id, int) and selected_survey_id > 0:
+                    survey = SurveyModel.get_survey(selected_survey_id)
+                    if not survey:
+                        raise ValueError('selected survey does not exist')
+
+                    if survey.engagement_id != engagement_id:
+                        raise ValueError('selected survey does not belong to this engagement')
+
             updated_engagement = EngagementModel.edit_engagement(data)
+
             if not updated_engagement:
-                raise ValueError('Engagement to update was not found')
+                raise ValueError(engagement)
 
             has_epic_fields_getting_updated = 'end_date' in data or 'start_date' in data
             if has_epic_fields_getting_updated:
                 ProjectService.update_project_info(updated_engagement.id)
 
-        if survey_block:
-            EngagementService._save_or_update_eng_block(engagement_id, survey_block)
+            if status_block:
+                EngagementService._save_or_update_eng_block(engagement_id, status_block)
+
+            if surveys:
+                EngagementService._save_or_update_surveys(engagement_id, surveys)
+
         return EngagementModel.find_by_id(engagement_id)
 
     @staticmethod
