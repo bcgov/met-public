@@ -288,12 +288,44 @@ class EngagementService:
             raise ValueError(
                 'Some fields cannot be updated after the engagement has been published'
             )
+        
+    @staticmethod
+    def _validate_and_assign_survey(survey_id: int, engagement_id: int):
+        if survey_id == -1:
+            return None
+        elif isinstance(survey_id, int) and survey_id > 0:
+            survey = SurveyModel.get_survey(survey_id)
+            if not survey:
+                raise ValueError('selected survey does not exist')
+
+            if survey.engagement_id != engagement_id:
+                raise ValueError('selected survey does not belong to this engagement')
+            
+            return survey_id
+        
+    @staticmethod
+    def _update_external_engagement_data(
+        eng_id: int, 
+        status_block: object, 
+        surveys: object, 
+        epic_fields, 
+        new_eng: EngagementModel | None
+    ):
+        if epic_fields:
+            ProjectService.update_project_info(new_eng.id)
+
+        if status_block:
+            EngagementService._save_or_update_eng_block(eng_id, status_block)
+
+        if surveys:
+            EngagementService._save_or_update_surveys(eng_id, surveys)
 
     @staticmethod
     def edit_engagement(data: dict):
         """Update engagement partially."""
         status_block = data.pop('status_block', None)
         surveys = data.pop('surveys', None)
+        epic_fields = 'end_date' in data or 'start_date' in data
         selected_survey_id = data.get('selected_survey_id', None)
         engagement_id = data.get('id', None)
         authorization.check_auth(
@@ -308,30 +340,21 @@ class EngagementService:
         EngagementService._validate_engagement_edit_data(engagement, data)
         if data:
             if selected_survey_id:
-                if selected_survey_id == -1:
-                    data['selected_survey_id'] = None
-                elif isinstance(selected_survey_id, int) and selected_survey_id > 0:
-                    survey = SurveyModel.get_survey(selected_survey_id)
-                    if not survey:
-                        raise ValueError('selected survey does not exist')
-
-                    if survey.engagement_id != engagement_id:
-                        raise ValueError('selected survey does not belong to this engagement')
+                data['selected_survey_id'] = \
+                    EngagementService._validate_and_assign_survey(selected_survey_id, engagement_id)
 
             updated_engagement = EngagementModel.edit_engagement(data)
 
             if not updated_engagement:
                 raise ValueError(engagement)
-
-            has_epic_fields_getting_updated = 'end_date' in data or 'start_date' in data
-            if has_epic_fields_getting_updated:
-                ProjectService.update_project_info(updated_engagement.id)
-
-            if status_block:
-                EngagementService._save_or_update_eng_block(engagement_id, status_block)
-
-            if surveys:
-                EngagementService._save_or_update_surveys(engagement_id, surveys)
+            
+            EngagementService._update_external_engagement_data(
+                engagement_id, 
+                status_block, 
+                surveys, 
+                epic_fields, 
+                updated_engagement
+            )
 
         return EngagementModel.find_by_id(engagement_id)
 

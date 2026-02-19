@@ -10,11 +10,12 @@ import { Button } from 'components/common/Input';
 export const PreviewBanner = () => {
     const { survey } = useRouteLoaderData('survey');
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
+    const navigate = useNavigate();
+
     if (!isLoggedIn || !survey) {
         return null;
     }
 
-    const navigate = useNavigate();
     return (
         <Box sx={{ backgroundColor: 'secondary.light' }}>
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>

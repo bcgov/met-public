@@ -7,7 +7,6 @@ import SettingsTable from './SettingsTable';
 import SearchBar from './SearchBar';
 import { getBaseUrl } from 'helper';
 import { Button, FormField, TextInput } from 'components/common/Input';
-// import MetTable from 'components/common/Table';
 import { updateSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';

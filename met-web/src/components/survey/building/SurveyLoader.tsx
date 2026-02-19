@@ -30,10 +30,10 @@ export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
     const verPromise = token ? getEmailVerification(token) : null;
     let engPromise = engagementId ? getEngagement(Number(engagementId)) : null;
     let survey: Survey | null = null;
-    // Try getting the engagement by the survey ID if the engagement ID isn't present
+    // Try getting the engagement by the survey ID if the engagement ID isn't presentq
     if (!engPromise && !engagementId && surveyId) {
         survey = await getSurvey(Number(surveyId));
-        engPromise = getEngagement(Number(survey?.engagement_id)) || null;
+        engPromise = survey ? getEngagement(Number(survey.engagement_id)) : null;
     }
     const [engagement, verification] = await Promise.all([engPromise, verPromise]);
     survey = !survey && surveyId ? await getSurvey(Number(surveyId)) : survey || engagement?.surveys?.[0] || null;

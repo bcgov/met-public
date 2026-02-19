@@ -11,11 +11,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { AuthoringTemplateOutletContext } from './types';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
-import { AuthoringLoaderData } from './authoringLoader';
+import { AuthoringLoaderData, SurveyData } from './authoringLoader';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import ConfirmModal from 'components/common/Modals/ConfirmModal';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
+import { Engagement } from 'models/engagement';
 
 type SelectOption = { label: string; value: number };
 
@@ -49,44 +50,49 @@ const AuthoringFeedback = () => {
     // Reset values to default and retrieve relevant content from loader.
     useEffect(() => {
         surveys.then((surveys) => {
-            if (surveys?.items && Array.isArray(surveys.items) && surveys.items.length > 0) {
-                const filteredOptions: SelectOption[] = [];
-                surveys.items.forEach((svy) => {
-                    // Only return surveys that share a tenant with the current engagement and aren't claimed
-                    if (
-                        svy.tenant_id === tenantId &&
-                        (Number(svy.engagement_id) === engagementId || !svy.engagement_id)
-                    ) {
-                        filteredOptions.push({
-                            label: svy?.name || '',
-                            value: svy?.id || 0,
-                        });
-                    }
-                });
-                setSurveySelectOptions([{ label: 'None', value: -1 }, ...filteredOptions]);
-                engagement.then((eng) => {
-                    statusId = eng.status_id || statusId;
-                    reset(defaultValuesObject);
-                    setValue('form_source', pageName);
-                    setValue('id', Number(eng.id));
-                    setValue('status_id', Number(eng.id));
-                    setValue('feedback_heading', eng.feedback_heading);
-                    // Check if feedback_body is valid stringified JSON, then convert it to an editor state
-                    if (tryParse(eng.feedback_body)) {
-                        setValue('feedback_body', getEditorStateFromRaw(eng.feedback_body) || '');
-                    }
-                    // Check if the selected survey exists in the array of available surveys
-                    setValue(
-                        'selected_survey_id',
-                        eng.surveys?.find((s) => Number(s.id) === eng.selected_survey_id) ? eng.selected_survey_id : -1,
-                    );
-                    setValue('surveys', eng.surveys || []);
-                    setDefaultValues(getValues());
-                    reset(getValues());
-                });
-            }
+            handleSurveyData(surveys);
+            engagement.then((eng) => {
+                handleEngagementData(eng);
+            });
         });
     }, [engagement, surveys]);
+
+    const handleSurveyData = (surveys: SurveyData) => {
+        if (surveys?.items && Array.isArray(surveys.items) && surveys.items.length > 0) {
+            const filteredOptions: SelectOption[] = [];
+            surveys.items.forEach((svy) => {
+                // Only return surveys that share a tenant with the current engagement and aren't claimed
+                if (svy.tenant_id === tenantId && (Number(svy.engagement_id) === engagementId || !svy.engagement_id)) {
+                    filteredOptions.push({
+                        label: svy?.name || '',
+                        value: svy?.id || 0,
+                    });
+                }
+            });
+            setSurveySelectOptions([{ label: 'None', value: -1 }, ...filteredOptions]);
+        }
+    };
+
+    const handleEngagementData = (eng: Engagement) => {
+        statusId = eng.status_id || statusId;
+        reset(defaultValuesObject);
+        setValue('form_source', pageName);
+        setValue('id', Number(eng.id));
+        setValue('status_id', Number(eng.id));
+        setValue('feedback_heading', eng.feedback_heading);
+        // Check if feedback_body is valid stringified JSON, then convert it to an editor state
+        if (tryParse(eng.feedback_body)) {
+            setValue('feedback_body', getEditorStateFromRaw(eng.feedback_body) || '');
+        }
+        // Check if the selected survey exists in the array of available surveys
+        setValue(
+            'selected_survey_id',
+            eng.surveys?.find((s) => Number(s.id) === eng.selected_survey_id) ? eng.selected_survey_id : -1,
+        );
+        setValue('surveys', eng.surveys || []);
+        setDefaultValues(getValues());
+        reset(getValues());
+    };
 
     // Determines whether a string is JSON parseable and returns the JSON if it is.
     const tryParse = (json: string) => {

@@ -451,13 +451,11 @@ const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: bo
 };
 
 const SurveyFormBuilder = () => {
-    const { survey: surveyPromise, engagement: engagementPromise } = useRouteLoaderData('survey') as SurveyLoaderData;
-
-    const surveyDataPromise = Promise.all([surveyPromise, engagementPromise]);
+    const { survey, engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     return (
         <Suspense fallback={<FormBuilderSkeleton />}>
-            <Await resolve={surveyDataPromise}>
+            <Await resolve={[survey, engagement]}>
                 <FormBuilderPage />
             </Await>
         </Suspense>
