@@ -1,5 +1,5 @@
 import React, { Suspense, useState } from 'react';
-import { Await, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Await, useNavigate, useRouteLoaderData } from 'react-router';
 import { ClickAwayListener, Grid2 as Grid, Stack, InputAdornment, Tooltip, Skeleton, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-regular-svg-icons/faCopy';

@@ -12,7 +12,7 @@ import {
     Avatar,
     ThemeProvider,
 } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { Routes, Route } from './SideNavElements';
 import { DarkTheme, Palette, colors, ZIndex } from '../../../styles/Theme';
 import { SideNavProps, DrawerBoxProps } from './types';

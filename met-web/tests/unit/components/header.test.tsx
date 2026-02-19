@@ -25,8 +25,8 @@ jest.mock('hooks', () => ({
         }),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useRouteLoaderData: (routeId: string) => {
         if (routeId === 'authenticated-root') {
             return {

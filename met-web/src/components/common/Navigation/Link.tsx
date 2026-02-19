@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as MuiLink, LinkProps as MuiLinkProps } from '@mui/material';
-import { LinkProps, NavLink } from 'react-router-dom';
+import { LinkProps, NavLink } from 'react-router';
 import { colors } from '..';
 
 interface FocusableNavLinkProps extends MuiLinkProps {

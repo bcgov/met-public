@@ -9,7 +9,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { Tenant } from 'models/tenant';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useRouteLoaderData, useNavigate, Await, useRevalidator } from 'react-router-dom';
+import { useRouteLoaderData, useNavigate, Await, useRevalidator } from 'react-router';
 import { MidScreenLoader } from 'components/common';
 // Prevents page load fail due to waiting for engagement title on refresh
 const AutoBreadcrumbs = React.lazy(() =>

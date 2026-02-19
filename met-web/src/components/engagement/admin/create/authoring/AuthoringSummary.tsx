@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useOutletContext, useLoaderData } from 'react-router-dom';
+import { useOutletContext, useLoaderData } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';

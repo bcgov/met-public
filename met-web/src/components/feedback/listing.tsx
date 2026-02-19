@@ -10,7 +10,7 @@ import MetTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 import { ActionsDropDown } from './actionDropdown';
 import { USER_ROLES } from 'services/userService/constants';

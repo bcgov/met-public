@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import SurveyListing from '../../../../src/components/survey/listing';
 import { setupEnv } from '../setEnvVars';
 import * as surveyService from 'services/surveyService';
@@ -110,8 +110,8 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
     useLocation: jest.fn(() => ({
         search: '',

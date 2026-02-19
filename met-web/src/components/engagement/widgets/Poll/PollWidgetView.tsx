@@ -7,7 +7,7 @@ import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollS
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { BodyText, Header3 } from 'components/common/Typography';
 import { BaseTheme, colors } from 'styles/Theme';
-import { Await } from 'react-router-dom';
+import { Await } from 'react-router';
 import { PollStatus } from 'constants/engagementStatus';
 import PollDisplay from 'components/engagement/form/EngagementWidgets/Poll/PollDisplay';
 import { Button } from 'components/common/Input';

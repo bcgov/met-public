@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
 import TenantDetail from '../../../../src/components/tenantManagement/Detail';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { USER_ROLES } from 'services/userService/constants';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { NotificationModalState } from 'services/notificationModalService/types';
@@ -76,8 +76,8 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useParams: jest.fn(() => {
         return { tenantShortName: mockTenant.short_name };
     }),

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Card, CardContent, CardMedia, CardActionArea, ThemeProvider } from '@mui/material';
+import { Box, Grid2 as Grid, Card, CardContent, CardMedia, CardActionArea, ThemeProvider } from '@mui/material';
 import { Engagement } from 'models/engagement';
 import { getEngagement } from 'services/engagementService';
 import dayjs from 'dayjs';
 import { EngagementStatusChip } from 'components/common/Indicators/StatusChip';
 import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
-import { getBaseUrl } from 'helper';
 import { useAppTranslation } from 'hooks';
 import { BodyText, Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,13 +30,12 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     const endDate = dayjs(loadedEngagement?.end_date);
     const dateFormat = 'MMMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
-    const languagePath = `/${sessionStorage.getItem('languageId')}`;
-    const engagementPath = `/new-look${slug ? '/' + slug : ''}`;
-    const engagementUrl = `${getBaseUrl()}${engagementPath}${languagePath}`;
+    const language = sessionStorage.getItem('languageId');
+    const engagementPath = slug ? '/' + slug : '';
+    const engagementUrl = `${engagementPath}/${language}`;
 
     const loadEngagement = async () => {
         if (passedEngagement) {
-            setIsLoadingEngagement(false);
             setLoadedEngagement(passedEngagement);
             return;
         }
@@ -50,8 +48,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
         try {
             const engagement = await getEngagement(engagementId);
             setLoadedEngagement(engagement);
-            setIsLoadingEngagement(false);
         } catch {
+        } finally {
             setIsLoadingEngagement(false);
         }
     };
@@ -68,6 +66,8 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             setSlug(response.slug);
         } catch {
             setSlug('');
+        } finally {
+            setIsLoadingEngagement(false);
         }
     };
 
@@ -90,9 +90,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
             <Card
                 className={isActive ? 'active' : ''}
                 sx={{
+                    cursor: isLoadingEngagement ? 'not-allowed' : 'pointer',
                     borderRadius: '24px',
                     width: '320px',
-                    cursor: 'pointer',
                     '&:hover, &:has(:hover)': {
                         boxShadow: elevations.hover,
                         background: colors.surface.blue[90],
@@ -130,8 +130,9 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     onMouseDown={() => setIsActive(true)}
                     onMouseUp={() => setIsActive(false)}
                     LinkComponent={RouterLinkRenderer}
-                    href={engagementUrl}
+                    href={isLoadingEngagement ? '#' : engagementUrl}
                     sx={{
+                        cursor: isLoadingEngagement ? 'progress' : 'pointer',
                         '&:focus-visible': {
                             // focus visible styling is applied by the parent Card component
                             border: 'none',
@@ -143,7 +144,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                     }}
                 >
                     {Boolean(banner_url) && <CardMedia sx={{ height: '172px' }} image={banner_url} />}
-                    <CardContent sx={{ height: '260px', p: '40px 32px' }}>
+                    <CardContent sx={{ height: '180px', p: '40px 32px' }}>
                         <Box
                             sx={{
                                 height: '96px',
@@ -178,10 +179,10 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                             </Header2>
                         </Box>
                         <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
-                            <Grid item xs="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
+                            <Grid size="auto" alignContent={'flex-start'} alignItems={'flex-start'}>
                                 <EngagementStatusChip statusId={loadedEngagement.submission_status} />
                             </Grid>
-                            <Grid item xs container flexDirection="column">
+                            <Grid size="auto" container flexDirection="column">
                                 <BodyText bold size="small" sx={{ lineHeight: 1 }}>
                                     <time dateTime={`${startDate.format(semanticDateFormat)}`}>
                                         {startDate.format(dateFormat)}

@@ -1,6 +1,6 @@
 import React, { createContext, JSX, useEffect, useState } from 'react';
 import { Engagement } from 'models/engagement';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';

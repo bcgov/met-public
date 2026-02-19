@@ -3,7 +3,7 @@ import { useAppDispatch } from 'hooks';
 import { MetLabel } from 'components/common';
 import { Palette } from 'styles/Theme';
 import { Grid, MenuItem, Select } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { Language } from 'models/language';
 import { LanguageContext } from './LanguageContext';
 

@@ -5,7 +5,7 @@ import { FormSubmissionData } from 'components/Form/types';
 import { useAppDispatch, useAppSelector, useAppTranslation } from 'hooks';
 import { When } from 'react-if';
 import { submitSurvey } from 'services/submissionService';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 import { Button } from 'components/common/Input';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';

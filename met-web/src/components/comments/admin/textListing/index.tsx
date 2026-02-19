@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MetTable from 'components/common/Table';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router';
 import {
     MetPageGridContainer,
     PrimaryButtonOld,

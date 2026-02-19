@@ -2,7 +2,7 @@ import http from 'apiManager/httpRequestHandler';
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 
-interface GetSlugByEngagementIdResponse {
+export interface GetSlugByEngagementIdResponse {
     slug: string;
 }
 export const getSlugByEngagementId = async (engagementId: number): Promise<GetSlugByEngagementIdResponse> => {

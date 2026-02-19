@@ -1,12 +1,11 @@
 import React, { ReactNode } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
-import * as reactRouterDom from 'react-router-dom';
+import * as reactRouter from 'react-router';
 import TenantCreationPage from 'components/tenantManagement/Create';
 import { USER_ROLES } from 'services/userService/constants';
-import { RouterProvider, createMemoryRouter, useRouteLoaderData } from 'react-router-dom';
+import { createMemoryRouter, useRouteLoaderData, RouterProvider } from 'react-router';
 
 const mockTenant = {
     id: 1,
@@ -44,8 +43,8 @@ jest.mock('react', () => ({
     }),
 }));
 
-jest.mock('react-router-dom', () => {
-    const actual = jest.requireActual('react-router-dom');
+jest.mock('react-router', () => {
+    const actual = jest.requireActual('react-router');
     return {
         ...actual,
         Await: ({ children, resolve }: { children: any; resolve: any }) => {
@@ -271,7 +270,7 @@ describe('Tenant Creation Page tests', () => {
             proceed: blockerProceed,
             reset: blockerReset,
         };
-        jest.spyOn(reactRouterDom, 'useBlocker').mockReturnValue(blocker);
+        jest.spyOn(reactRouter, 'useBlocker').mockReturnValue(blocker);
         render(<RouterProvider router={router} />);
         await waitFor(() => {
             expect(screen.getByText('Unsaved Changes')).toBeVisible();

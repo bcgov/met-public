@@ -1,4 +1,4 @@
-import { Params } from 'react-router-dom';
+import { Params } from 'react-router';
 import { getAllTenants, getTenant } from 'services/tenantService';
 
 export const allTenantsLoader = () => {

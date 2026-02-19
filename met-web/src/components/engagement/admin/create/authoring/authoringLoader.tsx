@@ -1,7 +1,7 @@
 import { Engagement } from 'models/engagement';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { Survey } from 'models/survey';
-import { Params } from 'react-router-dom';
+import { Params } from 'react-router';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
 import { getEngagement } from 'services/engagementService';
 import { getSurveysPage } from 'services/surveyService';

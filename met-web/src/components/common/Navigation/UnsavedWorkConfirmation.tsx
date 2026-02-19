@@ -1,6 +1,6 @@
 import { Modal } from '@mui/material';
 import React from 'react';
-import { useBlocker } from 'react-router-dom';
+import { useBlocker } from 'react-router';
 import ConfirmModal from '../Modals/ConfirmModal';
 
 interface UnsavedWorkConfirmationProps {

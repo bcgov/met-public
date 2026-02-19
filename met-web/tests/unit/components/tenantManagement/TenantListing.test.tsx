@@ -2,10 +2,8 @@ import React, { ReactNode } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
-import * as reactRouter from 'react-router';
 import TenantListingPage from '../../../../src/components/tenantManagement/Listing';
 import { USER_ROLES } from 'services/userService/constants';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const mockTenantOne = {
     id: 1,
@@ -66,8 +64,13 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+// Mocking AutoBreadcrumbs component
+jest.mock('components/common/Navigation/Breadcrumb', () => ({
+    AutoBreadcrumbs: () => <div>Breadcrumbs</div>,
+}));
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: jest.fn(),
     useLocation: jest.fn(() => ({
         search: '',
@@ -80,25 +83,12 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('Tenant Listing Page tests', () => {
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
-
     beforeEach(() => {
         setupEnv();
     });
 
     test('Tenant table is rendered', async () => {
-        const router = createMemoryRouter(
-            [
-                {
-                    path: '/tenantadmin',
-                    element: <TenantListingPage />,
-                    id: 'tenant-admin',
-                    loader: () => Promise.resolve([mockTenantOne, mockTenantTwo]),
-                },
-            ],
-            { initialEntries: ['/tenantadmin'] },
-        );
-        render(<RouterProvider router={router} />);
+        render(<TenantListingPage />);
 
         await waitFor(() => {
             expect(screen.getByText('Tenant One')).toBeVisible();

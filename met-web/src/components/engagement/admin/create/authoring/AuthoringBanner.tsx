@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
-import { Await, useLoaderData, useOutletContext } from 'react-router-dom';
+import { Await, useLoaderData, useOutletContext } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';

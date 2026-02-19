@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import LanguageAdminPanel, { addOrRemoveLanguage } from 'components/language';
 import * as languageService from 'services/languageService';
 
@@ -37,6 +38,18 @@ jest.mock('services/languageService', () => ({
     deleteTenantLanguage: jest.fn(),
 }));
 
+const router = createMemoryRouter(
+    [
+        {
+            path: '/',
+            element: <LanguageAdminPanel />,
+        },
+    ],
+    {
+        initialEntries: [`/`],
+    },
+);
+
 describe('LanguageAdminPanel component tests', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -47,9 +60,7 @@ describe('LanguageAdminPanel component tests', () => {
     });
 
     test('Language view renders', async () => {
-        await act(async () => {
-            render(<LanguageAdminPanel />);
-        });
+        render(<RouterProvider router={router} />);
         await waitFor(() => {
             expect(screen.getByTestId(`language-admin-panel`)).toBeVisible();
         });

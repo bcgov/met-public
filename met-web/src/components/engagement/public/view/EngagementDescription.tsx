@@ -4,7 +4,7 @@ import { Link } from 'components/common/Navigation';
 import { Engagement } from 'models/engagement';
 import { Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, useLoaderData } from 'react-router-dom';
+import { Await, useLoaderData } from 'react-router';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';

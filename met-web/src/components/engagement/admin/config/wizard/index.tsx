@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Header2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
-import { Form } from 'react-router-dom';
+import { Form } from 'react-router';
 import { Box } from '@mui/material';
 import { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';

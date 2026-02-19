@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Grid, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { CircularProgressWithLabel, MetHeader1Old, MetPaper, MetDescription } from 'components/common';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';

@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MetPaper } from 'components/common';
-import { ActionContext } from '../../old-view/ActionContext';
 import { Divider, Grid, Skeleton } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
@@ -12,10 +11,12 @@ import EmailListSection from './EmailListSection';
 import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
 import { Header2 } from 'components/common/Typography';
+import { useRouteLoaderData } from 'react-router';
+import { EngagementLoaderData } from 'engagements/public/view';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
-    const { engagementWidgets } = useContext(ActionContext);
+    const { widgets } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
     const [open, setOpen] = useState(false);
     const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
     const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);
@@ -38,7 +39,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
 
     useEffect(() => {
         loadSubscribeItems();
-    }, [engagementWidgets]);
+    }, [widgets]);
 
     if (isLoadingSubscribeItems) {
         return (

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import MetTable from 'components/common/Table';
 import Grid from '@mui/material/Grid';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { MetPageGridContainer, PrimaryButtonOld, MetHeader1Old, SecondaryButtonOld } from 'components/common';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';

@@ -14,7 +14,7 @@ import { WidgetType } from 'models/widget';
 import { draftEngagement, surveys, mockMap, mapWidget, engagementMetadata } from '../factory';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementSettings, createDefaultEngagementSettings } from 'models/engagement';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router';
 
 const mockEngagementSettings: EngagementSettings = {
     ...createDefaultEngagementSettings(),
@@ -78,19 +78,10 @@ jest.mock('apiManager/apiSlices/widgets', () => ({
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useLocation: jest.fn(() => ({ search: '' })),
-    useParams: jest.fn(() => {
-        return { projectId: '' };
-    }),
-    useNavigate: () => jest.fn(),
-}));
-
 jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(Promise.resolve([engagementMetadata]));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({ search: '' })),
     useParams: jest.fn(() => {
         return { projectId: '', engagementId: '1' };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tab, Box, useMediaQuery, Theme } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';

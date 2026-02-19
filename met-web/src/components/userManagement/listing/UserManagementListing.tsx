@@ -7,7 +7,7 @@ import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyi
 import { USER_STATUS, User } from 'models/user';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';

@@ -4,7 +4,7 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { createDefaultPageInfo, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { User, createDefaultUser } from 'models/user';
 import { getUserList } from 'services/userService/api';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { updateURLWithPagination } from 'components/common/Table/utils';
 
 export interface UserManagementContextProps {

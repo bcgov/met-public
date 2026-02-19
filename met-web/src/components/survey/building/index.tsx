@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react';
-import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import {
     Grid,

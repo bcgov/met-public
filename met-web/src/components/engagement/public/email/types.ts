@@ -1,11 +1,5 @@
 import { Engagement } from 'models/engagement';
-import React, { JSX } from 'react';
-
-export interface BannerProps {
-    imageUrl?: string;
-    height?: string;
-    children?: JSX.Element | JSX.Element[];
-}
+import React from 'react';
 
 export interface EmailModalProps {
     open: boolean;
@@ -18,14 +12,14 @@ export interface EmailModalProps {
     handleClose: () => void;
     updateEmail?: (email: string) => void;
     updateModal?: (open: boolean) => void;
-    engagement?: Engagement;
+    engagement: Engagement;
 }
 
 export interface EmailPanelProps {
     email: string;
     checkEmail: () => void;
     handleClose: () => void;
-    updateEmail: (string: string) => void;
+    updateEmail: (email: string) => void;
     isSaving: boolean;
     isInternal: boolean;
 }
@@ -48,12 +42,4 @@ export interface FailurePanelProps {
 
 export interface SurveyBlockProps {
     startSurvey: () => void;
-}
-
-export interface RouteState {
-    state: EngagementRouteProps | null;
-}
-
-export interface EngagementRouteProps {
-    open: boolean;
 }

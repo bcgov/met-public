@@ -5,7 +5,7 @@ import { SurveyFormProps } from '../types';
 import { useAppDispatch, useAppTranslation } from 'hooks';
 import { updateSubmission } from 'services/submissionService';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { useAsyncValue, useNavigate } from 'react-router-dom';
+import { useAsyncValue, useNavigate } from 'react-router';
 import { Engagement } from 'models/engagement';
 import { SurveySubmission } from 'models/surveySubmission';
 import { EmailVerification } from 'models/emailVerification';

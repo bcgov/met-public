@@ -5,6 +5,7 @@ Manages the engagement
 
 from __future__ import annotations
 
+import logging
 from datetime import datetime
 from typing import List, Optional
 
@@ -212,7 +213,7 @@ class Engagement(BaseModel):
     def publish_scheduled_engagements_due(cls) -> List[Engagement]:
         """Update scheduled engagements to published."""
         datetime_due = datetime.utcnow()
-        print('Publish due date (UTC) ------------------------', datetime_due)
+        logging.getLogger(__name__).debug('Publish due date (UTC): %s', datetime_due)
         update_fields = {
             'status_id': Status.Published.value,
             'published_date': datetime.utcnow(),

@@ -6,7 +6,7 @@ import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BaseTheme } from 'styles/Theme';
 import { BodyText, Header3 } from 'components/common/Typography';
-import { Await } from 'react-router-dom';
+import { Await } from 'react-router';
 import { faCircle, faCircleHalf } from '@fortawesome/pro-solid-svg-icons';
 interface TimelineWidgetProps {
     widget: Widget;

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { RepeatedGrid } from 'components/common';
 import { TileSkeleton } from './TileSkeleton';
 import EngagementTile from './EngagementTile';
@@ -21,28 +21,27 @@ const TileBlock = () => {
         return (
             <Grid
                 container
+                paddingLeft={0}
                 direction="row"
-                justifyContent={{ xs: 'center', sm: 'flex-start' }}
                 columnSpacing={5}
+                justifyContent={'center'}
                 rowSpacing={4}
-                item
-                xs={10}
+                size={12}
+                maxWidth="xl"
             >
                 <RepeatedGrid
                     times={8}
-                    item
                     container
-                    xs={12}
-                    md={6}
-                    lg={4}
-                    xl={3}
+                    size="auto"
                     sx={{
                         flexBasis: '320px',
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
                 >
-                    <TileSkeleton />
+                    <Grid width="320px">
+                        <TileSkeleton />
+                    </Grid>
                 </RepeatedGrid>
             </Grid>
         );
@@ -56,8 +55,7 @@ const TileBlock = () => {
                 alignItems="flex-start"
                 columnSpacing={{ xs: 0, sm: 2 }}
                 rowSpacing={4}
-                item
-                xs={10}
+                size={10}
             >
                 <NoResult />
                 <ul aria-label="Engagements list. No results."></ul>
@@ -69,26 +67,24 @@ const TileBlock = () => {
             <LiveMessage message={ariaStatusMessage} aria-live="assertive" />
             <Grid
                 container
+                paddingLeft={0}
                 component="ul"
+                my={0}
                 aria-label={`Engagements list. ${totalEngagements} results.`}
                 direction="row"
-                justifyContent={{ xs: 'center', sm: 'flex-start' }}
                 columnSpacing={5}
+                justifyContent={'center'}
                 rowSpacing={4}
-                item
-                xs={10}
+                size={12}
+                maxWidth="xl"
             >
                 {engagements.map((engagement) => {
                     return (
                         <Grid
                             component="li"
-                            item
                             container
                             key={engagement.id}
-                            xs={12}
-                            md={6}
-                            lg={4}
-                            xl={3}
+                            size="auto"
                             sx={{
                                 flexBasis: '320px',
                                 alignItems: 'center',
@@ -96,22 +92,21 @@ const TileBlock = () => {
                                 listStyleType: 'none',
                             }}
                         >
-                            <Grid item width="320px">
+                            <Grid width="320px">
                                 <EngagementTile passedEngagement={engagement} engagementId={engagement.id} />
                             </Grid>
                         </Grid>
                     );
                 })}
                 <Grid
-                    item
-                    xs={12}
+                    size={12}
                     container
                     direction="row"
                     alignItems={'center'}
                     justifyContent="center"
                     marginBottom="2em"
                 >
-                    <Grid item>
+                    <Grid>
                         <Pagination
                             defaultPage={1}
                             page={page}

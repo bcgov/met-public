@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from 'components/FormCAC/Form';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router';
 import { FormContext } from 'components/FormCAC/FormContext';
 
 jest.mock('@mui/lab/TabContext', () => {
@@ -28,8 +28,8 @@ jest.mock('@mui/material', () => ({
     },
 }));
 // Mock hooks and services
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useNavigate: () => jest.fn(),
     useParams: () => ({
         widgetId: '1',

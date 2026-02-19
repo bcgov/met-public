@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-light-svg-icons';
 import { globalFocusVisible } from 'components/common';
 import { getBaseUrl } from 'helper';
-import { Await, useAsyncValue, useRouteLoaderData } from 'react-router-dom';
+import { Await, useAsyncValue, useRouteLoaderData } from 'react-router';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import dayjs from 'dayjs';

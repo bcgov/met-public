@@ -1,4 +1,4 @@
-import { ActionFunction, redirect } from 'react-router-dom';
+import { ActionFunction, redirect } from 'react-router';
 import { postEngagement as createEngagement } from 'services/engagementService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
 import { addTeamMemberToEngagement } from 'services/membershipService';

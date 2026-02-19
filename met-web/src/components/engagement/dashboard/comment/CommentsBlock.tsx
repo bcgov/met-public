@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid, Skeleton } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { CommentViewContext } from './CommentViewContext';

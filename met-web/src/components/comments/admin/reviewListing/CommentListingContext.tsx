@@ -4,7 +4,7 @@ import { CommentStatus } from 'constants/commentStatus';
 import { useAppDispatch } from 'hooks';
 import { Survey, createDefaultSurvey } from 'models/survey';
 import { SurveySubmission } from 'models/surveySubmission';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getSubmissionPage } from 'services/submissionService';
 import { getSurvey } from 'services/surveyService';

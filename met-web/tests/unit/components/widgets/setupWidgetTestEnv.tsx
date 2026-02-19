@@ -29,8 +29,8 @@ export const setupWidgetTestEnvMock = (): void => {
         ...jest.requireActual('@reduxjs/toolkit/query/react'),
         fetchBaseQuery: jest.fn(),
     }));
-    jest.mock('react-router-dom', () => ({
-        ...jest.requireActual('react-router-dom'),
+    jest.mock('react-router', () => ({
+        ...jest.requireActual('react-router'),
         useLocation: jest.fn(() => ({ search: '' })),
         useParams: jest.fn(() => {
             return { projectId: '' };
@@ -62,8 +62,6 @@ export const setupWidgetTestEnvSpy = (): void => {
         ),
         useDispatch: jest.fn(() => jest.fn()),
     }));
-    jest.spyOn(reactRouter, 'useParams').mockReturnValue({ projectId: '' });
-    jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(jest.fn());
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
         Promise.resolve([engagementMetadata]),

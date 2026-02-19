@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Button } from 'components/common/Input';
 import { Box, Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, useLoaderData, useParams } from 'react-router-dom';
+import { Await, useLoaderData, useParams } from 'react-router';
 import { Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { getStatusFromStatusId } from 'components/common/Indicators/StatusChip';
@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import EmailModal from 'components/engagement/old-view/EmailModal';
+import EmailModal from 'engagements/public/email/EmailModal';
 import { EngagementLoaderData, EngagementViewSections } from '.';
 
 const gridContainerStyles = {

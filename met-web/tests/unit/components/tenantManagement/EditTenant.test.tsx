@@ -45,8 +45,8 @@ jest.mock('react', () => ({
     }),
 }));
 
-jest.mock('react-router-dom', () => {
-    const actual = jest.requireActual('react-router-dom');
+jest.mock('react-router', () => {
+    const actual = jest.requireActual('react-router');
     const useRouteLoaderDataMock = jest.fn((id: string) => {
         if (id === 'tenant') {
             return mockTenant;
@@ -74,7 +74,7 @@ jest.mock('react-router-dom', () => {
     };
 });
 
-const useRouteLoaderDataMock = jest.requireMock('react-router-dom').__useRouteLoaderDataMock as jest.Mock;
+const useRouteLoaderDataMock = jest.requireMock('react-router').__useRouteLoaderDataMock as jest.Mock;
 
 jest.mock('axios');
 

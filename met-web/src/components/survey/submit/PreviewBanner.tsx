@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Stack } from '@mui/material';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';

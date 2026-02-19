@@ -49,15 +49,15 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
     useLocation: jest.fn(() => ({
         search: '',
     })),
+    useNavigate: jest.fn(),
 }));
 
 describe('User Management tests', () => {
-    jest.spyOn(reactRouter, 'useNavigate').mockImplementation(() => jest.fn());
     jest.spyOn(userService, 'getUserList').mockReturnValue(
         Promise.resolve({
             items: [mockUser1],

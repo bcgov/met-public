@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Box, Grid, Skeleton } from '@mui/material';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer, DetailsContainer, Detail } from 'components/common/Layout';
-import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import { deleteTenant } from 'services/tenantService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';

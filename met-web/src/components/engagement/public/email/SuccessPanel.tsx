@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { SuccessPanelProps } from './types';
-import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { SuccessPanelProps } from 'engagements/public/email/types';
+import { modalStyle } from 'components/common';
+import { Button } from 'components/common/Input';
+import { BodyText, Header1 } from 'components/common/Typography';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
@@ -13,53 +15,52 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
             sx={{ ...modalStyle }}
             rowSpacing={2}
         >
-            <Grid container direction="row" item xs={12}>
-                <Grid item xs={12}>
-                    <MetHeader1Old bold sx={{ mb: 2 }}>
+            <Grid container direction="row" size={12}>
+                <Grid size={12}>
+                    <Header1 weight="bold" sx={{ mb: 2 }}>
                         Thank you
-                    </MetHeader1Old>
+                    </Header1>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld id="modal-modal-header">
+                <Grid size={12}>
+                    <BodyText id="modal-modal-header">
                         We sent a link to provide your feedback at the following email address:
-                    </MetBodyOld>
-                    <MetBodyOld sx={{ mt: 1 }}>{email}</MetBodyOld>
+                    </BodyText>
+                    <BodyText sx={{ mt: 1 }}>{email}</BodyText>
                 </Grid>
             </Grid>
-            <Grid container direction="row" item xs={12}>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1, fontWeight: 'bold' }}>
+            <Grid container direction="row" size={12}>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1, fontWeight: 'bold' }}>
                         If you don't see the email in your inbox within a few minutes, please check your junk/spam
                         folder, or your promotion folder (Gmail).
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1, fontWeight: 'bold' }}>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1, fontWeight: 'bold' }}>
                         Please click the link provided to provide your feedback.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</MetBodyOld>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1, fontWeight: 'bold' }}>The link will be valid for 24 hours.</BodyText>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1, fontWeight: 'bold', fontStyle: 'italic' }}>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1, fontStyle: 'italic' }}>
                         If you are not able to provide feedback within 24 hours, you may request a new link. Refer to
                         the verification email for more information.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
 
                 <Grid
-                    item
                     container
                     direction={{ xs: 'column', sm: 'row' }}
-                    xs={12}
+                    size={12}
                     justifyContent="flex-end"
                     spacing={1}
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButtonOld onClick={handleClose} sx={{ m: 1 }}>
+                    <Button onClick={handleClose} sx={{ m: 1 }}>
                         Close
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

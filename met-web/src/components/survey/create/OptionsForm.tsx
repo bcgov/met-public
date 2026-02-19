@@ -3,7 +3,7 @@ import { FormControl, FormControlLabel, FormLabel, Grid2 as Grid, RadioGroup, St
 import { MetPageGridContainer } from 'components/common';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Palette } from 'styles/Theme';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { OptionsFormSkeleton } from './OptionsFormSkeleton';

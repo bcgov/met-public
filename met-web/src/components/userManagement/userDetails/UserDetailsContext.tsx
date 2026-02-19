@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, JSX } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { User, createDefaultUser } from 'models/user';

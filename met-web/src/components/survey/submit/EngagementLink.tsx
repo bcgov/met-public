@@ -1,64 +1,21 @@
-import React, { useCallback } from 'react';
-import { Link as MuiLink } from '@mui/material';
-import { Link, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { useAppSelector } from 'hooks';
+import React from 'react';
+import { useAsyncValue } from 'react-router';
 import { When } from 'react-if';
-import { useDispatch } from 'react-redux';
-import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { SurveyLoaderData } from '../building/SurveyLoader';
+import { Engagement } from 'models/engagement';
+import { Link } from 'components/common/Navigation';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeftLong } from '@fortawesome/pro-regular-svg-icons';
 
 export const EngagementLink = () => {
-    const dispatch = useDispatch();
-    const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
-    const { engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
-    const navigate = useNavigate();
-
-    const handleNavigate = useCallback(
-        (link: string) => {
-            if (!isLoggedIn) {
-                dispatch(
-                    openNotificationModal({
-                        open: true,
-                        data: {
-                            header: 'Please Confirm',
-                            subText: [
-                                {
-                                    text: 'Are you sure you want to leave this survey? If you return to the main page, all your progress will be lost.',
-                                },
-                                {
-                                    text: 'You will have to start over by re-entering your email address and obtaining a new link.',
-                                },
-                            ],
-                            confirmButtonText: 'Leave page',
-                            cancelButtonText: 'Stay on this page',
-                            handleConfirm: () => {
-                                navigate(link); // Perform the navigation here
-                            },
-                        },
-                        type: 'confirm',
-                    }),
-                );
-            } else {
-                navigate(link);
-            }
-        },
-        [dispatch, navigate],
-    );
+    const engagement = useAsyncValue() as Engagement | null;
 
     return (
-        <>
-            <When condition={!engagement}>
-                <MuiLink
-                    component={Link}
-                    to={`/surveys`}
-                    onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-                        e.preventDefault();
-                        handleNavigate('/surveys');
-                    }}
-                >
-                    &lt;&lt; Return to survey list
-                </MuiLink>
-            </When>
-        </>
+        <When condition={!engagement}>
+            <UnsavedWorkConfirmation blockNavigationWhen />
+            <Link to="/surveys">
+                <FontAwesomeIcon icon={faArrowLeftLong} /> Back to Surveys
+            </Link>
+        </When>
     );
 };

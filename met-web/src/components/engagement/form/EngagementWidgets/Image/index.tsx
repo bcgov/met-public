@@ -4,7 +4,7 @@ import { Grid } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { fetchImageWidgets } from 'services/widgetService/ImageService';
-import { Await } from 'react-router-dom';
+import { Await } from 'react-router';
 import { MidScreenLoader } from 'components/common';
 
 export const ImageForm = () => {

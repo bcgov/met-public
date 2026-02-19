@@ -1,20 +1,19 @@
-import React, { FormEvent, useContext, useState } from 'react';
-import { ActionContext } from './ActionContext';
-import { Grid, Checkbox, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
-import { EmailPanelProps } from './types';
-import { MetLabel, modalStyle, MetHeader1Old, MetBodyOld, MetDescription, MetDisclaimer } from 'components/common';
+import React, { FormEvent, useState } from 'react';
+import { Grid2 as Grid, Checkbox, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
+import { EmailPanelProps } from 'engagements/public/email/types';
+import { modalStyle, MetDisclaimer } from 'components/common';
 import { When } from 'react-if';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Button, CustomTextField } from 'components/common/Input';
-import { useAsyncValue } from 'react-router-dom';
+import { useAsyncValue } from 'react-router';
 import { Engagement } from 'models/engagement';
+import { BodyText, Header1 } from 'components/common/Typography';
 
 const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isInternal }: EmailPanelProps) => {
     const loadedEngagement = useAsyncValue() as [Engagement] | undefined;
-    const { savedEngagement } = useContext(ActionContext);
-    const engagement = loadedEngagement ? loadedEngagement[0] : savedEngagement;
+    const engagement = loadedEngagement ? loadedEngagement[0] : undefined;
     const [checked, setChecked] = useState(false);
     const [emailFormError, setEmailFormError] = useState({
         terms: false,
@@ -54,52 +53,51 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                 justifyContent="flex-start"
                 rowSpacing={2}
             >
-                <Grid item xs={12}>
-                    <MetHeader1Old bold sx={{ mb: 2 }}>
+                <Grid size={12}>
+                    <Header1 weight="bold" sx={{ mb: 2 }}>
                         Verify your email address
-                    </MetHeader1Old>
+                    </Header1>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <MetBodyOld>
+                <Grid size={12}>
+                    <BodyText>
                         To provide you with the best experience possible, we require you to validate your email address.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <MetBodyOld>
+                <Grid size={12}>
+                    <BodyText>
                         You will receive a link to provide your feedback at the email address you provide.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
 
-                <Grid item xs={12}>
-                    <MetBodyOld>
+                <Grid size={12}>
+                    <BodyText>
                         <strong>Why are we collecting your email?</strong> Email verification helps us to know you are
                         not a robot, and ensures we have your consent to collect your feedback. Your email address will
                         remain confidential and will only be used to authenticate your participation in this public
                         comment period.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <MetDisclaimer>
                         <Editor
-                            editorState={getEditorStateFromRaw(engagement.consent_message)}
+                            editorState={getEditorStateFromRaw(engagement?.consent_message ?? '')}
                             readOnly={true}
                             toolbarHidden
                         />
                     </MetDisclaimer>
                 </Grid>
                 <Grid
-                    item
                     container
                     direction="row"
                     width="100%"
-                    xs={12}
+                    size={12}
                     alignItems="flex-start"
                     justifyContent="flex-start"
                     rowSpacing={1}
                 >
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <FormControl required error={emailFormError.terms} component="fieldset" variant="standard">
                             <FormControlLabel
                                 control={
@@ -117,8 +115,8 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                             </FormHelperText>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}>
-                        <MetLabel>Email Address</MetLabel>
+                    <Grid size={12}>
+                        <BodyText bold>Email Address</BodyText>
                         <CustomTextField
                             onChange={(e) => {
                                 updateEmail(e.target.value);
@@ -135,14 +133,14 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                     </Grid>
                 </Grid>
                 <When condition={isInternal}>
-                    <Grid item xs={12}>
-                        <MetDescription>
+                    <Grid size={12}>
+                        <BodyText>
                             <strong>This is an Internal Engagement!</strong> You can only use a {INTERNAL_EMAIL_DOMAIN}{' '}
                             email address to answer this survey.
-                        </MetDescription>
+                        </BodyText>
                     </Grid>
                 </When>
-                <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                <Grid container direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack
                         direction={{ md: 'column-reverse', lg: 'row' }}
                         spacing={1}
