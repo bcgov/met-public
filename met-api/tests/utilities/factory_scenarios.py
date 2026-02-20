@@ -202,7 +202,6 @@ class TestEngagementInfo(dict, Enum):
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
         'description_title': 'My Test Description Title',
         'surveys': [TestSurveyInfo.survey1],
-        'selected_survey_id': TestSurveyInfo.survey1['id'],
     }
 
     engagement_draft = {
@@ -236,7 +235,6 @@ class TestEngagementInfo(dict, Enum):
         'is_internal': False,
         'feedback_heading': 'My Feedback Heading 2',
         'surveys': [TestSurveyInfo.survey1],
-        'selected_survey_id': TestSurveyInfo.survey1['id'],
         'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body 2\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -270,7 +268,6 @@ class TestEngagementInfo(dict, Enum):
         'is_internal': False,
         'feedback_heading': 'My Feedback Heading 3',
         'surveys': [TestSurveyInfo.survey1],
-        'selected_survey_id': TestSurveyInfo.survey1['id'],
         'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body 3\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',
@@ -1049,7 +1046,6 @@ class TestEngagementTranslationInfo(dict, Enum):
         'description_title': 'My Test Description Title',
         'feedback_heading': 'My Feedback Heading 4',
         'surveys': [TestSurveyInfo.survey1],
-        'selected_survey_id': TestSurveyInfo.survey1['id'],
         'feedback_body': '"{\"blocks\":[{\"key\":\"2ku94\",\"text\":\"Feedback Body 4\",\
         \"type\":\"unstyled\",\
         \"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}"',

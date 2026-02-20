@@ -35,23 +35,20 @@ export const SurveyLoader = async ({ params }: { params: Params<string> }) => {
         survey = await getSurvey(Number(surveyId));
         engPromise = survey ? getEngagement(Number(survey.engagement_id)) : null;
     }
-    const [engagement, verification] = await Promise.all([engPromise, verPromise]);
-    survey = !survey && surveyId ? await getSurvey(Number(surveyId)) : survey || engagement?.surveys?.[0] || null;
-
-    const slugPromise = engagement?.id && !urlSlug ? getSlugByEngagementId(engagement?.id) : urlSlug || null;
-    const submissionPromise = verification?.verification_token
-        ? getSubmissionByToken(verification.verification_token)
-        : null;
-    const reportSettingsPromise = survey?.id ? fetchSurveyReportSettings(String(survey.id)) : null;
-    const results = await Promise.all([slugPromise, submissionPromise]);
-    const [slug, submission] = results;
     try {
-        const reportSettings = await reportSettingsPromise;
+        const [engagement, verification] = await Promise.all([engPromise, verPromise]);
+        survey = !survey && surveyId ? await getSurvey(Number(surveyId)) : survey || engagement?.surveys?.[0] || null;
+
+        const slugPromise = engagement?.id && !urlSlug ? getSlugByEngagementId(engagement?.id) : urlSlug || null;
+        const submissionPromise = verification?.verification_token
+            ? getSubmissionByToken(verification.verification_token)
+            : null;
+        const reportSettingsPromise = survey?.id ? fetchSurveyReportSettings(String(survey.id)) : null;
+        const results = await Promise.all([slugPromise, submissionPromise, reportSettingsPromise]);
+        const [slug, submission, reportSettings] = results;
         return { engagement, language, reportSettings, slug, submission, survey, surveyId, token, verification };
     } catch (e) {
-        // Don't throw
-        console.log(e);
-        return { engagement, language, slug, submission, survey, surveyId, token, verification };
+        console.error('Failed to get survey data', e);
     }
 };
 

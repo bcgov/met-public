@@ -31,7 +31,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), index=True)
     form_json = db.Column(postgresql.JSONB(astext_type=db.Text()), nullable=False, server_default='{}')
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False)
+    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=True)
     comments = db.relationship('Comment', backref='survey', cascade='all, delete')
     submissions = db.relationship('Submission', backref='survey', cascade='all, delete')
     # Survey templates might not need tenant id

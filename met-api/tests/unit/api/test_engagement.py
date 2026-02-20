@@ -443,7 +443,7 @@ def test_patch_engagement(client, jwt, session, engagement_info, side_effect, ex
     with patch.object(EngagementService, 'edit_engagement', side_effect=ValidationError('Test error')):
         rv = client.patch('/api/engagements/', data=json.dumps(engagement_edits),
                           headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unused-argument
