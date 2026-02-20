@@ -7,7 +7,6 @@ pylint-flask
 pytest
 pytest-cov
 pytest-env
-pytest-dotenv
 pytest-mock
 requests
 flake8==7.0.0
