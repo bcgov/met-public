@@ -9,6 +9,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.engagement_translation import EngagementTranslation as EngagementTranslationModel
+from met_api.models.survey import Survey as SurveyModel
 from met_api.models.language import Language as LanguageModel
 from met_api.schemas.language import LanguageSchema
 from met_api.schemas.engagement_translation import EngagementTranslationSchema
@@ -136,6 +137,8 @@ class EngagementTranslationService:
         translation_data['description_title'] = engagement.description_title
         translation_data['consent_message'] = engagement.consent_message
         translation_data['sponsor_name'] = engagement.sponsor_name
+        translation_data['feedback_heading'] = engagement.feedback_heading
+        translation_data['feedback_body'] = engagement.feedback_body
 
         engagement_slug = EngagementSlugModel.find_by_engagement_id(engagement_id)
         if engagement_slug:
@@ -155,5 +158,9 @@ class EngagementTranslationService:
                                                                        SubmissionStatus.Closed.name)
         if closed_status_block:
             translation_data['closed_status_block_text'] = closed_status_block.block_text
+
+        surveys = SurveyModel.find_by_id(engagement_id)
+        if surveys:
+            translation_data['surveys'] = surveys
 
         return translation_data

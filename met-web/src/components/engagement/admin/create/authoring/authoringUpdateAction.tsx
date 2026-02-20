@@ -82,6 +82,23 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         }
     }
 
+    // Update engagement feedback and survey settings
+    if (formData.get('form_source') === 'feedback') {
+        try {
+            const selectedSurvey = formData.get('selected_survey_id');
+            const numericSelectedSurvey = selectedSurvey ? Number(selectedSurvey) : undefined;
+            await patchEngagement({
+                id: engagementId as unknown as number,
+                feedback_heading: (formData.get('feedback_heading') as string) || undefined,
+                feedback_body: (formData.get('feedback_body') as string) || undefined,
+                selected_survey_id: (numericSelectedSurvey as unknown as number) || undefined,
+            });
+        } catch (e) {
+            console.error('Error updating engagement', e);
+            errors.push(e);
+        }
+    }
+
     // Update engagement metadata if necessary.
     if (formData.get('metadata_value') && formData.get('taxon_id')) {
         try {

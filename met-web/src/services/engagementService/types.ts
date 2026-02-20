@@ -1,5 +1,6 @@
 import { Engagement } from 'models/engagement';
 import { EngagementStatusBlock } from 'models/engagementStatusBlock';
+import { Survey } from 'models/survey';
 
 export interface EngagementState {
     allEngagements: Engagement[];
@@ -44,4 +45,8 @@ export interface PatchEngagementRequest {
     status_block?: EngagementStatusBlock[];
     is_internal?: boolean;
     sponsor_name?: string;
+    feedback_heading?: string;
+    feedback_body?: string;
+    surveys?: Survey[];
+    selected_survey_id?: number;
 }

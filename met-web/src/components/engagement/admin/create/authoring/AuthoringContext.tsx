@@ -48,6 +48,16 @@ const summarySchema = yup.object({
     form_source: yup.string().required(),
 });
 
+const feedbackSchema = yup.object({
+    id: yup.number().required(),
+    feedback_heading: yup.string().required().max(60),
+    feedback_body: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
+        return value?.getCurrentContent()?.hasText();
+    }),
+    surveys: yup.array().default([]),
+    selected_survey_id: yup.number().typeError('Please select a valid survey or the None option.').integer(),
+});
+
 const authoringTemplateSchema = yup.object({
     name: yup.string().required('Engagement title is required'),
     eyebrow: yup.string().nullable().max(40, 'Eyebrow text must be 40 characters or less'),
@@ -100,6 +110,7 @@ const authoringTemplateSchema = yup.object({
 export interface EngagementUpdateData
     extends
         yup.TypeOf<typeof authoringTemplateSchema>,
+        yup.TypeOf<typeof feedbackSchema>,
         yup.TypeOf<typeof summarySchema>,
         yup.TypeOf<typeof detailsTabsSchema> {
     id: number;
@@ -165,6 +176,11 @@ export const defaultValuesObject = {
     view_results_link_type: 'internal',
     view_results_section_link: EngagementViewSections.PROVIDE_FEEDBACK,
     view_results_external_link: '',
+    // Feedback fields
+    feedback_heading: '',
+    feedback_body: '',
+    surveys: [],
+    selected_survey_id: -1,
     // Details fields
     details_tabs: [],
     // Determines which page the form is being sent from
@@ -200,6 +216,8 @@ export const AuthoringContext = () => {
 
     const resolver = useMemo<Resolver<EngagementUpdateData> | undefined>(() => {
         switch (pageName) {
+            case 'feedback':
+                return yupResolver(feedbackSchema) as unknown as Resolver<EngagementUpdateData>;
             case 'banner':
                 // on the banner page, we need inter-field validation so we use the yup resolver
                 return yupResolver(authoringTemplateSchema) as unknown as Resolver<EngagementUpdateData>;
@@ -225,9 +243,9 @@ export const AuthoringContext = () => {
         fetcher.submit(
             createSearchParams({
                 id: 0 === data.id ? '' : data.id.toString(),
-                status_id: 0 === data.status_id ? '' : data.status_id.toString(),
-                taxon_id: 0 === data.taxon_id ? '' : data.taxon_id.toString(),
-                content_id: 0 === data.content_id ? '' : data.content_id.toString(),
+                status_id: 0 === data.status_id ? '' : String(data.status_id),
+                taxon_id: 0 === data.taxon_id ? '' : String(data.taxon_id),
+                content_id: 0 === data.content_id ? '' : String(data.content_id),
                 name: data.name,
                 start_date:
                     '1970-01-01' === data.start_date.format('YYYY-MM-DD') ? '' : data.start_date.format('YYYY-MM-DD'),
@@ -262,6 +280,12 @@ export const AuthoringContext = () => {
                 view_results_link_type: data.view_results_link_type || '',
                 view_results_section_link: data.view_results_section_link || '',
                 view_results_external_link: data.view_results_external_link || '',
+
+                feedback_heading: data.feedback_heading || '',
+                feedback_body:
+                    data.feedback_body && JSON.stringify(convertToRaw(data.feedback_body.getCurrentContent())),
+                surveys: JSON.stringify(data.surveys),
+                selected_survey_id: data.selected_survey_id?.toString() || '',
 
                 details_tabs: JSON.stringify(
                     data.details_tabs.map((tab) => ({

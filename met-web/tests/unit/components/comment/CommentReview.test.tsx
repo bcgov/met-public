@@ -100,6 +100,7 @@ describe('CommentReview Component', () => {
             engagement_status: { id: 0, status_name: '' },
             surveys: [],
             submission_status: 1,
+            tenant_id: 0,
             submissions_meta_data: {
                 total: 0,
                 pending: 0,
@@ -107,6 +108,9 @@ describe('CommentReview Component', () => {
                 rejected: 0,
                 approved: 0,
             },
+            feedback_heading: '',
+            feedback_body: '',
+            selected_survey_id: 0,
             status_block: [],
             is_internal: false,
             consent_message: '',

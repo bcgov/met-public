@@ -1,15 +1,21 @@
 import React, { createContext, JSX, useEffect, useState } from 'react';
 import { Engagement } from 'models/engagement';
-import { useNavigate, useLocation } from 'react-router';
-import { getEngagement } from 'services/engagementService';
+import { useParams } from 'react-router';
+import { getEngagements } from 'services/engagementService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Survey } from 'models/survey';
+import { getSurveysPage } from 'services/surveyService';
+
+const PAGE = 1;
+
+const PAGE_SIZE = 2000;
+
+const SORT_ORDER = 'asc';
 
 interface CreateSurveyContextValues {
     surveyForm: SurveyForm;
     handleSurveyFormChange: (_form: SurveyForm) => void;
-    engagementToLink: Engagement | null;
     loading: boolean;
     availableSurveys: Survey[] | null;
     setAvailableSurveys: (surveys: Survey[]) => void;
@@ -23,22 +29,17 @@ interface CreateSurveyContextValues {
 
 const initialSurveyForm = {
     name: '',
+    engagement_id: -1,
+    survey_id: -1,
 };
 export const CreateSurveyContext = createContext<CreateSurveyContextValues>({
     surveyForm: initialSurveyForm,
-    handleSurveyFormChange: (_form: SurveyForm) => {
-        //empty method
-    },
-    engagementToLink: null,
+    handleSurveyFormChange: (_form: SurveyForm) => {},
     loading: true,
     availableSurveys: null,
-    setAvailableSurveys: (_surveys: Survey[]) => {
-        //empty method
-    },
+    setAvailableSurveys: (_surveys: Survey[]) => {},
     availableEngagements: null,
-    setAvailableEngagements: (_engagements: Engagement[]) => {
-        //empty method
-    },
+    setAvailableEngagements: (_engagements: Engagement[]) => {},
     isDisclaimerChecked: false,
     setIsDisclaimerChecked: (_checked: boolean) => {
         throw new Error('setIsDisclaimerChecked method not implemented');
@@ -49,56 +50,86 @@ export const CreateSurveyContext = createContext<CreateSurveyContextValues>({
     },
 });
 
-interface SurveyForm {
+export interface SurveyForm {
     name: string;
+    engagement_id: number;
+    survey_id?: number;
     structure?: unknown;
 }
 
 export const CreateSurveyContextProvider = ({ children }: { children: JSX.Element }) => {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
     const [surveyForm, setSurveyForm] = useState<SurveyForm>(initialSurveyForm);
     const [loading, setLoading] = useState(true);
-    const [engagementToLink, setEngagementToLink] = useState<Engagement | null>(null);
     const [availableSurveys, setAvailableSurveys] = useState<Survey[] | null>(null);
     const [availableEngagements, setAvailableEngagements] = useState<Engagement[] | null>(null);
     const [isDisclaimerChecked, setIsDisclaimerChecked] = useState(false);
     const [disclaimerError, setDisclaimerError] = useState(false);
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const engagementId = searchParams.get('engagementId');
-
-    useEffect(() => {
-        fetchEngagementToLink();
-    }, [engagementId]);
-
-    const handleEngagement = (engagement: Engagement) => {
-        if (engagement.surveys?.length > 0) {
-            dispatch(openNotification({ severity: 'error', text: `Engagement ${engagement.id} already has a survey` }));
-            navigate(-1);
-            return;
-        }
-
-        setEngagementToLink(engagement);
-        setLoading(false);
-    };
-
-    const fetchEngagementToLink = async () => {
-        if (!engagementId || isNaN(Number(engagementId))) {
-            setLoading(false);
-            return;
-        }
-        try {
-            const engagement = await getEngagement(Number(engagementId));
-            handleEngagement(engagement);
-        } catch {
-            dispatch(openNotification({ severity: 'error', text: 'Error fetching the linked engagement' }));
-            navigate(-1);
-        }
-    };
+    const params = useParams();
+    const tenantId = Number(params.tenantId || '');
 
     const handleSurveyFormChange = (form: SurveyForm) => {
         setSurveyForm(form);
+    };
+
+    useEffect(() => {
+        if (!availableEngagements) {
+            handleFetchEngagements(PAGE, PAGE_SIZE, SORT_ORDER, tenantId);
+        }
+    }, [availableEngagements]);
+
+    useEffect(() => {
+        if (!availableSurveys) {
+            handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
+        }
+    }, [availableEngagements]);
+
+    const handleFetchSurveys = async (page: number, size: number, sort_order: 'asc' | 'desc' | undefined) => {
+        try {
+            const fetchedSurveys = await getSurveysPage({
+                page: page,
+                size: size,
+                sort_order: sort_order,
+                exclude_hidden: true,
+            });
+            setAvailableSurveys(fetchedSurveys.items);
+        } catch {
+            dispatch(openNotification({ severity: 'error', text: 'Error occurred while fetching available surveys' }));
+        }
+    };
+
+    useEffect(() => {
+        handleFetchSurveys(PAGE, PAGE_SIZE, SORT_ORDER);
+    }, []);
+
+    const handleFetchEngagements = async (
+        page: number,
+        size: number,
+        sort_order: 'asc' | 'desc' | undefined,
+        tenant_id: number | undefined,
+    ) => {
+        setLoading(true);
+        try {
+            const fetchedEngagements = await getEngagements({
+                page: page,
+                size: size,
+                sort_order: sort_order,
+                tenant_id: tenant_id,
+            });
+            if (fetchedEngagements?.items) {
+                const filteredEngagements = fetchedEngagements?.items.filter(
+                    // Filter out engagements that aren't from this tenant
+                    (fe) => fe.tenant_id !== tenantId,
+                );
+                setAvailableEngagements(filteredEngagements);
+            }
+        } catch {
+            dispatch(
+                openNotification({ severity: 'error', text: 'Error occurred while fetching available engagements' }),
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -106,7 +137,6 @@ export const CreateSurveyContextProvider = ({ children }: { children: JSX.Elemen
             value={{
                 surveyForm,
                 handleSurveyFormChange,
-                engagementToLink,
                 loading,
                 availableSurveys,
                 setAvailableSurveys,

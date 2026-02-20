@@ -2,26 +2,15 @@ import React from 'react';
 import { Grid, Modal } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { useAppSelector, useAppTranslation } from 'hooks';
-import { useAsyncValue, useNavigate } from 'react-router';
-import { EmailVerification } from 'models/emailVerification';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 import { Button } from 'components/common/Input';
 import { BodyText } from 'components/common/Typography';
-
-interface PromiseResult<T> {
-    status: 'fulfilled' | 'rejected';
-    value?: T;
-}
 
 export const InvalidTokenModal = () => {
     const { t: translate } = useAppTranslation();
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const navigate = useNavigate();
-    const [verificationResult, slugResult] = useAsyncValue() as [
-        PromiseResult<EmailVerification>,
-        PromiseResult<{ slug: string }>,
-    ];
-    const verification = verificationResult?.value;
-    const slug = slugResult.value?.slug ?? '';
+    const { verification, slug } = useRouteLoaderData('survey');
     const languagePath = `/${sessionStorage.getItem('languageId')}`;
 
     const navigateToEngagement = () => {

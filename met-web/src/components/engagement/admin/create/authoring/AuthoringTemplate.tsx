@@ -43,7 +43,7 @@ export const getLanguageValue = (languageCode: string, languages: Language[]) =>
 
 const AuthoringTemplate = () => {
     const { onSubmit, defaultValues, setDefaultValues, fetcher }: AuthoringContextType = useOutletContext();
-    const { engagementId } = useParams() as { engagementId: string }; // We need the engagement ID quickly, so let's grab it from useParams
+    const { engagementId } = useParams() as { engagementId: string; tenantId: string };
     const { engagement, languages } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
     const dispatch = useAppDispatch();
     const currentLanguage = useAppSelector((state) => state.language);

@@ -1,3 +1,18 @@
+## February 18, 2026
+
+- Admin authoring - provide feedback section [🎟️ DEP-94](https://citz-gdx.atlassian.net/browse/DEP-94)
+  - Modified existing "Provide Feedback" section to reflect needed controls (Autocomplete survey selector), as per Steve
+  - Hooked up all form controls and created necessary columns in Engagement models/schemas to accomodate data
+  - Got validation working and added navigate away message when form is dirty
+  - Added a confirm modal if engagement is published and user is changing the survey
+- Fixed the survey section
+  - Got the survey creation wizard working
+  - Added mandatory field to select connected engagement when creating a new survey
+  - Fixed invalid calls for survey setting data before it exists
+  - Modified the survey loader to deliver data instead of promises due to complexity of survey data needs
+  - Fixed form validation that was misfiring
+  - Replaced many deprecated components (not exhaustive)
+
 ## February 10, 2026
 
 - **Chore** Move new look route from `/new-look` to base path `/` [🎟️ DEP-217](https://citz-gdx.atlassian.net/browse/DEP-217)

@@ -3,6 +3,9 @@ import { createDefaultEngagement, Engagement } from './engagement';
 
 export interface Survey {
     id: number;
+    engagement_id: number;
+    engagement_status_id?: number;
+    tenant_id: number;
     name: string;
     responseCount: number;
     created_date: string;
@@ -12,8 +15,6 @@ export interface Survey {
     form_json?: FormBuilderData;
     comments?: unknown;
     comments_meta_data: SurveyCommentData;
-    engagement_id: number;
-    engagement_status_id?: number;
 }
 
 export interface SurveyCommentData {
@@ -49,5 +50,6 @@ export const createDefaultSurvey = (): Survey => {
             needs_further_review: 0,
         },
         engagement_id: 0,
+        tenant_id: 0,
     };
 };

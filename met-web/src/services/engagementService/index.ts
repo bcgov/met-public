@@ -29,6 +29,7 @@ export interface GetEngagementsParams {
     include_banner_url?: boolean;
     has_team_access?: boolean;
     metadata?: string;
+    tenant_id?: number;
 }
 export const getEngagements = async (params: GetEngagementsParams = {}): Promise<Page<Engagement>> => {
     const responseData = await http.GetRequest<Page<Engagement>>(Endpoints.Engagement.GET_LIST, params);

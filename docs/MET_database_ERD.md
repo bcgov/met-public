@@ -20,6 +20,9 @@ erDiagram
         timestamp scheduled_date
         integer tenant_id FK "The id from tenant"
         boolean is_internal
+        string feedback_heading
+        json feedback_body
+        string selected_survey_id
     }
     survey {
         integer id PK

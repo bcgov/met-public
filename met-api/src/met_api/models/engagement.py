@@ -48,8 +48,20 @@ class Engagement(BaseModel):
     published_date = db.Column(db.DateTime, nullable=True)
     scheduled_date = db.Column(db.DateTime, nullable=True)
     banner_filename = db.Column(db.String(), unique=False, nullable=True)
+    feedback_heading = db.Column(db.String(60), unique=False, nullable=True)
+    feedback_body = db.Column(JSON, unique=False, nullable=True)
+    selected_survey_id = db.Column(db.Integer, ForeignKey(
+        'survey.id', ondelete='SET NULL'
+    ), nullable=True)
     surveys = db.relationship(
-        'Survey', backref='engagement', cascade='all, delete')
+        'Survey',
+        back_populates='engagement',
+        primaryjoin='Survey.engagement_id == Engagement.id',
+        foreign_keys='Survey.engagement_id',
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+        lazy='selectin',
+    )
     status_block = db.relationship(
         'EngagementStatusBlock', backref='engagement')
     tenant_id = db.Column(
@@ -135,6 +147,9 @@ class Engagement(BaseModel):
             'start_date': engagement.get('start_date', None),
             'end_date': engagement.get('end_date', None),
             'status_id': engagement.get('status_id', None),
+            'feedback_heading': engagement.get('feedback_heading', None),
+            'feedback_body': engagement.get('feedback_body', None),
+            'selected_survey_id': engagement.get('selected_survey_id', None),
             # to fix the bug with UI not passing published date always.
             # Defaulting to existing
             'published_date': engagement.get(

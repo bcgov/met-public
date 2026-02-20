@@ -1,11 +1,10 @@
 import React from 'react';
 import { Banner } from 'components/banner/Banner';
 import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
-import { Engagement } from 'models/engagement';
-import { useAsyncValue } from 'react-router';
+import { useRouteLoaderData } from 'react-router';
 
 export const SurveyBanner = () => {
-    const engagement = useAsyncValue() as Engagement | undefined;
+    const { engagement } = useRouteLoaderData('survey');
 
     if (!engagement) return null;
 

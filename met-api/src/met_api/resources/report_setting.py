@@ -47,7 +47,7 @@ class ReportSetting(Resource):
             if report_setting:
                 return jsonify(report_setting), HTTPStatus.OK
 
-            return 'Report setting was not found', HTTPStatus.NOT_FOUND
+            return 'Report setting was not found', HTTPStatus.NO_CONTENT
         except KeyError:
             return 'Report setting was not found', HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

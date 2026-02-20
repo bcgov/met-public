@@ -157,8 +157,8 @@ class Engagements(Resource):
             requestjson['updated_by'] = user_id
 
             engagement_schema = EngagementSchema()
-            engagement_schema.load(requestjson, partial=True)
-            engagement = EngagementService().edit_engagement(requestjson)
+            payload = engagement_schema.load(requestjson, partial=True)
+            engagement = EngagementService().edit_engagement(payload)
 
             return engagement_schema.dump(engagement), HTTPStatus.OK
         except KeyError as err:
@@ -166,4 +166,4 @@ class Engagements(Resource):
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValidationError as err:
-            return str(err.messages), HTTPStatus.INTERNAL_SERVER_ERROR
+            return str(err.messages), HTTPStatus.BAD_REQUEST

@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState, Suspense } from 'react';
-import { useNavigate, useAsyncValue, useRouteLoaderData, Await, useRevalidator } from 'react-router';
-import { Survey } from 'models/survey';
+import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
-import { Engagement } from 'models/engagement';
 import {
     Grid,
     Stack,
@@ -43,6 +41,7 @@ import {
 import { Else, If, Then } from 'react-if';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { SurveyLoaderData } from './SurveyLoader';
+import { fetchSurveyReportSettings } from 'services/surveyService/reportSettingsService';
 
 interface SurveyForm {
     id: string;
@@ -57,8 +56,10 @@ export const FormBuilderPage = () => {
     const dispatch = useAppDispatch();
     const revalidator = useRevalidator();
 
-    const [survey, engagement] = useAsyncValue() as [Survey, Engagement];
+    const { survey, engagement, reportSettings } = useRouteLoaderData('survey');
+    const [settings, setSettings] = useState(reportSettings);
     const [formDefinition, setFormDefinition] = useState(survey.form_json);
+    const [isMultiPage, setIsMultiPage] = useState(formDefinition?.display === 'wizard');
     const [isFormDirty, setIsFormDirty] = useState(false);
     const [hasChanged, setHasChanged] = useState(false);
     const [saveError, setSaveError] = useState(false);
@@ -92,8 +93,6 @@ export const FormBuilderPage = () => {
     const name = watch('name');
     const hasUnsavedWork = (isDirty || isFormDirty) && !isSubmitting;
 
-    const isMultiPage = formDefinition?.display === 'wizard';
-
     const hasEngagement = Boolean(survey?.engagement_id);
     const isEngagementDraft = engagement?.status_id === EngagementStatus.Draft;
     const hasPublishedEngagement = hasEngagement && !isEngagementDraft;
@@ -122,6 +121,17 @@ export const FormBuilderPage = () => {
                     ...data,
                     form_json: formDef,
                 });
+                // Synchronize survey report settings
+                if (formDef?.display === 'wizard' && formDef.components?.length > 0) {
+                    try {
+                        const newSettings = await fetchSurveyReportSettings(String(survey?.id));
+                        setSettings(newSettings || []);
+                    } catch (e) {
+                        // No results, don't throw
+                        setSettings([]);
+                        console.log(e);
+                    }
+                }
                 reset(result as Omit<SurveyForm, 'form_json' | 'id'>);
                 setAutoSaveNotificationOpen(true);
                 setIsFormDirty(false);
@@ -257,6 +267,7 @@ export const FormBuilderPage = () => {
                             <Switch
                                 checked={isMultiPage}
                                 onChange={() => {
+                                    const newMultiPageVal = !isMultiPage;
                                     dispatch(
                                         openNotificationModal({
                                             open: true,
@@ -265,9 +276,9 @@ export const FormBuilderPage = () => {
                                                 subText: [
                                                     {
                                                         text: `You will be changing the survey type from ${
-                                                            isMultiPage
-                                                                ? 'multi page to single page'
-                                                                : 'single page to multi page'
+                                                            newMultiPageVal
+                                                                ? 'single page to multi page'
+                                                                : 'multi page to single page'
                                                         }.`,
                                                     },
                                                     {
@@ -279,8 +290,9 @@ export const FormBuilderPage = () => {
                                                     },
                                                 ],
                                                 handleConfirm: () => {
+                                                    setIsMultiPage(newMultiPageVal);
                                                     onEditorChange({
-                                                        display: isMultiPage ? 'form' : 'wizard',
+                                                        display: newMultiPageVal ? 'wizard' : 'form',
                                                         components: [],
                                                     });
                                                 },
@@ -374,7 +386,11 @@ export const FormBuilderPage = () => {
             </Grid>
             <Grid item xs={12}>
                 <Stack direction="row" spacing={2}>
-                    <Button variant="primary" disabled={!formDefinition} onClick={handleSubmit(formSubmitHandler)}>
+                    <Button
+                        variant="primary"
+                        disabled={!formDefinition || !isMultiPage || !Array.isArray(settings) || settings?.length < 1}
+                        onClick={handleSubmit(formSubmitHandler)}
+                    >
                         Report Settings
                     </Button>
                     <Button variant="secondary" href="/surveys">
@@ -435,13 +451,11 @@ const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: bo
 };
 
 const SurveyFormBuilder = () => {
-    const { survey: surveyPromise, engagement: engagementPromise } = useRouteLoaderData('survey') as SurveyLoaderData;
-
-    const surveyDataPromise = Promise.all([surveyPromise, engagementPromise]);
+    const { survey, engagement } = useRouteLoaderData('survey') as SurveyLoaderData;
 
     return (
         <Suspense fallback={<FormBuilderSkeleton />}>
-            <Await resolve={surveyDataPromise}>
+            <Await resolve={[survey, engagement]}>
                 <FormBuilderPage />
             </Await>
         </Suspense>
