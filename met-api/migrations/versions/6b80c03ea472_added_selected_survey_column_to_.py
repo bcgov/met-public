@@ -19,13 +19,7 @@ depends_on = None
 def upgrade():
     op.add_column('engagement', sa.Column('selected_survey_id', sa.Integer(), nullable=True))
     op.create_foreign_key('engagement_selected_survey_fk', 'engagement', 'survey', ['selected_survey_id'], ['id'], ondelete='SET NULL')
-    op.alter_column('survey', 'engagement_id',
-               existing_type=sa.INTEGER(),
-               nullable=False)
 
 def downgrade():
-    op.alter_column('survey', 'engagement_id',
-               existing_type=sa.INTEGER(),
-               nullable=True)
     op.drop_constraint('engagement_selected_survey_fk', 'engagement', type_='foreignkey')
     op.drop_column('engagement', 'selected_survey_id')
