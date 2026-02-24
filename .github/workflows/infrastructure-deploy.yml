@@ -25,6 +25,7 @@ on:
           - notify-api
           - met-api
           - met-web
+          - dagster
           - analytics-api
           - met-analytics
           - locust
@@ -71,6 +72,7 @@ jobs:
             openshift/web/**
             openshift/analytics-api/**
             openshift/met-analytics/**
+            openshift/met-etl/**
             openshift/dagster/**
             openshift/locust/**
 
