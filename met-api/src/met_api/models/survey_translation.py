@@ -58,6 +58,13 @@ class SurveyTranslation(BaseModel):
         return survey_translation_records
 
     @staticmethod
+    def get_survey_translation_list_by_survey_id(survey_id=None):
+        """Get all survey translations for a given survey_id."""
+        query = SurveyTranslation.query.filter_by(survey_id=survey_id)
+        survey_translation_list = query.all()
+        return survey_translation_list
+
+    @staticmethod
     def create_survey_translation(data):
         """Create a new survey translation."""
         survey_translation = SurveyTranslation(

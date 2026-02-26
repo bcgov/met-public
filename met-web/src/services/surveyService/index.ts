@@ -101,19 +101,12 @@ export const linkSurvey = async (params: LinkPutSurveyRequest): Promise<Survey> 
     return response.data;
 };
 
-interface UnlinkPutSurveyRequest {
-    id: number;
-    engagement_id: number;
-}
-export const unlinkSurvey = async (params: UnlinkPutSurveyRequest): Promise<Survey> => {
-    const url = replaceAllInURL({
-        URL: Endpoints.Survey.UNLINK_FROM_ENGAGEMENT,
-        params: {
-            survey_id: String(params.id),
-            engagement_id: String(params.engagement_id),
-        },
-    });
-
-    const response = await http.DeleteRequest<Survey>(url);
-    return response.data;
+export const deleteSurvey = async (surveyId: number): Promise<{ id: number }> => {
+    const url = replaceUrl(Endpoints.Survey.DELETE, 'survey_id', String(surveyId));
+    try {
+        const response = await http.DeleteRequest<{ id: number }>(url);
+        return response.data;
+    } catch (e) {
+        return Promise.reject(Error('Failed to delete survey. ' + (e instanceof Error ? e.message : String(e))));
+    }
 };

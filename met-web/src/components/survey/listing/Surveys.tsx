@@ -47,6 +47,7 @@ const Surveys = () => {
         searchText,
         setSearchText,
         searchFilter,
+        loadSurveys,
     } = useContext(SurveyListingContext);
     const navigate = useNavigate();
 
@@ -383,7 +384,7 @@ const Surveys = () => {
             label: 'Actions',
             allowSort: false,
             renderCell: (row: Survey) => {
-                return <ActionsDropDown survey={row} />;
+                return <ActionsDropDown survey={row} loadSurveys={loadSurveys} />;
             },
             customStyle: {
                 minWidth: '200px',

@@ -19,6 +19,7 @@ from datetime import datetime, timedelta
 
 from faker import Faker
 from freezegun import freeze_time
+import pytest
 
 from met_api.constants.engagement_status import Status
 from met_api.models import Survey as SurveyModel
@@ -83,3 +84,31 @@ def test_get_open_survey_time_based(session):
     with freeze_time(day_before_time_delay):
         survey_new = SurveyModel.get_open(survey.id)
         assert survey_new is not None, 'survey fetchable since one day before closure.'
+
+
+def test_delete_survey_success(session):
+    """Assert that delete_survey removes the survey and returns the deleted instance."""
+    survey = factory_survey_model()
+    db.session.add(survey)
+    db.session.commit()
+    survey_id = survey.id
+
+    found = SurveyModel.find_by_id(survey_id)
+    assert found is not None
+
+    deleted = SurveyModel.delete_survey(survey_id)
+
+    assert deleted is not None
+    assert deleted.id == survey_id
+
+    assert SurveyModel.find_by_id(survey_id) is None
+
+
+def test_delete_survey_not_found_raises(session):
+    """Assert that delete_survey raises ValueError if the survey does not exist."""
+    non_existent_id = 999999
+
+    with pytest.raises(ValueError) as excinfo:
+        SurveyModel.delete_survey(non_existent_id)
+
+    assert str(excinfo.value) == 'Survey not found.'

@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Modal, Select } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
 import { Palette } from 'styles/Theme';
 import { Survey } from 'models/survey';
+import { openNotification } from 'services/notificationService/notificationSlice';
+import { useDispatch } from 'react-redux';
+import { deleteSurvey } from 'services/surveyService';
+import ConfirmModal from 'components/common/Modals/ConfirmModal';
+import { getEngagement } from 'services/engagementService';
 
 interface ActionDropDownItem {
     value: number;
@@ -13,9 +18,11 @@ interface ActionDropDownItem {
     action?: () => void;
     condition?: boolean;
 }
-export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
+export const ActionsDropDown = ({ survey, loadSurveys }: { survey: Survey; loadSurveys: () => void }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
+    const [deleteSurveyModalOpen, setDeleteSurveyModalOpen] = React.useState(false);
     const engagement = survey.engagement;
     const engagementId = engagement?.id ?? 0;
     const submissionHasBeenOpened =
@@ -67,6 +74,27 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
         );
     };
 
+    const removeSurvey = async () => {
+        setDeleteSurveyModalOpen(true);
+    };
+
+    const confirmRemoveSurvey = async () => {
+        setDeleteSurveyModalOpen(false);
+        try {
+            if (survey.engagement_id) {
+                const engagement = await getEngagement(survey.engagement_id);
+                if (engagement?.status_id === EngagementStatus.Published) {
+                    throw new Error('Cannot delete a survey that is linked to a published engagement');
+                }
+            }
+            await deleteSurvey(survey.id);
+            dispatch(openNotification({ text: 'The survey was successfully deleted', severity: 'success' }));
+            loadSurveys();
+        } catch (error) {
+            dispatch(openNotification({ text: String(error), severity: 'error' }));
+        }
+    };
+
     const ITEMS: ActionDropDownItem[] = useMemo(
         () => [
             {
@@ -109,26 +137,56 @@ export const ActionsDropDown = ({ survey }: { survey: Survey }) => {
                 },
                 condition: canEditSurvey(),
             },
+            {
+                value: 6,
+                label: 'Delete Survey',
+                action: () => {
+                    removeSurvey();
+                },
+                condition: roles.includes(USER_ROLES.SUPER_ADMIN) || roles.includes(USER_ROLES.EDIT_ALL_SURVEYS),
+            },
         ],
         [engagementId],
     );
 
     return (
-        <Select
-            id={`action-drop-down-${survey.id}`}
-            value={0}
-            fullWidth
-            size="small"
-            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
-        >
-            <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
-                {'(Select One)'}
-            </MenuItem>
-            {ITEMS.filter((item) => item.condition).map((item) => (
-                <MenuItem key={item.value} value={item.value} onClick={item.action}>
-                    {item.label}
+        <>
+            {/* prevent user from accidentally deleting a survey */}
+            <Modal open={deleteSurveyModalOpen} aria-describedby="delete-survey-modal-subtext">
+                <ConfirmModal
+                    style="danger"
+                    header={`Are you sure you want to delete ${survey.name || 'this survey'}?`}
+                    subHeader="This action cannot be undone."
+                    subTextId="delete-survey-modal-subtext"
+                    subText={[
+                        {
+                            text: 'You will not be able to delete a survey that is being used for a public engagement.',
+                            bold: false,
+                        },
+                    ]}
+                    handleConfirm={confirmRemoveSurvey}
+                    handleClose={() => setDeleteSurveyModalOpen(false)}
+                    confirmButtonText={'Delete Survey'}
+                    cancelButtonText={'Cancel & Go Back'}
+                />
+            </Modal>
+
+            <Select
+                id={`action-drop-down-${survey.id}`}
+                value={0}
+                fullWidth
+                size="small"
+                sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+            >
+                <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
+                    {'(Select One)'}
                 </MenuItem>
-            ))}
-        </Select>
+                {ITEMS.filter((item) => item.condition).map((item) => (
+                    <MenuItem key={item.value} value={item.value} onClick={item.action}>
+                        {item.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </>
     );
 };

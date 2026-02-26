@@ -209,3 +209,22 @@ class SurveysClone(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@cors_preflight('DELETE, OPTIONS')
+@API.route('/<survey_id>/delete')
+class SurveyDelete(Resource):
+    """Resource for deleting surveys."""
+
+    @staticmethod
+    @require_role([Role.EDIT_ALL_SURVEYS.value])
+    @cross_origin(origins=allowedorigins())
+    def delete(survey_id: int):
+        """Delete a survey."""
+        try:
+            SurveyService.delete(survey_id)
+            return {'id': survey_id}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
