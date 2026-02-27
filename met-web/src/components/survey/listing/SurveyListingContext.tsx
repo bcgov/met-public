@@ -52,6 +52,7 @@ export interface SurveyListingContextState {
     tableLoading: boolean;
     surveys: Survey[];
     initialSearchFilters: AdvancedSearchFilters;
+    loadSurveys: () => void;
 }
 
 export const SurveyListingContext = createContext<SurveyListingContextState>({
@@ -87,6 +88,9 @@ export const SurveyListingContext = createContext<SurveyListingContextState>({
     tableLoading: false,
     surveys: [],
     initialSearchFilters: initialSearchFilters,
+    loadSurveys: () => {
+        throw new Error('loadSurveys not implemented');
+    },
 });
 
 interface SurveyListingContextProviderProps {
@@ -204,6 +208,7 @@ export const SurveyListingContextProvider = ({ children }: SurveyListingContextP
                 setAdvancedSearchFilters,
                 surveys,
                 initialSearchFilters,
+                loadSurveys,
             }}
         >
             {children}

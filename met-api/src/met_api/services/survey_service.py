@@ -1,5 +1,6 @@
 """Service for survey management."""
 from http import HTTPStatus
+from sqlalchemy.exc import SQLAlchemyError
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
@@ -9,6 +10,7 @@ from met_api.models.db import db, transactional
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.report_setting import ReportSetting
 from met_api.models.survey_search_options import SurveySearchOptions
+from met_api.models.survey_translation import SurveyTranslation
 from met_api.schemas.engagement import EngagementSchema
 from met_api.schemas.survey import SurveySchema
 from met_api.services import authorization
@@ -178,7 +180,12 @@ class SurveyService:
         is_template = survey.get('is_template', None)
         cls.validate_template_surveys_edit_access(is_template, user_roles)
 
-        if engagement and engagement.get('status_id', None) not in [Status.Draft.value, Status.Published.value]:
+        if engagement and engagement.get('status_id', None) not in [
+            Status.Draft.value,
+            Status.Published.value,
+            Status.Unpublished.value,
+            Status.Scheduled.value
+        ]:
             raise ValueError('Engagement already published')
 
         updated_survey = SurveyModel.update_survey(data)
@@ -263,3 +270,36 @@ class SurveyService:
         engagement_status = linked_engagement.get('engagement_status')
         if engagement_status.get('id') != Status.Draft.value:
             raise ValueError('Cannot unlink survey from engagement with status ' + engagement_status.get('status_name'))
+
+    @classmethod
+    def delete(cls, survey_id: int):
+        """Delete an existing survey and its translations."""
+        one_of_roles = (Role.SUPER_ADMIN.value, Role.EDIT_ALL_SURVEYS.value)
+        authorization.check_auth(one_of_roles=one_of_roles)
+
+        survey = SurveyModel.find_by_id(survey_id)
+        if not survey:
+            raise ValueError('Survey not found')
+
+        try:
+            SurveyService._verify_linked_engagement_status(survey.engagement_id)
+            for tx in (SurveyTranslation.get_survey_translation_list_by_survey_id(survey_id) or []):
+                SurveyTranslation.delete_survey_translation(tx.id)
+
+            deleted = SurveyModel.delete_survey(survey_id)
+
+        except ValueError as exc:
+            raise ValueError(str(exc)) from exc
+        except SQLAlchemyError as e:
+            raise RuntimeError('Database error while deleting survey') from e
+        return {'id': deleted.id if hasattr(deleted, 'id') else survey_id}
+
+    @staticmethod
+    def _verify_linked_engagement_status(engagement_id):
+        """Verify that the engagement exists and check if it is published."""
+        if engagement_id:
+            engagement = EngagementModel.find_by_id(engagement_id)
+            if not engagement:
+                raise ValueError('Linked engagement not found')
+            if engagement.status_id == Status.Published.value:
+                raise ValueError('Cannot delete a survey that is linked to a published engagement')

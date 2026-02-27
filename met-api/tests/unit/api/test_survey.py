@@ -482,3 +482,38 @@ def test_survey_unlink(client, jwt, session, side_effect, expected_status,
             content_type=ContentType.JSON.value
         )
     assert rv.status_code == expected_status
+
+
+def test_delete_survey(client, jwt, session, mocker,
+                       setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that the resource DELETE /api/surveys/<id>/delete returns 200 on success and maps errors correctly."""
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    survey = factory_survey_model()
+    survey_id = str(survey.id)
+
+    mocker.patch('met_api.services.survey_service.SurveyService.delete', return_value=None)
+    rv = client.delete(
+        f'{surveys_url}{survey_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.get_json() == {'id': survey_id}
+
+    mocker.patch('met_api.services.survey_service.SurveyService.delete', side_effect=KeyError('boom'))
+    rv = client.delete(
+        f'{surveys_url}{survey_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    mocker.patch('met_api.services.survey_service.SurveyService.delete', side_effect=ValueError('bad'))
+    rv = client.delete(
+        f'{surveys_url}{survey_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST

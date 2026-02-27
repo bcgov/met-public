@@ -1,3 +1,12 @@
+## February 26, 2026
+
+- Added delete functionality to survey section [🎟️ DEP-174](https://citz-gdx.atlassian.net/browse/DEP-94)
+  - Integrated with existing translation layer so that survey deletions also delete translations
+  - Prevented surveys from being deleted if they are attached to a published engagement
+  - Menu option only available to super admins or user role edit_all_surveys
+  - Confirmation dialog on survey deletion
+  - Success/failure messages, including a clear 'you can't delete a published engagement' message
+
 ## February 18, 2026
 
 - Admin authoring - provide feedback section [🎟️ DEP-94](https://citz-gdx.atlassian.net/browse/DEP-94)

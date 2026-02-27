@@ -240,3 +240,13 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
         if search_options.published_date_to:
             query = query.filter(Engagement.published_date <= search_options.published_date_to)
         return query
+
+    @classmethod
+    def delete_survey(cls, survey_id) -> Survey:
+        """Delete a single survey by ID."""
+        survey = db.session.get(cls, survey_id)
+        if survey is None:
+            raise ValueError('Survey not found.')
+        db.session.delete(survey)
+        db.session.commit()
+        return survey
