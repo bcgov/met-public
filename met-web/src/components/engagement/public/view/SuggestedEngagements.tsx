@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { Box, Grid } from '@mui/material';
 import { TileSkeleton } from 'components/landing/TileSkeleton';
-import { getEngagements } from 'services/engagementService';
 import { Engagement } from 'models/engagement';
 import EngagementTile from 'components/landing/EngagementTile';
 import { Header2 } from 'components/common/Typography';
@@ -10,21 +9,10 @@ import { faArrowLeft } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
 import { Await, useLoaderData } from 'react-router';
 import { RepeatedGrid } from 'components/common';
-import { EngagementLoaderData } from './EngagementLoader';
+import { EngagementLoaderPublicData } from './EngagementLoaderPublic';
 
 export const SuggestedEngagements = () => {
-    const { engagement } = useLoaderData() as EngagementLoaderData;
-    const suggestedEngagementsPromise = getEngagements({ size: 5, page: 1, include_banner_url: true }).then(
-        async (response) => {
-            const currentEngagement = await engagement;
-            return response.items
-                .filter((engagement) => engagement.id !== currentEngagement.id)
-                .slice(0, 4)
-                .map((value) => ({ value, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ value }) => value);
-        },
-    );
+    const { suggestedEngagements } = useLoaderData() as EngagementLoaderPublicData;
 
     return (
         <section id="suggested-engagements" aria-label="Suggested Engagements">
@@ -57,7 +45,7 @@ export const SuggestedEngagements = () => {
                             </RepeatedGrid>
                         }
                     >
-                        <Await resolve={suggestedEngagementsPromise}>
+                        <Await resolve={suggestedEngagements}>
                             {(engagements: Engagement[]) =>
                                 engagements.map((engagement, index) => {
                                     return (

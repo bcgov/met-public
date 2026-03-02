@@ -5,7 +5,7 @@ import { EngagementStatus } from 'constants/engagementStatus';
 import { Box, Skeleton, Tab } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { EngagementLoaderData } from 'components/engagement/public/view';
+import { EngagementLoaderAdminData } from 'components/engagement/admin/EngagementLoaderAdmin';
 import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 import { Header1 } from 'components/common/Typography';
 import { StatusLabel } from '../create/authoring/AuthoringTemplate';
@@ -15,7 +15,7 @@ const AutoBreadcrumbs = React.lazy(() =>
 );
 
 const AdminEngagementView = () => {
-    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
 
     const EngagementViewTabs = {
         config: 'Configuration',

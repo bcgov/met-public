@@ -12,11 +12,11 @@ import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
 import { Header2 } from 'components/common/Typography';
 import { useRouteLoaderData } from 'react-router';
-import { EngagementLoaderData } from 'engagements/public/view';
+import { EngagementLoaderPublicData } from 'engagements/public/view';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { widgets } = useRouteLoaderData('single-engagement') as EngagementLoaderPublicData;
     const [open, setOpen] = useState(false);
     const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
     const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);

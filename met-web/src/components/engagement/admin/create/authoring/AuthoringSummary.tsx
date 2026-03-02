@@ -10,7 +10,7 @@ import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
 import { Controller, useFormContext } from 'react-hook-form';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
-import { EngagementLoaderData } from 'components/engagement/public/view';
+import { EngagementLoaderAdminData } from 'components/engagement/admin/EngagementLoaderAdmin';
 import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
@@ -27,7 +27,7 @@ const AuthoringSummary = () => {
     } = useFormContext<EngagementUpdateData>();
 
     // Must be a loader assigned to this route or data won't be refreshed on page change.
-    const { engagement } = useLoaderData() as EngagementLoaderData;
+    const { engagement } = useLoaderData() as EngagementLoaderAdminData;
     const hasUnsavedWork = isDirty && !isSubmitting;
 
     // Set current values to default state after saving form

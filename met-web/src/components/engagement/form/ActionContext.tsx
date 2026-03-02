@@ -12,7 +12,7 @@ import { PatchEngagementRequest } from 'services/engagementService/types';
 import { USER_ROLES } from 'services/userService/constants';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { TenantState } from 'reduxSlices/tenantSlice';
-import { EngagementLoaderData } from '../public/view';
+import { EngagementLoaderPublicData } from '../public/view';
 
 const CREATE = 'create';
 
@@ -66,7 +66,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     const [bannerImage, setBannerImage] = useState<File | null>();
     const [savedBannerImageFileName, setSavedBannerImageFileName] = useState('');
     const isCreate = window.location.pathname.includes(CREATE);
-    const { engagement, metadata, taxa } = (useRouteLoaderData('single-engagement') ?? {}) as EngagementLoaderData;
+    const { engagement, metadata, taxa } = (useRouteLoaderData('single-engagement') ??
+        {}) as EngagementLoaderPublicData;
 
     // Load the engagement from the shared individual engagement loader and watch the engagement variable for any changes.
     useEffect(() => {

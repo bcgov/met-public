@@ -74,7 +74,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
             <LazyRoute
                 path=":engagementId"
                 id="single-engagement"
-                loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                loaderLazy={() => import('engagements/admin/EngagementLoaderAdmin')}
                 ErrorBoundaryLazy={() => import('routes/NotFound')}
                 handle={{
                     crumb: async (data: { engagement: Promise<{ name: string; id: number }> }) =>
@@ -103,7 +103,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                             path="publish"
                             ComponentLazy={() => import('engagements/admin/view/PublishingTab')}
                             actionLazy={() => import('engagements/admin/view/publishingAction')}
-                            loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                            loaderLazy={() => import('engagements/admin/EngagementLoaderAdmin')}
                         />
                         <LazyRoute
                             path="*"
@@ -123,7 +123,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                 <LazyRoute
                                     path="banner"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringBanner')}
-                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                                    loaderLazy={() => import('engagements/admin/EngagementLoaderAdmin')}
                                     actionLazy={() =>
                                         import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
@@ -132,7 +132,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                 <LazyRoute
                                     path="summary"
                                     ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringSummary')}
-                                    loaderLazy={() => import('engagements/public/view/EngagementLoader')}
+                                    loaderLazy={() => import('engagements/admin/EngagementLoaderAdmin')}
                                     actionLazy={() =>
                                         import('engagements/admin/create/authoring/authoringUpdateAction')
                                     }
@@ -191,7 +191,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 <LazyRoute path="dashboard/:dashboardType" ComponentLazy={() => import('components/publicDashboard')} />
             </LazyRoute>
             <LazyRoute path=":slug">
-                <LazyRoute index loaderLazy={() => import('engagements/public/view/EngagementLoader')} />
+                <LazyRoute index loaderLazy={() => import('engagements/admin/EngagementLoaderAdmin')} />
                 <LazyRoute
                     path="comments/:dashboardType"
                     ComponentLazy={() => import('engagements/dashboard/comment')}

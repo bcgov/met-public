@@ -14,11 +14,11 @@ import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engag
 import { Button } from 'components/common/Input';
 import { faPen } from '@fortawesome/pro-regular-svg-icons';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
-import { EngagementLoaderData } from 'engagements/public/view';
+import { EngagementLoaderAdminData } from '../EngagementLoaderAdmin';
 
 export const ConfigSummary = () => {
     const siteUrl = getBaseUrl();
-    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
     const [tooltipOpen, setTooltipOpen] = React.useState(false);
 
     useEffect(() => {

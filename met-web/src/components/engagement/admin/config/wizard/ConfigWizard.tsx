@@ -4,7 +4,7 @@ import { useFetcher, createSearchParams, useRouteLoaderData, Await, useAsyncValu
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '.';
-import { EngagementLoaderData } from 'components/engagement/public/view';
+import { EngagementLoaderAdminData } from 'engagements/admin/EngagementLoaderAdmin';
 import { Engagement } from 'models/engagement';
 import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engagementTeamMember';
 import { BodyText, Header1, Header2 } from 'components/common/Typography';
@@ -14,7 +14,7 @@ import { CircularProgress, Grid, Modal, Skeleton } from '@mui/material';
 import { modalStyle } from 'components/common';
 
 const EngagementConfigurationWizard = () => {
-    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
