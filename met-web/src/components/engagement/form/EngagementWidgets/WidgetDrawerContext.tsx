@@ -46,7 +46,7 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    widgetLocation: 0,
+    widgetLocation: WidgetLocation.Summary,
     setWidgetLocation: (widgetLocation: number) => {
         /* empty default method  */
     },
@@ -70,7 +70,7 @@ export const WidgetDrawerProvider = ({
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
     const [removeWidget] = useDeleteWidgetMutation();
-    const [widgetLocation, setWidgetLocation] = useState(0);
+    const [widgetLocation, setWidgetLocation] = useState(WidgetLocation.Summary);
     const [widgetDetailsTabId, setWidgetDetailsTabId] = useState<number | null>(null);
 
     const isWidgetInScope = (widget: Widget) => {

@@ -27,7 +27,9 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(timeLineWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(timeLineWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
@@ -57,7 +59,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([timeLineWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -79,10 +81,22 @@ const router = createMemoryRouter(
 );
 
 describe('TimeLine Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([timeLineWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([timeLineWidget]);
+                return timeLineWidget;
+            },
+        }));
     });
 
     async function addTimeLineWidget() {
@@ -92,6 +106,7 @@ describe('TimeLine Widget tests', () => {
 
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Timeline}`));
+
         await waitFor(() => {
             expect(screen.getByText('Title')).toBeVisible();
             expect(screen.getByText('Description')).toBeVisible();
@@ -125,10 +140,6 @@ describe('TimeLine Widget tests', () => {
 
     test('TimeLine widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest
-            .spyOn(widgetService, 'getWidgets')
-            .mockReturnValue(Promise.resolve([timeLineWidget]));
-
         await addTimeLineWidget();
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Description')).toBeVisible();

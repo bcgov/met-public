@@ -42,7 +42,7 @@ export const WidgetPickerButton = ({
         setWidgetLocation(location);
         setWidgetDetailsTabId(validDetailsTabId ?? null);
         return () => {
-            setWidgetLocation(0);
+            setWidgetLocation(WidgetLocation.Summary);
             setWidgetDetailsTabId(null);
         };
     }, [location, validDetailsTabId, setWidgetLocation, setWidgetDetailsTabId]);

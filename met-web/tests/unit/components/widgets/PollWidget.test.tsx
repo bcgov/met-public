@@ -25,7 +25,9 @@ jest.mock('react-redux', () => ({
     ),
     useDispatch: jest.fn(() => jest.fn()),
 }));
-const mockCreateWidget = jest.fn(() => Promise.resolve(pollWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(pollWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
@@ -55,7 +57,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([pollWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -77,10 +79,22 @@ const router = createMemoryRouter(
 );
 
 describe('Poll Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([pollWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([pollWidget]);
+                return pollWidget;
+            },
+        }));
     });
 
     async function addPollWidget() {
@@ -89,6 +103,7 @@ describe('Poll Widget tests', () => {
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Poll}`));
+
         await waitFor(() => {
             expect(screen.getByText('Poll Answers')).toBeVisible();
         });
@@ -130,7 +145,6 @@ describe('Poll Widget tests', () => {
 
     test('Poll widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([pollWidget]));
 
         await addPollWidget();
 

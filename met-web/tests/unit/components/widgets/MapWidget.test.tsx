@@ -69,7 +69,9 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(mapWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(mapWidget),
+}));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
@@ -93,7 +95,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([mapWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -128,10 +130,12 @@ describe('Map Widget tests', () => {
     beforeEach(() => {
         setupEnv();
         getWidgetsMock.mockResolvedValue([]);
-        mockCreateWidget.mockImplementation(async () => {
-            getWidgetsMock.mockResolvedValue([mapWidget]);
-            return mapWidget;
-        });
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([mapWidget]);
+                return mapWidget;
+            },
+        }));
     });
 
     async function addMapWidget(container: HTMLElement) {
@@ -171,6 +175,7 @@ describe('Map Widget tests', () => {
             widget_type_id: WidgetType.Map,
             engagement_id: draftEngagement.id,
             title: mapWidget.title,
+            location: 1,
         });
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Upload Shapefile')).toBeVisible();

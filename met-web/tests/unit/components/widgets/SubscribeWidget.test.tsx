@@ -25,7 +25,9 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(subscribeWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(subscribeWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
@@ -60,23 +62,35 @@ jest.mock('react-router', () => ({
         if (routeId === 'single-engagement') {
             return {
                 engagement: Promise.resolve(draftEngagement),
-                widgets: Promise.resolve([subscribeWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
             };
         }
     },
     useLoaderData: () => ({
         engagement: Promise.resolve(draftEngagement),
-        widgets: Promise.resolve([subscribeWidget]),
+        widgets: Promise.resolve([]),
         metadata: Promise.resolve([]),
     }),
 }));
 
 describe('Subscribe Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([subscribeWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([subscribeWidget]);
+                return subscribeWidget;
+            },
+        }));
     });
 
     async function addSubscribeWidget() {
@@ -85,6 +99,7 @@ describe('Subscribe Widget tests', () => {
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Subscribe}`));
+
         await waitFor(() => {
             expect(screen.getByText('Email List')).toBeVisible();
             expect(screen.getByText('Form Sign-up')).toBeVisible();
@@ -100,10 +115,6 @@ describe('Subscribe Widget tests', () => {
 
         // Simulate typing into the rich text editor
         richTextEditorDesc.textContent = 'Your desired text';
-        // Manually dispatch an 'input' event
-        const inputEvent = new Event('input', { bubbles: true });
-        richTextEditorDesc.dispatchEvent(inputEvent);
-
         fireEvent.change(callToActionText, { target: { value: 'Click here' } });
         fireEvent.click(linkRadioButton);
 
@@ -137,15 +148,12 @@ describe('Subscribe Widget tests', () => {
 
     test('Subscribe widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest
-            .spyOn(widgetService, 'getWidgets')
-            .mockReturnValue(Promise.resolve([subscribeWidget]));
 
         await addSubscribeWidget();
 
-        expect(getWidgetsMock).toHaveBeenCalledTimes(1);
-        expect(screen.getByText('Email List')).toBeVisible();
-        expect(screen.getByText('Form Sign-up')).toBeVisible();
+        expect(getWidgetsMock).toHaveBeenCalled();
+        expect(screen.getByRole('button', { name: 'Email List' })).toBeVisible();
+        expect(screen.getByRole('button', { name: 'Form Sign-up' })).toBeVisible();
     });
 
     test('Subscribe widget Email List handles input correctly', async () => {

@@ -19,6 +19,7 @@ import {
 } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { Widget, WidgetType } from 'models/widget';
+import { WidgetLocation } from 'models/widget';
 import { DocumentItem } from 'models/document';
 import { USER_ROLES } from 'services/userService/constants';
 import { engagementMetadata } from '../factory';
@@ -67,7 +68,7 @@ const documentWidget: Widget = {
     widget_type_id: WidgetType.Document,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 jest.mock('axios');

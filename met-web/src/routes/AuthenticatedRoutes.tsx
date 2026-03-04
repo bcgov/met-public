@@ -233,78 +233,78 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 />
                 <LazyRoute path="dashboard/:dashboardType" ComponentLazy={() => import('components/publicDashboard')} />
             </LazyRoute>
-        </LazyRoute>
-        <LazyRoute
-            path="/metadatamanagement"
-            ComponentLazy={() => import('components/metadataManagement')}
-            handle={{ crumb: () => ({ name: 'Metadata Management' }) }}
-        />
-        <LazyRoute
-            path="/languages"
-            loaderLazy={() => import('engagements/admin/config/LanguageLoader')}
-            ComponentLazy={() => import('components/language')}
-            handle={{ crumb: () => ({ name: 'Languages' }) }}
-        />
-        <LazyRoute
-            id="tenant-admin"
-            path="/tenantadmin"
-            loaderLazy={() => import('components/tenantManagement/tenantLoader').then((m) => m.allTenantsLoader)}
-            ErrorBoundaryLazy={() => import('routes/NotFound')}
-            handle={{ crumb: () => ({ name: 'Tenant Admin' }) }}
-        >
-            <LazyRoute index ComponentLazy={() => import('components/tenantManagement/Listing')} />
             <LazyRoute
-                path="create"
-                ComponentLazy={() => import('components/tenantManagement/Create')}
-                handle={{ crumb: () => ({ name: 'Create Tenant Instance' }) }}
+                path="/metadatamanagement"
+                ComponentLazy={() => import('components/metadataManagement')}
+                handle={{ crumb: () => ({ name: 'Metadata Management' }) }}
             />
             <LazyRoute
-                id="tenant"
-                path=":tenantShortName"
-                loaderLazy={() => import('components/tenantManagement/tenantLoader')}
+                path="/languages"
+                loaderLazy={() => import('engagements/admin/config/LanguageLoader')}
+                ComponentLazy={() => import('components/language')}
+                handle={{ crumb: () => ({ name: 'Languages' }) }}
+            />
+            <LazyRoute
+                id="tenant-admin"
+                path="/tenantadmin"
+                loaderLazy={() => import('components/tenantManagement/tenantLoader').then((m) => m.allTenantsLoader)}
                 ErrorBoundaryLazy={() => import('routes/NotFound')}
-                handle={{
-                    crumb: (data: { name: string; short_name: string }) => ({
-                        link: `/tenantadmin/${data.short_name}/detail`,
-                        name: data.name,
-                    }),
-                }}
-                shouldRevalidate={({ currentParams, nextParams }) => {
-                    return currentParams.tenantShortName !== nextParams.tenantShortName;
-                }}
+                handle={{ crumb: () => ({ name: 'Tenant Admin' }) }}
             >
-                <LazyRoute index element={<Navigate to="detail" />} />
-                <LazyRoute path="detail" ComponentLazy={() => import('components/tenantManagement/Detail')} />
+                <LazyRoute index ComponentLazy={() => import('components/tenantManagement/Listing')} />
                 <LazyRoute
-                    path="edit"
-                    ComponentLazy={() => import('components/tenantManagement/Edit')}
-                    handle={{ crumb: () => ({ name: 'Edit Instance' }) }}
+                    path="create"
+                    ComponentLazy={() => import('components/tenantManagement/Create')}
+                    handle={{ crumb: () => ({ name: 'Create Tenant Instance' }) }}
+                />
+                <LazyRoute
+                    id="tenant"
+                    path=":tenantShortName"
+                    loaderLazy={() => import('components/tenantManagement/tenantLoader')}
+                    ErrorBoundaryLazy={() => import('routes/NotFound')}
+                    handle={{
+                        crumb: (data: { name: string; short_name: string }) => ({
+                            link: `/tenantadmin/${data.short_name}/detail`,
+                            name: data.name,
+                        }),
+                    }}
+                    shouldRevalidate={({ currentParams, nextParams }) => {
+                        return currentParams.tenantShortName !== nextParams.tenantShortName;
+                    }}
+                >
+                    <LazyRoute index element={<Navigate to="detail" />} />
+                    <LazyRoute path="detail" ComponentLazy={() => import('components/tenantManagement/Detail')} />
+                    <LazyRoute
+                        path="edit"
+                        ComponentLazy={() => import('components/tenantManagement/Edit')}
+                        handle={{ crumb: () => ({ name: 'Edit Instance' }) }}
+                    />
+                </LazyRoute>
+            </LazyRoute>
+            <LazyRoute
+                path="/feedback"
+                ComponentLazy={() => import('components/feedback/listing')}
+                handle={{ crumb: () => ({ name: 'Feedback' }) }}
+            />
+            <LazyRoute path="/calendar" ComponentLazy={() => import('routes/UnderConstruction')} />
+            <LazyRoute path="/reporting" ComponentLazy={() => import('routes/UnderConstruction')} />
+            <LazyRoute path="/usermanagement" handle={{ crumb: () => ({ name: 'User Management' }) }}>
+                <LazyRoute index ComponentLazy={() => import('components/userManagement/listing')} />
+                <LazyRoute
+                    path="search"
+                    element={<Navigate to="/usermanagement" />}
+                    loaderLazy={() => import('components/userManagement/userSearchLoader')}
+                />
+                <LazyRoute
+                    path=":userId/details"
+                    ComponentLazy={() => import('components/userManagement/userDetails')}
+                    handle={{ crumb: () => ({ name: 'User Details' }) }}
                 />
             </LazyRoute>
+            <LazyRoute path="/unauthorized" ComponentLazy={() => import('routes/Unauthorized')} />
+            <LazyRoute path="/not-found" ComponentLazy={() => import('routes/NotFound')} />
+            <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
         </LazyRoute>
-        <LazyRoute
-            path="/feedback"
-            ComponentLazy={() => import('components/feedback/listing')}
-            handle={{ crumb: () => ({ name: 'Feedback' }) }}
-        />
-        <LazyRoute path="/calendar" ComponentLazy={() => import('routes/UnderConstruction')} />
-        <LazyRoute path="/reporting" ComponentLazy={() => import('routes/UnderConstruction')} />
-        <LazyRoute path="/usermanagement" handle={{ crumb: () => ({ name: 'User Management' }) }}>
-            <LazyRoute index ComponentLazy={() => import('components/userManagement/listing')} />
-            <LazyRoute
-                path="search"
-                element={<Navigate to="/usermanagement" />}
-                loaderLazy={() => import('components/userManagement/userSearchLoader')}
-            />
-            <LazyRoute
-                path=":userId/details"
-                ComponentLazy={() => import('components/userManagement/userDetails')}
-                handle={{ crumb: () => ({ name: 'User Details' }) }}
-            />
-        </LazyRoute>
-        <LazyRoute path="/unauthorized" ComponentLazy={() => import('routes/Unauthorized')} />
-        <LazyRoute path="/not-found" ComponentLazy={() => import('routes/NotFound')} />
-        <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
     </LazyRoute>,
 );
 

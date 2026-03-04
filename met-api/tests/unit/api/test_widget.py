@@ -86,7 +86,7 @@ def test_get_widget(client, jwt, session, widget_info,
 
 
 def test_create_widget_location(client, jwt, session,
-                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
+                                setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1

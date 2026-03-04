@@ -27,7 +27,9 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(videoWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(videoWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
@@ -58,7 +60,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([videoWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -80,10 +82,22 @@ const router = createMemoryRouter(
 );
 
 describe('Video Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([videoWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([videoWidget]);
+                return videoWidget;
+            },
+        }));
     });
 
     async function addVideoWidget() {
@@ -91,6 +105,7 @@ describe('Video Widget tests', () => {
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Video}`));
+
         await waitFor(() => {
             expect(screen.getByText('Description (Optional)')).toBeVisible();
         });
@@ -111,7 +126,6 @@ describe('Video Widget tests', () => {
 
     test('Video widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([videoWidget]));
 
         await addVideoWidget();
 
