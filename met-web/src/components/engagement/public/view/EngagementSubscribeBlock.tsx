@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { EngagementLoaderPublicData, EngagementViewSections } from 'engagements/public/view';
+import { EngagementViewSections } from 'engagements/public/view';
 import { useEngagementLoaderData } from 'engagements/preview/PreviewLoaderDataContext';
 import PreviewSwitch, { PreviewRender } from 'engagements/preview/PreviewSwitch';
 import { Header2, BodyText } from 'components/common/Typography';
@@ -28,7 +28,7 @@ const defaultConsentMessage =
     'Personal information collected by the Ministry of Citizens’ Services is under the authority of section 26(c) and 26(e) of the Freedom of Information and Protection of Privacy Act for the purpose of informing this engagement.';
 
 export const EngagementSubscribeBlock = () => {
-    const { engagement } = useEngagementLoaderData() as EngagementLoaderPublicData;
+    const { engagement } = useEngagementLoaderData();
     const { isPreviewMode } = usePreview();
     return (
         <Suspense>
@@ -145,10 +145,7 @@ export const EngagementSubscribeBlock = () => {
                                                 size="small"
                                                 sx={{ minWidth: '96px', height: '44px' }}
                                                 onClick={() => {
-                                                    {
-                                                        /* TODO: Handle subscribe action */
-                                                    }
-                                                    return;
+                                                    /* TODO: Handle subscribe action */
                                                 }}
                                             >
                                                 Subscribe

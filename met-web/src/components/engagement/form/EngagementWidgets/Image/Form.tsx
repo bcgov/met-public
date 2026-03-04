@@ -33,7 +33,7 @@ const Form = () => {
     const dispatch = useAppDispatch();
     const [widget, imageWidget] = useAsyncValue() as [Widget, ImageWidget];
     const [previewImage, setPreviewImage] = React.useState<File | null>(null);
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
 
     const imageForm = useForm<ImageWidgetForm>({
@@ -145,7 +145,7 @@ const Form = () => {
             await saveImageWidget(data);
             setIsCreating(false);
             reset({});
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add image' }));
             setIsCreating(false);
@@ -240,7 +240,7 @@ const Form = () => {
                                 </Button>
                             </Grid>
                             <Grid item>
-                                <Button variant="secondary" onClick={() => handleWidgetDrawerOpen(false)}>
+                                <Button variant="secondary" onClick={() => setWidgetDrawerOpen(false)}>
                                     Cancel
                                 </Button>
                             </Grid>

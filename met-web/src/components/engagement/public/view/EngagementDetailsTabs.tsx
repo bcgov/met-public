@@ -5,7 +5,7 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EngagementLoaderPublicData, EngagementViewSections } from '.';
+import { EngagementViewSections } from '.';
 import { FormDetailsTab } from 'engagements/admin/create/authoring/types';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { EngagementPreviewTag } from './EngagementPreviewTag';
@@ -13,7 +13,7 @@ import { useEngagementLoaderData } from 'components/engagement/preview/PreviewLo
 import { EngagementWidgetDisplay } from './EngagementWidgetDisplay';
 import { WidgetLocation } from 'models/widget';
 import TextPlaceholder from 'engagements/preview/placeholders/TextPlaceholder';
-import { PreviewSwitch } from 'engagements/preview/PreviewSwitch';
+import { previewValue, PreviewSwitch } from 'engagements/preview/PreviewSwitch';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
 
 // Todo: Replace this placeholder widget boolean type with a real widget type
@@ -36,7 +36,7 @@ const parseAndSortTabs = (tabs: EngagementDetailsTab[]): FormDetailsTabWithWidge
 };
 
 export const EngagementDetailsTabs = () => {
-    const { details } = useEngagementLoaderData() as EngagementLoaderPublicData; // Get fresh data to avoid DB sync issues
+    const { details } = useEngagementLoaderData(); // Get fresh data to avoid DB sync issues
     const [selectedTab, setSelectedTab] = useState('0');
     const [tabs, setTabs] = useState<FormDetailsTabWithWidget[]>([]);
     const { isPreviewMode } = usePreview();
@@ -113,23 +113,29 @@ export const EngagementDetailsTabs = () => {
     };
 
     const hasBodyContent = (tab: FormDetailsTabWithWidget) => tab.body?.getCurrentContent()?.hasText?.() ?? false;
+    const previewDisplay: FormDetailsTabWithWidget[] = [
+        {
+            id: -1,
+            engagement_id: 0,
+            label: '',
+            slug: '',
+            heading: '',
+            body: getEditorStateFromRaw(''),
+            sort_index: 0,
+            widget: true,
+        },
+    ];
+    // If there are no tabs, show a placeholder tab in preview mode to encourage users to add tabs
+    // and show them how it will look. Otherwise, show real tabs (or no tabs if there are none and
+    // we're not in preview).
     const displayTabs =
-        tabs.length > 0
-            ? tabs
-            : isPreviewMode
-              ? [
-                    {
-                        id: -1,
-                        engagement_id: 0,
-                        label: '',
-                        slug: '',
-                        heading: '',
-                        body: getEditorStateFromRaw(''),
-                        sort_index: 0,
-                        widget: true,
-                    } as FormDetailsTabWithWidget,
-                ]
-              : [];
+        previewValue<FormDetailsTabWithWidget[]>({
+            isPreviewMode,
+            hasValue: tabs.length > 0,
+            value: tabs,
+            previewFallback: previewDisplay,
+            fallback: [],
+        }) ?? [];
 
     return (
         <section
@@ -171,14 +177,12 @@ export const EngagementDetailsTabs = () => {
                                             aria-label={tab.heading || `Tab ${key + 1} Heading`}
                                         >
                                             <PreviewSwitch
-                                                isPreviewMode={isPreviewMode}
                                                 hasValue={Boolean(tab.heading?.trim())}
                                                 value={tab.heading}
                                                 previewFallback={<TextPlaceholder text={`Tab ${key + 1} Heading`} />}
                                             />
                                         </Header2>
                                         <PreviewSwitch
-                                            isPreviewMode={isPreviewMode}
                                             hasValue={hasBodyContent(tab)}
                                             value={
                                                 <RichTextArea

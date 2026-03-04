@@ -26,7 +26,7 @@ export const previewValue = <T,>({
     fallback,
 }: PreviewResolutionProps<T>): T | undefined => {
     if (hasValue) return value;
-    return Boolean(isPreviewMode) ? (previewFallback ?? fallback) : fallback;
+    return isPreviewMode ? (previewFallback ?? fallback) : fallback;
 };
 
 /**

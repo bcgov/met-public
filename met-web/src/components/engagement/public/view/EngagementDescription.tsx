@@ -11,7 +11,7 @@ import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
 import { WidgetLocation } from 'models/widget';
 import { DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EngagementLoaderPublicData, EngagementViewSections } from '.';
+import { EngagementViewSections } from '.';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
 import { TextPlaceholder } from 'components/engagement/preview/placeholders/TextPlaceholder';
 import { PreviewSwitch } from 'engagements/preview/PreviewSwitch';
@@ -20,7 +20,7 @@ import { EngagementWidgetDisplay } from './EngagementWidgetDisplay';
 import { useEngagementLoaderData } from 'components/engagement/preview/PreviewLoaderDataContext';
 
 export const EngagementDescription = () => {
-    const { engagement } = useEngagementLoaderData() as EngagementLoaderPublicData;
+    const { engagement } = useEngagementLoaderData();
     const { isPreviewMode } = usePreview();
     return (
         <section

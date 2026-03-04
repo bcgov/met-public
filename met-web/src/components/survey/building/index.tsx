@@ -205,8 +205,7 @@ export const FormBuilderPage = () => {
             direction="row"
             alignItems="flex-start"
             justifyContent="flex-start"
-            item
-            xs={12}
+            size={12}
             spacing={4}
         >
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />

@@ -96,7 +96,7 @@ const AuthoringBottomNav = ({
         [0, 120, 320].forEach((delayMs) => {
             globalThis.setTimeout(() => {
                 if (!previewWindow.closed) {
-                    previewWindow.postMessage(message, window.location.origin);
+                    previewWindow.postMessage(message, globalThis.location.origin);
                 }
             }, delayMs);
         });
@@ -115,7 +115,7 @@ const AuthoringBottomNav = ({
 
         const targetPath = getTargetPreviewBasePath();
         try {
-            const targetUrl = new URL(targetPath, window.location.origin);
+            const targetUrl = new URL(targetPath, globalThis.location.origin);
             const currentPath = previewWindow.location.pathname;
             if (currentPath !== targetUrl.pathname) {
                 previewWindow.location.replace(targetPath);
@@ -147,16 +147,16 @@ const AuthoringBottomNav = ({
             closePreviewWindow();
         };
 
-        window.addEventListener('beforeunload', handleBeforeUnload);
+        globalThis.addEventListener('beforeunload', handleBeforeUnload);
         return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
+            globalThis.removeEventListener('beforeunload', handleBeforeUnload);
             schedulePreviewClose(PREVIEW_CLOSE_GRACE_MS);
         };
     }, [cancelScheduledPreviewClose, closePreviewWindow, schedulePreviewClose]);
 
     useEffect(() => {
         syncPreviewWindowUrl(pageName);
-        const interval = window.setInterval(() => {
+        const interval = globalThis.setInterval(() => {
             const previewWindow = getActivePreviewWindow();
             if (!previewWindow || previewWindow.closed) return;
 
@@ -171,7 +171,7 @@ const AuthoringBottomNav = ({
         }, 10000);
 
         return () => {
-            window.clearInterval(interval);
+            globalThis.clearInterval(interval);
         };
     }, [engagementId, pageName]);
 
@@ -344,8 +344,7 @@ const AuthoringBottomNav = ({
                                     type="button"
                                     href={`${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`}
                                     icon={<img src={pagePreview} alt="" aria-hidden="true" />}
-                                    onClick={(e) => {
-                                        e.preventDefault();
+                                    onClick={() => {
                                         // If the preview window is still open, bring it to the foreground
                                         if (getActivePreviewWindow()) {
                                             syncPreviewWindowUrl(pageName);
@@ -363,7 +362,7 @@ const AuthoringBottomNav = ({
                                         const previewWidth = availWidth / 2; // open in the center of the right half, leaving some space on the sides
                                         const left = screenLeft + availWidth / 2;
                                         const top = screenTop + 37;
-                                        const openedPreviewWindow = window.open(
+                                        const openedPreviewWindow = globalThis.open(
                                             `${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`,
                                             'popup',
                                             `width=${previewWidth},height=${previewHeight},top=${top},left=${left}`,
@@ -372,6 +371,7 @@ const AuthoringBottomNav = ({
                                         if (openedPreviewWindow) {
                                             postPreviewScrollMessage(openedPreviewWindow, pageName);
                                         }
+                                        return false;
                                     }}
                                     LinkComponent={RouterLinkRenderer}
                                     target="_blank"

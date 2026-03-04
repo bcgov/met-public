@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import { Grid2 as Grid, Skeleton } from '@mui/material';
-import { EngagementLoaderPublicData } from '.';
 import { Await } from 'react-router';
 import { Widget, WidgetLocation } from 'models/widget';
 import { WidgetSwitch } from 'components/engagement/widgets/WidgetSwitch';
@@ -11,7 +10,6 @@ import WidgetPlaceholder from 'components/engagement/preview/placeholders/Widget
 export interface EngagementWidgetDisplayProps {
     location: WidgetLocation;
     detailsTabId?: number;
-    isTab?: boolean;
     tabIndex?: number;
 }
 
@@ -28,7 +26,7 @@ export const EngagementWidgetSkeleton = () => (
 );
 
 export const EngagementWidgetDisplay = ({ location, detailsTabId, tabIndex }: EngagementWidgetDisplayProps) => {
-    const { widgets } = useEngagementLoaderData() as EngagementLoaderPublicData;
+    const { widgets } = useEngagementLoaderData();
     const { isPreviewMode } = usePreview();
 
     const getPlaceholderLabel = () => {

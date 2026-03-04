@@ -4,8 +4,8 @@ import { Box, Grid2 as Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { Await, useParams } from 'react-router';
 import { Engagement } from 'models/engagement';
 import { SubmissionStatus } from 'constants/engagementStatus';
-import { getStatusFromStatusId } from 'components/common/Indicators/StatusChip';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
+import { getStatusFromStatusId, getSubmissionStatusFromPreviewState } from 'components/common/Indicators';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Widget, WidgetLocation } from 'models/widget';
 import { BaseTheme, DarkTheme } from 'styles/Theme';
@@ -14,13 +14,13 @@ import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
 import EmailModal from 'engagements/public/email/EmailModal';
-import { EngagementLoaderPublicData, EngagementViewSections } from '.';
+import { EngagementViewSections } from '.';
 import { EngagementPreviewTag } from 'engagements/public/view/EngagementPreviewTag';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
 import { useEngagementLoaderData } from 'components/engagement/preview/PreviewLoaderDataContext';
 import { EngagementWidgetDisplay } from './EngagementWidgetDisplay';
 import { TextPlaceholder } from 'components/engagement/preview/placeholders/TextPlaceholder';
-import { PreviewSwitch } from 'engagements/preview/PreviewSwitch';
+import { previewValue, PreviewSwitch } from 'engagements/preview/PreviewSwitch';
 import { BodyText, Header2 } from 'components/common/Typography';
 
 const gridContainerStyles = {
@@ -34,7 +34,7 @@ const gridContainerStyles = {
 };
 
 export const EngagementSurveyBlock = () => {
-    const { engagement, widgets } = useEngagementLoaderData() as EngagementLoaderPublicData;
+    const { engagement, widgets } = useEngagementLoaderData();
     const surveyBlockContents = Promise.all([engagement, widgets]);
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
     const { t: translate } = useAppTranslation();
@@ -95,16 +95,21 @@ export const EngagementSurveyBlock = () => {
                             const hasWidget = widgets.some((widget) => widget.location === WidgetLocation.Feedback);
                             const engagementStatus = engagement.submission_status;
                             const surveyStatus = getStatusFromStatusId(engagementStatus);
+                            const usePreviewState = Boolean(isPreviewMode && previewStateType);
                             const effectiveSurveyStatus =
-                                isPreviewMode && previewStateType ? previewStateType : surveyStatus;
+                                previewValue<string>({
+                                    isPreviewMode,
+                                    hasValue: usePreviewState,
+                                    value: previewStateType ?? surveyStatus,
+                                    fallback: surveyStatus,
+                                }) ?? surveyStatus;
                             const effectiveStatus =
-                                isPreviewMode && previewStateType
-                                    ? previewStateType === 'Open'
-                                        ? SubmissionStatus.Open
-                                        : previewStateType === 'Closed' || previewStateType === 'ViewResults'
-                                          ? SubmissionStatus.Closed
-                                          : SubmissionStatus.Upcoming
-                                    : engagementStatus;
+                                previewValue<SubmissionStatus>({
+                                    isPreviewMode,
+                                    hasValue: usePreviewState,
+                                    value: getSubmissionStatusFromPreviewState(previewStateType),
+                                    fallback: engagementStatus,
+                                }) ?? engagementStatus;
                             const isErrorMessage =
                                 isPreviewMode && (previewStateType === 'Upcoming' || previewStateType === 'Closed');
                             const statusBlock = engagement.status_block.find(
@@ -122,6 +127,10 @@ export const EngagementSurveyBlock = () => {
                                 engagement.surveys?.length > 0
                                     ? engagement.surveys.slice(0, 2).map((survey) => survey.name)
                                     : ['Feedback method 1', 'Feedback method 2'];
+                            const shouldDisplayFeedbackColumn =
+                                isPreviewMode ||
+                                (hasStatusBlockText && !isErrorMessage) ||
+                                effectiveStatus !== SubmissionStatus.Upcoming;
                             // Outside preview mode, skip if there's nothing to show.
                             if (!isPreviewMode && !hasStatusBlockText && !hasWidget && !hasFeedbackContent) return null;
                             return (
@@ -137,17 +146,10 @@ export const EngagementSurveyBlock = () => {
                                         size={{ xs: 12, md: 6 }}
                                         direction="column"
                                         minHeight="120px"
-                                        display={
-                                            isPreviewMode ||
-                                            (hasStatusBlockText && !isErrorMessage) ||
-                                            effectiveStatus !== SubmissionStatus.Upcoming
-                                                ? 'flex'
-                                                : 'none'
-                                        }
+                                        display={shouldDisplayFeedbackColumn ? 'flex' : 'none'}
                                     >
                                         <Box>
                                             <PreviewSwitch
-                                                isPreviewMode={isPreviewMode}
                                                 hasValue={hasFeedbackHeading}
                                                 value={
                                                     <Header2 decorated weight="thin" sx={{ mt: 0, mb: '16px' }}>
@@ -162,7 +164,6 @@ export const EngagementSurveyBlock = () => {
                                             />
                                             <BodyText>
                                                 <PreviewSwitch
-                                                    isPreviewMode={isPreviewMode}
                                                     hasValue={hasFeedbackBody}
                                                     value={
                                                         <RichTextArea
@@ -191,7 +192,6 @@ export const EngagementSurveyBlock = () => {
                                                 />
                                             </ThemeProvider>
                                             <PreviewSwitch
-                                                isPreviewMode={isPreviewMode}
                                                 hasValue={!isPreviewMode}
                                                 value={
                                                     <Switch>

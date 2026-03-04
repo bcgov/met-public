@@ -19,7 +19,6 @@ interface WidgetOptionCardProps {
     widgetType: WidgetType;
     tabValue: keyof typeof WidgetTabValues;
     icon: IconDefinition;
-    includeLocation?: boolean;
     successMessage?: string;
     errorMessage?: string;
 }

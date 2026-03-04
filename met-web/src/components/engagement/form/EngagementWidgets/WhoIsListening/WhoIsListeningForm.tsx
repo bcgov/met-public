@@ -13,7 +13,7 @@ import { WidgetTitle } from '../WidgetTitle';
 import { patchListeningWidget, postListeningWidget } from 'services/widgetService/ListeningService';
 
 const WhoIsListeningForm = () => {
-    const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const {
         handleAddContactDrawerOpen,
         loadingContacts,
@@ -94,7 +94,7 @@ const WhoIsListeningForm = () => {
             }
             await loadListeningWidget();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
             setSavingWidgetItems(false);
         } catch (error) {
             console.log(error);
@@ -175,7 +175,7 @@ const WhoIsListeningForm = () => {
                     >{`Save & Close`}</PrimaryButtonOld>
                 </Grid>
                 <Grid item>
-                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
+                    <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

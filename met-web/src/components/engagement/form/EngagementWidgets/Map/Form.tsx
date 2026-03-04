@@ -55,7 +55,7 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 const Form = () => {
     const dispatch = useAppDispatch();
     const { widget, mapData, isLoadingMap, setPreviewMapOpen, setPreviewMap, updateZoom } = useContext(MapContext);
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = useState(false);
     const [uploadName, setUploadName] = useState('');
     const [calculatingZoom, setCalculatingZoom] = useState(false);
@@ -113,7 +113,7 @@ const Form = () => {
             await createMap(data);
             setIsCreating(false);
             reset({});
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add map' }));
             setIsCreating(false);
@@ -303,7 +303,7 @@ const Form = () => {
                                     >{`Save & Close`}</PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
+                                    <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>
                                         Cancel
                                     </SecondaryButtonOld>
                                 </Grid>

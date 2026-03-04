@@ -4,7 +4,7 @@ import { Await, useLoaderData, useOutletContext } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { BodyText } from 'components/common/Typography/Body';
+import { BodyText, ErrorMessage } from 'components/common/Typography/Body';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
@@ -16,7 +16,6 @@ import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { convertToRaw, EditorState } from 'draft-js';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
-import { ErrorMessage } from 'components/common/Typography/Body';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { Engagement } from 'models/engagement';
 

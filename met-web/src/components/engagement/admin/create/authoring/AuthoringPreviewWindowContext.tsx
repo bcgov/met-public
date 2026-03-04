@@ -53,19 +53,25 @@ export const AuthoringPreviewWindowProvider: React.FC<AuthoringPreviewWindowProv
         }, delayMs);
     };
 
-    return (
-        <AuthoringPreviewWindowContext.Provider
-            value={{
-                getActivePreviewWindow,
-                setPreviewWindow,
-                cancelScheduledPreviewClose,
-                schedulePreviewClose,
-                closePreviewWindow,
-            }}
-        >
-            {children}
-        </AuthoringPreviewWindowContext.Provider>
+    // Avoid unnecessary re-renders by memoizing the context value
+    const value = React.useMemo(
+        () => ({
+            getActivePreviewWindow,
+            setPreviewWindow,
+            cancelScheduledPreviewClose,
+            schedulePreviewClose,
+            closePreviewWindow,
+        }),
+        [
+            getActivePreviewWindow,
+            setPreviewWindow,
+            cancelScheduledPreviewClose,
+            schedulePreviewClose,
+            closePreviewWindow,
+        ],
     );
+
+    return <AuthoringPreviewWindowContext.Provider value={value}>{children}</AuthoringPreviewWindowContext.Provider>;
 };
 
 export const useAuthoringPreviewWindow = (): AuthoringPreviewWindowContextType => {

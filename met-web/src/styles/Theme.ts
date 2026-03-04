@@ -452,6 +452,8 @@ export const DarkTheme = createTheme({
     },
 });
 
+export { BaseTheme as AdminTheme, DarkTheme as AdminDarkTheme };
+
 export const ZIndex = {
     feedback: '1002',
     sideNav: '1001',

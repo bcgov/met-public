@@ -30,11 +30,11 @@ export const PreviewProvider: React.FC<PreviewProviderProps> = ({
     showPlaceholders = false,
     previewStateType = null,
 }) => {
-    return (
-        <PreviewContext.Provider value={{ isPreviewMode, showPlaceholders, previewStateType }}>
-            {children}
-        </PreviewContext.Provider>
+    const value = React.useMemo(
+        () => ({ isPreviewMode, showPlaceholders, previewStateType }),
+        [isPreviewMode, showPlaceholders, previewStateType],
     );
+    return <PreviewContext.Provider value={value}>{children}</PreviewContext.Provider>;
 };
 
 /**

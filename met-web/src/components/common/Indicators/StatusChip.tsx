@@ -22,6 +22,20 @@ export const getStatusFromStatusId = (statusId: SubmissionStatus): StatusText =>
             return 'Closed';
     }
 };
+
+export const getSubmissionStatusFromPreviewState = (previewStateType?: string | null): SubmissionStatus => {
+    switch (previewStateType) {
+        case 'Open':
+            return SubmissionStatus.Open;
+        case 'Closed':
+        case 'ViewResults':
+            return SubmissionStatus.Closed;
+        case 'Upcoming':
+        default:
+            return SubmissionStatus.Upcoming;
+    }
+};
+
 /**
  * A Chip component that displays the status of an engagement.
  * It uses the SubmissionStatus enum to determine the status and applies appropriate styles.

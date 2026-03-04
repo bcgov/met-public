@@ -14,20 +14,20 @@ import { PreviewLoaderDataProvider } from './PreviewLoaderDataContext';
 import PublicHeader from 'components/layout/Header/PublicHeader';
 
 const MeasurementBar: React.FC = () => {
-    const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+    const [viewportWidth, setViewportWidth] = useState(globalThis.innerWidth);
     const [barVisible, setBarVisible] = useState(false);
     const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
-            setViewportWidth(window.innerWidth);
+            setViewportWidth(globalThis.innerWidth);
             setBarVisible(true);
             if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
             hideTimerRef.current = setTimeout(() => setBarVisible(false), 1500);
         };
-        window.addEventListener('resize', handleResize);
+        globalThis.addEventListener('resize', handleResize);
         return () => {
-            window.removeEventListener('resize', handleResize);
+            globalThis.removeEventListener('resize', handleResize);
             if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
         };
     }, []);
@@ -213,15 +213,15 @@ export const EngagementPreview: React.FC = () => {
             const targetElement = document.getElementById(targetId);
             if (!targetElement) return;
 
-            const startY = window.scrollY;
-            const targetY = targetElement.getBoundingClientRect().top + window.scrollY;
+            const startY = globalThis.scrollY;
+            const targetY = targetElement.getBoundingClientRect().top + globalThis.scrollY;
             const distanceY = targetY - startY;
             const durationMs = 260;
             const startTime = performance.now();
 
             if (Math.abs(distanceY) < 2) {
                 try {
-                    window.history.replaceState(null, '', `#${targetId}`);
+                    globalThis.history.replaceState(null, '', `#${targetId}`);
                 } catch {
                     return;
                 }
@@ -234,49 +234,48 @@ export const EngagementPreview: React.FC = () => {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / durationMs, 1);
                 const easedProgress = easeOutCubic(progress);
-                window.scrollTo(0, Math.round(startY + distanceY * easedProgress));
+                globalThis.scrollTo(0, Math.round(startY + distanceY * easedProgress));
 
                 if (progress < 1) {
-                    window.requestAnimationFrame(animate);
+                    globalThis.requestAnimationFrame(animate);
                     return;
                 }
 
                 try {
-                    window.history.replaceState(null, '', `#${targetId}`);
+                    globalThis.history.replaceState(null, '', `#${targetId}`);
                 } catch {
                     return;
                 }
             };
 
-            window.requestAnimationFrame(animate);
+            globalThis.requestAnimationFrame(animate);
         };
 
         const handlePreviewScrollMessage = (event: MessageEvent) => {
-            if (event.origin !== window.location.origin) return;
-            if (!event.data || event.data.type !== 'met-preview-scroll') return;
-            if (typeof event.data.targetId !== 'string') return;
-            animateScrollToElement(event.data.targetId);
+            if (event.origin !== globalThis.location.origin) return;
+            if (typeof event?.data?.targetId !== 'string') return;
+            animateScrollToElement(event?.data?.targetId);
         };
 
-        window.addEventListener('message', handlePreviewScrollMessage);
+        globalThis.addEventListener('message', handlePreviewScrollMessage);
 
         const scrollToHashTarget = () => {
-            const targetId = window.location.hash.replace('#', '');
+            const targetId = globalThis.location.hash.replace('#', '');
             if (!targetId) return;
             document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
-        const firstAttempt = window.setTimeout(scrollToHashTarget, 60);
-        const secondAttempt = window.setTimeout(scrollToHashTarget, 220);
-        const thirdAttempt = window.setTimeout(scrollToHashTarget, 500);
+        const firstAttempt = globalThis.setTimeout(scrollToHashTarget, 60);
+        const secondAttempt = globalThis.setTimeout(scrollToHashTarget, 220);
+        const thirdAttempt = globalThis.setTimeout(scrollToHashTarget, 500);
 
-        window.addEventListener('hashchange', scrollToHashTarget);
+        globalThis.addEventListener('hashchange', scrollToHashTarget);
         return () => {
-            window.clearTimeout(firstAttempt);
-            window.clearTimeout(secondAttempt);
-            window.clearTimeout(thirdAttempt);
-            window.removeEventListener('hashchange', scrollToHashTarget);
-            window.removeEventListener('message', handlePreviewScrollMessage);
+            globalThis.clearTimeout(firstAttempt);
+            globalThis.clearTimeout(secondAttempt);
+            globalThis.clearTimeout(thirdAttempt);
+            globalThis.removeEventListener('hashchange', scrollToHashTarget);
+            globalThis.removeEventListener('message', handlePreviewScrollMessage);
         };
     }, [contentVersion]);
 

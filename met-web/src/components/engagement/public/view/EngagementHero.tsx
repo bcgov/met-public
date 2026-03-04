@@ -6,25 +6,25 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Engagement } from 'models/engagement';
 import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
 import { colors } from 'components/common';
-import { EngagementStatusChip } from 'components/common/Indicators';
+import { EngagementStatusChip, getSubmissionStatusFromPreviewState } from 'components/common/Indicators';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Await } from 'react-router';
 import { StatusChipSkeleton } from 'components/common/Indicators/StatusChip';
-import { EngagementLoaderPublicData, EngagementViewSections } from '.';
+import { EngagementViewSections } from '.';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { BlueprintImagePlaceholder } from 'components/engagement/preview/placeholders/BlueprintImagePlaceholder';
 import { TextPlaceholder } from 'components/engagement/preview/placeholders/TextPlaceholder';
-import { PreviewRender, PreviewSwitch } from 'engagements/preview/PreviewSwitch';
+import { previewValue, PreviewRender, PreviewSwitch } from 'engagements/preview/PreviewSwitch';
 import { EngagementPreviewTag } from './EngagementPreviewTag';
 import { useEngagementLoaderData } from 'components/engagement/preview/PreviewLoaderDataContext';
 
 export const EngagementHero = () => {
     const dateFormat = 'MMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
-    const { engagement } = useEngagementLoaderData() as EngagementLoaderPublicData;
+    const { engagement } = useEngagementLoaderData();
     const { isPreviewMode, previewStateType } = usePreview();
     const startDate = engagement?.then((engagement) => dayjs(engagement.start_date));
     const endDate = engagement?.then((engagement) => dayjs(engagement.end_date));
@@ -120,35 +120,43 @@ export const EngagementHero = () => {
                 >
                     <Await resolve={engagementInfo}>
                         {([engagement, startDate, endDate]: [Engagement, dayjs.Dayjs, dayjs.Dayjs]) => {
-                            const effectiveStatusId: SubmissionStatus =
-                                isPreviewMode && previewStateType
-                                    ? previewStateType === 'Open'
-                                        ? SubmissionStatus.Open
-                                        : previewStateType === 'Closed' || previewStateType === 'ViewResults'
-                                          ? SubmissionStatus.Closed
-                                          : SubmissionStatus.Upcoming
-                                    : engagement.submission_status;
+                            const usePreviewState = Boolean(isPreviewMode && previewStateType);
 
-                            const effectiveBlock =
-                                isPreviewMode && previewStateType
-                                    ? engagement.status_block.find(
-                                          (block) =>
-                                              block.survey_status === previewStateType &&
-                                              block.link_type === 'internal',
-                                      )
-                                    : engagement.status_block.find((block) => block.link_type === 'internal');
+                            const effectiveStatusId =
+                                previewValue<SubmissionStatus>({
+                                    isPreviewMode,
+                                    hasValue: usePreviewState,
+                                    value: getSubmissionStatusFromPreviewState(previewStateType),
+                                    fallback: engagement.submission_status,
+                                }) ?? engagement.submission_status;
 
-                            // Block containing state-specific message text (Upcoming / Closed only)
+                            const effectiveBlock = previewValue({
+                                isPreviewMode,
+                                hasValue: usePreviewState,
+                                value: engagement.status_block.find(
+                                    (block) =>
+                                        block.survey_status === previewStateType && block.link_type === 'internal',
+                                ),
+                                fallback: engagement.status_block.find((block) => block.link_type === 'internal'),
+                            });
+
                             const stateMessageBlock =
-                                isPreviewMode && previewStateType
-                                    ? engagement.status_block.find((block) => block.survey_status === previewStateType)
-                                    : null;
+                                previewValue({
+                                    isPreviewMode,
+                                    hasValue: usePreviewState,
+                                    value: engagement.status_block.find(
+                                        (block) => block.survey_status === previewStateType,
+                                    ),
+                                    fallback: null,
+                                }) ?? null;
+
+                            const shouldShowStateMessage =
+                                isPreviewMode && (previewStateType === 'Upcoming' || previewStateType === 'Closed');
 
                             return (
                                 <>
                                     <EyebrowText mb="24px">
                                         <PreviewSwitch
-                                            isPreviewMode={isPreviewMode}
                                             hasValue={Boolean(engagement.sponsor_name?.trim())}
                                             value={engagement.sponsor_name}
                                             previewFallback={<TextPlaceholder type="short" />}
@@ -156,7 +164,6 @@ export const EngagementHero = () => {
                                     </EyebrowText>
                                     <Header1 weight="thin" sx={{ color: colors.surface.gray[110], mb: '32px', mt: 0 }}>
                                         <PreviewSwitch
-                                            isPreviewMode={isPreviewMode}
                                             hasValue={Boolean(engagement.name?.trim())}
                                             value={engagement.name}
                                             previewFallback={<TextPlaceholder type="short" />}
@@ -179,27 +186,24 @@ export const EngagementHero = () => {
                                         </Grid>
                                     </Grid>
                                     {/* State message for Upcoming / Closed in preview mode */}
-                                    {isPreviewMode &&
-                                        (previewStateType === 'Upcoming' || previewStateType === 'Closed') && (
-                                            <Box sx={{ color: 'error.main', mt: '24px', mb: '8px' }}>
-                                                <PreviewSwitch
-                                                    isPreviewMode={isPreviewMode}
-                                                    hasValue={Boolean(stateMessageBlock?.block_text)}
-                                                    value={
-                                                        <RichTextArea
-                                                            readOnly
-                                                            toolbarHidden
-                                                            editorState={getEditorStateFromRaw(
-                                                                stateMessageBlock?.block_text || '',
-                                                            )}
-                                                        />
-                                                    }
-                                                    previewFallback={<TextPlaceholder type="paragraph" />}
-                                                />
-                                            </Box>
-                                        )}
+                                    {shouldShowStateMessage && (
+                                        <Box sx={{ color: 'error.main', mt: '24px', mb: '8px' }}>
+                                            <PreviewSwitch
+                                                hasValue={Boolean(stateMessageBlock?.block_text)}
+                                                value={
+                                                    <RichTextArea
+                                                        readOnly
+                                                        toolbarHidden
+                                                        editorState={getEditorStateFromRaw(
+                                                            stateMessageBlock?.block_text || '',
+                                                        )}
+                                                    />
+                                                }
+                                                previewFallback={<TextPlaceholder type="paragraph" />}
+                                            />
+                                        </Box>
+                                    )}
                                     <PreviewRender
-                                        isPreviewMode={isPreviewMode}
                                         hasValue={Boolean(effectiveBlock)}
                                         value={{
                                             href: effectiveBlock?.internal_link || '#detailsTabs',

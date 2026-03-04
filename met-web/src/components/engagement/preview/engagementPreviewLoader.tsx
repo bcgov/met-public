@@ -41,8 +41,8 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
     }
 
     const tenantId =
-        typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined'
-            ? window.sessionStorage.getItem('tenantId')
+        globalThis !== undefined && typeof globalThis.sessionStorage !== 'undefined'
+            ? globalThis.sessionStorage.getItem('tenantId')
             : null;
     const languages = tenantId ? getTenantLanguages(tenantId) : Promise.resolve([]);
     const slug = getSlugByEngagementId(Number(engagementId))
@@ -59,9 +59,7 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
         metaResponse.forEach((metaEntry) => {
             const taxon = taxaResponse[metaEntry.taxon_id];
             if (taxon) {
-                if (taxon.entries === undefined) {
-                    taxon.entries = [];
-                }
+                taxon.entries ??= [];
                 taxon.entries.push(metaEntry);
             }
         });
