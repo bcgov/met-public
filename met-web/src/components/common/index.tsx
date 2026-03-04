@@ -228,51 +228,6 @@ interface MetSurveyProps {
     deleting?: boolean;
 }
 
-export const MetSurvey = ({
-    testId,
-    children,
-    title,
-    onEditClick,
-    onDeleteClick,
-    deleting,
-    ...rest
-}: MetSurveyProps) => {
-    return (
-        <MetWidgetPaper elevation={3} {...rest}>
-            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={6}>
-                    <MetHeader3 bold>{title}</MetHeader3>
-                </Grid>
-                <Grid item xs={6} container direction="row" justifyContent="flex-end">
-                    <Stack direction="row" spacing={1}>
-                        <When condition={!!onEditClick}>
-                            <IconButton color="inherit" onClick={onEditClick} data-testid="survey-widget/edit">
-                                <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
-                            </IconButton>
-                        </When>
-                        <When condition={!!onDeleteClick}>
-                            <IconButton
-                                color="inherit"
-                                onClick={onDeleteClick}
-                                data-testid={`survey-widget/remove-${testId}`}
-                            >
-                                {deleting ? (
-                                    <CircularProgress size="1em" color="inherit" />
-                                ) : (
-                                    <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
-                                )}
-                            </IconButton>
-                        </When>
-                    </Stack>
-                </Grid>
-                <Grid item xs={12}>
-                    {children}
-                </Grid>
-            </Grid>
-        </MetWidgetPaper>
-    );
-};
-
 export const MidScreenLoader = ({ message }: { message?: string }) => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
         <Grid alignItems="center" direction="column" container>

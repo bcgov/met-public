@@ -20,7 +20,12 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'widget'
     __table_args__ = (
-        db.UniqueConstraint('location', 'engagement_id', 'engagement_details_tab_id', name='unique_widget_location_tab'),
+        db.UniqueConstraint(
+            'location',
+            'engagement_id',
+            'engagement_details_tab_id', 
+            name='unique_widget_location_tab'
+        ),
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
