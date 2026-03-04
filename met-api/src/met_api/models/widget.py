@@ -23,7 +23,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
         db.UniqueConstraint(
             'location',
             'engagement_id',
-            'engagement_details_tab_id', 
+            'engagement_details_tab_id',
             name='unique_widget_location_tab'
         ),
     )

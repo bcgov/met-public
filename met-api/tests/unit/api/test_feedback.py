@@ -21,6 +21,7 @@ from http import HTTPStatus
 from unittest.mock import patch
 from faker import Faker
 import pytest
+from flask import current_app
 
 from met_api.constants.feedback import FeedbackSourceType, FeedbackStatusType
 from met_api.services.feedback_service import FeedbackService
@@ -88,7 +89,7 @@ def test_invalid_feedback(client, jwt, session):  # pylint:disable=unused-argume
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.post('/api/feedbacks/', data=json.dumps(to_dict),
                      headers=headers, content_type=ContentType.JSON.value)
-    print(rv.json.get('message'))
+    current_app.logger.info(rv.json.get('message'))
     assert rating_error_msg in rv.json.get('message')
 
 
