@@ -9,6 +9,7 @@ export interface Widget {
     id: number;
     widget_type_id: WidgetType;
     engagement_id: number;
+    engagement_details_tab_id?: number | null;
     items: WidgetItem[];
     title: string;
     location: WidgetLocation;

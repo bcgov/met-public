@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Button as MuiButton,
-    Grid,
+    Grid2 as Grid,
     Paper as MuiPaper,
     CircularProgress,
     Typography,
@@ -273,10 +273,13 @@ export const MetSurvey = ({
     );
 };
 
-export const MidScreenLoader = () => (
+export const MidScreenLoader = ({ message }: { message?: string }) => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
-        <Grid item>
+        <Grid alignItems="center" direction="column" container>
             <CircularProgress data-testid="loader" />
+            <Typography variant="body1" align="center" sx={{ mt: 2, height: '1.5em' }}>
+                {message}
+            </Typography>
         </Grid>
     </Grid>
 );

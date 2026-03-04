@@ -7,19 +7,19 @@ import {
     Drawer,
     Toolbar,
     SwipeableDrawer,
-    Grid,
+    Grid2 as Grid,
     Avatar,
     ThemeProvider,
 } from '@mui/material';
 import { getAuthoringRoutes as getRoutes, AuthoringRoute as Route } from './AuthoringNavElements';
-import { DarkTheme, Palette, colors, ZIndex } from 'styles/Theme';
+import { AdminDarkTheme, Palette, colors, ZIndex } from 'styles/Theme';
 import { AuthoringNavProps, DrawerBoxProps } from './types';
 import { When } from 'react-if';
 import { useAppSelector } from 'hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/pro-light-svg-icons/faPencil';
 import { Link } from 'components/common/Navigation';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { USER_ROLES } from 'services/userService/constants';
 import UserService from 'services/userService';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
@@ -259,7 +259,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
         >
             <Box>
                 <DrawerBox isMediumScreenOrLarger={isMediumScreen} setOpen={setOpen} engagementId={engagementId} />
-                <ThemeProvider theme={DarkTheme}>
+                <ThemeProvider theme={AdminDarkTheme}>
                     <Grid
                         m={2}
                         container
@@ -268,7 +268,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                         alignItems="center"
                         spacing={1}
                     >
-                        <Grid item>
+                        <Grid>
                             <Avatar
                                 sx={{
                                     backgroundColor: colors.surface.blue[10],
@@ -281,7 +281,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                                 {currentUser?.last_name[0]}
                             </Avatar>
                         </Grid>
-                        <Grid item sx={{ textAlign: 'left' }}>
+                        <Grid sx={{ textAlign: 'left' }}>
                             <BodyText size="small" sx={{ userSelect: 'none' }}>
                                 Hello {currentUser?.first_name}
                             </BodyText>
@@ -291,7 +291,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                                     : (currentUser?.main_role ?? 'User')}
                             </BodyText>
                         </Grid>
-                        <Grid item sx={{ marginLeft: 'auto', marginRight: '2rem' }}>
+                        <Grid sx={{ marginLeft: 'auto', marginRight: '2rem' }}>
                             <Link onClick={UserService.doLogout} to={'#'}>
                                 Logout
                                 <FontAwesomeIcon style={{ marginLeft: '0.25rem' }} icon={faArrowRight} />

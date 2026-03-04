@@ -4,41 +4,176 @@ import {
     AppBar,
     Theme,
     ThemeProvider,
-    Box,
+    Grid2 as Grid,
     useMediaQuery,
     Select,
     MenuItem,
     SelectChangeEvent,
     Modal,
+    Tooltip,
+    CircularProgress,
 } from '@mui/material';
-import { Palette, colors, DarkTheme, BaseTheme, ZIndex } from 'styles/Theme';
+import { Palette, colors, AdminDarkTheme, AdminTheme, ZIndex } from 'styles/Theme';
 import { When, Unless } from 'react-if';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { elevations } from 'components/common';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';
 import { StatusCircle } from '../../view/AuthoringTab';
-import pagePreview from 'assets/images/pagePreview.png';
+import pagePreview from 'assets/images/pagePreview.svg';
 import { AuthoringBottomNavProps, LanguageSelectorProps } from './types';
 import { getLanguageValue } from './AuthoringTemplate';
 import { useFormContext } from 'react-hook-form';
 import { EngagementUpdateData } from './AuthoringContext';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Await } from 'react-router';
+import { Await, useParams } from 'react-router';
 import ConfirmModal from 'components/common/Modals/ConfirmModal';
 import { Language } from 'models/language';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { EngagementViewSections } from 'components/engagement/public/view';
+import { useAuthoringPreviewWindow } from './AuthoringPreviewWindowContext';
+const PREVIEW_CLOSE_GRACE_MS = 800;
 
-const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pageTitle }: AuthoringBottomNavProps) => {
+const AuthoringBottomNav = ({
+    currentLanguage,
+    setCurrentLanguage,
+    languages,
+    pageTitle,
+    pageName,
+}: AuthoringBottomNavProps) => {
     const {
         setValue,
         formState: { isDirty, isSubmitting },
     } = useFormContext<EngagementUpdateData>();
+    const { engagementId } = useParams();
     const isMediumScreenOrLarger = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
     const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
     const [atFooter, setAtFooter] = useState(false);
     const navRef = useRef<HTMLDivElement | null>(null);
-    const placeholderRef = useRef<HTMLDivElement | null>(null);
+    const {
+        getActivePreviewWindow,
+        setPreviewWindow,
+        cancelScheduledPreviewClose,
+        schedulePreviewClose,
+        closePreviewWindow,
+    } = useAuthoringPreviewWindow();
+
+    const getBasePathPrefix = () => {
+        const basename = sessionStorage.getItem('basename');
+        return basename ? `/${basename}` : '';
+    };
+
+    const getPreviewSectionHash = (section?: string) => {
+        switch (section) {
+            case 'banner':
+                return `#${EngagementViewSections.HERO}`;
+            case 'summary':
+                return `#${EngagementViewSections.DESCRIPTION}`;
+            case 'details':
+                return `#${EngagementViewSections.DETAILS_TABS}`;
+            case 'feedback':
+                return `#${EngagementViewSections.PROVIDE_FEEDBACK}`;
+            case 'results':
+                return `#${EngagementViewSections.VIEW_RESULTS}`;
+            case 'subscribe':
+                return `#${EngagementViewSections.SUBSCRIBE}`;
+            case 'more':
+                return `#${EngagementViewSections.MORE_ENGAGEMENTS}`;
+            default:
+                return `#${EngagementViewSections.HERO}`;
+        }
+    };
+
+    const getTargetPreviewBasePath = () => `${getBasePathPrefix()}/engagements/${engagementId}/preview`;
+
+    const postPreviewScrollMessage = (previewWindow: Window, section?: string) => {
+        const targetHash = getPreviewSectionHash(section);
+        const targetId = targetHash.replace('#', '');
+        const message = { type: 'met-preview-scroll', targetId };
+
+        [0, 120, 320].forEach((delayMs) => {
+            globalThis.setTimeout(() => {
+                if (!previewWindow.closed) {
+                    previewWindow.postMessage(message, window.location.origin);
+                }
+            }, delayMs);
+        });
+
+        try {
+            const targetPathWithHash = `${getTargetPreviewBasePath()}${targetHash}`;
+            previewWindow.history.replaceState(null, '', targetPathWithHash);
+        } catch {
+            return;
+        }
+    };
+
+    const syncPreviewWindowUrl = (section?: string) => {
+        const previewWindow = getActivePreviewWindow();
+        if (!previewWindow || previewWindow.closed) return;
+
+        const targetPath = getTargetPreviewBasePath();
+        try {
+            const targetUrl = new URL(targetPath, window.location.origin);
+            const currentPath = previewWindow.location.pathname;
+            if (currentPath !== targetUrl.pathname) {
+                previewWindow.location.replace(targetPath);
+                [250, 700, 1300].forEach((delayMs) => {
+                    globalThis.setTimeout(() => {
+                        const activePreviewWindow = getActivePreviewWindow();
+                        if (!activePreviewWindow) return;
+                        try {
+                            if (activePreviewWindow.location.pathname === targetUrl.pathname) {
+                                postPreviewScrollMessage(activePreviewWindow, section);
+                            }
+                        } catch {
+                            return;
+                        }
+                    }, delayMs);
+                });
+                return;
+            }
+            postPreviewScrollMessage(previewWindow, section);
+        } catch {
+            previewWindow.location.replace(targetPath);
+        }
+    };
+
+    useEffect(() => {
+        cancelScheduledPreviewClose();
+
+        const handleBeforeUnload = () => {
+            closePreviewWindow();
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            schedulePreviewClose(PREVIEW_CLOSE_GRACE_MS);
+        };
+    }, [cancelScheduledPreviewClose, closePreviewWindow, schedulePreviewClose]);
+
+    useEffect(() => {
+        syncPreviewWindowUrl(pageName);
+        const interval = window.setInterval(() => {
+            const previewWindow = getActivePreviewWindow();
+            if (!previewWindow || previewWindow.closed) return;
+
+            const expectedPathPrefix = `${getBasePathPrefix()}/engagements/${engagementId}/preview`;
+            try {
+                if (!previewWindow.location.pathname.startsWith(expectedPathPrefix)) {
+                    syncPreviewWindowUrl(pageName);
+                }
+            } catch {
+                syncPreviewWindowUrl(pageName);
+            }
+        }, 10000);
+
+        return () => {
+            window.clearInterval(interval);
+        };
+    }, [engagementId, pageName]);
 
     useLayoutEffect(() => {
         const footer = document.querySelector('footer');
@@ -50,7 +185,6 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
         placeholder.style.width = '100%';
         placeholder.style.top = '2em'; // slight offset to avoid any potential overlap with footer content
         hostParent.insertBefore(placeholder, footer ?? null);
-        placeholderRef.current = placeholder;
         setPortalEl(placeholder);
 
         let footerObserver: IntersectionObserver | null = null;
@@ -69,7 +203,6 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
             footerObserver?.disconnect();
             placeholder.remove();
             setPortalEl(null);
-            placeholderRef.current = null;
         };
     }, []);
 
@@ -87,17 +220,6 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
             globalThis.removeEventListener('resize', updateHeight);
         };
     }, [portalEl]);
-
-    const buttonStyles = {
-        height: '2.6rem',
-        borderRadius: '8px',
-        border: 'none',
-        padding: '0',
-        margin: '0',
-        minWidth: '8.125rem',
-        fontSize: '0.9rem',
-        width: { xs: '50%', sm: 'unset' },
-    };
 
     if (!portalEl) return null;
 
@@ -135,7 +257,8 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
             }}
             data-testid="appbar-authoring-bottom-nav"
         >
-            <Box
+            <Grid
+                container
                 sx={{
                     background: colors.surface.blue[90],
                     minHeight: '5rem',
@@ -145,27 +268,29 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                     flexWrap: isMediumScreenOrLarger ? 'nowrap' : 'wrap',
                 }}
             >
-                <ThemeProvider theme={DarkTheme}>
-                    <Box
-                        sx={{
-                            width: '18.75rem',
-                            minWidth: '18.75rem',
-                            marginBottom: isMediumScreenOrLarger ? '0' : '1rem',
-                            pl: { xs: '1em', md: '3.1rem' },
-                            pt: { xs: '2rem', md: '0' },
-                        }}
+                <ThemeProvider theme={AdminDarkTheme}>
+                    <Grid
+                        container
+                        mb={isMediumScreenOrLarger ? 0 : '1rem'}
+                        pl={{ xs: '1em', md: '3.1rem' }}
+                        pt={{ xs: '2rem', md: '0' }}
+                        width="18.75rem"
                     >
-                        <BodyText bold>Currently Authoring</BodyText>
-                        <BodyText sx={{ fontSize: '0.7rem', alignItems: 'center', marginTop: '-5px', display: 'flex' }}>
-                            <span>{pageTitle}</span>
-                            <span style={{ fontSize: '0.4rem', paddingLeft: '0.4rem', paddingRight: '0.4rem' }}>
-                                {'\u2B24'}
-                            </span>
-                            <Suspense>
-                                <Await resolve={languages}>{currentLanguage.name}</Await>
-                            </Suspense>
-                        </BodyText>
-                    </Box>
+                        <Grid size={12}>
+                            <BodyText bold>Currently Authoring</BodyText>
+                        </Grid>
+                        <Grid>
+                            <BodyText
+                                sx={{ fontSize: '0.7rem', alignItems: 'center', marginTop: '-5px', display: 'flex' }}
+                            >
+                                <span>{pageTitle}</span>
+                                <span style={{ fontSize: '0.4rem', paddingLeft: '0.4rem', paddingRight: '0.4rem' }}>
+                                    {'\u2B24'}
+                                </span>
+                                {currentLanguage.name}
+                            </BodyText>
+                        </Grid>
+                    </Grid>
                     <ResponsiveContainer
                         sx={{
                             width: '100%',
@@ -179,55 +304,92 @@ const AuthoringBottomNav = ({ currentLanguage, setCurrentLanguage, languages, pa
                             gap: '1rem',
                         }}
                     >
-                        <ThemeProvider theme={BaseTheme}>
-                            <LanguageSelector
-                                currentLanguage={currentLanguage}
-                                setCurrentLanguage={setCurrentLanguage}
-                                languages={languages}
-                                isDirty={isDirty}
-                                isSubmitting={isSubmitting}
-                            />
-                        </ThemeProvider>
-                        <Box
-                            className="button-container"
-                            sx={{ flexWrap: 'nowrap', display: 'flex', gap: '1rem', width: '100%' }}
-                        >
+                        <Grid className="button-container" container flexWrap="nowrap" size={12} gap="1rem">
+                            <ThemeProvider theme={AdminTheme}>
+                                <LanguageSelector
+                                    currentLanguage={currentLanguage}
+                                    setCurrentLanguage={setCurrentLanguage}
+                                    languages={languages}
+                                    isDirty={isDirty}
+                                    isSubmitting={isSubmitting}
+                                />
+                            </ThemeProvider>
                             <Button
                                 disabled={!isDirty || isSubmitting}
                                 type="submit"
                                 form="authoring-form"
                                 onClick={() => setValue('request_type', 'update')}
+                                variant="primary"
+                                size="small"
                                 sx={{
-                                    ...buttonStyles,
+                                    color: colors.type.regular.primary,
+                                    fontSize: '0.875rem',
+                                    minWidth: 'max-content',
+                                    paddingX: { xs: '0.5rem', sm: '1.5rem' },
                                 }}
                             >
                                 Save Section
                             </Button>
-                            <Button
-                                disabled={!isDirty || isSubmitting}
-                                type="submit"
-                                form="authoring-form"
-                                onClick={() => setValue('request_type', 'preview')}
-                                sx={{
-                                    ...buttonStyles,
-                                    marginLeft: 'auto',
-                                }}
+                            <Tooltip
+                                placement="top"
+                                title={
+                                    <BodyText size="small" color="currentcolor">
+                                        Opens in new window <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                                    </BodyText>
+                                }
                             >
-                                <img
-                                    style={{
-                                        paddingRight: '0.3rem',
-                                        filter: !isDirty || isSubmitting ? 'opacity(40%)' : 'opacity(100%)',
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    type="button"
+                                    href={`${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`}
+                                    icon={<img src={pagePreview} alt="" aria-hidden="true" />}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        // If the preview window is still open, bring it to the foreground
+                                        if (getActivePreviewWindow()) {
+                                            syncPreviewWindowUrl(pageName);
+                                            getActivePreviewWindow()?.focus();
+                                            return;
+                                        }
+                                        // Cancel the navigation and open the preview in a new browser window instead, to avoid losing unsaved changes
+                                        const {
+                                            screenLeft,
+                                            screenTop,
+                                            screen: { availHeight, availWidth },
+                                        } = window;
+                                        // Calculate the position to split the screen in half and open the preview in the center of the right half
+                                        const previewHeight = availHeight - 75; // leave some space to avoid overlapping with browser UI
+                                        const previewWidth = availWidth / 2; // open in the center of the right half, leaving some space on the sides
+                                        const left = screenLeft + availWidth / 2;
+                                        const top = screenTop + 37;
+                                        const openedPreviewWindow = window.open(
+                                            `${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`,
+                                            'popup',
+                                            `width=${previewWidth},height=${previewHeight},top=${top},left=${left}`,
+                                        );
+                                        setPreviewWindow(openedPreviewWindow);
+                                        if (openedPreviewWindow) {
+                                            postPreviewScrollMessage(openedPreviewWindow, pageName);
+                                        }
                                     }}
-                                    src={pagePreview}
-                                    alt=""
-                                    aria-hidden="true"
-                                />
-                                Preview
-                            </Button>
-                        </Box>
+                                    LinkComponent={RouterLinkRenderer}
+                                    target="_blank"
+                                    sx={{
+                                        marginLeft: 'auto',
+                                        color: colors.type.regular.primary,
+                                        fontSize: '0.875rem',
+                                        minWidth: 'max-content',
+                                        paddingX: { xs: '0.5rem', sm: '1.5rem' },
+                                    }}
+                                >
+                                    Preview
+                                </Button>
+                            </Tooltip>
+                        </Grid>
                     </ResponsiveContainer>
                 </ThemeProvider>
-            </Box>
+            </Grid>
         </AppBar>,
         portalEl,
     );
@@ -288,20 +450,28 @@ const LanguageSelector = ({
                     cancelButtonText={'Cancel & Go Back'}
                 />
             </Modal>
-
-            <Suspense>
+            <Suspense
+                fallback={
+                    <Select
+                        disabled
+                        renderValue={() => <CircularProgress sx={{ position: 'relative', top: '3px' }} size={20} />}
+                        value="loading"
+                        sx={{ height: '2.5rem', borderRadius: '8px', minWidth: '130px', textAlign: 'center' }}
+                    />
+                }
+            >
                 <Await resolve={languages}>
                     {(languages) => (
                         <Select
                             value={currentLanguage.id}
                             onChange={handleSelectChange}
+                            variant="standard"
+                            slotProps={{
+                                input: { sx: { height: '100% !important', lineHeight: '38px' } },
+                            }}
                             sx={{
-                                height: '2.6rem',
-                                borderRadius: '8px',
-                                width: { xs: '100%', sm: 'unset' },
                                 minWidth: '130px',
                                 backgroundColor: colors.surface.gray[10],
-                                border: 'none',
                                 color: Palette.text.primary,
                                 fontSize: '0.9rem',
                                 cursor: 'pointer',

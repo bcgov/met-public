@@ -58,8 +58,10 @@ export const WhoIsListeningProvider = ({ children }: { children: JSX.Element | J
     const { savedEngagement } = useContext(ActionContext);
     const [getContactsTrigger] = useLazyGetContactsQuery();
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.WhoIsListening) || null;
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.WhoIsListening) ||
+        null;
 
     const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
     const [addContactDrawerOpen, setAddContactDrawerOpen] = useState(false);

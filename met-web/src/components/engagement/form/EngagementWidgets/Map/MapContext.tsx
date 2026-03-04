@@ -60,9 +60,10 @@ export const MapContext = createContext<MapContextProps>({
 });
 
 export const MapProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Map) || null;
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Map) || null;
     const [mapData, setMapData] = useState<WidgetMap | null>(null);
     const [previewMap, setPreviewMap] = useState<PreviewMap | null>(null);
     const [previewMapOpen, setPreviewMapOpen] = useState(false);

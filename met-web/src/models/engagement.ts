@@ -31,6 +31,9 @@ export interface Engagement {
     consent_message: string;
     sponsor_name: string;
     tenant_id: number;
+    subscribe_section_shown?: boolean;
+    subscribe_section_header?: string;
+    subscribe_section_description?: string;
 }
 
 export interface Status {

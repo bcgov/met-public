@@ -58,8 +58,9 @@ export const SubscribeContext = createContext<SubscribeContextProps>({
 
 export const SubscribeProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Subscribe) || null;
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Subscribe) || null;
     const [subscribeOptionToEdit, setSubscribeOptionToEdit] = useState<SubscribeForm | null>(null);
     const [emailListTabOpen, setEmailListTabOpen] = useState(false);
     const [formSignUpTabOpen, setFormSignUpTabOpen] = useState(false);

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
+import { FormControlLabel, Grid2 as Grid, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
 import { Await, useLoaderData, useOutletContext } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
@@ -22,6 +22,16 @@ import { Engagement } from 'models/engagement';
 
 const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
+
+const sectionOptions = (
+    <>
+        <MenuItem value={EngagementViewSections.DESCRIPTION}>Summary Section</MenuItem>
+        <MenuItem value={EngagementViewSections.DETAILS_TABS}>Details Section</MenuItem>
+        <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>Provide Feedback Section</MenuItem>
+        <MenuItem value={EngagementViewSections.VIEW_RESULTS}>Results Section</MenuItem>
+        <MenuItem value={EngagementViewSections.SUBSCRIBE}>Subscribe Section</MenuItem>
+    </>
+);
 
 const AuthoringBanner = () => {
     // Access the form functions and values from the authoring template
@@ -187,7 +197,7 @@ const AuthoringBanner = () => {
                     </Suspense>
                 </AuthoringFormSection>
 
-                <Grid item sx={{ mt: '1rem' }}>
+                <Grid sx={{ mt: '1rem' }}>
                     <Header3>Engagement State Content Variants</Header3>
                     <BodyText size="small">
                         The content in this section of your engagement may be changed based on the state or status of
@@ -197,9 +207,9 @@ const AuthoringBanner = () => {
                 <AuthoringFormSection
                     name="“Upcoming” State Message Text "
                     details={
-                        "While your engagement is open, the Primary CTA (button) in your engagement's hero banner should " +
-                        'link to the most important action you want your engagement audience to take. Enter text for the ' +
-                        'Primary CTA (button) below and then indicate where you would like it to link to.'
+                        'If you are going to publish your engagement before it is “Open”, ' +
+                        'you may add message text to your hero banner advising your engagement ' +
+                        'audience to come back later to provide feedback.'
                     }
                 >
                     <BodyText size="small" bold sx={{ mb: -2 }}>
@@ -212,6 +222,7 @@ const AuthoringBanner = () => {
                             options: ['inline', 'link', 'history'],
                             inline: { options: ['bold', 'italic', 'underline', 'superscript', 'subscript'] },
                         }}
+                        placeholder="This engagement is not available for feedback yet; please visit again later."
                         editorState={upcomingEditorState}
                         onEditorStateChange={(value) => updateEditorState(value, 'upcoming_message')}
                     />
@@ -224,7 +235,7 @@ const AuthoringBanner = () => {
                     name="“Open” State Primary CTA"
                     labelFor="cta_button_text"
                     details={
-                        "When your engagement is open the Primary CTA (button) in your engagement's hero banner should " +
+                        'When your engagement is open the Primary CTA (button) in your engagement’s hero banner should ' +
                         'link to the most important action you want your engagement audience to take. Enter text for the ' +
                         'Primary CTA (button) below and then indicate where you would like it to link to.'
                     }
@@ -239,7 +250,7 @@ const AuthoringBanner = () => {
                                 title="Primary CTA (Button) Text"
                                 counter
                                 maxLength={20}
-                                placeholder="Call-to-action button text"
+                                placeholder="Learn More"
                                 error={errors.open_cta?.message}
                             />
                         )}
@@ -248,14 +259,31 @@ const AuthoringBanner = () => {
                         name="open_cta_link_type"
                         control={control}
                         render={({ field }) => (
-                            <RadioGroup row id="cta_link_radio" {...field}>
-                                <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
+                            <Grid
+                                container
+                                size={12}
+                                direction="row"
+                                columnSpacing={4}
+                                component={RadioGroup}
+                                row
+                                id="cta_link_radio"
+                                {...field}
+                            >
+                                <Grid container size={6} direction="column">
                                     <FormControlLabel
                                         value="internal"
-                                        control={<Radio />}
+                                        control={<Radio color={'info'} />}
+                                        slotProps={{
+                                            typography: {
+                                                sx: {
+                                                    fontSize: '0.875rem',
+                                                    fontWeight: 'bold',
+                                                    color: 'text.secondary',
+                                                },
+                                            },
+                                        }}
                                         label="In-Page Section Link"
                                     />
-                                    <br />
                                     <Controller
                                         name="open_section_link"
                                         control={control}
@@ -264,26 +292,35 @@ const AuthoringBanner = () => {
                                                 {...field}
                                                 disabled={watch('open_cta_link_type') !== 'internal'}
                                                 aria-label="Section Link"
-                                                fullWidth
-                                                sx={{ mt: 1, height: '3em', '& fieldset': { borderColor: '#7A7876' } }}
+                                                sx={{
+                                                    width: 'calc(100% - 1.5rem)',
+                                                    ml: 3,
+                                                    mt: 1,
+                                                    height: '3em',
+                                                    '& fieldset': { borderColor: '#7A7876' },
+                                                }}
                                                 id="section_link"
                                             >
-                                                <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>
-                                                    Provide Feedback Section
-                                                </MenuItem>
-                                                <MenuItem value={EngagementViewSections.DETAILS_TABS}>
-                                                    Tabbed Content
-                                                </MenuItem>
-                                                <MenuItem value={EngagementViewSections.DESCRIPTION}>
-                                                    Description Section
-                                                </MenuItem>
+                                                {sectionOptions}
                                             </Select>
                                         )}
                                     />
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <FormControlLabel value="external" control={<Radio />} label="External URL" />
-                                    <br />
+                                <Grid container direction="column" size={6}>
+                                    <FormControlLabel
+                                        value="external"
+                                        control={<Radio color="info" />}
+                                        slotProps={{
+                                            typography: {
+                                                sx: {
+                                                    fontSize: '0.875rem',
+                                                    fontWeight: 'bold',
+                                                    color: 'text.secondary',
+                                                },
+                                            },
+                                        }}
+                                        label="External URL"
+                                    />
                                     <Controller
                                         name="open_external_link"
                                         aria-label="External URL"
@@ -291,9 +328,10 @@ const AuthoringBanner = () => {
                                         render={({ field }) => (
                                             <TextField
                                                 {...field}
+                                                width="calc(100% - 1.5rem)"
                                                 value={field.value || undefined}
                                                 disabled={watch('open_cta_link_type') !== 'external'}
-                                                sx={{ backgroundColor: colors.surface.white }}
+                                                sx={{ backgroundColor: colors.surface.white, ml: 3 }}
                                                 id="external_link"
                                                 placeholder="Paste or type URL here"
                                                 error={errors.open_external_link?.message}
@@ -302,7 +340,7 @@ const AuthoringBanner = () => {
                                         )}
                                     />
                                 </Grid>
-                            </RadioGroup>
+                            </Grid>
                         )}
                     />
                 </AuthoringFormSection>
@@ -323,6 +361,7 @@ const AuthoringBanner = () => {
                             options: ['inline', 'link', 'history'],
                             inline: { options: ['bold', 'italic', 'underline', 'superscript', 'subscript'] },
                         }}
+                        placeholder="This engagement is now closed. Please return later to view the results."
                         editorState={closedEditorState}
                         onEditorStateChange={(value) => updateEditorState(value, 'closed_message')}
                     />
@@ -350,7 +389,7 @@ const AuthoringBanner = () => {
                                 title="Button (Primary CTA) Text"
                                 counter
                                 maxLength={20}
-                                placeholder="View results text"
+                                placeholder="View results"
                             />
                         )}
                     />
@@ -359,7 +398,7 @@ const AuthoringBanner = () => {
                         control={control}
                         render={({ field }) => (
                             <RadioGroup row id="cta_view_results_radio" defaultValue="internal" {...field}>
-                                <Grid item xs={6} direction="column" sx={{ paddingRight: '2rem' }}>
+                                <Grid size={6} direction="column" sx={{ paddingRight: '2rem' }}>
                                     <FormControlLabel
                                         value="internal"
                                         control={<Radio />}
@@ -378,20 +417,12 @@ const AuthoringBanner = () => {
                                                 sx={{ mt: 1, height: '3em', '& fieldset': { borderColor: '#7A7876' } }}
                                                 id="view_results_link"
                                             >
-                                                <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>
-                                                    Provide Feedback Section
-                                                </MenuItem>
-                                                <MenuItem value={EngagementViewSections.DETAILS_TABS}>
-                                                    Tabbed Content
-                                                </MenuItem>
-                                                <MenuItem value={EngagementViewSections.DESCRIPTION}>
-                                                    Description Section
-                                                </MenuItem>
+                                                {sectionOptions}
                                             </Select>
                                         )}
                                     />
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid size={6}>
                                     <FormControlLabel value="external" control={<Radio />} label="External URL" />
                                     <br />
 

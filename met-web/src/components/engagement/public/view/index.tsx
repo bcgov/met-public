@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router';
 import { EngagementHero } from './EngagementHero';
 import { EngagementDescription } from './EngagementDescription';
 import { EngagementDetailsTabs } from './EngagementDetailsTabs';
@@ -11,11 +12,16 @@ export enum EngagementViewSections {
     DETAILS_TABS = 'detailsTabs',
     CONTENT_TABS = 'contentTabs',
     PROVIDE_FEEDBACK = 'provideFeedback',
+    VIEW_RESULTS = 'viewResults',
+    SUBSCRIBE = 'subscribe',
+    MORE_ENGAGEMENTS = 'moreEngagements',
 }
 
 export const PublicEngagementView = () => {
+    const { slug, engagementId, language } = useParams();
+    const viewKey = `${slug ?? engagementId ?? 'engagement'}-${language ?? 'default'}`;
     return (
-        <main>
+        <main key={viewKey}>
             <EngagementHero />
             <EngagementDescription />
             <EngagementDetailsTabs />

@@ -1,3 +1,12 @@
+## March 3, 2026
+
+- **Feature** Add engagement preview functionality [🎟️ DEP-73](https://citz-gdx.atlassian.net/browse/DEP-73)
+  - The Preview button in the authoring view now opens a new window in split-screen (if possible) to show a live preview of the engagement as it would appear to the public.
+    - Updated button icon to use the SVG provided by design
+  - The preview page is a new route in the application that loads the engagement data and renders it using the public-facing components, allowing authors to see exactly how their content will appear to users.
+  - Added preview components, including TextPlaceholder for uncompleted content, and PreviewSwitch and PreviewRender components to handle conditional rendering of preview vs live data.
+  - Implemented a new context and loader for the preview data, which fetches the engagement data and provides it to the preview components.
+
 ## February 26, 2026
 
 - Added delete functionality to survey section [🎟️ DEP-174](https://citz-gdx.atlassian.net/browse/DEP-94)

@@ -8,10 +8,12 @@
   "examples": [
     {
       "widget_type_id": 1,
-      "engagement_id": 1
+      "engagement_id": 1,
+      "location": 1,
+      "engagement_details_tab_id": null
     }
   ],
-  "required": ["widget_type_id", "engagement_id"],
+  "required": ["widget_type_id", "engagement_id", "location"],
   "properties": {
     "widget_type_id": {
       "$id": "#/properties/widget_type_id",
@@ -26,6 +28,20 @@
       "title": "Engagement id",
       "description": "The engagement to which this widget belongs.",
       "examples": [1]
+    },
+    "location": {
+      "$id": "#/properties/location",
+      "type": "number",
+      "title": "Widget location",
+      "description": "The position in the engagement layout where this widget appears.",
+      "examples": [1]
+    },
+    "engagement_details_tab_id": {
+      "$id": "#/properties/engagement_details_tab_id",
+      "type": ["number", "null"],
+      "title": "Engagement details tab id",
+      "description": "Optional details tab ID for tab-specific widgets.",
+      "examples": [1, null]
     }
   }
 }

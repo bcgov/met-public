@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { WidgetDrawerContext } from 'components/engagement/form/EngagementWidgets/WidgetDrawerContext';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { If, Else, Then } from 'react-if';
 import { useAppDispatch } from 'hooks';
 import { colors } from 'styles/Theme';
@@ -18,15 +18,34 @@ import { WidgetLocation } from 'models/widget';
  * @example
  * <WidgetPickerButton location={WidgetLocation.Header} />
  */
-export const WidgetPickerButton = ({ location }: { location: WidgetLocation }) => {
-    const { widgets, deleteWidget, handleWidgetDrawerOpen, isWidgetsLoading, setWidgetLocation } =
+export const WidgetPickerButton = ({
+    location,
+    detailsTabId,
+    tabIndex,
+}: {
+    location: WidgetLocation;
+    detailsTabId?: number;
+    tabIndex?: number;
+}) => {
+    const { widgets, deleteWidget, setWidgetDrawerOpen, isWidgetsLoading, setWidgetLocation, setWidgetDetailsTabId } =
         useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
+    const validDetailsTabId = detailsTabId && detailsTabId > 0 ? detailsTabId : undefined;
+    const locationWidgets = widgets.filter(
+        (w) =>
+            w.location === location &&
+            (location !== WidgetLocation.Details ||
+                (w.engagement_details_tab_id ?? null) === (validDetailsTabId ?? null)),
+    );
 
     useEffect(() => {
         setWidgetLocation(location);
-        return () => setWidgetLocation(0);
-    }, []);
+        setWidgetDetailsTabId(validDetailsTabId ?? null);
+        return () => {
+            setWidgetLocation(0);
+            setWidgetDetailsTabId(null);
+        };
+    }, [location, validDetailsTabId, setWidgetLocation, setWidgetDetailsTabId]);
 
     const removeWidget = (widgetId: number) => {
         dispatch(
@@ -52,24 +71,24 @@ export const WidgetPickerButton = ({ location }: { location: WidgetLocation }) =
         <Grid container spacing={2} direction="column">
             <If condition={isWidgetsLoading}>
                 <Then>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Skeleton width="100%" height="3em" />
                     </Grid>
                 </Then>
                 <Else>
-                    <Grid item>
-                        {/* Only ever render the first selected widget. This may change in the future. */}
-                        {widgets.length > 0 ? (
+                    <Grid>
+                        {/* Only ever render the widget assigned to this location. */}
+                        {locationWidgets.length > 0 ? (
                             <WidgetCardSwitch
                                 singleSelection={true}
-                                key={`${widgets[0].widget_type_id}`}
-                                widget={widgets[0]}
+                                key={locationWidgets[0].id}
+                                widget={locationWidgets[0]}
                                 removeWidget={removeWidget}
                             />
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => handleWidgetDrawerOpen(true)}
+                                onClick={() => setWidgetDrawerOpen(true)}
                                 style={{
                                     width: '100%',
                                     borderRadius: '8px',

@@ -1,8 +1,5 @@
 """Service for widget management."""
-from http import HTTPStatus
-
 from met_api.constants.membership_type import MembershipType
-from met_api.exceptions.business_exception import BusinessException
 from met_api.models.widget import Widget as WidgetModel
 from met_api.models.widget_item import WidgetItem
 from met_api.schemas.widget import WidgetSchema
@@ -42,41 +39,8 @@ class WidgetService:
         if widget_data.get('engagement_id', None) != int(engagement_id):
             raise ValueError('widget data has engagement id for a different engagement')
 
-        sort_index = WidgetService._find_higest_sort_index(engagement_id)
-
-        widget_data['sort_index'] = sort_index + 1
         created_widget = WidgetModel.create_widget(widget_data)
         return WidgetSchema().dump(created_widget)
-
-    @staticmethod
-    def _find_higest_sort_index(engagement_id):
-        # find the highest sort order of the engagement
-        sort_index = 0
-        widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
-        if widgets:
-            # Find the largest in the existing widgest
-            sort_index = max(widget.sort_index for widget in widgets)
-        return sort_index
-
-    @staticmethod
-    def sort_widget(engagement_id, widgets: list, user_id=None):
-        """Sort widgets."""
-        WidgetService._validate_widget_ids(engagement_id, widgets)
-
-        one_of_roles = (
-            MembershipType.TEAM_MEMBER.name,
-            Role.EDIT_ENGAGEMENT.value
-        )
-        authorization.check_auth(one_of_roles=one_of_roles, engagement_id=engagement_id)
-
-        widget_sort_mappings = [{
-            'id': widget.get('id'),
-            'sort_index': index + 1,
-            'updated_by': user_id
-        } for index, widget in enumerate(widgets)
-        ]
-
-        WidgetModel.update_widgets(widget_sort_mappings)
 
     @staticmethod
     def update_widget(engagement_id, widget_id: list, widget_data: dict, user_id=None):
@@ -93,17 +57,6 @@ class WidgetService:
 
         updated_widget = WidgetModel.update_widget(engagement_id, widget_id, widget_data)
         return WidgetSchema().dump(updated_widget)
-
-    @staticmethod
-    def _validate_widget_ids(engagement_id, widgets):
-        """Validate if widget ids belong to the engagement."""
-        eng_widgets = WidgetModel.get_widgets_by_engagement_id(engagement_id)
-        widget_ids = [widget.id for widget in eng_widgets]
-        input_widget_ids = [widget_item.get('id') for widget_item in widgets]
-        if len(set(widget_ids) - set(input_widget_ids)) > 0:
-            raise BusinessException(
-                error='Invalid widgets.',
-                status_code=HTTPStatus.BAD_REQUEST)
 
     @staticmethod
     def _verify_widget(widget_id):
