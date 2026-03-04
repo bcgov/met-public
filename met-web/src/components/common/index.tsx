@@ -5,8 +5,6 @@ import {
     Paper as MuiPaper,
     CircularProgress,
     Typography,
-    Stack,
-    IconButton,
     Box,
     CircularProgressProps,
     ToggleButton,
@@ -15,13 +13,9 @@ import {
     styled,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
-import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { Palette, colors } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
-import { When } from 'react-if';
 export { colors };
 
 export const elevations = {
@@ -217,16 +211,6 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
     backgroundColor: '#F2F2F2',
     padding: '1em',
 }));
-
-interface MetSurveyProps {
-    testId?: number;
-    title: string;
-    children?: React.ReactNode;
-    [prop: string]: unknown;
-    onEditClick?: () => void;
-    onDeleteClick?: () => void;
-    deleting?: boolean;
-}
 
 export const MidScreenLoader = ({ message }: { message?: string }) => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
