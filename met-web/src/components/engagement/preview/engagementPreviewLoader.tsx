@@ -40,10 +40,8 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
         throw new Error('Engagement ID is required');
     }
 
-    const tenantId =
-        globalThis !== undefined && typeof globalThis.sessionStorage !== 'undefined'
-            ? globalThis.sessionStorage.getItem('tenantId')
-            : null;
+    const tenantId = globalThis?.sessionStorage?.getItem('tenantId') || null;
+
     const languages = tenantId ? getTenantLanguages(tenantId) : Promise.resolve([]);
     const slug = getSlugByEngagementId(Number(engagementId))
         .then((response) => response.slug)

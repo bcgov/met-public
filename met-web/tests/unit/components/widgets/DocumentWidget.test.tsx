@@ -18,8 +18,7 @@ import {
     EngagementSettings,
 } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { Widget, WidgetType } from 'models/widget';
-import { WidgetLocation } from 'models/widget';
+import { Widget, WidgetType, WidgetLocation } from 'models/widget';
 import { DocumentItem } from 'models/document';
 import { USER_ROLES } from 'services/userService/constants';
 import { engagementMetadata } from '../factory';

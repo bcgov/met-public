@@ -356,7 +356,7 @@ const AuthoringBottomNav = ({
                                             screenLeft,
                                             screenTop,
                                             screen: { availHeight, availWidth },
-                                        } = window;
+                                        } = globalThis;
                                         // Calculate the position to split the screen in half and open the preview in the center of the right half
                                         const previewHeight = availHeight - 75; // leave some space to avoid overlapping with browser UI
                                         const previewWidth = availWidth / 2; // open in the center of the right half, leaving some space on the sides
