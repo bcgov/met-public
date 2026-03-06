@@ -12,10 +12,10 @@ import { Widget } from 'models/widget';
 import { WidgetSwitch } from 'components/engagement/widgets/WidgetSwitch';
 import { DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EngagementLoaderData, EngagementViewSections } from '.';
+import { EngagementLoaderPublicData, EngagementViewSections } from '.';
 
 export const EngagementDescription = () => {
-    const { engagement, widgets } = useLoaderData() as EngagementLoaderData;
+    const { engagement, widgets } = useLoaderData() as EngagementLoaderPublicData;
     return (
         <section id={EngagementViewSections.DESCRIPTION} aria-labelledby="description-header">
             <ThemeProvider theme={DarkTheme}>

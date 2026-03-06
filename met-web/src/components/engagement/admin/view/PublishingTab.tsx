@@ -8,7 +8,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Button } from 'components/common/Input';
-import { EngagementLoaderData } from 'engagements/public/view';
+import { EngagementLoaderAdminData } from '../EngagementLoaderAdmin';
 import { Engagement } from 'models/engagement';
 import { Then, If, Else } from 'react-if';
 import { EngagementStatus } from 'constants/engagementStatus';
@@ -53,7 +53,7 @@ export const PublishingTab = () => {
     const [unpublishConfirmOpen, setUnpublishConfirmOpen] = useState(false);
     const fetcher = useFetcher();
     const dispatch = useAppDispatch();
-    const { engagement } = useLoaderData() as EngagementLoaderData;
+    const { engagement } = useLoaderData() as EngagementLoaderAdminData;
     const engPubForm = useForm<PublishEngagementData>({
         defaultValues: useMemo(() => defaultValues, [defaultValues]),
         mode: 'onSubmit',

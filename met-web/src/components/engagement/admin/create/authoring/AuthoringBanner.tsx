@@ -8,7 +8,8 @@ import { BodyText } from 'components/common/Typography';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
-import { EngagementLoaderData, EngagementViewSections } from 'components/engagement/public/view';
+import { EngagementViewSections } from 'engagements/public/view';
+import { EngagementLoaderAdminData } from 'engagements/admin/EngagementLoaderAdmin';
 import { Controller, useFormContext } from 'react-hook-form';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
@@ -33,7 +34,7 @@ const AuthoringBanner = () => {
         control,
         formState: { errors, isDirty, isSubmitting },
     } = useFormContext<EngagementUpdateData>();
-    const { engagement } = useLoaderData() as EngagementLoaderData;
+    const { engagement } = useLoaderData() as EngagementLoaderAdminData;
 
     const [upcomingEditorState, setUpcomingEditorState] = useState<EditorState>(getEditorStateFromRaw(''));
     const [closedEditorState, setClosedEditorState] = useState<EditorState>(getEditorStateFromRaw(''));

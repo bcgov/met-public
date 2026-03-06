@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
 import { Engagement } from 'models/engagement';
-import { EngagementLoaderData } from 'components/engagement/public/view';
+import { EngagementLoaderAdminData } from 'components/engagement/admin/EngagementLoaderAdmin';
 import { colors } from 'styles/Theme';
 import { saveLanguage } from 'reduxSlices/languageSlice';
 
@@ -43,8 +43,8 @@ export const getLanguageValue = (languageCode: string, languages: Language[]) =>
 
 const AuthoringTemplate = () => {
     const { onSubmit, defaultValues, setDefaultValues, fetcher }: AuthoringContextType = useOutletContext();
-    const { engagementId } = useParams() as { engagementId: string; tenantId: string };
-    const { engagement, languages } = useRouteLoaderData('single-engagement') as EngagementLoaderData;
+    const { engagementId } = useParams() as { engagementId: string }; // We need the engagement ID quickly, so let's grab it from useParams
+    const { engagement, languages } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
     const dispatch = useAppDispatch();
     const currentLanguage = useAppSelector((state) => state.language);
     const setCurrentLanguage = React.useCallback(

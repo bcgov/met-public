@@ -23,6 +23,6 @@ sqlalchemy==1.4.52
 secure
 python-dotenv
 requests
-itsdangerous==2.0.1
+itsdangerous==2.2.0
 Jinja2==3.1.6
 flask-cors==6.0.1

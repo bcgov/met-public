@@ -6,7 +6,7 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { Header2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EngagementLoaderData, EngagementViewSections } from '.';
+import { EngagementLoaderPublicData, EngagementViewSections } from '.';
 import { FormDetailsTab } from 'engagements/admin/create/authoring/types';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 
@@ -30,7 +30,7 @@ const parseAndSortTabs = (tabs: EngagementDetailsTab[]): FormDetailsTabWithWidge
 };
 
 export const EngagementDetailsTabs = () => {
-    const { details } = useLoaderData() as EngagementLoaderData; // Get fresh data to avoid DB sync issues
+    const { details } = useLoaderData() as EngagementLoaderPublicData; // Get fresh data to avoid DB sync issues
     const [selectedTab, setSelectedTab] = useState('0');
     const [tabs, setTabs] = useState<FormDetailsTabWithWidget[]>([]);
     const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'), { noSsr: true });

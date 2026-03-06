@@ -10,12 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Await, useLoaderData } from 'react-router';
 import { StatusChipSkeleton } from 'components/common/Indicators/StatusChip';
-import { EngagementLoaderData, EngagementViewSections } from '.';
+import { EngagementLoaderPublicData, EngagementViewSections } from '.';
 
 export const EngagementHero = () => {
     const dateFormat = 'MMM DD, YYYY';
     const semanticDateFormat = 'YYYY-MM-DD';
-    const { engagement } = useLoaderData() as EngagementLoaderData;
+    const { engagement } = useLoaderData() as EngagementLoaderPublicData;
     const startDate = engagement?.then((engagement) => dayjs(engagement.start_date));
     const endDate = engagement?.then((engagement) => dayjs(engagement.end_date));
     const engagementInfo = Promise.all([engagement, startDate, endDate]);
