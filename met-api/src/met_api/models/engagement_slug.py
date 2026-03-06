@@ -3,7 +3,7 @@
 Manages the engagement slug
 """
 from sqlalchemy import ForeignKey, Index, or_
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, relationship
 
 from .base_model import BaseModel
 from .db import db
@@ -14,10 +14,24 @@ class EngagementSlug(BaseModel):
 
     __tablename__ = 'engagement_slug'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'), nullable=False, unique=True)
+
+    engagement_id = db.Column(
+        db.Integer,
+        ForeignKey(
+            'engagement.id',
+            ondelete='CASCADE',
+        ),
+        nullable=False,
+        unique=True,
+        index=True,
+    )
+
     slug = db.Column(db.String(200), nullable=False, unique=True)
 
-    engagement = relationship('Engagement', backref='engagement_slugs')
+    engagement = relationship(
+        'Engagement',
+        backref=backref('slugs', cascade='all, delete-orphan', passive_deletes=True),
+    )
 
     __table_args__ = (
         Index('idx_slug', slug),

@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { USER_ROLES } from 'services/userService/constants';
-import { CircularProgress, MenuItem, Select } from '@mui/material';
+import { CircularProgress, MenuItem, Modal, Select } from '@mui/material';
 import { Engagement } from 'models/engagement';
-import { useNavigate } from 'react-router';
+import { useNavigate, useRevalidator } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
 import { Palette } from 'styles/Theme';
@@ -10,6 +10,8 @@ import { getFormsSheet } from 'services/FormCAC';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { formatToUTC } from 'components/common/dateHelper';
 import { downloadFile } from 'utils';
+import ConfirmModal from 'components/common/Modals/ConfirmModal';
+import { deleteEngagement } from 'services/engagementService';
 
 interface ActionDropDownItem {
     value: number;
@@ -20,7 +22,9 @@ interface ActionDropDownItem {
 export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const revalidator = useRevalidator();
     const [isExportingCacForms, setIsExportingCacForms] = useState(false);
+    const [deleteEngagementModalOpen, setDeleteEngagementModalOpen] = useState(false);
     const { roles, assignedEngagements } = useAppSelector((state) => state.user);
     const submissionHasBeenOpened = [SubmissionStatus.Open, SubmissionStatus.Closed].includes(
         engagement.submission_status,
@@ -89,6 +93,25 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
         }
     };
 
+    const removeEngagement = async () => {
+        setDeleteEngagementModalOpen(true);
+    };
+
+    const confirmRemoveEngagement = async () => {
+        setDeleteEngagementModalOpen(false);
+        const status = engagement.status_id || engagement.engagement_status?.id || 0;
+        try {
+            if (status === EngagementStatus.Published) {
+                throw new Error('Cannot delete an engagement that is currently published');
+            }
+            await deleteEngagement(engagement.id);
+            dispatch(openNotification({ text: 'The engagement was successfully deleted', severity: 'success' }));
+            revalidator.revalidate();
+        } catch (error) {
+            dispatch(openNotification({ text: String(error), severity: 'error' }));
+        }
+    };
+
     const ITEMS: ActionDropDownItem[] = useMemo(
         () => [
             {
@@ -151,6 +174,16 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
                     (roles.includes(USER_ROLES.EXPORT_CAC_FORM_TO_SHEET) &&
                         assignedEngagements.includes(engagement.id)),
             },
+            {
+                value: 7,
+                label: 'Delete Engagement',
+                action: () => {
+                    removeEngagement();
+                },
+                condition:
+                    roles.includes(USER_ROLES.SUPER_ADMIN) ||
+                    (roles.includes(USER_ROLES.UNPUBLISH_ENGAGEMENT) && assignedEngagements.includes(engagement.id)),
+            },
         ],
         [engagement.id],
     );
@@ -160,21 +193,43 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
     }
 
     return (
-        <Select
-            id={`action-drop-down-${engagement.id}`}
-            value={0}
-            fullWidth
-            size="small"
-            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
-        >
-            <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
-                {'(Select One)'}
-            </MenuItem>
-            {ITEMS.filter((item) => item.condition).map((item) => (
-                <MenuItem key={item.value} value={item.value} onClick={item.action}>
-                    {item.label}
+        <>
+            {/* prevent user from accidentally deleting a survey */}
+            <Modal open={deleteEngagementModalOpen} aria-describedby="delete-engagement-modal-subtext">
+                <ConfirmModal
+                    style="danger"
+                    header={`Are you sure you want to delete ${engagement.name || 'this engagement'}?`}
+                    subHeader="This action cannot be undone."
+                    subTextId="delete-engagement-modal-subtext"
+                    subText={[
+                        {
+                            text: 'You will not be able to delete an engagement if it is published or you are in the production environment.',
+                            bold: false,
+                        },
+                    ]}
+                    handleConfirm={confirmRemoveEngagement}
+                    handleClose={() => setDeleteEngagementModalOpen(false)}
+                    confirmButtonText={'Delete Engagement'}
+                    cancelButtonText={'Cancel & Go Back'}
+                />
+            </Modal>
+
+            <Select
+                id={`action-drop-down-${engagement.id}`}
+                value={0}
+                fullWidth
+                size="small"
+                sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+            >
+                <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
+                    {'(Select One)'}
                 </MenuItem>
-            ))}
-        </Select>
+                {ITEMS.filter((item) => item.condition).map((item) => (
+                    <MenuItem key={item.value} value={item.value} onClick={item.action}>
+                        {item.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </>
     );
 };

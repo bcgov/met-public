@@ -1,3 +1,11 @@
+## March 8, 2026
+
+- Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
+  - All attempts to delete an engagement from the production environment will fail
+  - Published engagements can not be deleted in any environment
+  - Only super admins or users authorized to unpublish a specific engagement can delete
+  - Surveys are not going to be erased when an engagement is deleted, for now
+
 ## February 26, 2026
 
 - Added delete functionality to survey section [🎟️ DEP-174](https://citz-gdx.atlassian.net/browse/DEP-94)

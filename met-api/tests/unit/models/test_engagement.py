@@ -17,8 +17,10 @@ Test suite to ensure that the Engagement model routines are working as expected.
 """
 
 from faker import Faker
+import pytest
 
 from met_api.constants.engagement_status import Status
+from met_api.models import db
 from met_api.models.engagement_metadata import EngagementMetadata
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
@@ -291,3 +293,31 @@ def test_get_engagements_metadata_match_any(session):
     # This should find *any* matching value, so the inclusion of a non-matching
     # value "test2" should not change the result
     assert count == 6
+
+
+def test_delete_engagement_success(session):
+    """Assert that delete removes the engagement and returns the deleted instance."""
+    engagement = factory_engagement_model()
+    db.session.add(engagement)
+    db.session.commit()
+    engagement_id = engagement.id
+
+    found = EngagementModel.find_by_id(engagement_id)
+    assert found is not None
+
+    deleted = EngagementModel.delete_engagement(engagement_id)
+
+    assert deleted is not None
+    assert deleted.id == engagement_id
+
+    assert EngagementModel.find_by_id(engagement_id) is None
+
+
+def test_delete_engagement_not_found_raises(session):
+    """Assert that delete_engagement raises ValueError if the engagement does not exist."""
+    non_existent_id = 999999
+
+    with pytest.raises(ValueError) as excinfo:
+        EngagementModel.delete_engagement(non_existent_id)
+
+    assert str(excinfo.value) == 'Engagement not found.'
