@@ -23,9 +23,10 @@ export const VideoContext = createContext<VideoContextProps>({
 });
 
 export const VideoContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Video) ?? null;
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Video) ?? null;
     const [isLoadingVideoWidget, setIsLoadingVideoWidget] = useState(true);
     const [videoWidget, setVideoWidget] = useState<VideoWidget | null>(null);
 

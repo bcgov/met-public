@@ -20,15 +20,20 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
 
     __tablename__ = 'widget'
     __table_args__ = (
-        db.UniqueConstraint('widget_type_id', 'engagement_id', name='unique_widget_type'),
+        db.UniqueConstraint(
+            'location',
+            'engagement_id',
+            'engagement_details_tab_id',
+            name='unique_widget_location_tab'
+        ),
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='RESTRICT'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
+    engagement_details_tab_id = db.Column(db.Integer, ForeignKey('engagement_details_tabs.id', ondelete='CASCADE'))
     title = db.Column(db.String(100), comment='Custom title for the widget.')
     items = db.relationship('WidgetItem', backref='widget', cascade='all, delete', order_by='WidgetItem.sort_index')
-    sort_index = db.Column(db.Integer, nullable=False, default=1)
     location = db.Column(db.Integer, nullable=False)
 
     @classmethod
@@ -45,7 +50,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
         return db.session.query(Widget)\
             .join(WidgetItem, Widget.id == WidgetItem.widget_id, isouter=True)\
             .filter(Widget.engagement_id == engagement_id)\
-            .order_by(Widget.sort_index.asc())\
+            .order_by(Widget.location.asc())\
             .all()
 
     @classmethod
@@ -62,13 +67,13 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
         return Widget(
             widget_type_id=widget.get('widget_type_id', None),
             engagement_id=widget.get('engagement_id', None),
-            sort_index=widget.get('sort_index', 1),
             created_date=datetime.utcnow(),
             updated_date=datetime.utcnow(),
             created_by=widget.get('created_by', None),
             updated_by=widget.get('updated_by', None),
             title=widget.get('title', None),
             location=widget.get('location', None),
+            engagement_details_tab_id=widget.get('engagement_details_tab_id', None),
         )
 
     @classmethod

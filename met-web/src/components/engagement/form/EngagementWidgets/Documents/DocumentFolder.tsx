@@ -30,8 +30,10 @@ const DocumentFolder = ({
 }) => {
     const dispatch = useAppDispatch();
     const { documents, loadDocuments } = useContext(DocumentsContext);
-    const { widgets } = useContext(WidgetDrawerContext);
-    const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
+    const { widgets, widgetLocation } = useContext(WidgetDrawerContext);
+    const documentWidget = widgets.find(
+        (widget: Widget) => widget.widget_type_id === WidgetType.Document && widget.location === widgetLocation,
+    );
     const [edit, setEdit] = useState<boolean>(false);
     const [document, setDocument] = useState<DocumentItem | undefined>(documentItem);
 

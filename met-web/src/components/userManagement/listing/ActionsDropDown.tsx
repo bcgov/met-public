@@ -1,7 +1,6 @@
 import React, { useMemo, useContext } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { User, USER_COMPOSITE_ROLE, USER_STATUS } from 'models/user';
-import { Palette } from 'styles/Theme';
 import { UserManagementContext } from './UserManagementContext';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
@@ -90,7 +89,7 @@ export const ActionsDropDown = ({ selectedUser }: { selectedUser: User }) => {
             value={0}
             fullWidth
             size="small"
-            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+            sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}

@@ -10,6 +10,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { saveObject } from 'services/objectStorageService';
 import { FormDetailsTab } from './types';
+import { AuthoringPreviewWindowProvider } from './AuthoringPreviewWindowContext';
 
 const tabSchema = yup.object({
     id: yup.number().required(),
@@ -135,6 +136,13 @@ export interface EngagementUpdateData
     json_content: string;
     summary_editor_state: EditorState;
     details_tabs: FormDetailsTab[];
+    feedback_section_heading: string;
+    feedback_body_copy: string;
+    feedback_editor_state: EditorState;
+    feedback_survey_button_text: string;
+    feedback_third_party_cta_text: string;
+    feedback_third_party_cta_link: string;
+    feedback_widget_type: string;
     form_source: string;
 }
 
@@ -183,6 +191,14 @@ export const defaultValuesObject = {
     selected_survey_id: -1,
     // Details fields
     details_tabs: [],
+    // Provide feedback fields
+    feedback_section_heading: '',
+    feedback_body_copy: '',
+    feedback_editor_state: EditorState.createEmpty(),
+    feedback_survey_button_text: '',
+    feedback_third_party_cta_text: '',
+    feedback_third_party_cta_link: '',
+    feedback_widget_type: '',
     // Determines which page the form is being sent from
     form_source: '',
 } as EngagementUpdateData;
@@ -302,9 +318,11 @@ export const AuthoringContext = () => {
     };
 
     return (
-        <FormProvider key={pageName || 'authoring-form'} {...engagementUpdateForm}>
-            <Outlet context={{ onSubmit, defaultValues, setDefaultValues, fetcher }} />
-        </FormProvider>
+        <AuthoringPreviewWindowProvider>
+            <FormProvider key={pageName || 'authoring-form'} {...engagementUpdateForm}>
+                <Outlet context={{ onSubmit, defaultValues, setDefaultValues, fetcher }} />
+            </FormProvider>
+        </AuthoringPreviewWindowProvider>
     );
 };
 

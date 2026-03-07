@@ -18,11 +18,19 @@ import { ActionProvider } from 'components/engagement/form/ActionContext';
  * @see {@link WidgetDrawer} for the drawer that displays available widgets.
  * @see {@link WidgetDrawerProvider} for the context provider that manages widget state.
  */
-export const WidgetPicker = ({ location }: { location: WidgetLocation }) => {
+export const WidgetPicker = ({
+    location,
+    detailsTabId,
+    tabIndex,
+}: {
+    location: WidgetLocation;
+    detailsTabId?: number;
+    tabIndex?: number;
+}) => {
     return (
         <ActionProvider>
             <WidgetDrawerProvider>
-                <WidgetPickerButton location={location} />
+                <WidgetPickerButton location={location} detailsTabId={detailsTabId} tabIndex={tabIndex} />
                 <WidgetDrawer />
             </WidgetDrawerProvider>
         </ActionProvider>

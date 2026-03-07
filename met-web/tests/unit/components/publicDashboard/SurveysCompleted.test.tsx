@@ -30,11 +30,17 @@ const renderComponent = () => {
 describe('SurveysCompleted Component Tests', () => {
     const getAggregatorMock = jest.spyOn(aggregatorService, 'getAggregatorData');
 
-    beforeEach(() => {
-        jest.resetAllMocks();
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
-    test('displays loading indicator while fetching data', () => {
+    test('displays loading indicator while fetching data', async () => {
+        getAggregatorMock.mockReturnValueOnce(
+            Promise.resolve({
+                key: '',
+                value: 0,
+            }),
+        );
         getAggregatorMock.mockReturnValueOnce(
             Promise.resolve({
                 key: '',
@@ -42,6 +48,9 @@ describe('SurveysCompleted Component Tests', () => {
             }),
         );
         render(<SurveysCompleted engagement={mockEngagement} engagementIsLoading={true} />);
+        await waitFor(() => {
+            expect(getAggregatorMock).toHaveBeenCalledTimes(2);
+        });
         expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 

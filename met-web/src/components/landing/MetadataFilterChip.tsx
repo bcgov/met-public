@@ -16,6 +16,7 @@ export const MetadataFilterChip = ({
     const theme = useTheme();
     const { t: translate } = useAppTranslation();
     const selectionHint = translate(selected ? 'landing.filters.aria.selected' : 'landing.filters.aria.notSelected');
+    const textColor = selected ? theme.palette.primary.contrastText : theme.palette.text.primary;
     return (
         <Chip
             size="medium"
@@ -26,27 +27,27 @@ export const MetadataFilterChip = ({
             color="default"
             avatar={
                 selected ? (
-                    <FontAwesomeIcon icon={faCheck} style={{ fontSize: '20px', color: theme.palette.primary.light }} />
+                    <FontAwesomeIcon icon={faCheck} style={{ height: '16px', width: '16px', color: textColor }} />
                 ) : undefined
             }
             variant={selected ? 'filled' : 'outlined'}
             onClick={onClick}
             sx={{
-                mr: 1,
+                mr: selected ? 1 : 2,
                 mb: 2,
                 p: 1,
                 height: '48px',
                 fontWeight: selected ? 'bold' : 'normal',
-                borderColor: selected ? '#053662' : '#D8EAFD',
+                borderColor: selected ? 'primary.contrastText' : 'blue.20',
                 borderRadius: '2em',
-                backgroundColor: selected ? '#D8EAFD' : 'transparent',
-                color: selected ? theme.palette.primary.light : 'white',
+                backgroundColor: selected ? 'blue.20' : 'transparent',
+                color: textColor,
                 fontSize: '16px',
                 '&.MuiChip-clickable:hover': {
-                    backgroundColor: selected ? '#F1F8FE' : '#1E5189',
+                    backgroundColor: selected ? 'blue.10' : 'blue.100',
                 },
                 '&:focus': {
-                    backgroundColor: selected ? '#F1F8FE' : '#1E5189',
+                    backgroundColor: selected ? 'blue.10' : 'blue.100',
                 },
                 '&:focus-visible': {
                     outline: 'white 2px dashed', // Remove default outline

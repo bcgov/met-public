@@ -1,49 +1,107 @@
 import React from 'react';
-import { Divider, Grid } from '@mui/material';
-import WhoIsListeningOptionCard from './WhoIsListening/WhoIsListeningOptionCard';
-import { MetHeader3 } from 'components/common';
-import DocumentOptionCard from './Documents/DocumentOptionCard';
-import SubscribeOptionCard from './Subscribe/SubscribeOptionCard';
-import EventsOptionCard from './Events/EventsOptionCard';
-import MapOptionCard from './Map/MapOptionCard';
-import VideoOptionCard from './Video/VideoOptionCard';
-import TimelineOptionCard from './Timeline/TimelineOptionCard';
-import PollOptionCard from './Poll/PollOptionCard';
-import ImageOptionCard from './Image/ImageOptionCard';
+import { Divider, Grid2 as Grid } from '@mui/material';
+import { Header3 } from 'components/common/Typography';
+import WidgetOptionCard from './WidgetOptionCard';
+import { WidgetType } from 'models/widget';
+import {
+    faCalendarStar,
+    faClapperboardPlay,
+    faEnvelopeOpenText,
+    faFileLines,
+    faImageLandscape,
+    faListTimeline,
+    faMapLocationDot,
+    faPoll,
+    faUserCircle,
+} from '@fortawesome/pro-regular-svg-icons';
 
 const WidgetOptionCards = () => {
     return (
-        <Grid item xs={12} container alignItems="stretch" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
-                <MetHeader3>Select Widget</MetHeader3>
+        <Grid size={12} container alignItems="stretch" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
+                <Header3>Select Widget</Header3>
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <WhoIsListeningOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Who Is Listening"
+                    description="Add contacts to this engagement"
+                    widgetType={WidgetType.WhoIsListening}
+                    tabValue="WHO_IS_LISTENING_FORM"
+                    icon={faUserCircle}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <DocumentOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Documents"
+                    description="Add documents and folders"
+                    widgetType={WidgetType.Document}
+                    tabValue="DOCUMENT_FORM"
+                    icon={faFileLines}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <SubscribeOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Sign Up for Updates"
+                    description="Allow members of the public to subscribe to updates"
+                    widgetType={WidgetType.Subscribe}
+                    tabValue="SUBSCRIBE_FORM"
+                    icon={faEnvelopeOpenText}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <EventsOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Events"
+                    description="Add information about in-person or virtual information sessions"
+                    widgetType={WidgetType.Events}
+                    tabValue="EVENTS_FORM"
+                    icon={faCalendarStar}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <MapOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Map"
+                    description="Add a map with the project location"
+                    widgetType={WidgetType.Map}
+                    tabValue="MAP_FORM"
+                    icon={faMapLocationDot}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <VideoOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Video"
+                    description="Embed a video to share information about the project"
+                    widgetType={WidgetType.Video}
+                    tabValue="VIDEO_FORM"
+                    icon={faClapperboardPlay}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <TimelineOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Timeline"
+                    description="Add a timeline to this engagement"
+                    widgetType={WidgetType.Timeline}
+                    tabValue="TIMELINE_FORM"
+                    icon={faListTimeline}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <PollOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Poll"
+                    description="Add a poll to gather feedback from the public"
+                    widgetType={WidgetType.Poll}
+                    tabValue="POLL_FORM"
+                    icon={faPoll}
+                />
             </Grid>
-            <Grid item xs={12} lg={6}>
-                <ImageOptionCard />
+            <Grid size={{ xs: 12, lg: 6, xl: 4 }}>
+                <WidgetOptionCard
+                    title="Image"
+                    description="Displays a static image, with optional caption"
+                    widgetType={WidgetType.Image}
+                    tabValue="IMAGE_FORM"
+                    icon={faImageLandscape}
+                />
             </Grid>
         </Grid>
     );

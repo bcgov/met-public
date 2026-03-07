@@ -7,16 +7,15 @@ import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 
 const WidgetDrawer = () => {
-    const { widgetDrawerOpen, handleWidgetDrawerOpen, handleWidgetDrawerTabValueChange } =
-        useContext(WidgetDrawerContext);
+    const { widgetDrawerOpen, setWidgetDrawerOpen, setWidgetDrawerTabValue } = useContext(WidgetDrawerContext);
 
     return (
         <Drawer
             anchor="right"
             open={widgetDrawerOpen}
-            onClose={() => handleWidgetDrawerOpen(false)}
+            onClose={() => setWidgetDrawerOpen(false)}
             SlideProps={{
-                onExited: () => handleWidgetDrawerTabValueChange(WidgetTabValues.WIDGET_OPTIONS),
+                onExited: () => setWidgetDrawerTabValue(WidgetTabValues.WIDGET_OPTIONS),
             }}
         >
             <Box sx={{ width: '50vw', paddingTop: '5.5em' }} role="presentation">

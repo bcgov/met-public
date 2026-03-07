@@ -1,1 +1,1 @@
-export { EngagementStatusChip } from './StatusChip';
+export { EngagementStatusChip, getStatusFromStatusId, getSubmissionStatusFromPreviewState } from './StatusChip';

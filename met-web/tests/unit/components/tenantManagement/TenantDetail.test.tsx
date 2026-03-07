@@ -40,11 +40,11 @@ const mockTenant = {
 jest.mock('axios');
 
 jest.mock('react', () => ({
-    //this makes the suspense component render its children immediately
     ...jest.requireActual('react'),
-    Suspense: jest.fn(({ children, fallback }: { children: ReactNode; fallback: ReactNode }) => {
-        return children;
-    }),
+    Suspense: ({ children }: { children: ReactNode }) => {
+        // For tests, just render children directly (skip suspense)
+        return <>{children}</>;
+    },
 }));
 
 jest.mock('@mui/material', () => ({
@@ -57,6 +57,7 @@ jest.mock('@mui/material', () => ({
 jest.mock('components/common/Typography/', () => ({
     Header1: ({ children }: { children: ReactNode }) => <h1>{children}</h1>,
     Header2: ({ children }: { children: ReactNode }) => <h2>{children}</h2>,
+    Header4: ({ children }: { children: ReactNode }) => <h4>{children}</h4>,
     BodyText: ({ children }: { children: ReactNode }) => <p>{children}</p>,
 }));
 
@@ -81,7 +82,12 @@ jest.mock('react-router', () => ({
     useParams: jest.fn(() => {
         return { tenantShortName: mockTenant.short_name };
     }),
-    useNavigate: jest.fn(),
+    useNavigate: jest.fn(() => jest.fn()),
+    Await: ({ children, resolve }: { children: (data: unknown) => ReactNode; resolve: unknown }) => {
+        // For tests, immediately "resolve" the promise by calling children with mockTenant
+        // This simulates the resolved state without actually waiting
+        return <>{children(mockTenant)}</>;
+    },
 }));
 
 jest.mock('services/tenantService', () => ({
@@ -158,10 +164,11 @@ describe('Tenant Detail Page tests', () => {
     test('Loading state is rendered', () => {
         // Re-mock the Suspense component to render the fallback prop
         jest.spyOn(React, 'Suspense').mockImplementation((props: SuspenseProps) => {
-            return props.fallback as JSX.Element;
+            return props.fallback;
         });
         render(<RouterProvider router={router} />);
         const loadingTexts = screen.getAllByText('Loading...');
         expect(loadingTexts.length).toBeGreaterThan(0);
+        jest.restoreAllMocks();
     });
 });

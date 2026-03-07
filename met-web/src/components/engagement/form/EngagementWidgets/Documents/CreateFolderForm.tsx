@@ -12,7 +12,7 @@ import { DOCUMENT_TYPE } from 'models/document';
 
 const CreateFolderForm = () => {
     const { loadDocuments, handleAddFileDrawerOpen, setUploadFileDrawerOpen } = useContext(DocumentsContext);
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, widgetLocation } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
     const [createFolderMode, setCreateFolderMode] = useState(false);
     const [creatingFolder, setCreatingFolder] = useState(false);
@@ -21,7 +21,9 @@ const CreateFolderForm = () => {
         name: false,
     };
     const [formError, setFormError] = useState(initialFormError);
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document);
+    const widget = widgets.find(
+        (widget) => widget.widget_type_id === WidgetType.Document && widget.location === widgetLocation,
+    );
 
     const validateForm = () => {
         const errors = { name: !folderName || folderName.length > 50 };

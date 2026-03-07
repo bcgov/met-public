@@ -49,7 +49,7 @@ export const DocumentsContext = createContext<DocumentsContextProps>({
 
 export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const [documentToEdit, setDocumentToEdit] = useState<DocumentItem | null>(null);
     const [documents, setDocuments] = useState<DocumentItem[]>([]);
@@ -57,7 +57,8 @@ export const DocumentsProvider = ({ children }: { children: JSX.Element | JSX.El
     const [addFileDrawerOpen, setAddDrawerFileOpen] = useState(false);
     const [uploadFileDrawerOpen, setUploadFileDrawerOpen] = useState(false);
 
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Document) || null;
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Document) || null;
 
     const loadDocuments = async () => {
         try {

@@ -43,7 +43,7 @@ const interactionEnabled = false;
 const Form = () => {
     const dispatch = useAppDispatch();
     const { widget, isLoadingPollWidget, pollWidget } = useContext(PollContext);
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
     const { savedEngagement } = useContext(ActionContext);
     const { pollAnswers, setPollAnswers, pollWidgetState, setPollWidgetState, isEngagementPublished } =
@@ -112,7 +112,7 @@ const Form = () => {
             setIsCreating(true);
             await savePollWidget(data);
             setIsCreating(false);
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add the event' }));
             setIsCreating(false);
@@ -263,7 +263,7 @@ const Form = () => {
                 </PrimaryButtonOld>
             </Grid>
             <Grid item>
-                <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>Cancel</SecondaryButtonOld>
+                <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>Cancel</SecondaryButtonOld>
             </Grid>
         </Grid>
     );

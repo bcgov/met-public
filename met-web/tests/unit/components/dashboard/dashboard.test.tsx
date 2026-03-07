@@ -26,6 +26,13 @@ jest.mock('components/common', () => ({
     },
 }));
 
+jest.mock('components/common', () => ({
+    ...jest.requireActual('components/common'),
+    PrimaryButtonOld: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
+        return <button {...rest}>{children}</button>;
+    },
+}));
+
 jest.mock('maplibre-gl/dist/maplibre-gl', () => ({
     Map: () => ({}),
 }));

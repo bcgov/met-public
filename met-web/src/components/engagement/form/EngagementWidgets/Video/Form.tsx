@@ -32,7 +32,7 @@ type DetailsForm = yup.TypeOf<typeof schema>;
 const Form = () => {
     const dispatch = useAppDispatch();
     const { widget, isLoadingVideoWidget, videoWidget } = useContext(VideoContext);
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
 
     const methods = useForm<DetailsForm>({
@@ -107,7 +107,7 @@ const Form = () => {
             await saveVideoWidget(data);
             setIsCreating(false);
             reset({});
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add event' }));
             setIsCreating(false);
@@ -187,7 +187,7 @@ const Form = () => {
                                     </PrimaryButtonOld>
                                 </Grid>
                                 <Grid item>
-                                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
+                                    <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>
                                         Cancel
                                     </SecondaryButtonOld>
                                 </Grid>

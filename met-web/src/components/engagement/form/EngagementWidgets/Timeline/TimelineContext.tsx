@@ -23,9 +23,10 @@ export const TimelineContext = createContext<TimelineContextProps>({
 });
 
 export const TimelineContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Timeline) ?? null;
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Timeline) ?? null;
     const [isLoadingTimelineWidget, setIsLoadingTimelineWidget] = useState(true);
     const [timelineWidget, setTimelineWidget] = useState<TimelineWidget | null>(null);
 

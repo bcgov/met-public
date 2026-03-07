@@ -1,11 +1,10 @@
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useOutletContext, useLoaderData } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
 import { colors } from 'styles/Theme';
-import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
-import { MetHeader3, MetLabel as MetBigLabel } from 'components/common';
+import { BodyText, Header3, ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -56,14 +55,6 @@ const AuthoringSummary = () => {
         });
     }, []);
 
-    // Define the styles
-    const metBigLabelStyles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-        lineHeight: 1.167,
-        color: '#292929',
-        fontWeight: '700',
-    };
     const metHeader3Styles = {
         fontSize: '1.05rem',
         marginBottom: '0.7rem',
@@ -112,12 +103,12 @@ const AuthoringSummary = () => {
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
             <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }}>
                     <label htmlFor="description_title">
-                        <MetBigLabel style={metBigLabelStyles}>
+                        <BodyText bold mb="0.5rem">
                             Section Heading
                             <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                        </MetBigLabel>
+                        </BodyText>
                         <FormDescriptionText style={formDescriptionTextStyles}>
                             Your section heading should be descriptive, short and succinct.
                         </FormDescriptionText>
@@ -142,12 +133,12 @@ const AuthoringSummary = () => {
                     </label>
                 </Grid>
 
-                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }} item>
+                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }}>
                     <label htmlFor="summary_editor_state">
-                        <MetBigLabel style={metBigLabelStyles} role="document" tab-index="0">
+                        <BodyText bold mb="0.5rem" role="document" tab-index="0">
                             Body Copy
                             <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                        </MetBigLabel>
+                        </BodyText>
                         <FormDescriptionText style={formDescriptionTextStyles}>
                             Body copy for the summary section of your engagement should provide a short overview of what
                             your engagement is about and describe what you are asking your audience to do.
@@ -166,6 +157,7 @@ const AuthoringSummary = () => {
                                         onEditorStateChange={(value) => {
                                             field.onChange(handleEditorChange(value));
                                         }}
+                                        placeholder="Body copy"
                                         handlePastedText={() => false}
                                         toolbar={toolbar}
                                     />
@@ -175,8 +167,8 @@ const AuthoringSummary = () => {
                     </label>
                 </Grid>
 
-                <Grid sx={{ mt: '1rem' }} item>
-                    <MetHeader3 style={metHeader3Styles}>Supporting Content (Optional)</MetHeader3>
+                <Grid sx={{ mt: '1rem' }}>
+                    <Header3 style={metHeader3Styles}>Supporting Content (Optional)</Header3>
                     <FormDescriptionText style={formDescriptionTextStyles}>
                         You may use a widget to add supporting content to your primary content.
                     </FormDescriptionText>

@@ -9,7 +9,7 @@ import {
     MetadataTaxon,
 } from 'models/engagement';
 import { EngagementStatus } from 'constants/engagementStatus';
-import { WidgetType, Widget, WidgetItem } from 'models/widget';
+import { WidgetType, Widget, WidgetItem, WidgetLocation } from 'models/widget';
 import { Event, EventItem } from 'models/event';
 import { WidgetMap } from 'models/widgetMap';
 import { PollWidget, PollAnswer } from 'models/pollWidget';
@@ -143,7 +143,7 @@ const eventWidget: Widget = {
     widget_type_id: WidgetType.Events,
     engagement_id: 1,
     items: [eventWidgetItem],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const mapWidgetItem: WidgetItem = {
@@ -159,7 +159,7 @@ const mapWidget: Widget = {
     widget_type_id: WidgetType.Map,
     engagement_id: 1,
     items: [mapWidgetItem],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const mockMap: WidgetMap = {
@@ -179,7 +179,7 @@ const pollWidget: Widget = {
     widget_type_id: WidgetType.Poll,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const videoWidget: Widget = {
@@ -188,7 +188,7 @@ const videoWidget: Widget = {
     widget_type_id: WidgetType.Video,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const subscribeWidget: Widget = {
@@ -197,7 +197,7 @@ const subscribeWidget: Widget = {
     widget_type_id: WidgetType.Subscribe,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const timeLineWidget: Widget = {
@@ -206,7 +206,7 @@ const timeLineWidget: Widget = {
     widget_type_id: WidgetType.Timeline,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const imageWidget: Widget = {
@@ -215,7 +215,7 @@ const imageWidget: Widget = {
     widget_type_id: WidgetType.Image,
     engagement_id: 1,
     items: [],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const mockPollAnswer1: PollAnswer = {

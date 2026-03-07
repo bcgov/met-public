@@ -37,7 +37,8 @@ def test_create_widget(session, monkeypatch):  # pylint:disable=unused-argument
 
     widget_to_create = {
         'engagement_id': engagement.id,
-        'widget_type_id': WidgetType.WHO_IS_LISTENING.value
+        'widget_type_id': WidgetType.WHO_IS_LISTENING.value,
+        'location': 1,
     }
     patch_token_info(TestJwtClaims.staff_admin_role, monkeypatch)
     set_global_tenant()

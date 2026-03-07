@@ -13,7 +13,7 @@ import { WidgetTitle } from '../WidgetTitle';
 import { patchListeningWidget, postListeningWidget } from 'services/widgetService/ListeningService';
 
 const WhoIsListeningForm = () => {
-    const { handleWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen, widgets, loadWidgets } = useContext(WidgetDrawerContext);
     const {
         handleAddContactDrawerOpen,
         loadingContacts,
@@ -28,9 +28,14 @@ const WhoIsListeningForm = () => {
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [savingWidgetItems, setSavingWidgetItems] = useState(false);
     const [createWidgetItems] = useCreateWidgetItemsMutation();
-    const widget = widgets.filter((widget) => widget.widget_type_id === WidgetType.WhoIsListening)[0] || null;
+    const { widgetLocation } = useContext(WidgetDrawerContext);
+    const widget =
+        widgets.find(
+            (widget) => widget.widget_type_id === WidgetType.WhoIsListening && widget.location === widgetLocation,
+        ) || null;
 
     useEffect(() => {
+        if (!widget) return;
         const savedContacts = widget.items
             .map((widget_item) => {
                 return contacts.find((contact) => contact.id === widget_item.widget_data_id);
@@ -71,6 +76,7 @@ const WhoIsListeningForm = () => {
     };
 
     const saveWidgetItems = async () => {
+        if (!widget) return;
         const widgetsToUpdate = addedContacts.map((addedContact) => {
             return {
                 widget_id: widget.id,
@@ -94,7 +100,7 @@ const WhoIsListeningForm = () => {
             }
             await loadListeningWidget();
             dispatch(openNotification({ severity: 'success', text: 'Widgets successfully added' }));
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
             setSavingWidgetItems(false);
         } catch (error) {
             console.log(error);
@@ -108,7 +114,7 @@ const WhoIsListeningForm = () => {
     return (
         <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
             <Grid item xs={12}>
-                <WidgetTitle widget={widget} />
+                {widget && <WidgetTitle widget={widget} />}
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
             <Grid item xs={12}>
@@ -175,7 +181,7 @@ const WhoIsListeningForm = () => {
                     >{`Save & Close`}</PrimaryButtonOld>
                 </Grid>
                 <Grid item>
-                    <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
+                    <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>{`Cancel`}</SecondaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

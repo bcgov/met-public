@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import {
-    Grid,
+    Grid2 as Grid,
     Checkbox,
     TextField,
     FormControl,
@@ -10,16 +10,11 @@ import {
     useMediaQuery,
     Theme,
 } from '@mui/material';
-import {
-    MetLabel,
-    modalStyle,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-    MetHeader1Old,
-    MetBodyOld,
-} from 'components/common';
+import { modalStyle } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
+import { BodyText, Header1 } from '../Typography';
+import { Button } from '../Input';
 
 /**
  * A modal component for collecting user email and agreement to terms.
@@ -99,34 +94,31 @@ const EmailModal = ({
                     justifyContent="flex-start"
                     rowSpacing={2}
                 >
-                    <Grid item xs={12}>
-                        <MetHeader1Old bold sx={{ mb: 2 }}>
+                    <Grid size={12}>
+                        <Header1 weight="bold" sx={{ mb: 2 }}>
                             {header}
-                        </MetHeader1Old>
+                        </Header1>
                     </Grid>
 
                     {subText.map((subtext) => (
-                        <Grid item xs={12}>
-                            <MetBodyOld bold={subtext.bold}>{subtext.text}</MetBodyOld>
+                        <Grid size={12}>
+                            <BodyText bold={subtext.bold}>{subtext.text}</BodyText>
                         </Grid>
                     ))}
 
                     {signupoptions}
 
-                    <Grid item xs={12}>
-                        {termsOfService}
-                    </Grid>
+                    <Grid size={12}>{termsOfService}</Grid>
                     <Grid
-                        item
                         container
                         direction="row"
                         width="100%"
-                        xs={12}
+                        size={12}
                         alignItems="flex-start"
                         justifyContent="flex-start"
                         rowSpacing={1}
                     >
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl required error={emailFormError.terms} component="fieldset" variant="standard">
                                 <FormControlLabel
                                     control={
@@ -144,8 +136,8 @@ const EmailModal = ({
                                 </FormHelperText>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
-                            <MetLabel>Email Address</MetLabel>
+                        <Grid size={12}>
+                            <BodyText bold>Email Address</BodyText>
                             <TextField
                                 onChange={(e) => {
                                     updateEmail(e.target.value);
@@ -163,27 +155,19 @@ const EmailModal = ({
                         </Grid>
                     </Grid>
 
-                    <Grid
-                        item
-                        container
-                        xs={12}
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={1}
-                        sx={{ mt: '1em' }}
-                    >
+                    <Grid container size={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                         <Stack
                             direction={{ md: 'column-reverse', lg: 'row' }}
                             spacing={1}
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButtonOld sx={{ mb: isSmallScreen ? 2 : 0 }} onClick={() => updateModal(false)}>
+                            <Button sx={{ mb: isSmallScreen ? 2 : 0 }} onClick={() => updateModal(false)}>
                                 Cancel
-                            </SecondaryButtonOld>
-                            <PrimaryButtonOld loading={isSaving} type="submit" variant={'contained'}>
+                            </Button>
+                            <Button variant="primary" loading={isSaving} type="submit">
                                 Submit
-                            </PrimaryButtonOld>
+                            </Button>
                         </Stack>
                     </Grid>
                 </Grid>

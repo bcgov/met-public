@@ -2,49 +2,53 @@ import React, { Suspense } from 'react';
 import { BodyText, Header2 } from 'components/common/Typography';
 import { Link } from 'components/common/Navigation';
 import { Engagement } from 'models/engagement';
-import { Grid, Skeleton, ThemeProvider } from '@mui/material';
+import { Grid2 as Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { colors } from 'components/common';
-import { Await, useLoaderData } from 'react-router';
+import { Await } from 'react-router';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
-import { Widget } from 'models/widget';
-import { WidgetSwitch } from 'components/engagement/widgets/WidgetSwitch';
+import { WidgetLocation } from 'models/widget';
 import { DarkTheme } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
-import { EngagementLoaderPublicData, EngagementViewSections } from '.';
+import { EngagementViewSections } from '.';
+import { usePreview } from 'components/engagement/preview/PreviewContext';
+import { TextPlaceholder } from 'components/engagement/preview/placeholders/TextPlaceholder';
+import { PreviewSwitch } from 'engagements/preview/PreviewSwitch';
+import { EngagementPreviewTag } from './EngagementPreviewTag';
+import { EngagementWidgetDisplay } from './EngagementWidgetDisplay';
+import { useEngagementLoaderData } from 'components/engagement/preview/PreviewLoaderDataContext';
 
 export const EngagementDescription = () => {
-    const { engagement, widgets } = useLoaderData() as EngagementLoaderPublicData;
+    const { engagement } = useEngagementLoaderData();
+    const { isPreviewMode } = usePreview();
     return (
-        <section id={EngagementViewSections.DESCRIPTION} aria-labelledby="description-header">
+        <section
+            id={EngagementViewSections.DESCRIPTION}
+            aria-labelledby="description-header"
+            style={{ position: 'relative' }}
+        >
+            <EngagementPreviewTag required>Summary Section</EngagementPreviewTag>
             <ThemeProvider theme={DarkTheme}>
                 <Grid
                     container
+                    size={12}
                     justifyContent="space-between"
+                    spacing={8}
+                    margin={0}
                     sx={{
-                        width: '100%',
-                        margin: 0,
                         background: colors.surface.blue[90],
                         color: colors.surface.white,
                         borderRadius: '0px 24px 0px 0px' /* upper right corner */,
-                        padding: { xs: '43px 16px 24px 16px', md: '32px 5vw 40px 5vw', lg: '32px 156px 40px 156px' },
+                        padding: { xs: '43px 16px 24px 16px', md: '32px 5vw 40px 5vw', lg: '32px 10em 40px 10em' },
                         marginTop: '-56px',
                         zIndex: 10,
                         position: 'relative',
                         flexDirection: { xs: 'column', md: 'row' },
                     }}
                 >
-                    <Grid
-                        item
-                        sx={{
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            marginBottom: { xs: '24px', md: '48px' },
-                        }}
-                    >
-                        <Grid item container component={Link} to={'/'} alignItems="center" display="flex">
+                    <Grid size={12}>
+                        <Grid container component={Link} to={'/'} alignItems="center" display="flex">
                             <FontAwesomeIcon
                                 icon={faArrowLeftLong}
                                 color={colors.surface.white}
@@ -56,54 +60,45 @@ export const EngagementDescription = () => {
                             </BodyText>
                         </Grid>
                     </Grid>
-                    <Grid
-                        item
-                        sx={{
-                            width: { xs: '100%', md: '47.5%' },
-                            display: 'flex',
-                            flexDirection: 'column',
-                            minHeight: '120px',
-                            marginBottom: '48px',
-                        }}
-                    >
-                        <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '288px' }} />}>
+                    <Grid size={{ xs: 12, md: 6 }} direction="column" minHeight="120px">
+                        <Suspense fallback={<Skeleton variant="rectangular" height="288px" width="100%" />}>
                             <Await resolve={engagement}>
-                                {(engagement: Engagement) => (
-                                    <>
-                                        <Header2 decorated id="description-header" sx={{ mb: 1 }}>
-                                            {engagement.description_title}
-                                        </Header2>
-                                        <RichTextArea
-                                            toolbarHidden
-                                            readOnly
-                                            editorState={getEditorStateFromRaw(engagement.rich_description)}
-                                        />
-                                    </>
-                                )}
+                                {(engagement: Engagement) => {
+                                    const summaryEditorState = getEditorStateFromRaw(engagement.rich_description);
+                                    const hasSummaryBody =
+                                        summaryEditorState?.getCurrentContent()?.hasText?.() ?? false;
+
+                                    return (
+                                        <>
+                                            <Header2 decorated id="description-header" sx={{ mb: 1 }}>
+                                                <PreviewSwitch
+                                                    isPreviewMode={isPreviewMode}
+                                                    hasValue={Boolean(engagement.description_title?.trim())}
+                                                    value={engagement.description_title}
+                                                    previewFallback={<TextPlaceholder text="Summary Section" />}
+                                                />
+                                            </Header2>
+                                            <PreviewSwitch
+                                                isPreviewMode={isPreviewMode}
+                                                hasValue={hasSummaryBody}
+                                                value={
+                                                    <RichTextArea
+                                                        toolbarHidden
+                                                        readOnly
+                                                        editorState={summaryEditorState}
+                                                    />
+                                                }
+                                                previewFallback={<TextPlaceholder type="long" />}
+                                            />
+                                        </>
+                                    );
+                                }}
                             </Await>
                         </Suspense>
                     </Grid>
-                    <Suspense fallback={<Skeleton variant="rectangular" sx={{ width: '100%', height: '360px' }} />}>
-                        <Await resolve={widgets}>
-                            {(resolvedWidgets: Widget[]) => {
-                                const widget = resolvedWidgets[0];
-                                if (widget)
-                                    return (
-                                        <Grid
-                                            item
-                                            sx={{
-                                                width: { xs: '100%', md: '47.5%' },
-                                                display: 'flex',
-                                                minHeight: '360px',
-                                                marginBottom: '48px',
-                                            }}
-                                        >
-                                            <WidgetSwitch widget={widget} />
-                                        </Grid>
-                                    );
-                            }}
-                        </Await>
-                    </Suspense>
+                    <Grid container size={{ xs: 12, md: 6 }} justifyContent="flex-end" alignItems="flex-start">
+                        <EngagementWidgetDisplay location={WidgetLocation.Summary} />
+                    </Grid>
                 </Grid>
             </ThemeProvider>
         </section>

@@ -1,7 +1,7 @@
 import React, { useId, useRef, useState } from 'react';
 import {
     ButtonBase,
-    Grid,
+    Grid2 as Grid,
     MenuList,
     Popper,
     ClickAwayListener,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import TrapFocus from '@mui/material/Unstable_TrapFocus';
 import { colors } from 'styles/Theme';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-regular-svg-icons';
 import { When, Unless } from 'react-if';
@@ -108,10 +108,10 @@ export const DropdownMenu = ({
                 {/* A basic button label if no custom content is provided */}
                 <When condition={renderButtonContent === undefined}>
                     <Grid container direction="row" alignItems="center" spacing={1}>
-                        <Grid item>
+                        <Grid>
                             <BodyText sx={{ userSelect: 'none', textTransform: 'capitalize' }}>{name}</BodyText>
                         </Grid>
-                        <Grid item hidden={!children}>
+                        <Grid hidden={!children}>
                             <FontAwesomeIcon color="white" icon={faChevronDown} rotation={open ? 180 : undefined} />
                         </Grid>
                     </Grid>
