@@ -6,6 +6,7 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/engagements/`,
         UPDATE: `${AppConfig.apiUrl}/engagements/`,
         GET: `${AppConfig.apiUrl}/engagements/engagement_id`,
+        DELETE: `${AppConfig.apiUrl}/engagements/engagement_id/delete`,
     },
     EngagementTranslations: {
         GET_TRANSLATION_LANGUAGES: `${AppConfig.apiUrl}/engagement/engagement_id/translations/languages`,

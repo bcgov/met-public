@@ -18,10 +18,10 @@ Test-Suite to ensure that the /Engagement endpoint is working as expected.
 """
 import copy
 import json
+import pytest
 from http import HTTPStatus
 from unittest.mock import patch
 
-import pytest
 from faker import Faker
 from flask import current_app
 from marshmallow import ValidationError
@@ -724,3 +724,38 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
     assert rv.status_code == HTTPStatus.OK
     # the filter should return the engagements with either value
     assert rv.json.get('total') == 10
+
+
+def test_delete_engaement(client, jwt, session, mocker,
+                          setup_admin_user_and_claims):  # pylint:disable=unused-argument
+    """Assert that the resource DELETE /api/engagements/<id>/delete returns 200 on success and maps errors correctly."""
+    user, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    engagement = factory_engagement_model()
+    engagement_id = str(engagement.id)
+
+    mocker.patch('met_api.services.engagement_service.EngagementService.delete', return_value=None)
+    rv = client.delete(
+        f'api/engagements/{engagement_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.OK
+    assert rv.get_json() == {'id': engagement_id}
+
+    mocker.patch('met_api.services.engagement_service.EngagementService.delete', side_effect=KeyError('boom'))
+    rv = client.delete(
+        f'api/engagements/{engagement_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+
+    mocker.patch('met_api.services.engagement_service.EngagementService.delete', side_effect=ValueError('bad'))
+    rv = client.delete(
+        f'api/engagements/{engagement_id}/delete',
+        headers=headers,
+        content_type=ContentType.JSON.value
+    )
+    assert rv.status_code == HTTPStatus.BAD_REQUEST

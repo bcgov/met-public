@@ -58,7 +58,6 @@ class Engagement(BaseModel):
         back_populates='engagement',
         primaryjoin='Survey.engagement_id == Engagement.id',
         foreign_keys='Survey.engagement_id',
-        cascade='all, delete-orphan',
         passive_deletes=True,
         lazy='selectin',
     )
@@ -383,3 +382,13 @@ class Engagement(BaseModel):
                 )) \
             .all()
         return engagements
+
+    @classmethod
+    def delete_engagement(cls, engagement_id) -> Engagement:
+        """Delete a single engagement by ID."""
+        engagement = db.session.get(cls, engagement_id)
+        if engagement is None:
+            raise ValueError('Engagement not found.')
+        db.session.delete(engagement)
+        db.session.commit()
+        return engagement
