@@ -1,3 +1,4 @@
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ReactNode } from 'react';
 
 export interface ModalSubtext {
@@ -7,6 +8,7 @@ export interface ModalSubtext {
 
 export interface NotificationModalProps {
     style?: 'default' | 'danger' | 'warning' | 'success';
+    icon?: IconDefinition;
     header: string;
     subHeader?: string;
     subText: ModalSubtext[];

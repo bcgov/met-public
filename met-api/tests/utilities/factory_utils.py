@@ -369,6 +369,7 @@ def factory_widget_model(widget_info: dict = TestWidgetInfo.widget1):
         updated_by=widget_info.get('updated_by'),
         created_date=widget_info.get('created_date'),
         updated_date=widget_info.get('updated_date'),
+        location=widget_info.get('location', 1),
     )
     widget.save()
     return widget

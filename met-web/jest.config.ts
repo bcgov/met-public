@@ -122,6 +122,7 @@ const config: Config.InitialOptions = {
     // The paths to modules that run some code to configure or set up the testing environment before each test
     setupFiles: [
         '<rootDir>/tests/unit/components/polyfillTextEncoding.ts',
+        '<rootDir>/tests/unit/components/polyfills/fetch.ts',
         '<rootDir>/tests/unit/components/setEnvVars.tsx',
         '<rootDir>/public/config/config.js',
     ],
@@ -180,7 +181,9 @@ const config: Config.InitialOptions = {
     },
 
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    transformIgnorePatterns: ['/node_modules/(?!react-dnd|core-dnd|@react-dnd|dnd-core|react-dnd-html5-backend|uuid)'],
+    transformIgnorePatterns: [
+        '/node_modules/(?!react-dnd|core-dnd|@react-dnd|dnd-core|react-dnd-html5-backend|uuid|@turf|kdbush|geokdbush|tinyqueue)',
+    ],
 
     modulePaths: ['src'],
 

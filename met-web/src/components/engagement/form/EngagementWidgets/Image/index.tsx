@@ -8,8 +8,10 @@ import { Await } from 'react-router';
 import { MidScreenLoader } from 'components/common';
 
 export const ImageForm = () => {
-    const { widgets } = useContext(WidgetDrawerContext);
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Image) ?? null;
+    const { widgets, widgetLocation } = useContext(WidgetDrawerContext);
+    const widget =
+        widgets.find((widget) => widget.widget_type_id === WidgetType.Image && widget.location === widgetLocation) ??
+        null;
     const imageWidget = widget
         ? fetchImageWidgets(widget.id).then((result) => (result.length ? result[result.length - 1] : null))
         : Promise.resolve(null);

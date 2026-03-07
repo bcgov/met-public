@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, BoxProps } from '@mui/material';
+import { Box, Grid2 as Grid, BoxProps, Grid2Props as GridProps } from '@mui/material';
 import { Outlet } from 'react-router';
 
 /**
@@ -31,17 +31,17 @@ export const OutlineBox = (props: BoxProps) => {
  *                It accepts all BoxProps from MUI, including children, sx, etc.
  * @returns JSX.Element: A Box component with responsive padding.
  */
-export const ResponsiveContainer: React.FC<BoxProps> = (props: BoxProps) => {
+export const ResponsiveContainer: React.FC<GridProps> = (props: GridProps) => {
     return (
-        <Box
+        <Grid
             {...props}
-            sx={{
-                padding: { xs: '3em 1em', md: '3em 1.5em', lg: '3em 3em' },
-                ...props.sx,
-            }}
+            py="3em"
+            px={{ xs: '1em', md: '1.5em', lg: '3em' }}
+            // Set as a container unless explicitly disabled
+            container={props.container === false ? false : true}
         >
             {props.children}
-        </Box>
+        </Grid>
     );
 };
 

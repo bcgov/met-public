@@ -9,8 +9,9 @@ import * as widgetService from 'services/widgetService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as membershipService from 'services/membershipService';
 import * as engagementSettingService from 'services/engagementSettingService';
+import * as listeningService from 'services/widgetService/ListeningService';
 import { createDefaultSurvey, Survey } from 'models/survey';
-import { Widget, WidgetItem, WidgetType } from 'models/widget';
+import { Widget, WidgetItem, WidgetLocation, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
 import { Box } from '@mui/material';
 import { draftEngagement, engagementMetadata } from '../factory';
@@ -39,6 +40,13 @@ const mockContact: Contact = {
     avatar_url: '',
 };
 
+const mockListeningWidget = {
+    id: 1,
+    engagement_id: 1,
+    widget_id: 1,
+    description: '',
+};
+
 const contactWidgetItem: WidgetItem = {
     id: 1,
     widget_id: 1,
@@ -48,11 +56,11 @@ const contactWidgetItem: WidgetItem = {
 
 const whoIsListeningWidget: Widget = {
     id: 1,
-    title: 'Who is Listening',
+    title: 'Who Is Listening',
     widget_type_id: WidgetType.WhoIsListening,
     engagement_id: 1,
     items: [contactWidgetItem],
-    location: 1,
+    location: WidgetLocation.Summary,
 };
 
 const mockEngagementSettings: EngagementSettings = {
@@ -78,7 +86,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([whoIsListeningWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -153,7 +161,9 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(whoIsListeningWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(whoIsListeningWidget),
+}));
 const mockCreateWidgetItems = jest.fn(() => Promise.resolve(contactWidgetItem));
 const mockCreateWidgetItemsTrigger = jest.fn(() => {
     return {
@@ -178,6 +188,9 @@ describe('Who is Listening widget  tests', () => {
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),
     );
+    const fetchListeningWidgetMock = jest
+        .spyOn(listeningService, 'fetchListeningWidget')
+        .mockReturnValue(Promise.resolve(mockListeningWidget));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -190,11 +203,14 @@ describe('Who is Listening widget  tests', () => {
         setupEnv();
         mockCreateWidget.mockReset();
         getWidgetsMock.mockReset();
+        fetchListeningWidgetMock.mockReset();
         getWidgetsMock.mockResolvedValue([]);
-        mockCreateWidget.mockImplementation(async () => {
-            getWidgetsMock.mockResolvedValue([whoIsListeningWidget]);
-            return whoIsListeningWidget;
-        });
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([whoIsListeningWidget]);
+                return whoIsListeningWidget;
+            },
+        }));
     });
 
     async function addWhosIsListeningWidget(container: HTMLElement) {
@@ -233,7 +249,7 @@ describe('Who is Listening widget  tests', () => {
             widget_type_id: WidgetType.WhoIsListening,
             engagement_id: draftEngagement.id,
             title: whoIsListeningWidget.title,
-            location: 0,
+            location: 1,
         });
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Add This Contact')).toBeVisible();

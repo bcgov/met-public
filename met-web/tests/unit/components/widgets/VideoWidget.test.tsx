@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
@@ -27,13 +27,18 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(videoWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(videoWidget),
+}));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(videoWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(videoWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -58,7 +63,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([videoWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -80,10 +85,22 @@ const router = createMemoryRouter(
 );
 
 describe('Video Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([videoWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([videoWidget]);
+                return videoWidget;
+            },
+        }));
     });
 
     async function addVideoWidget() {
@@ -91,6 +108,7 @@ describe('Video Widget tests', () => {
         fireEvent.click(screen.getByText('Add Widget'));
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Video}`));
+
         await waitFor(() => {
             expect(screen.getByText('Description (Optional)')).toBeVisible();
         });
@@ -100,8 +118,10 @@ describe('Video Widget tests', () => {
         const linkInput = document.querySelector('input[name="videoUrl"]') as HTMLInputElement;
         const descInput = document.querySelector('textarea[name="description"]') as HTMLInputElement;
 
-        fireEvent.change(linkInput, { target: { value: mockVideo.video_url } });
-        fireEvent.change(descInput, { target: { value: mockVideo.description } });
+        act(() => {
+            fireEvent.change(linkInput, { target: { value: mockVideo.video_url } });
+            fireEvent.change(descInput, { target: { value: mockVideo.description } });
+        });
 
         await waitFor(() => {
             expect(linkInput.value).toBe(mockVideo.video_url);
@@ -111,7 +131,6 @@ describe('Video Widget tests', () => {
 
     test('Video widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([videoWidget]));
 
         await addVideoWidget();
 
@@ -133,7 +152,9 @@ describe('Video Widget tests', () => {
         await inputMockVideodata();
 
         const submitButton = screen.getByRole('button', { name: 'Save & Close' });
-        fireEvent.click(submitButton);
+        act(() => {
+            fireEvent.click(submitButton);
+        });
 
         await waitFor(() => {
             expect(VideoService.postVideo).toHaveBeenCalledTimes(1);

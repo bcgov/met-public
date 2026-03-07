@@ -10,6 +10,7 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
         ErrorBoundaryLazy={() => import('routes/NotFound')}
         id="public-root"
     >
+        <LazyRoute index ComponentLazy={() => import('components/landing')} />
         <Route path=":slug">
             <LazyRoute
                 path=":language"
@@ -40,7 +41,6 @@ const UnauthenticatedRoutes = resolveLazyRouteTree(
             />
             <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
         </Route>
-        <LazyRoute index ComponentLazy={() => import('components/landing')} />
         <Route path="/engagements">
             <LazyRoute
                 path="create/form/:language"

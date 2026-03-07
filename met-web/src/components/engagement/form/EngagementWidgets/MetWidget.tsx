@@ -1,15 +1,28 @@
 import React from 'react';
-import { MetLabel, MetWidgetPaper } from 'components/common';
-import { Grid, CircularProgress, Stack, IconButton, Tooltip } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
+import { Grid2 as Grid, CircularProgress, Stack, IconButton, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
-import { faThumbtack } from '@fortawesome/pro-solid-svg-icons/faThumbtack';
-import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
 import { If, Then, Else } from 'react-if';
+import { WidgetType } from 'models/widget';
+import {
+    faImageLandscape,
+    faIdCard,
+    faFileLines,
+    faEnvelopeOpenText,
+    faCalendarStar,
+    faMapLocationDot,
+    faClapperboardPlay,
+    faPeopleGroup,
+    faListTimeline,
+    faPoll,
+} from '@fortawesome/pro-regular-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 interface MetWidgetProps {
     testId?: string;
+    widgetTypeId: WidgetType;
     title: string;
     children?: React.ReactNode;
     [prop: string]: unknown;
@@ -19,8 +32,22 @@ interface MetWidgetProps {
     sortable?: boolean;
 }
 
+const icons: Record<WidgetType, IconDefinition> = {
+    [WidgetType.Image]: faImageLandscape,
+    [WidgetType.WhoIsListening]: faIdCard,
+    [WidgetType.Document]: faFileLines,
+    [WidgetType.Subscribe]: faEnvelopeOpenText,
+    [WidgetType.Events]: faCalendarStar,
+    [WidgetType.Map]: faMapLocationDot,
+    [WidgetType.Video]: faClapperboardPlay,
+    [WidgetType.CACForm]: faPeopleGroup,
+    [WidgetType.Timeline]: faListTimeline,
+    [WidgetType.Poll]: faPoll,
+};
+
 const MetWidget = ({
     testId,
+    widgetTypeId,
     children,
     title,
     onEdit,
@@ -30,29 +57,15 @@ const MetWidget = ({
     ...rest
 }: MetWidgetProps) => {
     return (
-        <MetWidgetPaper elevation={1} {...rest}>
-            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <If condition={sortable}>
-                        <Then>
-                            <IconButton sx={{ margin: 0, padding: 0 }} color="inherit" aria-label="drag-indicator">
-                                <FontAwesomeIcon
-                                    icon={faGripDotsVertical}
-                                    style={{ fontSize: '24px', margin: '0px 4px' }}
-                                />
-                            </IconButton>
-                        </Then>
-                        <Else>
-                            <Tooltip title="This widget has a fixed position.">
-                                <FontAwesomeIcon icon={faThumbtack} style={{ fontSize: '24px', margin: '8px 4px' }} />
-                            </Tooltip>
-                        </Else>
-                    </If>
+        <Paper>
+            <Grid p={2} container alignItems="flex-start" justifyContent="flex-start">
+                <Grid size="auto">
+                    <FontAwesomeIcon icon={icons[widgetTypeId]} style={{ fontSize: '24px', marginRight: '12px' }} />
                 </Grid>
-                <Grid item container direction="row" alignItems="center" justifyContent="flex-start" xs={8}>
-                    <MetLabel>{title}</MetLabel>
+                <Grid container direction="row" alignItems="center" justifyContent="flex-start" size="grow">
+                    <BodyText bold>{title}</BodyText>
                 </Grid>
-                <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center">
+                <Grid size="auto" container direction="row" alignItems="flex-start" justifyContent="center">
                     <Stack direction="row" spacing={1}>
                         <If condition={!!onEdit}>
                             <Then>
@@ -88,11 +101,9 @@ const MetWidget = ({
                         </IconButton>
                     </Stack>
                 </Grid>
-                <Grid item xs={12}>
-                    {children}
-                </Grid>
+                <Grid size={12}>{children}</Grid>
             </Grid>
-        </MetWidgetPaper>
+        </Paper>
     );
 };
 

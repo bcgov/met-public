@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Stack } from '@mui/material';
+import { Grid2 as Grid, Stack } from '@mui/material';
 import { colors, modalStyle } from 'components/common';
-import { Button } from '../Input';
+import { Button } from '../Input/Button';
 import { Header2, BodyText } from '../Typography';
 import { NotificationModalProps } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -41,6 +41,7 @@ import {
  */
 const ConfirmModal = ({
     style = 'default',
+    icon,
     header,
     subHeader,
     subText,
@@ -66,47 +67,45 @@ const ConfirmModal = ({
             sx={{ ...modalStyle, borderColor: palette.shade }}
             aria-label={`${header} ${subHeader}`}
         >
-            <Grid item xs={1} sx={{ pt: 1.25, fontSize: '16px' }}>
-                <FontAwesomeIcon icon={iconMap[style]} color={palette.icon} size="2x" />
+            <Grid size={1} sx={{ pt: 1.25, fontSize: '16px' }}>
+                <FontAwesomeIcon icon={icon ?? iconMap[style]} color={palette.icon} size="2x" />
             </Grid>
             <Grid
-                item
-                xs={11}
+                size={11}
                 container
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="space-between"
                 rowSpacing={1}
             >
-                <Grid container direction="row" item xs={12}>
-                    <Grid xs={12}>
+                <Grid container direction="row" size={12}>
+                    <Grid size={12}>
                         <Header2 sx={{ mb: 0 }}>{header}</Header2>
                     </Grid>
                 </Grid>
                 {subHeader && (
-                    <Grid container direction="row" item xs={12}>
+                    <Grid container direction="row" size={12}>
                         <BodyText bold>{subHeader}</BodyText>
                     </Grid>
                 )}
-                <Grid container id={subTextId ?? undefined} direction="row" item xs={12} sx={{ mt: '1em' }}>
+                <Grid container id={subTextId ?? undefined} direction="row" size={12} sx={{ mt: '1em' }}>
                     {subText.map((subtext, index) => (
-                        <Grid key={index} item xs={12}>
+                        <Grid key={index} size={12}>
                             <BodyText bold={subtext.bold} sx={{ mb: 1 }}>
                                 {subtext.text}
                             </BodyText>
                         </Grid>
                     ))}
                     <Grid
-                        item
                         container
                         direction={{ xs: 'column', sm: 'row' }}
-                        xs={12}
+                        size={12}
                         justifyContent="flex-end"
                         spacing={1}
                         sx={{ mt: '1em' }}
                     >
                         <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
-                            <Button type="button" variant="secondary" onClick={handleClose} autoFocus>
+                            <Button type="button" onClick={handleClose} autoFocus>
                                 {cancelButtonText}
                             </Button>
                             <Button variant="primary" color={style} onClick={handleConfirm} type="submit">

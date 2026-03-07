@@ -39,9 +39,6 @@ export const DeletableFilterChip = ({ name, onDelete }: { name: string; onDelete
             // make clicking anywhere on the chip also delete it (larger touch target)
             onClick={onDelete}
             sx={{
-                mt: '1px',
-                mr: 1,
-                mb: 2,
                 p: 1,
                 height: 48,
                 fontWeight: 'normal',

@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
-import { Grid, Skeleton } from '@mui/material';
-import { MetHeader2Old, MetPaper, MetTooltip, SecondaryButtonOld } from 'components/common';
+import React, { useContext } from 'react';
+import { Grid2 as Grid, Paper, Skeleton, Tooltip } from '@mui/material';
+import { Header2 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else } from 'react-if';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
@@ -8,43 +9,14 @@ import { ActionContext } from '../ActionContext';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { debounce } from 'lodash';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
-import { reorder } from 'utils';
 
 const WidgetsBlock = () => {
-    const { widgets, deleteWidget, updateWidgetsSorting, handleWidgetDrawerOpen, isWidgetsLoading } =
-        useContext(WidgetDrawerContext);
+    const { widgets, deleteWidget, setWidgetDrawerOpen, isWidgetsLoading } = useContext(WidgetDrawerContext);
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
 
-    const [sortableWidgets, setSortableWidgets] = useState<Widget[]>([]);
-
-    useEffect(() => {
-        setSortableWidgets(widgets);
-    }, [widgets]);
-
     const handleAddWidgetClick = () => {
-        handleWidgetDrawerOpen(true);
-    };
-
-    const debounceUpdateWidgetsSorting = useRef(
-        debounce((widgetsToSort: Widget[]) => {
-            updateWidgetsSorting(widgetsToSort);
-        }, 800),
-    ).current;
-
-    const moveWidget = (result: DropResult) => {
-        if (!result.destination) {
-            return;
-        }
-
-        const items = reorder(sortableWidgets, result.source.index, result.destination.index);
-
-        setSortableWidgets(items);
-
-        debounceUpdateWidgetsSorting(items);
+        setWidgetDrawerOpen(true);
     };
 
     const removeWidget = (widgetId: number) => {
@@ -67,12 +39,12 @@ const WidgetsBlock = () => {
     };
 
     return (
-        <Grid container item xs={12} rowSpacing={1}>
-            <Grid item xs={12}>
-                <MetHeader2Old bold>Widgets</MetHeader2Old>
+        <Grid container size={12} rowSpacing={1}>
+            <Grid size={12}>
+                <Header2 weight="bold">Widgets</Header2>
             </Grid>
-            <Grid item xs={12}>
-                <MetPaper sx={{ padding: '1em' }}>
+            <Grid size={12}>
+                <Paper sx={{ padding: '1em' }}>
                     <Grid
                         container
                         direction="row"
@@ -80,52 +52,42 @@ const WidgetsBlock = () => {
                         justifyContent="flex-start"
                         rowSpacing={2}
                     >
-                        <Grid item container alignItems={'flex-end'} justifyContent="flex-end">
-                            <MetTooltip
+                        <Grid container alignItems={'flex-end'} justifyContent="flex-end">
+                            <Tooltip
                                 title={!savedEngagement.id ? 'Please save the engagement before adding a widget.' : ''}
                             >
                                 <span>
-                                    <SecondaryButtonOld onClick={handleAddWidgetClick} disabled={!savedEngagement.id}>
+                                    <Button onClick={handleAddWidgetClick} disabled={!savedEngagement.id}>
                                         Add Widget
-                                    </SecondaryButtonOld>
+                                    </Button>
                                 </span>
-                            </MetTooltip>
+                            </Tooltip>
                         </Grid>
                         <If condition={isWidgetsLoading}>
                             <Then>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Skeleton width="100%" height="6em" />
                                 </Grid>
                             </Then>
                             <Else>
-                                <Grid item xs={12}>
-                                    <DragDropContext onDragEnd={moveWidget}>
-                                        <MetDroppable droppableId="droppable">
-                                            <Grid
-                                                container
-                                                direction="row"
-                                                alignItems={'flex-start'}
-                                                justifyContent="flex-start"
-                                            >
-                                                {sortableWidgets.map((widget: Widget, index) => (
-                                                    <Grid item xs={12} key={`Grid-${widget.widget_type_id}`}>
-                                                        <MetDraggable draggableId={String(widget.id)} index={index}>
-                                                            <WidgetCardSwitch
-                                                                key={`${widget.widget_type_id}`}
-                                                                widget={widget}
-                                                                removeWidget={removeWidget}
-                                                            />
-                                                        </MetDraggable>
-                                                    </Grid>
-                                                ))}
+                                <Grid size={12}>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        alignItems={'flex-start'}
+                                        justifyContent="flex-start"
+                                    >
+                                        {widgets.map((widget: Widget) => (
+                                            <Grid size={12} key={widget.id}>
+                                                <WidgetCardSwitch widget={widget} removeWidget={removeWidget} />
                                             </Grid>
-                                        </MetDroppable>
-                                    </DragDropContext>
+                                        ))}
+                                    </Grid>
                                 </Grid>
                             </Else>
                         </If>
                     </Grid>
-                </MetPaper>
+                </Paper>
             </Grid>
         </Grid>
     );

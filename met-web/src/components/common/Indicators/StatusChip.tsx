@@ -22,6 +22,20 @@ export const getStatusFromStatusId = (statusId: SubmissionStatus): StatusText =>
             return 'Closed';
     }
 };
+
+export const getSubmissionStatusFromPreviewState = (previewStateType?: string | null): SubmissionStatus => {
+    switch (previewStateType) {
+        case 'Open':
+            return SubmissionStatus.Open;
+        case 'Closed':
+        case 'ViewResults':
+            return SubmissionStatus.Closed;
+        case 'Upcoming':
+        default:
+            return SubmissionStatus.Upcoming;
+    }
+};
+
 /**
  * A Chip component that displays the status of an engagement.
  * It uses the SubmissionStatus enum to determine the status and applies appropriate styles.
@@ -101,5 +115,5 @@ export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> =
  * @returns A rectangular skeleton with a fixed width and height, styled to resemble a status chip.
  */
 export const StatusChipSkeleton = () => (
-    <Skeleton variant="rectangular" sx={{ width: '64px', height: '28px', borderRadius: '24px' }} />
+    <Skeleton variant="rectangular" sx={{ width: '72px', height: '28px', borderRadius: '24px' }} />
 );

@@ -56,8 +56,9 @@ export const EventsContext = createContext<EventsContextProps>({
 
 export const EventsProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useContext(WidgetDrawerContext);
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Events) || null;
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Events) || null;
     const [eventToEdit, setEventToEdit] = useState<Event | null>(null);
     const [inPersonFormTabOpen, setInPersonFormTabOpen] = useState(false);
     const [virtualSessionFormTabOpen, setVirtualSessionFormTabOpen] = useState(false);

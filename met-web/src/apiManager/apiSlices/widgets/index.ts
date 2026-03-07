@@ -44,14 +44,6 @@ export const widgetsApi = createApi({
             }),
             invalidatesTags: ['Widgets'],
         }),
-        sortWidgets: builder.mutation<Widget, { engagementId: number; widgets: Widget[] }>({
-            query: ({ engagementId, widgets }) => ({
-                url: `widgets/engagement/${engagementId}/sort_index`,
-                method: 'PATCH',
-                body: widgets,
-            }),
-            invalidatesTags: ['Widgets'],
-        }),
         deleteWidget: builder.mutation<Widget, { engagementId: number; widgetId: number }>({
             query: ({ engagementId, widgetId }) => ({
                 url: `widgets/${widgetId}/engagements/${engagementId}`,
@@ -70,7 +62,6 @@ export const {
     useLazyGetWidgetsQuery,
     useCreateWidgetMutation,
     useUpdateWidgetMutation,
-    useSortWidgetsMutation,
     useDeleteWidgetMutation,
     useCreateWidgetItemsMutation,
 } = widgetsApi;

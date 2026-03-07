@@ -7,6 +7,7 @@ import { EditorState } from 'draft-js';
 import { FetcherWithComponents } from 'react-router';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { LanguageState } from 'reduxSlices/languageSlice';
+import { EngagementStatus } from 'constants/engagementStatus';
 
 export interface AuthoringNavProps {
     open: boolean;
@@ -44,10 +45,19 @@ export interface AuthoringBottomNavProps {
     pageName: string;
 }
 
-export interface StatusLabelProps {
+export interface LabelProps {
     text: string;
-    completed: boolean;
+    completed?: boolean;
+    status?: never;
 }
+
+export interface LabelWithStatusProps {
+    text?: string;
+    completed?: never;
+    status: EngagementStatus;
+}
+
+export type StatusLabelProps = LabelProps | LabelWithStatusProps;
 
 export interface AuthoringTemplateOutletContext {
     engagement: Engagement;

@@ -1,22 +1,23 @@
 import React, { Suspense } from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid2 as Grid } from '@mui/material';
 import { TileSkeleton } from 'components/landing/TileSkeleton';
 import { Engagement } from 'models/engagement';
 import EngagementTile from 'components/landing/EngagementTile';
 import { Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/pro-regular-svg-icons';
+import { faArrowLeftLong } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
 import { Await, useLoaderData } from 'react-router';
 import { RepeatedGrid } from 'components/common';
 import { EngagementLoaderPublicData } from './EngagementLoaderPublic';
+import { EngagementViewSections } from '.';
 
 export const SuggestedEngagements = () => {
     const { suggestedEngagements } = useLoaderData() as EngagementLoaderPublicData;
 
     return (
-        <section id="suggested-engagements" aria-label="Suggested Engagements">
-            <Box sx={{ padding: { xs: '64px 16px 24px 16px', md: '64px 5vw 40px 5vw', lg: '64px 156px 40px 156px' } }}>
+        <section id={EngagementViewSections.MORE_ENGAGEMENTS} aria-label="Suggested Engagements">
+            <Box sx={{ padding: { xs: '64px 16px 24px 16px', md: '64px 5vw 40px 5vw', lg: '64px 10em 40px 10em' } }}>
                 <Header2 weight="thin" sx={{ mb: '10px' }} decorated>
                     You may also be interested in
                 </Header2>
@@ -31,15 +32,12 @@ export const SuggestedEngagements = () => {
                     <Suspense
                         fallback={
                             <RepeatedGrid
+                                size="auto"
                                 times={4}
-                                item
                                 width="320px"
                                 m="0 16px"
-                                sx={{
-                                    flexBasis: '320px',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
+                                alignItems="center"
+                                justifyContent="center"
                             >
                                 <TileSkeleton />
                             </RepeatedGrid>
@@ -50,15 +48,12 @@ export const SuggestedEngagements = () => {
                                 engagements.map((engagement, index) => {
                                     return (
                                         <Grid
+                                            size="auto"
                                             key={`Grid-${engagement.id}`}
-                                            item
                                             width="320px"
                                             m="0 16px"
-                                            sx={{
-                                                flexBasis: '320px',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}
+                                            alignItems="center"
+                                            justifyContent="center"
                                         >
                                             <EngagementTile
                                                 passedEngagement={engagement}
@@ -72,9 +67,9 @@ export const SuggestedEngagements = () => {
                     </Suspense>
                 </Grid>
                 <Grid container justifyContent="center" alignItems={'center'} direction={'row'}>
-                    <Grid item xs={12} mt="64px" textAlign={'center'}>
+                    <Grid size={12} mt="64px" textAlign={'center'}>
                         <Link to="/" sx={{ color: (theme) => theme.palette.text.primary, textDecoration: 'none' }}>
-                            <FontAwesomeIcon icon={faArrowLeft} style={{ paddingRight: '8px' }} />
+                            <FontAwesomeIcon icon={faArrowLeftLong} style={{ paddingRight: '8px' }} />
                             All engagements
                         </Link>
                     </Grid>

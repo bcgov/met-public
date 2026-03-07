@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@mui/material';
 import { PollWidget } from 'models/pollWidget';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { Palette } from 'styles/Theme';
 
 // type for the component's props
@@ -43,24 +43,7 @@ const PollDisplay = ({ pollWidget, interactionEnabled, onOptionChange }: PollDis
                     <FormControlLabel
                         key={'answer' + index}
                         value={answer.id.toString()}
-                        control={
-                            <Radio
-                                sx={{
-                                    '& .MuiSvgIcon-root': {
-                                        fontSize: 28,
-                                        '&[data-testid=RadioButtonCheckedIcon]': {
-                                            fontSize: 22,
-                                            marginTop: '3px',
-                                            marginLeft: '3px',
-                                        },
-                                    },
-                                    '&.Mui-checked': {
-                                        color: 'primary.main',
-                                        fontWeight: 'bold',
-                                    },
-                                }}
-                            />
-                        }
+                        control={<Radio />}
                         label={
                             <BodyText
                                 variant="body2"

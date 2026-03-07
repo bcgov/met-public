@@ -23,9 +23,10 @@ export const PollContext = createContext<PollContextProps>({
 });
 
 export const PollContextProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
-    const { widgets } = useContext(WidgetDrawerContext);
+    const { widgets, isWidgetInScope } = useContext(WidgetDrawerContext);
     const dispatch = useAppDispatch();
-    const widget = widgets.find((widget) => widget.widget_type_id === WidgetType.Poll) ?? null;
+    const widget =
+        widgets.find((widget) => isWidgetInScope(widget) && widget.widget_type_id === WidgetType.Poll) ?? null;
     const [isLoadingPollWidget, setIsLoadingPollWidget] = useState(true);
     const [pollWidget, setPollWidget] = useState<PollWidget | null>(null);
 

@@ -1,25 +1,27 @@
-import React, { createContext, useState, useEffect, useContext, JSX } from 'react';
+import React, { createContext, useState, useEffect, useContext, PropsWithChildren } from 'react';
 import { useAppDispatch } from 'hooks';
-import { Widget } from 'models/widget';
+import { Widget, WidgetLocation } from 'models/widget';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { getWidgets } from 'services/widgetService';
 import { ActionContext } from '../ActionContext';
 import { WidgetTabValues } from './type';
-import { useDeleteWidgetMutation, useSortWidgetsMutation } from 'apiManager/apiSlices/widgets';
+import { useDeleteWidgetMutation } from 'apiManager/apiSlices/widgets';
 
 export interface WidgetDrawerContextProps {
     widgets: Widget[];
     setWidgets: React.Dispatch<React.SetStateAction<Widget[]>>;
     widgetDrawerOpen: boolean;
-    handleWidgetDrawerOpen: (_open: boolean) => void;
+    setWidgetDrawerOpen: (_open: boolean) => void;
     widgetDrawerTabValue: string;
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => void;
+    setWidgetDrawerTabValue: React.Dispatch<React.SetStateAction<string>>;
     isWidgetsLoading: boolean;
     loadWidgets: () => Promise<void>;
     deleteWidget: (widgetIndex: number) => void;
-    updateWidgetsSorting: (widgets: Widget[]) => void;
     widgetLocation: number;
     setWidgetLocation: (widgetLocation: number) => void;
+    widgetDetailsTabId: number | null;
+    setWidgetDetailsTabId: (detailsTabId: number | null) => void;
+    isWidgetInScope: (widget: Widget) => boolean;
 }
 
 export type EngagementParams = {
@@ -33,27 +35,34 @@ export const WidgetDrawerContext = createContext<WidgetDrawerContextProps>({
     },
     isWidgetsLoading: false,
     widgetDrawerOpen: false,
-    handleWidgetDrawerOpen: (_open: boolean) => {
+    setWidgetDrawerOpen: (_open: boolean) => {
         /* empty default method  */
     },
     widgetDrawerTabValue: WidgetTabValues.WIDGET_OPTIONS,
-    handleWidgetDrawerTabValueChange: (_tabValue: string) => {
+    setWidgetDrawerTabValue: (_tabValue: React.SetStateAction<string>) => {
         /* empty default method  */
     },
     loadWidgets: () => Promise.resolve(),
     deleteWidget: (widgetIndex: number) => {
         /* empty default method  */
     },
-    updateWidgetsSorting: (widgets: Widget[]) => {
-        /* empty default method  */
-    },
-    widgetLocation: 0,
+    widgetLocation: WidgetLocation.Summary,
     setWidgetLocation: (widgetLocation: number) => {
         /* empty default method  */
     },
+    widgetDetailsTabId: null,
+    setWidgetDetailsTabId: (_detailsTabId: number | null) => {
+        /* empty default method  */
+    },
+    isWidgetInScope: (_widget: Widget) => false,
 });
 
-export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
+export const WidgetDrawerProvider = ({
+    children,
+    location,
+}: PropsWithChildren<{
+    location?: WidgetLocation;
+}>) => {
     const { savedEngagement } = useContext(ActionContext);
     const dispatch = useAppDispatch();
     const [widgets, setWidgets] = useState<Widget[]>([]);
@@ -61,8 +70,26 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
     const [widgetDrawerOpen, setWidgetDrawerOpen] = useState(false);
     const [widgetDrawerTabValue, setWidgetDrawerTabValue] = React.useState(WidgetTabValues.WIDGET_OPTIONS);
     const [removeWidget] = useDeleteWidgetMutation();
-    const [sortWidgets] = useSortWidgetsMutation();
-    const [widgetLocation, setWidgetLocation] = useState(0);
+    const [widgetLocation, setWidgetLocation] = useState(WidgetLocation.Summary);
+    const [widgetDetailsTabId, setWidgetDetailsTabId] = useState<number | null>(null);
+
+    const isWidgetInScope = (widget: Widget) => {
+        if (widget.location !== widgetLocation) {
+            return false;
+        }
+
+        if (widgetLocation !== WidgetLocation.Details) {
+            return true;
+        }
+
+        const widgetDetailsTab = widget.engagement_details_tab_id ?? null;
+
+        if (widgetDetailsTab === widgetDetailsTabId) {
+            return true;
+        }
+
+        return widgetDetailsTab === null;
+    };
 
     const deleteWidget = async (widgetId: number) => {
         try {
@@ -71,14 +98,6 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
             loadWidgets();
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'Error removing widgets' }));
-        }
-    };
-
-    const updateWidgetsSorting = async (resortedWidgets: Widget[]) => {
-        try {
-            await sortWidgets({ engagementId: savedEngagement.id, widgets: resortedWidgets });
-        } catch {
-            dispatch(openNotification({ severity: 'error', text: 'Error sorting widgets' }));
         }
     };
 
@@ -102,29 +121,23 @@ export const WidgetDrawerProvider = ({ children }: { children: JSX.Element | JSX
         loadWidgets();
     }, [savedEngagement]);
 
-    const handleWidgetDrawerOpen = (open: boolean) => {
-        setWidgetDrawerOpen(open);
-    };
-
-    const handleWidgetDrawerTabValueChange = (tabValue: string) => {
-        setWidgetDrawerTabValue(tabValue);
-    };
-
     return (
         <WidgetDrawerContext.Provider
             value={{
                 widgets,
                 setWidgets,
                 deleteWidget,
-                updateWidgetsSorting,
                 widgetDrawerOpen,
-                handleWidgetDrawerOpen,
+                setWidgetDrawerOpen,
                 widgetDrawerTabValue,
-                handleWidgetDrawerTabValueChange,
+                setWidgetDrawerTabValue,
                 isWidgetsLoading,
                 loadWidgets,
                 widgetLocation,
                 setWidgetLocation,
+                widgetDetailsTabId,
+                setWidgetDetailsTabId,
+                isWidgetInScope,
             }}
         >
             {children}

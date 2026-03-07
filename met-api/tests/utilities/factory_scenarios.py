@@ -484,6 +484,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 1,
     }
     widget2 = {
         'widget_type_id': WidgetType.DOCUMENTS.value,
@@ -491,6 +492,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 2,
     }
     widget_events = {
         'widget_type_id': WidgetType.EVENTS.value,
@@ -498,6 +500,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 3,
     }
     widget_subscribe = {
         'widget_type_id': WidgetType.SUBSCRIBE.value,
@@ -505,6 +508,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 1,
     }
     widget_map = {
         'widget_type_id': WidgetType.Map.value,
@@ -512,6 +516,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 2,
     }
     widget_video = {
         'widget_type_id': WidgetType.Video.value,
@@ -519,6 +524,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 3,
     }
     widget_timeline = {
         'widget_type_id': WidgetType.Timeline.value,
@@ -526,6 +532,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 1,
     }
     widget_image = {
         'widget_type_id': WidgetType.Image.value,
@@ -533,6 +540,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 2,
     }
     widget_listening = {
         'widget_type_id': WidgetType.WHO_IS_LISTENING.value,
@@ -540,6 +548,7 @@ class TestWidgetInfo(dict, Enum):
         'updated_by': '123',
         'created_date': datetime.now().strftime('%Y-%m-%d'),
         'updated_date': datetime.now().strftime('%Y-%m-%d'),
+        'location': 3,
     }
 
 

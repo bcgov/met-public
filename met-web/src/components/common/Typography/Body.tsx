@@ -95,16 +95,7 @@ export const EyebrowText = ({
     children: React.ReactNode;
 } & TypographyProps) => {
     return (
-        <Typography
-            variant="body1"
-            {...props}
-            sx={{
-                fontSize: '24px',
-                lineHeight: 'normal',
-                fontWeight: 300,
-                ...props.sx,
-            }}
-        >
+        <Typography variant="body1" fontSize="24px" lineHeight="normal" fontWeight={300} {...props}>
             {children}
         </Typography>
     );

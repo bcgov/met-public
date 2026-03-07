@@ -16,7 +16,7 @@ export type TextInputProps = {
 
 export const textInputStyles = {
     display: 'flex',
-    padding: '8px 16px',
+    padding: '10px 16px',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '10px',
@@ -250,11 +250,10 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
         <MuiTextField
             {...props}
             sx={[
-                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
                 {
                     '& .MuiOutlinedInput-root': {
                         display: 'flex',
-                        height: '48px',
+                        minHeight: '48px',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '10px',
@@ -283,6 +282,7 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
                         },
                     },
                 },
+                ...(Array.isArray(sx) ? sx : [sx]),
             ]}
         />
     );

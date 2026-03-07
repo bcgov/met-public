@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import '@bcgov/design-tokens/css-prefixed/variables.css'; // Will be available to use in all component
 import './App.scss';
 import { RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router';
@@ -14,7 +14,7 @@ import i18n from './i18n';
 import { Languages } from 'constants/language';
 import { AuthKeyCloakContext } from './components/auth/AuthKeycloakContext';
 import { determinePathSegments, findTenantInPath } from './utils';
-import { authenticatedRootLoader } from 'routes/AuthenticatedRootRouteLoader';
+import UserService from './services/userService';
 const MidScreenLoaderLazy = React.lazy(() =>
     import('components/common').then((module) => ({ default: module.MidScreenLoader })),
 );
@@ -27,6 +27,7 @@ const App = () => {
     const dispatch = useAppDispatch();
     const roles = useAppSelector((state) => state.user.roles);
     const authenticationLoading = useAppSelector((state) => state.user.authentication.loading);
+    const userDetail = useAppSelector((state) => state.user.userDetail);
     const pathSegments = determinePathSegments();
     const language: LanguageState = useAppSelector((state) => state.language);
     const basename = findTenantInPath();
@@ -38,6 +39,15 @@ const App = () => {
         sessionStorage.setItem('apiurl', String(AppConfig.apiUrl));
         loadTenant();
     }, [basename, AppConfig.apiUrl]);
+
+    // Re-trigger auth data loading if authenticated but user details haven't loaded yet and tenant is now available
+    // This handles the race condition where authentication completes before tenant loading
+    useEffect(() => {
+        if (isAuthenticated && tenant.id && !userDetail?.sub && !authenticationLoading) {
+            // Tenant is now loaded, retry loading user data
+            UserService.setAuthData(dispatch);
+        }
+    }, [isAuthenticated, tenant.id, userDetail?.sub, authenticationLoading, dispatch]);
 
     const fetchTenant = async (_basename: string) => {
         if (!_basename) {
@@ -189,13 +199,9 @@ const App = () => {
         loadTranslation();
     }, [language.id, translations]);
 
-    if (authenticationLoading || tenant.loading || language.loading) {
-        return <MidScreenLoaderLazy />;
-    }
-
-    // If the tenant has failed to load, show the Not Found page.
-    if (!tenant.id) {
-        const router = createBrowserRouter(
+    const notFoundRouter = useMemo(() => {
+        if (tenant.id) return null;
+        return createBrowserRouter(
             [
                 {
                     path: '/*',
@@ -204,29 +210,24 @@ const App = () => {
             ],
             { basename: `/${basename}` },
         );
-        return <RouterProvider router={router} />;
-    }
+    }, [basename, tenant.id]);
 
-    // Otherwise, if the user is not authenticated, show the public layout.
-    if (!isAuthenticated) {
-        const router = createBrowserRouter(
-            createRoutesFromElements(UnauthenticatedRoutes as Parameters<typeof createRoutesFromElements>[0]),
-            {
-                basename: `/${basename}`,
-            },
-        );
-        return <RouterProvider router={router} />;
-    }
+    const unauthenticatedRouter = useMemo(() => {
+        if (isAuthenticated || !tenant.id) return null;
+        return createBrowserRouter(createRoutesFromElements(UnauthenticatedRoutes), {
+            basename: `/${basename}`,
+        });
+    }, [basename, isAuthenticated, tenant.id]);
 
-    // Otherwise, if the user is authenticated but does not have a role, display the admin area with no access to children pages.
-    if (roles.length === 0) {
-        const router = createBrowserRouter(
+    const noAccessRouter = useMemo(() => {
+        if (!isAuthenticated || roles.length !== 0 || !tenant.id) return null;
+        return createBrowserRouter(
             [
                 {
                     lazy: () => {
                         return Promise.all([
                             import('routes/AuthenticatedRootRouteLoader'),
-                            import('components/appLayouts/AuthenticatedLayout'),
+                            import('components/appLayouts/SimplifiedLayout'),
                         ]).then(([loaderModule, layoutModule]) => ({
                             Component: layoutModule.default,
                             loader: loaderModule.authenticatedRootLoader,
@@ -238,23 +239,58 @@ const App = () => {
                             lazy: () => import('routes/NoAccess').then((module) => ({ Component: module.default })),
                         },
                     ],
-                    loader: authenticatedRootLoader,
                     id: 'authenticated-root',
                 },
             ],
             { basename: `/${basename}` },
         );
+    }, [basename, isAuthenticated, roles.length, tenant.id]);
+
+    const authenticatedRouter = useMemo(() => {
+        if (!isAuthenticated || roles.length === 0 || !tenant.id) return null;
+        return createBrowserRouter(createRoutesFromElements(AuthenticatedRoutes), {
+            basename: `/${basename}`,
+        });
+    }, [basename, isAuthenticated, roles.length, tenant.id]);
+
+    // Wait for tenant to load before proceeding with authentication flow
+    // This is necessary because API calls require the tenant-id header from sessionStorage
+    if (tenant.loading) {
+        return <MidScreenLoaderLazy message="Loading tenant..." />;
+    }
+
+    if (language.loading) {
+        return <MidScreenLoaderLazy message="Loading languages..." />;
+    }
+
+    // After tenant is loaded, wait for authentication and user authorization to complete
+    if (authenticationLoading || (isAuthenticated && !userDetail?.sub)) {
+        return <MidScreenLoaderLazy message="Loading user details..." />;
+    }
+
+    const chooseRouter = () => {
+        if (!tenant.id) {
+            // If the tenant failed to load, show the Not Found page.
+            return notFoundRouter;
+        }
+        if (!isAuthenticated) {
+            // If the user is not authenticated, show the public layout.
+            return unauthenticatedRouter;
+        }
+        if (roles.length === 0) {
+            // If the user is authenticated but does not have a role, display the admin area with no access to children pages.
+            return noAccessRouter;
+        }
+        // Otherwise, display the admin area.
+        return authenticatedRouter;
+    };
+
+    const router = chooseRouter();
+
+    if (router) {
         return <RouterProvider router={router} />;
     }
 
-    // Otherwise, display the admin area.
-    const router = createBrowserRouter(
-        createRoutesFromElements(AuthenticatedRoutes as Parameters<typeof createRoutesFromElements>[0]),
-        {
-            basename: `/${basename}`,
-        },
-    );
-
-    return <RouterProvider router={router} />;
+    return <MidScreenLoaderLazy />;
 };
 export default App;

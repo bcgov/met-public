@@ -8,7 +8,7 @@ import { WidgetTitle } from '../WidgetTitle';
 import { DocumentsContext } from './DocumentsContext';
 
 const DocumentForm = () => {
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { widget } = useContext(DocumentsContext);
 
     return (
@@ -28,7 +28,7 @@ const DocumentForm = () => {
 
             <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="8em">
                 <Grid item>
-                    <PrimaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>{`Close`}</PrimaryButtonOld>
+                    <PrimaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>{`Close`}</PrimaryButtonOld>
                 </Grid>
             </Grid>
         </Grid>

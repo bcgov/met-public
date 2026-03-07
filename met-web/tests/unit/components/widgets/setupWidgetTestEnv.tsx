@@ -33,7 +33,7 @@ export const setupWidgetTestEnvMock = (): void => {
         ...jest.requireActual('react-router'),
         useLocation: jest.fn(() => ({ search: '' })),
         useParams: jest.fn(() => {
-            return { projectId: '' };
+            return { projectId: '', engagementId: '1' };
         }),
         useNavigate: () => jest.fn(),
     }));
@@ -62,6 +62,12 @@ export const setupWidgetTestEnvSpy = (): void => {
         ),
         useDispatch: jest.fn(() => jest.fn()),
     }));
+    const useParamsDescriptor = Object.getOwnPropertyDescriptor(reactRouter, 'useParams');
+    if (jest.isMockFunction(reactRouter.useParams)) {
+        (reactRouter.useParams as jest.Mock).mockReturnValue({ projectId: '', engagementId: '1' });
+    } else if (!useParamsDescriptor || useParamsDescriptor.configurable) {
+        jest.spyOn(reactRouter, 'useParams').mockReturnValue({ projectId: '', engagementId: '1' });
+    }
     jest.spyOn(engagementService, 'getEngagement').mockReturnValue(Promise.resolve(draftEngagement));
     jest.spyOn(engagementMetadataService, 'getEngagementMetadata').mockReturnValue(
         Promise.resolve([engagementMetadata]),

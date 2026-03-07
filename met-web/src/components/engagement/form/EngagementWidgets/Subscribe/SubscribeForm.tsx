@@ -9,7 +9,7 @@ import { When } from 'react-if';
 import SubscribeInfoBlock from './SubscribeInfoBlock';
 
 const Form = () => {
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { handleSubscribeDrawerOpen, subscribeOptions, widget, setSubscribeOptionToEdit } =
         useContext(SubscribeContext);
     const subscribeFormExists = subscribeOptions.length > 0;
@@ -76,7 +76,7 @@ const Form = () => {
                 <Grid item>
                     <PrimaryButtonOld
                         onClick={() => {
-                            handleWidgetDrawerOpen(false);
+                            setWidgetDrawerOpen(false);
                         }}
                     >
                         Close

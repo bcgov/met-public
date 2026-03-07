@@ -7,7 +7,7 @@ import {
     Theme,
     ThemeProvider,
     ButtonBase,
-    Grid,
+    Grid2 as Grid,
     Avatar,
     MenuItem,
     Drawer,
@@ -15,19 +15,20 @@ import {
     Collapse,
     CssBaseline,
     LinearProgress,
+    Grow,
 } from '@mui/material';
-import { colors, DarkTheme, Palette } from 'styles/Theme';
+import { colors, AdminDarkTheme, Palette } from 'styles/Theme';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { useAppSelector } from '../../../hooks';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { Link } from 'components/common/Navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faClose, faSignOut } from '@fortawesome/pro-regular-svg-icons';
 import UserService from 'services/userService';
 import { Await, useRouteLoaderData, useParams, useNavigation } from 'react-router';
 import { Tenant } from 'models/tenant';
-import { When, Unless, If, Else, Then } from 'react-if';
-import { Button } from 'components/common/Input';
+import { When, If, Else, Then } from 'react-if';
+import { Button } from 'components/common/Input/Button';
 import DropdownMenu, { dropdownMenuStyles } from 'components/common/Navigation/DropdownMenu';
 import { elevations } from 'components/common';
 import { AuthenticatedRootLoaderData } from 'routes/AuthenticatedRootRouteLoader';
@@ -79,6 +80,23 @@ const InternalHeader = () => {
     const sidePadding = { xs: '0 1em', md: '0 1.5em 0 2em', lg: '0 3em 0 2em' };
     const navigation = useNavigation();
     const isPending = navigation.state === 'loading' || navigation.state === 'submitting';
+    const leftPositionSign = sideNavOpen ? -6 : 6;
+    const leftPosition = isMobileScreen ? `${leftPositionSign}px` : '0px';
+
+    // Add delayed state for user menu to prevent disappearing before collapse completes
+    const [showUserMenu, setShowUserMenu] = useState(isMediumScreenOrLarger);
+
+    useEffect(() => {
+        if (isMediumScreenOrLarger) {
+            setShowUserMenu(true);
+        } else {
+            // Delay hiding user menu to match collapse exit timing
+            const timer = setTimeout(() => {
+                setShowUserMenu(false);
+            }, 250); // Match collapse exit timing
+            return () => clearTimeout(timer);
+        }
+    }, [isMediumScreenOrLarger]);
 
     return (
         // Keep focus within the app bar + sidenav when sidenav is open on mobile
@@ -91,9 +109,17 @@ const InternalHeader = () => {
                 }}
             >
                 <CssBaseline />
-                <Unless condition={isMediumScreenOrLarger || !canNavigate}>
+                <Grow
+                    in={!isMediumScreenOrLarger && canNavigate}
+                    timeout={{
+                        enter: 300,
+                        exit: 250,
+                    }}
+                    style={{
+                        transformOrigin: 'center right',
+                    }}
+                >
                     <Button
-                        variant="secondary"
                         onClick={() => {
                             setSideNavOpen(!sideNavOpen);
                         }}
@@ -104,10 +130,10 @@ const InternalHeader = () => {
                                 style={{
                                     width: '20px',
                                     transform: `rotate(${sideNavOpen ? '180deg' : '0'})`,
-                                    transition: 'transform 0.3s',
-                                    position: isMobileScreen ? 'relative' : undefined,
-                                    right: isMobileScreen && sideNavOpen ? '6px' : undefined,
-                                    left: isMobileScreen && !sideNavOpen ? '6px' : undefined,
+                                    transition:
+                                        'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    position: 'relative',
+                                    left: leftPosition,
                                 }}
                             />
                         }
@@ -120,13 +146,21 @@ const InternalHeader = () => {
                             minWidth: 'unset',
                             alignContent: 'center',
                             justifyContent: 'center',
+                            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                            '& .MuiSvgIcon-root': {
+                                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                            },
                         }}
                     >
-                        <Unless condition={isMobileScreen}>
+                        <Collapse
+                            in={!isMobileScreen && !isMediumScreenOrLarger}
+                            orientation="horizontal"
+                            timeout={250}
+                        >
                             <BodyText>Menu</BodyText>
-                        </Unless>
+                        </Collapse>
                     </Button>
-                </Unless>
+                </Grow>
                 <AppBar
                     position="fixed"
                     sx={{
@@ -140,6 +174,8 @@ const InternalHeader = () => {
                         borderRadius: 0,
                         borderBottomLeftRadius: '1em',
                         borderBottomRightRadius: '1em',
+                        transition: 'box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                        paddingRight: '0 !important',
                     }}
                     data-testid="appbar-header"
                 >
@@ -148,6 +184,7 @@ const InternalHeader = () => {
                             height: '4em',
                             padding: sidePadding,
                             backgroundColor: Palette.internalHeader.backgroundColor,
+                            transition: 'padding 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                     >
                         <Link underline="none" href="https://gov.bc.ca" sx={{ height: '100%', mr: '2px' }}>
@@ -174,7 +211,6 @@ const InternalHeader = () => {
                             engage{/*no space*/}
                             <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
                         </BodyText>
-                        <When condition={isMediumScreenOrLarger}></When>
                     </Toolbar>
                     <If condition={isPending}>
                         <Then>
@@ -185,8 +221,12 @@ const InternalHeader = () => {
                         in={secondaryMenuOpen}
                         timeout={{
                             appear: 0,
-                            enter: 200,
-                            exit: 200,
+                            enter: 300,
+                            exit: 250,
+                        }}
+                        easing={{
+                            enter: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                            exit: 'cubic-bezier(0.4, 0, 0.6, 1)',
                         }}
                     >
                         <Box
@@ -199,9 +239,10 @@ const InternalHeader = () => {
                                 padding: sidePadding,
                                 display: 'flex',
                                 alignItems: 'center',
+                                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                             }}
                         >
-                            <ThemeProvider theme={DarkTheme}>
+                            <ThemeProvider theme={AdminDarkTheme}>
                                 <Suspense>
                                     <Await resolve={myTenants}>
                                         {(tenants: Tenant[]) => (
@@ -213,7 +254,7 @@ const InternalHeader = () => {
                                         )}
                                     </Await>
                                 </Suspense>
-                                <When condition={isMediumScreenOrLarger}>
+                                <When condition={showUserMenu}>
                                     <UserMenu />
                                 </When>
                             </ThemeProvider>
@@ -223,15 +264,13 @@ const InternalHeader = () => {
                 <When condition={canNavigate}>
                     <If condition={authoringRoutes.includes(currentAuthoringSlug)}>
                         <Then>
-                            <>
-                                <AuthoringSideNav
-                                    open={sideNavOpen}
-                                    setOpen={setSideNavOpen}
-                                    data-testid="authoringnav-header"
-                                    isMediumScreen={isMediumScreenOrLarger}
-                                    engagementId={engagementId}
-                                />
-                            </>
+                            <AuthoringSideNav
+                                open={sideNavOpen}
+                                setOpen={setSideNavOpen}
+                                data-testid="authoringnav-header"
+                                isMediumScreen={isMediumScreenOrLarger}
+                                engagementId={engagementId}
+                            />
                         </Then>
                         <Else>
                             <SideNav
@@ -312,6 +351,7 @@ const TenantSelector = ({
                     sx={{
                         height: 'calc( 100% - 2px )' /* 1px on either side to show border*/,
                         ...dropdownMenuStyles,
+                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                 >
                     <TenantButtonContent
@@ -332,6 +372,10 @@ const TenantSelector = ({
                             padding: '1rem',
                             top: '6.5rem',
                             backgroundImage: 'none',
+                            transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out',
+                        },
+                        '& .MuiBackdrop-root': {
+                            transition: 'opacity 0.25s ease-out',
                         },
                     }}
                 >
@@ -344,6 +388,7 @@ const TenantSelector = ({
                                 mt: 0,
                                 '& .MuiMenuItem-root': {
                                     marginBottom: '1rem',
+                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                                     '&:first-of-type': {
                                         marginTop: '-4px',
                                     },
@@ -376,6 +421,7 @@ const TenantSelector = ({
                 sx: {
                     marginLeft: '-16px' /*Visual alignment with nav bar*/,
                     height: 'calc( 100% - 2px )' /* 1px on either side to show border*/,
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 },
             }}
             popperProps={{
@@ -401,7 +447,7 @@ const TenantButtonContent = ({
 }) => {
     return (
         <Grid container data-testid="tenant-switcher-button" direction="row" alignItems="center" spacing={1}>
-            <Grid item sx={{ flex: '1 1 auto' }}>
+            <Grid sx={{ flex: '1 1 auto' }}>
                 <BodyText
                     sx={{
                         userSelect: 'none',
@@ -414,7 +460,7 @@ const TenantButtonContent = ({
                     {currentTenantName}
                 </BodyText>
             </Grid>
-            <Grid item hidden={!hasOtherTenants} sx={{ flex: '0 0 auto' }}>
+            <Grid hidden={!hasOtherTenants} sx={{ flex: '0 0 auto' }}>
                 <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
             </Grid>
         </Grid>
@@ -432,6 +478,7 @@ const UserMenu = () => {
                 sx: {
                     marginLeft: 'auto' /* float to the right */,
                     height: 'calc( 100% - 2px )' /* 1px on either side to show border*/,
+                    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 },
             }}
             popperProps={{
@@ -446,7 +493,12 @@ const UserMenu = () => {
                 onClick={() => {
                     UserService.doLogout();
                 }}
-                sx={{ width: '100%', paddingLeft: 2, paddingRight: 2 }}
+                sx={{
+                    width: '100%',
+                    paddingLeft: 2,
+                    paddingRight: 2,
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
             >
                 <FontAwesomeIcon style={{ marginRight: '0.5rem' }} icon={faSignOut} />
                 Logout
@@ -459,7 +511,7 @@ const UserButtonContent = ({ isOpen }: { isOpen: boolean }) => {
     const currentUser = useAppSelector((state) => state.user.userDetail.user);
     return (
         <Grid container data-testid="user-menu-button" direction="row" alignItems="center" spacing={1}>
-            <Grid item>
+            <Grid>
                 <Avatar
                     sx={{
                         backgroundColor: colors.surface.blue[10],
@@ -472,7 +524,7 @@ const UserButtonContent = ({ isOpen }: { isOpen: boolean }) => {
                     {currentUser?.last_name[0]}
                 </Avatar>
             </Grid>
-            <Grid item>
+            <Grid>
                 <BodyText size="small" sx={{ userSelect: 'none' }}>
                     Hello {currentUser?.first_name}
                 </BodyText>
@@ -482,7 +534,7 @@ const UserButtonContent = ({ isOpen }: { isOpen: boolean }) => {
                         : (currentUser?.main_role ?? 'User')}
                 </BodyText>
             </Grid>
-            <Grid item>
+            <Grid>
                 <FontAwesomeIcon color="white" rotation={isOpen ? 180 : undefined} icon={faChevronDown} />
             </Grid>
         </Grid>

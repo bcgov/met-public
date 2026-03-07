@@ -135,6 +135,12 @@ function MetTable<T>({
     const order = sort_order;
     const orderBy = sort_key;
 
+    const rowsPerPage = size && size > 0 ? size : 5;
+    const baseRowsPerPageOptions = [5, 10, 25];
+    const rowsPerPageOptions = baseRowsPerPageOptions.includes(rowsPerPage)
+        ? baseRowsPerPageOptions
+        : [...baseRowsPerPageOptions, rowsPerPage].sort((a, b) => a - b);
+
     const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => {
         const isAsc = orderBy === property && order === 'asc';
         handleChangePagination({
@@ -162,7 +168,7 @@ function MetTable<T>({
     };
 
     // Avoid a layout jump when reaching the last page with empty filteredRows.
-    const emptyRows = page > 1 ? Math.max(0, page * size - total) : 0;
+    const emptyRows = page > 1 ? Math.max(0, page * rowsPerPage - total) : 0;
 
     return (
         <Box data-testid="listing-table">
@@ -244,10 +250,10 @@ function MetTable<T>({
                 <Unless condition={noPagination}>
                     <TablePagination
                         data-testid="Table-Pagination"
-                        rowsPerPageOptions={[5, 10, 25]}
+                        rowsPerPageOptions={rowsPerPageOptions}
                         component="div"
                         count={total}
-                        rowsPerPage={size}
+                        rowsPerPage={rowsPerPage}
                         page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
