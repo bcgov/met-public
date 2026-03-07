@@ -30,12 +30,15 @@ jest.mock('react-redux', () => ({
 const mockCreateWidget = jest.fn(() => ({
     unwrap: () => Promise.resolve(timeLineWidget),
 }));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(timeLineWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(timeLineWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -124,12 +127,12 @@ describe('TimeLine Widget tests', () => {
         const eventDesc1 = document.querySelector('input[name="eventDescription1"]') as HTMLInputElement;
         const eventTime1 = document.querySelector('input[name="eventTime1"]') as HTMLInputElement;
         const selectElement1 = document.querySelector('input[name="eventStatus1"]') as HTMLInputElement;
-        console.log(selectElement1);
+        const selectButton1 = screen.getByRole('combobox');
 
         fireEvent.change(eventDesc1, { target: { value: mockTimeLine.events[0].description } });
         fireEvent.change(eventTime1, { target: { value: mockTimeLine.events[0].time } });
-        fireEvent.mouseDown(selectElement1);
-        fireEvent.click(screen.getByText('Pending'));
+        fireEvent.mouseDown(selectButton1);
+        fireEvent.click(screen.getByRole('option', { name: 'Pending' }));
 
         await waitFor(() => {
             expect(titleInput.value).toBe(mockTimeLine.title);

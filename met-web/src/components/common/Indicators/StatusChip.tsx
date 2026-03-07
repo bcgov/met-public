@@ -115,5 +115,5 @@ export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> =
  * @returns A rectangular skeleton with a fixed width and height, styled to resemble a status chip.
  */
 export const StatusChipSkeleton = () => (
-    <Skeleton variant="rectangular" sx={{ width: '64px', height: '28px', borderRadius: '24px' }} />
+    <Skeleton variant="rectangular" sx={{ width: '72px', height: '28px', borderRadius: '24px' }} />
 );

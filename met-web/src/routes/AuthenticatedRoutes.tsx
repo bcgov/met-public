@@ -8,9 +8,11 @@ import LazyRoute, { resolveLazyRouteTree } from './LazyRoute';
 import AuthGate from './AuthGate';
 
 const AuthenticatedRoutes = resolveLazyRouteTree(
-    <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.ACCESS_DASHBOARD]} />}>
+    <Route>
         {/* Preview Route with Simplified Layout */}
-        <LazyRoute element={<AuthGate allowedRoles={[USER_ROLES.EDIT_ENGAGEMENT]} />}>
+        <LazyRoute
+            element={<AuthGate allowedRoles={[USER_ROLES.VIEW_ENGAGEMENT, USER_ROLES.VIEW_ASSIGNED_ENGAGEMENTS]} />}
+        >
             <LazyRoute
                 path="/engagements/:engagementId/preview"
                 ComponentLazy={() => import('components/appLayouts/SimplifiedLayout')}
@@ -305,7 +307,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
             <LazyRoute path="/not-found" ComponentLazy={() => import('routes/NotFound')} />
             <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
         </LazyRoute>
-    </LazyRoute>,
+    </Route>,
 );
 
 export default AuthenticatedRoutes;

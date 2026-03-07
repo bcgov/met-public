@@ -1,6 +1,5 @@
-import { Box, BoxProps } from '@mui/material';
+import { Grid2 as Grid, Grid2Props as GridProps } from '@mui/material';
 import React from 'react';
-import { colors } from '..';
 
 /**
  * A container component for displaying details in a layout.
@@ -8,7 +7,7 @@ import { colors } from '..';
  * The component supports additional styling through the `sx` prop.
  * @param {Object} props - The component props.
  * @param {React.ReactNode} props.children - The content to display within the details container.
- * @param {BoxProps} [props.formContainerProps] - Additional properties for the Box component.
+ * @param {GridProps} [props.formContainerProps] - Additional properties for the Box component.
  * @returns {JSX.Element} A styled Box component that serves as a details container.
  * @example
  * <DetailsContainer>
@@ -16,25 +15,23 @@ import { colors } from '..';
  *    <Detail>Detail 2</Detail>
  * </DetailsContainer>
  * */
-export const DetailsContainer = ({ children, ...formContainerProps }: { children: React.ReactNode } & BoxProps) => {
-    const { sx, ...rest } = formContainerProps;
+export const DetailsContainer = ({ children, ...formContainerProps }: GridProps) => {
     return (
-        <Box
+        <Grid
+            // Set as a container unless explicitly disabled
+            container={formContainerProps.container === false ? false : true}
+            size={12}
             className="met-layout-details-container"
-            sx={{
-                display: 'flex',
-                padding: { xs: '16px', sm: '32px' },
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                background: colors.surface.gray[10],
-                gap: '24px',
-                ...sx,
-            }}
-            {...rest}
+            padding={{ xs: 2, sm: 4 }}
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            bgcolor="gray.10"
+            gap={3}
+            {...formContainerProps}
         >
             {children}
-        </Box>
+        </Grid>
     );
 };
 
@@ -45,7 +42,7 @@ export const DetailsContainer = ({ children, ...formContainerProps }: { children
  * @param {Object} props - The component props.
  * @param {React.ReactNode} props.children - The content to display within the detail section.
  * @param {boolean} [props.invisible=false] - If true, the background will be transparent; otherwise, it will be white.
- * @param {BoxProps} [props.containerProps] - Additional properties for the Box component.
+ * @param {GridProps} [props.containerProps] - Additional properties for the Box component.
  * @returns {JSX.Element} A styled Box component that serves as a detail section.
  * @example
  * <Detail invisible={false}>
@@ -53,29 +50,24 @@ export const DetailsContainer = ({ children, ...formContainerProps }: { children
  *     <p>This is some detailed information.</p>
  * </Detail>
  */
-export const Detail = ({
-    children,
-    invisible,
-    ...containerProps
-}: { children: React.ReactNode; invisible?: boolean } & BoxProps) => {
-    const { sx, ...rest } = containerProps;
+export const Detail = ({ children, invisible, ...containerProps }: { invisible?: boolean } & GridProps) => {
     return (
-        <Box
+        <Grid
+            size={12}
+            // Set as a container unless explicitly disabled
+            container={containerProps.container === false ? false : true}
             className="met-layout-detail"
-            sx={{
-                display: 'flex',
-                padding: '16px',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: '8px',
-                alignSelf: 'stretch',
-                borderRadius: '4px',
-                background: invisible ? 'transparent' : colors.surface.white,
-                ...sx,
-            }}
-            {...rest}
+            direction="column"
+            padding={2}
+            rowSpacing={1}
+            gap={1}
+            alignItems="flex-start"
+            alignSelf="stretch"
+            borderRadius={0.5}
+            bgcolor={invisible ? 'transparent' : 'background.paper'}
+            {...containerProps}
         >
             {children}
-        </Box>
+        </Grid>
     );
 };

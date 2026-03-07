@@ -124,7 +124,6 @@ export const Select: React.FC<SelectProps & Omit<MuiSelectProps, 'value' | 'onCh
                 },
                 sx: {
                     backgroundColor: 'transparent',
-                    borderRadius: '8px',
                     boxShadow: 3,
                     mt: 1,
                     ml: -1,
@@ -146,7 +145,7 @@ export const Select: React.FC<SelectProps & Omit<MuiSelectProps, 'value' | 'onCh
                                 backgroundColor: '#D8EAFD',
                             },
                             '& span': {
-                                color: '#292929',
+                                color: 'text.primary',
                             },
                             '&.Mui-selected span': {
                                 fontWeight: 'bold',

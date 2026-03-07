@@ -10,13 +10,13 @@ import { SubscriptionType } from 'constants/subscriptionType';
 import { Editor } from 'react-draft-wysiwyg';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { LanguageState } from 'reduxSlices/languageSlice';
-import { Await, useRouteLoaderData } from 'react-router';
+import { Await, useLoaderData } from 'react-router';
 import { EngagementLoaderPublicData } from 'engagements/public/view';
 import { CircularProgress } from '@mui/material';
 
 const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
     const dispatch = useAppDispatch();
-    const { engagement } = useRouteLoaderData('single-engagement') as EngagementLoaderPublicData;
+    const { engagement } = useLoaderData() as EngagementLoaderPublicData;
     const defaultType = SubscriptionType.ENGAGEMENT;
     const [email, setEmail] = useState('');
     const [isSaving, setIsSaving] = useState(false);

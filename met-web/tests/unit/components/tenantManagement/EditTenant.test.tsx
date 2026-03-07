@@ -1,5 +1,6 @@
 import React, { JSX, ReactNode, SuspenseProps } from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import * as reactRouter from 'react-router';
 import * as tenantService from 'services/tenantService';
@@ -8,6 +9,7 @@ import { USER_ROLES } from 'services/userService/constants';
 
 const navigate = jest.fn();
 const revalidate = jest.fn();
+let user: ReturnType<typeof userEvent.setup>;
 
 const mockTenant = {
     id: 1,
@@ -133,16 +135,17 @@ jest.mock('components/common/Navigation/UnsavedWorkConfirmation', () => ({
 const renderPage = () => render(<TenantEditPage />);
 
 describe('Tenant Editing Page tests', () => {
-    const editField = (placeholder: string, value: string) => {
+    const editField = async (placeholder: string, value: string) => {
         const field = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
-        field.focus();
-        field.setSelectionRange(0, field.value.length);
-        fireEvent.change(field, { target: { value } });
-        fireEvent.blur(field); // Trigger validation
+        await user.click(field);
+        await user.clear(field);
+        await user.type(field, value);
+        await user.tab(); // Trigger validation via blur
     };
 
     beforeEach(() => {
         jest.clearAllMocks();
+        user = userEvent.setup();
         jest.spyOn(reactRouter, 'useNavigate').mockReturnValue(navigate);
     });
 
@@ -180,16 +183,16 @@ describe('Tenant Editing Page tests', () => {
 
     test('Button is enabled after form is edited', async () => {
         renderPage();
+        await editField('Name', 'New Name');
         await waitFor(() => {
-            editField('Name', 'New Name');
             expect(screen.getByText('Update')).not.toBeDisabled();
         });
     });
 
     test('Email throws error if invalid', async () => {
         renderPage();
+        await editField('Email', 'invalid-email');
         await waitFor(() => {
-            editField('Email', 'invalid-email');
             expect(screen.getByText("That doesn't look like a valid email...")).toBeVisible();
             expect(screen.getByText('Update')).toBeDisabled();
         });
@@ -197,8 +200,8 @@ describe('Tenant Editing Page tests', () => {
 
     test('Short name throws error if invalid', async () => {
         renderPage();
+        await editField('shortname', 'invalid shortname');
         await waitFor(() => {
-            editField('shortname', 'invalid shortname');
             expect(screen.getByText('Your input contains invalid symbols')).toBeVisible();
             expect(screen.getByText('Update')).toBeDisabled();
         });
@@ -206,7 +209,9 @@ describe('Tenant Editing Page tests', () => {
 
     test('Character limit is enforced on fields', async () => {
         renderPage();
-        editField('Title', 'a'.repeat(256));
+        const field = screen.getByPlaceholderText('Title') as HTMLInputElement;
+        fireEvent.change(field, { target: { value: 'a'.repeat(256) } });
+        fireEvent.blur(field);
         await waitFor(() => {
             expect(screen.getByText('This input is too long!')).toBeVisible();
             expect(screen.getByText('Update')).toBeDisabled();
@@ -215,7 +220,7 @@ describe('Tenant Editing Page tests', () => {
 
     test('Cancel button navigates back to tenant details page', async () => {
         renderPage();
-        fireEvent.click(screen.getByText('Cancel'));
+        await user.click(screen.getByText('Cancel'));
         await waitFor(() => {
             expect(navigate).toHaveBeenCalledTimes(1);
             expect(navigate).toHaveBeenCalledWith(`/tenantadmin/${mockTenant.short_name}/detail`);
@@ -224,11 +229,11 @@ describe('Tenant Editing Page tests', () => {
 
     test('Update button calls updateTenant action', async () => {
         renderPage();
+        await editField('Name', 'New Name');
         await waitFor(() => {
-            editField('Name', 'New Name');
             expect(screen.getByText('Update')).not.toBeDisabled();
         });
-        fireEvent.click(screen.getByText('Update'));
+        await user.click(screen.getByText('Update'));
         await waitFor(() => {
             expect(tenantService.updateTenant).toHaveBeenCalledTimes(1);
         });

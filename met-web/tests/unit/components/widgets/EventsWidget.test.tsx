@@ -72,10 +72,13 @@ jest.mock('@hello-pangea/dnd', () => ({
 const mockCreateWidget = jest.fn(() => ({
     unwrap: () => Promise.resolve(eventWidget),
 }));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(eventWidget),
+}));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(eventWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -131,6 +134,7 @@ describe('Event Widget tests', () => {
     beforeEach(() => {
         setupEnv();
         mockCreateWidget.mockReset();
+        mockUpdateWidget.mockReset();
         getWidgetsMock.mockReset();
 
         getWidgetsMock.mockResolvedValue([]);

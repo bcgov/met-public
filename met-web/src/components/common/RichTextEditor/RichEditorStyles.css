@@ -20,12 +20,17 @@
     padding: 12px 8px;
     box-shadow: none;
     outline-offset: 0;
+    box-sizing: border-box;
 }
 
 li.rdw-dropdownoption-default {
     border-radius: 4px;
     padding: 2px;
     outline-offset: 0;
+}
+
+.public-DraftEditorPlaceholder-inner{
+    color: #A19F9D;
 }
 
 .rdw-option-wrapper:hover:not(:disabled) {

@@ -28,12 +28,15 @@ jest.mock('react-redux', () => ({
 const mockCreateWidget = jest.fn(() => ({
     unwrap: () => Promise.resolve(pollWidget),
 }));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(pollWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(pollWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));

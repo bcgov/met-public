@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Grid, GridProps } from '@mui/material';
+import { Grid2 as Grid, Grid2Props as GridProps } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { StatusIcon } from '../Communication/StatusIcon';
 import { colors } from 'styles/Theme';
 import { faClose } from '@fortawesome/pro-regular-svg-icons';
+import { Button } from 'components/common/Input/Button';
 
 /**
  * Displays an inline system message with an icon, text, and optional dismiss button.
@@ -71,13 +72,11 @@ export const SystemMessage = ({
                 ...props.sx,
             }}
         >
-            <Grid item sx={{ pr: 1, mt: -0.5, fontSize: '18px' }}>
+            <Grid sx={{ pr: 1, mt: -0.5, fontSize: '18px' }}>
                 <StatusIcon status={status} color={color} />
             </Grid>
-            <Grid item sx={{ width: '100%', maxWidth: { xs: '100%', md: '600px', fontSize: '14px' } }}>
-                {children}
-            </Grid>
-            <Grid item justifySelf="flex-end" sx={{ mt: -0.75, opacity: onDismiss ? 1 : 0 }}>
+            <Grid sx={{ width: '100%', maxWidth: { xs: '100%', md: '600px', fontSize: '14px' } }}>{children}</Grid>
+            <Grid justifySelf="flex-end" sx={{ mt: -0.75, opacity: onDismiss ? 1 : 0 }}>
                 <Button
                     disabled={!onDismiss}
                     onClick={onDismiss}
@@ -93,8 +92,8 @@ export const SystemMessage = ({
                             backgroundColor: 'transparent',
                         },
                     }}
-                    startIcon={<FontAwesomeIcon icon={faClose} />}
-                ></Button>
+                    icon={<FontAwesomeIcon icon={faClose} />}
+                />
             </Grid>
         </Grid>
     );

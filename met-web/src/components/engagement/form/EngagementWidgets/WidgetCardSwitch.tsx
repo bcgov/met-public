@@ -11,133 +11,140 @@ interface WidgetCardSwitchProps {
     removeWidget: (widgetId: number) => void;
 }
 export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget }: WidgetCardSwitchProps) => {
-    const { setWidgetDrawerOpen, setWidgetDrawerTabValue } = useContext(WidgetDrawerContext);
-
+    const { setWidgetDrawerOpen, setWidgetDrawerTabValue, setWidgetLocation } = useContext(WidgetDrawerContext);
+    const openDrawerToTab = (tabValue: (typeof WidgetTabValues)[keyof typeof WidgetTabValues]) => {
+        // Set the widget location before opening the drawer
+        if (widget.location) {
+            setWidgetLocation(widget.location);
+        }
+        setWidgetDrawerTabValue(tabValue);
+        setWidgetDrawerOpen(true);
+    };
     return (
         <Switch>
             <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`who-is-listening-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.WHO_IS_LISTENING_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.WHO_IS_LISTENING_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Document}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`document-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.DOCUMENT_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.DOCUMENT_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`subscribe-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.SUBSCRIBE_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.SUBSCRIBE_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Events}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.EVENTS_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.EVENTS_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Map}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.MAP_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.MAP_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Video}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.VIDEO_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.VIDEO_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Timeline}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.TIMELINE_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.TIMELINE_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Poll}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.POLL_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.POLL_FORM);
                     }}
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Image}>
                 <MetWidget
                     sortable={!singleSelection}
+                    widgetTypeId={widget.widget_type_id}
                     testId={`image-${widget.widget_type_id}`}
                     title={widget.title}
                     onDelete={() => {
                         removeWidget(widget.id);
                     }}
                     onEdit={() => {
-                        setWidgetDrawerTabValue(WidgetTabValues.IMAGE_FORM);
-                        setWidgetDrawerOpen(true);
+                        openDrawerToTab(WidgetTabValues.IMAGE_FORM);
                     }}
                 />
             </Case>

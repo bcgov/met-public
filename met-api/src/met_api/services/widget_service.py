@@ -44,7 +44,7 @@ class WidgetService:
 
     @staticmethod
     def update_widget(engagement_id, widget_id: list, widget_data: dict, user_id=None):
-        """Sort widgets."""
+        """Update widget."""
         WidgetService._verify_widget(widget_id)
 
         widget_data['updated_by'] = user_id

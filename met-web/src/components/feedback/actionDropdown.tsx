@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { MenuItem, Select } from '@mui/material';
 import { Feedback, FeedbackStatusEnum } from 'models/feedback';
 import { useAppDispatch } from 'hooks';
-import { Palette } from 'styles/Theme';
 import { updateFeedback, deleteFeedback } from 'services/feedbackService';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -88,7 +87,7 @@ export const ActionsDropDown = ({ feedback, reload }: { feedback: Feedback; relo
             value={0}
             fullWidth
             size="small"
-            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+            sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}

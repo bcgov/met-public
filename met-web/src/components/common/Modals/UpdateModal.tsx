@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { modalStyle, PrimaryButtonOld, MetHeader1Old, MetBodyOld, colors } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { modalStyle, colors } from 'components/common';
 import { NotificationModalProps } from './types';
+import { BodyText, Header1 } from '../Typography';
+import { Button } from '../Input/Button';
 
 const UpdateModal = ({ header, style = 'default', subText, handleClose }: NotificationModalProps) => {
     const palette = colors.button[style];
@@ -14,33 +16,32 @@ const UpdateModal = ({ header, style = 'default', subText, handleClose }: Notifi
             sx={{ ...modalStyle, borderColor: palette.shade }}
             rowSpacing={2}
         >
-            <Grid container direction="row" item xs={12}>
-                <Grid item xs={12}>
-                    <MetHeader1Old bold sx={{ mb: 2 }}>
+            <Grid container direction="row" size={{ xs: 12 }}>
+                <Grid size={12}>
+                    <Header1 weight="bold" sx={{ mb: 2 }}>
                         {header}
-                    </MetHeader1Old>
+                    </Header1>
                 </Grid>
             </Grid>
-            <Grid container direction="row" item xs={12}>
+            <Grid container direction="row" size={{ xs: 12 }}>
                 {subText.map((subtext) => (
-                    <Grid item xs={12}>
-                        <MetBodyOld bold={subtext.bold} sx={{ mb: 1 }}>
+                    <Grid size={12}>
+                        <BodyText bold={subtext.bold} sx={{ mb: 1 }}>
                             {subtext.text}
-                        </MetBodyOld>
+                        </BodyText>
                     </Grid>
                 ))}
                 <Grid
-                    item
                     container
                     direction={{ xs: 'column', sm: 'row' }}
-                    xs={12}
+                    size={{ xs: 12 }}
                     justifyContent="flex-end"
                     spacing={1}
                     sx={{ mt: '1em' }}
                 >
-                    <PrimaryButtonOld onClick={handleClose} sx={{ m: 1 }}>
+                    <Button variant="primary" onClick={handleClose} sx={{ m: 1 }}>
                         Close
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

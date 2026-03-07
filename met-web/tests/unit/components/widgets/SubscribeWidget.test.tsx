@@ -11,6 +11,26 @@ import { createMemoryRouter, RouterProvider } from 'react-router';
 
 jest.mock('components/map', () => () => <div></div>);
 jest.mock('axios');
+jest.mock('components/common/RichTextEditor', () => ({
+    __esModule: true,
+    default: ({
+        setRawText,
+        handleEditorStateChange,
+    }: {
+        setRawText: (text: string) => void;
+        handleEditorStateChange: (state: string) => void;
+    }) => (
+        <div
+            data-testid="rich-text-editor"
+            contentEditable
+            onInput={(event) => {
+                const text = (event.currentTarget.textContent ?? '').trim();
+                setRawText(text);
+                handleEditorStateChange(text);
+            }}
+        />
+    ),
+}));
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn((callback) =>
@@ -28,12 +48,15 @@ jest.mock('react-redux', () => ({
 const mockCreateWidget = jest.fn(() => ({
     unwrap: () => Promise.resolve(subscribeWidget),
 }));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(subscribeWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(subscribeWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -108,13 +131,14 @@ describe('Subscribe Widget tests', () => {
 
     async function inputMockSubscribeData() {
         const callToActionText = document.querySelector('input[name="callToActionText"]') as HTMLInputElement;
-        const richTextEditorDesc = document.querySelector('[contenteditable="true"]') as HTMLInputElement;
+        const richTextEditorDesc = screen.getByTestId('rich-text-editor') as HTMLDivElement;
 
         const linkRadioButton = screen.getByLabelText('Link');
         const buttonRadioButton = screen.getByLabelText('Button');
 
         // Simulate typing into the rich text editor
         richTextEditorDesc.textContent = 'Your desired text';
+        fireEvent.input(richTextEditorDesc);
         fireEvent.change(callToActionText, { target: { value: 'Click here' } });
         fireEvent.click(linkRadioButton);
 

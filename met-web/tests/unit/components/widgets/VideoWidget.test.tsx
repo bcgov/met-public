@@ -1,4 +1,4 @@
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent, act } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
 import EngagementForm from '../../../../src/components/engagement/form';
@@ -30,12 +30,15 @@ jest.mock('react-redux', () => ({
 const mockCreateWidget = jest.fn(() => ({
     unwrap: () => Promise.resolve(videoWidget),
 }));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(videoWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(videoWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -115,8 +118,10 @@ describe('Video Widget tests', () => {
         const linkInput = document.querySelector('input[name="videoUrl"]') as HTMLInputElement;
         const descInput = document.querySelector('textarea[name="description"]') as HTMLInputElement;
 
-        fireEvent.change(linkInput, { target: { value: mockVideo.video_url } });
-        fireEvent.change(descInput, { target: { value: mockVideo.description } });
+        act(() => {
+            fireEvent.change(linkInput, { target: { value: mockVideo.video_url } });
+            fireEvent.change(descInput, { target: { value: mockVideo.description } });
+        });
 
         await waitFor(() => {
             expect(linkInput.value).toBe(mockVideo.video_url);
@@ -147,7 +152,9 @@ describe('Video Widget tests', () => {
         await inputMockVideodata();
 
         const submitButton = screen.getByRole('button', { name: 'Save & Close' });
-        fireEvent.click(submitButton);
+        act(() => {
+            fireEvent.click(submitButton);
+        });
 
         await waitFor(() => {
             expect(VideoService.postVideo).toHaveBeenCalledTimes(1);

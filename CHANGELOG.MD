@@ -6,6 +6,9 @@
   - The preview page is a new route in the application that loads the engagement data and renders it using the public-facing components, allowing authors to see exactly how their content will appear to users.
   - Added preview components, including TextPlaceholder for uncompleted content, and PreviewSwitch and PreviewRender components to handle conditional rendering of preview vs live data.
   - Implemented a new context and loader for the preview data, which fetches the engagement data and provides it to the preview components.
+  - Updated widget components to support tabbed display. Widgets, instead of being unique per-location, are now unique per combination of location and tab.
+    - This allows authors to configure different widgets for the same location on different tabs, as per the new design.
+  - Optimized widget card display by creating a centralized card component that handles the layout and styling for all widget types, reducing duplication and improving consistency across different implementations.
 
 ## February 26, 2026
 

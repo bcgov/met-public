@@ -13,7 +13,7 @@ import {
     Tooltip,
     CircularProgress,
 } from '@mui/material';
-import { Palette, colors, AdminDarkTheme, AdminTheme, ZIndex } from 'styles/Theme';
+import { colors, AdminDarkTheme, AdminTheme, ZIndex } from 'styles/Theme';
 import { When, Unless } from 'react-if';
 import { BodyText } from 'components/common/Typography/Body';
 import { elevations } from 'components/common';
@@ -344,7 +344,8 @@ const AuthoringBottomNav = ({
                                     type="button"
                                     href={`${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`}
                                     icon={<img src={pagePreview} alt="" aria-hidden="true" />}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault();
                                         // If the preview window is still open, bring it to the foreground
                                         if (getActivePreviewWindow()) {
                                             syncPreviewWindowUrl(pageName);
@@ -364,14 +365,13 @@ const AuthoringBottomNav = ({
                                         const top = screenTop + 37;
                                         const openedPreviewWindow = globalThis.open(
                                             `${getTargetPreviewBasePath()}${getPreviewSectionHash(pageName)}`,
-                                            'popup',
-                                            `width=${previewWidth},height=${previewHeight},top=${top},left=${left}`,
+                                            '_blank',
+                                            `width=${previewWidth},height=${previewHeight},top=${top},left=${left},location`,
                                         );
                                         setPreviewWindow(openedPreviewWindow);
                                         if (openedPreviewWindow) {
                                             postPreviewScrollMessage(openedPreviewWindow, pageName);
                                         }
-                                        return false;
                                     }}
                                     LinkComponent={RouterLinkRenderer}
                                     target="_blank"
@@ -467,16 +467,22 @@ const LanguageSelector = ({
                             onChange={handleSelectChange}
                             variant="standard"
                             slotProps={{
-                                input: { sx: { height: '100% !important', lineHeight: '38px' } },
+                                input: {
+                                    sx: {
+                                        height: '100%',
+                                        lineHeight: '32px',
+                                        paddingLeft: { xs: '0.5rem !important', sm: '0.875rem !important' },
+                                        paddingRight: { xs: '2rem !important', sm: '3rem !important' },
+                                    },
+                                },
                             }}
                             sx={{
-                                minWidth: '130px',
-                                backgroundColor: colors.surface.gray[10],
-                                color: Palette.text.primary,
-                                fontSize: '0.9rem',
+                                color: 'text.primary',
+                                fontSize: '0.875rem',
                                 cursor: 'pointer',
-                                '& .MuiSelect-icon': {
-                                    color: Palette.text.primary,
+                                height: '100%',
+                                '& svg': {
+                                    right: '0.5rem',
                                 },
                             }}
                             renderValue={() => {

@@ -24,7 +24,7 @@ const TileBlock = () => {
                 paddingLeft={0}
                 direction="row"
                 columnSpacing={5}
-                justifyContent={'center'}
+                justifyContent={'space-between'}
                 rowSpacing={4}
                 size={12}
                 maxWidth="xl"
@@ -73,7 +73,7 @@ const TileBlock = () => {
                 aria-label={`Engagements list. ${totalEngagements} results.`}
                 direction="row"
                 columnSpacing={5}
-                justifyContent={'center'}
+                justifyContent={'space-between'}
                 rowSpacing={4}
                 size={12}
                 maxWidth="xl"

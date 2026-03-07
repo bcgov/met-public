@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid2 as Grid, Typography } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
 import { FileUploadContext } from './FileUploadContext';
 

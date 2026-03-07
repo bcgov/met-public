@@ -76,9 +76,7 @@ describe('PollWidgetView Component Tests', () => {
     });
 
     test('renders poll details on successful data fetch', async () => {
-        await act(async () => {
-            render(<RouterProvider router={router} />);
-        });
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText(mockPoll.title)).toBeInTheDocument();
@@ -90,9 +88,7 @@ describe('PollWidgetView Component Tests', () => {
 
     test('displays error notification on fetch failure', async () => {
         jest.spyOn(widgetService, 'fetchPollWidgets').mockRejectedValue(new Error('Fetch Error'));
-        await act(async () => {
-            render(<RouterProvider router={router} />);
-        });
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('Error occurred while fetching widget information')).toBeInTheDocument();
@@ -101,12 +97,17 @@ describe('PollWidgetView Component Tests', () => {
 
     test('submits poll response and displays success message', async () => {
         jest.spyOn(widgetService, 'postPollResponse').mockResolvedValue({ selected_answer_id: '1' });
-        await act(async () => {
-            render(<RouterProvider router={router} />);
+        render(<RouterProvider router={router} />);
+
+        await waitFor(() => {
+            expect(screen.getByText(mockPoll.title)).toBeInTheDocument();
         });
 
         const optionRadioButton = screen.getByLabelText(mockPoll.answers[0].answer_text);
-        fireEvent.click(optionRadioButton);
+
+        act(() => {
+            fireEvent.click(optionRadioButton);
+        });
 
         expect(optionRadioButton).toBeChecked();
 
@@ -119,16 +120,20 @@ describe('PollWidgetView Component Tests', () => {
 
     test('displays error message on submission failure', async () => {
         jest.spyOn(widgetService, 'postPollResponse').mockRejectedValue({
-            response: { status: 400 },
+            status: 400,
         });
-        await act(async () => {
-            render(<RouterProvider router={router} />);
+        render(<RouterProvider router={router} />);
+
+        await waitFor(() => {
+            expect(screen.getByText(mockPoll.title)).toBeInTheDocument();
         });
 
         const optionRadioButton = screen.getByLabelText(mockPoll.answers[0].answer_text);
-        fireEvent.click(optionRadioButton);
+        act(() => {
+            fireEvent.click(optionRadioButton);
+            fireEvent.click(screen.getByText('Submit'));
+        });
 
-        fireEvent.click(screen.getByText('Submit'));
         await waitFor(() => {
             expect(screen.getByText('An unknown error occurred')).toBeInTheDocument();
         });

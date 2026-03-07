@@ -5,7 +5,6 @@ import { Engagement } from 'models/engagement';
 import { useNavigate } from 'react-router';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
-import { Palette } from 'styles/Theme';
 import { getFormsSheet } from 'services/FormCAC';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { formatToUTC } from 'components/common/dateHelper';
@@ -165,7 +164,7 @@ export const ActionsDropDown = ({ engagement }: { engagement: Engagement }) => {
             value={0}
             fullWidth
             size="small"
-            sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+            sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
         >
             <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                 {'(Select One)'}

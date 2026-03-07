@@ -120,6 +120,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
     const videoSources: WidgetVideoSource[] = [
         { domain: 'youtu.be', name: 'YouTube', icon: faYoutube },
+        { domain: 'youtube.com', name: 'YouTube', icon: faYoutube },
         { domain: 'vimeo.com', name: 'Vimeo', icon: faVimeo },
         { domain: 'twitch.tv', name: 'Twitch', icon: faTwitch },
         { domain: 'soundcloud.com', name: 'SoundCloud', icon: faSoundcloud },
@@ -129,7 +130,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     ];
 
     const hostname = new URL(videoWidget.video_url).hostname;
-    const videoSource = videoSources.find((source) => source.domain === hostname)?.name || 'Unknown';
+    const videoSource = videoSources.find((source) => hostname.includes(source.domain))?.name || 'Unknown';
 
     const getVideoTitle = (player: ReactPlayer, source: string, widgetTitle: string) => {
         if ('YouTube' === source) {

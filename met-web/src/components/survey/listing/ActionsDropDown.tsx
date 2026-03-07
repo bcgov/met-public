@@ -4,7 +4,6 @@ import { MenuItem, Modal, Select } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { SubmissionStatus, EngagementStatus } from 'constants/engagementStatus';
-import { Palette } from 'styles/Theme';
 import { Survey } from 'models/survey';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { useDispatch } from 'react-redux';
@@ -176,7 +175,7 @@ export const ActionsDropDown = ({ survey, loadSurveys }: { survey: Survey; loadS
                 value={0}
                 fullWidth
                 size="small"
-                sx={{ backgroundColor: 'var(--bcds-surface-background-white)', color: Palette.info.main }}
+                sx={{ backgroundColor: 'var(--bcds-surface-background-white)' }}
             >
                 <MenuItem value={0} sx={{ fontStyle: 'italic', height: '2em' }} color="info" disabled>
                     {'(Select One)'}

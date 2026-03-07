@@ -14,6 +14,13 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
+jest.mock('hooks', () => ({
+    ...jest.requireActual('hooks'),
+    useAppTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
 describe('Feedback modal tests', () => {
     jest.spyOn(notificationSlice, 'openNotification').mockImplementation(jest.fn());
     const createFeedbackMock = jest.spyOn(feedbackService, 'createFeedback');

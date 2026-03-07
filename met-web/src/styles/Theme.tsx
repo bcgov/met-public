@@ -1,5 +1,25 @@
-import { PaletteMode, createTheme } from '@mui/material';
+import React, { forwardRef } from 'react';
+import { createTheme } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
+
+const CustomSelectIcon = forwardRef<SVGSVGElement>((props, ref) => (
+    <FontAwesomeIcon
+        icon={faChevronDown}
+        ref={ref}
+        style={{
+            height: '1rem',
+            width: '1rem',
+            boxSizing: 'border-box',
+            pointerEvents: 'none',
+            padding: '0.125rem',
+            color: 'currentColor',
+        }}
+        {...props}
+    />
+));
+
 export const colors = {
     type: {
         regular: {
@@ -128,6 +148,20 @@ export const colors = {
     },
 };
 
+export const elevations = {
+    // For use with CSS box-shadow property
+    none: '0px 0px transparent',
+    pressed:
+        '0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px 0px 1px 0px rgba(0, 0, 0, 0.60) inset, 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
+    default:
+        '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
+    hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
+    tertiary: '0 8px 35px -12px rgba(181, 181, 181, 0.30)',
+    tertiaryDark: '0 8px 35px -12px rgba(16, 38, 61, 0.40)',
+    tertiaryPressed: '0 0 16px 20px #E8EEF3 inset;',
+    tertiaryDarkPressed: '0 0 16px 12px rgba(11, 37, 58, 0.10) inset;',
+};
+
 export const Palette = {
     ...colors.surface,
     notification: colors.notification,
@@ -141,9 +175,34 @@ export const Palette = {
         light: colors.surface.gold[50],
         dark: colors.surface.gold[70],
     },
+    error: {
+        main: colors.notification.error.shade,
+        light: colors.notification.error.tint,
+        dark: colors.notification.error.icon,
+        contrastText: colors.type.inverted.primary,
+    },
+    success: {
+        main: colors.notification.success.shade,
+        light: colors.notification.success.tint,
+        dark: colors.notification.success.icon,
+        contrastText: colors.type.inverted.primary,
+    },
+    warning: {
+        main: colors.notification.warning.shade,
+        light: colors.notification.warning.tint,
+        dark: colors.notification.warning.icon,
+        contrastText: colors.type.regular.primary,
+    },
+    info: {
+        main: colors.notification.info.shade,
+        light: colors.notification.info.tint,
+        dark: colors.notification.info.icon,
+        contrastText: colors.type.inverted.primary,
+    },
     background: {
         default: colors.surface.white,
         paper: colors.surface.white,
+        chip: colors.surface.gray[10],
     },
     hover: {
         light: colors.surface.blue[10],
@@ -154,9 +213,6 @@ export const Palette = {
     },
     action: {
         active: colors.type.regular.link,
-    },
-    info: {
-        main: colors.surface.gray[90],
     },
     focus: {
         outer: colors.focus.regular.outer,
@@ -192,6 +248,10 @@ export const Palette = {
         background: colors.acknowledgement.background,
         border: colors.acknowledgement.border,
     },
+    label: {
+        background: colors.surface.gray[30],
+        text: colors.type.regular.primary,
+    },
 };
 
 export const BaseTheme = createTheme({
@@ -202,6 +262,7 @@ export const BaseTheme = createTheme({
                 root: {
                     backgroundColor: Palette.background.paper,
                     borderRadius: '1rem',
+                    backgroundImage: 'none',
                 },
             },
         },
@@ -216,6 +277,7 @@ export const BaseTheme = createTheme({
                 },
             ],
             defaultProps: {
+                IconComponent: CustomSelectIcon,
                 MenuProps: {
                     sx: {
                         '& .MuiMenu-list .MuiMenuItem-root:hover, .MuiMenu-list .MuiMenuItem-root.Mui-focusVisible': {
@@ -238,7 +300,7 @@ export const BaseTheme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    height: '40px',
+                    borderRadius: '8px',
                 },
             },
             defaultProps: {
@@ -289,6 +351,23 @@ export const BaseTheme = createTheme({
                 },
             },
         },
+        MuiRadio: {
+            defaultProps: {
+                sx: {
+                    '& .MuiSvgIcon-root': {
+                        fontSize: '1.75rem',
+                        '&[data-testid=RadioButtonCheckedIcon]': {
+                            fontSize: '1.375rem',
+                            marginTop: '0.1875rem',
+                            marginLeft: '0.1875rem',
+                        },
+                    },
+                    '&.Mui-checked': {
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+        },
     },
     typography: {
         fontFamily: "'BCSans', 'Noto Sans', Verdana, Arial, sans-serif",
@@ -331,14 +410,14 @@ export const BaseTheme = createTheme({
 });
 
 export const DarkPalette = {
-    mode: 'dark' as PaletteMode,
+    mode: 'dark' as const,
     ...colors.surface,
     notification: colors.notification,
     primary: {
         main: colors.surface.white,
-        light: colors.surface.blue[90],
+        light: colors.surface.white,
         dark: colors.surface.blue[100],
-        contrastText: colors.type.inverted.primary,
+        contrastText: colors.surface.blue[90],
     },
     secondary: {
         main: colors.surface.gold.bc,
@@ -374,22 +453,9 @@ export const DarkTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: DarkPalette.background.paper,
+                    borderRadius: '1rem',
+                    backgroundImage: 'none',
                 },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    height: '40px',
-                },
-            },
-            defaultProps: {
-                disableRipple: true,
-            },
-        },
-        MuiTextField: {
-            defaultProps: {
-                size: 'small',
             },
         },
         MuiLink: {
@@ -397,26 +463,9 @@ export const DarkTheme = createTheme({
                 color: DarkPalette.action.active,
             },
         },
-        MuiFormLabel: {
-            defaultProps: {
-                focused: false,
-            },
-        },
-        MuiStepLabel: {
-            styleOverrides: {
-                label: {
-                    color: '#494949 !important',
-                    opacity: '100% !important',
-                },
-                labelContainer: {
-                    color: '#494949 !important',
-                    opacity: '100% !important',
-                },
-            },
-        },
         MuiSkeleton: {
             defaultProps: {
-                animation: 'wave',
+                animation: 'wave' as const,
             },
             styleOverrides: {
                 root: {
@@ -437,6 +486,10 @@ export const DarkTheme = createTheme({
         h2: {
             fontWeight: 300,
         },
+        h3: {
+            fontWeight: 300,
+            fontSize: '1.5rem',
+        },
         subtitle2: {
             fontWeight: 500,
             fontSize: '1.15rem',
@@ -452,9 +505,66 @@ export const DarkTheme = createTheme({
     },
 });
 
-export { BaseTheme as AdminTheme, DarkTheme as AdminDarkTheme };
+export const AdminTheme = createTheme({
+    ...BaseTheme,
+    palette: {
+        ...BaseTheme.palette,
+    },
+    components: {
+        ...BaseTheme.components,
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '8px',
+                },
+            },
+            defaultProps: {
+                disableRipple: true,
+            },
+        },
+        MuiRadio: {
+            defaultProps: {
+                sx: {
+                    '& .MuiSvgIcon-root': {
+                        fontSize: '1.25rem',
+                        '&[data-testid=RadioButtonCheckedIcon]': {
+                            fontSize: '1rem',
+                            marginTop: '0.1rem',
+                            marginLeft: '0.1rem',
+                        },
+                    },
+                    '&.Mui-checked': {
+                        fontWeight: 'bold',
+                    },
+                },
+            },
+        },
+    },
+});
+
+export const AdminDarkTheme = createTheme({
+    ...DarkTheme,
+    palette: {
+        ...DarkTheme.palette,
+    },
+    components: {
+        ...DarkTheme.components,
+        ...AdminTheme.components,
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '8px',
+                },
+            },
+            defaultProps: {
+                disableRipple: true,
+            },
+        },
+    },
+});
 
 export const ZIndex = {
+    drawer: '1100',
     feedback: '1002',
     sideNav: '1001',
     footer: '1000',

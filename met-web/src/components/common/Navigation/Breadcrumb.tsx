@@ -38,7 +38,7 @@ export const BreadcrumbTrail: React.FC<{ crumbs: BreadcrumbProps[]; smallScreenO
         >
             {crumbs.map((crumb, index) =>
                 crumb.link ? (
-                    <Link size="small" key={crumb.name} to={crumb.link}>
+                    <Link size="small" key={crumb.name} to={crumb.link} underline="hover">
                         {crumb.name}
                     </Link>
                 ) : (
@@ -76,16 +76,19 @@ export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ small
     const matchKey = matches.map((m) => m.pathname).join('-');
     const crumbs = useMemo(() => {
         return matches.map((match) => {
-            const data = match.data as unknown;
-            const handle = match.handle as UIRouteHandle;
+            const data = match.loaderData;
+            const handle = match.handle;
             return handle?.crumb?.(data) ?? Promise.resolve({ name: '', link: '' });
         });
     }, [matchKey]); // Recompute only when matches change
 
     return (
-        <Breadcrumbs aria-label="breadcrumbs" sx={smallScreenOnly ? { display: { xs: 'block', md: 'none' } } : {}}>
+        <Breadcrumbs
+            aria-label="breadcrumbs"
+            sx={{ display: smallScreenOnly ? { xs: 'block', md: 'none' } : undefined, fontSize: '14px' }}
+        >
             {crumbs.map((unresolvedCrumb, index) => (
-                <Suspense>
+                <Suspense key={`breadcrumb-${matches[index].pathname}`}>
                     <Await resolve={unresolvedCrumb}>
                         {(resolvedCrumb: BreadcrumbProps) => {
                             const name = resolvedCrumb?.name;
@@ -94,7 +97,12 @@ export const AutoBreadcrumbs: React.FC<{ smallScreenOnly?: boolean }> = ({ small
                                     ? (resolvedCrumb?.link ?? matches[index].pathname)
                                     : undefined;
                             return link ? (
-                                <Link size="small" key={matches[index].pathname + name} to={link}>
+                                <Link
+                                    size="small"
+                                    key={matches[index].pathname + name}
+                                    to={link}
+                                    sx={{ lineHeight: '24px' }}
+                                >
                                     {name}
                                 </Link>
                             ) : (

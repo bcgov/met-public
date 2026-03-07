@@ -124,7 +124,9 @@ jest.mock('@reduxjs/toolkit/query/react', () => ({
     fetchBaseQuery: jest.fn(),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(documentWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: jest.fn(() => Promise.resolve(documentWidget)),
+}));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
@@ -163,7 +165,9 @@ describe.skip('Document widget in engagement page tests', () => {
     function setupMock() {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
+        mockCreateWidget.mockReturnValue({
+            unwrap: jest.fn(() => Promise.resolve(documentWidget)),
+        });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
     }
 
@@ -195,7 +199,9 @@ describe.skip('Document widget in engagement page tests', () => {
     test('Document widget is created when option is clicked', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
+        mockCreateWidget.mockReturnValue({
+            unwrap: jest.fn(() => Promise.resolve(documentWidget)),
+        });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<RouterProvider router={router} />);
 
@@ -216,7 +222,9 @@ describe.skip('Document widget in engagement page tests', () => {
     test('Create folder appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
+        mockCreateWidget.mockReturnValue({
+            unwrap: jest.fn(() => Promise.resolve(documentWidget)),
+        });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
         fetchDocumentsMock.mockReturnValueOnce(Promise.resolve([mockFolder]));
         const { container } = render(<RouterProvider router={router} />);
@@ -239,7 +247,9 @@ describe.skip('Document widget in engagement page tests', () => {
     test('Create file appears', async () => {
         useParamsMock.mockReturnValue({ engagementId: '1' });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([]));
-        mockCreateWidget.mockReturnValue(Promise.resolve(documentWidget));
+        mockCreateWidget.mockReturnValue({
+            unwrap: jest.fn(() => Promise.resolve(documentWidget)),
+        });
         getWidgetsMock.mockReturnValueOnce(Promise.resolve([documentWidget]));
         const { container } = render(<RouterProvider router={router} />);
 

@@ -3,6 +3,7 @@ import { render, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { setupEnv } from '../setEnvVars';
 import * as reactRouter from 'react-router';
+import { RouterProvider } from 'react-router';
 import * as userService from 'services/userService/api';
 import { User, createDefaultUser } from 'models/user';
 import UserManagementListing from 'components/userManagement/listing';
@@ -57,6 +58,18 @@ jest.mock('react-router', () => ({
     useNavigate: jest.fn(),
 }));
 
+const router = reactRouter.createMemoryRouter(
+    [
+        {
+            path: '/usermanagement',
+            element: <UserManagementListing />,
+        },
+    ],
+    {
+        initialEntries: ['/usermanagement'],
+    },
+);
+
 describe('User Management tests', () => {
     jest.spyOn(userService, 'getUserList').mockReturnValue(
         Promise.resolve({
@@ -70,7 +83,7 @@ describe('User Management tests', () => {
     });
 
     test('User table is rendered', async () => {
-        render(<UserManagementListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('User Name')).toBeVisible();
@@ -81,7 +94,7 @@ describe('User Management tests', () => {
     });
 
     test('Assign Role to user modal appears', async () => {
-        render(<UserManagementListing />);
+        render(<RouterProvider router={router} />);
 
         await waitFor(() => {
             expect(screen.getByText('User Name')).toBeVisible();

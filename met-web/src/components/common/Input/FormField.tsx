@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, GridProps } from '@mui/material';
+import { Grid2 as Grid, GridProps } from '@mui/material';
 import { BodyText } from '../Typography';
 import { ErrorMessage } from '../Typography/Body';
 
@@ -61,26 +61,26 @@ export const FormField = ({
                 {...gridProps}
                 sx={{ opacity: disabled ? '0.5' : '1', ...gridProps.sx }}
             >
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <BodyText bold size="large" className="met-input-form-field-title">
                         {title}
                         {required && title && <span title="(Required)">*</span>}
                         {optional && title && <span style={{ fontWeight: '400' }}> (Optional)</span>}
                     </BodyText>
                 </Grid>
-                <Grid item xs={12} sx={{ mb: '8px' }}>
+                <Grid size={12} sx={{ mb: '8px' }}>
                     <BodyText size="small">{instructions}</BodyText>
                 </Grid>
                 {error && errorPosition === 'top' && (
-                    <Grid item container xs={12} sx={{ mb: '8px' }}>
+                    <Grid container size={12} sx={{ mb: '8px' }}>
                         <ErrorMessage error={error} />
                     </Grid>
                 )}
-                <Grid item container xs={12}>
+                <Grid container size={12}>
                     {children}
                 </Grid>
                 {error && errorPosition === 'bottom' && (
-                    <Grid item container xs={12} sx={{ mb: '8px' }}>
+                    <Grid container size={12} sx={{ mb: '8px' }}>
                         <ErrorMessage error={error} />
                     </Grid>
                 )}

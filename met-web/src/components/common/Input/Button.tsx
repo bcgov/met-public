@@ -12,21 +12,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RouterLinkRenderer } from '../Navigation/Link';
 
 const buttonStyles = {
-    borderRadius: '16px',
     padding: '0 1.5rem',
     fontWeight: 500,
     fontSize: '16px',
 };
 
 type ButtonProps = {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     color?: 'default' | 'danger' | 'warning' | 'success' | string;
-    onClick?: () => void;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
     size?: 'small' | 'medium' | 'large';
     icon?: React.ReactNode;
     iconPosition?: 'left' | 'right';
     disabled?: boolean;
-    loading?: boolean;
     target?: React.HTMLAttributeAnchorTarget;
 } & Omit<MuiButtonProps, 'size' | 'color' | 'variant'>; // Exclude conflicting props
 
@@ -44,7 +42,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
     icon,
     iconPosition = 'left',
     disabled,
-    loading,
+    sx,
     ...buttonProps
 }) => {
     const theme = useTheme();
@@ -71,46 +69,47 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
         <MuiButton
             variant="contained"
             onClick={onClick}
-            {...buttonProps}
             disabled={disabled}
             startIcon={icon && iconPosition === 'left' ? icon : undefined}
             endIcon={icon && iconPosition === 'right' ? icon : undefined}
-            sx={{
-                ...buttonStyles,
-                boxShadow: elevations.default,
-                height: height,
-                background: bgColor,
-                color: textColor(),
-                '&:focus': {
-                    backgroundColor: darkBgColor,
-                    boxShadow: elevations.hover,
-                },
-                '&:focus-visible': {
-                    backgroundColor: darkBgColor,
-                    outline: `2px solid ${colors.focus.regular.outer}`,
-                    boxShadow: [globalFocusShadow, elevations.hover].join(','),
-                },
-                '&:hover': {
-                    backgroundColor: darkBgColor,
-                    boxShadow: elevations.hover,
+            sx={[
+                {
+                    background: bgColor,
+                    color: textColor(),
+                    height: height,
+                    '&:focus': {
+                        backgroundColor: darkBgColor,
+                        boxShadow: elevations.hover,
+                    },
                     '&:focus-visible': {
+                        backgroundColor: darkBgColor,
+                        outline: `2px solid ${colors.focus.regular.outer}`,
                         boxShadow: [globalFocusShadow, elevations.hover].join(','),
                     },
-                },
-                '&:active': {
-                    backgroundColor: darkBgColor,
-                    boxShadow: elevations.pressed,
-                    '&:focus-visible': {
-                        boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                    '&:hover': {
+                        backgroundColor: darkBgColor,
+                        boxShadow: elevations.hover,
+                        '&:focus-visible': {
+                            boxShadow: [globalFocusShadow, elevations.hover].join(','),
+                        },
+                    },
+                    '&:active': {
+                        backgroundColor: darkBgColor,
+                        boxShadow: elevations.pressed,
+                        '&:focus-visible': {
+                            boxShadow: [globalFocusShadow, elevations.pressed].join(','),
+                        },
+                    },
+                    '&:disabled': {
+                        backgroundColor: '#EDEBE9',
+                        boxShadow: 'none',
+                        color: colors.type.regular.disabled,
                     },
                 },
-                '&:disabled': {
-                    backgroundColor: '#EDEBE9',
-                    boxShadow: 'none',
-                    color: colors.type.regular.disabled,
-                },
-                ...buttonProps.sx,
-            }}
+                buttonStyles,
+                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+            ]}
+            {...buttonProps}
         >
             {children}
         </MuiButton>
@@ -125,73 +124,86 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
     icon,
     iconPosition = 'left',
     disabled,
-    loading,
+    sx,
     ...buttonProps
 }) => {
     const height: string = sizeMap[size];
-    const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === 'dark';
     const isCustom = color !== 'default';
-    const textColor = isCustom ? customColor : colors.type.regular.primary;
-    const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 5%)` : textColor;
-    const borderColor = isCustom ? customColor : colors.surface.gray[80];
-    const darkBorderColor = isCustom ? `color-mix(in srgb, ${borderColor}, black 5%)` : colors.surface.gray[110];
-    const darkBackgroundColor = isCustom ? '#F8F8F8' : `color-mix(in srgb, white, black 5%)`;
+    const mixAmount = isCustom ? '20%' : isDarkMode ? '10%' : '3%';
+    const baseBackground = isCustom
+        ? (colors.notification[color as keyof typeof colors.notification]?.shade ?? color)
+        : isDarkMode
+          ? 'transparent'
+          : 'white';
+    const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
+    const textColor = isCustom ? customColor : 'text.primary';
+    const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 20%)` : textColor;
+    const borderColor = isCustom ? customColor : isDarkMode ? 'white' : colors.surface.gray[80];
+    const darkBorderColor = isCustom
+        ? `color-mix(in srgb, ${borderColor}, black 20%)`
+        : isDarkMode
+          ? 'white'
+          : colors.surface.gray[100];
+    const darkBackgroundColor = isCustom ? '#F8F8F8' : `color-mix(in srgb, ${baseBackground}, black ${mixAmount})`;
 
     return (
         <MuiButton
             variant="outlined"
             onClick={onClick}
-            {...buttonProps}
             disabled={disabled}
             startIcon={icon && iconPosition === 'left' ? icon : undefined}
             endIcon={icon && iconPosition === 'right' ? icon : undefined}
-            sx={{
-                ...buttonStyles,
-                height: height,
-                background: 'white',
-                color: textColor,
-                boxShadow: elevations.default,
-                border: `1px solid ${borderColor}`,
-                '&:focus': {
-                    backgroundColor: darkBackgroundColor,
-                    boxShadow: elevations.hover,
-                    color: darkTextColor,
-                    border: `1px solid ${darkBorderColor}`,
-                },
-                '&:hover': {
-                    backgroundColor: darkBackgroundColor,
-                    boxShadow: elevations.hover,
-                    color: darkTextColor,
-                    border: `1px solid ${darkBorderColor}`,
-                    '&:focus-visible': {
+            sx={[
+                {
+                    ...buttonStyles,
+                    height: height,
+                    background: baseBackground,
+                    color: textColor,
+                    boxShadow: elevations.default,
+                    border: `1px solid ${borderColor}`,
+                    '&:focus': {
+                        backgroundColor: darkBackgroundColor,
                         boxShadow: elevations.hover,
+                        color: darkTextColor,
+                        border: `1px solid ${darkBorderColor}`,
                     },
-                },
-                '&:active': {
-                    backgroundColor: darkBackgroundColor,
-                    boxShadow: elevations.pressed,
-                    color: darkTextColor,
-                    border: isCustom ? `1px solid ${customColor}` : `1px solid transparent`,
-                    '&:focus-visible': {
+                    '&:hover': {
+                        backgroundColor: darkBackgroundColor,
+                        boxShadow: elevations.hover,
+                        color: darkTextColor,
+                        border: `1px solid ${darkBorderColor}`,
+                        '&:focus-visible': {
+                            boxShadow: elevations.hover,
+                        },
+                    },
+                    '&:active': {
+                        backgroundColor: darkBackgroundColor,
                         boxShadow: elevations.pressed,
+                        color: darkTextColor,
+                        border: `1px solid ${darkBorderColor}`,
+                        '&:focus-visible': {
+                            boxShadow: elevations.pressed,
+                        },
+                    },
+                    '&:focus-visible': {
+                        backgroundColor: darkBackgroundColor,
+                        outline: `2px solid ${colors.focus.regular.outer}`,
+                        outlineOffset: '0px',
+                        boxShadow: elevations.hover,
+                        color: darkTextColor,
+                    },
+                    '&:disabled': {
+                        backgroundColor: 'white',
+                        boxShadow: 'none',
+                        color: colors.type.regular.disabled,
+                        border: `1px solid ${colors.type.regular.disabled}`,
                     },
                 },
-                '&:focus-visible': {
-                    backgroundColor: darkBackgroundColor,
-                    outline: `2px solid ${colors.focus.regular.outer}`,
-                    outlineOffset: '0px',
-                    boxShadow: elevations.hover,
-                    color: darkTextColor,
-                    border: `1px solid transparent`,
-                },
-                '&:disabled': {
-                    backgroundColor: 'white',
-                    boxShadow: 'none',
-                    color: colors.type.regular.disabled,
-                    border: `1px solid ${colors.type.regular.disabled}`,
-                },
-                ...buttonProps.sx,
-            }}
+                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+            ]}
+            {...buttonProps}
         >
             {children}
         </MuiButton>
@@ -206,39 +218,55 @@ const TertiaryButton = ({
     icon,
     iconPosition = 'left',
     disabled,
-    loading,
+    sx,
     ...buttonProps
 }: ButtonProps) => {
     const height: string = sizeMap[size];
-    const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
-    const activeColor = color == 'default' ? colors.surface.blue[10] : `color-mix(in srgb, ${customColor}, white 90%)`;
+    const colorobject = {
+        tint: color === 'default' ? 'white' : color,
+        shade: color === 'default' ? 'gray.110' : color,
+    };
+    const customColor =
+        (color !== 'default' && colors.notification[color as keyof typeof colors.notification]) || colorobject;
 
     return (
         <MuiButton
             variant="text"
             onClick={onClick}
-            {...buttonProps}
             disabled={disabled}
             startIcon={icon && iconPosition === 'left' ? icon : undefined}
             endIcon={icon && iconPosition === 'right' ? icon : undefined}
-            sx={{
-                ...buttonStyles,
-                height: height,
-                background: 'transparent',
-                color: colors.type.regular.primary,
-                boxShadow: elevations.none,
-                '&:focus, &:focus-visible, &:hover, &:active': {
-                    backgroundColor: activeColor,
+            sx={[
+                {
+                    ...buttonStyles,
+                    height: height,
+                    bgcolor: 'transparent',
+                    color: (theme) => (theme.palette.mode === 'dark' ? customColor.tint : customColor.shade),
+                    boxShadow: (theme) =>
+                        theme.palette.mode === 'dark' ? elevations.tertiaryDark : elevations.tertiary,
+                    '&:focus, &:focus-visible, &:hover, &:active': {
+                        bgcolor: (theme) =>
+                            theme.palette.mode === 'dark'
+                                ? `color-mix(in srgb, transparent, #000000 5%)`
+                                : `color-mix(in srgb, transparent, #F1F8FF 50%)`,
+                    },
+                    '&:active': {
+                        boxShadow: (theme) =>
+                            theme.palette.mode === 'dark' ? elevations.tertiaryDarkPressed : elevations.tertiaryPressed,
+                    },
+                    '&:focus-visible': {
+                        outline: `2px solid ${colors.focus.regular.outer}`,
+                        boxShadow: globalFocusShadow,
+                    },
+                    '&:disabled': {
+                        color: colors.type.regular.disabled,
+                        bgColor: 'transparent',
+                        boxShadow: 'none',
+                    },
                 },
-                '&:focus-visible': {
-                    outline: `2px solid ${colors.focus.regular.outer}`,
-                    boxShadow: globalFocusShadow,
-                },
-                '&:disabled': {
-                    color: colors.type.regular.disabled,
-                },
-                ...buttonProps.sx,
-            }}
+                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+            ]}
+            {...buttonProps}
         >
             {children}
         </MuiButton>
@@ -274,13 +302,13 @@ export const Button = ({
         case 'tertiary':
             return <TertiaryButton {...props} />;
         default:
-            return <PrimaryButton {...props} />;
+            return <SecondaryButton {...props} />;
     }
 };
 
 type IconButtonProps = {
     icon: IconProp;
-    onClick?: () => void;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
     title?: string;
     sx?: React.CSSProperties;
     size?: string;
@@ -333,7 +361,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
             sx={{
                 width: size,
                 height: size,
-                borderRadius: '50%',
+                borderRadius: '9999px', // Always fully rounded even if content isn't perfectly square
                 backgroundColor: backgroundColor,
                 color: color,
                 '&:hover': {

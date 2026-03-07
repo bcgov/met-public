@@ -9,6 +9,7 @@ import * as widgetService from 'services/widgetService';
 import * as engagementMetadataService from 'services/engagementMetadataService';
 import * as membershipService from 'services/membershipService';
 import * as engagementSettingService from 'services/engagementSettingService';
+import * as listeningService from 'services/widgetService/ListeningService';
 import { createDefaultSurvey, Survey } from 'models/survey';
 import { Widget, WidgetItem, WidgetLocation, WidgetType } from 'models/widget';
 import { Contact } from 'models/contact';
@@ -37,6 +38,13 @@ const mockContact: Contact = {
     bio: 'Jacaerys Targaryen is the son and heir of Rhaenyra Targaryen',
     avatar_filename: '',
     avatar_url: '',
+};
+
+const mockListeningWidget = {
+    id: 1,
+    engagement_id: 1,
+    widget_id: 1,
+    description: '',
 };
 
 const contactWidgetItem: WidgetItem = {
@@ -180,6 +188,9 @@ describe('Who is Listening widget  tests', () => {
     jest.spyOn(engagementSettingService, 'getEngagementSettings').mockReturnValue(
         Promise.resolve(mockEngagementSettings),
     );
+    const fetchListeningWidgetMock = jest
+        .spyOn(listeningService, 'fetchListeningWidget')
+        .mockReturnValue(Promise.resolve(mockListeningWidget));
     const useParamsMock = jest.spyOn(reactRouter, 'useParams');
     const getEngagementMock = jest
         .spyOn(engagementService, 'getEngagement')
@@ -192,6 +203,7 @@ describe('Who is Listening widget  tests', () => {
         setupEnv();
         mockCreateWidget.mockReset();
         getWidgetsMock.mockReset();
+        fetchListeningWidgetMock.mockReset();
         getWidgetsMock.mockResolvedValue([]);
         mockCreateWidget.mockImplementation(() => ({
             unwrap: async () => {

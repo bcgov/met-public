@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Button as MuiButton,
-    Grid2 as Grid,
+    Grid,
     Paper as MuiPaper,
     CircularProgress,
     Typography,
@@ -13,21 +13,10 @@ import {
     styled,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { Palette, colors } from 'styles/Theme';
+import { Palette, colors, elevations } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
-export { colors };
-
-export const elevations = {
-    // For use with CSS box-shadow property
-    // Not complete in Figma yet
-    none: '0px 0px transparent',
-    pressed:
-        '0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px 0px 1px 0px rgba(0, 0, 0, 0.60) inset, 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
-    default:
-        '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
-    hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
-};
+export { colors, elevations };
 
 export const globalFocusShadow = `inset 0px 0px 0px 2px ${colors.focus.regular.inner}`;
 
