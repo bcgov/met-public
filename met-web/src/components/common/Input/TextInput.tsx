@@ -282,7 +282,7 @@ export const CustomTextField: React.FC<CustomTextFieldProps> = ({ sx, ...props }
                         },
                     },
                 },
-                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                ...(Array.isArray(sx) ? sx : [sx]),
             ]}
         />
     );

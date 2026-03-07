@@ -34,6 +34,51 @@ const sizeMap = {
     large: '56px',
 };
 
+const getSecondaryButtonStyles = (color: ButtonProps['color'], isDarkMode: boolean) => {
+    const notificationColor = colors.notification[color as keyof typeof colors.notification]?.shade;
+    const resolvedColor = notificationColor ?? color;
+    const isCustom = color !== 'default';
+
+    let baseBackground = 'white';
+    if (isCustom) {
+        baseBackground = resolvedColor;
+    } else if (isDarkMode) {
+        baseBackground = 'transparent';
+    }
+
+    const textColor = isCustom ? resolvedColor : 'text.primary';
+    const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 20%)` : textColor;
+
+    let borderColor = colors.surface.gray[80];
+    if (isCustom) {
+        borderColor = resolvedColor;
+    } else if (isDarkMode) {
+        borderColor = 'white';
+    }
+
+    let darkBorderColor = colors.surface.gray[100];
+    if (isCustom) {
+        darkBorderColor = `color-mix(in srgb, ${borderColor}, black 20%)`;
+    } else if (isDarkMode) {
+        darkBorderColor = 'white';
+    }
+
+    let darkBackgroundColor = '#F8F8F8';
+    if (!isCustom) {
+        const mixAmount = isDarkMode ? '10%' : '3%';
+        darkBackgroundColor = `color-mix(in srgb, ${baseBackground}, black ${mixAmount})`;
+    }
+
+    return {
+        baseBackground,
+        textColor,
+        darkTextColor,
+        borderColor,
+        darkBorderColor,
+        darkBackgroundColor,
+    };
+};
+
 export const PrimaryButton: React.FC<ButtonProps> = ({
     children,
     color = 'default',
@@ -107,7 +152,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
                     },
                 },
                 buttonStyles,
-                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                ...(Array.isArray(sx) ? sx : [sx]),
             ]}
             {...buttonProps}
         >
@@ -130,23 +175,8 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
     const height: string = sizeMap[size];
     const theme = useTheme();
     const isDarkMode = theme.palette.mode === 'dark';
-    const isCustom = color !== 'default';
-    const mixAmount = isCustom ? '20%' : isDarkMode ? '10%' : '3%';
-    const baseBackground = isCustom
-        ? (colors.notification[color as keyof typeof colors.notification]?.shade ?? color)
-        : isDarkMode
-          ? 'transparent'
-          : 'white';
-    const customColor = colors.notification[color as keyof typeof colors.notification]?.shade ?? color;
-    const textColor = isCustom ? customColor : 'text.primary';
-    const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 20%)` : textColor;
-    const borderColor = isCustom ? customColor : isDarkMode ? 'white' : colors.surface.gray[80];
-    const darkBorderColor = isCustom
-        ? `color-mix(in srgb, ${borderColor}, black 20%)`
-        : isDarkMode
-          ? 'white'
-          : colors.surface.gray[100];
-    const darkBackgroundColor = isCustom ? '#F8F8F8' : `color-mix(in srgb, ${baseBackground}, black ${mixAmount})`;
+    const { baseBackground, textColor, darkTextColor, borderColor, darkBorderColor, darkBackgroundColor } =
+        getSecondaryButtonStyles(color, isDarkMode);
 
     return (
         <MuiButton
@@ -201,7 +231,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
                         border: `1px solid ${colors.type.regular.disabled}`,
                     },
                 },
-                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                ...(Array.isArray(sx) ? sx : [sx]),
             ]}
             {...buttonProps}
         >
@@ -264,7 +294,7 @@ const TertiaryButton = ({
                         boxShadow: 'none',
                     },
                 },
-                ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+                ...(Array.isArray(sx) ? sx : [sx]),
             ]}
             {...buttonProps}
         >

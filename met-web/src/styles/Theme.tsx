@@ -275,6 +275,13 @@ export const BaseTheme = createTheme({
                         borderRadius: '8px',
                     },
                 },
+                {
+                    props: { variant: 'standard' },
+                    style: {
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                    },
+                },
             ],
             defaultProps: {
                 IconComponent: CustomSelectIcon,
