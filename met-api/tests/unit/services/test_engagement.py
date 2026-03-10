@@ -15,10 +15,15 @@
 
 Test suite to ensure that the Engagement service routines are working as expected.
 """
+import pytest
 from unittest.mock import patch
+from werkzeug.exceptions import Forbidden
 
+from met_api.constants.engagement_status import Status
 from faker import Faker
 
+from met_api.models import db
+from met_api.models.engagement import Engagement
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
@@ -96,3 +101,44 @@ def test_patch_engagement(session, monkeypatch):  # pylint:disable=unused-argume
         assert updated_engagement_record.end_date.strftime(date_format) == engagement_edits.get('end_date')
         assert updated_engagement_record.description == engagement_edits.get('description')
         assert updated_engagement_record.created_date.strftime(date_format) == engagement_edits.get('created_date')
+
+
+def test_delete_success(session, mocker):
+    """Assert that an engagement can be deleted."""
+    eng = factory_engagement_model(status=Status.Draft.value)
+    db.session.add(eng)
+    db.session.commit()
+    eid = eng.id
+    mocker.patch.object(authorization, 'check_auth', return_value=True)
+    result = EngagementService.delete(eid)
+    assert Engagement.find_by_id(eid) is None
+    assert isinstance(result, dict) and result.get('id') == eid
+
+
+def test_delete_failure_engagement_published(session, mocker):
+    """Assert that an engagement cannot be deleted if it is published."""
+    eng = factory_engagement_model(status=Status.Published.value)
+    db.session.add(eng)
+    db.session.commit()
+    eid = eng.id
+    mocker.patch.object(authorization, 'check_auth', return_value=True)
+    try:
+        EngagementService.delete(eid)
+        assert False, 'Expected ValueError was not raised'
+    except ValueError as err:
+        assert str(err) == 'Cannot delete an engagement that is published'
+
+
+def test_delete_failure_production_environment(db, monkeypatch, mocker):
+    """Engagement delete should be blocked in production (403 Forbidden)."""
+    monkeypatch.setenv('FLASK_ENV', 'production')
+    mocker.patch.object(authorization, 'check_auth', return_value=True)
+
+    with pytest.raises(Forbidden) as excinfo:
+        EngagementService.delete(123)  # Does not get to db, value irrelevant
+
+    desc = str(excinfo.value.description)
+    expected = ("You don't have the permission to access the requested resource. "
+                'It is either read-protected or not readable by the server.')
+
+    assert expected in desc

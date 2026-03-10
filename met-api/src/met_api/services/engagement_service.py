@@ -2,9 +2,12 @@
 
 from datetime import datetime
 from http import HTTPStatus
+import os
 from typing import Mapping, Optional, Sequence, Union
 
+from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
+from flask_restx import abort
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
@@ -14,6 +17,7 @@ from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
 from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
+from met_api.models.engagement_translation import EngagementTranslation
 from met_api.models.survey import Survey as SurveyModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
@@ -456,3 +460,29 @@ class EngagementService:
         return paths['ENGAGEMENT']['DASHBOARD'].format(
             engagement_id=engagement.id, lang=lang_code
         )
+
+    @classmethod
+    def delete(cls, engagement_id: int):
+        """Delete an existing engagement and its translations."""
+        one_of_roles = (Role.SUPER_ADMIN.value, Role.UNPUBLISH_ENGAGEMENT.value)
+        authorization.check_auth(one_of_roles=one_of_roles)
+
+        current_env = os.getenv('FLASK_ENV', 'production').lower()
+        if current_env in ('prod', 'production'):
+            abort(HTTPStatus.FORBIDDEN, 'Cannot delete an engagement in production environment')
+
+        engagement = EngagementModel.find_by_id(engagement_id)
+        if not engagement:
+            raise ValueError('Engagement not found')
+        if engagement.status_id == Status.Published.value:
+            raise ValueError('Cannot delete an engagement that is published')
+
+        try:
+            for translation in (EngagementTranslation.get_available_translation_languages(engagement.id) or []):
+                EngagementTranslation.delete_engagement_translation(translation.id)
+            deleted = EngagementModel.delete_engagement(engagement_id)
+        except ValueError as exc:
+            raise ValueError(str(exc)) from exc
+        except SQLAlchemyError as e:
+            raise RuntimeError('Database error while deleting engagement', e) from e
+        return {'id': deleted.id if hasattr(deleted, 'id') else engagement_id}

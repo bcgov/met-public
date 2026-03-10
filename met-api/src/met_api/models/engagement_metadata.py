@@ -39,13 +39,6 @@ class EngagementMetadata(BaseModel):
             raise ValueError('Cannot change own ID')
         return new_id
 
-    @validates('tenant_id')
-    def validate_tenant_id(self, _, new_tenant_id):
-        """Prevent update of tenant id."""
-        if self.tenant_id and self.tenant_id != new_tenant_id:
-            raise ValueError('Cannot change tenant_id')
-        return new_tenant_id
-
     @validates('engagement_id')
     def validate_engagement_id(self, _, new_engagement_id):
         """Prevent update of engagement id."""
@@ -219,6 +212,6 @@ class MetadataTaxon(BaseModel):
         """
         for index, taxon_id in enumerate(taxon_order):
             taxon = cls.query.filter_by(
-                tenant_id=tenant_id, taxon_id=taxon_id).first()
+                tenant_id=tenant_id, id=taxon_id).first()
             if taxon:
                 taxon.position = index

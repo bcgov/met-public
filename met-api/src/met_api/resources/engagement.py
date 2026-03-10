@@ -60,6 +60,25 @@ class Engagement(Resource):
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
+@cors_preflight('DELETE, OPTIONS')
+@API.route('/<engagement_id>/delete')
+class EngagementDelete(Resource):
+    """Resource for deleting engagements."""
+
+    @staticmethod
+    @require_role([Role.UNPUBLISH_ENGAGEMENT.value, Role.SUPER_ADMIN.value])
+    @cross_origin(origins=allowedorigins())
+    def delete(engagement_id: int):
+        """Delete an engagement."""
+        try:
+            EngagementService.delete(engagement_id)
+            return {'id': engagement_id}, HTTPStatus.OK
+        except KeyError as err:
+            return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
+        except ValueError as err:
+            return str(err), HTTPStatus.BAD_REQUEST
+
+
 @cors_preflight('GET, POST, PATCH, OPTIONS')
 @API.route('/')
 class Engagements(Resource):

@@ -29,7 +29,7 @@ class Widget(BaseModel):  # pylint: disable=too-few-public-methods
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='CASCADE'))
+    widget_type_id = db.Column(db.Integer, ForeignKey('widget_type.id', ondelete='RESTRICT'), nullable=False)
     engagement_id = db.Column(db.Integer, ForeignKey('engagement.id', ondelete='CASCADE'))
     engagement_details_tab_id = db.Column(db.Integer, ForeignKey('engagement_details_tabs.id', ondelete='CASCADE'))
     title = db.Column(db.String(100), comment='Custom title for the widget.')

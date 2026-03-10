@@ -17,8 +17,10 @@ Test suite to ensure that the Engagement model routines are working as expected.
 """
 
 from faker import Faker
+import pytest
 
 from met_api.constants.engagement_status import Status
+from met_api.models import db
 from met_api.models.engagement_metadata import EngagementMetadata
 from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_scope_options import EngagementScopeOptions
@@ -173,15 +175,19 @@ def test_get_engagements_metadata_match_all(session):
         'freeform': False,
         'filter_type': 'chips_all',
     })
-    # give every engagement some random metadata
+
+    # Use deterministic "noise" so we don't collide with the search values
     for eng in engagements:
         eng.metadata.append(EngagementMetadata(
-            taxon_id=taxon.id, value=fake.word()))
+            taxon_id=taxon.id, value='noise'))
 
-    # give alternating engagements a value we will search for
-    for eng in range(0, len(engagements), 2):
-        engagements[eng].metadata.append(EngagementMetadata(
-            taxon_id=taxon.id, value='test'))
+    # give alternating engagements the value we will search for
+    needle = 'test_metadata_search'
+    for i in range(0, len(engagements), 2):
+        engagements[i].metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value=needle))
+
+    session.flush()
 
     external_user_id = 123
     pagination_options = PaginationOptions(
@@ -191,7 +197,7 @@ def test_get_engagements_metadata_match_all(session):
         'metadata': [{
             'taxon_id': taxon.id,
             'filter_type': 'chips_all',
-            'values': ['test']
+            'values': [needle]
         }]
     }
 
@@ -207,18 +213,21 @@ def test_get_engagements_metadata_match_all(session):
     assert count == 5
 
     engagements[1].metadata.append(EngagementMetadata(
-        taxon_id=taxon.id, value='test'))
+        taxon_id=taxon.id, value=needle))
+    session.flush()
     _, count = refresh_engagements()
     assert count == 6
 
-    search_options['metadata'][0]['values'] = ['test', 'test2']
+    second = 'test2'
+    search_options['metadata'][0]['values'] = [needle, second]
     _, count = refresh_engagements()
     # This should find *all* matching values, so the inclusion of a non-matching
     # value "test2" should reduce the result to 0
     assert count == 0
 
     engagements[0].metadata.append(EngagementMetadata(
-        taxon_id=taxon.id, value='test2'))
+        taxon_id=taxon.id, value=second))
+    session.flush()
     _, count = refresh_engagements()
 
     # There should now be a single engagement with both "test" and "test2"
@@ -291,3 +300,31 @@ def test_get_engagements_metadata_match_any(session):
     # This should find *any* matching value, so the inclusion of a non-matching
     # value "test2" should not change the result
     assert count == 6
+
+
+def test_delete_engagement_success(session):
+    """Assert that delete removes the engagement and returns the deleted instance."""
+    engagement = factory_engagement_model()
+    db.session.add(engagement)
+    db.session.commit()
+    engagement_id = engagement.id
+
+    found = EngagementModel.find_by_id(engagement_id)
+    assert found is not None
+
+    deleted = EngagementModel.delete_engagement(engagement_id)
+
+    assert deleted is not None
+    assert deleted.id == engagement_id
+
+    assert EngagementModel.find_by_id(engagement_id) is None
+
+
+def test_delete_engagement_not_found_raises(session):
+    """Assert that delete_engagement raises ValueError if the engagement does not exist."""
+    non_existent_id = 999999
+
+    with pytest.raises(ValueError) as excinfo:
+        EngagementModel.delete_engagement(non_existent_id)
+
+    assert str(excinfo.value) == 'Engagement not found.'

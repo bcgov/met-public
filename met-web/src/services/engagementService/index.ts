@@ -7,6 +7,7 @@ import { PatchEngagementRequest, PostEngagementRequest, PutEngagementRequest } f
 import Endpoints from 'apiManager/endpoints';
 import { replaceUrl } from 'helper';
 import { Page } from 'services/type';
+import axios from 'axios';
 
 export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagement[]> => {
     const responseData = await http.GetRequest<Engagement[]>(Endpoints.Engagement.GET_LIST);
@@ -91,4 +92,29 @@ export const patchEngagement = async (data: PatchEngagementRequest): Promise<Eng
         return response.data;
     }
     return Promise.reject('Failed to update engagement');
+};
+
+interface ApiErrorBody {
+    error?: string;
+    message?: string;
+    code?: string;
+}
+
+export const deleteEngagement = async (engagementId: number): Promise<{ id: number }> => {
+    try {
+        const url = replaceUrl(Endpoints.Engagement.DELETE, 'engagement_id', String(engagementId));
+        const response = await http.DeleteRequest<{ id: number }>(url);
+        if (response.data) {
+            return response.data;
+        }
+        throw new Error('Failed to delete engagement');
+    } catch (e: unknown) {
+        if (axios.isAxiosError<ApiErrorBody>(e)) {
+            throw new Error(e?.response?.data?.message as unknown as Error['message']);
+        } else if (e instanceof Error) {
+            throw new Error(e?.message);
+        } else {
+            throw new Error(String(e));
+        }
+    }
 };

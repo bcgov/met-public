@@ -217,7 +217,7 @@ class SurveyDelete(Resource):
     """Resource for deleting surveys."""
 
     @staticmethod
-    @require_role([Role.EDIT_ALL_SURVEYS.value])
+    @require_role([Role.EDIT_ALL_SURVEYS.value, Role.SUPER_ADMIN.value])
     @cross_origin(origins=allowedorigins())
     def delete(survey_id: int):
         """Delete a survey."""
