@@ -156,20 +156,23 @@ jest.mock('services/engagementService', () => ({
 }));
 
 const openActionsFor = async (engagementId: number) => {
-    const input = await waitFor(
-        () => document.getElementById(`action-drop-down-${engagementId}`) as HTMLElement | null,
-    );
-    expect(input).not.toBeNull();
+    const input = await waitFor(() => document.getElementById(`action-drop-down-${engagementId}`));
 
-    const root = input!.parentElement ?? input!;
+    if (!(input instanceof HTMLElement)) {
+        throw new Error(`#action-drop-down-${engagementId} is not an HTMLElement`);
+    }
+
+    const root: HTMLElement = input.parentElement ?? input;
     const trigger =
-        (root.querySelector('[role="button"][aria-haspopup="listbox"]') as HTMLElement) ||
-        (root.closest('td')?.querySelector('[role="button"][aria-haspopup="listbox"]') as HTMLElement) ||
-        (root.querySelector('[role="combobox"]') as HTMLElement); // fallback on some MUI builds
+        root.querySelector('[role="button"][aria-haspopup="listbox"]') ||
+        root.closest('td')?.querySelector('[role="button"][aria-haspopup="listbox"]') ||
+        root.querySelector('[role="combobox"]'); // fallback on some MUI builds
 
-    expect(trigger).toBeTruthy();
+    if (!(trigger instanceof HTMLElement)) {
+        throw new Error(`Trigger element was not found.`);
+    }
 
-    fireEvent.mouseDown(trigger!);
+    fireEvent.mouseDown(trigger);
     await screen.findByRole('listbox');
 };
 

@@ -110,11 +110,11 @@ export const deleteEngagement = async (engagementId: number): Promise<{ id: numb
         throw new Error('Failed to delete engagement');
     } catch (e: unknown) {
         if (axios.isAxiosError<ApiErrorBody>(e)) {
-            return Promise.reject(e?.response?.data?.message);
+            throw new Error(e?.response?.data?.message as unknown as Error['message']);
         } else if (e instanceof Error) {
-            return Promise.reject(e?.message || e);
+            throw new Error(e?.message);
         } else {
-            return Promise.reject(e);
+            throw new Error(String(e));
         }
     }
 };

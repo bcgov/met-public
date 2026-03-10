@@ -729,7 +729,7 @@ def test_get_engagements_metadata_match_any(client, session):  # pylint:disable=
 def test_delete_engaement(client, jwt, session, mocker,
                           setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that the resource DELETE /api/engagements/<id>/delete returns 200 on success and maps errors correctly."""
-    user, claims = setup_admin_user_and_claims
+    _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
 
     engagement = factory_engagement_model()
