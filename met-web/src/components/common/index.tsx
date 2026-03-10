@@ -5,8 +5,6 @@ import {
     Paper as MuiPaper,
     CircularProgress,
     Typography,
-    Stack,
-    IconButton,
     Box,
     CircularProgressProps,
     ToggleButton,
@@ -15,25 +13,10 @@ import {
     styled,
 } from '@mui/material';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
-import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
-import { Palette, colors } from 'styles/Theme';
+import { Palette, colors, elevations } from 'styles/Theme';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MET_Header_Font_Family, MET_Font_Weight, MET_Header_Font_Weight } from '../../styles/constants';
-import { When } from 'react-if';
-export { colors };
-
-export const elevations = {
-    // For use with CSS box-shadow property
-    // Not complete in Figma yet
-    none: '0px 0px transparent',
-    pressed:
-        '0px 0px 1px 0px rgba(0, 0, 0, 0.14), 0px 0px 1px 0px rgba(0, 0, 0, 0.60) inset, 0px 1px 6px 0px rgba(0, 0, 0, 0.60) inset',
-    default:
-        '0px 12px 10px 0px rgba(0, 0, 0, 0.01), 0px 7px 9px 0px rgba(0, 0, 0, 0.05), 0px 3px 6px 0px rgba(0, 0, 0, 0.09), 0px 1px 3px 0px rgba(0, 0, 0, 0.10)',
-    hover: '0px 5px 6px 0px rgba(0, 0, 0, 0.20), 0px 9px 12px 0px rgba(0, 0, 0, 0.14), 0px 3px 16px 0px rgba(0, 0, 0, 0.12)',
-};
+export { colors, elevations };
 
 export const globalFocusShadow = `inset 0px 0px 0px 2px ${colors.focus.regular.inner}`;
 
@@ -218,65 +201,13 @@ export const MetWidgetPaper = styled(MuiPaper)(() => ({
     padding: '1em',
 }));
 
-interface MetSurveyProps {
-    testId?: number;
-    title: string;
-    children?: React.ReactNode;
-    [prop: string]: unknown;
-    onEditClick?: () => void;
-    onDeleteClick?: () => void;
-    deleting?: boolean;
-}
-
-export const MetSurvey = ({
-    testId,
-    children,
-    title,
-    onEditClick,
-    onDeleteClick,
-    deleting,
-    ...rest
-}: MetSurveyProps) => {
-    return (
-        <MetWidgetPaper elevation={3} {...rest}>
-            <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={6}>
-                    <MetHeader3 bold>{title}</MetHeader3>
-                </Grid>
-                <Grid item xs={6} container direction="row" justifyContent="flex-end">
-                    <Stack direction="row" spacing={1}>
-                        <When condition={!!onEditClick}>
-                            <IconButton color="inherit" onClick={onEditClick} data-testid="survey-widget/edit">
-                                <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
-                            </IconButton>
-                        </When>
-                        <When condition={!!onDeleteClick}>
-                            <IconButton
-                                color="inherit"
-                                onClick={onDeleteClick}
-                                data-testid={`survey-widget/remove-${testId}`}
-                            >
-                                {deleting ? (
-                                    <CircularProgress size="1em" color="inherit" />
-                                ) : (
-                                    <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
-                                )}
-                            </IconButton>
-                        </When>
-                    </Stack>
-                </Grid>
-                <Grid item xs={12}>
-                    {children}
-                </Grid>
-            </Grid>
-        </MetWidgetPaper>
-    );
-};
-
-export const MidScreenLoader = () => (
+export const MidScreenLoader = ({ message }: { message?: string }) => (
     <Grid container direction="row" justifyContent="center" alignItems="center" sx={{ minHeight: '90vh' }}>
-        <Grid item>
+        <Grid alignItems="center" direction="column" container>
             <CircularProgress data-testid="loader" />
+            <Typography variant="body1" align="center" sx={{ mt: 2, height: '1.5em' }}>
+                {message}
+            </Typography>
         </Grid>
     </Grid>
 );

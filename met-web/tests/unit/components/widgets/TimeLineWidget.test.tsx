@@ -27,13 +27,18 @@ jest.mock('react-redux', () => ({
     useDispatch: jest.fn(() => jest.fn()),
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(timeLineWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(timeLineWidget),
+}));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(timeLineWidget),
+}));
 
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
     useCreateWidgetItemsMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(timeLineWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -57,7 +62,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([timeLineWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -79,10 +84,22 @@ const router = createMemoryRouter(
 );
 
 describe('TimeLine Widget tests', () => {
+    const getWidgetsMock = jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([]));
+
     beforeAll(() => {
         setupWidgetTestEnvMock();
         setupWidgetTestEnvSpy();
-        jest.spyOn(widgetService, 'getWidgets').mockReturnValue(Promise.resolve([timeLineWidget]));
+    });
+
+    beforeEach(() => {
+        getWidgetsMock.mockReset();
+        getWidgetsMock.mockResolvedValue([]);
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([timeLineWidget]);
+                return timeLineWidget;
+            },
+        }));
     });
 
     async function addTimeLineWidget() {
@@ -92,6 +109,7 @@ describe('TimeLine Widget tests', () => {
 
         await waitFor(() => expect(screen.getByText('Select Widget')).toBeVisible());
         fireEvent.click(screen.getByTestId(`widget-drawer-option/${WidgetType.Timeline}`));
+
         await waitFor(() => {
             expect(screen.getByText('Title')).toBeVisible();
             expect(screen.getByText('Description')).toBeVisible();
@@ -109,12 +127,12 @@ describe('TimeLine Widget tests', () => {
         const eventDesc1 = document.querySelector('input[name="eventDescription1"]') as HTMLInputElement;
         const eventTime1 = document.querySelector('input[name="eventTime1"]') as HTMLInputElement;
         const selectElement1 = document.querySelector('input[name="eventStatus1"]') as HTMLInputElement;
-        console.log(selectElement1);
+        const selectButton1 = screen.getByRole('combobox');
 
         fireEvent.change(eventDesc1, { target: { value: mockTimeLine.events[0].description } });
         fireEvent.change(eventTime1, { target: { value: mockTimeLine.events[0].time } });
-        fireEvent.mouseDown(selectElement1);
-        fireEvent.click(screen.getByText('Pending'));
+        fireEvent.mouseDown(selectButton1);
+        fireEvent.click(screen.getByRole('option', { name: 'Pending' }));
 
         await waitFor(() => {
             expect(titleInput.value).toBe(mockTimeLine.title);
@@ -125,10 +143,6 @@ describe('TimeLine Widget tests', () => {
 
     test('TimeLine widget is created when option is clicked', async () => {
         render(<RouterProvider router={router} />);
-        const getWidgetsMock = jest
-            .spyOn(widgetService, 'getWidgets')
-            .mockReturnValue(Promise.resolve([timeLineWidget]));
-
         await addTimeLineWidget();
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Description')).toBeVisible();

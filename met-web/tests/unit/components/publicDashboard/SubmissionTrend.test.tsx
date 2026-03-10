@@ -41,8 +41,11 @@ const mockEngagement = closedEngagement;
 const getMonthlyDataMock = jest.spyOn(userResponseDetailService, 'getUserResponseDetailByMonth');
 
 describe('SubmissionTrend Component Tests', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-    test('displays loading indicator while fetching data', () => {
+    test('displays loading indicator while fetching data', async () => {
         getMonthlyDataMock.mockReturnValueOnce(
             Promise.resolve({
                 showdataby: '',
@@ -50,13 +53,19 @@ describe('SubmissionTrend Component Tests', () => {
             }),
         );
         render(<SubmissionTrend engagement={mockEngagement} engagementIsLoading={true} />);
+        await waitFor(() => {
+            expect(getMonthlyDataMock).toHaveBeenCalled();
+        });
         expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
     test('renders correctly on successful monthly data fetch', async () => {
         const mockData: UserResponseDetailByMonth = { showdataby: 'January', responses: 100 };
-        getMonthlyDataMock.mockResolvedValue(Promise.resolve(mockData));
+        getMonthlyDataMock.mockResolvedValue(mockData);
         render(<SubmissionTrend engagement={mockEngagement} engagementIsLoading={false} />);
+        await waitFor(() => {
+            expect(getMonthlyDataMock).toHaveBeenCalled();
+        });
         await waitFor(() => {
             expect(screen.getByText('Select Date Range')).toBeInTheDocument();
             // Check if the "Weekly" toggle button is present
@@ -76,6 +85,9 @@ describe('SubmissionTrend Component Tests', () => {
     test('displays error message on fetch failure', async () => {
         getMonthlyDataMock.mockRejectedValue(new Error('Fetch Error'));
         render(<SubmissionTrend engagement={mockEngagement} engagementIsLoading={false} />);
+        await waitFor(() => {
+            expect(getMonthlyDataMock).toHaveBeenCalled();
+        });
         await waitFor(() => {
             expect(screen.getByText('No Data Available')).toBeInTheDocument();
         });

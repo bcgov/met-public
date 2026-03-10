@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid2 as Grid } from '@mui/material';
 import {
     faCircle1,
     faCircle2,
@@ -14,7 +14,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { colors } from 'styles/Theme';
-import { BodyText, Header2 } from '../Typography';
+import { BodyText } from '../Typography';
 
 const circleNumberIcons = [
     faCircle1,
@@ -92,22 +92,15 @@ export const FormStep = ({
                 maxWidth: '100%',
             }}
         >
-            <Grid
-                item
-                container
-                alignItems="stretch"
-                direction="column"
-                gap={1}
-                sx={{ pt: 1.25, fontSize: '16px', width: '3rem' }}
-            >
-                <Grid item>
+            <Grid container size="auto" justifyContent="flex-start" direction="column" width="2rem">
+                <Grid size="auto">
                     <FontAwesomeIcon
                         icon={completed ? faCircleCheck : circleNumberIcons[step - 1]}
                         color={activityColor}
                         size="2x"
                     />
                 </Grid>
-                <Grid item xs>
+                <Grid size="grow">
                     <Box
                         sx={{
                             height: '100%',
@@ -119,50 +112,46 @@ export const FormStep = ({
                 </Grid>
             </Grid>
             <Grid
-                item
                 container
-                xs
+                size="grow"
+                maxWidth="100%"
                 justifyContent="flex-start"
                 alignItems="flex-start"
+                gap={0}
+                p={0}
+                m={0}
                 pb="16px"
                 component={isGroup ? 'fieldset' : 'div'}
                 aria-labelledby={titleId + ' ' + instructionsId}
-                sx={{ border: 'none' }}
+                border="none"
             >
-                {isGroup ? (
-                    <>
-                        <legend id={titleId} style={{ marginBottom: 0, fontSize: '20px', fontWeight: 300, padding: 0 }}>
-                            {question}
-                        </legend>
-                        {details && (
-                            <Grid item sx={{ marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
-                                <BodyText size="small">
-                                    <span id={instructionsId}>{details}</span>
-                                </BodyText>
-                            </Grid>
-                        )}
-                    </>
-                ) : (
-                    <Grid item xs={12}>
-                        <Header2 sx={{ mt: 0, fontSize: '20px', fontWeight: '300' }}>
-                            <label htmlFor={labelFor} id={titleId}>
-                                {question}
-                            </label>
-                        </Header2>
-                    </Grid>
-                )}
-                {!isGroup && details && (
-                    <Grid item sx={{ marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
-                        <BodyText size="small">
-                            <label htmlFor={labelFor} id={instructionsId}>
-                                {details}
-                            </label>
-                        </BodyText>
-                    </Grid>
-                )}
-                <Grid item xs={12}>
-                    {children}
+                <Grid size={12} lineHeight="2rem" fontSize="1.25rem" mb={1.25}>
+                    <BodyText
+                        fontSize="1.25rem"
+                        p={0}
+                        my={0}
+                        fontWeight={400}
+                        lineHeight="2rem"
+                        component={isGroup ? 'legend' : 'label'}
+                        id={titleId}
+                        {...({ htmlFor: isGroup ? undefined : labelFor } as object)}
+                    >
+                        {question}
+                    </BodyText>
                 </Grid>
+                <Grid hidden={!details} sx={{ marginBottom: '1.5rem', lineHeight: '1.5rem' }} size={12}>
+                    <BodyText
+                        letterSpacing="calc(13 / 990 * -1rem)"
+                        lineHeight="1.5rem"
+                        id={instructionsId}
+                        size="small"
+                        component={isGroup ? 'p' : 'label'}
+                        {...({ htmlFor: isGroup ? undefined : labelFor } as object)}
+                    >
+                        {details}
+                    </BodyText>
+                </Grid>
+                <Grid size={12}>{children}</Grid>
             </Grid>
         </Grid>
     );

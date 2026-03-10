@@ -1,6 +1,10 @@
 @charset "UTF-8";
 @use '../node_modules/@bcgov/design-tokens/css-prefixed/variables.css';
 
+html{
+  scrollbar-gutter: stable;
+}
+
 #main {
   margin-top: 10px;
 }
@@ -10,7 +14,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif;
-  color: #494949
 }
 
 code {

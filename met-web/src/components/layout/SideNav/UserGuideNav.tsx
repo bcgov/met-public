@@ -23,7 +23,7 @@ const UserGuideNav = () => {
         '/surveys/1/comments': `${HELP_URL}/posts/comments-listing/`,
         '/surveys/1/comments/all': `${HELP_URL}/posts/read-all-comments/`,
         '/surveys/1/submissions/1/review': `${HELP_URL}/posts/comment-review-page/`,
-        '/engagements/create/form': `${HELP_URL}/posts/create-engagement/`,
+        '/engagements/create/wizard': `${HELP_URL}/posts/create-engagement/`,
         '/engagements/1/form': `${HELP_URL}/posts/engagement-details/`,
         '/engagements/1/view': `${HELP_URL}/posts/preview-engagement/`,
         '/engagements/1/comments': `${HELP_URL}/posts/preview-engagement/`,
@@ -34,6 +34,10 @@ const UserGuideNav = () => {
         '/reporting': `${HELP_URL}/posts/report/`,
         '/usermanagement': `${HELP_URL}/posts/user-management/`,
         '/usermanagement/1/details': `${HELP_URL}/posts/user-details/`,
+        '/tenantadmin': `${HELP_URL}/posts/tenant-admin/`,
+        '/tenantadmin/create': `${HELP_URL}/posts/tenant-admin/#create-tenant`,
+        '/tenantadmin/aaa/detail': `${HELP_URL}/posts/tenant-admin/#view-tenant-details`,
+        '/tenantadmin/aaa/edit': `${HELP_URL}/posts/tenant-details/#edit-tenant`,
     };
 
     const handleSimilarityScore = () => {
@@ -55,21 +59,18 @@ const UserGuideNav = () => {
         }
     };
 
-    const openHelpPage = () => {
+    const currentHelpPage = React.useMemo(() => {
         const key = handleSimilarityScore();
-        if (!key) {
-            window.location.href = HELP_URL;
-            return;
-        }
-        const helpPagePath = key ? helpPaths[key] : HELP_URL;
-        window.location.href = helpPagePath;
-    };
+        return key ? helpPaths[key] : HELP_URL;
+    }, [pathname]);
 
     return (
         <ListItem key="user-guide" sx={routeItemStyle}>
             <ListItemButton
                 component="a"
-                onClick={openHelpPage}
+                href={currentHelpPage}
+                target="_blank"
+                rel="noopener noreferrer"
                 disableRipple
                 sx={{
                     '&:hover, &:active, &:focus': {

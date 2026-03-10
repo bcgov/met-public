@@ -69,11 +69,16 @@ jest.mock('@hello-pangea/dnd', () => ({
     DragDropContext: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
-const mockCreateWidget = jest.fn(() => Promise.resolve(eventWidget));
+const mockCreateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(eventWidget),
+}));
+const mockUpdateWidget = jest.fn(() => ({
+    unwrap: () => Promise.resolve(eventWidget),
+}));
 jest.mock('apiManager/apiSlices/widgets', () => ({
     ...jest.requireActual('apiManager/apiSlices/widgets'),
     useCreateWidgetMutation: () => [mockCreateWidget],
-    useUpdateWidgetMutation: () => [jest.fn(() => Promise.resolve(eventWidget))],
+    useUpdateWidgetMutation: () => [mockUpdateWidget],
     useDeleteWidgetMutation: () => [jest.fn(() => Promise.resolve())],
     useSortWidgetsMutation: () => [jest.fn(() => Promise.resolve())],
 }));
@@ -91,7 +96,7 @@ jest.mock('react-router', () => ({
                 engagement: Promise.resolve({
                     ...draftEngagement,
                 }),
-                widgets: Promise.resolve([eventWidget]),
+                widgets: Promise.resolve([]),
                 metadata: Promise.resolve([]),
                 content: Promise.resolve([]),
                 taxa: Promise.resolve([]),
@@ -129,13 +134,16 @@ describe('Event Widget tests', () => {
     beforeEach(() => {
         setupEnv();
         mockCreateWidget.mockReset();
+        mockUpdateWidget.mockReset();
         getWidgetsMock.mockReset();
 
         getWidgetsMock.mockResolvedValue([]);
-        mockCreateWidget.mockImplementation(async () => {
-            getWidgetsMock.mockResolvedValue([eventWidget]);
-            return eventWidget;
-        });
+        mockCreateWidget.mockImplementation(() => ({
+            unwrap: async () => {
+                getWidgetsMock.mockResolvedValue([eventWidget]);
+                return eventWidget;
+            },
+        }));
     });
 
     async function addEventWidget(container: HTMLElement) {
@@ -179,6 +187,7 @@ describe('Event Widget tests', () => {
             widget_type_id: WidgetType.Events,
             engagement_id: draftEngagement.id,
             title: mockEvent.title,
+            location: 1,
         });
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Add In-Person Event')).toBeVisible();

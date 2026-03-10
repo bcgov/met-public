@@ -38,7 +38,7 @@ export const Header1 = ({ children, weight, component, ...props }: HeaderProps) 
             variant="h1"
             lineHeight="1.5"
             fontSize="2rem"
-            marginBottom="2rem"
+            marginBottom="1.5rem"
             marginTop="1.5rem"
             fontWeight={fontWeight(weight)}
             {...props}
@@ -71,26 +71,28 @@ export const Header2 = ({
         <Typography
             variant="h2"
             component={component || 'h2'}
+            lineHeight="1.5"
+            fontSize="1.5rem"
+            mb="1.5rem"
+            mt="0.5rem"
+            fontWeight={fontWeight(weight)}
             {...props}
-            sx={{
-                lineHeight: '1.5',
-                fontSize: '1.5rem',
-                marginBottom: '1.5rem',
-                marginTop: '0.5rem',
-                fontWeight: fontWeight(weight),
-                ...(decorated && {
-                    '&::before': {
-                        backgroundColor: '#FCBA19',
-                        content: '""',
-                        display: 'block',
-                        width: '40px',
-                        height: '4px',
-                        position: 'relative',
-                        bottom: '4px',
-                    },
-                }),
-                ...props.sx,
-            }}
+            sx={[
+                {
+                    '&::before': decorated
+                        ? {
+                              backgroundColor: '#FCBA19',
+                              content: '""',
+                              display: 'block',
+                              width: '40px',
+                              height: '4px',
+                              position: 'relative',
+                              bottom: '4px',
+                          }
+                        : {},
+                },
+                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
         >
             {children}
         </Typography>
@@ -120,14 +122,11 @@ export const Header3 = ({
         <Typography
             component={component || 'h3'}
             variant="h3"
+            lineHeight={1.5}
+            fontSize="1.375rem"
+            fontStyle="normal"
+            fontWeight={fontWeight(weight)}
             {...props}
-            sx={{
-                lineHeight: '1.5',
-                fontSize: '1.25rem',
-                fontStyle: 'normal',
-                fontWeight: fontWeight(weight),
-                ...props.sx,
-            }}
         >
             {children}
         </Typography>
@@ -157,14 +156,11 @@ export const Header4 = ({
         <Typography
             component={component || 'h4'}
             variant="h4"
+            lineHeight="1.5"
+            fontSize="1.125rem"
+            fontStyle="normal"
+            fontWeight={fontWeight(weight)}
             {...props}
-            sx={{
-                lineHeight: '1.5',
-                fontSize: '1.125rem',
-                fontStyle: 'normal',
-                fontWeight: fontWeight(weight),
-                ...props.sx,
-            }}
         >
             {children}
         </Typography>

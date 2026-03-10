@@ -7,7 +7,8 @@
   "default": {},
   "examples": [
     {
-      "title": "Who is Listening"
+      "title": "Who is Listening",
+      "engagement_details_tab_id": null
     }
   ],
   "required": ["title"],
@@ -18,6 +19,13 @@
       "title": "Widget title",
       "description": "The title of the widget.",
       "examples": ["Who is Listening"]
+    },
+    "engagement_details_tab_id": {
+      "$id": "#/properties/engagement_details_tab_id",
+      "type": ["number", "null"],
+      "title": "Engagement details tab id",
+      "description": "Optional details tab ID for tab-specific widgets.",
+      "examples": [1, null]
     }
   }
 }

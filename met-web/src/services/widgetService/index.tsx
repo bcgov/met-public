@@ -24,6 +24,8 @@ export const getWidget = async (engagement_id: number, widget_id: number): Promi
 interface PostWidget {
     widget_type_id: number;
     engagement_id: number;
+    location: number;
+    engagement_details_tab_id?: number;
 }
 /**
  * @deprecated The method was replaced by Redux RTK query to have caching behaviour
@@ -78,18 +80,6 @@ export const removeWidget = async (engagement_id: number, widget_id: number): Pr
             return response.data;
         }
         return Promise.reject('Failed to delete widget');
-    } catch (err) {
-        return Promise.reject(err);
-    }
-};
-
-/**
- * @deprecated The method was replaced by Redux RTK query to have caching behaviour
- */
-export const sortWidgets = async (engagement_id: number, data: Widget[]): Promise<void> => {
-    try {
-        const url = replaceUrl(Endpoints.Widgets.SORT, 'engagement_id', String(engagement_id));
-        await http.PatchRequest<Widget>(url, data);
     } catch (err) {
         return Promise.reject(err);
     }

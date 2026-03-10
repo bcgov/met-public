@@ -205,7 +205,6 @@ export const FormBuilderPage = () => {
             direction="row"
             alignItems="flex-start"
             justifyContent="flex-start"
-            item
             xs={12}
             spacing={4}
         >

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, GridProps, Box, BoxProps } from '@mui/material';
-import { BodyText } from 'components/common/Typography';
+import { Grid2 as Grid, GridProps, Box, BoxProps } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
 
 export const AuthoringFormContainer = ({
     children,
@@ -28,14 +28,14 @@ export const UnnamedAuthoringFormSection = ({
     ...formSectionProps
 }: { children: React.ReactNode; required?: boolean; gridItemProps?: GridProps } & BoxProps) => {
     return (
-        <Grid item {...gridItemProps} className="met-layout-authoring-form-grid-item">
+        <Grid {...gridItemProps} className="met-layout-authoring-form-grid-item">
             <Box
                 className="met-layout-authoring-form-section"
                 display="flex"
                 flexDirection="column"
                 gap="24px"
                 bgcolor={required ? 'blue.10' : 'gray.10'}
-                padding="2rem 1.4rem"
+                padding="2rem 1.5rem"
                 margin="1rem 0"
                 borderRadius="16px"
                 {...formSectionProps}
@@ -81,7 +81,7 @@ export const AuthoringFormSection = ({
                     </Box>
                 )}
                 {details && (
-                    <Box fontSize="0.875rem" lineHeight={12 / 7}>
+                    <Box fontSize="0.875rem" lineHeight={12 / 7} letterSpacing="-0.013rem">
                         {details}
                     </Box>
                 )}

@@ -49,7 +49,7 @@ def test_create_widget(client, jwt, session, widget_info,
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json[0].get('sort_index') == 1
+    assert rv.json[0].get('location') == 1
 
     with patch.object(WidgetService, 'create_widget', side_effect=ValueError('Test error')):
         rv = client.post('/api/widgets/engagement/' + str(engagement.id), data=json.dumps(widget_info),
@@ -77,7 +77,7 @@ def test_get_widget(client, jwt, session, widget_info,
     rv = client.get('/api/widgets/engagement/' + str(engagement.id),
                     headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == 200
-    assert rv.json[0].get('sort_index') == 1
+    assert rv.json[0].get('location') == 1
 
     with patch.object(WidgetService, 'get_widgets_by_engagement_id', side_effect=ValueError('Test error')):
         rv = client.get('/api/widgets/engagement/' + str(engagement.id),
@@ -85,8 +85,8 @@ def test_get_widget(client, jwt, session, widget_info,
     assert rv.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def test_create_widget_sort(client, jwt, session,
-                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
+def test_create_widget_location(client, jwt, session,
+                                setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that a widget can be POSTed."""
     engagement = factory_engagement_model()
     widget_info_1 = TestWidgetInfo.widget1
@@ -110,60 +110,10 @@ def test_create_widget_sort(client, jwt, session,
     assert len(rv.json) == 2, 'Two Widgets Should exist.'
     widgets = rv.json
     who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
-    assert who_is_widget.get('sort_index') == 1
+    assert who_is_widget.get('location') == 1
 
     doc_widget = _find_widget(widgets, WidgetType.DOCUMENTS)
-    assert doc_widget.get('sort_index') == 2
-
-    # Do reorder
-
-    reorder_dict = [
-        {
-            'id': doc_widget.get('id'),
-        },
-        {
-            'id': who_is_widget.get('id'),
-        }
-    ]
-
-    rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
-                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 204
-
-    rv = client.get(f'/api/widgets/engagement/{engagement.id}',
-                    headers=headers, content_type=ContentType.JSON.value)
-    widgets = rv.json
-    who_is_widget = _find_widget(widgets, WidgetType.WHO_IS_LISTENING)
-    assert who_is_widget.get('sort_index') == 2
-
-    doc_widget = _find_widget(widgets, WidgetType.DOCUMENTS)
-    assert doc_widget.get('sort_index') == 1
-
-
-def test_create_widget_sort_invalid(client, jwt, session,
-                                    setup_admin_user_and_claims):  # pylint:disable=unused-argument
-    """Assert that a widget can be POSTed."""
-    engagement = factory_engagement_model()
-    widget_info_1 = TestWidgetInfo.widget1
-    widget_info_1['engagement_id'] = engagement.id
-    user, claims = setup_admin_user_and_claims
-    headers = factory_auth_header(jwt=jwt, claims=claims)
-    rv = client.post(f'/api/widgets/engagement/{engagement.id}', data=json.dumps(widget_info_1),
-                     headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == 200
-
-    # invalid reorder
-    reorder_dict = [{
-        'id': 123,
-        'sort_index': 2
-    }, {
-        'id': 1234,
-        'sort_index': 1
-    }
-    ]
-    rv = client.patch(f'/api/widgets/engagement/{engagement.id}/sort_index', data=json.dumps(reorder_dict),
-                      headers=headers, content_type=ContentType.JSON.value)
-    assert rv.status_code == HTTPStatus.BAD_REQUEST
+    assert doc_widget.get('location') == 2
 
 
 def _find_widget(widgets, widget_type):

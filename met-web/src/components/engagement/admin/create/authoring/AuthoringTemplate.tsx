@@ -3,36 +3,18 @@ import { useOutletContext, Form, useParams, Await, Outlet, useMatch, useRouteLoa
 import AuthoringBottomNav from './AuthoringBottomNav';
 import { EngagementUpdateData } from './AuthoringContext';
 import { useFormContext } from 'react-hook-form';
-import { AuthoringContextType, StatusLabelProps } from './types';
+import { AuthoringContextType } from './types';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { EngagementStatus } from 'constants/engagementStatus';
-import { BodyText, Header1, Header2 } from 'components/common/Typography';
+import { Header1, Header2 } from 'components/common/Typography';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
 import { Engagement } from 'models/engagement';
 import { EngagementLoaderAdminData } from 'components/engagement/admin/EngagementLoaderAdmin';
-import { colors } from 'styles/Theme';
 import { saveLanguage } from 'reduxSlices/languageSlice';
-
-export const StatusLabel = ({ text, completed }: StatusLabelProps) => {
-    const statusColor = completed ? colors.notification.success : colors.notification.error;
-    return (
-        <BodyText
-            size="small"
-            p="0.2rem 0.75rem"
-            bgcolor={statusColor.shade}
-            color="white"
-            borderRadius="3px"
-            fontSize="0.8rem"
-            display="inline"
-            lineHeight="unset"
-        >
-            {text}
-        </BodyText>
-    );
-};
+import Grid from '@mui/material/Grid2';
+import { StatusLabel } from './StatusLabel';
 
 export const getLanguageValue = (languageCode: string, languages: Language[]) => {
     if (languageCode === 'en') {
@@ -77,51 +59,55 @@ const AuthoringTemplate = () => {
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
-            <div style={{ marginTop: '2rem' }}>
+            <Grid mt="2rem" size={12}>
                 <Suspense>
                     <Await resolve={engagement}>
-                        {(engagement: Engagement) => (
-                            <StatusLabel text={EngagementStatus[engagement.status_id]} completed={false} />
-                        )}
+                        {(engagement: Engagement) => <StatusLabel status={engagement.status_id} />}
                     </Await>
                 </Suspense>
                 {/* todo: For the section status label when it's ready */}
                 {/* <StatusLabel text={'Insert Section Status Text Here'} completed={'Insert Completed Boolean Here'} /> */}
-            </div>
-            <Header1 style={{ marginTop: '0.5rem', paddingBottom: '1rem' }}>{pageTitle}</Header1>
+            </Grid>
+            <Grid size={12}>
+                <Header1 style={{ marginTop: '0.5rem', paddingBottom: '1rem' }}>{pageTitle}</Header1>
+            </Grid>
 
             {/* Portal target for anything that needs to be rendered before the section title + content */}
             <div id="pre-authoring-content" />
 
-            <Header2 decorated style={{ paddingTop: '1rem' }}>
-                {currentLanguage.name}
-            </Header2>
+            <Grid size={12}>
+                <Header2 decorated style={{ paddingTop: '1rem' }}>
+                    {currentLanguage.name}
+                </Header2>
+            </Grid>
 
-            <Form onSubmit={handleSubmit(onSubmit)} id="authoring-form">
-                <Suspense>
-                    <Await resolve={engagement}>
-                        {(engagement: Engagement) => (
-                            <Outlet
-                                key={outletKey}
-                                context={{
-                                    setDefaultValues,
-                                    engagement,
-                                    defaultValues,
-                                    fetcher,
-                                    pageName,
-                                }}
-                            />
-                        )}
-                    </Await>
-                </Suspense>
-                <AuthoringBottomNav
-                    currentLanguage={currentLanguage}
-                    setCurrentLanguage={setCurrentLanguage}
-                    languages={languages}
-                    pageTitle={pageTitle || 'untitled'} // Full title
-                    pageName={pageName || 'untitled'} // Slug
-                />
-            </Form>
+            <Grid>
+                <Form onSubmit={handleSubmit(onSubmit)} id="authoring-form">
+                    <Suspense>
+                        <Await resolve={engagement}>
+                            {(engagement: Engagement) => (
+                                <Outlet
+                                    key={outletKey}
+                                    context={{
+                                        setDefaultValues,
+                                        engagement,
+                                        defaultValues,
+                                        fetcher,
+                                        pageName,
+                                    }}
+                                />
+                            )}
+                        </Await>
+                    </Suspense>
+                    <AuthoringBottomNav
+                        currentLanguage={currentLanguage}
+                        setCurrentLanguage={setCurrentLanguage}
+                        languages={languages}
+                        pageTitle={pageTitle || 'untitled'} // Full title
+                        pageName={pageName || 'untitled'} // Slug
+                    />
+                </Form>
+            </Grid>
         </ResponsiveContainer>
     );
 };

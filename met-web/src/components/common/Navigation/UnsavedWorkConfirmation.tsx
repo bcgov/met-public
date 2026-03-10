@@ -2,6 +2,7 @@ import { Modal } from '@mui/material';
 import React from 'react';
 import { useBlocker } from 'react-router';
 import ConfirmModal from '../Modals/ConfirmModal';
+import { faFileCircleQuestion } from '@fortawesome/pro-regular-svg-icons';
 
 interface UnsavedWorkConfirmationProps {
     blockNavigationWhen: boolean;
@@ -31,6 +32,7 @@ const UnsavedWorkConfirmation: React.FC<UnsavedWorkConfirmationProps> = ({ block
             <ConfirmModal
                 style="warning"
                 header="Unsaved Changes"
+                icon={faFileCircleQuestion}
                 subHeader="Are you sure you want to leave this page?"
                 subText={[{ text: 'If you leave this page, your changes will be lost.' }]}
                 cancelButtonText="Stay"

@@ -25,8 +25,10 @@ const DocumentFile = ({
 }) => {
     const dispatch = useAppDispatch();
     const { handleAddFileDrawerOpen, handleChangeDocumentToEdit, loadDocuments } = useContext(DocumentsContext);
-    const { widgets } = useContext(WidgetDrawerContext);
-    const documentWidget = widgets.find((widget: Widget) => widget.widget_type_id === WidgetType.Document);
+    const { widgets, widgetLocation } = useContext(WidgetDrawerContext);
+    const documentWidget = widgets.find(
+        (widget: Widget) => widget.widget_type_id === WidgetType.Document && widget.location === widgetLocation,
+    );
 
     const handleEditDocument = () => {
         handleChangeDocumentToEdit(documentItem);

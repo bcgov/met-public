@@ -169,7 +169,28 @@ export const RichTextArea = ({
     }, [maxLines, expanded, props.editorState]);
 
     return (
-        <Box ref={rootRef} id={contentRegionId} sx={containerSx}>
+        <Box
+            ref={rootRef}
+            id={contentRegionId}
+            sx={[
+                {
+                    '&:has([contenteditable="true"])': {
+                        borderColor: 'gray.80',
+                        border: '1px solid',
+                        borderRadius: '8px',
+                        '&:hover:not(:focus-within), &:hover:not(:focus-within) .rdw-editor-wrapper': {
+                            boxShadow: `0 0 0 1px ${colors.surface.gray[90]} inset`,
+                        },
+                        '&:focus-within': {
+                            borderColor: `${colors.focus.regular.inner}`,
+                            outline: `4px solid ${colors.focus.regular.outer}`,
+                        },
+                    },
+                },
+                ...(Array.isArray(containerSx) ? containerSx : [containerSx || {}]),
+                1,
+            ]}
+        >
             <Editor
                 customDecorators={[
                     {

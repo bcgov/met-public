@@ -40,6 +40,11 @@ global['Request'] = jest.fn().mockImplementation((input: string = '', init: Requ
 
 jest.mock('axios');
 
+jest.mock('react', () => ({
+    ...jest.requireActual('react'),
+    lazy: () => () => null,
+}));
+
 jest.mock('@mui/material', () => ({
     ...jest.requireActual('@mui/material'),
     Link: ({ children }: { children: ReactNode }) => {
@@ -47,11 +52,8 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
-        return <button onClick={onClick}>{children}</button>;
-    },
+jest.mock('components/common/Navigation/Breadcrumb', () => ({
+    AutoBreadcrumbs: () => <div />,
 }));
 
 jest.mock('react-redux', () => ({
@@ -77,7 +79,7 @@ jest.mock('react-router', () => ({
     })),
     useRouteLoaderData: jest.fn((routeId) => {
         if (routeId === 'tenant-admin') {
-            return Promise.resolve([mockTenantOne, mockTenantTwo]);
+            return [mockTenantOne, mockTenantTwo];
         }
     }),
 }));

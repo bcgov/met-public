@@ -26,7 +26,7 @@ interface WidgetState {
 const Form = () => {
     const dispatch = useAppDispatch();
     const { widget, isLoadingTimelineWidget, timelineWidget } = useContext(TimelineContext);
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const [isCreating, setIsCreating] = React.useState(false);
 
     const newEvent: TimelineEvent = {
@@ -115,7 +115,7 @@ const Form = () => {
             setIsCreating(true);
             await saveTimelineWidget(data);
             setIsCreating(false);
-            handleWidgetDrawerOpen(false);
+            setWidgetDrawerOpen(false);
         } catch {
             dispatch(openNotification({ severity: 'error', text: 'An error occurred while trying to add the event' }));
             setIsCreating(false);
@@ -370,7 +370,7 @@ const Form = () => {
                                 </PrimaryButtonOld>
                             </Grid>
                             <Grid item>
-                                <SecondaryButtonOld onClick={() => handleWidgetDrawerOpen(false)}>
+                                <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>
                                     Cancel
                                 </SecondaryButtonOld>
                             </Grid>

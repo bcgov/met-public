@@ -147,7 +147,7 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <Button onClick={handleClose} disabled={isSaving} variant="secondary" size="small">
+                        <Button onClick={handleClose} disabled={isSaving} size="small">
                             Cancel
                         </Button>
                         <Button type="submit" variant="primary" size="small" loading={isSaving}>

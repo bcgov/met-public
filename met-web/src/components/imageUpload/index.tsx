@@ -3,11 +3,10 @@ import { CropModal } from './cropModal';
 import { ImageUploadContextProvider } from './imageUploadContext';
 import Uploader from './Uploader';
 import { Accept } from 'react-dropzone';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudUpload } from '@fortawesome/pro-regular-svg-icons';
+import fileUpload from 'assets/images/fileUpload.svg';
 import { colors } from 'components/common';
-import { BodyText } from 'components/common/Typography';
-import { Button } from 'components/common/Input';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input/Button';
 
 interface UploaderProps {
     margin?: number;
@@ -56,11 +55,11 @@ export const ImageUpload = ({
             cropAspectRatio={cropAspectRatio}
         >
             <Uploader height={height} accept={accept}>
-                <FontAwesomeIcon icon={faCloudUpload} size="2x" color={colors.surface.blue[90]} />
+                <img src={fileUpload} alt="" aria-hidden="true" style={{ color: colors.surface.blue[90] }} />
                 <BodyText
                     bold
                     size="small"
-                    sx={{ color: colors.surface.blue[90], textAlign: 'center', pl: '1rem', pr: '1rem' }}
+                    sx={{ color: colors.surface.blue[80], textAlign: 'center', pl: '1rem', pr: '1rem' }}
                 >
                     {helpText}
                 </BodyText>
@@ -70,7 +69,7 @@ export const ImageUpload = ({
                 >
                     Supported formats: JPG, PNG, WEBP
                 </BodyText>
-                <Button id="select-file-button" variant="secondary" size="small" sx={{ mt: '1.5em' }}>
+                <Button id="select-file-button" size="small" sx={{ mt: '1.5em' }}>
                     Select File
                 </Button>
             </Uploader>

@@ -7,7 +7,7 @@ import EventsInfoBlock from './EventsInfoBlock';
 import { WidgetTitle } from '../WidgetTitle';
 
 const Form = () => {
-    const { handleWidgetDrawerOpen } = useContext(WidgetDrawerContext);
+    const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
     const { setInPersonFormTabOpen, setVirtualSessionFormTabOpen, widget } = useContext(EventsContext);
 
     if (!widget) {
@@ -47,7 +47,7 @@ const Form = () => {
                 <Grid item>
                     <PrimaryButtonOld
                         onClick={() => {
-                            handleWidgetDrawerOpen(false);
+                            setWidgetDrawerOpen(false);
                         }}
                     >
                         Close

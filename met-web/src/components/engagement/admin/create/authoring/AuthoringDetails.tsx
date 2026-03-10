@@ -717,7 +717,11 @@ const AuthoringDetails = () => {
                                                 'content will be displayed below your primary content.'}
                                         </FormDescriptionText>
                                         <Grid sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                                            <WidgetPicker location={WidgetLocation.Details} />
+                                            <WidgetPicker
+                                                location={WidgetLocation.Details}
+                                                detailsTabId={tab.id > 0 ? tab.id : undefined}
+                                                tabIndex={key + 1}
+                                            />
                                         </Grid>
                                     </Grid>
                                 </TabPanel>

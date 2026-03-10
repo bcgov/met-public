@@ -2,6 +2,7 @@
 
 import json
 from http import HTTPStatus
+from flask import current_app
 
 from met_api.utils.enums import ContentType
 from tests.utilities.factory_utils import (
@@ -44,7 +45,7 @@ def test_create_survey_translation(client, jwt, session, setup_admin_user_and_cl
         'form_json': {'question': 'Your name?'},
         'pre_populate': False,
     }
-    print(data)
+    current_app.logger.info(data)
     rv = client.post(
         f'/api/surveys/{survey.id}/translations/',
         data=json.dumps(data),

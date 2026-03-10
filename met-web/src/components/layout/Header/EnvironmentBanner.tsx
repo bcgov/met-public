@@ -1,6 +1,8 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import { Palette } from 'styles/Theme';
+import Grid from '@mui/material/Grid2';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { BodyText } from 'components/common/Typography';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const EnvironmentBanner = () => {
     const host = window.location.hostname;
@@ -13,9 +15,25 @@ const EnvironmentBanner = () => {
         return <></>;
     }
     return (
-        <Box sx={{ backgroundColor: Palette.secondary.main, color: Palette.text.primary }} textAlign="center">
-            You are using a TEST environment (<strong>{host}</strong>)
-        </Box>
+        <Grid
+            container
+            direction="row"
+            gap={2}
+            padding={{ xs: '0 1em 0', md: '0 5vw 0', lg: '0 10em 0' }}
+            color={(theme) => theme.palette.warning.contrastText}
+            height="50px"
+            bgcolor="gold.10"
+            borderBottom="4px solid"
+            borderColor="warning.main"
+            textAlign="left"
+            alignItems="center"
+            lineHeight="28px"
+        >
+            <BodyText component="span" fontSize="22px" color="warning.dark">
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+            </BodyText>
+            <BodyText component="span">You are using a test environment.</BodyText>
+        </Grid>
     );
 };
 
