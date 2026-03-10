@@ -159,7 +159,7 @@ const openActionsFor = async (engagementId: number) => {
     const input = await waitFor(() => document.getElementById(`action-drop-down-${engagementId}`));
 
     if (!(input instanceof HTMLElement)) {
-        throw new Error(`#action-drop-down-${engagementId} is not an HTMLElement`);
+        throw new TypeError(`#action-drop-down-${engagementId} is not an HTMLElement`);
     }
 
     const root: HTMLElement = input.parentElement ?? input;
@@ -169,7 +169,7 @@ const openActionsFor = async (engagementId: number) => {
         root.querySelector('[role="combobox"]'); // fallback on some MUI builds
 
     if (!(trigger instanceof HTMLElement)) {
-        throw new Error(`Trigger element was not found.`);
+        throw new TypeError(`Trigger element was not found.`);
     }
 
     fireEvent.mouseDown(trigger);
