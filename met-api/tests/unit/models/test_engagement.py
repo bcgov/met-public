@@ -175,15 +175,19 @@ def test_get_engagements_metadata_match_all(session):
         'freeform': False,
         'filter_type': 'chips_all',
     })
-    # give every engagement some random metadata
+
+    # Use deterministic "noise" so we don't collide with the search values
     for eng in engagements:
         eng.metadata.append(EngagementMetadata(
-            taxon_id=taxon.id, value=fake.word()))
+            taxon_id=taxon.id, value='noise'))
 
-    # give alternating engagements a value we will search for
-    for eng in range(0, len(engagements), 2):
-        engagements[eng].metadata.append(EngagementMetadata(
-            taxon_id=taxon.id, value='test'))
+    # give alternating engagements the value we will search for
+    needle = 'test_metadata_search'
+    for i in range(0, len(engagements), 2):
+        engagements[i].metadata.append(EngagementMetadata(
+            taxon_id=taxon.id, value=needle))
+
+    session.flush()
 
     external_user_id = 123
     pagination_options = PaginationOptions(
@@ -193,7 +197,7 @@ def test_get_engagements_metadata_match_all(session):
         'metadata': [{
             'taxon_id': taxon.id,
             'filter_type': 'chips_all',
-            'values': ['test']
+            'values': [needle]
         }]
     }
 
@@ -209,18 +213,21 @@ def test_get_engagements_metadata_match_all(session):
     assert count == 5
 
     engagements[1].metadata.append(EngagementMetadata(
-        taxon_id=taxon.id, value='test'))
+        taxon_id=taxon.id, value=needle))
+    session.flush()
     _, count = refresh_engagements()
     assert count == 6
 
-    search_options['metadata'][0]['values'] = ['test', 'test2']
+    second = 'test2'
+    search_options['metadata'][0]['values'] = [needle, second]
     _, count = refresh_engagements()
     # This should find *all* matching values, so the inclusion of a non-matching
     # value "test2" should reduce the result to 0
     assert count == 0
 
     engagements[0].metadata.append(EngagementMetadata(
-        taxon_id=taxon.id, value='test2'))
+        taxon_id=taxon.id, value=second))
+    session.flush()
     _, count = refresh_engagements()
 
     # There should now be a single engagement with both "test" and "test2"
