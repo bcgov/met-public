@@ -1,7 +1,7 @@
 """Remove cascade delete from eng to survey and widget to widget type.
 
 Revision ID: 45a555233a81
-Revises: 6b80c03ea472
+Revises: f4a8b2e91c30
 Create Date: 2026-03-04 16:30:22.520315
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '45a555233a81'
-down_revision = '6b80c03ea472'
+down_revision = 'f4a8b2e91c30'
 branch_labels = None
 depends_on = None
 
