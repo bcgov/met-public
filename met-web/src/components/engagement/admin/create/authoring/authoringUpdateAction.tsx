@@ -99,6 +99,21 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         }
     }
 
+    // Update engagement subscribe section settings
+    if (formData.get('form_source') === 'subscribe') {
+        try {
+            await patchEngagement({
+                id: engagementId as unknown as number,
+                subscribe_section_header: (formData.get('subscribe_section_header') as string) || undefined,
+                subscribe_section_description: (formData.get('subscribe_section_description') as string) || undefined,
+                subscribe_consent_message: (formData.get('subscribe_consent_message') as string) || undefined,
+            });
+        } catch (e) {
+            console.error('Error updating engagement subscribe section', e);
+            errors.push(e);
+        }
+    }
+
     // Update engagement metadata if necessary.
     if (formData.get('metadata_value') && formData.get('taxon_id')) {
         try {

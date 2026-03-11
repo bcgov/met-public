@@ -29,6 +29,7 @@ export interface Engagement {
     status_block: EngagementStatusBlock[];
     is_internal: boolean;
     consent_message: string;
+    subscribe_consent_message?: string;
     sponsor_name: string;
     tenant_id: number;
     subscribe_section_shown?: boolean;
@@ -104,6 +105,7 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         status_block: [],
         is_internal: false,
         consent_message: '',
+        subscribe_consent_message: '',
         sponsor_name: sponsorName ?? '',
         tenant_id: 0,
     };

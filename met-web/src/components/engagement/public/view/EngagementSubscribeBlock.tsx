@@ -39,6 +39,10 @@ export const EngagementSubscribeBlock = () => {
                     );
                     const hasSubscribeDescription =
                         subscribeDescriptionEditorState?.getCurrentContent()?.hasText?.() ?? false;
+                    const consentMessageEditorState = getEditorStateFromRaw(
+                        resolvedEngagement.subscribe_consent_message || resolvedEngagement.consent_message || '',
+                    );
+                    const hasConsentMessage = consentMessageEditorState?.getCurrentContent()?.hasText?.() ?? false;
 
                     if (!resolvedEngagement.subscribe_section_shown && !isPreviewMode) {
                         return null;
@@ -100,14 +104,24 @@ export const EngagementSubscribeBlock = () => {
                                             Your Privacy
                                         </BodyText>
 
-                                        <BodyText sx={{ mb: '24px' }}>
-                                            <PreviewSwitch
-                                                hasValue={!!resolvedEngagement.consent_message}
-                                                value={resolvedEngagement.consent_message}
-                                                previewFallback={<TextPlaceholder text={defaultConsentMessage} />}
-                                                fallback={defaultConsentMessage}
-                                            />
-                                        </BodyText>
+                                        <PreviewRender
+                                            hasValue={hasConsentMessage}
+                                            value={
+                                                <RichTextArea
+                                                    toolbarHidden
+                                                    readOnly
+                                                    editorState={consentMessageEditorState}
+                                                />
+                                            }
+                                            previewFallback={
+                                                <BodyText>
+                                                    <TextPlaceholder text={defaultConsentMessage} />
+                                                </BodyText>
+                                            }
+                                            fallback={<BodyText>{defaultConsentMessage}</BodyText>}
+                                        >
+                                            {(content) => <Box sx={{ mb: '24px' }}>{content}</Box>}
+                                        </PreviewRender>
 
                                         <Box sx={{ mb: '20px' }}>
                                             <FormControlLabel
