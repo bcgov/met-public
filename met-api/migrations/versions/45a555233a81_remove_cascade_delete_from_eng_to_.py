@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.drop_constraint('survey_engagement_id_fkey', 'survey', type_='foreignkey')
+    _drop_matching_foreign_keys('survey', 'engagement_id', 'engagement')
     op.create_foreign_key(
         'survey_engagement_id_fkey',
         'survey',
@@ -27,7 +27,7 @@ def upgrade():
         ondelete='SET NULL'
     )
 
-    op.drop_constraint('widget_widget_type_id_fkey', 'widget', type_='foreignkey')
+    _drop_matching_foreign_keys('widget', 'widget_type_id', 'widget_type')
     op.create_foreign_key(
         'widget_widget_type_id_fkey',
         'widget',
@@ -39,7 +39,7 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_constraint('survey_engagement_id_fkey', 'survey', type_='foreignkey')
+    _drop_matching_foreign_keys('survey', 'engagement_id', 'engagement')
     op.create_foreign_key(
         'survey_engagement_id_fkey',
         'survey',
@@ -49,7 +49,7 @@ def downgrade():
         ondelete='CASCADE'
     )
 
-    op.drop_constraint('widget_widget_type_id_fkey', 'widget', type_='foreignkey')
+    _drop_matching_foreign_keys('widget', 'widget_type_id', 'widget_type')
     op.create_foreign_key(
         'widget_widget_type_id_fkey',
         'widget',
@@ -58,3 +58,22 @@ def downgrade():
         ['id'],
         ondelete='CASCADE'
     )
+
+
+def _drop_matching_foreign_keys(table_name, local_column, referred_table):
+    """Drop FK constraints for a specific local column and referenced table."""
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    foreign_keys = inspector.get_foreign_keys(table_name)
+
+    for foreign_key in foreign_keys:
+        name = foreign_key.get('name')
+        constrained_columns = foreign_key.get('constrained_columns') or []
+        current_referred_table = foreign_key.get('referred_table')
+
+        if (
+            name
+            and local_column in constrained_columns
+            and current_referred_table == referred_table
+        ):
+            op.drop_constraint(name, table_name, type_='foreignkey')
