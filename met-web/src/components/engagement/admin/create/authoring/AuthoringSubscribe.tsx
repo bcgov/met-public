@@ -3,7 +3,7 @@ import { colors } from 'components/common';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
-import { BodyText, ErrorMessage, EyebrowText as FormDescriptionText, Header3 } from 'components/common/Typography';
+import { BodyText, ErrorMessage, Header3 } from 'components/common/Typography';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { ContentState, EditorState } from 'draft-js';
 import React, { useEffect } from 'react';
