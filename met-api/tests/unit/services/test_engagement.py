@@ -24,6 +24,7 @@ from faker import Faker
 
 from met_api.models import db
 from met_api.models.engagement import Engagement
+from met_api.utils.roles import Role
 from met_api.services import authorization
 from met_api.services.engagement_service import EngagementService
 from tests.utilities.factory_scenarios import TestEngagementInfo, TestJwtClaims
@@ -142,3 +143,18 @@ def test_delete_failure_production_environment(db, monkeypatch, mocker):
                 'It is either read-protected or not readable by the server.')
 
     assert expected in desc
+
+
+def test_get_scope_options_super_admin_unrestricted():
+    """Assert that super admin can list all tenant engagements."""
+    scope_options = EngagementService._get_scope_options({Role.SUPER_ADMIN.value}, has_team_access=False)
+
+    assert scope_options.restricted is False
+    assert scope_options.include_assigned is False
+
+
+def test_get_scope_options_super_admin_overrides_team_access():
+    """Assert super admin remains unrestricted even when team access filter is requested."""
+    scope_options = EngagementService._get_scope_options({Role.SUPER_ADMIN.value}, has_team_access=True)
+
+    assert scope_options.restricted is False
