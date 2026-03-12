@@ -68,7 +68,7 @@ class Engagement(BaseModel):
     tenant = db.relationship('Tenant', backref='engagements')
     is_internal = db.Column(db.Boolean, nullable=False)
     consent_message = db.Column(JSON, unique=False, nullable=True)
-    subscribe_section_header = db.Column(db.String(60), unique=False, nullable=True)
+    subscribe_section_heading = db.Column(db.String(60), unique=False, nullable=True)
     subscribe_section_description = db.Column(JSON, unique=False, nullable=True)
     subscribe_consent_message = db.Column(JSON, unique=False, nullable=True)
     sponsor_name = db.Column(db.String(50), nullable=True)
@@ -164,8 +164,8 @@ class Engagement(BaseModel):
             'is_internal': engagement.get('is_internal', record.is_internal),
             'consent_message': engagement.get(
                 'consent_message', record.consent_message),
-            'subscribe_section_header': engagement.get(
-                'subscribe_section_header', record.subscribe_section_header),
+            'subscribe_section_heading': engagement.get(
+                'subscribe_section_heading', record.subscribe_section_heading),
             'subscribe_section_description': engagement.get(
                 'subscribe_section_description', record.subscribe_section_description),
             'subscribe_consent_message': engagement.get(

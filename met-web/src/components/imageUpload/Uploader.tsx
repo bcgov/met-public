@@ -8,8 +8,9 @@ interface UploaderProps {
     height?: string;
     accept?: Accept;
     children: React.ReactNode;
+    bgColor?: string;
 }
-const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => {
+const Uploader = ({ height = '10em', bgColor = 'blue.10', accept = {}, children }: UploaderProps) => {
     const {
         handleAddFile,
         addedImageFileUrl,
@@ -117,7 +118,7 @@ const Uploader = ({ height = '10em', accept = {}, children }: UploaderProps) => 
                             borderRadius: '8px',
                             border: '2px dashed',
                             borderColor: 'gray.80',
-                            backgroundColor: 'blue.10',
+                            backgroundColor: bgColor,
                             height: height,
                             cursor: 'pointer',
                         }}

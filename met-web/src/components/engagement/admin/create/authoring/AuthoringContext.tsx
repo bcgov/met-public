@@ -59,6 +59,18 @@ const feedbackSchema = yup.object({
     selected_survey_id: yup.number().typeError('Please select a valid survey or the None option.').integer(),
 });
 
+const subscribeSchema = yup.object({
+    id: yup.number().required(),
+    subscribe_section_heading: yup.string().required().max(60),
+    subscribe_section_description: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
+        return value?.getCurrentContent()?.hasText();
+    }),
+    subscribe_consent_message: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
+        return value?.getCurrentContent()?.hasText();
+    }),
+    form_source: yup.string().required(),
+});
+
 const authoringTemplateSchema = yup.object({
     name: yup.string().required('Engagement title is required'),
     eyebrow: yup.string().nullable().max(40, 'Eyebrow text must be 40 characters or less'),
@@ -112,6 +124,7 @@ export interface EngagementUpdateData
     extends
         yup.TypeOf<typeof authoringTemplateSchema>,
         yup.TypeOf<typeof feedbackSchema>,
+        yup.TypeOf<typeof subscribeSchema>,
         yup.TypeOf<typeof summarySchema>,
         yup.TypeOf<typeof detailsTabsSchema> {
     id: number;
@@ -143,6 +156,9 @@ export interface EngagementUpdateData
     feedback_third_party_cta_text: string;
     feedback_third_party_cta_link: string;
     feedback_widget_type: string;
+    subscribe_section_heading: string;
+    subscribe_section_description: EditorState;
+    subscribe_consent_message: EditorState;
     form_source: string;
 }
 
@@ -199,6 +215,10 @@ export const defaultValuesObject = {
     feedback_third_party_cta_text: '',
     feedback_third_party_cta_link: '',
     feedback_widget_type: '',
+    // Subscribe fields
+    subscribe_section_heading: '',
+    subscribe_section_description: EditorState.createEmpty(),
+    subscribe_consent_message: EditorState.createEmpty(),
     // Determines which page the form is being sent from
     form_source: '',
 } as EngagementUpdateData;
@@ -241,6 +261,8 @@ export const AuthoringContext = () => {
                 return yupResolver(summarySchema) as unknown as Resolver<EngagementUpdateData>;
             case 'details':
                 return yupResolver(detailsTabsSchema) as unknown as Resolver<EngagementUpdateData>;
+            case 'subscribe':
+                return yupResolver(subscribeSchema) as unknown as Resolver<EngagementUpdateData>;
             default:
                 return undefined;
         }
@@ -302,6 +324,14 @@ export const AuthoringContext = () => {
                     data.feedback_body && JSON.stringify(convertToRaw(data.feedback_body.getCurrentContent())),
                 surveys: JSON.stringify(data.surveys),
                 selected_survey_id: data.selected_survey_id?.toString() || '',
+
+                subscribe_section_heading: data.subscribe_section_heading || '',
+                subscribe_section_description:
+                    data.subscribe_section_description &&
+                    JSON.stringify(convertToRaw(data.subscribe_section_description.getCurrentContent())),
+                subscribe_consent_message:
+                    data.subscribe_consent_message &&
+                    JSON.stringify(convertToRaw(data.subscribe_consent_message.getCurrentContent())),
 
                 details_tabs: JSON.stringify(
                     data.details_tabs.map((tab) => ({

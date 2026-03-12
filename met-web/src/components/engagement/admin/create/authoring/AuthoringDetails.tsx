@@ -1,5 +1,5 @@
 import { Box, FormControlLabel, Grid2 as Grid, IconButton, Modal, Radio, RadioGroup, Tab } from '@mui/material';
-import { ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { BodyText, ErrorMessage } from 'components/common/Typography';
 import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
@@ -272,17 +272,6 @@ const AuthoringDetails = () => {
         list: { options: ['unordered', 'ordered'] },
     };
 
-    // Styles
-
-    const heading3Styles = {
-        pb: '1rem',
-        fontWeight: 'bold',
-    };
-
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-    };
-
     const tabRadioContainerStyles = {
         display: 'flex',
         width: '100%',
@@ -298,7 +287,6 @@ const AuthoringDetails = () => {
     const tabListStyles = {
         display: tabsEnabled ? 'flex' : 'none',
         borderBottom: `1px solid ${Palette.primary.main}`,
-        margin: '1rem 0',
         '& .MuiTabs-flexContainer': {
             flexWrap: 'wrap', // For 7-10 tabs, a second line of tabs is required.
             marginBottom: '-12px',
@@ -342,7 +330,7 @@ const AuthoringDetails = () => {
         borderRadius: '0px 16px 0px 0px',
         background: 'transparent',
         fontWeight: 'normal',
-        fontSize: '0.9rem',
+        fontSize: '0.875rem',
         padding: '0',
         mb: '0.75rem',
         display: 'flex',
@@ -370,13 +358,6 @@ const AuthoringDetails = () => {
 
     const labelSectionStyles: React.CSSProperties = {
         display: tabsEnabled ? 'flex' : 'none',
-    };
-
-    const authoringFormContainerStyles = {
-        gap: 0,
-        '& .met-input-form-field-title': { fontSize: '0.875rem' },
-        '& .met-input-text': { background: 'white' },
-        '& #image-upload-section .MuiGrid-container': { background: 'white' },
     };
 
     const closeTabXContainer = {
@@ -459,63 +440,60 @@ const AuthoringDetails = () => {
             {/* prevent navigating away when the user has unsaved work */}
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
-            {/* Tabs and form */}
-            <AuthoringFormContainer sx={authoringFormContainerStyles}>
+            <AuthoringFormContainer rowGap="1rem" mb="1rem">
+                <BodyText size="small">
+                    In the Details Section of your engagement, you have the option to display your content in a normal,
+                    static page section view (no tabs) or, for lengthy content, use tabs. You may wish to use tabs if
+                    your content is quite lengthy so you can organize it into smaller, more digestible chunks and reduce
+                    the length of your engagement page.
+                </BodyText>
                 {/* Tabs mode radio selector */}
-                <Grid sx={{ margin: '1rem 0' }}>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        {'In the Details Section of your engagement, you have the option to display your content in a ' +
-                            'normal, static page section view (no tabs) or, for lengthy content, use tabs. You may wish ' +
-                            'to use tabs if your content is quite lengthy so you can organize it into smaller, more ' +
-                            'digestible chunks and reduce the length of your engagement page.'}
-                    </FormDescriptionText>
-                    <RadioGroup
-                        row
-                        aria-label="Tab Mode Selector"
-                        id="tab_mode_selector"
-                        sx={tabRadioContainerStyles}
-                        value={tabsEnabled ? 'true' : 'false'}
-                        onChange={(_, value) => {
-                            value === 'true' ? enableTabs() : disableTabs();
-                        }}
-                    >
-                        <FormControlLabel
-                            value="false"
-                            control={<Radio />}
-                            label={<span style={{ fontWeight: 'bold' }}>No Tabs</span>}
-                            style={radioStyles}
-                        />
-                        <FormControlLabel
-                            value="true"
-                            control={<Radio />}
-                            label={
-                                <>
-                                    <span style={{ fontWeight: 'bold' }}>Tabs </span>
-                                    <span>(2 Minimum)</span>
-                                </>
-                            }
-                            style={radioStyles}
-                        />
-                    </RadioGroup>
-                </Grid>
+                <RadioGroup
+                    row
+                    aria-label="Tab Mode Selector"
+                    id="tab_mode_selector"
+                    sx={tabRadioContainerStyles}
+                    value={tabsEnabled ? 'true' : 'false'}
+                    onChange={(_, value) => {
+                        value === 'true' ? enableTabs() : disableTabs();
+                    }}
+                >
+                    <FormControlLabel
+                        value="false"
+                        control={<Radio color="info" />}
+                        label={<span style={{ fontWeight: 'bold' }}>No Tabs</span>}
+                        style={radioStyles}
+                    />
+                    <FormControlLabel
+                        value="true"
+                        control={<Radio color="info" />}
+                        label={
+                            <>
+                                <span style={{ fontWeight: 'bold' }}>Tabs </span>
+                                <span>(2 Minimum)</span>
+                            </>
+                        }
+                        style={radioStyles}
+                    />
+                </RadioGroup>
+            </AuthoringFormContainer>
 
-                {/* Tab instructions */}
-                {tabsEnabled && (
-                    <Grid sx={{ margin: '1rem 0' }}>
-                        <div ref={tabErrorsRef}></div>
-                        <Header3 sx={heading3Styles}>Tabs Configuration</Header3>
-                        <FormDescriptionText style={formDescriptionTextStyles}>
-                            {'If your audience will need additional context to interpret the topic of your ' +
-                                'engagement, or it is important for them to understand who, within BC Gov, is ' +
-                                'requesting feedback, you may wish to add two to five words of eyebrow text.'}
-                        </FormDescriptionText>
-                    </Grid>
-                )}
-
-                {currentTab && (
-                    <Grid>
-                        <TabContext value={currentTab}>
-                            {/* Tab labels */}
+            {/* Tab instructions */}
+            {currentTab && (
+                <TabContext value={currentTab}>
+                    <AuthoringFormContainer rowSpacing="2rem" pt="0.5rem">
+                        {tabsEnabled && (
+                            <Grid container rowSpacing="0.5rem">
+                                <div ref={tabErrorsRef}></div>
+                                <Header3 weight="bold">Tabs Configuration</Header3>
+                                <BodyText size="small">
+                                    You must have a minimum of two tabs to use the tabs configuration. To add additional
+                                    tabs, select the Add Tab button. To remove a tab you have added, select the “X”
+                                    button beside the tab label.
+                                </BodyText>
+                            </Grid>
+                        )}
+                        {tabsEnabled && (
                             <ErrorMessage
                                 error={
                                     errors?.details_tabs &&
@@ -525,211 +503,208 @@ const AuthoringDetails = () => {
                                         : ''
                                 }
                             />
-                            <TabList
-                                id="details-tab-list"
-                                sx={tabListStyles}
-                                selectionFollowsFocus
-                                slotProps={{ indicator: { style: { display: 'none' } } }}
-                                onChange={(_, value: string) => {
-                                    if (value !== 'add') {
-                                        setCurrentTab(String(value));
-                                    }
-                                }}
-                            >
-                                {authoringDetailsTabs.map((value, key) => (
-                                    <Tab
-                                        component="button"
-                                        aria-label={`${value.label || 'Tab ' + key} is selected. Press the delete key to remove.`}
-                                        key={String(key)}
-                                        value={String(key)}
-                                        onKeyDown={(event) => {
-                                            tabKeyDown(event, 'tab', key);
-                                        }}
-                                        disableFocusRipple
-                                        ref={currentTab === String(key) ? selectedTabRef : null}
-                                        // Add an X when appropriate: not on first tab, only if there are 3 or more tabs.
-                                        label={
-                                            <Box sx={closeTabXContainer}>
-                                                <span>{value.label}</span>
-                                                {key !== 0 && authoringDetailsTabs.length > 2 ? (
-                                                    <IconButton
-                                                        component="span"
-                                                        focusVisibleClassName="activated-x"
-                                                        sx={iconButtonStyles}
-                                                        disableRipple
-                                                        tabIndex={currentTab === String(key) ? 0 : -1}
-                                                        size="small"
-                                                        edge="end"
-                                                        aria-label={`Remove tab: ${value.label || key + 1}.`}
-                                                        onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            removeTab(event, key);
-                                                        }}
-                                                        onKeyDown={(event) => {
-                                                            tabKeyDown(event, 'tabx', key);
-                                                        }}
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            style={{ ...fontAwesomeXStyles }}
-                                                            icon={faXmark}
-                                                        />
-                                                    </IconButton>
-                                                ) : null}
-                                            </Box>
-                                        }
-                                        // Colour the tab labels red if they contain errors so the user sees them from another tab.
-                                        sx={{
-                                            ...tabStyles,
-                                            backgroundColor: errors.details_tabs?.[key]
-                                                ? colors.button.error.tint
-                                                : 'gray.10',
-                                            '&.Mui-selected': {
-                                                backgroundColor: errors.details_tabs?.[key]
-                                                    ? colors.button.error.shade
-                                                    : 'primary.main',
-                                                borderColor: 'primary.main',
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                            },
-                                        }}
-                                    ></Tab>
-                                ))}
-
+                        )}
+                        {/* Tabs and form */}
+                        <TabList
+                            id="details-tab-list"
+                            sx={tabListStyles}
+                            selectionFollowsFocus
+                            slotProps={{ indicator: { style: { display: 'none' } } }}
+                            onChange={(_, value: string) => {
+                                if (value !== 'add') {
+                                    setCurrentTab(String(value));
+                                }
+                            }}
+                        >
+                            {authoringDetailsTabs.map((value, key) => (
                                 <Tab
-                                    value="add"
-                                    label="+ Add Tab"
-                                    aria-label="Add a new tab."
-                                    disabled={authoringDetailsTabs.length > 9}
-                                    disableRipple
-                                    sx={{ ...addTabButtonStyles }}
-                                    onClick={() => addTab()}
-                                    onKeyDown={(event) => tabKeyDown(event, 'add')}
-                                />
-                            </TabList>
-
-                            {/* Tab contents */}
-                            {authoringDetailsTabs.map((tab, key) => (
-                                <TabPanel sx={tabPanelStyles} value={String(key)} key={key}>
-                                    <AuthoringFormSection
-                                        name={`Tab ${key + 1} Label`}
-                                        required={true}
-                                        labelFor={`details_tabs.${key}.label`}
-                                        style={labelSectionStyles}
-                                    >
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            Your tab label should be one or two words (maximum three).
-                                        </FormDescriptionText>
-                                        <Controller
-                                            name={`details_tabs.${key}.label`}
-                                            control={control}
-                                            render={({ field }) => (
-                                                <TextField
-                                                    {...field}
-                                                    sx={{ backgroundColor: colors.surface.white }}
-                                                    id={`details_tabs.${key}.label`}
-                                                    aria-label={`Tab ${key + 1} Label`}
-                                                    onChange={(value) => {
-                                                        field.onChange(value);
-                                                        labelChange(value, key);
+                                    component="button"
+                                    aria-label={`${value.label || 'Tab ' + key} is selected. Press the delete key to remove.`}
+                                    key={String(key)}
+                                    value={String(key)}
+                                    onKeyDown={(event) => {
+                                        tabKeyDown(event, 'tab', key);
+                                    }}
+                                    disableFocusRipple
+                                    ref={currentTab === String(key) ? selectedTabRef : null}
+                                    // Add an X when appropriate: not on first tab, only if there are 3 or more tabs.
+                                    label={
+                                        <Box sx={closeTabXContainer}>
+                                            <span>{value.label}</span>
+                                            {key !== 0 && authoringDetailsTabs.length > 2 ? (
+                                                <IconButton
+                                                    component="span"
+                                                    focusVisibleClassName="activated-x"
+                                                    sx={iconButtonStyles}
+                                                    disableRipple
+                                                    tabIndex={currentTab === String(key) ? 0 : -1}
+                                                    size="small"
+                                                    edge="end"
+                                                    aria-label={`Remove tab: ${value.label || key + 1}.`}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        removeTab(event, key);
                                                     }}
-                                                    counter
-                                                    maxLength={20}
-                                                    placeholder={`${tab.label} Label`}
-                                                    error={errors.details_tabs?.[key]?.label?.message ?? ''}
-                                                />
-                                            )}
-                                        />
-                                    </AuthoringFormSection>
-
-                                    <Grid sx={{ margin: '1rem 0' }}>
-                                        <Header3 sx={heading3Styles}>Primary Content (Required)</Header3>
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            {'Primary content will display on the left two thirds of the page on large screens ' +
-                                                'and full width on small screens. (If you add optional supporting content in the section ' +
-                                                'below, on small screens, your primary content will display first (on top) followed ' +
-                                                'by your supporting content (underneath).'}
-                                        </FormDescriptionText>
-                                    </Grid>
-
-                                    <AuthoringFormSection
-                                        name="Heading"
-                                        required={true}
-                                        labelFor={`details_tabs.${key}.heading`}
-                                    >
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            Your heading should be descriptive, short and succinct.
-                                        </FormDescriptionText>
-                                        <Controller
-                                            name={`details_tabs.${key}.heading`}
-                                            control={control}
-                                            render={({ field }) => (
-                                                <TextField
-                                                    {...field}
-                                                    sx={{ backgroundColor: colors.surface.white }}
-                                                    id={`details_tabs.${key}.heading`}
-                                                    aria-label={`Tab ${key + 1} Heading`}
-                                                    counter
-                                                    maxLength={60}
-                                                    placeholder="Heading"
-                                                    error={errors?.details_tabs?.[key]?.heading?.message ?? ''}
-                                                />
-                                            )}
-                                        />
-                                    </AuthoringFormSection>
-
-                                    <AuthoringFormSection
-                                        name="Body Copy"
-                                        required={true}
-                                        labelFor={`details_tabs.${key}.body`}
-                                    >
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            {'If the content you add for this tab is quite long, a "read more" expander will be ' +
-                                                'added to your content at approximately xx (large screens) and xx (small screens). ' +
-                                                'In this case, you will want to ensure that the most important body copy is first so ' +
-                                                'that your audience will see it even if they do not interact with the Read More expander.'}
-                                        </FormDescriptionText>
-                                        <ErrorMessage error={errors?.details_tabs?.[key]?.body?.message ?? ''} />
-                                        <Controller
-                                            name={`details_tabs.${key}.body`}
-                                            control={control}
-                                            render={({ field }) => (
-                                                <RichTextArea
-                                                    spellCheck
-                                                    editorState={field.value}
-                                                    aria-label={`Tab ${key + 1} Body`}
-                                                    onEditorStateChange={(value) => {
-                                                        field.onChange(editorChange(value, key));
+                                                    onKeyDown={(event) => {
+                                                        tabKeyDown(event, 'tabx', key);
                                                     }}
-                                                    handlePastedText={() => false}
-                                                    toolbar={toolbar}
-                                                    placeholder="Body Copy"
-                                                />
-                                            )}
-                                        />
-                                    </AuthoringFormSection>
-
-                                    {/* Todo: Replace with streamlined widget selector that saves on form save */}
-                                    <Grid sx={{ mt: '1rem' }}>
-                                        <Header3 sx={heading3Styles}>Supporting Content (Optional)</Header3>
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            {'You may use a widget to add supporting content to your primary content. On large screens ' +
-                                                'this content will be displayed to the right of your primary content. On small screens this ' +
-                                                'content will be displayed below your primary content.'}
-                                        </FormDescriptionText>
-                                        <Grid sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                                            <WidgetPicker
-                                                location={WidgetLocation.Details}
-                                                detailsTabId={tab.id > 0 ? tab.id : undefined}
-                                                tabIndex={key + 1}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </TabPanel>
+                                                >
+                                                    <FontAwesomeIcon style={{ ...fontAwesomeXStyles }} icon={faXmark} />
+                                                </IconButton>
+                                            ) : null}
+                                        </Box>
+                                    }
+                                    // Colour the tab labels red if they contain errors so the user sees them from another tab.
+                                    sx={{
+                                        ...tabStyles,
+                                        backgroundColor: errors.details_tabs?.[key]
+                                            ? colors.button.error.tint
+                                            : 'gray.10',
+                                        '&.Mui-selected': {
+                                            backgroundColor: errors.details_tabs?.[key]
+                                                ? colors.button.error.shade
+                                                : 'primary.main',
+                                            borderColor: 'primary.main',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                        },
+                                    }}
+                                ></Tab>
                             ))}
-                        </TabContext>
-                    </Grid>
-                )}
-            </AuthoringFormContainer>
+
+                            <Tab
+                                value="add"
+                                label="+ Add Tab"
+                                aria-label="Add a new tab."
+                                disabled={authoringDetailsTabs.length > 9}
+                                disableRipple
+                                sx={{ ...addTabButtonStyles }}
+                                onClick={() => addTab()}
+                                onKeyDown={(event) => tabKeyDown(event, 'add')}
+                            />
+                        </TabList>
+                    </AuthoringFormContainer>
+
+                    {/* Tab contents */}
+                    {authoringDetailsTabs.map((tab, key) => (
+                        <TabPanel sx={tabPanelStyles} value={String(key)} key={key}>
+                            <AuthoringFormContainer pt="2rem" pb="2.5rem">
+                                <AuthoringFormSection
+                                    name={`Tab ${key + 1} Label`}
+                                    required={true}
+                                    labelFor={`details_tabs.${key}.label`}
+                                    style={labelSectionStyles}
+                                    details="Your tab label should be one or two words (maximum three)."
+                                >
+                                    <Controller
+                                        name={`details_tabs.${key}.label`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <TextField
+                                                {...field}
+                                                sx={{ backgroundColor: colors.surface.white }}
+                                                id={`details_tabs.${key}.label`}
+                                                aria-label={`Tab ${key + 1} Label`}
+                                                onChange={(value) => {
+                                                    field.onChange(value);
+                                                    labelChange(value, key);
+                                                }}
+                                                counter
+                                                maxLength={20}
+                                                placeholder={`${tab.label} Label`}
+                                                error={errors.details_tabs?.[key]?.label?.message ?? ''}
+                                            />
+                                        )}
+                                    />
+                                </AuthoringFormSection>
+                                <Grid container direction="column" gap="0.5rem">
+                                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                                    <BodyText size="small">
+                                        {'Primary content will display on the left two thirds of the page on large screens ' +
+                                            'and full width on small screens. (If you add optional supporting content in the section ' +
+                                            'below, on small screens, your primary content will display first (on top) followed ' +
+                                            'by your supporting content (underneath).'}
+                                    </BodyText>
+                                </Grid>
+
+                                <AuthoringFormSection
+                                    name="Heading"
+                                    required={true}
+                                    labelFor={`details_tabs.${key}.heading`}
+                                    details="Your heading should be descriptive, short and succinct."
+                                >
+                                    <Controller
+                                        name={`details_tabs.${key}.heading`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <TextField
+                                                {...field}
+                                                sx={{ backgroundColor: colors.surface.white }}
+                                                id={`details_tabs.${key}.heading`}
+                                                aria-label={`Tab ${key + 1} Heading`}
+                                                counter
+                                                maxLength={60}
+                                                placeholder="Heading"
+                                                error={errors?.details_tabs?.[key]?.heading?.message ?? ''}
+                                            />
+                                        )}
+                                    />
+                                </AuthoringFormSection>
+
+                                <AuthoringFormSection
+                                    name="Body Copy"
+                                    required={true}
+                                    labelFor={`details_tabs.${key}.body`}
+                                    details={
+                                        'If the content you add for this tab is quite long, a "read more" expander will be ' +
+                                        'added to your content at approximately xx (large screens) and xx (small screens). ' +
+                                        'In this case, you will want to ensure that the most important body copy is first so ' +
+                                        'that your audience will see it even if they do not interact with the Read More expander.'
+                                    }
+                                >
+                                    <ErrorMessage error={errors?.details_tabs?.[key]?.body?.message ?? ''} />
+                                    <Controller
+                                        name={`details_tabs.${key}.body`}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <RichTextArea
+                                                spellCheck
+                                                editorState={field.value}
+                                                aria-label={`Tab ${key + 1} Body`}
+                                                onEditorStateChange={(value) => {
+                                                    field.onChange(editorChange(value, key));
+                                                }}
+                                                handlePastedText={() => false}
+                                                toolbar={toolbar}
+                                                placeholder="Body Copy"
+                                            />
+                                        )}
+                                    />
+                                </AuthoringFormSection>
+                            </AuthoringFormContainer>
+
+                            {/* Todo: Replace with streamlined widget selector that saves on form save */}
+                            <AuthoringFormContainer>
+                                <Grid container direction="column" gap="0.5rem">
+                                    <Header3 weight="bold">Supporting Content (Optional)</Header3>
+                                    <BodyText size="small">
+                                        You may use a widget to add supporting content to your primary content. On large
+                                        screens this content will be displayed to the right of your primary content. On
+                                        small screens this content will be displayed below your primary content.
+                                    </BodyText>
+                                </Grid>
+                                <Grid>
+                                    <WidgetPicker
+                                        location={WidgetLocation.Details}
+                                        detailsTabId={tab.id > 0 ? tab.id : undefined}
+                                        tabIndex={key + 1}
+                                    />
+                                </Grid>
+                            </AuthoringFormContainer>
+                        </TabPanel>
+                    ))}
+                </TabContext>
+            )}
         </>
     );
 };

@@ -212,7 +212,7 @@ class EngagementService:
             banner_filename=engagement_data.get('banner_filename', None),
             is_internal=engagement_data.get('is_internal', False),
             consent_message=engagement_data.get('consent_message', None),
-            subscribe_section_header=engagement_data.get('subscribe_section_header', None),
+            subscribe_section_heading=engagement_data.get('subscribe_section_heading', None),
             subscribe_section_description=engagement_data.get('subscribe_section_description', None),
             subscribe_consent_message=engagement_data.get(
                 'subscribe_consent_message',

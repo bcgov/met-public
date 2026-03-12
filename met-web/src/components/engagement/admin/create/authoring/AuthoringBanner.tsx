@@ -114,13 +114,7 @@ const AuthoringBanner = () => {
             {/* prevent navigating away when the user has unsaved work */}
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
-            <AuthoringFormContainer
-                sx={{
-                    '& .met-input-form-field-title': { fontSize: '0.875rem' },
-                    '& .met-input-text': { background: 'white' },
-                    '& #image-upload-section .MuiGrid-container': { background: 'white' },
-                }}
-            >
+            <AuthoringFormContainer>
                 <AuthoringFormSection
                     required
                     name="Engagement Title"
@@ -183,6 +177,7 @@ const AuthoringBanner = () => {
                         <Await resolve={engagement}>
                             {(eng: Engagement) => (
                                 <ImageUpload
+                                    bgColor='background.default'
                                     margin={4}
                                     data-testid="engagement-form/image-upload"
                                     handleAddFile={handleAddBannerImage}
@@ -211,7 +206,7 @@ const AuthoringBanner = () => {
                         'audience to come back later to provide feedback.'
                     }
                 >
-                    <BodyText size="small" bold sx={{ mb: -2 }}>
+                    <BodyText size="small" bold>
                         Message Text
                     </BodyText>
                     <ErrorMessage error={errors._upcoming_message_plain?.message} />
@@ -350,7 +345,7 @@ const AuthoringBanner = () => {
                         'your engagement audience to come back later to view the results of your engagement.'
                     }
                 >
-                    <BodyText size="small" bold sx={{ mb: -2 }}>
+                    <BodyText size="small" bold>
                         Message Text
                     </BodyText>
                     <ErrorMessage error={errors._closed_message_plain?.message} />

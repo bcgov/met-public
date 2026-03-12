@@ -68,8 +68,8 @@ export const EngagementSubscribeBlock = () => {
                                 <Grid size={{ xs: 12, lg: 3.5 }}>
                                     <Header2 weight="thin" decorated sx={{ mb: '24px' }}>
                                         <PreviewSwitch
-                                            hasValue={!!resolvedEngagement.subscribe_section_header}
-                                            value={resolvedEngagement.subscribe_section_header}
+                                            hasValue={!!resolvedEngagement.subscribe_section_heading}
+                                            value={resolvedEngagement.subscribe_section_heading}
                                             previewFallback={<TextPlaceholder text="Subscribe Section" />}
                                             fallback="Subscribe Section"
                                         />

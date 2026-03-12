@@ -123,7 +123,7 @@ export const Header3 = ({
             component={component || 'h3'}
             variant="h3"
             lineHeight={1.5}
-            fontSize="1.375rem"
+            fontSize="1.25rem"
             fontStyle="normal"
             fontWeight={fontWeight(weight)}
             {...props}

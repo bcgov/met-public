@@ -12,9 +12,10 @@ import { useOutletContext } from 'react-router';
 import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { AuthoringTemplateOutletContext } from './types';
+import { tryParse } from './utils';
 
 type SubscribeAuthoringData = EngagementUpdateData & {
-    subscribe_section_header: string;
+    subscribe_section_heading: string;
     subscribe_section_description: EditorState;
     subscribe_consent_message: EditorState;
 };
@@ -41,22 +42,12 @@ const AuthoringSubscribe = () => {
         reset(defaultValuesObject);
         setValue('form_source', pageName);
         setValue('id', Number(eng.id));
-        setValue('subscribe_section_header', eng.subscribe_section_header || '');
+        setValue('subscribe_section_heading', eng.subscribe_section_heading || '');
         setValue('subscribe_section_description', getEditorState(eng.subscribe_section_description));
         setValue('subscribe_consent_message', getEditorState(eng.subscribe_consent_message || eng.consent_message));
         setDefaultValues(getValues());
         reset(getValues());
     }, [eng, pageName]);
-
-    const tryParse = (json: string) => {
-        try {
-            const object = JSON.parse(json);
-            if (object && typeof object === 'object') {
-                return object;
-            }
-        } catch {}
-        return false;
-    };
 
     const getEditorState = (value?: string) => {
         if (!value) {
@@ -70,15 +61,6 @@ const AuthoringSubscribe = () => {
         return EditorState.createWithContent(ContentState.createFromText(value));
     };
 
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-    };
-    const authoringFormContainerStyles = {
-        gap: 0,
-        '& .met-input-form-field-title': { fontSize: '0.875rem' },
-        '& .met-input-text': { background: 'white' },
-    };
     const toolbar = {
         options: ['inline', 'list', 'link', 'blockType', 'history'],
         inline: {
@@ -92,29 +74,37 @@ const AuthoringSubscribe = () => {
         <>
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
-            <AuthoringFormContainer sx={authoringFormContainerStyles}>
-                <Grid sx={{ mt: '1rem' }}>
-                    <Header3 style={metHeader3Styles}>Primary Content (Required)</Header3>
+            <AuthoringFormContainer>
+                <Grid container direction="column" mt="1rem">
+                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <BodyText size="small">
+                        The content in this section will be shown to users in the subscription section. It should
+                        include a heading and some body copy that encourages users to subscribe to updates about the
+                        engagement. Also include any necessary information about the update process or what users can
+                        expect after subscribing.
+                    </BodyText>
                 </Grid>
 
-                <AuthoringFormSection name="Section Heading" required={true} labelFor={'subscribe_section_header'}>
-                    <BodyText fontSize="0.875rem">
-                        Your section heading should be descriptive, short and succinct.
-                    </BodyText>
+                <AuthoringFormSection
+                    name="Section Heading"
+                    required={true}
+                    labelFor={'subscribe_section_heading'}
+                    details="Your section heading should be descriptive, short and succinct."
+                >
                     <Controller
                         control={control}
-                        name="subscribe_section_header"
+                        name="subscribe_section_heading"
                         rules={{ required: true, maxLength: 60 }}
                         render={({ field }) => (
                             <TextField
                                 {...field}
                                 sx={{ backgroundColor: colors.surface.white }}
-                                id="subscribe_section_header"
+                                id="subscribe_section_heading"
                                 aria-label="Section heading. Your section heading should be descriptive, short and succinct."
                                 counter
                                 maxLength={60}
                                 placeholder="Section heading text"
-                                error={errors.subscribe_section_header?.message ?? ''}
+                                error={errors.subscribe_section_heading?.message ?? ''}
                                 onChange={(value) => {
                                     field.onChange(value);
                                 }}

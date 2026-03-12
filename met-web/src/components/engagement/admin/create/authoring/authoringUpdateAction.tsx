@@ -104,7 +104,7 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         try {
             await patchEngagement({
                 id: engagementId as unknown as number,
-                subscribe_section_header: (formData.get('subscribe_section_header') as string) || undefined,
+                subscribe_section_heading: (formData.get('subscribe_section_heading') as string) || undefined,
                 subscribe_section_description: (formData.get('subscribe_section_description') as string) || undefined,
                 subscribe_consent_message: (formData.get('subscribe_consent_message') as string) || undefined,
             });

@@ -49,7 +49,7 @@ export interface PatchEngagementRequest {
     feedback_body?: string;
     surveys?: Survey[];
     selected_survey_id?: number;
-    subscribe_section_header?: string;
+    subscribe_section_heading?: string;
     subscribe_section_description?: string;
     subscribe_consent_message?: string;
     consent_message?: string;

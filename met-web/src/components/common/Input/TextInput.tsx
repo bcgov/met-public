@@ -83,18 +83,19 @@ export const TextInput: React.FC<TextInputProps> = ({
             }}
             error={error || undefined}
             inputProps={{
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: 'text.primary',
+                bgColor: 'background.default',
+                border: 'none',
                 ...inputProps,
                 sx: {
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    color: colors.type.regular.primary,
                     '&::placeholder': {
                         color: colors.type.regular.secondary,
                     },
                     '&:disabled': {
                         cursor: 'not-allowed',
                     },
-                    border: 'none',
                     ...inputProps?.sx,
                 },
             }}

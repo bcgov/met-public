@@ -18,7 +18,7 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column('engagement', sa.Column('subscribe_section_header', sa.String(length=60), nullable=True))
+    op.add_column('engagement', sa.Column('subscribe_section_heading', sa.String(length=60), nullable=True))
     op.add_column(
         'engagement',
         sa.Column('subscribe_section_description', postgresql.JSON(astext_type=sa.Text()), nullable=True),
@@ -43,4 +43,4 @@ def upgrade():
 def downgrade():
     op.drop_column('engagement', 'subscribe_consent_message')
     op.drop_column('engagement', 'subscribe_section_description')
-    op.drop_column('engagement', 'subscribe_section_header')
+    op.drop_column('engagement', 'subscribe_section_heading')
