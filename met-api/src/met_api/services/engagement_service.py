@@ -116,19 +116,15 @@ class EngagementService:
 
     @staticmethod
     def _get_scope_options(user_roles, has_team_access):
-        if Role.SUPER_ADMIN.value in user_roles:
+        if Role.SUPER_ADMIN.value in user_roles or Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             # Super admins should always see all engagements within the current tenant.
-            return EngagementScopeOptions(restricted=False)
-        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
             # If user has VIEW_PRIVATE_ENGAGEMENTS, e.g. Administrator role, return unrestricted scope options
             return EngagementScopeOptions(restricted=False)
         if has_team_access:
             # return those engagements where user has access for edit members..
             # either they have edit_member role or check if they are a team member
-            has_edit_role = Role.EDIT_MEMBERS.value in user_roles
-            if has_edit_role:
+            if Role.EDIT_MEMBERS.value in user_roles:
                 return EngagementScopeOptions(restricted=False)
-
             # check if user
             return EngagementScopeOptions(include_assigned=True)
         if Role.VIEW_ENGAGEMENT.value in user_roles:
