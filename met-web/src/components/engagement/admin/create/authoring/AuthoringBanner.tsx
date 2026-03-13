@@ -7,7 +7,7 @@ import { BodyText, ErrorMessage } from 'components/common/Typography/Body';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Header3 } from 'components/common/Typography/Headers';
-import { EngagementViewSections } from 'engagements/public/view';
+import { EngagementViewSections as Sections } from 'engagements/public/view';
 import { EngagementLoaderAdminData } from 'engagements/admin/EngagementLoaderAdmin';
 import { Controller, useFormContext } from 'react-hook-form';
 import { SUBMISSION_STATUS } from 'constants/engagementStatus';
@@ -22,12 +22,16 @@ const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
 const sectionOptions = [
-    <MenuItem value={EngagementViewSections.DESCRIPTION}>Summary Section</MenuItem>,
-    <MenuItem value={EngagementViewSections.DETAILS_TABS}>Details Section</MenuItem>,
-    <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>Provide Feedback Section</MenuItem>,
-    <MenuItem value={EngagementViewSections.VIEW_RESULTS}>Results Section</MenuItem>,
-    <MenuItem value={EngagementViewSections.SUBSCRIBE}>Subscribe Section</MenuItem>,
-];
+    ['Summary', Sections.DESCRIPTION],
+    ['Details', Sections.DETAILS_TABS],
+    ['Provide Feedback', Sections.PROVIDE_FEEDBACK],
+    ['Results', Sections.VIEW_RESULTS],
+    ['Subscribe', Sections.SUBSCRIBE],
+].map((section) => (
+    <MenuItem value={section[1]} key={section[1]}>
+        {section[0]} Section
+    </MenuItem>
+));
 
 const AuthoringBanner = () => {
     // Access the form functions and values from the authoring template
