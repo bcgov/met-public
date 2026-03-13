@@ -1,6 +1,5 @@
 import { Autocomplete, Grid2 as Grid, Modal, TextField as MUITextField } from '@mui/material';
 import { BodyText, ErrorMessage, Header3 } from 'components/common/Typography';
-import { colors } from 'components/common';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -161,7 +160,6 @@ const AuthoringFeedback = () => {
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                sx={{ backgroundColor: colors.surface.white }}
                                 id="feedback_heading"
                                 aria-label="Feedback heading. Your feedback heading should be descriptive, short, and succinct."
                                 counter
@@ -234,7 +232,7 @@ const AuthoringFeedback = () => {
                                         aria-label="Select the survey that you wish to link to your feedback section. External surveys are coming soon."
                                         id="selected_survey_id"
                                         size="small"
-                                        sx={{ minHeight: '48px' }}
+                                        sx={{ minHeight: '48px', bgcolor: 'background.default' }}
                                         options={surveySelectOptions}
                                         value={surveySelectOptions?.find((o) => o.value === field.value) ?? undefined}
                                         isOptionEqualToValue={(opt, val) => opt.value === val.value}

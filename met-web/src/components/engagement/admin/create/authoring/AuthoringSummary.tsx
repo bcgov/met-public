@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useOutletContext, useLoaderData } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
-import { colors } from 'styles/Theme';
 import { Header3, ErrorMessage, BodyText } from 'components/common/Typography';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
@@ -101,7 +100,6 @@ const AuthoringSummary = () => {
                             return (
                                 <TextField
                                     {...field}
-                                    sx={{ backgroundColor: colors.surface.white }}
                                     id="description_title"
                                     counter
                                     maxLength={60}

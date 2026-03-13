@@ -602,7 +602,6 @@ const AuthoringDetails = () => {
                                         render={({ field }) => (
                                             <TextField
                                                 {...field}
-                                                sx={{ backgroundColor: colors.surface.white }}
                                                 id={`details_tabs.${key}.label`}
                                                 aria-label={`Tab ${key + 1} Label`}
                                                 onChange={(value) => {
@@ -639,7 +638,6 @@ const AuthoringDetails = () => {
                                         render={({ field }) => (
                                             <TextField
                                                 {...field}
-                                                sx={{ backgroundColor: colors.surface.white }}
                                                 id={`details_tabs.${key}.heading`}
                                                 aria-label={`Tab ${key + 1} Heading`}
                                                 counter

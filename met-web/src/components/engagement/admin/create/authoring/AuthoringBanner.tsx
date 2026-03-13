@@ -3,7 +3,6 @@ import { FormControlLabel, Grid2 as Grid, MenuItem, Radio, RadioGroup, Select } 
 import { Await, useLoaderData, useOutletContext } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
-import { colors } from 'styles/Theme';
 import { BodyText, ErrorMessage } from 'components/common/Typography/Body';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
@@ -22,15 +21,13 @@ import { Engagement } from 'models/engagement';
 const ENGAGEMENT_UPLOADER_HEIGHT = '360px';
 const ENGAGEMENT_CROPPER_ASPECT_RATIO = 1920 / 700;
 
-const sectionOptions = (
-    <>
-        <MenuItem value={EngagementViewSections.DESCRIPTION}>Summary Section</MenuItem>
-        <MenuItem value={EngagementViewSections.DETAILS_TABS}>Details Section</MenuItem>
-        <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>Provide Feedback Section</MenuItem>
-        <MenuItem value={EngagementViewSections.VIEW_RESULTS}>Results Section</MenuItem>
-        <MenuItem value={EngagementViewSections.SUBSCRIBE}>Subscribe Section</MenuItem>
-    </>
-);
+const sectionOptions = [
+    <MenuItem value={EngagementViewSections.DESCRIPTION}>Summary Section</MenuItem>,
+    <MenuItem value={EngagementViewSections.DETAILS_TABS}>Details Section</MenuItem>,
+    <MenuItem value={EngagementViewSections.PROVIDE_FEEDBACK}>Provide Feedback Section</MenuItem>,
+    <MenuItem value={EngagementViewSections.VIEW_RESULTS}>Results Section</MenuItem>,
+    <MenuItem value={EngagementViewSections.SUBSCRIBE}>Subscribe Section</MenuItem>,
+];
 
 const AuthoringBanner = () => {
     // Access the form functions and values from the authoring template
@@ -177,7 +174,7 @@ const AuthoringBanner = () => {
                         <Await resolve={engagement}>
                             {(eng: Engagement) => (
                                 <ImageUpload
-                                    bgColor='background.default'
+                                    bgColor="background.default"
                                     margin={4}
                                     data-testid="engagement-form/image-upload"
                                     handleAddFile={handleAddBannerImage}
@@ -325,7 +322,7 @@ const AuthoringBanner = () => {
                                                 width="calc(100% - 1.5rem)"
                                                 value={field.value || undefined}
                                                 disabled={watch('open_cta_link_type') !== 'external'}
-                                                sx={{ backgroundColor: colors.surface.white, ml: 3 }}
+                                                sx={{ ml: 3 }}
                                                 id="external_link"
                                                 placeholder="Paste or type URL here"
                                                 error={errors.open_external_link?.message}
@@ -428,7 +425,6 @@ const AuthoringBanner = () => {
                                                 {...field}
                                                 value={field.value || undefined}
                                                 disabled={watch('view_results_link_type') !== 'external'}
-                                                sx={{ backgroundColor: colors.surface.white }}
                                                 id="view_results_link"
                                                 placeholder="Paste or type URL here"
                                             />

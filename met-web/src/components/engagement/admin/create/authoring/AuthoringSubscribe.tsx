@@ -1,5 +1,4 @@
 import { Grid2 as Grid } from '@mui/material';
-import { colors } from 'components/common';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
@@ -98,7 +97,6 @@ const AuthoringSubscribe = () => {
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                sx={{ backgroundColor: colors.surface.white }}
                                 id="subscribe_section_heading"
                                 aria-label="Section heading. Your section heading should be descriptive, short and succinct."
                                 counter
