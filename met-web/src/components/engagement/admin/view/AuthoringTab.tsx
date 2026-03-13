@@ -87,7 +87,7 @@ export const AuthoringTab = () => {
     const metLabelStyles = {
         textTransform: 'uppercase',
         marginBottom: '1.1rem',
-        fontSize: '0.9rem',
+        fontSize: '0.875rem',
     };
     const anchorContainerStyles = {
         margin: '0 0 2.5rem 0',
