@@ -1,9 +1,16 @@
+## March 12, 2026
+
+- **Bugfix** Always let users with SUPER_ADMIN role list engagements, even if they don't have the VIEW_ENGAGEMENT permission. [🎟️ DEP-238](https://citz-gdx.atlassian.net/browse/DEP-238)
+  - Updated the API endpoint for listing engagements to check for the SUPER_ADMIN role in addition to the VIEW_ENGAGEMENT permission and direct membership in the engagement. The role bypasses all other checks.
+  - This ensures that users with the SUPER_ADMIN role can always list engagements, regardless of their specific permissions.
+
 ## March 11, 2026
 
 - Implemented Subscribe section of engagement authoring area [🎟️ DEP-227](https://citz-gdx.atlassian.net/browse/DEP-227)
   - Added new fields to the API and database to support subscribe section data
   - Populated form components in AuthoringSubscribe.tsx to allow users to input data for the subscribe section
   - Modified AuthoringContext to include subscribe section data and actions for updating it
+
 
 ## March 8, 2026
 
