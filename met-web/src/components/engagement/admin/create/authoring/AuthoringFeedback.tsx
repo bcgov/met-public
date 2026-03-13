@@ -1,6 +1,5 @@
 import { Autocomplete, Grid2 as Grid, Modal, TextField as MUITextField } from '@mui/material';
-import { ErrorMessage, EyebrowText as FormDescriptionText, Header3 } from 'components/common/Typography';
-import { colors } from 'components/common';
+import { BodyText, ErrorMessage, Header3 } from 'components/common/Typography';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -17,6 +16,7 @@ import ConfirmModal from 'components/common/Modals/ConfirmModal';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
 import { Engagement } from 'models/engagement';
+import { tryParse } from './utils';
 
 type SelectOption = { label: string; value: number };
 
@@ -94,17 +94,6 @@ const AuthoringFeedback = () => {
         reset(getValues());
     };
 
-    // Determines whether a string is JSON parseable and returns the JSON if it is.
-    const tryParse = (json: string) => {
-        try {
-            const object = JSON.parse(json);
-            if (object && typeof object === 'object') {
-                return object;
-            }
-        } catch {}
-        return false;
-    };
-
     // Change the survey value if the change survey modal is opened and the user confirms.
     const surveyChangeConfirm = () => {
         if (surveyChangeValue?.value) {
@@ -114,21 +103,6 @@ const AuthoringFeedback = () => {
         setSurveyChangeModalOpen(false);
     };
 
-    // Define the styles
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-    };
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
-    };
-    const authoringFormContainerStyles = {
-        gap: 0,
-        '& .met-input-form-field-title': { fontSize: '0.875rem' },
-        '& .met-input-text': { background: 'white' },
-        '& #image-upload-section .MuiGrid-container': { background: 'white' },
-    };
     const toolbar = {
         options: ['inline', 'list', 'link', 'blockType', 'history'],
         inline: {
@@ -164,19 +138,21 @@ const AuthoringFeedback = () => {
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
             {/* Feedback form */}
-            <AuthoringFormContainer sx={authoringFormContainerStyles}>
-                <Grid sx={{ mt: '1rem' }}>
-                    <Header3 style={metHeader3Styles}>Primary Content (Required)</Header3>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
+            <AuthoringFormContainer>
+                <Grid sx={{ mt: '1rem' }} direction="column" gap="0.5rem">
+                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <BodyText size="small">
                         This section of content should provide a brief overview of your approach to feedback and what
                         you would like your audience to do.
-                    </FormDescriptionText>
+                    </BodyText>
                 </Grid>
 
-                <AuthoringFormSection name="Section Heading" required={true} labelFor={'feedback_heading'}>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your feedback heading should be descriptive, short, and succinct.
-                    </FormDescriptionText>
+                <AuthoringFormSection
+                    name="Section Heading"
+                    required={true}
+                    labelFor={'feedback_heading'}
+                    details="Your feedback heading should be descriptive, short, and succint."
+                >
                     <Controller
                         control={control}
                         name="feedback_heading"
@@ -184,7 +160,6 @@ const AuthoringFeedback = () => {
                         render={({ field }) => (
                             <TextField
                                 {...field}
-                                sx={{ backgroundColor: colors.surface.white }}
                                 id="feedback_heading"
                                 aria-label="Feedback heading. Your feedback heading should be descriptive, short, and succinct."
                                 counter
@@ -199,12 +174,16 @@ const AuthoringFeedback = () => {
                     />
                 </AuthoringFormSection>
 
-                <AuthoringFormSection name="Body Copy" required={true} labelFor={'feedback_body'}>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        You must either include links to your engagement feedback methods within this section’s body
-                        copy using the link button in the WSIWYG editor below, or, Call to Action Buttons in the
-                        following two fields.
-                    </FormDescriptionText>
+                <AuthoringFormSection
+                    name="Body Copy"
+                    required={true}
+                    labelFor={'feedback_body'}
+                    details={
+                        'You must either include links to your engagement feedback methods within ' +
+                        'this section’s body copy using the link button in the WSIWYG editor below, ' +
+                        'or, Call to Action Buttons in the following two fields.'
+                    }
+                >
                     <ErrorMessage error={errors.feedback_body?.message?.toString() || ''} />
                     <Controller
                         control={control}
@@ -230,11 +209,18 @@ const AuthoringFeedback = () => {
                     />
                 </AuthoringFormSection>
 
-                <AuthoringFormSection name="Survey" required={false} labelFor={'selected_survey_id'}>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Select the survey that you wish to link to your feedback section. External surveys are coming
-                        soon!
-                    </FormDescriptionText>
+                <AuthoringFormSection
+                    name="Survey"
+                    required={false}
+                    labelFor={'selected_survey_id'}
+                    details={
+                        "Select the survey you would like to link to this engagement's " +
+                        'feedback section. This is optional, but if a survey is selected, a link ' +
+                        'to the survey will be included in the feedback section of your engagement. ' +
+                        'You can use this to link to an existing survey in the system, or create a new ' +
+                        'one to link to. External surveys are not currently supported, but are coming soon!'
+                    }
+                >
                     <Suspense>
                         <Await resolve={[surveys, engagement]}>
                             <Controller
@@ -246,7 +232,7 @@ const AuthoringFeedback = () => {
                                         aria-label="Select the survey that you wish to link to your feedback section. External surveys are coming soon."
                                         id="selected_survey_id"
                                         size="small"
-                                        sx={{ minHeight: '48px' }}
+                                        sx={{ minHeight: '48px', bgcolor: 'background.default' }}
                                         options={surveySelectOptions}
                                         value={surveySelectOptions?.find((o) => o.value === field.value) ?? undefined}
                                         isOptionEqualToValue={(opt, val) => opt.value === val.value}
@@ -283,10 +269,10 @@ const AuthoringFeedback = () => {
                 </AuthoringFormSection>
 
                 <Grid sx={{ mt: '1rem' }}>
-                    <Header3 style={metHeader3Styles}>Supporting Content (Optional)</Header3>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
+                    <Header3 weight="bold">Supporting Content (Optional)</Header3>
+                    <BodyText size="small">
                         You may use a widget to add supporting content to your primary content.
-                    </FormDescriptionText>
+                    </BodyText>
                     <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
                         <WidgetPicker location={WidgetLocation.Feedback} />
                     </Grid>

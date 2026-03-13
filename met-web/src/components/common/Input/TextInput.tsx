@@ -75,6 +75,8 @@ export const TextInput: React.FC<TextInputProps> = ({
             placeholder={placeholder}
             disabled={disabled}
             sx={{
+                color: 'text.primary',
+                bgcolor: 'background.default',
                 ...textInputStyles,
                 boxShadow: error
                     ? `0 0 0 2px ${colors.notification.error.shade} inset`
@@ -83,18 +85,17 @@ export const TextInput: React.FC<TextInputProps> = ({
             }}
             error={error || undefined}
             inputProps={{
+                fontSize: '16px',
+                lineHeight: '24px',
+                border: 'none',
                 ...inputProps,
                 sx: {
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    color: colors.type.regular.primary,
                     '&::placeholder': {
                         color: colors.type.regular.secondary,
                     },
                     '&:disabled': {
                         cursor: 'not-allowed',
                     },
-                    border: 'none',
                     ...inputProps?.sx,
                 },
             }}

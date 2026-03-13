@@ -62,7 +62,7 @@ export const FormField = ({
                 sx={{ opacity: disabled ? '0.5' : '1', ...gridProps.sx }}
             >
                 <Grid size={12}>
-                    <BodyText bold size="large" className="met-input-form-field-title">
+                    <BodyText bold className="met-input-form-field-title">
                         {title}
                         {required && title && <span title="(Required)">*</span>}
                         {optional && title && <span style={{ fontWeight: '400' }}> (Optional)</span>}

@@ -3,8 +3,7 @@ import React, { useEffect } from 'react';
 import { useOutletContext, useLoaderData } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
-import { colors } from 'styles/Theme';
-import { BodyText, Header3, ErrorMessage, EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { Header3, ErrorMessage, BodyText } from 'components/common/Typography';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -14,6 +13,8 @@ import WidgetPicker from '../widgets';
 import { WidgetLocation } from 'models/widget';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
+import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
+import { tryParse } from './utils';
 
 const AuthoringSummary = () => {
     const { setDefaultValues, fetcher, pageName }: AuthoringTemplateOutletContext = useOutletContext(); // Access the form functions and values from the authoring template.
@@ -55,20 +56,6 @@ const AuthoringSummary = () => {
         });
     }, []);
 
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-    };
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
-    };
-    const formItemContainerStyles = {
-        padding: '2rem 1.4rem !important',
-        margin: '1rem 0',
-        borderRadius: '16px',
-    };
-
     const toolbar = {
         options: ['inline', 'list', 'link', 'blockType', 'history'],
         inline: {
@@ -86,97 +73,85 @@ const AuthoringSummary = () => {
         return newEditorState;
     };
 
-    // Determines whether a string is JSON parseable and returns the JSON if it is.
-    const tryParse = (json: string) => {
-        try {
-            const object = JSON.parse(json);
-            if (object && typeof object === 'object') {
-                return object;
-            }
-        } catch {}
-        return false;
-    };
-
     return (
         <>
             {/* prevent navigating away when the user has unsaved work */}
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
-            <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
-                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }}>
-                    <label htmlFor="description_title">
-                        <BodyText bold mb="0.5rem">
-                            Section Heading
-                            <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                        </BodyText>
-                        <FormDescriptionText style={formDescriptionTextStyles}>
-                            Your section heading should be descriptive, short and succinct.
-                        </FormDescriptionText>
-                        <Controller
-                            control={control}
-                            name="description_title"
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <TextField
-                                        {...field}
-                                        sx={{ backgroundColor: colors.surface.white }}
-                                        id="description_title"
-                                        counter
-                                        maxLength={60}
-                                        placeholder="Section heading text"
-                                        error={errors.description_title?.message ?? ''}
-                                    />
-                                );
-                            }}
-                        />
-                    </label>
+            <AuthoringFormContainer>
+                <Grid sx={{ mt: '1rem' }} direction="column" gap="0.5rem">
+                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <BodyText size="small">
+                        This section of content should provide a brief overview of your approach to feedback and what
+                        you would like your audience to do.
+                    </BodyText>
                 </Grid>
+                <AuthoringFormSection
+                    name="Section Heading"
+                    required
+                    labelFor="description_title"
+                    details="Your section heading should be descriptive, short and succinct."
+                >
+                    <Controller
+                        control={control}
+                        name="description_title"
+                        rules={{ required: true }}
+                        render={({ field }) => {
+                            return (
+                                <TextField
+                                    {...field}
+                                    id="description_title"
+                                    counter
+                                    maxLength={60}
+                                    placeholder="Section heading text"
+                                    error={errors.description_title?.message ?? ''}
+                                />
+                            );
+                        }}
+                    />
+                </AuthoringFormSection>
 
-                <Grid sx={{ ...formItemContainerStyles, backgroundColor: colors.surface.blue[10] }}>
-                    <label htmlFor="summary_editor_state">
-                        <BodyText bold mb="0.5rem" role="document" tab-index="0">
-                            Body Copy
-                            <span style={{ fontWeight: 'normal' }}> (Required)</span>
-                        </BodyText>
-                        <FormDescriptionText style={formDescriptionTextStyles}>
-                            Body copy for the summary section of your engagement should provide a short overview of what
-                            your engagement is about and describe what you are asking your audience to do.
-                        </FormDescriptionText>
-                        <ErrorMessage error={errors.summary_editor_state?.message ?? ''} />
-                        <Controller
-                            control={control}
-                            name="summary_editor_state"
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <RichTextArea
-                                        ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
-                                        spellCheck
-                                        editorState={field.value}
-                                        onEditorStateChange={(value) => {
-                                            field.onChange(handleEditorChange(value));
-                                        }}
-                                        placeholder="Body copy"
-                                        handlePastedText={() => false}
-                                        toolbar={toolbar}
-                                    />
-                                );
-                            }}
-                        />
-                    </label>
-                </Grid>
+                <AuthoringFormSection
+                    name="Body Copy"
+                    required
+                    labelFor="summary_editor_state"
+                    details="Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
+                >
+                    <ErrorMessage error={errors.summary_editor_state?.message ?? ''} />
+                    <Controller
+                        control={control}
+                        name="summary_editor_state"
+                        rules={{ required: true }}
+                        render={({ field }) => {
+                            return (
+                                <RichTextArea
+                                    ariaLabel="Body Copy: Body copy for the summary section of your engagement should provide a short overview of what your engagement is about and describe what you are asking your audience to do."
+                                    spellCheck
+                                    editorState={field.value}
+                                    onEditorStateChange={(value) => {
+                                        field.onChange(handleEditorChange(value));
+                                    }}
+                                    placeholder="Body copy"
+                                    handlePastedText={() => false}
+                                    toolbar={toolbar}
+                                />
+                            );
+                        }}
+                    />
+                </AuthoringFormSection>
 
                 <Grid sx={{ mt: '1rem' }}>
-                    <Header3 style={metHeader3Styles}>Supporting Content (Optional)</Header3>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
+                    <Header3 weight="bold" pb="0.5rem">
+                        Supporting Content (Optional)
+                    </Header3>
+                    <BodyText size="small">
                         You may use a widget to add supporting content to your primary content.
-                    </FormDescriptionText>
+                    </BodyText>
                     <Grid container sx={{ maxWidth: '700px', mt: '1rem' }} direction="column">
                         <WidgetPicker location={WidgetLocation.Summary} />
                     </Grid>
                 </Grid>
-            </Grid>
+            </AuthoringFormContainer>
         </>
     );
 };

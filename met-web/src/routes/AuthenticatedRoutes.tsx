@@ -202,6 +202,9 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                         ComponentLazy={() =>
                                             import('engagements/admin/create/authoring/AuthoringSubscribe')
                                         }
+                                        actionLazy={() =>
+                                            import('engagements/admin/create/authoring/authoringUpdateAction')
+                                        }
                                         handle={{ crumb: () => ({ name: 'Subscribe' }) }}
                                     />
                                     <LazyRoute

@@ -123,10 +123,7 @@ export const EngagementSurveyBlock = () => {
                             const feedbackBodyEditorState = getEditorStateFromRaw(engagement.feedback_body || '');
                             const hasFeedbackBody = feedbackBodyEditorState?.getCurrentContent()?.hasText?.() || false;
                             const hasFeedbackContent = hasFeedbackHeading || hasFeedbackBody;
-                            const previewFeedbackButtons =
-                                engagement.surveys?.length > 0
-                                    ? engagement.surveys.slice(0, 2).map((survey) => survey.name)
-                                    : ['Feedback method 1', 'Feedback method 2'];
+                            const feedbackButtons = engagement.surveys.map((survey) => survey.name);
                             const shouldDisplayFeedbackColumn =
                                 isPreviewMode ||
                                 (hasStatusBlockText && !isErrorMessage) ||
@@ -192,7 +189,7 @@ export const EngagementSurveyBlock = () => {
                                                 />
                                             </ThemeProvider>
                                             <PreviewSwitch
-                                                hasValue={!isPreviewMode}
+                                                hasValue={engagement.surveys.length > 0}
                                                 value={
                                                     <Switch>
                                                         <Case condition={effectiveStatus === SubmissionStatus.Open}>
@@ -244,7 +241,7 @@ export const EngagementSurveyBlock = () => {
                                                             gap: 1.5,
                                                         }}
                                                     >
-                                                        {previewFeedbackButtons.map((label, index) => (
+                                                        {feedbackButtons.map((label, index) => (
                                                             <Button
                                                                 key={`${label}-${index}`}
                                                                 variant="primary"

@@ -1,3 +1,10 @@
+## March 11, 2026
+
+- Implemented Subscribe section of engagement authoring area [🎟️ DEP-227](https://citz-gdx.atlassian.net/browse/DEP-227)
+  - Added new fields to the API and database to support subscribe section data
+  - Populated form components in AuthoringSubscribe.tsx to allow users to input data for the subscribe section
+  - Modified AuthoringContext to include subscribe section data and actions for updating it
+
 ## March 8, 2026
 
 - Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
