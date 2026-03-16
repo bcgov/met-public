@@ -8,7 +8,7 @@ import { faBookOpen } from '@fortawesome/pro-regular-svg-icons/faBookOpen';
 import { routeItemStyle } from './SideNav';
 
 const THRESHOLD_SIMILARITY_SCORE = 10;
-const HELP_URL = 'https://bcgov.github.io/met-guide';
+const HELP_URL = 'https://bcgov.github.io/dep-guide';
 
 const UserGuideNav = () => {
     const { pathname } = useLocation();
