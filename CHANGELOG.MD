@@ -10,6 +10,11 @@
     - Modified section styling slightly to match hi-fi prototype
     - Updated public and preview loaders
 
+## March 16, 2026
+
+- **Chore** Update user guide link to point to new location [🎟️ DEP-222](https://citz-gdx.atlassian.net/browse/DEP-222)
+  - Updated the user guide link in the application to point to the new location of the user guide documentation, which has been moved from `bcgov.github.io/met-guide` to `bcgov.github.io/dep-guide` to reflect the rebranding of the project to the Digital Engagement Platform (DEP).
+
 ## March 12, 2026
 
 - **Bugfix** Always let users with SUPER_ADMIN role list engagements, even if they don't have the VIEW_ENGAGEMENT permission. [🎟️ DEP-238](https://citz-gdx.atlassian.net/browse/DEP-238)
@@ -22,7 +27,6 @@
   - Added new fields to the API and database to support subscribe section data
   - Populated form components in AuthoringSubscribe.tsx to allow users to input data for the subscribe section
   - Modified AuthoringContext to include subscribe section data and actions for updating it
-
 
 ## March 8, 2026
 
