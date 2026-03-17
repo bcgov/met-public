@@ -69,6 +69,7 @@ class Engagement(BaseModel):
     is_internal = db.Column(db.Boolean, nullable=False)
     consent_message = db.Column(JSON, unique=False, nullable=True)
     sponsor_name = db.Column(db.String(50), nullable=True)
+    more_engagements_heading = db.Column(db.String(60), nullable=True)
 
     @classmethod
     def get_engagements_paginated(
@@ -163,6 +164,7 @@ class Engagement(BaseModel):
                 'consent_message', record.consent_message),
             'sponsor_name': engagement.get('sponsor_name', record.sponsor_name),
             'cta_url': engagement.get('cta_url', record.cta_url),
+            'more_engagements_heading': engagement.get('more_engagements_heading', record.more_engagements_heading)
         }
         query.update(update_fields)
         db.session.commit()

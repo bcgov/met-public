@@ -14,6 +14,8 @@ import { Language } from 'models/language';
 import { Tenant } from 'models/tenant';
 import { fetchVersion } from 'services/versionService';
 import { getMyTenants } from 'services/tenantService';
+import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
+import { getSuggestedEngagements } from 'services/suggestedEngagementService';
 
 export type EngagementPreviewLoaderData = {
     engagement: Promise<Engagement>;
@@ -26,6 +28,7 @@ export type EngagementPreviewLoaderData = {
     languages: Promise<Language[]>;
     tenants: Promise<Tenant[]>;
     apiVersion: Promise<string>;
+    suggestions: Promise<SuggestedEngagementWithAttachment[]>;
 };
 
 /**
@@ -46,39 +49,45 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
     const slug = getSlugByEngagementId(Number(engagementId))
         .then((response) => response.slug)
         .catch(() => '');
-    const engagement = getEngagement(Number(engagementId));
-    const widgets = engagement.then((response) => getWidgets(Number(response.id)));
-    const details = engagement.then((response) => getDetailsTabs(response.id));
-    const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
-    const taxaData = getMetadataTaxa();
-    const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }).catch(() => []));
-
-    const metadata = Promise.all([engagementMetadata, taxaData]).then(([metaResponse, taxaResponse]) => {
-        metaResponse.forEach((metaEntry) => {
-            const taxon = taxaResponse[metaEntry.taxon_id];
-            if (taxon) {
-                taxon.entries ??= [];
-                taxon.entries.push(metaEntry);
-            }
-        });
-        return metaResponse;
-    });
-
-    const taxa = taxaData.then((taxa) => Object.values(taxa));
+    const engagement = await getEngagement(Number(engagementId));
+    const widgets = getWidgets(engagement.id);
+    const details = getDetailsTabs(engagement.id);
+    const teamMembers = getTeamMembers({ engagement_id: engagement.id }).catch(() => []);
+    const suggestions = getSuggestedEngagements(engagement.id, true); // Passing true to attach engagement data
     const myTenants = getMyTenants();
     const apiVersion = fetchVersion();
 
+    // Get meta and taxa data
+    const taxaData = await getMetadataTaxa();
+    const engagementMetadata = await getEngagementMetadata(engagement.id);
+    const taxaDataPresent = taxaData && Array.isArray(taxaData) && taxaData.length > 0;
+    const metadataPresent = engagementMetadata && Array.isArray(engagementMetadata) && engagementMetadata.length > 0;
+    const metadata =
+        metadataPresent && taxaDataPresent
+            ? engagementMetadata.forEach((md) => {
+                  const taxon = taxaData[md.taxon_id];
+                  if (taxon) {
+                      if (taxon.entries === undefined) {
+                          taxon.entries = [];
+                      }
+                      taxon.entries.push(md);
+                  }
+              })
+            : {};
+    const taxa = taxaDataPresent ? Object.values(taxaData) : {};
+
     return {
-        engagement,
+        engagement: Promise.resolve(engagement),
         slug,
         widgets,
         details,
-        metadata,
-        taxa,
+        metadata: Promise.resolve(metadata),
+        taxa: Promise.resolve(taxa),
         teamMembers,
         languages,
         tenants: myTenants,
         apiVersion,
+        suggestions,
     };
 };
 

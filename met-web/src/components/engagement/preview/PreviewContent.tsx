@@ -5,7 +5,7 @@ import { EngagementDescription } from '../public/view/EngagementDescription';
 import { EngagementDetailsTabs } from '../public/view/EngagementDetailsTabs';
 import { EngagementSurveyBlock } from '../public/view/EngagementSurveyBlock';
 import { EngagementSubscribeBlock } from '../public/view/EngagementSubscribeBlock';
-// import { SuggestedEngagements } from 'engagements/public/view/SuggestedEngagements';
+import { SuggestedEngagements } from 'engagements/public/view/SuggestedEngagements';
 import { SubmissionStatusTypes } from 'constants/engagementStatus';
 
 interface PreviewContentProps {
@@ -17,6 +17,7 @@ interface PreviewContentProps {
  * Wraps the view with PreviewContext to enable placeholder rendering for missing content.
  */
 export const PreviewContent: React.FC<PreviewContentProps> = ({ previewStateType }) => {
+    const isPublic = false;
     return (
         <PreviewProvider isPreviewMode={true} showPlaceholders={true} previewStateType={previewStateType}>
             <main>
@@ -25,8 +26,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({ previewStateType
                 <EngagementDetailsTabs />
                 <EngagementSurveyBlock />
                 <EngagementSubscribeBlock />
-                {/* SuggestedEngagements are omitted in preview mode for now */}
-                {/* <SuggestedEngagements /> */}
+                <SuggestedEngagements isPublic={isPublic} />
             </main>
         </PreviewProvider>
     );

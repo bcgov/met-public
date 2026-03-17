@@ -52,6 +52,7 @@ class EngagementSchema(Schema):
     is_internal = fields.Bool(data_key='is_internal')
     consent_message = fields.Str(data_key='consent_message')
     sponsor_name = fields.Str(data_key='sponsor_name')
+    more_engagements_heading = fields.Str(data_key='more_engagements_heading')
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

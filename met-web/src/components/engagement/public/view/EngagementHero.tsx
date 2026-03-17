@@ -119,7 +119,7 @@ export const EngagementHero = () => {
                     }
                 >
                     <Await resolve={engagementInfo}>
-                        {([engagement, startDate, endDate]: [Engagement, dayjs.Dayjs, dayjs.Dayjs]) => {
+                        {([engagement, startDate, endDate]: [Engagement, dayjs.Dayjs | null, dayjs.Dayjs | null]) => {
                             const usePreviewState = Boolean(isPreviewMode && previewStateType);
 
                             const effectiveStatusId =
@@ -175,12 +175,12 @@ export const EngagementHero = () => {
                                         </Grid>
                                         <Grid>
                                             <BodyText bold size="small" sx={{ color: '#201F1E' }}>
-                                                <time dateTime={`${startDate.format(semanticDateFormat)}`}>
-                                                    {startDate.format(dateFormat)}
+                                                <time dateTime={`${startDate?.format(semanticDateFormat)}`}>
+                                                    {startDate?.format(dateFormat)}
                                                 </time>{' '}
                                                 to{' '}
-                                                <time dateTime={`${endDate.format(semanticDateFormat)}`}>
-                                                    {endDate.format(dateFormat)}
+                                                <time dateTime={`${endDate?.format(semanticDateFormat)}`}>
+                                                    {endDate?.format(dateFormat)}
                                                 </time>
                                             </BodyText>
                                         </Grid>

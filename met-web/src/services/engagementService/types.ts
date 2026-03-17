@@ -49,4 +49,5 @@ export interface PatchEngagementRequest {
     feedback_body?: string;
     surveys?: Survey[];
     selected_survey_id?: number;
+    more_engagements_heading?: string;
 }

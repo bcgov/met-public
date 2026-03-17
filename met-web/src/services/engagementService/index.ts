@@ -16,6 +16,12 @@ export const fetchAll = async (dispatch: Dispatch<AnyAction>): Promise<Engagemen
     return engagements;
 };
 
+export interface ApiErrorBody {
+    error?: string;
+    message?: string;
+    code?: string;
+}
+
 export interface GetEngagementsParams {
     page?: number;
     size?: number;
@@ -94,12 +100,6 @@ export const patchEngagement = async (data: PatchEngagementRequest): Promise<Eng
     return Promise.reject('Failed to update engagement');
 };
 
-interface ApiErrorBody {
-    error?: string;
-    message?: string;
-    code?: string;
-}
-
 export const deleteEngagement = async (engagementId: number): Promise<{ id: number }> => {
     try {
         const url = replaceUrl(Endpoints.Engagement.DELETE, 'engagement_id', String(engagementId));
@@ -110,7 +110,7 @@ export const deleteEngagement = async (engagementId: number): Promise<{ id: numb
         throw new Error('Failed to delete engagement');
     } catch (e: unknown) {
         if (axios.isAxiosError<ApiErrorBody>(e)) {
-            throw new Error(e?.response?.data?.message as unknown as Error['message']);
+            throw new Error(e?.response?.data?.message);
         } else if (e instanceof Error) {
             throw new Error(e?.message);
         } else {

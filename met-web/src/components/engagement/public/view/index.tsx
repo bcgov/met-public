@@ -20,13 +20,14 @@ export enum EngagementViewSections {
 export const PublicEngagementView = () => {
     const { slug, engagementId, language } = useParams();
     const viewKey = `${slug ?? engagementId ?? 'engagement'}-${language ?? 'default'}`;
+    const isPublic = true;
     return (
         <main key={viewKey}>
             <EngagementHero />
             <EngagementDescription />
             <EngagementDetailsTabs />
             <EngagementSurveyBlock />
-            <SuggestedEngagements />
+            <SuggestedEngagements isPublic={isPublic} />
         </main>
     );
 };

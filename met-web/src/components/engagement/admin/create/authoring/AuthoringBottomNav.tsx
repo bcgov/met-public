@@ -109,6 +109,13 @@ const AuthoringBottomNav = ({
         }
     };
 
+    const postPreviewRefreshMessage = (previewWindow: Window | null) => {
+        const message = { type: 'met-preview-refresh' };
+        if (previewWindow && !previewWindow.closed) {
+            previewWindow?.postMessage(message, globalThis.location.origin);
+        }
+    };
+
     const syncPreviewWindowUrl = (section?: string) => {
         const previewWindow = getActivePreviewWindow();
         if (!previewWindow || previewWindow.closed) return;
@@ -346,10 +353,11 @@ const AuthoringBottomNav = ({
                                     icon={<img src={pagePreview} alt="" aria-hidden="true" />}
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        // If the preview window is still open, bring it to the foreground
-                                        if (getActivePreviewWindow()) {
-                                            syncPreviewWindowUrl(pageName);
-                                            getActivePreviewWindow()?.focus();
+                                        // If the preview window is still open, resfresh the data and bring it to the foreground
+                                        const window = getActivePreviewWindow();
+                                        if (window) {
+                                            postPreviewRefreshMessage(window);
+                                            window?.focus();
                                             return;
                                         }
                                         // Cancel the navigation and open the preview in a new browser window instead, to avoid losing unsaved changes

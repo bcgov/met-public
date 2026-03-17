@@ -215,7 +215,8 @@ class EngagementService:
             sponsor_name=engagement_data.get('sponsor_name', None),
             feedback_heading=engagement_data.get('feedback_heading', None),
             feedback_body=engagement_data.get('feedback_body', None),
-            selected_survey_id=engagement_data.get('selected_survey_id', None)
+            selected_survey_id=engagement_data.get('selected_survey_id', None),
+            more_engagements_heading=engagement_data.get('more_engagements_heading', None)
         )
         new_engagement.save()
         return new_engagement

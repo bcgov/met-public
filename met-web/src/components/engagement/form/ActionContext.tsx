@@ -105,6 +105,8 @@ export const ActionProvider = ({ children }: { children: JSX.Element }) => {
     }, [metadata, taxa]);
 
     const taxonMetadata = useMemo(() => {
+        if (!engagementMetadata || !Array.isArray(engagementMetadata) || engagementMetadata.length < 1)
+            return [] as unknown as Map<number, string[]>;
         const taxonMetadataMap = new Map<number, string[]>();
         engagementMetadata.forEach((metadata) => {
             if (!taxonMetadataMap.has(metadata.taxon_id)) {

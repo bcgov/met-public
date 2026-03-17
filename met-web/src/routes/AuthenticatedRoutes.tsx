@@ -207,6 +207,10 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     <LazyRoute
                                         path="more"
                                         ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringMore')}
+                                        loaderLazy={() => import('engagements/admin/create/authoring/authoringLoader')}
+                                        actionLazy={() =>
+                                            import('engagements/admin/create/authoring/authoringUpdateAction')
+                                        }
                                         handle={{ crumb: () => ({ name: 'More Engagements' }) }}
                                     />
                                 </LazyRoute>

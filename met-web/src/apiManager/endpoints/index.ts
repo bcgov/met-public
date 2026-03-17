@@ -44,6 +44,10 @@ const Endpoints = {
         CREATE: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
         UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/details`,
     },
+    SuggestedEngagement: {
+        GET_LIST: `${AppConfig.apiUrl}/engagement/engagement_id/suggestions`,
+        UPDATE: `${AppConfig.apiUrl}/engagement/engagement_id/suggestions`,
+    },
     User: {
         GET: `${AppConfig.apiUrl}/user/user_id`,
         CREATE_UPDATE: `${AppConfig.apiUrl}/user/`,
