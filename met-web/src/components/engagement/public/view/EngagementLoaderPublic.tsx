@@ -45,7 +45,7 @@ export const engagementLoaderPublic = async ({ params }: { params: Params<string
     const engagementMetadata = await getEngagementMetadata(engagement.id);
     const taxaData = await getMetadataTaxa();
     const metadataPresent = engagementMetadata && Array.isArray(engagementMetadata) && engagementMetadata.length > 0;
-    const taxaDataPresent = taxaData && Array.isArray(taxaData) && engagementMetadata.length > 0;
+    const taxaDataPresent = taxaData && Array.isArray(taxaData) && taxaData.length > 0;
     const metadata =
         metadataPresent && taxaDataPresent
             ? engagementMetadata.forEach((md) => {
