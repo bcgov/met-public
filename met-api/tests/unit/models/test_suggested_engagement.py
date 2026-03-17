@@ -118,10 +118,10 @@ def test_bulk_update_suggested_engagements(session):
 
 def test_update_suggested_engagement_success(session):
     """Assert that update_suggested_engagement updates fields and stamps updated_date."""
-    eng_a, eng_b, eng_c = _make_engagements(3)
+    eng_a, eng_b, _ = _make_engagements(3)
     s = _insert_suggestion(eng_a.id, eng_b.id, 1)
 
-    before = datetime.utcnow()
+    before = datetime.now(None)
     updated = SuggestedEngagement.update_suggested_engagement(
         engagement_id=eng_a.id,
         suggestion_id=s.id,

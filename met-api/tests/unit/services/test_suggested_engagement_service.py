@@ -110,7 +110,7 @@ def test_sync_suggestions_rejects_self_link(session, monkeypatch):
 def test_update_suggestion_success(session, monkeypatch):
     """Update via sync_suggestions modifies a single row and stamps updated_date."""
     with patch.object(authorization, 'check_auth', return_value=True):
-        eng_a, eng_b, eng_c = _make_engagements(3)
+        eng_a, eng_b, _ = _make_engagements(3)
         s = _insert(eng_a.id, eng_b.id, 1)
 
         SuggestedEngagementService().sync_suggestions(

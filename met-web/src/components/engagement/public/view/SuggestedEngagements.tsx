@@ -80,9 +80,11 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                 >
                                     {engagementSlots.map((_, i) => {
                                         const sug = suggestions.find((s) => s.sort_index === i + 1);
-                                        return !sug ? (
-                                            /* Placeholder with outline in preview window */
-                                            !isPublic ? (
+                                        // Empty suggestion slot in public engagement
+                                        if (!sug && isPublic) return <></>;
+                                        // Empty suggestion slot in preview window
+                                        if (!sug && !isPublic)
+                                            return (
                                                 <Grid
                                                     key={`Placeholder-${i + 1}`}
                                                     size="auto"
@@ -96,25 +98,23 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                                         Engagement Card
                                                     </p>
                                                 </Grid>
-                                            ) : (
-                                                /* Empty space in public engagement listing */
-                                                <></>
-                                            )
-                                        ) : (
-                                            /* Regular engagement card (preview window and public engagement) */
-                                            <Grid
-                                                size="auto"
-                                                key={`Grid-${sug?.suggested_engagement_id}`}
-                                                width="320px"
-                                                alignItems="center"
-                                                justifyContent="center"
-                                            >
-                                                <EngagementTile
-                                                    passedEngagement={sug.engagement as Engagement}
-                                                    engagementId={sug.suggested_engagement_id as number}
-                                                />
-                                            </Grid>
-                                        );
+                                            );
+                                        /* Regular engagement card (preview window and public engagement) */
+                                        if (sug)
+                                            return (
+                                                <Grid
+                                                    size="auto"
+                                                    key={`Grid-${sug?.suggested_engagement_id}`}
+                                                    width="320px"
+                                                    alignItems="center"
+                                                    justifyContent="center"
+                                                >
+                                                    <EngagementTile
+                                                        passedEngagement={sug.engagement as Engagement}
+                                                        engagementId={sug.suggested_engagement_id as number}
+                                                    />
+                                                </Grid>
+                                            );
                                     })}
                                 </Grid>
                                 <Grid container justifyContent="center" alignItems="center" direction="row">

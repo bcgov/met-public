@@ -4,7 +4,7 @@ Database operations for suggested engagements. These are received by the API as 
 """
 
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import CheckConstraint
@@ -68,7 +68,7 @@ class SuggestedEngagement(BaseModel):
         suggestion = query.first()
         if not suggestion:
             return None
-        suggestion_data['updated_date'] = datetime.utcnow()
+        suggestion_data['updated_date'] = datetime.now(timezone.utc)
         query.update(suggestion_data)
         db.session.commit()
         db.session.refresh(suggestion)

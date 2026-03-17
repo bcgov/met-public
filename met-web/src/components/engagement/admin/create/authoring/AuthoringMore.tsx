@@ -95,6 +95,14 @@ const AuthoringMore = () => {
         });
     };
 
+    const getSelectedValue = (selected: number) => {
+        const matchingOption = engagementSelectOptions.find((eso) => eso.value === selected);
+        if (matchingOption?.label) {
+            return matchingOption.label;
+        }
+        return 'None';
+    };
+
     // Define the styles
     const metHeader3Styles = {
         fontSize: '1.05rem',
@@ -186,10 +194,7 @@ const AuthoringMore = () => {
                                         }}
                                         renderValue={(selected) => (
                                             <span>
-                                                {selected
-                                                    ? engagementSelectOptions.find((eso) => eso.value === selected)
-                                                          ?.label
-                                                    : 'None'}
+                                                {selected ? getSelectedValue(selected as unknown as number) : 'None'}
                                             </span>
                                         )}
                                     />

@@ -22,6 +22,9 @@ from met_api.services.suggested_engagement_service import SuggestedEngagementSer
 
 from tests.utilities.factory_utils import factory_auth_header
 
+error_invalid = 'invalid suggested_engagement_id'
+content_type = {'Content-Type': 'application/json'}
+
 
 @pytest.fixture(autouse=True)
 def _app_ctx(client):
@@ -110,7 +113,7 @@ def test_put_sync_ok(client, jwt, session, monkeypatch, setup_admin_user_and_cla
     resp = client.put(
         _path(eid),
         data=json.dumps(payload),
-        headers={'Content-Type': 'application/json', **headers},
+        headers={**content_type, **headers},
     )
     assert resp.status_code == 200
     assert resp.get_json() == expected
@@ -121,7 +124,7 @@ def test_put_business_exception_400(client, jwt, session, monkeypatch, setup_adm
     eid = 101
 
     def _fake_sync(*_args, **_kwargs):
-        raise BusinessException(error='invalid suggested_engagement_id', status_code=400)
+        raise BusinessException(error=error_invalid, status_code=400)
 
     monkeypatch.setattr(
         SuggestedEngagementService,
@@ -136,13 +139,13 @@ def test_put_business_exception_400(client, jwt, session, monkeypatch, setup_adm
     resp = client.put(
         _path(eid),
         data=json.dumps([{'suggested_engagement_id': 101, 'sort_index': 1}]),
-        headers={'Content-Type': 'application/json', **headers},
+        headers={**content_type, **headers},
     )
 
     assert resp.status_code == 400
     body = resp.get_json()
     assert body.get('status') == 'failure'
-    assert body.get('message') == 'invalid suggested_engagement_id'
+    assert body.get('message') == error_invalid
 
     _, claims = setup_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
@@ -150,13 +153,13 @@ def test_put_business_exception_400(client, jwt, session, monkeypatch, setup_adm
     resp = client.put(
         _path(eid),
         data=json.dumps([{'suggested_engagement_id': 101, 'sort_index': 1}]),
-        headers={'Content-Type': 'application/json', **headers},
+        headers={**content_type, **headers},
     )
 
     assert resp.status_code == 400
     body = resp.get_json()
     assert body.get('status') == 'failure'
-    assert body.get('message') == 'invalid suggested_engagement_id'
+    assert body.get('message') == error_invalid
 
 
 def test_put_validation_error_400(client, jwt, session, monkeypatch, setup_admin_user_and_claims):
@@ -179,7 +182,7 @@ def test_put_validation_error_400(client, jwt, session, monkeypatch, setup_admin
     resp = client.put(
         _path(eid),
         data=json.dumps([{'suggested_engagement_id': 303, 'sort_index': 0}]),
-        headers={'Content-Type': 'application/json', **headers},
+        headers={**content_type, **headers},
     )
 
     assert resp.status_code == 400
