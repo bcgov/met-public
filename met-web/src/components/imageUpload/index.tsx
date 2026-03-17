@@ -17,6 +17,7 @@ interface UploaderProps {
     height?: string;
     cropAspectRatio?: number;
     accept?: Accept;
+    bgColor?: string;
 }
 /**
  * ImageUpload component allows users to upload images with drag-and-drop functionality.
@@ -46,6 +47,7 @@ export const ImageUpload = ({
         'image/png': [],
         'image/webp': [],
     },
+    bgColor = 'blue.10',
 }: UploaderProps) => {
     return (
         <ImageUploadContextProvider
@@ -54,7 +56,7 @@ export const ImageUpload = ({
             savedImageName={savedImageName}
             cropAspectRatio={cropAspectRatio}
         >
-            <Uploader height={height} accept={accept}>
+            <Uploader height={height} accept={accept} bgColor={bgColor}>
                 <img src={fileUpload} alt="" aria-hidden="true" style={{ color: colors.surface.blue[90] }} />
                 <BodyText
                     bold

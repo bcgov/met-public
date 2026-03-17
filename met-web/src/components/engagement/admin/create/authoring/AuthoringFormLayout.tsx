@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid2 as Grid, GridProps, Box, BoxProps } from '@mui/material';
+import { Grid2 as Grid, Grid2Props as GridProps } from '@mui/material';
 import { BodyText } from 'components/common/Typography/Body';
 
 export const AuthoringFormContainer = ({
@@ -12,7 +12,8 @@ export const AuthoringFormContainer = ({
             container
             display="flex"
             flexDirection="column"
-            gap="24px"
+            columnGap="0.5rem"
+            rowGap="1.5rem"
             maxWidth="700px"
             {...formContainerProps}
         >
@@ -21,27 +22,20 @@ export const AuthoringFormContainer = ({
     );
 };
 
-export const UnnamedAuthoringFormSection = ({
-    children,
-    required,
-    gridItemProps,
-    ...formSectionProps
-}: { children: React.ReactNode; required?: boolean; gridItemProps?: GridProps } & BoxProps) => {
+export const UnnamedAuthoringFormSection = ({ children, required, ...props }: { required?: boolean } & GridProps) => {
     return (
-        <Grid {...gridItemProps} className="met-layout-authoring-form-grid-item">
-            <Box
-                className="met-layout-authoring-form-section"
-                display="flex"
-                flexDirection="column"
-                gap="24px"
-                bgcolor={required ? 'blue.10' : 'gray.10'}
-                padding="2rem 1.5rem"
-                margin="1rem 0"
-                borderRadius="16px"
-                {...formSectionProps}
-            >
-                {children}
-            </Box>
+        <Grid
+            container
+            direction="column"
+            className="met-layout-authoring-form-grid-item met-layout-authoring-form-section"
+            borderRadius="16px"
+            padding="2rem 1.5rem"
+            columnGap="0.5rem"
+            rowGap="1.5rem"
+            bgcolor={required ? 'blue.10' : 'gray.10'}
+            {...props}
+        >
+            {children}
         </Grid>
     );
 };
@@ -52,7 +46,6 @@ export const AuthoringFormSection = ({
     name,
     details,
     labelFor,
-    gridItemProps,
     ...formSectionProps
 }: {
     children: React.ReactNode;
@@ -60,32 +53,30 @@ export const AuthoringFormSection = ({
     name?: string;
     details?: string;
     labelFor?: string;
-    gridItemProps?: GridProps;
-} & BoxProps) => {
+} & GridProps) => {
     return (
-        <UnnamedAuthoringFormSection required={required} gridItemProps={gridItemProps} {...formSectionProps}>
-            <Box
+        <UnnamedAuthoringFormSection required={required} {...formSectionProps}>
+            <Grid
+                container
                 className="met-layout-authoring-form-section-title"
-                display="flex"
-                flexDirection="column"
-                gap="8px"
+                direction="column"
                 component={labelFor ? 'label' : 'div'}
                 htmlFor={labelFor}
             >
-                {name && (
-                    <Box fontSize="1.05rem" lineHeight="1.5" color="text.primary" fontWeight="700">
-                        {name}
-                        <BodyText fontWeight="400" display="inline">
-                            {required ? ' (Required)' : ' (Optional)'}
-                        </BodyText>
-                    </Box>
-                )}
-                {details && (
-                    <Box fontSize="0.875rem" lineHeight={12 / 7} letterSpacing="-0.013rem">
-                        {details}
-                    </Box>
-                )}
-            </Box>
+                <Grid container direction="column" lineHeight="24px" gap="0.5rem">
+                    {name && (
+                        <Grid lineHeight="1.5" color="text.primary" fontWeight="700">
+                            {name}
+                            <BodyText display="inline">{required ? ' (Required)' : ' (Optional)'}</BodyText>
+                        </Grid>
+                    )}
+                    {details && (
+                        <Grid fontSize="0.875rem" lineHeight={12 / 7} letterSpacing="-0.013rem">
+                            {details}
+                        </Grid>
+                    )}
+                </Grid>
+            </Grid>
             {children}
         </UnnamedAuthoringFormSection>
     );

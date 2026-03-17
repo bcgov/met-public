@@ -51,6 +51,9 @@ class EngagementSchema(Schema):
     tenant_id = fields.Str(data_key='tenant_id')
     is_internal = fields.Bool(data_key='is_internal')
     consent_message = fields.Str(data_key='consent_message')
+    subscribe_section_heading = fields.Str(data_key='subscribe_section_heading')
+    subscribe_section_description = fields.Str(data_key='subscribe_section_description')
+    subscribe_consent_message = fields.Str(data_key='subscribe_consent_message')
     sponsor_name = fields.Str(data_key='sponsor_name')
     more_engagements_heading = fields.Str(data_key='more_engagements_heading')
 

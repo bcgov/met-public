@@ -50,4 +50,8 @@ export interface PatchEngagementRequest {
     surveys?: Survey[];
     selected_survey_id?: number;
     more_engagements_heading?: string;
+    subscribe_section_heading?: string;
+    subscribe_section_description?: string;
+    subscribe_consent_message?: string;
+    consent_message?: string;
 }

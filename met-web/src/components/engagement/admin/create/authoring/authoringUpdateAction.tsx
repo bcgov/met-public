@@ -124,6 +124,20 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
             await patchSuggestedEngagements(engagementId, suggestions);
         } catch (e) {
             console.error('Error updating more engagements section', e);
+        }
+    }
+
+    // Update engagement subscribe section settings
+    if (formData.get('form_source') === 'subscribe') {
+        try {
+            await patchEngagement({
+                id: engagementId as unknown as number,
+                subscribe_section_heading: (formData.get('subscribe_section_heading') as string) || undefined,
+                subscribe_section_description: (formData.get('subscribe_section_description') as string) || undefined,
+                subscribe_consent_message: (formData.get('subscribe_consent_message') as string) || undefined,
+            });
+        } catch (e) {
+            console.error('Error updating engagement subscribe section', e);
             errors.push(e);
         }
     }

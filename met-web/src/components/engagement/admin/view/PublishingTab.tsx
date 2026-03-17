@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
-import { Header2, EyebrowText as FormDescriptionText } from 'components/common/Typography';
+import { BodyText, Header2 } from 'components/common/Typography';
 import { Box, Grid2 as Grid, Modal } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Controller, Resolver, useForm } from 'react-hook-form';
@@ -148,11 +148,6 @@ export const PublishingTab = () => {
 
     // Styles
 
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        margin: '0.5rem 0 1rem',
-    };
-
     const dateAndTimeContainerStyles = {
         display: 'flex',
         flexDirection: 'row',
@@ -249,18 +244,17 @@ export const PublishingTab = () => {
                                 </Modal>
                                 <If condition={eng.status_id === EngagementStatus.Published}>
                                     <Then>
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            The engagement has already been published.
-                                        </FormDescriptionText>
+                                        <BodyText size="small">The engagement has already been published.</BodyText>
                                     </Then>
                                     <Else>
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
-                                            {"The Engagement page will be visible on the date selected below, but the public won't be able to" +
-                                                ' provide feedback until the public comment period opens.'}
-                                        </FormDescriptionText>
-                                        <FormDescriptionText style={formDescriptionTextStyles}>
+                                        <BodyText size="small">
+                                            The Engagement page will be visible on the date selected below, but the
+                                            public won't be able to provide feedback until the public comment period
+                                            opens.
+                                        </BodyText>
+                                        <BodyText size="small">
                                             Enter the date and time you want the Engagement page to go live.
-                                        </FormDescriptionText>
+                                        </BodyText>
                                     </Else>
                                 </If>
                                 <Form onSubmit={engPubForm.handleSubmit(submitForm)} id="publishing-form">

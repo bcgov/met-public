@@ -116,16 +116,15 @@ class EngagementService:
 
     @staticmethod
     def _get_scope_options(user_roles, has_team_access):
-        if Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
+        if Role.SUPER_ADMIN.value in user_roles or Role.VIEW_PRIVATE_ENGAGEMENTS.value in user_roles:
+            # Super admins should always see all engagements within the current tenant.
             # If user has VIEW_PRIVATE_ENGAGEMENTS, e.g. Administrator role, return unrestricted scope options
             return EngagementScopeOptions(restricted=False)
         if has_team_access:
             # return those engagements where user has access for edit members..
             # either they have edit_member role or check if they are a team member
-            has_edit_role = Role.EDIT_MEMBERS.value in user_roles
-            if has_edit_role:
+            if Role.EDIT_MEMBERS.value in user_roles:
                 return EngagementScopeOptions(restricted=False)
-
             # check if user
             return EngagementScopeOptions(include_assigned=True)
         if Role.VIEW_ENGAGEMENT.value in user_roles:
@@ -212,6 +211,12 @@ class EngagementService:
             banner_filename=engagement_data.get('banner_filename', None),
             is_internal=engagement_data.get('is_internal', False),
             consent_message=engagement_data.get('consent_message', None),
+            subscribe_section_heading=engagement_data.get('subscribe_section_heading', None),
+            subscribe_section_description=engagement_data.get('subscribe_section_description', None),
+            subscribe_consent_message=engagement_data.get(
+                'subscribe_consent_message',
+                engagement_data.get('subscribe_consent', None)
+            ),
             sponsor_name=engagement_data.get('sponsor_name', None),
             feedback_heading=engagement_data.get('feedback_heading', None),
             feedback_body=engagement_data.get('feedback_body', None),
