@@ -105,7 +105,6 @@ const AuthoringMore = () => {
         marginBottom: '1.5rem',
     };
     const authoringFormContainerStyles = {
-        gap: 0,
         '& .met-input-form-field-title': { fontSize: '0.875rem' },
         '& .met-input-text': { background: 'white' },
         '& #image-upload-section .MuiGrid-container': { background: 'white' },

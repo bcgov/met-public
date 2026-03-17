@@ -1,7 +1,7 @@
 """Added suggested engagements.
 
 Revision ID: 59138db76b10
-Revises: 45a555233a81
+Revises: 1d3f0c9e7a21
 Create Date: 2026-03-11 14:20:06.750069
 
 """
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = '59138db76b10'
-down_revision = '45a555233a81'
+down_revision = '1d3f0c9e7a21'
 branch_labels = None
 depends_on = None
 
