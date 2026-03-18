@@ -25,7 +25,7 @@ class SuggestedEngagementSyncItemSchema(Schema):
 
     @pre_load(pass_many=True)
     def normalize_sort_index(self, data, many, **kwargs):
-        """Default sort_index from payload order when omitted."""
+        """Normalize sort_index from payload order when omitted."""
         rows = data if many else [data]
         normalized_rows = []
         for index, row in enumerate(rows, start=1):

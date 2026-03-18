@@ -11,10 +11,7 @@ from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
 from met_api.schemas.engagement_survey import EngagementSurveySchema
-from met_api.schemas.suggested_engagement import (
-    SuggestedEngagementSyncItemSchema,
-    SuggestedEngagementWithAttachment,
-)
+from met_api.schemas.suggested_engagement import SuggestedEngagementSyncItemSchema, SuggestedEngagementWithAttachment
 from met_api.schemas.utils import count_comments_by_status
 from met_api.utils.datetime import local_datetime
 

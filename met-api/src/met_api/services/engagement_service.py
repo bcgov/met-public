@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
 from flask import current_app
 from flask_restx import abort
+from marshmallow import ValidationError
 
 from met_api.constants.engagement_status import Status
 from met_api.constants.membership_type import MembershipType
@@ -399,7 +400,7 @@ class EngagementService:
                 EngagementService._sync_suggestions(engagement, suggested_engagements)
 
             db.session.commit()
-        except Exception:
+        except (BusinessException, ValueError, ValidationError, SQLAlchemyError):
             db.session.rollback()
             raise
 
@@ -433,7 +434,6 @@ class EngagementService:
             ordered_links.append(link)
 
         engagement.suggested_engagement_links = ordered_links
-
 
     @staticmethod
     def validate_fields(data):

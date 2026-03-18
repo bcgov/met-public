@@ -215,7 +215,7 @@ class Engagement(BaseModel):
         engagement_data['updated_date'] = datetime.utcnow()
         # Ensure no relationship fields are included in the update payload, only real columns
         updatable_columns = {column.name for column in Engagement.__table__.columns}
-        updatable_columns.discard('id') # ID can never be updated
+        updatable_columns.discard('id')  # ID can never be updated
         update_payload = {
             key: value for key, value in engagement_data.items() if key in updatable_columns
         }

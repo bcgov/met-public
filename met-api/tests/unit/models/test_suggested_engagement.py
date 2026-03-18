@@ -14,7 +14,7 @@
 
 """Tests for the SuggestedEngagement model."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from sqlalchemy import text
@@ -160,7 +160,9 @@ def test_delete_suggestions_by_ids(session):
     s2 = _insert_suggestion(eng_a.id, eng_c.id, 2)
     s3 = _insert_suggestion(eng_a.id, eng_d.id, 3)
 
-    db.session.query(SuggestedEngagement).filter(SuggestedEngagement.id.in_({s1.id, s3.id})).delete(synchronize_session=False)
+    db.session.query(SuggestedEngagement).filter(
+        SuggestedEngagement.id.in_({s1.id, s3.id})
+    ).delete(synchronize_session=False)
     db.session.commit()
 
     remaining = _get_for_engagement(eng_a.id)
