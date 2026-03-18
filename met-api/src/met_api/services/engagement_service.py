@@ -1,11 +1,12 @@
 """Service for engagement management."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 from http import HTTPStatus
 import os
 from typing import Mapping, Optional, Sequence, Union
 
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 from flask import current_app
 from flask_restx import abort
 
@@ -19,9 +20,12 @@ from met_api.models.engagement_slug import EngagementSlug as EngagementSlugModel
 from met_api.models.engagement_status_block import EngagementStatusBlock as EngagementStatusBlockModel
 from met_api.models.engagement_translation import EngagementTranslation
 from met_api.models.survey import Survey as SurveyModel
+from met_api.models.suggested_engagement import SuggestedEngagement as SuggestedEngagementModel
 from met_api.models.pagination_options import PaginationOptions
 from met_api.models.submission import Submission as SubmissionModel
+from met_api.models.db import db
 from met_api.schemas.engagement import EngagementSchema
+from met_api.schemas.suggested_engagement import SuggestedEngagementSyncItemSchema
 from met_api.services import authorization
 from met_api.services.engagement_settings_service import EngagementSettingsService
 from met_api.services.engagement_slug_service import EngagementSlugService
@@ -53,7 +57,15 @@ class EngagementService:
 
     def get_engagement(self, engagement_id) -> Optional[EngagementDump]:
         """Get Engagement by the id."""
-        engagement_model: EngagementModel = EngagementModel.find_by_id(engagement_id)
+        engagement_model: EngagementModel = (
+            EngagementModel.query
+            .options(
+                selectinload(EngagementModel.suggested_engagement_links)
+                .selectinload(SuggestedEngagementModel.suggested_engagement)
+            )
+            .filter_by(id=engagement_id)
+            .one_or_none()
+        )
 
         if engagement_model:
             if TokenInfo.get_id() is None and engagement_model.status_id not in (
@@ -344,6 +356,11 @@ class EngagementService:
         """Update engagement partially."""
         status_block = data.pop('status_block', None)
         surveys = data.pop('surveys', None)
+        suggested_engagements = data.pop('suggested_engagements', None)
+        if suggested_engagements is None:
+            suggested_engagements = data.pop('suggested_engagements_input', None)
+        # Defensive: relationship keys are not valid for SQL UPDATE mappings.
+        data.pop('suggested_engagement_links', None)
         epic_fields = 'end_date' in data or 'start_date' in data
         selected_survey_id = data.get('selected_survey_id', None)
         engagement_id = data.get('id', None)
@@ -356,26 +373,67 @@ class EngagementService:
         if not engagement:
             raise ValueError('Engagement does not exist')
 
-        EngagementService._validate_engagement_edit_data(engagement, data)
-        if data:
-            if selected_survey_id:
-                data['selected_survey_id'] = \
-                    EngagementService._validate_and_assign_survey(selected_survey_id, engagement_id)
+        try:
+            EngagementService._validate_engagement_edit_data(engagement, data)
+            updated_engagement = engagement
 
-            updated_engagement = EngagementModel.edit_engagement(data)
+            if data:
+                if selected_survey_id:
+                    data['selected_survey_id'] = \
+                        EngagementService._validate_and_assign_survey(selected_survey_id, engagement_id)
 
-            if not updated_engagement:
-                raise ValueError(engagement)
+                updated_engagement = EngagementModel.edit_engagement(data, commit=False)
 
-            EngagementService._update_external_engagement_data(
-                engagement_id,
-                status_block,
-                surveys,
-                epic_fields,
-                updated_engagement
-            )
+                if not updated_engagement:
+                    raise ValueError(engagement)
+
+                EngagementService._update_external_engagement_data(
+                    engagement_id,
+                    status_block,
+                    surveys,
+                    epic_fields,
+                    updated_engagement
+                )
+
+            if suggested_engagements is not None:
+                EngagementService._sync_suggestions(engagement, suggested_engagements)
+
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            raise
 
         return EngagementModel.find_by_id(engagement_id)
+
+    @staticmethod
+    def _sync_suggestions(engagement: EngagementModel, suggestions_data):
+        """Sync suggested engagements using ORM relationship replacement."""
+        if not isinstance(suggestions_data, list):
+            raise BusinessException(
+                error='Invalid suggestions payload',
+                status_code=HTTPStatus.BAD_REQUEST,
+            )
+
+        normalized_suggestions = SuggestedEngagementSyncItemSchema(many=True).load(suggestions_data)
+        existing_by_id = {row.id: row for row in engagement.suggested_engagement_links}
+        now = datetime.now(timezone.utc)
+        ordered_links = []
+
+        for row in sorted(normalized_suggestions, key=lambda item: item['sort_index']):
+            suggestion_id = row.get('id')
+            if suggestion_id in existing_by_id:
+                link = existing_by_id[suggestion_id]
+                link.suggested_engagement_id = row['suggested_engagement_id']
+                link.updated_date = now
+            else:
+                link = SuggestedEngagementModel(
+                    suggested_engagement_id=row['suggested_engagement_id'],
+                    updated_date=now,
+                )
+            ordered_links.append(link)
+
+        engagement.suggested_engagement_links = ordered_links
+
 
     @staticmethod
     def validate_fields(data):

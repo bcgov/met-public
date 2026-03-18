@@ -5,11 +5,7 @@ export interface SuggestedEngagement {
     sort_index: number;
 }
 
-export interface SuggestedEngagementWithAttachment {
-    id?: number;
-    engagement_id: number;
-    suggested_engagement_id: number;
-    sort_index: number;
+export interface SuggestedEngagementWithAttachment extends SuggestedEngagement {
     engagement: SuggestedEngagementAttachment;
 }
 
@@ -23,6 +19,7 @@ interface SuggestedEngagementAttachment {
     end_date: string;
     status_id: number;
     banner_filename: string;
+    banner_url: string;
     tenant_id: number;
     is_internal: boolean;
     consent_message: string;

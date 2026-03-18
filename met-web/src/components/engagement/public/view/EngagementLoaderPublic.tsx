@@ -9,7 +9,6 @@ import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
 import { getTenantLanguages } from 'services/languageService';
 import { Language } from 'models/language';
-import { getSuggestedEngagements } from 'services/suggestedEngagementService';
 import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
 
 export type EngagementLoaderPublicData = {
@@ -39,7 +38,9 @@ export const engagementLoaderPublic = async ({ params }: { params: Params<string
         : getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
     const details = engagement.then((response) => getDetailsTabs(response.id));
-    const suggestions = engagement.then((response) => getSuggestedEngagements(response.id, true));
+    const suggestions = engagement.then(
+        (response) => response.suggested_engagements ?? ([] as SuggestedEngagementWithAttachment[]),
+    );
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
 

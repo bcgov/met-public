@@ -15,7 +15,6 @@ import { Tenant } from 'models/tenant';
 import { fetchVersion } from 'services/versionService';
 import { getMyTenants } from 'services/tenantService';
 import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
-import { getSuggestedEngagements } from 'services/suggestedEngagementService';
 
 export type EngagementPreviewLoaderData = {
     engagement: Promise<Engagement>;
@@ -52,7 +51,9 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
     const engagement = getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
     const details = engagement.then((response) => getDetailsTabs(response.id));
-    const suggestions = engagement.then((response) => getSuggestedEngagements(response.id, true));
+    const suggestions = engagement.then(
+        (response) => response.suggested_engagements ?? ([] as SuggestedEngagementWithAttachment[]),
+    );
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
     const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }).catch(() => []));
