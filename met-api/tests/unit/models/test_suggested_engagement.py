@@ -128,9 +128,9 @@ def test_update_suggested_engagement_success(session):
     eng_a, eng_b, _ = _make_engagements(3)
     s = _insert_suggestion(eng_a.id, eng_b.id, 1)
 
-    before = datetime.now(None)
+    before = datetime.now(timezone.utc)
     s.sort_index = 3
-    s.updated_date = datetime.utcnow()
+    s.updated_date = datetime.now(timezone.utc)
     db.session.commit()
     db.session.refresh(s)
 
