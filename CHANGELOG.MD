@@ -7,8 +7,7 @@
     - Created More Engagements authoring component, updated authoring action/loader
     - Integrated data with existing preview window / public engagement More Engagements section
         - Added reload trigger when pressing on Preview button and preview window is already open
-    - Modified section styling slightly to match hi-fi prototype
-    - Updated public and preview loaders
+    - Modified suggestion section styling slightly to match hi-fi prototype
 
 ## March 16, 2026
 

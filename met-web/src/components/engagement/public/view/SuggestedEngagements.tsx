@@ -82,7 +82,7 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                         const sug = suggestions.find((s) => s.sort_index === i + 1);
                                         // Empty suggestion slot in public engagement
                                         if (!sug && isPublic) return <></>;
-                                        // Empty suggestion slot in preview window
+                                        // Outlined slot in preview window
                                         if (!sug && !isPublic)
                                             return (
                                                 <Grid
