@@ -136,7 +136,7 @@ def test_update_suggested_engagement_success(session):
 
     assert s.sort_index == 3
     assert s.updated_date is not None
-    assert s.updated_date >= before
+    assert s.updated_date.astimezone(timezone.utc) >= before
 
 
 def test_update_suggested_engagement_not_found_returns_none(session):
