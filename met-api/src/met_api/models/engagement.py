@@ -11,6 +11,8 @@ from typing import List, Optional
 
 from sqlalchemy import and_, asc, desc, or_
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.sql import text
 from sqlalchemy.sql.schema import ForeignKey
 
@@ -73,6 +75,27 @@ class Engagement(BaseModel):
     subscribe_consent_message = db.Column(JSON, unique=False, nullable=True)
     sponsor_name = db.Column(db.String(50), nullable=True)
     more_engagements_heading = db.Column(db.String(60), nullable=True)
+    suggested_engagement_links = db.relationship(
+        'SuggestedEngagement',
+        back_populates='source_engagement',
+        primaryjoin='SuggestedEngagement.engagement_id == Engagement.id',
+        foreign_keys='SuggestedEngagement.engagement_id',
+        order_by='SuggestedEngagement.sort_index',
+        collection_class=ordering_list('sort_index', count_from=1),
+        cascade='all, delete-orphan',
+        passive_deletes=True,
+        lazy='selectin',
+    )
+    suggested_by_links = db.relationship(
+        'SuggestedEngagement',
+        back_populates='suggested_engagement',
+        primaryjoin='SuggestedEngagement.suggested_engagement_id == Engagement.id',
+        foreign_keys='SuggestedEngagement.suggested_engagement_id',
+        passive_deletes=True,
+        lazy='selectin',
+    )
+    suggested_engagements = association_proxy('suggested_engagement_links', 'suggested_engagement')
+    suggested_engagement_ids = association_proxy('suggested_engagement_links', 'suggested_engagement_id')
 
     @classmethod
     def get_engagements_paginated(
@@ -182,7 +205,7 @@ class Engagement(BaseModel):
         return record
 
     @classmethod
-    def edit_engagement(cls, engagement_data: dict) -> Optional[Engagement]:
+    def edit_engagement(cls, engagement_data: dict, commit: bool = True) -> Optional[Engagement]:
         """Update engagement."""
         engagement_id = engagement_data.get('id', None)
         query = Engagement.query.filter_by(id=engagement_id)
@@ -190,8 +213,15 @@ class Engagement(BaseModel):
         if not engagement:
             return None
         engagement_data['updated_date'] = datetime.utcnow()
-        query.update(engagement_data)
-        db.session.commit()
+        # Ensure no relationship fields are included in the update payload, only real columns
+        updatable_columns = {column.name for column in Engagement.__table__.columns}
+        updatable_columns.discard('id')  # ID can never be updated
+        update_payload = {
+            key: value for key, value in engagement_data.items() if key in updatable_columns
+        }
+        query.update(update_payload)
+        if commit:
+            db.session.commit()
         return engagement
 
     @classmethod

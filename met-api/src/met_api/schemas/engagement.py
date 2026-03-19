@@ -11,6 +11,7 @@ from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status, SubmissionStatus
 from met_api.schemas.engagement_status_block import EngagementStatusBlockSchema
 from met_api.schemas.engagement_survey import EngagementSurveySchema
+from met_api.schemas.suggested_engagement import SuggestedEngagementSyncItemSchema, SuggestedEngagementWithAttachment
 from met_api.schemas.utils import count_comments_by_status
 from met_api.utils.datetime import local_datetime
 
@@ -56,6 +57,18 @@ class EngagementSchema(Schema):
     subscribe_consent_message = fields.Str(data_key='subscribe_consent_message')
     sponsor_name = fields.Str(data_key='sponsor_name')
     more_engagements_heading = fields.Str(data_key='more_engagements_heading')
+    suggested_engagements = fields.Nested(
+        SuggestedEngagementWithAttachment,
+        many=True,
+        attribute='suggested_engagement_links',
+        dump_only=True,
+    )
+    suggested_engagements_input = fields.Nested(
+        SuggestedEngagementSyncItemSchema,
+        many=True,
+        data_key='suggested_engagements',
+        load_only=True,
+    )
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

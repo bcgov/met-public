@@ -14,7 +14,7 @@
 
 """Tests for the SuggestedEngagement model."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from sqlalchemy import text
@@ -45,8 +45,17 @@ def _insert_suggestion(engagement_id: int, suggested_engagement_id: int, sort_in
     return s
 
 
-def test_find_by_engagement_id_returns_sorted(session):
-    """Assert that find_by_engagement_id returns suggestions sorted by sort_index ascending."""
+def _get_for_engagement(engagement_id: int):
+    return (
+        db.session.query(SuggestedEngagement)
+        .filter(SuggestedEngagement.engagement_id == engagement_id)
+        .order_by(SuggestedEngagement.sort_index.asc())
+        .all()
+    )
+
+
+def test_query_by_engagement_returns_sorted(session):
+    """Assert query by engagement returns suggestions sorted by sort_index ascending."""
     eng_a, eng_b, eng_c, eng_d = _make_engagements(4)
 
     # Unordered inserts
@@ -54,129 +63,123 @@ def test_find_by_engagement_id_returns_sorted(session):
     _insert_suggestion(eng_a.id, eng_c.id, 1)
     _insert_suggestion(eng_a.id, eng_d.id, 2)
 
-    results = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    results = _get_for_engagement(eng_a.id)
     assert [r.sort_index for r in results] == [1, 2, 3]
     assert [r.suggested_engagement_id for r in results] == [eng_c.id, eng_d.id, eng_b.id]
 
 
-def test_find_by_engagement_id_and_attach_joins_engagement(session):
-    """Assert join + order works and returns (SuggestedEngagement, Engagement) tuples."""
+def test_relationship_attach_resolves_target_engagement(session):
+    """Assert relationships return sorted links with target engagement objects attached."""
     eng_a, eng_b, eng_c = _make_engagements(3)
     _insert_suggestion(eng_a.id, eng_b.id, 2)
     _insert_suggestion(eng_a.id, eng_c.id, 1)
 
-    rows = SuggestedEngagement.find_by_engagement_id_and_attach(eng_a.id)
+    engagement = EngagementModel.query.filter_by(id=eng_a.id).one()
+    rows = engagement.suggested_engagement_links
     assert len(rows) == 2
-    first_suggestion, first_eng = rows[0]
-    assert isinstance(first_suggestion, SuggestedEngagement)
-    assert isinstance(first_eng, EngagementModel)
-    assert first_suggestion.suggested_engagement_id == eng_c.id
-    assert first_eng.id == eng_c.id
+    assert isinstance(rows[0], SuggestedEngagement)
+    assert isinstance(rows[0].suggested_engagement, EngagementModel)
+    assert rows[0].suggested_engagement_id == eng_c.id
+    assert rows[0].suggested_engagement.id == eng_c.id
 
 
-def test_bulk_insert_suggested_engagements(session):
-    """Assert that bulk insert creates rows and enforces order by sort_index."""
+def test_insert_suggested_engagements(session):
+    """Assert inserts create rows and query order is by sort_index."""
     eng_a, eng_b, eng_c = _make_engagements(3)
 
-    mappings = [
-        {
-            'engagement_id': eng_a.id,
-            'suggested_engagement_id': eng_b.id,
-            'sort_index': 2,
-        },
-        {
-            'engagement_id': eng_a.id,
-            'suggested_engagement_id': eng_c.id,
-            'sort_index': 1,
-        },
-    ]
-    SuggestedEngagement.bulk_insert_suggested_engagements(mappings)
+    db.session.add_all([
+        SuggestedEngagement(
+            engagement_id=eng_a.id,
+            suggested_engagement_id=eng_b.id,
+            sort_index=2,
+        ),
+        SuggestedEngagement(
+            engagement_id=eng_a.id,
+            suggested_engagement_id=eng_c.id,
+            sort_index=1,
+        ),
+    ])
+    db.session.commit()
 
-    results = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    results = _get_for_engagement(eng_a.id)
     assert len(results) == 2
     assert [r.sort_index for r in results] == [1, 2]
     assert [r.suggested_engagement_id for r in results] == [eng_c.id, eng_b.id]
 
 
-def test_bulk_update_suggested_engagements(session):
-    """Assert that bulk update modifies rows as expected."""
+def test_update_suggested_engagements(session):
+    """Assert ORM updates modify rows as expected."""
     eng_a, eng_b, eng_c = _make_engagements(3)
     s1 = _insert_suggestion(eng_a.id, eng_b.id, 1)
     s2 = _insert_suggestion(eng_a.id, eng_c.id, 2)
 
     # swap sort indexes
-    updates = [
-        {'id': s1.id, 'sort_index': 2},
-        {'id': s2.id, 'sort_index': 1},
-    ]
-    SuggestedEngagement.bulk_update_suggested_engagements(updates)
+    s1.sort_index = 2
+    s2.sort_index = 1
+    db.session.commit()
 
-    results = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    results = _get_for_engagement(eng_a.id)
     assert [r.id for r in results] == [s2.id, s1.id]
     assert [r.sort_index for r in results] == [1, 2]
 
 
 def test_update_suggested_engagement_success(session):
-    """Assert that update_suggested_engagement updates fields and stamps updated_date."""
+    """Assert ORM update modifies fields and persists updated_date."""
     eng_a, eng_b, _ = _make_engagements(3)
     s = _insert_suggestion(eng_a.id, eng_b.id, 1)
 
-    before = datetime.now(None)
-    updated = SuggestedEngagement.update_suggested_engagement(
-        engagement_id=eng_a.id,
-        suggestion_id=s.id,
-        suggestion_data={'sort_index': 3},
-    )
-    assert updated is not None
-    assert updated.sort_index == 3
-    assert updated.updated_date is not None
-    assert updated.updated_date >= before  # updated_date set by model method
+    before = datetime.now(timezone.utc)
+    s.sort_index = 3
+    s.updated_date = datetime.now(timezone.utc)
+    db.session.commit()
+    db.session.refresh(s)
+
+    assert s.sort_index == 3
+    assert s.updated_date is not None
+    assert s.updated_date.astimezone(timezone.utc) >= before
 
 
 def test_update_suggested_engagement_not_found_returns_none(session):
-    """Assert update returns None when the row doesn't match (wrong id or engagement_id)."""
+    """Assert query returns None when the row doesn't match (wrong id or engagement_id)."""
     eng_a, eng_b = _make_engagements(2)
     s = _insert_suggestion(eng_a.id, eng_b.id, 1)
 
     # wrong engagement_id
-    updated = SuggestedEngagement.update_suggested_engagement(
-        engagement_id=eng_b.id,
-        suggestion_id=s.id,
-        suggestion_data={'sort_index': 2},
-    )
+    updated = SuggestedEngagement.query.filter_by(id=s.id, engagement_id=eng_b.id).one_or_none()
     assert updated is None
 
     # wrong suggestion_id
-    updated = SuggestedEngagement.update_suggested_engagement(
-        engagement_id=eng_a.id,
-        suggestion_id=999999,
-        suggestion_data={'sort_index': 2},
-    )
+    updated = SuggestedEngagement.query.filter_by(id=999999, engagement_id=eng_a.id).one_or_none()
     assert updated is None
 
 
 def test_delete_suggestions_by_ids(session):
-    """Assert that delete_suggestions_by_ids deletes multiple rows."""
+    """Assert query-driven delete removes multiple rows."""
     eng_a, eng_b, eng_c, eng_d = _make_engagements(4)
     s1 = _insert_suggestion(eng_a.id, eng_b.id, 1)
     s2 = _insert_suggestion(eng_a.id, eng_c.id, 2)
     s3 = _insert_suggestion(eng_a.id, eng_d.id, 3)
 
-    SuggestedEngagement.delete_suggestions_by_ids({s1.id, s3.id})
-    remaining = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    db.session.query(SuggestedEngagement).filter(
+        SuggestedEngagement.id.in_({s1.id, s3.id})
+    ).delete(synchronize_session=False)
+    db.session.commit()
+
+    remaining = _get_for_engagement(eng_a.id)
     assert [r.id for r in remaining] == [s2.id]
 
 
 def test_delete_suggested_engagement_single(session):
-    """Assert that delete_suggested_engagement deletes only the targeted row and returns count."""
+    """Assert single-row query delete removes only targeted row and returns count."""
     eng_a, eng_b, eng_c = _make_engagements(3)
     s1 = _insert_suggestion(eng_a.id, eng_b.id, 1)
     s2 = _insert_suggestion(eng_a.id, eng_c.id, 2)
 
-    deleted_count = SuggestedEngagement.delete_suggested_engagement(eng_a.id, s1.id)
+    deleted_count = SuggestedEngagement.query.filter_by(id=s1.id, engagement_id=eng_a.id).delete()
+    db.session.commit()
     assert deleted_count == 1
 
-    rows = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    rows = _get_for_engagement(eng_a.id)
     assert [r.id for r in rows] == [s2.id]
 
 
@@ -239,11 +242,29 @@ def test_cascade_delete_when_engagement_deleted(session):
     eng_a, eng_b, eng_c = _make_engagements(3)
     _insert_suggestion(eng_a.id, eng_b.id, 1)
     _insert_suggestion(eng_a.id, eng_c.id, 2)
-    assert SuggestedEngagement.find_by_engagement_id(eng_a.id)  # rows exist
+    assert _get_for_engagement(eng_a.id)  # rows exist
 
     # Delete the parent engagement (eng_a)
     deleted = EngagementModel.delete_engagement(eng_a.id)
     assert deleted is not None
 
-    remaining = SuggestedEngagement.find_by_engagement_id(eng_a.id)
+    remaining = _get_for_engagement(eng_a.id)
     assert remaining == []
+
+
+def test_ordering_list_assigns_one_based_sort_indexes_on_append(session):
+    """Appending via relationship should assign 1-based sort_index values."""
+    eng_a, eng_b, eng_c = _make_engagements(3)
+
+    engagement = EngagementModel.query.filter_by(id=eng_a.id).one()
+    engagement.suggested_engagement_links.append(
+        SuggestedEngagement(suggested_engagement_id=eng_b.id)
+    )
+    engagement.suggested_engagement_links.append(
+        SuggestedEngagement(suggested_engagement_id=eng_c.id)
+    )
+    db.session.commit()
+
+    rows = _get_for_engagement(eng_a.id)
+    assert [row.sort_index for row in rows] == [1, 2]
+    assert [row.suggested_engagement_id for row in rows] == [eng_b.id, eng_c.id]

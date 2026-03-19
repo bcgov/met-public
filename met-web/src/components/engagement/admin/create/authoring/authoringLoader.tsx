@@ -5,7 +5,6 @@ import { Survey } from 'models/survey';
 import { Params } from 'react-router';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
 import { getEngagement, getEngagements } from 'services/engagementService';
-import { getSuggestedEngagements } from 'services/suggestedEngagementService';
 import { getSurveysPage } from 'services/surveyService';
 import { Page } from 'services/type';
 
@@ -32,7 +31,7 @@ const authoringLoader = async ({ params }: { params: Params<string> }) => {
     const engagementListPromise = getEngagements({ size: 1000, tenant_id: tId });
     const detailsTabsPromise = getDetailsTabs(id);
     const surveysPromise = getSurveysPage();
-    const suggestionsPromise = getSuggestedEngagements(id);
+    const suggestionsPromise = engagementPromise.then((response) => response.suggested_engagements ?? []);
 
     return {
         engagement: engagementPromise,

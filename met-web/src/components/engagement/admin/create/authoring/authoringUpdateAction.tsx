@@ -6,7 +6,6 @@ import { patchEngagementSlug } from 'services/engagementSlugService';
 import { EngagementStatusBlock } from 'models/engagementStatusBlock';
 import { patchDetailsTabs } from 'services/engagementDetailsTabService';
 import { EngagementDetailsTab } from 'models/engagementDetailsTab';
-import { patchSuggestedEngagements } from 'services/suggestedEngagementService';
 
 export const authoringUpdateAction: ActionFunction = async ({ request }) => {
     const formData = (await request.formData()) as FormData;
@@ -104,10 +103,6 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
     if (formData.get('form_source') === 'more') {
         try {
             const moreEngagementsHeading = formData.get('more_engagements_heading') as string;
-            await patchEngagement({
-                id: engagementId as unknown as number,
-                more_engagements_heading: moreEngagementsHeading,
-            });
             // 3 Engagement Suggestion Slots
             const suggestions = Array.from({ length: 3 })
                 .map((_, i) => {
@@ -116,12 +111,16 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
                     if (!Number.isFinite(suggested) || suggested <= 0) return undefined;
                     return {
                         sort_index: i + 1,
-                        engagement_id: engagementId,
                         suggested_engagement_id: suggested,
                     };
                 })
                 .filter((v) => v !== undefined);
-            await patchSuggestedEngagements(engagementId, suggestions);
+
+            await patchEngagement({
+                id: engagementId as unknown as number,
+                more_engagements_heading: moreEngagementsHeading,
+                suggested_engagements: suggestions,
+            });
         } catch (e) {
             console.error('Error updating more engagements section', e);
         }
