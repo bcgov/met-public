@@ -5,7 +5,7 @@ Manages the engagement
 
 from datetime import datetime
 
-from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, validates_schema
+from marshmallow import EXCLUDE, Schema, ValidationError, fields, pre_load, validate, validates_schema
 
 from met_api.constants.comment_status import Status as CommentStatus
 from met_api.constants.engagement_status import Status, SubmissionStatus
@@ -66,9 +66,16 @@ class EngagementSchema(Schema):
     suggested_engagements_input = fields.Nested(
         SuggestedEngagementSyncItemSchema,
         many=True,
-        data_key='suggested_engagements',
         load_only=True,
     )
+
+    @pre_load
+    def map_suggested_engagements_input(self, data, **kwargs):
+        """Map external suggested_engagements payload to internal load-only field."""
+        if isinstance(data, dict) and 'suggested_engagements' in data and 'suggested_engagements_input' not in data:
+            data = dict(data)
+            data['suggested_engagements_input'] = data['suggested_engagements']
+        return data
 
     def get_submissions_meta_data(self, obj):
         """Get the meta data of the submissions made in the survey."""

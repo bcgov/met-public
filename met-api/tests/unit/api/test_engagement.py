@@ -485,6 +485,42 @@ def test_patch_engagement_by_member(client, jwt, session):  # pylint:disable=unu
     assert rv.json.get('name') == engagement_edits.get('name')
 
 
+def test_patch_engagement_persists_and_returns_suggested_engagements(
+    client, jwt, session, setup_admin_user_and_claims
+):  # pylint:disable=unused-argument
+    """Assert PATCH can persist suggested engagements and include them in response payload."""
+    _, claims = setup_admin_user_and_claims
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+
+    source_engagement = factory_engagement_model()
+    suggested_target = factory_engagement_model()
+
+    payload = {
+        'id': source_engagement.id,
+        'more_engagements_heading': 'You may also be interested in',
+        'suggested_engagements': [
+            {
+                'sort_index': 1,
+                'suggested_engagement_id': suggested_target.id,
+            }
+        ],
+    }
+
+    rv = client.patch(
+        '/api/engagements/',
+        data=json.dumps(payload),
+        headers=headers,
+        content_type=ContentType.JSON.value,
+    )
+
+    assert rv.status_code == HTTPStatus.OK
+    assert 'suggested_engagements' in rv.json
+    assert len(rv.json['suggested_engagements']) == 1
+    suggestion = rv.json['suggested_engagements'][0]
+    assert suggestion.get('sort_index') == 1
+    assert suggestion.get('suggested_engagement_id') == suggested_target.id
+
+
 def test_patch_new_survey_block_engagement(client, jwt, session,
                                            setup_admin_user_and_claims):  # pylint:disable=unused-argument
     """Assert that an engagement's survey status blocks can be updated."""
