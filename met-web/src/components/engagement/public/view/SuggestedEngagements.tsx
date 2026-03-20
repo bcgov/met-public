@@ -80,7 +80,7 @@ export const SuggestedEngagements = () => {
                                                 <Grid size="auto" key={`Grid-${sug.suggested_engagement_id}`}>
                                                     <EngagementTile
                                                         passedEngagement={sug.engagement as Engagement}
-                                                        engagementId={sug.suggested_engagement_id as number}
+                                                        engagementId={sug.suggested_engagement_id}
                                                     />
                                                 </Grid>
                                             ) : null,

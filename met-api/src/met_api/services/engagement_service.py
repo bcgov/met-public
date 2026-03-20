@@ -448,7 +448,7 @@ class EngagementService:
             ordered.append(link)
 
         incoming_targets = {i['suggested_engagement_id'] for i in normalized}
-        for existing in list(engagement.suggested_engagement_links):
+        for existing in engagement.suggested_engagement_links:
             if existing.suggested_engagement_id not in incoming_targets:
                 db.session.delete(existing)
 

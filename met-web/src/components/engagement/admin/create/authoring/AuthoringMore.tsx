@@ -187,7 +187,7 @@ const AuthoringMore = () => {
                                         sx={{ minHeight: '48px', width: '100%' }}
                                         options={engagementSelectOptions}
                                         value={
-                                            engagementSelectOptions.find((eso) => eso.value === field.value)
+                                            engagementSelectOptions.some((eso) => eso.value === field.value)
                                                 ? Number(field.value)
                                                 : engagementSelectOptions[0].value // None
                                         }
@@ -199,6 +199,14 @@ const AuthoringMore = () => {
                                                 {selected ? getSelectedValue(selected as unknown as number) : 'None'}
                                             </span>
                                         )}
+                                        MenuProps={{
+                                            PaperProps: {
+                                                style: {
+                                                    maxHeight: 48 * 4.5 + 8,
+                                                    overflowY: 'auto',
+                                                },
+                                            },
+                                        }}
                                     />
                                 </FormField>
                             )}
