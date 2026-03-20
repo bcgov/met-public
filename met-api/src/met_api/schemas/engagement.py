@@ -14,6 +14,7 @@ from met_api.schemas.engagement_survey import EngagementSurveySchema
 from met_api.schemas.suggested_engagement import SuggestedEngagementSyncItemSchema, SuggestedEngagementWithAttachment
 from met_api.schemas.utils import count_comments_by_status
 from met_api.utils.datetime import local_datetime
+from met_api.utils.submission_status import get_submission_status
 
 from .engagement_status import EngagementStatusSchema
 
@@ -46,7 +47,7 @@ class EngagementSchema(Schema):
     feedback_body = fields.Str(data_key='feedback_body')
     surveys = fields.Nested(EngagementSurveySchema, many=True)
     selected_survey_id = fields.Int(data_key='selected_survey_id')
-    submission_status = fields.Method('get_submission_status')
+    submission_status = fields.Function(lambda obj: get_submission_status(obj))
     submissions_meta_data = fields.Method('get_submissions_meta_data')
     status_block = fields.List(fields.Nested(EngagementStatusBlockSchema))
     tenant_id = fields.Str(data_key='tenant_id')
@@ -97,26 +98,6 @@ class EngagementSchema(Schema):
                 submissions,
                 CommentStatus.Needs_further_review.value)
         }
-
-    def get_submission_status(self, obj):
-        """Get the submission status of the engagement."""
-        if obj.status_id == Status.Draft.value or obj.status_id == Status.Scheduled.value:
-            return SubmissionStatus.Upcoming.value
-
-        if obj.status_id == Status.Closed.value:
-            return SubmissionStatus.Closed.value
-
-        now = local_datetime()
-        # Strip time off datetime object
-        date_due = datetime(now.year, now.month, now.day)
-
-        if obj.start_date <= date_due <= obj.end_date:
-            return SubmissionStatus.Open.value
-
-        if date_due <= obj.start_date:
-            return SubmissionStatus.Upcoming.value
-
-        return SubmissionStatus.Closed.value
 
     @validates_schema
     def validate_dates(self, data, **kwargs):

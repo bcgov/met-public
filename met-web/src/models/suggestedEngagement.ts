@@ -17,7 +17,7 @@ interface SuggestedEngagementAttachment {
     description_title: string;
     start_date: string;
     end_date: string;
-    status_id: number;
+    submission_status: number;
     banner_filename: string;
     banner_url: string;
     tenant_id: number;

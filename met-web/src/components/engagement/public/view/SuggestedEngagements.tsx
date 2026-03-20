@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense } from 'react';
 import { Box, Grid2 as Grid } from '@mui/material';
 import { TileSkeleton } from 'components/landing/TileSkeleton';
 import EngagementTile from 'components/landing/EngagementTile';
@@ -7,33 +7,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
 import { Await, useLoaderData } from 'react-router';
-import { colors, RepeatedGrid } from 'components/common';
+import { RepeatedGrid } from 'components/common';
 import { EngagementLoaderPublicData } from './EngagementLoaderPublic';
 import { EngagementViewSections } from '.';
 import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
 import { Engagement } from 'models/engagement';
+import { previewValue } from 'engagements/preview/PreviewSwitch';
+import { usePreview } from 'engagements/preview/PreviewContext';
 
-export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
-    const { suggestions: sugs, engagement: eng } = useLoaderData() as EngagementLoaderPublicData;
+export const SuggestedEngagements = () => {
+    const { suggestions, engagement } = useLoaderData() as EngagementLoaderPublicData;
     const engagementSlots = Array.from({ length: 3 });
-    const [suggestions, setSuggestions] = useState<SuggestedEngagementWithAttachment[]>();
-    const [engagement, setEngagement] = useState<Engagement>();
-
-    useEffect(() => {
-        const getLoaderData = async () => {
-            setSuggestions(await sugs);
-            setEngagement(await eng);
-        };
-        getLoaderData();
-    }, [eng, sugs]);
+    const { isPreviewMode } = usePreview();
 
     const placeholderStyles = {
-        border: `2px dashed ${colors.surface.blue[80]}`,
+        border: `2px dashed`,
+        borderColor: 'primary.light',
         borderRadius: '16px',
         alignItems: 'center',
         justifyContent: 'center',
-        color: colors.surface.blue[80],
-        display: 'flex',
+        color: 'primary.light',
         minHeight: '442px',
         userSelect: 'none',
     };
@@ -53,9 +46,9 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                 </RepeatedGrid>
             }
         >
-            <Await resolve={[sugs, eng]}>
-                <>
-                    {!suggestions || suggestions?.length < 1 ? null : ( // Do not render component if no suggestions are available
+            <Await resolve={Promise.all([suggestions, engagement])}>
+                {([sugs, eng]: [SuggestedEngagementWithAttachment[], Engagement]) =>
+                    !sugs || sugs?.length < 1 ? null : ( // Do not render component if no suggestions are available
                         <section id={EngagementViewSections.MORE_ENGAGEMENTS} aria-label="Suggested Engagements">
                             <Box
                                 sx={{
@@ -67,7 +60,7 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                 }}
                             >
                                 <Header2 weight="thin" sx={{ mb: '42px' }} decorated>
-                                    {engagement?.more_engagements_heading || 'You may also be interested in'}
+                                    {eng?.more_engagements_heading || 'You may also be interested in'}
                                 </Header2>
                                 <Grid
                                     container
@@ -79,15 +72,23 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                     rowSpacing={4}
                                 >
                                     {engagementSlots.map((_, i) => {
-                                        const sug = suggestions.find((s) => s.sort_index === i + 1);
-                                        // Empty suggestion slot in public engagement
-                                        if (!sug && isPublic) return <></>;
-                                        // Outlined slot in preview window
-                                        if (!sug && !isPublic)
-                                            return (
+                                        const sug = sugs.find((s) => s.sort_index === i + 1);
+                                        return previewValue<React.ReactNode>({
+                                            isPreviewMode: isPreviewMode,
+                                            hasValue: Boolean(sug),
+                                            value: sug ? (
+                                                <Grid size="auto" key={`Grid-${sug.suggested_engagement_id}`}>
+                                                    <EngagementTile
+                                                        passedEngagement={sug.engagement as Engagement}
+                                                        engagementId={sug.suggested_engagement_id as number}
+                                                    />
+                                                </Grid>
+                                            ) : null,
+                                            previewFallback: (
                                                 <Grid
                                                     key={`Placeholder-${i + 1}`}
                                                     size="auto"
+                                                    container
                                                     width="320px"
                                                     sx={placeholderStyles}
                                                 >
@@ -98,43 +99,21 @@ export const SuggestedEngagements = ({ isPublic }: { isPublic: boolean }) => {
                                                         Engagement Card
                                                     </p>
                                                 </Grid>
-                                            );
-                                        /* Regular engagement card (preview window and public engagement) */
-                                        if (sug)
-                                            return (
-                                                <Grid
-                                                    size="auto"
-                                                    key={`Grid-${sug?.suggested_engagement_id}`}
-                                                    width="320px"
-                                                    alignItems="center"
-                                                    justifyContent="center"
-                                                >
-                                                    <EngagementTile
-                                                        passedEngagement={sug.engagement as Engagement}
-                                                        engagementId={sug.suggested_engagement_id as number}
-                                                    />
-                                                </Grid>
-                                            );
+                                            ),
+                                            fallback: null,
+                                        });
                                     })}
                                 </Grid>
-                                <Grid container justifyContent="center" alignItems="center" direction="row">
-                                    <Grid size={12} mt="64px" textAlign={'center'}>
-                                        <Link
-                                            to="/"
-                                            sx={{
-                                                color: (theme) => theme.palette.text.primary,
-                                                textDecoration: 'none',
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faArrowLeftLong} style={{ paddingRight: '8px' }} />
-                                            All engagements
-                                        </Link>
-                                    </Grid>
+                                <Grid size={12} mt="64px" textAlign={'center'}>
+                                    <Link to="/" sx={{ color: 'text.primary' }}>
+                                        <FontAwesomeIcon icon={faArrowLeftLong} style={{ paddingRight: '8px' }} />
+                                        All engagements
+                                    </Link>
                                 </Grid>
                             </Box>
                         </section>
-                    )}
-                </>
+                    )
+                }
             </Await>
         </Suspense>
     );

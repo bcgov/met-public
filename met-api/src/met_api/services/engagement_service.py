@@ -408,32 +408,51 @@ class EngagementService:
 
     @staticmethod
     def _sync_suggestions(engagement: EngagementModel, suggestions_data):
-        """Sync suggested engagements using ORM relationship replacement."""
+        """Sync suggestions: combined create, update, delete."""
         if not isinstance(suggestions_data, list):
             raise BusinessException(
                 error='Invalid suggestions payload',
                 status_code=HTTPStatus.BAD_REQUEST,
             )
 
-        normalized_suggestions = SuggestedEngagementSyncItemSchema(many=True).load(suggestions_data)
-        existing_by_id = {row.id: row for row in engagement.suggested_engagement_links}
-        now = datetime.now(timezone.utc)
-        ordered_links = []
+        by_id: dict[int, SuggestedEngagementModel] = {
+            r.id: r for r in engagement.suggested_engagement_links if r.id is not None
+        }
+        by_target: dict[int, SuggestedEngagementModel] = {
+            r.suggested_engagement_id: r for r in engagement.suggested_engagement_links
+            if r.suggested_engagement_id is not None
+        }
 
-        for row in sorted(normalized_suggestions, key=lambda item: item['sort_index']):
-            suggestion_id = row.get('id')
-            if suggestion_id in existing_by_id:
-                link = existing_by_id[suggestion_id]
-                link.suggested_engagement_id = row['suggested_engagement_id']
-                link.updated_date = now
+        normalized = SuggestedEngagementSyncItemSchema(many=True).load(suggestions_data)
+        now = datetime.now(timezone.utc)
+        ordered: list[SuggestedEngagementModel] = []
+
+        for item in sorted(normalized, key=lambda x: x['sort_index']):
+            sid = item.get('id')
+            target = item['suggested_engagement_id']
+            slot = item['sort_index']
+
+            if sid and sid in by_id:
+                link = by_id[sid]
+            elif target in by_target:
+                link = by_target[target]
             else:
                 link = SuggestedEngagementModel(
-                    suggested_engagement_id=row['suggested_engagement_id'],
-                    updated_date=now,
+                    suggested_engagement_id=target,
+                    created_date=now,
                 )
-            ordered_links.append(link)
 
-        engagement.suggested_engagement_links = ordered_links
+            link.suggested_engagement_id = target
+            link.sort_index = slot
+            link.updated_date = now
+            ordered.append(link)
+
+        incoming_targets = {i['suggested_engagement_id'] for i in normalized}
+        for existing in list(engagement.suggested_engagement_links):
+            if existing.suggested_engagement_id not in incoming_targets:
+                db.session.delete(existing)
+
+        engagement.suggested_engagement_links = ordered
 
     @staticmethod
     def validate_fields(data):
@@ -448,7 +467,7 @@ class EngagementService:
 
     @staticmethod
     def _send_closeout_emails(engagement: EngagementModel) -> None:
-        """Send the engagement closeout emails.Throws error if fails."""
+        """Send the engagement closeout emails. Throws error if fails."""
         lang_code = current_app.config['DEFAULT_LANGUAGE']
         subject, body, args = EngagementService._render_email_template(
             engagement, lang_code

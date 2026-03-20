@@ -17,7 +17,6 @@ interface PreviewContentProps {
  * Wraps the view with PreviewContext to enable placeholder rendering for missing content.
  */
 export const PreviewContent: React.FC<PreviewContentProps> = ({ previewStateType }) => {
-    const isPublic = false;
     return (
         <PreviewProvider isPreviewMode={true} showPlaceholders={true} previewStateType={previewStateType}>
             <main>
@@ -26,7 +25,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({ previewStateType
                 <EngagementDetailsTabs />
                 <EngagementSurveyBlock />
                 <EngagementSubscribeBlock />
-                <SuggestedEngagements isPublic={isPublic} />
+                <SuggestedEngagements />
             </main>
         </PreviewProvider>
     );

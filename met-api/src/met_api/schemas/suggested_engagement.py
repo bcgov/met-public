@@ -5,6 +5,7 @@ Represents an individual suggested engagement.
 from marshmallow import EXCLUDE, Schema, ValidationError, fields, pre_load, validate, validates_schema
 
 from met_api.services.object_storage_service import ObjectStorageService
+from met_api.utils.submission_status import get_submission_status
 
 
 class SuggestedEngagementSyncItemSchema(Schema):
@@ -62,7 +63,7 @@ class SuggestedEngagementAttachment(Schema):
     description_title = fields.Str(data_key='description_title')
     start_date = fields.Date(data_key='start_date', required=True)
     end_date = fields.Date(data_key='end_date', required=True)
-    status_id = fields.Int(data_key='status_id')
+    submission_status = fields.Function(lambda obj: get_submission_status(obj))
     banner_filename = fields.Str(data_key='banner_filename')
     banner_url = fields.Method('get_banner_url', data_key='banner_url')
     tenant_id = fields.Int(data_key='tenant_id')

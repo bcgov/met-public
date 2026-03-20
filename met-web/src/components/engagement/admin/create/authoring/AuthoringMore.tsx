@@ -9,7 +9,7 @@ import { defaultValuesObject, EngagementUpdateData } from './AuthoringContext';
 import { AuthoringTemplateOutletContext } from './types';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
-import { EngagementStatus } from 'constants/engagementStatus';
+import { SubmissionStatus } from 'constants/engagementStatus';
 import { AuthoringLoaderData } from './authoringLoader';
 import { Engagement } from 'models/engagement';
 import { Page } from 'services/type';
@@ -77,7 +77,9 @@ const AuthoringMore = () => {
                 if (
                     eng.tenant_id === tenantId && // Must be engagements from same tenant
                     eng.id !== engagementId && // Can't suggest the current engagement
-                    eng.status_id === EngagementStatus.Published // Only suggest published engagements
+                    // Only suggest open or closed engagements, not drafts or unpublished
+                    (eng.submission_status === SubmissionStatus.Open ||
+                        eng.submission_status === SubmissionStatus.Closed)
                 ) {
                     filteredOptions.push({
                         label: eng?.name || '',
