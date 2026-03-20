@@ -408,7 +408,7 @@ class EngagementService:
 
     @staticmethod
     def _sync_suggestions(engagement: EngagementModel, suggestions_data):
-        """Sync suggestions: combined create, update, delete."""
+        """Sync suggestions: create, update, delete using ORM relationship replacement."""
         if not isinstance(suggestions_data, list):
             raise BusinessException(
                 error='Invalid suggestions payload',
