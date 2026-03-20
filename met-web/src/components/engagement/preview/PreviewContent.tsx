@@ -5,7 +5,7 @@ import { EngagementDescription } from '../public/view/EngagementDescription';
 import { EngagementDetailsTabs } from '../public/view/EngagementDetailsTabs';
 import { EngagementSurveyBlock } from '../public/view/EngagementSurveyBlock';
 import { EngagementSubscribeBlock } from '../public/view/EngagementSubscribeBlock';
-// import { SuggestedEngagements } from 'engagements/public/view/SuggestedEngagements';
+import { SuggestedEngagements } from 'engagements/public/view/SuggestedEngagements';
 import { SubmissionStatusTypes } from 'constants/engagementStatus';
 
 interface PreviewContentProps {
@@ -25,8 +25,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({ previewStateType
                 <EngagementDetailsTabs />
                 <EngagementSurveyBlock />
                 <EngagementSubscribeBlock />
-                {/* SuggestedEngagements are omitted in preview mode for now */}
-                {/* <SuggestedEngagements /> */}
+                <SuggestedEngagements />
             </main>
         </PreviewProvider>
     );

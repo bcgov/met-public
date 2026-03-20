@@ -46,7 +46,6 @@ const summarySchema = yup.object({
     summary_editor_state: yup.mixed().test('body-not-empty', 'Body cannot be empty', (value) => {
         return value?.getCurrentContent()?.hasText();
     }),
-    form_source: yup.string().required(),
 });
 
 const feedbackSchema = yup.object({
@@ -58,6 +57,33 @@ const feedbackSchema = yup.object({
     surveys: yup.array().default([]),
     selected_survey_id: yup.number().typeError('Please select a valid survey or the None option.').integer(),
 });
+
+const dupeMsg = 'Each suggested engagement can only be chosen once';
+const moreEngagementsSchema = yup.object({
+    id: yup.number().required(),
+    more_engagements_heading: yup
+        .string()
+        .required('Heading is required')
+        .max(60, 'Heading must be 60 characters or less'),
+    more_engagements_1: yup.number().test('dup-1', dupeMsg, function (val) {
+        return testMoreEngagementsValue(this, val);
+    }),
+    more_engagements_2: yup.number().test('dup-2', dupeMsg, function (val) {
+        return testMoreEngagementsValue(this, val);
+    }),
+    more_engagements_3: yup.number().test('dup-3', dupeMsg, function (val) {
+        return testMoreEngagementsValue(this, val);
+    }),
+});
+
+const testMoreEngagementsValue = (that: yup.TestContext, value: number | undefined) => {
+    const { more_engagements_1, more_engagements_2, more_engagements_3 } = that.parent ?? {};
+    const fields = [more_engagements_1, more_engagements_2, more_engagements_3];
+    // Ignore default values
+    if (value === undefined || value === null || value === -1) return true;
+    // Check for number validity and duplicates
+    return Number.isFinite(value) && fields.filter((f) => f === value)?.length < 2;
+};
 
 const subscribeSchema = yup.object({
     id: yup.number().required(),
@@ -126,7 +152,8 @@ export interface EngagementUpdateData
         yup.TypeOf<typeof feedbackSchema>,
         yup.TypeOf<typeof subscribeSchema>,
         yup.TypeOf<typeof summarySchema>,
-        yup.TypeOf<typeof detailsTabsSchema> {
+        yup.TypeOf<typeof detailsTabsSchema>,
+        yup.TypeOf<typeof moreEngagementsSchema> {
     id: number;
     status_id: number;
     taxon_id: number;
@@ -215,6 +242,11 @@ export const defaultValuesObject = {
     feedback_third_party_cta_text: '',
     feedback_third_party_cta_link: '',
     feedback_widget_type: '',
+    // More engagements fields
+    more_engagements_heading: '',
+    more_engagements_1: -1,
+    more_engagements_2: -1,
+    more_engagements_3: -1,
     // Subscribe fields
     subscribe_section_heading: '',
     subscribe_section_description: EditorState.createEmpty(),
@@ -261,6 +293,8 @@ export const AuthoringContext = () => {
                 return yupResolver(summarySchema) as unknown as Resolver<EngagementUpdateData>;
             case 'details':
                 return yupResolver(detailsTabsSchema) as unknown as Resolver<EngagementUpdateData>;
+            case 'more':
+                return yupResolver(moreEngagementsSchema) as unknown as Resolver<EngagementUpdateData>;
             case 'subscribe':
                 return yupResolver(subscribeSchema) as unknown as Resolver<EngagementUpdateData>;
             default:
@@ -339,6 +373,10 @@ export const AuthoringContext = () => {
                         body: convertToRaw(tab.body.getCurrentContent()),
                     })),
                 ),
+                more_engagements_heading: data.more_engagements_heading || '',
+                more_engagements_1: data.more_engagements_1?.toString() || '',
+                more_engagements_2: data.more_engagements_2?.toString() || '',
+                more_engagements_3: data.more_engagements_3?.toString() || '',
             }),
             {
                 method: 'post',

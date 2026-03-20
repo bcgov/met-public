@@ -15,6 +15,7 @@ import { EngagementLoaderAdminData } from 'components/engagement/admin/Engagemen
 import { saveLanguage } from 'reduxSlices/languageSlice';
 import Grid from '@mui/material/Grid2';
 import { StatusLabel } from './StatusLabel';
+import AuthoringMorePreform from './AuthoringMorePreform';
 
 export const getLanguageValue = (languageCode: string, languages: Language[]) => {
     if (languageCode === 'en') {
@@ -73,7 +74,9 @@ const AuthoringTemplate = () => {
             </Grid>
 
             {/* Portal target for anything that needs to be rendered before the section title + content */}
-            <div id="pre-authoring-content" />
+            <div id="pre-authoring-content">
+                {pageName === 'more' && <AuthoringMorePreform languages={languages} />}
+            </div>
 
             <Grid size={12}>
                 <Header2 decorated style={{ paddingTop: '1rem' }}>

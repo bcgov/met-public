@@ -99,6 +99,33 @@ export const authoringUpdateAction: ActionFunction = async ({ request }) => {
         }
     }
 
+    // Update more engagements section if necesssary
+    if (formData.get('form_source') === 'more') {
+        try {
+            const moreEngagementsHeading = formData.get('more_engagements_heading') as string;
+            // 3 Engagement Suggestion Slots
+            const suggestions = Array.from({ length: 3 })
+                .map((_, i) => {
+                    const raw = formData.get(`more_engagements_${i + 1}`) as unknown as number;
+                    const suggested = Number(raw);
+                    if (!Number.isFinite(suggested) || suggested <= 0) return undefined;
+                    return {
+                        sort_index: i + 1,
+                        suggested_engagement_id: suggested,
+                    };
+                })
+                .filter((v) => v !== undefined);
+
+            await patchEngagement({
+                id: engagementId as unknown as number,
+                more_engagements_heading: moreEngagementsHeading,
+                suggested_engagements: suggestions,
+            });
+        } catch (e) {
+            console.error('Error updating more engagements section', e);
+        }
+    }
+
     // Update engagement subscribe section settings
     if (formData.get('form_source') === 'subscribe') {
         try {

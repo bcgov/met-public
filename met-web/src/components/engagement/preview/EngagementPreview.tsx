@@ -169,7 +169,7 @@ export const EngagementPreview: React.FC = () => {
 
     useEffect(() => {
         setContentVersion((previous) => previous + 1);
-    }, [loaderData.engagement, loaderData.widgets, loaderData.details, loaderData.metadata]);
+    }, [loaderData.engagement, loaderData.widgets, loaderData.details, loaderData.metadata, loaderData.suggestions]);
 
     useEffect(() => {
         let isMounted = true;
@@ -197,6 +197,7 @@ export const EngagementPreview: React.FC = () => {
             loaderData.widgets,
             loaderData.details,
             loaderData.metadata,
+            loaderData.suggestions,
         ]).finally(() => {
             if (isMounted) {
                 setIsReloading(false);
@@ -206,7 +207,14 @@ export const EngagementPreview: React.FC = () => {
         return () => {
             isMounted = false;
         };
-    }, [isReloading, loaderData.engagement, loaderData.widgets, loaderData.details, loaderData.metadata]);
+    }, [
+        isReloading,
+        loaderData.engagement,
+        loaderData.widgets,
+        loaderData.details,
+        loaderData.metadata,
+        loaderData.suggestions,
+    ]);
 
     useEffect(() => {
         const animateScrollToElement = (targetId: string) => {
@@ -251,13 +259,18 @@ export const EngagementPreview: React.FC = () => {
             globalThis.requestAnimationFrame(animate);
         };
 
-        const handlePreviewScrollMessage = (event: MessageEvent) => {
+        const handleWindowMessage = (event: MessageEvent) => {
             if (event.origin !== globalThis.location.origin) return;
-            if (typeof event?.data?.targetId !== 'string') return;
-            animateScrollToElement(event?.data?.targetId);
+
+            const message = event?.data || undefined;
+            if (message?.type === 'met-preview-scroll') {
+                animateScrollToElement(event?.data?.targetId);
+            } else if (message?.type === 'met-preview-refresh') {
+                handleReload();
+            }
         };
 
-        globalThis.addEventListener('message', handlePreviewScrollMessage);
+        globalThis.addEventListener('message', handleWindowMessage);
 
         const scrollToHashTarget = () => {
             const targetId = globalThis.location.hash.replace('#', '');
@@ -275,7 +288,7 @@ export const EngagementPreview: React.FC = () => {
             globalThis.clearTimeout(secondAttempt);
             globalThis.clearTimeout(thirdAttempt);
             globalThis.removeEventListener('hashchange', scrollToHashTarget);
-            globalThis.removeEventListener('message', handlePreviewScrollMessage);
+            globalThis.removeEventListener('message', handleWindowMessage);
         };
     }, [contentVersion]);
 

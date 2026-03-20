@@ -37,6 +37,10 @@ export interface LanguageSelectorProps {
     isSubmitting: boolean;
 }
 
+export interface AuthoringMorePreformProps {
+    languages: Promise<Language[]>;
+}
+
 export interface AuthoringBottomNavProps {
     currentLanguage: LanguageState;
     setCurrentLanguage: (code: string, name: string) => void;

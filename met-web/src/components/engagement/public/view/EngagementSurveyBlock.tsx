@@ -159,7 +159,7 @@ export const EngagementSurveyBlock = () => {
                                                     </Header2>
                                                 }
                                             />
-                                            <BodyText>
+                                            <BodyText component="div">
                                                 <PreviewSwitch
                                                     hasValue={hasFeedbackBody}
                                                     value={

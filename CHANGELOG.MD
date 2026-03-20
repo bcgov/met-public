@@ -1,3 +1,15 @@
+## March 17, 2026
+
+- **Feature** Added More Engagements to authoring section [🎟️ DEP-228](https://citz-gdx.atlassian.net/browse/DEP-228)
+  - Created SuggestedEngagement data type, as these are many to one with engagements
+    - Added schema, model, and migration to the API
+  - Updated engagement data type to store more engagements custom header string
+  - Updated engagement API endpoints to include suggested engagement data and allow updating suggested engagements via the engagement details endpoint
+  - Created More Engagements authoring component, updated authoring action/loader
+  - Integrated data with existing preview window / public engagement More Engagements section
+    - Added reload trigger when pressing on Preview button and preview window is already open
+  - Modified suggestion section styling slightly to match hi-fi prototype
+
 ## March 16, 2026
 
 - **Chore** Update user guide link to point to new location [🎟️ DEP-222](https://citz-gdx.atlassian.net/browse/DEP-222)
@@ -18,7 +30,7 @@
 
 ## March 8, 2026
 
-- Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
+- **Feature** Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
   - All attempts to delete an engagement from the production environment will fail
   - Published engagements can not be deleted in any environment
   - Only super admins or users authorized to unpublish a specific engagement can delete
