@@ -1,5 +1,3 @@
-import { Grid2 as Grid } from '@mui/material';
-import { EyebrowText as FormDescriptionText, Header3 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { FormField, Select, TextField } from 'components/common/Input';
 import React, { useEffect, useState } from 'react';
@@ -105,40 +103,19 @@ const AuthoringMore = () => {
         return 'None';
     };
 
-    // Define the styles
-    const metHeader3Styles = {
-        fontSize: '1.05rem',
-        marginBottom: '0.7rem',
-    };
-    const formDescriptionTextStyles = {
-        fontSize: '0.9rem',
-        marginBottom: '1.5rem',
-    };
-    const authoringFormContainerStyles = {
-        '& .met-input-form-field-title': { fontSize: '0.875rem' },
-        '& .met-input-text': { background: 'white' },
-        '& #image-upload-section .MuiGrid-container': { background: 'white' },
-    };
-
     return (
         <>
             {/* prevent navigating away when the user has unsaved work */}
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
 
             {/* More Engagements form */}
-            <AuthoringFormContainer sx={authoringFormContainerStyles}>
-                <Grid sx={{ mt: '1rem' }}>
-                    <Header3 style={metHeader3Styles}>Primary Content (Required)</Header3>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        This section of content should provide a brief overview of your approach to feedback and what
-                        you would like your audience to do.
-                    </FormDescriptionText>
-                </Grid>
-
-                <AuthoringFormSection name="Section Heading" required={true} labelFor={'more_engagements_heading'}>
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Your more engagements heading should be descriptive, short, and succinct.
-                    </FormDescriptionText>
+            <AuthoringFormContainer>
+                <AuthoringFormSection
+                    name="Section Heading"
+                    required={true}
+                    labelFor={'more_engagements_heading'}
+                    details="Your more engagements heading should be descriptive, short, and succinct."
+                >
                     <Controller
                         control={control}
                         name="more_engagements_heading"
@@ -162,14 +139,11 @@ const AuthoringMore = () => {
                 </AuthoringFormSection>
 
                 <AuthoringFormSection
+                    required
                     name="Select and Add Other Engagements"
-                    required={true}
                     labelFor={'more_engagements_1'}
+                    details="Select up to three other engagements to display this section in your engagement page."
                 >
-                    <FormDescriptionText style={formDescriptionTextStyles}>
-                        Select up to three other engagements to display this section in your engagement page.
-                    </FormDescriptionText>
-
                     {engagementSlots.map((es, i) => (
                         <Controller
                             key={es}
