@@ -88,6 +88,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     return (
         <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
             <Card
+                draggable={false}
                 className={isActive ? 'active' : ''}
                 sx={{
                     cursor: isLoadingEngagement ? 'not-allowed' : 'pointer',

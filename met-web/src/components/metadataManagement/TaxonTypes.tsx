@@ -1,26 +1,26 @@
-import {
-    Abc,
-    AlternateEmail,
-    Event,
-    EventNote,
-    Flaky,
-    Link,
-    Article,
-    PinOutlined,
-    Phone,
-    Schedule,
-} from '@mui/icons-material';
 import { TaxonType, GenericInputProps as TaxonInputProps } from './types';
 import * as yup from 'yup';
 import React from 'react';
 import { TextField } from '@mui/material';
 import { TaxonPicker, PickerTypes, taxonSwitch } from 'components/metadataManagement/TaxonInputComponents';
 import { MetadataFilterTypes } from './MetadataFilterTypes';
+import {
+    faAt,
+    faCalendarClock,
+    faCalendarDay,
+    faClock,
+    faHashtag,
+    faInputText,
+    faLineColumns,
+    faLinkSimple,
+    faPhone,
+    faToggleOff,
+} from '@fortawesome/pro-regular-svg-icons';
 
 export const TaxonTypes: { [key: string]: TaxonType } = {
     text: {
         name: 'Text',
-        icon: Abc,
+        icon: faInputText,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
@@ -30,7 +30,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     long_text: {
         name: 'Multiline Text',
-        icon: Article,
+        icon: faLineColumns,
         supportsPresetValues: false,
         supportsFreeform: true,
         supportsMulti: false,
@@ -54,7 +54,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     number: {
         name: 'Number',
-        icon: PinOutlined,
+        icon: faHashtag,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
@@ -62,7 +62,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     boolean: {
         name: 'True/False',
-        icon: Flaky,
+        icon: faToggleOff,
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: false,
@@ -71,7 +71,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     date: {
         name: 'Date',
-        icon: Event,
+        icon: faCalendarDay,
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: true,
@@ -80,7 +80,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     time: {
         name: 'Time',
-        icon: Schedule,
+        icon: faClock,
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: false,
@@ -89,7 +89,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     datetime: {
         name: 'Date and Time',
-        icon: EventNote,
+        icon: faCalendarClock,
         supportsPresetValues: false,
         supportsFreeform: false,
         supportsMulti: false,
@@ -98,7 +98,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     url: {
         name: 'Web Link',
-        icon: Link,
+        icon: faLinkSimple,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
@@ -108,7 +108,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     email: {
         name: 'Email Address',
-        icon: AlternateEmail,
+        icon: faAt,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,
@@ -118,7 +118,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     phone: {
         name: 'Phone Number',
-        icon: Phone,
+        icon: faPhone,
         supportsPresetValues: true,
         supportsFreeform: true,
         supportsMulti: true,

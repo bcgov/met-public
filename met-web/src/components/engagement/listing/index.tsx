@@ -30,10 +30,7 @@ import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { EngagementListLoaderData } from 'engagements/public/view/EngagementListLoader';
-// Prevents page load fail due to waiting for engagement title on refresh
-const AutoBreadcrumbs = React.lazy(() =>
-    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
-);
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
 interface SearchFilter {
     key?: string;

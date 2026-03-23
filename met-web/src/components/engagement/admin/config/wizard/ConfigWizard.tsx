@@ -10,7 +10,7 @@ import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engag
 import { BodyText, Header1, Header2 } from 'components/common/Typography';
 import dayjs from 'dayjs';
 import { Language } from 'models/language';
-import { CircularProgress, Grid, Modal, Skeleton } from '@mui/material';
+import { CircularProgress, Grid2 as Grid, Modal, Skeleton } from '@mui/material';
 import { modalStyle } from 'components/common';
 
 const EngagementConfigurationWizard = () => {
@@ -18,23 +18,26 @@ const EngagementConfigurationWizard = () => {
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
-            <Suspense
-                fallback={
-                    <Skeleton variant="text">
-                        <Header1 sx={{ mb: 0 }}>Example Engagement</Header1>
-                    </Skeleton>
-                }
-            >
-                <Await resolve={engagement}>
-                    {(resolvedEngagement) => <Header1 sx={{ mb: 0 }}>{resolvedEngagement.name}</Header1>}
-                </Await>
-            </Suspense>
-            <br />
-            <Suspense fallback={<Header2 decorated>Edit Configuration</Header2>}>
-                <Await resolve={Promise.all([engagement, teamMembers, slug])}>
-                    <ConfigForm />
-                </Await>
-            </Suspense>
+            <Grid size={12}>
+                <Suspense
+                    fallback={
+                        <Skeleton variant="text">
+                            <Header1 mb={0}>Example Engagement</Header1>
+                        </Skeleton>
+                    }
+                >
+                    <Await resolve={engagement}>
+                        {(resolvedEngagement) => <Header1 mb={0}>{resolvedEngagement.name}</Header1>}
+                    </Await>
+                </Suspense>
+            </Grid>
+            <Grid size={12} mt={4}>
+                <Suspense fallback={<Header2 decorated>Edit Configuration</Header2>}>
+                    <Await resolve={Promise.all([engagement, teamMembers, slug])}>
+                        <ConfigForm />
+                    </Await>
+                </Suspense>
+            </Grid>
         </ResponsiveContainer>
     );
 };
@@ -99,7 +102,7 @@ const ConfigForm = () => {
                     alignItems="flex-start"
                     sx={{ ...modalStyle, borderColor: 'notification.default.shade' }}
                 >
-                    <Grid item xs={1} sx={{ pt: 1.25, fontSize: '16px' }}>
+                    <Grid size={1} sx={{ pt: 1.25, fontSize: '16px' }}>
                         <CircularProgress
                             variant="indeterminate"
                             sx={{
@@ -114,20 +117,19 @@ const ConfigForm = () => {
                         />
                     </Grid>
                     <Grid
-                        item
-                        xs={11}
+                        size={11}
                         container
                         direction="row"
                         justifyContent="flex-start"
                         alignItems="space-between"
                         rowSpacing={1}
                     >
-                        <Grid container direction="row" item xs={12}>
-                            <Grid xs={12}>
-                                <Header2 sx={{ mb: 0 }}>We're saving your configuration.</Header2>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={12}>
+                                <Header2 mb={0}>We're saving your configuration.</Header2>
                             </Grid>
                         </Grid>
-                        <Grid container direction="row" item xs={12}>
+                        <Grid container direction="row" size={12}>
                             <BodyText bold>This should only take a few seconds.</BodyText>
                         </Grid>
                     </Grid>

@@ -1,4 +1,4 @@
-import { EditAttributes, EditAttributesOutlined } from '@mui/icons-material';
+import { faObjectIntersect, faObjectUnion } from '@fortawesome/pro-regular-svg-icons';
 import { MetadataFilterType } from './types';
 
 export const MetadataFilterTypes: { [key: string]: MetadataFilterType } = {
@@ -7,13 +7,13 @@ export const MetadataFilterTypes: { [key: string]: MetadataFilterType } = {
         code: 'chips_any',
         details:
             'Users can click chips to filter by metadata. At least one of the selected values must be present on the engagement for it to be shown.',
-        icon: EditAttributesOutlined,
+        icon: faObjectUnion,
     },
     chips_all: {
         name: 'Chips (Match All Selected)',
         code: 'chips_all',
         details:
             'Users can click chips to filter by metadata. All the selected values must be present on the engagement for it to be shown.',
-        icon: EditAttributes,
+        icon: faObjectIntersect,
     },
 };

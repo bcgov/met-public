@@ -1,5 +1,5 @@
 import {
-    Grid,
+    Grid2 as Grid,
     Paper,
     Tooltip,
     Chip,
@@ -12,54 +12,45 @@ import {
     Stack,
     Divider,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
-import { faFileLines } from '@fortawesome/pro-regular-svg-icons/faFileLines';
-import { FormatQuote, EditAttributes, FileCopy, FilterAlt, FilterAltOff } from '@mui/icons-material';
 import React from 'react';
-import { MetHeader4 } from 'components/common';
+import { BodyText, Header3 } from 'components/common/Typography';
 import { TaxonTypes } from './TaxonTypes';
 import { TaxonCardProps } from './types';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
 import { MetadataFilterTypes } from './MetadataFilterTypes';
+import {
+    faTag,
+    faTags,
+    faFilter,
+    faShieldCheck,
+    faBlockQuote,
+    faFilterSlash,
+    IconDefinition,
+    faPlus,
+} from '@fortawesome/pro-regular-svg-icons';
 
-const DetailsRow = ({ name, icon, children }: { name: string; icon: React.ReactNode; children: React.ReactNode }) => {
-    const theme = useTheme();
+const DetailsRow = ({ name, icon, children }: { name: string; icon: IconDefinition; children: React.ReactNode }) => {
     return (
         <>
-            <Grid item flexBasis="100%">
+            <Grid size={12}>
                 <Divider />
             </Grid>
-            <Grid item flexBasis="2em">
+            <Grid size="auto">
                 <Tooltip title={name} placement="top">
-                    <Avatar
-                        sx={{
-                            backgroundColor: theme.palette.grey[600],
-                        }}
-                    >
-                        {icon}
+                    <Avatar sx={{ bgcolor: 'text.secondary', height: 40, width: 40 }}>
+                        <FontAwesomeIcon icon={icon} style={{ fontSize: '22px' }} />
                     </Avatar>
                 </Tooltip>
             </Grid>
-            <Grid item flexBasis="calc(100% - 3em)" flexGrow={1}>
-                {children}
-            </Grid>
+            <Grid size="grow">{children}</Grid>
         </>
     );
 };
 
 export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpand, isSelected, onSelect, index }) => {
-    const theme = useTheme();
-    const cardStyle = isSelected
-        ? {
-              backgroundColor: theme.palette.primary.light,
-              color: theme.palette.primary.contrastText,
-              border: `1px solid ${theme.palette.primary.dark}`,
-          }
-        : { border: '1px solid transparent' };
-
     const handleExpand = (clickEvent: React.MouseEvent<HTMLElement>) => {
         clickEvent.stopPropagation();
         onExpand(taxon);
@@ -75,16 +66,20 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
             >
                 <Badge
                     color="primary"
-                    badgeContent="+"
+                    badgeContent={
+                        <FontAwesomeIcon icon={faPlus} style={{ fontSize: '12px', color: 'inherit', margin: '-2px' }} />
+                    }
                     invisible={!taxonType.supportsMulti || taxon.one_per_engagement}
                 >
                     <Avatar
                         variant="rounded"
                         sx={{
-                            backgroundColor: isSelected ? theme.palette.primary.dark : theme.palette.primary.light,
+                            bgcolor: 'primary.light',
+                            height: { xs: '30px', sm: '40px' },
+                            width: { xs: '30px', sm: '40px' },
                         }}
                     >
-                        <taxonType.icon />
+                        <FontAwesomeIcon icon={taxonType.icon} style={{ fontSize: '22px' }} />
                     </Avatar>
                 </Badge>
             </Tooltip>
@@ -95,10 +90,9 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
         <Draggable key={taxon.id} draggableId={taxon.id.toString()} index={index}>
             {(provided: DraggableProvided) => (
                 <Grid
-                    item
                     {...provided.draggableProps}
                     ref={provided.innerRef}
-                    xs={12}
+                    size={12}
                     onClick={() => onSelect(taxon)}
                     component={Paper}
                     style={{
@@ -108,7 +102,6 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                         width: '100%',
                         marginBottom: '1em',
                         cursor: 'pointer',
-                        ...cardStyle,
                         ...provided.draggableProps.style,
                     }}
                     elevation={isSelected ? 3 : 1}
@@ -120,8 +113,8 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                     role="gridcell"
                     id={`taxon-${taxon.id}`}
                 >
-                    <Grid item container xs alignItems="center" spacing={1}>
-                        <Grid item>
+                    <Grid container size={12} alignItems="center" spacing={{ xs: 1, sm: 2 }} direction="row">
+                        <Grid size="auto" ml={1}>
                             <Tooltip color="error" title="Drag to reorganize" placement="top" id="drag-handle-tooltip">
                                 <IconButton
                                     sx={{ cursor: 'grab', color: 'inherit' }}
@@ -137,9 +130,10 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 </IconButton>
                             </Tooltip>
                         </Grid>
-                        <Grid item>{taxonTypeIcon()}</Grid>
-                        <Grid item sx={{ width: 'calc(100% - 9em)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            <MetHeader4
+                        <Grid size="auto">{taxonTypeIcon()}</Grid>
+                        <Grid size="grow">
+                            <Header3
+                                weight="bold"
                                 sx={{
                                     textOverflow: 'ellipsis',
                                     overflow: 'hidden',
@@ -149,9 +143,9 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 }}
                             >
                                 {taxon.name}
-                            </MetHeader4>
+                            </Header3>
                         </Grid>
-                        <Grid item>
+                        <Grid size="auto" mr={2}>
                             <IconButton
                                 sx={{
                                     transition: (theme) =>
@@ -172,7 +166,7 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                             </IconButton>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Collapse
                             in={isExpanded}
                             timeout="auto"
@@ -184,18 +178,14 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                         >
                             <Grid container alignItems="center" spacing={1} flexWrap="wrap">
                                 {/* Description */}
-                                <DetailsRow name="Description" icon={<FormatQuote />}>
-                                    <Typography
-                                        variant="body2"
-                                        pl={1}
-                                        sx={{ fontStyle: 'italic', wordWrap: 'break-word' }}
-                                    >
+                                <DetailsRow name="Description" icon={faBlockQuote}>
+                                    <BodyText pl={1} sx={{ fontStyle: 'italic', wordWrap: 'break-word' }}>
                                         {taxon.description || 'No description provided.'}
-                                    </Typography>
+                                    </BodyText>
                                 </DetailsRow>
 
                                 {/* Validation */}
-                                <DetailsRow name="Validation" icon={<EditAttributes />}>
+                                <DetailsRow name="Validation" icon={faShieldCheck}>
                                     <Typography variant="body1" pl={1}>
                                         {taxon.freeform
                                             ? `Any ${taxonType.name.toLowerCase()} value can be added to this field. `
@@ -212,26 +202,15 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                                 <Chip
                                                     key={chip}
                                                     label={chip}
-                                                    color={isSelected ? 'primary' : 'default'}
                                                     size="small"
-                                                    sx={{ margin: '2px' }}
+                                                    sx={{ margin: '2px !important' }}
                                                 />
                                             ))}
                                         </Stack>
                                     )}
                                 </DetailsRow>
-
-                                {/* Multi-select */}
-                                <DetailsRow
-                                    name="Multi-select"
-                                    icon={
-                                        taxon.one_per_engagement ? (
-                                            <FontAwesomeIcon icon={faFileLines} style={{ fontSize: '22px' }} />
-                                        ) : (
-                                            <FileCopy />
-                                        )
-                                    }
-                                >
+                                <DetailsRow name="Cardinality" icon={taxon.one_per_engagement ? faTag : faTags}>
+                                    {/* Cardinality */}
                                     <Typography variant="body1" pl={1}>
                                         {taxon.one_per_engagement
                                             ? 'One value per engagement.'
@@ -239,16 +218,16 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                     </Typography>
                                 </DetailsRow>
 
-                                {/* Filter Type */}
+                                {/* Filterability */}
                                 {Boolean(taxonType.supportedFilters) && (
                                     <DetailsRow
-                                        name="Filter Type"
-                                        icon={taxon.filter_type ? <FilterAlt /> : <FilterAltOff />}
+                                        name="Filterability"
+                                        icon={taxon.filter_type ? faFilter : faFilterSlash}
                                     >
                                         <Typography variant="body1" pl={1}>
                                             {taxon.filter_type
                                                 ? MetadataFilterTypes[taxon.filter_type].name
-                                                : 'Engagements are not filtered by this field.'}
+                                                : 'Filtering by this field is turned off.'}
                                         </Typography>
                                         {taxon.filter_type && (
                                             <Typography variant="body1" pl={1}>
@@ -271,9 +250,8 @@ export default TaxonCard;
 export const TaxonCardSkeleton: React.FC = () => {
     return (
         <Grid
-            item
             mr={2}
-            xs={12}
+            size={12}
             component={Paper}
             style={{
                 display: 'flex',
@@ -287,14 +265,15 @@ export const TaxonCardSkeleton: React.FC = () => {
             elevation={1}
         >
             <Grid
+                ml={1}
                 container
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
                 sx={{ width: '100%', p: 0.1 }}
             >
-                <Grid item container xs alignItems="center" spacing={1}>
-                    <Grid item>
+                <Grid container size={12} alignItems="center" spacing={{ xs: 1, sm: 2 }} direction="row">
+                    <Grid size="auto">
                         <IconButton color="inherit" size="small">
                             <FontAwesomeIcon
                                 icon={faGripDotsVertical}
@@ -302,13 +281,13 @@ export const TaxonCardSkeleton: React.FC = () => {
                             />
                         </IconButton>
                     </Grid>
-                    <Grid item>
+                    <Grid size="auto">
                         <Skeleton variant="rectangular" width={40} height={40} />
                     </Grid>
-                    <Grid item sx={{ width: 'calc(100% - 9em)' }}>
+                    <Grid size="grow">
                         <Skeleton variant="text" width={Math.random() * 50 + 10 + '%'} />
                     </Grid>
-                    <Grid item>
+                    <Grid size="auto" mr={2} justifySelf="flex-end">
                         <IconButton color="inherit" size="small" aria-label="expand">
                             <FontAwesomeIcon icon={faChevronDown} style={{ fontSize: '20px' }} />
                         </IconButton>

@@ -5,8 +5,7 @@ import {
     FormControl,
     FormGroup,
     Select,
-    Grid,
-    Button,
+    Grid2 as Grid,
     MenuItem,
     Tooltip,
     Avatar,
@@ -23,7 +22,6 @@ import { faTrash } from '@fortawesome/pro-solid-svg-icons/faTrash';
 import { faCircleExclamation } from '@fortawesome/pro-solid-svg-icons/faCircleExclamation';
 import { faCircleQuestion } from '@fortawesome/pro-regular-svg-icons/faCircleQuestion';
 import { Palette } from 'styles/Theme';
-import { Save, FilterAltOff } from '@mui/icons-material';
 import * as yup from 'yup';
 import React, { JSX, useContext, useEffect } from 'react';
 import { MetadataTaxon } from 'models/engagement';
@@ -34,8 +32,10 @@ import { TaxonTypes } from './TaxonTypes';
 import { TaxonType } from './types';
 import PresetValuesEditor from './presetFieldsEditor/PresetValuesEditor';
 import { useForm, SubmitHandler, Controller, FormProvider } from 'react-hook-form';
-import { MetHeader3, MetLabel } from 'components/common';
 import { openNotification } from 'services/notificationService/notificationSlice';
+import { Button } from 'components/common/Input/Button';
+import { faFilterSlash, faSave } from '@fortawesome/pro-regular-svg-icons';
+import { BodyText, Header3 } from 'components/common/Typography';
 
 const HelpTooltip = ({ children }: { children: string | string[] }) => {
     if (Array.isArray(children)) children = children.join(' ');
@@ -201,29 +201,30 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
         <FormProvider {...methods}>
             <FormGroup onKeyDown={handleKeys}>
                 <Grid container spacing={2} direction="column" sx={{ width: '100%', maxWidth: '40em' }}>
-                    <Grid item container direction="row">
-                        <Grid item xs={6} container alignItems="center">
+                    <Grid container direction="row">
+                        <Grid size="grow" container alignItems="center">
                             {!isSmallScreen && (
                                 <Avatar sx={{ backgroundColor: 'primary.main', marginRight: '0.5em' }}>
                                     <FontAwesomeIcon icon={faPen} style={{ fontSize: '20px' }} />
                                 </Avatar>
                             )}
-                            <MetHeader3>Edit taxon</MetHeader3>
+                            <Header3>Edit taxon</Header3>
                         </Grid>
-                        <Grid item xs={6} alignItems="center" textAlign="right">
+                        <Grid size="auto" justifySelf="flex-end">
                             <Button
-                                variant="outlined"
+                                icon={
+                                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '20px', paddingRight: '5px' }} />
+                                }
                                 color="error"
                                 aria-label="delete"
                                 onClick={() => removeMetadataTaxon(taxon.id)}
                             >
-                                <FontAwesomeIcon icon={faTrash} style={{ fontSize: '20px', paddingRight: '5px' }} />
-                                {}Delete
+                                Delete
                             </Button>
                         </Grid>
                     </Grid>
-                    <Grid item>
-                        <MetLabel>Taxon Name</MetLabel>
+                    <Grid>
+                        <BodyText bold>Taxon Name</BodyText>
                         <Controller
                             name="name"
                             control={control}
@@ -238,8 +239,8 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             )}
                         />
                     </Grid>
-                    <Grid item>
-                        <MetLabel>Taxon Description</MetLabel>
+                    <Grid>
+                        <BodyText bold>Taxon Description</BodyText>
                         <Controller
                             name="description"
                             control={control}
@@ -258,9 +259,11 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             )}
                         />
                     </Grid>
-                    <Grid item>
-                        <Grid item container justifyContent="flex-start" alignItems="left">
-                            <MetLabel marginRight={1}>Data Type</MetLabel>
+                    <Grid>
+                        <Grid container justifyContent="flex-start" alignItems="left">
+                            <BodyText bold marginRight={1}>
+                                Data Type
+                            </BodyText>
                             <HelpTooltip>
                                 The type of data that this taxon will store. Affects the availability of some other
                                 options.
@@ -275,10 +278,13 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                         {Object.entries(TaxonTypes).map(([key, type]: [string, TaxonType]) => (
                                             <MenuItem key={key} value={key}>
                                                 <Grid container spacing={1} alignItems="center">
-                                                    <Grid item>
-                                                        <type.icon />
+                                                    <Grid width="30px" textAlign="center">
+                                                        <FontAwesomeIcon
+                                                            icon={type.icon}
+                                                            style={{ fontSize: '22px' }}
+                                                        />
                                                     </Grid>
-                                                    <Grid item>{type.name}</Grid>
+                                                    <Grid>{type.name}</Grid>
                                                 </Grid>
                                             </MenuItem>
                                         ))}
@@ -287,9 +293,11 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item component={Collapse} in={taxonType.supportsPresetValues} timeout="auto" unmountOnExit>
-                        <Grid item container justifyContent="flex-start" alignItems="left">
-                            <MetLabel marginRight={1}>Preset Values</MetLabel>
+                    <Grid component={Collapse} in={taxonType.supportsPresetValues} timeout="auto" unmountOnExit>
+                        <Grid container justifyContent="flex-start" alignItems="left">
+                            <BodyText bold marginRight={1}>
+                                Preset Values
+                            </BodyText>
                             <HelpTooltip>
                                 These values will be shown to staff as possible options when creating engagements.
                                 {(Boolean(taxonType.supportedFilters) || '') &&
@@ -299,7 +307,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                         <PresetValuesEditor control={methods.control} name="preset_values" />
                     </Grid>
                     <Grid
-                        item
                         component={Collapse}
                         in={taxonType.supportsPresetValues && allowLimiting}
                         timeout="auto"
@@ -333,7 +340,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             }
                         />
                     </Grid>
-                    <Grid item component={Collapse} in={taxonType.supportsMulti} timeout="auto" unmountOnExit>
+                    <Grid component={Collapse} in={taxonType.supportsMulti} timeout="auto" unmountOnExit>
                         <FormControlLabel
                             control={
                                 <Controller
@@ -357,9 +364,11 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             }
                         />
                     </Grid>
-                    <Grid item component={Collapse} in={!!taxonType.supportedFilters} timeout="auto" unmountOnExit>
-                        <Grid item container justifyContent="flex-start" alignItems="left">
-                            <MetLabel marginRight={1}>Engagement Filtering</MetLabel>
+                    <Grid component={Collapse} in={!!taxonType.supportedFilters} timeout="auto" unmountOnExit>
+                        <Grid container justifyContent="flex-start" alignItems="left">
+                            <BodyText bold marginRight={1}>
+                                Engagement Filtering
+                            </BodyText>
                             <HelpTooltip>
                                 Selecting a filter style allows the public to use this taxon to narrow down which
                                 engagements they want to see. "No filtering" means it will not be publicly shown. For
@@ -381,22 +390,29 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                         <MenuItem value="none">
                                             <Grid container alignItems="center" spacing={1}>
                                                 {!isSmallScreen && (
-                                                    <Grid item>
-                                                        <FilterAltOff />
+                                                    <Grid>
+                                                        {/* <FilterAltOff /> */}
+                                                        <FontAwesomeIcon
+                                                            icon={faFilterSlash}
+                                                            style={{ fontSize: '22px' }}
+                                                        />
                                                     </Grid>
                                                 )}
-                                                <Grid item>No filtering</Grid>
+                                                <Grid>No filtering</Grid>
                                             </Grid>
                                         </MenuItem>
-                                        {taxonType.supportedFilters?.map((filter) => (
+                                        {(taxonType.supportedFilters ?? []).map((filter) => (
                                             <MenuItem key={filter.code} value={filter.code}>
                                                 <Grid container alignItems="center" spacing={1}>
                                                     {!isSmallScreen && (
-                                                        <Grid item>
-                                                            <filter.icon />
+                                                        <Grid>
+                                                            <FontAwesomeIcon
+                                                                icon={filter.icon}
+                                                                style={{ fontSize: '22px' }}
+                                                            />
                                                         </Grid>
                                                     )}
-                                                    <Grid item>Show as {filter.name}</Grid>
+                                                    <Grid>Show as {filter.name}</Grid>
                                                 </Grid>
                                             </MenuItem>
                                         ))}
@@ -406,7 +422,6 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                         </FormControl>
                     </Grid>
                     <Grid
-                        item
                         component={Collapse}
                         in={Boolean(taxonType.allowFreeformInFilter && isFreeform && isValidFilter)}
                         timeout="auto"
@@ -435,13 +450,9 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                             }
                         />
                     </Grid>
-                    <Grid item container alignItems="center" justifyContent="flex-start">
+                    <Grid container alignItems="center" justifyContent="flex-start">
                         <Tooltip title="Discard changes to taxon" id="cancel-button-tooltip">
-                            <Button
-                                variant="outlined"
-                                aria-label="Discard changes to taxon"
-                                onClick={() => setSelectedTaxonId(-1)}
-                            >
+                            <Button aria-label="Discard changes to taxon" onClick={() => setSelectedTaxonId(-1)}>
                                 <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px', paddingRight: '5px' }} />
                                 {}Cancel
                             </Button>
@@ -452,27 +463,35 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                     <Then>
                                         <Tooltip title={`Save changes to taxon (${modifierKey} + Enter)`}>
                                             <Button
-                                                variant="contained"
+                                                variant="primary"
+                                                icon={
+                                                    <FontAwesomeIcon
+                                                        icon={faSave}
+                                                        style={{ fontSize: '20px', paddingRight: '5px' }}
+                                                    />
+                                                }
                                                 aria-label="Save changes to taxon"
                                                 onClick={handleSubmit(onSubmit)}
                                                 sx={{ marginLeft: '0.5em' }}
                                             >
-                                                <Save /> Save
+                                                Save
                                             </Button>
                                         </Tooltip>
                                     </Then>
                                     <Else>
                                         <Button
-                                            variant="contained"
+                                            variant="primary"
+                                            icon={
+                                                <FontAwesomeIcon
+                                                    icon={faCheck}
+                                                    style={{ fontSize: '20px', paddingRight: '5px' }}
+                                                />
+                                            }
                                             aria-label="No changes to save"
                                             aria-disabled
                                             disabled
                                             sx={{ marginLeft: '0.5em' }}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faCheck}
-                                                style={{ fontSize: '20px', paddingRight: '5px' }}
-                                            />
                                             {}Saved
                                         </Button>
                                     </Else>
@@ -483,17 +502,19 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                     <span>
                                         {/* Span is used to allow disabled elements in a tooltip */}
                                         <Button
-                                            variant="contained"
+                                            variant="primary"
+                                            icon={
+                                                <FontAwesomeIcon
+                                                    icon={faCircleExclamation}
+                                                    style={{ fontSize: '20px', paddingRight: '5px' }}
+                                                />
+                                            }
                                             aria-disabled
                                             aria-labelledby="save-button-tooltip"
                                             aria-details="Please correct the errors before saving."
                                             disabled
                                             sx={{ marginLeft: '0.5em' }}
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faCircleExclamation}
-                                                style={{ fontSize: '20px', paddingRight: '5px' }}
-                                            />
                                             {}Save
                                         </Button>
                                     </span>
