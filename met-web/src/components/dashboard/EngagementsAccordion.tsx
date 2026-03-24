@@ -92,10 +92,10 @@ const EngagementsAccordion = ({
                         <AccordionDetails>
                             <When condition={openedEngagements.some((id) => id == engagement.id)}>
                                 <Grid container size={12} spacing={3} data-testid={`dashboard-frame-${engagement.id}`}>
-                                    <Grid size={{ xs: 12, sm: !mapExists ? 6 : 4 }}>
+                                    <Grid size={{ xs: 12, sm: mapExists ? 4 : 6 }}>
                                         <SurveyEmailsSent engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <Grid size={{ xs: 12, sm: !mapExists ? 6 : 4 }}>
+                                    <Grid size={{ xs: 12, sm: mapExists ? 4 : 6 }}>
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
                                     <ProjectLocation

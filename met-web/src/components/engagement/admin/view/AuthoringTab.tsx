@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AuthoringValue, AuthoringButtonProps, StatusCircleProps } from './types';
-import { Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightLong } from '@fortawesome/pro-light-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Header2, Header3 } from 'components/common/Typography';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { Unless, When } from 'react-if';
 import { Grid2 as Grid } from '@mui/material';

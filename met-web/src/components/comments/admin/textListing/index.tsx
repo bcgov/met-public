@@ -200,9 +200,9 @@ const CommentTextListing = () => {
             allowSort: true,
             renderCell: (row: SurveySubmission) => (
                 <Grid container size={12} rowSpacing={2} sx={{ pt: 1.5 }}>
-                    {row.comments?.map((comment, index) => {
+                    {row.comments?.map((comment) => {
                         return (
-                            <Grid key={index} size={12}>
+                            <Grid key={comment.id} size={12}>
                                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                                     <Grid size={1} paddingTop={1}>
                                         <If condition={comment.is_displayed}>

@@ -182,13 +182,13 @@ const Dashboard = () => {
                                                 </Grid>
                                             </Grid>
                                         </When>
-                                        <Grid id={'kpi-emails-sent'} size={{ sm: !mapExists ? 6 : 4 }}>
+                                        <Grid id={'kpi-emails-sent'} size={{ sm: mapExists ? 4 : 6 }}>
                                             <SurveyEmailsSent
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid id={'kpi-surveys-completed'} size={{ sm: !mapExists ? 6 : 4 }}>
+                                        <Grid id={'kpi-surveys-completed'} size={{ sm: mapExists ? 4 : 6 }}>
                                             <SurveysCompleted
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
