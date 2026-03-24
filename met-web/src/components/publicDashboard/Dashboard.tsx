@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Grid, useMediaQuery, Stack, Theme, Box, Backdrop } from '@mui/material';
+import { Grid2 as Grid, useMediaQuery, Stack, Theme, Box, Backdrop, Paper, CircularProgress } from '@mui/material';
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { useNavigate, useParams } from 'react-router';
-import { CircularProgressWithLabel, MetHeader1Old, MetPaper, MetDescription } from 'components/common';
+import { BodyText, Header1 } from 'components/common/Typography';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -16,6 +16,8 @@ import { generateDashboardPdf } from './util';
 import { Map } from 'models/analytics/map';
 import { When } from 'react-if';
 import { useAppSelector, useAppTranslation } from 'hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComments, faFileArrowDown } from '@fortawesome/pro-regular-svg-icons';
 
 const Dashboard = () => {
     const { t: translate } = useAppTranslation();
@@ -68,20 +70,19 @@ const Dashboard = () => {
     return (
         <>
             <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <ReportBanner engagement={engagement} isLoading={isEngagementLoading} />
                 </Grid>
                 <Grid
                     container
-                    item
-                    xs={12}
+                    size={12}
                     direction="row"
                     justifyContent={'flex-end'}
                     alignItems="flex-end"
                     m={{ lg: '1em 8em 2em 3em', sm: '2em', xs: '0.5em' }}
                 >
-                    <Grid container item xs={12} flexDirection="column">
-                        <Grid item xs={12} container justifyContent="flex-end" paddingBottom={'8px'}>
+                    <Grid container size={12} flexDirection="column">
+                        <Grid size={12} container justifyContent="flex-end" paddingBottom={'8px'}>
                             <Link
                                 to={isLoggedIn ? `${basePath}/view` : `${basePath}/view${languagePath}`}
                                 data-testid="link-container"
@@ -89,7 +90,7 @@ const Dashboard = () => {
                                 {translate('dashboard.link.0') + engagement.name + translate('dashboard.link.1')}
                             </Link>
                         </Grid>
-                        <MetPaper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
+                        <Paper elevation={1} sx={{ padding: { md: '2em 2em 1em 2em', sm: '1em', xs: '0.5em' } }}>
                             <Grid
                                 container
                                 direction="row"
@@ -98,35 +99,36 @@ const Dashboard = () => {
                                 rowSpacing={3}
                             >
                                 <When condition={!isTablet}>
-                                    <Grid item xs={12} sm={6}>
-                                        <MetHeader1Old textAlign={{ xs: 'center', sm: 'left' }}>
+                                    <Grid size={{ xs: 12, sm: 6 }}>
+                                        <Header1 textAlign={{ xs: 'center', sm: 'left' }}>
                                             {translate('dashboard.header')}
-                                        </MetHeader1Old>
+                                        </Header1>
                                     </Grid>
                                     <Grid
-                                        item
-                                        xs={12}
-                                        sm={6}
+                                        size={{ xs: 12, sm: 6 }}
                                         container
                                         direction={{ xs: 'column', sm: 'row' }}
                                         justifyContent="flex-end"
                                     >
                                         <Stack direction="row" spacing={1}>
                                             <Button
+                                                icon={<FontAwesomeIcon icon={faComments} />}
                                                 variant="primary"
                                                 size="small"
                                                 data-testid="SurveyBlock/take-me-to-survey-button"
                                                 onClick={handleReadComments}
+                                                sx={{ minWidth: 'max-content' }}
                                             >
                                                 {translate('dashboard.buttonText.readComments')}
                                             </Button>
                                             <Button
-                                                variant="secondary"
+                                                icon={<FontAwesomeIcon icon={faFileArrowDown} />}
                                                 size="small"
                                                 onClick={() => {
                                                     setIsPrinting(true);
                                                 }}
                                                 loading={isPrinting}
+                                                sx={{ minWidth: 'max-content' }}
                                             >
                                                 {translate('dashboard.buttonText.exportToPDF')}
                                             </Button>
@@ -137,60 +139,56 @@ const Dashboard = () => {
                                     container
                                     spacing={{ md: 0, lg: 3 }}
                                     rowSpacing={{ md: 1, lg: 3 }}
-                                    item
-                                    xs={12}
+                                    size={12}
                                     ml={{ md: 0, lg: 2 }}
                                 >
                                     <Grid
                                         id={'kpi'}
                                         container
                                         spacing={1}
-                                        item
                                         alignItems={'space-evenly'}
                                         justifyContent={'space-evenly'}
-                                        xs={12}
+                                        size={12}
                                     >
                                         <When condition={isTablet}>
-                                            <Grid item container sm={12}>
+                                            <Grid container size={{ sm: 12 }}>
                                                 <Grid
-                                                    item
                                                     container
                                                     alignItems={'center'}
                                                     justifyContent={'center'}
-                                                    xs={12}
+                                                    size={12}
                                                     sx={{ mb: 1 }}
                                                 >
-                                                    <MetHeader1Old bold>{engagement.name}</MetHeader1Old>
+                                                    <Header1 weight="bold">{engagement.name}</Header1>
                                                 </Grid>
                                                 <Grid
-                                                    item
                                                     container
                                                     alignItems={'center'}
                                                     justifyContent={'center'}
-                                                    xs={12}
+                                                    size={12}
                                                 >
-                                                    <Grid item>
-                                                        <MetDescription sx={{ mr: 1 }}>
+                                                    <Grid>
+                                                        <BodyText sx={{ mr: 1 }}>
                                                             {translate('dashboard.submissionTrend.filter.from')}
                                                             {engagement.start_date}{' '}
-                                                        </MetDescription>
+                                                        </BodyText>
                                                     </Grid>
-                                                    <Grid item>
-                                                        <MetDescription>
+                                                    <Grid>
+                                                        <BodyText>
                                                             {translate('dashboard.submissionTrend.filter.to')}
                                                             {engagement.end_date}
-                                                        </MetDescription>
+                                                        </BodyText>
                                                     </Grid>
                                                 </Grid>
                                             </Grid>
                                         </When>
-                                        <Grid id={'kpi-emails-sent'} item sm={!mapExists ? 6 : 4}>
+                                        <Grid id={'kpi-emails-sent'} size={{ sm: !mapExists ? 6 : 4 }}>
                                             <SurveyEmailsSent
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
                                             />
                                         </Grid>
-                                        <Grid id={'kpi-surveys-completed'} item sm={!mapExists ? 6 : 4}>
+                                        <Grid id={'kpi-surveys-completed'} size={{ sm: !mapExists ? 6 : 4 }}>
                                             <SurveysCompleted
                                                 engagement={engagement}
                                                 engagementIsLoading={isEngagementLoading}
@@ -202,13 +200,13 @@ const Dashboard = () => {
                                             handleProjectMapData={handleProjectMapData}
                                         />
                                     </Grid>
-                                    <Grid id={'submissiontrend'} item xs={12}>
+                                    <Grid id={'submissiontrend'} size={12}>
                                         <SubmissionTrend
                                             engagement={engagement}
                                             engagementIsLoading={isEngagementLoading}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Box id={'surveybarprintable'} sx={{ display: isPrinting ? 'block' : 'none' }}>
                                             <SurveyBarPrintable
                                                 engagement={engagement}
@@ -224,7 +222,7 @@ const Dashboard = () => {
                                         />
                                     </Grid>
                                     <When condition={isPrinting}>
-                                        <Grid item xs={12}>
+                                        <Grid size={12}>
                                             <Box
                                                 id={'printableMapContainer'}
                                                 sx={{
@@ -236,7 +234,7 @@ const Dashboard = () => {
                                     </When>
                                 </Grid>
                             </Grid>
-                        </MetPaper>
+                        </Paper>
                     </Grid>
                 </Grid>
             </Grid>
@@ -250,7 +248,23 @@ const Dashboard = () => {
                     setPdfExportProgress(0);
                 }}
             >
-                <CircularProgressWithLabel value={pdfExportProgress} />
+                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                    <CircularProgress color="inherit" value={pdfExportProgress} />
+                    <Box
+                        sx={{
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+                            position: 'absolute',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <BodyText color="inherit">{Math.round(pdfExportProgress)}%</BodyText>
+                    </Box>
+                </Box>
             </Backdrop>
         </>
     );

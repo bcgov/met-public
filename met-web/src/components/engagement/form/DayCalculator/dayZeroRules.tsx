@@ -1,56 +1,56 @@
 import React from 'react';
 
-import { MetHeader4, MetBodyOld } from 'components/common';
+import { BodyText, Header4 } from 'components/common/Typography';
 
 const DayZeroRules = () => (
     <div>
-        <MetHeader4 bold>Holidays</MetHeader4>
+        <Header4 weight="bold">Holidays</Header4>
         <div>
             <ul>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         If a deadline falls on a holiday the deadline is extended to the next day that is not a holiday.
                         For example, if the deadline for a comment period is December 26, boxing day, the deadline is
                         extended to December 27.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold>Weekends or Other Office Closures</MetHeader4>
+        <Header4 weight="bold">Weekends or Other Office Closures</Header4>
         <div>
             <ul>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         If a deadline falls on a day when the office is not open (Saturday, Sunday) the deadline is
                         extended to the next day that the office is open. For example, if the deadline for a comment
                         period falls on a Saturday then the deadline is extended to Monday.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold>Calculation of Days</MetHeader4>
+        <Header4 weight="bold">Calculation of Days</Header4>
         <div>
             <ul>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         When calculating periods (for example 30 day comment period) the first day must be excluded and
                         the last day included. For example, a 30 day comment period starts March 1, 2017, the comment
                         period does not end until March 31, 2017.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         Legislated time periods must be calculated with day -0- eg, Evaluation 30 days, Application
                         Review 180 days, Ministers Decision 45 days, and Public Comment Periods.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold>Time of Day</MetHeader4>
+        <Header4 weight="bold">Time of Day</Header4>
         <div>
             <ul>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         There is no specific mention of time of day in the Interpretation Act so the day would end at
                         midnight. If a comment is received before midnight on the last day of the comment period it
                         would be included in the comment period. If an email was received at 11:59PM it would be
@@ -58,24 +58,24 @@ const DayZeroRules = () => (
                         midnight then the comment would also be included in the comment period. Comments sent by mail or
                         courier must be post marked by the last day of the comment period in order to be included in the
                         comment period.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold>Suspension</MetHeader4>
+        <Header4 weight="bold">Suspension</Header4>
         <div>
             <ul>
                 <li>
-                    <MetBodyOld>
+                    <BodyText>
                         Suspending a project during the Application Review period, when the suspension resumes it starts
                         back on the day it was suspended on. If a project is suspended on day 50 of the 180, in
                         accordance with the spirit of the Act, day 49 was the last full day of the Application Review
                         Period, when the project resumes, it would resume on day 50 to allow 180 full days of review.
-                    </MetBodyOld>
+                    </BodyText>
                 </li>
             </ul>
         </div>
-        <MetHeader4 bold>Interpretation Act</MetHeader4>
+        <Header4 weight="bold">Interpretation Act</Header4>
         <div>
             <ul>
                 <p>

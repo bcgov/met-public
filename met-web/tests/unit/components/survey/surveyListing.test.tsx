@@ -85,13 +85,6 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: () => false,
 }));
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, ...rest }: { children: ReactNode; [prop: string]: unknown }) => {
-        return <button {...rest}>{children}</button>;
-    },
-}));
-
 jest.mock('components/permissionsGate', () => ({
     ...jest.requireActual('components/permissionsGate'),
     PermissionsGate: ({ children }: { children: ReactNode }) => {

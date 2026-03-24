@@ -1,6 +1,6 @@
 import React from 'react';
-import { MetBodyOld } from 'components/common';
-import { Grid } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
+import { Grid2 as Grid } from '@mui/material';
 import { When } from 'react-if';
 import { StaffNote } from 'models/staffNote';
 
@@ -19,40 +19,38 @@ export const RejectEmailTemplate = ({
     reviewNotes,
 }: RejectionEmailProps) => (
     <>
-        <Grid item xs={12}>
-            <MetBodyOld sx={{ mb: 1 }}>
+        <Grid size={12}>
+            <BodyText sx={{ mb: 1 }}>
                 We have reviewed your feedback and can’t accept it for the following reason(s):
-            </MetBodyOld>
+            </BodyText>
         </Grid>
         <ul>
             <When condition={hasPersonalInfo}>
                 <li>
-                    <Grid item xs={12}>
-                        <MetBodyOld sx={{ mb: 1 }}>Your feedback contains personal information</MetBodyOld>
+                    <Grid size={12}>
+                        <BodyText sx={{ mb: 1 }}>Your feedback contains personal information</BodyText>
                     </Grid>
                 </li>
             </When>
             <When condition={hasProfanity}>
                 <li>
-                    <Grid item xs={12}>
-                        <MetBodyOld sx={{ mb: 1 }}>
-                            Your feedback contains profanity or inappropriate language
-                        </MetBodyOld>
+                    <Grid size={12}>
+                        <BodyText sx={{ mb: 1 }}>Your feedback contains profanity or inappropriate language</BodyText>
                     </Grid>
                 </li>
             </When>
             <When condition={otherReason}>
                 <li>
-                    <Grid item xs={12}>
-                        <MetBodyOld sx={{ mb: 1 }}>{` Your feedback contains ${otherReason}.`}</MetBodyOld>
+                    <Grid size={12}>
+                        <BodyText sx={{ mb: 1 }}>{` Your feedback contains ${otherReason}.`}</BodyText>
                     </Grid>
                 </li>
             </When>
         </ul>
 
         <When condition={!!reviewNotes}>
-            <Grid item xs={12}>
-                <MetBodyOld sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</MetBodyOld>
+            <Grid size={12}>
+                <BodyText sx={{ mb: 1 }}>{reviewNotes ? reviewNotes[0]?.note : ''}</BodyText>
             </Grid>
         </When>
     </>

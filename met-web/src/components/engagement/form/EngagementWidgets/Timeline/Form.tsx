@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { TextField } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
+import { MidScreenLoader } from 'components/common';
 import { SubmitHandler } from 'react-hook-form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -11,6 +14,7 @@ import { patchTimeline, postTimeline } from 'services/widgetService/TimelineServ
 import { WidgetTitle } from '../WidgetTitle';
 import { TimelineEvent } from 'models/timelineWidget';
 import { WidgetLocation } from 'models/widget';
+import { Header3 } from 'components/common/Typography';
 
 interface DetailsForm {
     title: string;
@@ -150,11 +154,11 @@ const Form = () => {
         setTimelineEvents([...timelineEvents, newEventWithCorrectIndex]);
     };
 
-    const handleRemoveEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!timelineEvents) {
+    const handleRemoveEvent = (event?: React.MouseEvent<HTMLButtonElement>) => {
+        if (!event || !timelineEvents) {
             return;
         }
-        const position = Number(event.target.value);
+        const position = Number(event.currentTarget.value);
         const dataToSplice: TimelineEvent[] = [...timelineEvents];
         dataToSplice.splice(position, 1);
         dataToSplice.forEach((event, index) => {
@@ -163,11 +167,10 @@ const Form = () => {
         setTimelineEvents([...dataToSplice]);
     };
 
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>, property: string) => {
+    const handleTextChange = (newValue: string, property: string) => {
         if (!timelineEvents) {
             return;
         }
-        const newValue = e.currentTarget.value;
         if ('description' === property) {
             setTimelineWidgetState({ ...timelineWidgetState, description: newValue });
         } else if ('title' === property) {
@@ -175,11 +178,10 @@ const Form = () => {
         }
     };
 
-    const handleEventTextChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, property: string) => {
+    const handleEventTextChange = (newValue: string, index: number, property: string) => {
         if (!timelineEvents) {
             return;
         }
-        const newValue = e.currentTarget.value;
         const newArray = [...timelineEvents];
         if ('description' === property) {
             newArray[index].description = newValue;
@@ -203,7 +205,7 @@ const Form = () => {
     if (isLoadingTimelineWidget || !widget) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <MidScreenLoader />
                 </Grid>
             </Grid>
@@ -211,52 +213,39 @@ const Form = () => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <form onSubmit={(event) => handleOnSubmit(event)} id="timelineForm">
                     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                        <Grid item xs={12}>
-                            <MetLabel>Title</MetLabel>
-                            <MetDescription>The title must be less than 255 characters.</MetDescription>
+                        <Grid size={12}>
                             <TextField
+                                title="Title"
+                                instructions="The title must be less than 255 characters."
                                 name="title"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
                                 value={timelineWidgetState?.title}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleTextChange(event, 'title');
+                                onChange={(newValue) => {
+                                    handleTextChange(newValue, 'title');
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <MetLabel>Description</MetLabel>
+                        <Grid size={12}>
                             <TextField
                                 name="description"
-                                variant="outlined"
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
+                                title="Description"
                                 multiline
                                 rows={4}
                                 value={timelineWidgetState?.description}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    handleTextChange(event, 'description');
+                                onChange={(newValue) => {
+                                    handleTextChange(newValue, 'description');
                                 }}
                             />
                         </Grid>
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="column"
                             alignItems={'stretch'}
@@ -267,48 +256,43 @@ const Form = () => {
                             {timelineEvents &&
                                 timelineEvents.map((tEvent, index) => (
                                     <Grid
-                                        item
-                                        className={'event' + (index + 1)}
-                                        key={'event' + index + 1}
+                                        className={`event${index + 1}`}
+                                        key={`event${index + 1}`}
                                         spacing={1}
                                         container
                                         mb={'1em'}
-                                        xs={12}
+                                        size={12}
                                     >
-                                        <MetLabel sx={{ paddingLeft: '8px' }}>{'EVENT ' + (index + 1)}</MetLabel>
+                                        <Header3 weight="bold">{`Event ${index + 1}`}</Header3>
 
-                                        <Grid item xs={12}>
-                                            <MetLabel>Event Description</MetLabel>
-                                            <MetDescription>Describe the timeline event.</MetDescription>
+                                        <Grid size={12}>
+                                            <BodyText bold>Event Description</BodyText>
+                                            <BodyText size="small">Describe the timeline event.</BodyText>
                                             <TextField
                                                 name={'eventDescription' + (index + 1)}
                                                 id={'eventDescription' + (index + 1)}
-                                                variant="outlined"
                                                 value={tEvent.description}
-                                                fullWidth
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                    handleEventTextChange(event, index, 'description');
+                                                onChange={(newValue) => {
+                                                    handleEventTextChange(newValue, index, 'description');
                                                 }}
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12}>
-                                            <MetLabel>Event Time</MetLabel>
-                                            <MetDescription>When did the event happen?</MetDescription>
+                                        <Grid size={12}>
+                                            <BodyText bold>Event Time</BodyText>
+                                            <BodyText size="small">When did the event happen?</BodyText>
                                             <TextField
                                                 name={'eventTime' + (index + 1)}
                                                 id={'eventTime' + (index + 1)}
-                                                variant="outlined"
                                                 value={tEvent.time}
-                                                fullWidth
-                                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                    handleEventTextChange(event, index, 'time');
+                                                onChange={(newValue) => {
+                                                    handleEventTextChange(newValue, index, 'time');
                                                 }}
                                             />
                                         </Grid>
 
-                                        <Grid item xs={12}>
-                                            <MetLabel>Event Status</MetLabel>
+                                        <Grid size={12}>
+                                            <BodyText bold>Event Status</BodyText>
                                             <Select
                                                 name={'eventStatus' + (index + 1)}
                                                 id={'eventStatus' + (index + 1)}
@@ -331,32 +315,31 @@ const Form = () => {
                                             </Select>
                                         </Grid>
 
-                                        {1 < timelineEvents.length && (
-                                            <Grid item xs={12} sx={{ marginTop: '8px' }}>
-                                                <SecondaryButtonOld
-                                                    value={index}
-                                                    onClick={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                        handleRemoveEvent(event);
-                                                    }}
-                                                >
-                                                    Remove Event
-                                                </SecondaryButtonOld>
-                                            </Grid>
-                                        )}
+                                        <Grid size={12} sx={{ marginTop: '8px' }}>
+                                            <Button
+                                                size="small"
+                                                disabled={timelineEvents.length <= 1}
+                                                value={index}
+                                                onClick={handleRemoveEvent}
+                                            >
+                                                Remove Event
+                                            </Button>
+                                        </Grid>
 
-                                        <Grid item xs={12}>
+                                        <Grid size={12}>
                                             <Divider sx={{ marginTop: '1em' }} />
                                         </Grid>
                                     </Grid>
                                 ))}
-                            <Grid item>
-                                <PrimaryButtonOld onClick={() => handleAddEvent()}>Add Event</PrimaryButtonOld>
+                            <Grid>
+                                <Button size="small" variant="primary" onClick={() => handleAddEvent()}>
+                                    Add Event
+                                </Button>
                             </Grid>
                         </Grid>
 
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             alignItems={'flex-start'}
@@ -364,15 +347,13 @@ const Form = () => {
                             spacing={2}
                             mt={'3em'}
                         >
-                            <Grid item>
-                                <PrimaryButtonOld type="submit" disabled={isCreating}>
+                            <Grid>
+                                <Button variant="primary" type="submit" disabled={isCreating}>
                                     Save & Close
-                                </PrimaryButtonOld>
+                                </Button>
                             </Grid>
-                            <Grid item>
-                                <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>
-                                    Cancel
-                                </SecondaryButtonOld>
+                            <Grid>
+                                <Button onClick={() => setWidgetDrawerOpen(false)}>Cancel</Button>
                             </Grid>
                         </Grid>
                     </Grid>

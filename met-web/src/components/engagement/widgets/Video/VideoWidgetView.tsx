@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { AspectRatioContainer, colors, MetHeader3 } from 'components/common';
-import { Box, Grid, Skeleton, useTheme } from '@mui/material';
+import { colors } from 'components/common';
+import { BodyText, Header2, Header3 } from 'components/common/Typography';
+import { Grid2 as Grid, Skeleton, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { VideoWidget } from 'models/videoWidget';
 import { fetchVideoWidgets } from 'services/widgetService/VideoService';
-import { BodyText, Header2 } from 'components/common/Typography';
 import ReactPlayer from 'react-player';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -81,13 +81,13 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
     if (isLoading) {
         return (
-            <Grid container justifyContent="flex-start" spacing={3}>
-                <Grid item xs={12}>
+            <Grid container size={12} justifyContent="flex-start" spacing={3}>
+                <Grid size={12}>
                     <Header2>
                         <Skeleton variant="rectangular" />
                     </Header2>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Skeleton variant="rectangular" height="20em" />
                 </Grid>
             </Grid>
@@ -147,39 +147,35 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
     };
 
     return (
-        <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-            <Grid item xs={12} sx={{ height: 0 === widget.title.length ? '0px' : 'auto' }}>
-                <MetHeader3
-                    style={{
-                        fontWeight: 'lighter',
-                        fontSize: '1.5rem',
-                        marginBottom: '0.2rem',
-                        marginTop: '3.3rem',
-                        color: isDarkMode ? colors.surface.white : Palette.text.primary,
-                    }}
+        <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+            <Grid size={12} sx={{ height: 0 === widget.title.length ? '0px' : 'auto' }}>
+                <Header3
+                    fontWeight="lighter"
+                    fontSize="1.5rem"
+                    marginBottom="0.2rem"
+                    marginTop="3.3rem"
+                    color={isDarkMode ? colors.surface.white : Palette.text.primary}
                 >
                     {widget.title}
-                </MetHeader3>
+                </Header3>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <BodyText
                     style={{ marginBottom: '2.5rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
                 >
                     {videoWidget.description}
                 </BodyText>
             </Grid>
-            {/* Overlay covers play button for Mixcloud so it shouldn't be displayed */}
-            <When condition={showOverlay && 'Mixcloud' !== videoSource}>
-                <Grid item xs={12} sx={{ maxHeight: '0px', padding: '0 !important', margin: '0' }}>
+            <Grid size={12} container pt={0} mt={0} spacing={0}>
+                <When condition={showOverlay && 'Mixcloud' !== videoSource}>
                     <VideoOverlay
                         videoOverlayTitle={videoOverlayTitle}
                         source={videoSource}
                         videoSources={videoSources}
                     />
-                </Grid>
-            </When>
-            <Grid item xs={12} sx={{ paddingTop: '0 !important', marginTop: '0' }}>
-                <AspectRatioContainer style={{ borderRadius: '16px', overflow: 'hidden' }}>
+                </When>
+                <Grid borderRadius="16px" overflow="hidden" position="relative" size={12} paddingTop="56.25%">
+                    {/* Overlay covers play button for Mixcloud so it shouldn't be displayed */}
                     <ReactPlayer
                         onDuration={(duration) => {
                             setVideoDuration(formatVideoDuration(duration));
@@ -201,9 +197,9 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                             height: '100%',
                         }}
                     />
-                </AspectRatioContainer>
+                </Grid>
             </Grid>
-            <Grid item xs={12} sx={{ pt: '0.5rem !important' }}>
+            <Grid size={12} sx={{ pt: '0.5rem !important' }}>
                 <BodyText
                     style={{ fontSize: '0.875rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
                 >
@@ -216,33 +212,23 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
 const VideoOverlay = ({ videoOverlayTitle, source, videoSources }: VideoOverlayProps) => {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                height: '3.8rem',
-                background: 'black',
-                width: '100%',
-                borderRadius: '16px 16px 0 0',
-                position: 'relative',
-                top: '0',
-                zIndex: '10000',
-                alignItems: 'center',
-                padding: '1rem',
-            }}
+        <Grid
+            container
+            marginBottom="-3.9rem"
+            bgcolor="black"
+            size={12}
+            borderRadius="16px 16px 0 0"
+            zIndex="10000"
+            padding="1rem"
         >
-            <div
-                style={{
-                    alignItems: 'center',
-                    display: 'flex',
-                }}
-            >
+            <Grid container alignItems="center" size={12}>
                 <FontAwesomeIcon
                     icon={videoSources.find((vs) => vs.name === source)?.icon || faQuestionCircle}
                     style={{ fontSize: '1.9rem', paddingRight: '0.65rem', color: colors.surface.white }}
                 />{' '}
-                <span style={{ fontSize: '0.875rem' }}>{videoOverlayTitle}</span>
-            </div>
-        </Box>
+                <BodyText size="small">{videoOverlayTitle}</BodyText>
+            </Grid>
+        </Grid>
     );
 };
 

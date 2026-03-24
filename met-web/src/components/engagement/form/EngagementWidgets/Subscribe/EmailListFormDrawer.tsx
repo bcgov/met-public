@@ -3,8 +3,7 @@ import { useAppDispatch } from 'hooks';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, FormControlLabel, Radio, FormControl, FormLabel, FormHelperText } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid, FormControlLabel, Radio, FormControl, FormLabel, FormHelperText } from '@mui/material';
 import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -18,6 +17,8 @@ import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
 import ControlledRadioGroup from 'components/common/ControlledInputComponents/ControlledRadioGroup';
 import { When } from 'react-if';
 import { Palette } from 'styles/Theme';
+import { Button } from 'components/common/Input/Button';
+import { Header3, BodyText } from 'components/common/Typography';
 
 const schema = yup
     .object({
@@ -174,12 +175,14 @@ const EmailListDrawer = () => {
                             spacing={2}
                             padding="2em"
                         >
-                            <Grid item xs={12}>
-                                <MetHeader3 bold>Email List</MetHeader3>
+                            <Grid size={12}>
+                                <Header3 weight="bold">Email List</Header3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Description
+                                </BodyText>
                                 <Controller
                                     name="richDescription"
                                     control={control}
@@ -197,7 +200,7 @@ const EmailListDrawer = () => {
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <FormControl error={Boolean(errors.callToActionType)}>
                                     <FormLabel
                                         id="controlled-radio-buttons-group"
@@ -222,36 +225,27 @@ const EmailListDrawer = () => {
                                     </When>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Call-to-action</MetLabel>
-                                <ControlledTextField
-                                    name="callToActionText"
-                                    variant="outlined"
-                                    label=""
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Call-to-action
+                                </BodyText>
+                                <ControlledTextField name="callToActionText" />
                             </Grid>
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 container
                                 direction="row"
                                 spacing={1}
                                 justifyContent={'flex-start'}
                                 marginTop="2em"
                             >
-                                <Grid item>
-                                    <PrimaryButtonOld
-                                        type="submit"
-                                        loading={isCreating}
-                                    >{`Save & Close`}</PrimaryButtonOld>
+                                <Grid>
+                                    <Button variant="primary" type="submit" loading={isCreating}>
+                                        Save &amp; Close
+                                    </Button>
                                 </Grid>
-                                <Grid item>
-                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
+                                <Grid>
+                                    <Button onClick={handleClose}>Cancel</Button>
                                 </Grid>
                             </Grid>
                         </Grid>

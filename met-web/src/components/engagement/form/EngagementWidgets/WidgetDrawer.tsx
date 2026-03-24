@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import WidgetDrawerTabs from './WidgetDrawerTabs';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';

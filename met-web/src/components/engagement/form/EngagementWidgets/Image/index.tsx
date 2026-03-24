@@ -1,6 +1,6 @@
 import React, { Suspense, useContext } from 'react';
 import Form from './Form';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { WidgetType } from 'models/widget';
 import { fetchImageWidgets } from 'services/widgetService/ImageService';
@@ -27,7 +27,7 @@ export const ImageForm = () => {
 
 const LoadingCard = () => (
     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
             <MidScreenLoader />
         </Grid>
     </Grid>

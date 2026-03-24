@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Header2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
 import { Form } from 'react-router';
-import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 import EngagementVisibilityControl from '../EngagementVisibilityControl';
@@ -54,9 +54,8 @@ const EngagementForm = ({
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ maxWidth: '788px' }}>
+            <Grid container sx={{ maxWidth: '788px' }}>
                 <Header2 decorated>{isNewEngagement ? 'Configure Engagement' : 'Edit Configuration'}</Header2>
-                <br />
                 <Controller
                     control={control}
                     name="name"
@@ -136,8 +135,8 @@ const EngagementForm = ({
                 >
                     <UserManager />
                 </FormStep>
-            </Box>
-            <Box sx={{ mt: 3 }}>
+            </Grid>
+            <Grid sx={{ mt: 3 }}>
                 <Button
                     sx={{ mr: '16px' }}
                     disabled={
@@ -153,7 +152,7 @@ const EngagementForm = ({
                     {isNewEngagement ? 'Create Engagement' : 'Save Changes'}
                 </Button>
                 <Button href={isNewEngagement ? '/engagements' : '../'}>Cancel</Button>
-            </Box>
+            </Grid>
             <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
         </Form>
     );

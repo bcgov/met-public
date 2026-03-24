@@ -14,13 +14,6 @@ const MOCK_TENANT = {
 
 jest.mock('axios');
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, ...rest }: { children: React.ReactNode }) => {
-        return <button {...rest}>{children}</button>;
-    },
-}));
-
 jest.mock('hooks', () => ({
     useAppTranslation: () => ({
         t: (key: string) => key, // return the key itself

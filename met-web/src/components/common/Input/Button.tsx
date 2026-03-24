@@ -39,12 +39,7 @@ const getSecondaryButtonStyles = (color: ButtonProps['color'], isDarkMode: boole
     const resolvedColor = notificationColor ?? color;
     const isCustom = color !== 'default';
 
-    let baseBackground = 'white';
-    if (isCustom) {
-        baseBackground = resolvedColor;
-    } else if (isDarkMode) {
-        baseBackground = 'transparent';
-    }
+    let baseBackground = isDarkMode ? 'transparent' : 'white';
 
     const textColor = isCustom ? resolvedColor : 'text.primary';
     const darkTextColor = isCustom ? `color-mix(in srgb, ${textColor}, black 20%)` : textColor;

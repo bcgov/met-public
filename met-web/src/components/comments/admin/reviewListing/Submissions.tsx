@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import MetTable from 'components/common/Table';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { Link, useLocation } from 'react-router';
-import { MetPageGridContainer, PrimaryButtonOld, MetHeader1Old, SecondaryButtonOld } from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
 import { Collapse, Link as MuiLink } from '@mui/material';
@@ -18,6 +18,9 @@ import { CommentListingContext } from './CommentListingContext';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
+import { Header1 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
 const Submissions = () => {
     const {
@@ -101,14 +104,14 @@ const Submissions = () => {
     ];
 
     return (
-        <MetPageGridContainer
+        <ResponsiveContainer
             direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
             container
             rowSpacing={1}
         >
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1}>
                         <TextField
@@ -119,16 +122,19 @@ const Submissions = () => {
                             onChange={(e) => setSearchText(e.target.value)}
                             size="small"
                         />
-                        <PrimaryButtonOld
+                        <Button
+                            size="small"
                             data-testid="CommentListing/search-button"
                             onClick={() => handleSearchBarClick(searchText)}
+                            variant="primary"
                         >
                             <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                        </PrimaryButtonOld>
-                        <SecondaryButtonOld
+                        </Button>
+                        <Button
+                            size="small"
                             data-testid="comment-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
-                            startIcon={
+                            icon={
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
@@ -140,26 +146,31 @@ const Submissions = () => {
                             }
                         >
                             Advanced Search
-                        </SecondaryButtonOld>
+                        </Button>
                     </Stack>
                     <Stack direction="row" spacing={1}>
-                        <PrimaryButtonOld component={Link} to={`/surveys/${survey.id}/comments/all`}>
+                        <Button
+                            size="small"
+                            variant="primary"
+                            component={RouterLinkRenderer}
+                            href={`/surveys/${survey.id}/comments/all`}
+                        >
                             Read All Comments
-                        </PrimaryButtonOld>
+                        </Button>
                     </Stack>
                 </Stack>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Collapse in={isAdvancedSearchOpen}>
                     <AdvancedSearch />
                 </Collapse>
             </Grid>
 
-            <Grid item xs={12}>
-                <MetHeader1Old>
+            <Grid size={12}>
+                <Header1>
                     <strong>{`${survey.name} Comments`}</strong>
-                </MetHeader1Old>
+                </Header1>
                 <MetTable
                     headCells={headCells}
                     rows={submissions}
@@ -171,7 +182,7 @@ const Submissions = () => {
                     loading={loading}
                 />
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

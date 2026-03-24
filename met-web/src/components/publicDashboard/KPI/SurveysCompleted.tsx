@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
-import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid2 as Grid, CircularProgress, useMediaQuery, Theme, Paper } from '@mui/material';
 import { DASHBOARD } from '../constants';
 import { getAggregatorData } from 'services/analytics/aggregatorService';
 import { AggregatorData } from '../../../models/analytics/aggregator';
 import { Engagement } from 'models/engagement';
 import { RadialBarChart, PolarAngleAxis, RadialBar } from 'recharts';
-import { MetLabel, MetPaper } from 'components/common';
+import { BodyText } from 'components/common/Typography/Body';
 import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
 import axios, { AxiosError } from 'axios';
@@ -68,8 +68,10 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={2}>{translate('dashboard.surveysCompleted')}</MetLabel>
-                <MetPaper sx={{ p: 2, textAlign: 'center' }}>
+                <BodyText bold mb={2}>
+                    {translate('dashboard.surveysCompleted')}
+                </BodyText>
+                <Paper sx={{ p: 2, textAlign: 'center' }}>
                     <Box
                         sx={{
                             width: '100%',
@@ -86,7 +88,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                             <CircularProgress color="inherit" />
                         </Grid>
                     </Box>
-                </MetPaper>
+                </Paper>
             </>
         );
     }
@@ -108,8 +110,10 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
 
     return (
         <>
-            <MetLabel mb={{ md: 0.5, lg: 2 }}>{translate('dashboard.surveysCompleted')}</MetLabel>
-            <MetPaper sx={{ p: 2, textAlign: 'center' }}>
+            <BodyText bold mb={{ md: 0.5, lg: 2 }}>
+                {translate('dashboard.surveysCompleted')}
+            </BodyText>
+            <Paper sx={{ p: 2, textAlign: 'center' }}>
                 <Stack alignItems="center" gap={1}>
                     <RadialBarChart
                         width={circleSize}
@@ -147,7 +151,7 @@ const SurveysCompleted = ({ engagement, engagementIsLoading }: SurveysCompletedP
                         </text>
                     </RadialBarChart>
                 </Stack>
-            </MetPaper>
+            </Paper>
         </>
     );
 };

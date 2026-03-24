@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Grid,
+    Grid2 as Grid,
     FormControl,
     RadioGroup,
     FormControlLabel,
@@ -12,22 +12,15 @@ import {
     TextField,
     FormHelperText,
     Link,
+    Tooltip,
 } from '@mui/material';
 import { getSubmission, reviewComments } from 'services/submissionService';
 import { useAppDispatch, useAppTranslation, useAppSelector } from 'hooks';
 import { useParams, useNavigate } from 'react-router';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import {
-    MetLabel,
-    MetParagraphOld,
-    MetPageGridContainer,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-    MetHeader3,
-    MetHeader4,
-    MetSmallTextOld,
-    MetTooltip,
-} from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
+import { BodyText, Header3, Header4 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';
 import { formatDate } from 'components/common/dateHelper';
@@ -210,7 +203,7 @@ const CommentReview = () => {
     const threatEmailContact = tenant.contact_email;
     const threatConactName = tenant.contact_name;
     return (
-        <MetPageGridContainer>
+        <ResponsiveContainer>
             <EmailPreviewModal
                 open={openEmailPreview}
                 handleClose={() => setEmailPreview(false)}
@@ -225,68 +218,68 @@ const CommentReview = () => {
                 alignItems="flex-start"
                 rowSpacing={4}
             >
-                <Grid container direction="row" item rowSpacing={2}>
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Comment ID:</MetLabel>
+                <Grid container direction="row" rowSpacing={2}>
+                    <Grid container direction="row" size={6} spacing={1}>
+                        <Grid>
+                            <BodyText bold>Comment ID:</BodyText>
                         </Grid>
-                        <Grid item>
-                            <MetParagraphOld sx={{ pl: 2 }}>{id}</MetParagraphOld>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Status:</MetLabel>
-                        </Grid>
-                        <Grid item>
-                            <MetParagraphOld sx={{ pl: 2 }}>{CommentStatus[comment_status_id]}</MetParagraphOld>
+                        <Grid>
+                            <BodyText sx={{ pl: 2 }}>{id}</BodyText>
                         </Grid>
                     </Grid>
 
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Comment Date:</MetLabel>
+                    <Grid container direction="row" size={6} spacing={1}>
+                        <Grid>
+                            <BodyText bold>Status:</BodyText>
                         </Grid>
-                        <Grid item>
-                            <MetParagraphOld sx={{ pl: 2 }}>{formatDate(created_date)}</MetParagraphOld>
+                        <Grid>
+                            <BodyText sx={{ pl: 2 }}>{CommentStatus[comment_status_id]}</BodyText>
                         </Grid>
                     </Grid>
 
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Reviewed by:</MetLabel>
+                    <Grid container direction="row" size={6} spacing={1}>
+                        <Grid>
+                            <BodyText bold>Comment Date:</BodyText>
                         </Grid>
-                        <Grid item>
-                            <MetParagraphOld sx={{ pl: 2 }}>{reviewed_by}</MetParagraphOld>
+                        <Grid>
+                            <BodyText sx={{ pl: 2 }}>{formatDate(created_date)}</BodyText>
                         </Grid>
                     </Grid>
-                    <Grid container direction="row" item xs={6} spacing={1}></Grid>
-                    <Grid container direction="row" item xs={6} spacing={1}>
-                        <Grid item>
-                            <MetLabel>Date Reviewed:</MetLabel>
+
+                    <Grid container direction="row" size={6} spacing={1}>
+                        <Grid>
+                            <BodyText bold>Reviewed by:</BodyText>
                         </Grid>
-                        <Grid item>
-                            <MetParagraphOld sx={{ pl: 2 }}>{formatDate(review_date)}</MetParagraphOld>
+                        <Grid>
+                            <BodyText sx={{ pl: 2 }}>{reviewed_by}</BodyText>
+                        </Grid>
+                    </Grid>
+                    <Grid container direction="row" size={6} spacing={1}></Grid>
+                    <Grid container direction="row" size={6} spacing={1}>
+                        <Grid>
+                            <BodyText bold>Date Reviewed:</BodyText>
+                        </Grid>
+                        <Grid>
+                            <BodyText sx={{ pl: 2 }}>{formatDate(review_date)}</BodyText>
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid container rowSpacing={2} paddingTop={5}>
-                    <Grid item xs={12}>
-                        <Grid xs={12} item>
-                            <MetHeader3>Comment(s)</MetHeader3>
+                <Grid container rowSpacing={2}>
+                    <Grid size={12}>
+                        <Grid size={12}>
+                            <Header3 weight="bold">Comment(s)</Header3>
                         </Grid>
                     </Grid>
                     {submission.comments?.map((comment) => {
                         return (
-                            <Grid key={comment.id} item xs={12}>
+                            <Grid key={comment.id} size={12}>
                                 <Divider />
                                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                                    <Grid item xs={1} paddingTop={3}>
+                                    <Grid size={1} paddingTop={3}>
                                         <If condition={comment.is_displayed}>
                                             <Then>
-                                                <Grid xs={12} item>
-                                                    <MetTooltip
+                                                <Grid size={12}>
+                                                    <Tooltip
                                                         disableInteractive
                                                         title={'Displayed to the public'}
                                                         placement="top"
@@ -298,12 +291,12 @@ const CommentReview = () => {
                                                                 style={{ fontSize: '24px', color: '#757575' }}
                                                             />
                                                         </span>
-                                                    </MetTooltip>
+                                                    </Tooltip>
                                                 </Grid>
                                             </Then>
                                             <Else>
-                                                <Grid xs={12} item>
-                                                    <MetTooltip
+                                                <Grid size={12}>
+                                                    <Tooltip
                                                         disableInteractive
                                                         title={'Not displayed to the public'}
                                                         placement="top"
@@ -315,40 +308,40 @@ const CommentReview = () => {
                                                                 style={{ fontSize: '24px', color: '#757575' }}
                                                             />
                                                         </span>
-                                                    </MetTooltip>
+                                                    </Tooltip>
                                                 </Grid>
                                             </Else>
                                         </If>
                                     </Grid>
-                                    <Grid item xs={11}>
-                                        <Grid xs={12} item paddingTop={2}>
-                                            <MetLabel>{comment.label ?? 'Label not available.'}</MetLabel>
+                                    <Grid size={11}>
+                                        <Grid size={12} paddingTop={2}>
+                                            <BodyText>{comment.label ?? 'Label not available.'}</BodyText>
                                         </Grid>
-                                        <Grid xs={12} item>
-                                            <MetParagraphOld>{comment.text}</MetParagraphOld>
+                                        <Grid size={12}>
+                                            <BodyText>{comment.text}</BodyText>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         );
                     })}
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Divider />
                     </Grid>
                 </Grid>
                 <If condition={!submission.comments || submission.comments.length == 0}>
                     <Then>
-                        <Grid container direction="row" item xs={12} spacing={2}>
-                            <Grid xs={12} item>
-                                <MetLabel>This submission has no comments.</MetLabel>
+                        <Grid container direction="row" size={12} spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold>This submission has no comments.</BodyText>
                             </Grid>
                         </Grid>
                     </Then>
                     <Else>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl>
                                 <FormLabel id="controlled-radio-buttons-group">
-                                    <MetHeader3 sx={{ color: '#494949' }}>Comments Approval</MetHeader3>
+                                    <Header3 sx={{ color: '#494949' }}>Comments Approval</Header3>
                                 </FormLabel>
                                 <RadioGroup
                                     defaultValue={defaultVerdict}
@@ -357,29 +350,29 @@ const CommentReview = () => {
                                     <FormControlLabel
                                         value={CommentStatus.Approved}
                                         control={<Radio />}
-                                        label={<MetParagraphOld>Approve</MetParagraphOld>}
+                                        label={<BodyText>Approve</BodyText>}
                                     />
                                     <FormControlLabel
                                         value={CommentStatus.Rejected}
                                         control={<Radio />}
-                                        label={<MetParagraphOld>Reject</MetParagraphOld>}
+                                        label={<BodyText>Reject</BodyText>}
                                     />
                                     <FormControlLabel
                                         value={CommentStatus.NeedsFurtherReview}
                                         control={<Radio />}
-                                        label={<MetParagraphOld>Needs further review</MetParagraphOld>}
+                                        label={<BodyText>Needs further review</BodyText>}
                                     />
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
                         <When condition={review == CommentStatus.Rejected}>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <FormControl>
                                     <FormLabel id="controlled-checkbox-group">
-                                        <MetHeader4 sx={{ color: '#494949' }}>Reason for Rejection</MetHeader4>
+                                        <Header4 sx={{ color: '#494949' }}>Reason for Rejection</Header4>
                                     </FormLabel>
                                     <FormControlLabel
-                                        label={<MetParagraphOld>Contains personal information</MetParagraphOld>}
+                                        label={<BodyText>Contains personal information</BodyText>}
                                         control={
                                             <Checkbox
                                                 checked={hasPersonalInfo}
@@ -388,11 +381,7 @@ const CommentReview = () => {
                                         }
                                     />
                                     <FormControlLabel
-                                        label={
-                                            <MetParagraphOld>
-                                                Contains profanity or inappropriate language
-                                            </MetParagraphOld>
-                                        }
+                                        label={<BodyText>Contains profanity or inappropriate language</BodyText>}
                                         control={
                                             <Checkbox
                                                 checked={hasProfanity}
@@ -401,7 +390,7 @@ const CommentReview = () => {
                                         }
                                     />
                                     <FormControlLabel
-                                        label={<MetParagraphOld>Contains threat/menace</MetParagraphOld>}
+                                        label={<BodyText>Contains threat/menace</BodyText>}
                                         control={
                                             <Checkbox
                                                 checked={hasThreat}
@@ -409,14 +398,14 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetSmallTextOld bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
+                                    <BodyText size="small" bold color="#d32f2f" marginLeft={'3em'} mt={'-1em'}>
                                         {translate('comment.admin.review.threatTextOne')}&nbsp;
                                         {threatConactName}&nbsp;
                                         {translate('comment.admin.review.threatTextTwo')} &nbsp;
                                         <Link href={`mailto:${threatEmailContact}`}>{threatEmailContact}</Link>
-                                    </MetSmallTextOld>
+                                    </BodyText>
                                     <FormControlLabel
-                                        label={<MetParagraphOld sx={{ color: '#494949' }}>Other</MetParagraphOld>}
+                                        label={<BodyText sx={{ color: '#494949' }}>Other</BodyText>}
                                         control={
                                             <Checkbox
                                                 checked={hasOtherReason}
@@ -429,15 +418,20 @@ const CommentReview = () => {
                                             />
                                         }
                                     />
-                                    <MetParagraphOld sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
+                                    <BodyText sx={{ marginLeft: '3em', color: '#707070', fontSize: '13px' }}>
                                         This will be inserted in the email sent to the respondent:
-                                        <MetParagraphOld
-                                            sx={{ fontStyle: 'italic', color: '#707070', fontSize: '13px' }}
-                                        >
-                                            We have reviewed your feedback and can't accept it for the following
-                                            reason(s): - Your feedback contains "other"
-                                        </MetParagraphOld>
-                                    </MetParagraphOld>
+                                    </BodyText>
+                                    <BodyText
+                                        sx={{
+                                            marginLeft: '3em',
+                                            fontStyle: 'italic',
+                                            color: '#707070',
+                                            fontSize: '13px',
+                                        }}
+                                    >
+                                        We have reviewed your feedback and can't accept it for the following reason(s):
+                                        - Your feedback contains "other"
+                                    </BodyText>
                                     <TextField
                                         disabled={!hasOtherReason}
                                         value={otherReason}
@@ -448,13 +442,11 @@ const CommentReview = () => {
                                         multiline
                                     />
                                     <br />
-                                    <MetParagraphOld sx={{ fontWeight: 'bold', color: '#494949' }}>
-                                        Review Notes
-                                    </MetParagraphOld>
-                                    <MetParagraphOld sx={{ color: '#707070', fontSize: '13px' }}>
+                                    <BodyText sx={{ fontWeight: 'bold', color: '#494949' }}>Review Notes</BodyText>
+                                    <BodyText sx={{ color: '#707070', fontSize: '13px' }}>
                                         This note will be inserted in the email sent to the respondent to help them
                                         understand what needs to be edited for their comment(s) to be approved.
-                                    </MetParagraphOld>
+                                    </BodyText>
                                     {reviewNotes.map((staffNote) => {
                                         return (
                                             <TextField
@@ -477,20 +469,17 @@ const CommentReview = () => {
 
                                     <When condition={review == CommentStatus.Rejected && notifyEmail && !hasThreat}>
                                         <Grid
-                                            item
-                                            xs={12}
+                                            size={12}
                                             sx={{ m: 1 }}
                                             container
                                             alignItems="flex-end"
                                             justifyContent="flex-end"
                                         >
-                                            <SecondaryButtonOld onClick={previewEmail}>
-                                                {'Preview Email'}
-                                            </SecondaryButtonOld>
+                                            <Button onClick={previewEmail}>{'Preview Email'}</Button>
                                         </Grid>
                                     </When>
                                     <br />
-                                    <MetLabel>Internal Note</MetLabel>
+                                    <BodyText bold>Internal Note</BodyText>
                                     {internalNotes.map((staffNote) => {
                                         return (
                                             <TextField
@@ -511,19 +500,15 @@ const CommentReview = () => {
                                         );
                                     })}
                                     <br />
-                                    <MetParagraphOld>
+                                    <BodyText>
                                         Clicking the "Save" button will trigger an automatic email to be sent to the
                                         person who made this comment. They will have the option to edit and re-submit
                                         their comment. The edited comment will have to be approved before it is
                                         published.
-                                    </MetParagraphOld>
+                                    </BodyText>
                                     <br />
                                     <FormControlLabel
-                                        label={
-                                            <MetParagraphOld>
-                                                Don't send this email to the person who commented.
-                                            </MetParagraphOld>
-                                        }
+                                        label={<BodyText>Don't send this email to the person who commented.</BodyText>}
                                         control={
                                             <Checkbox
                                                 checked={notifyEmail === true ? false : true}
@@ -543,8 +528,8 @@ const CommentReview = () => {
                             </Grid>
                         </When>
                         <When condition={review !== CommentStatus.Rejected}>
-                            <Grid item xs={12}>
-                                <MetLabel>Internal Note</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold>Internal Note</BodyText>
                                 {internalNotes.map((staffNote) => {
                                     return (
                                         <TextField
@@ -562,19 +547,18 @@ const CommentReview = () => {
                                 })}
                             </Grid>
                         </When>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Stack direction="row" spacing={2}>
-                                <PrimaryButtonOld loading={isSaving} onClick={handleSave}>
-                                    {'Save & Continue'}
-                                </PrimaryButtonOld>
-
-                                <SecondaryButtonOld onClick={() => navigate(-1)}>Cancel</SecondaryButtonOld>
+                                <Button variant="primary" loading={isSaving} onClick={handleSave}>
+                                    Save &amp; Continue
+                                </Button>
+                                <Button onClick={() => navigate(-1)}>Cancel</Button>
                             </Stack>
                         </Grid>
                     </Else>
                 </If>
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

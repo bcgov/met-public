@@ -270,7 +270,6 @@ export const EngagementSurveyBlock = () => {
                                         size={{ xs: 12, md: 6 }}
                                         sx={{
                                             display: hasWidget || isPreviewMode ? 'flex' : 'none',
-                                            minHeight: '360px',
                                         }}
                                     >
                                         <EngagementWidgetDisplay location={WidgetLocation.Feedback} />

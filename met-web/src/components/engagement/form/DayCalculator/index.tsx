@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Modal, Grid, Stack, useMediaQuery, TextField, Autocomplete, Link as MuiLink, Typography } from '@mui/material';
 import {
-    modalStyle,
-    MetHeader1Old,
-    MetHeader4,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-    MetLabel,
-    MetBodyOld,
-} from 'components/common';
+    Modal,
+    Grid2 as Grid,
+    Stack,
+    useMediaQuery,
+    TextField,
+    Autocomplete,
+    Link as MuiLink,
+    Typography,
+} from '@mui/material';
+import { modalStyle } from 'components/common';
+import { BodyText, Header1, Header4 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { When } from 'react-if';
 import dayjs from 'dayjs';
 import { muitheme, options } from './constants';
@@ -176,30 +179,32 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 sx={{ ...modalStyle, overflowY: 'scroll' }}
                 rowSpacing={2}
             >
-                <Grid container direction="row" item xs={12} wrap="nowrap">
-                    <Grid item md={11} xs={12}>
+                <Grid container direction="row" size={12} wrap="nowrap">
+                    <Grid size={{ md: 11, xs: 12 }}>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                            <MetHeader1Old bold sx={{ mb: 2 }} data-testid="daycalculator-title">
+                            <Header1 weight="bold" sx={{ mb: 2 }} data-testid="daycalculator-title">
                                 Day Calculator
-                            </MetHeader1Old>
+                            </Header1>
                         </Stack>
                     </Grid>
                 </Grid>
-                <Grid container direction="row" item xs={12}>
-                    <MetHeader4 sx={{ mb: 3 }}>Enter any two fields to calculate the third</MetHeader4>
+                <Grid container direction="row" size={12}>
+                    <Header4 sx={{ mb: 3 }}>Enter any two fields to calculate the third</Header4>
                 </Grid>
-                <Grid container direction="row" item xs={12}>
-                    <MetLabel sx={{ mb: 0 }}>Engagement Date</MetLabel>
+                <Grid container direction="row" size={12}>
+                    <BodyText bold sx={{ mb: 0 }}>
+                        Engagement Date
+                    </BodyText>
                 </Grid>
                 {isSmallScreen ? (
                     <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>From</Typography>
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="start-date"
@@ -219,13 +224,13 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 </Stack>
                             </Grid>
                         </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Typography minWidth={{ xs: '2.5em', md: 'auto' }}>To</Typography>
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="end-date"
@@ -248,8 +253,8 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                     </>
                 ) : (
                     <>
-                        <Grid container direction="row" item xs={12} columnSpacing={2}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12} columnSpacing={2}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
                                         From
@@ -271,7 +276,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Typography minWidth={{ xs: '2.5em', md: 'auto' }} align="center">
                                         To
@@ -301,13 +306,15 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                         <>
                             <When condition={selectedOption?.label == suspensionLabel}>
                                 {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
+                                    <Grid container direction="row" size={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetLabel sx={{ mb: 0 }}>Suspension Date</MetLabel>
+                                                <BodyText bold sx={{ mb: 0 }}>
+                                                    Suspension Date
+                                                </BodyText>
                                             </Stack>
                                         </Grid>
-                                        <Grid item md={6} xs={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                 <TextField
                                                     id="suspension-date"
@@ -344,13 +351,15 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                         <>
                             <When condition={selectedOption?.label == suspensionLabel}>
                                 {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
+                                    <Grid container direction="row" size={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetLabel sx={{ mb: 0 }}>Resumption Date</MetLabel>
+                                                <BodyText bold sx={{ mb: 0 }}>
+                                                    Resumption Date
+                                                </BodyText>
                                             </Stack>
                                         </Grid>
-                                        <Grid item md={6} xs={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                 <TextField
                                                     id="resumption-date"
@@ -391,15 +400,19 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                         <>
                             <When condition={selectedOption?.label == suspensionLabel}>
                                 {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
+                                    <Grid container direction="row" size={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetLabel sx={{ mb: 0 }}>Suspension Date</MetLabel>
+                                                <BodyText bold sx={{ mb: 0 }}>
+                                                    Suspension Date
+                                                </BodyText>
                                             </Stack>
                                         </Grid>
-                                        <Grid item md={6} xs={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
-                                                <MetLabel sx={{ mb: 0 }}>Resumption Date</MetLabel>
+                                                <BodyText bold sx={{ mb: 0 }}>
+                                                    Resumption Date
+                                                </BodyText>
                                             </Stack>
                                         </Grid>
                                     </Grid>
@@ -409,8 +422,8 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                         <>
                             <When condition={selectedOption?.label == suspensionLabel}>
                                 {
-                                    <Grid container direction="row" item xs={12}>
-                                        <Grid item md={6} xs={12}>
+                                    <Grid container direction="row" size={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                 <TextField
                                                     id="suspension-date"
@@ -440,7 +453,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                                 />
                                             </Stack>
                                         </Grid>
-                                        <Grid item md={6} xs={12}>
+                                        <Grid size={{ md: 6, xs: 12 }}>
                                             <Stack direction="row" alignItems="center" spacing={2}>
                                                 <TextField
                                                     id="resumption-date"
@@ -479,13 +492,15 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                 )}
                 {isSmallScreen ? (
                     <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetLabel sx={{ mb: 0 }}>Calculation Type</MetLabel>
+                                    <BodyText bold sx={{ mb: 0 }}>
+                                        Calculation Type
+                                    </BodyText>
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Autocomplete
                                         id="drop-down"
@@ -516,13 +531,15 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                 </Stack>
                             </Grid>
                         </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetLabel sx={{ mb: 0 }}>Number of Days</MetLabel>
+                                    <BodyText bold sx={{ mb: 0 }}>
+                                        Number of Days
+                                    </BodyText>
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="number-of-days"
@@ -544,20 +561,24 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                     </>
                 ) : (
                     <>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetLabel sx={{ mb: 0 }}>Calculation Type</MetLabel>
+                                    <BodyText bold sx={{ mb: 0 }}>
+                                        Calculation Type
+                                    </BodyText>
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
-                                    <MetLabel sx={{ mb: 0 }}>Number of Days</MetLabel>
+                                    <BodyText bold sx={{ mb: 0 }}>
+                                        Number of Days
+                                    </BodyText>
                                 </Stack>
                             </Grid>
                         </Grid>
-                        <Grid container direction="row" item xs={12}>
-                            <Grid item md={6} xs={12}>
+                        <Grid container direction="row" size={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <Autocomplete
                                         id="drop-down"
@@ -587,7 +608,7 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid item md={6} xs={12}>
+                            <Grid size={{ md: 6, xs: 12 }}>
                                 <Stack direction="row" alignItems="center" spacing={2}>
                                     <TextField
                                         id="number-of-days"
@@ -608,12 +629,11 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                         </Grid>
                     </>
                 )}
-                <Grid container direction="row" item xs={12}>
+                <Grid container direction="row" size={12}>
                     <Grid
-                        item
                         container
                         direction={{ xs: 'column', sm: 'row' }}
-                        xs={12}
+                        size={12}
                         justifyContent="flex-end"
                         spacing={1}
                     >
@@ -623,49 +643,48 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButtonOld data-testid={'reset-button'} onClick={() => resetToDefault()}>
+                            <Button data-testid={'reset-button'} onClick={() => resetToDefault()}>
                                 Reset All
-                            </SecondaryButtonOld>
+                            </Button>
                         </Stack>
                     </Grid>
                 </Grid>
-                <Grid item md={12} xs={12}>
+                <Grid size={{ md: 12, xs: 12 }}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <MetHeader4 bold>Description</MetHeader4>
+                        <Header4 weight="bold">Description</Header4>
                     </Stack>
                 </Grid>
-                <Grid item md={12} xs={12}>
+                <Grid size={{ md: 12, xs: 12 }}>
                     <Stack direction="row" alignItems="center" spacing={2}>
                         <When condition={selectedOption?.label == dayZeroLabel}>
                             {
-                                <MetBodyOld sx={{ mb: 2 }}>
+                                <BodyText sx={{ mb: 2 }}>
                                     {options[0].description}
                                     <MuiLink onClick={() => setShowHideStatus(!showHideStatus)}>{`${
                                         showHideStatus ? 'Hide' : 'Show'
                                     }`}</MuiLink>{' '}
                                     Day Zero rules.
-                                </MetBodyOld>
+                                </BodyText>
                             }
                         </When>
                         <When condition={selectedOption?.label == calendarLabel}>
-                            {<MetBodyOld sx={{ mb: 2 }}>{options[1].description}</MetBodyOld>}
+                            {<BodyText sx={{ mb: 2 }}>{options[1].description}</BodyText>}
                         </When>
                         <When condition={selectedOption?.label == suspensionLabel}>
-                            {<MetBodyOld sx={{ mb: 2 }}>{options[2].description}</MetBodyOld>}
+                            {<BodyText sx={{ mb: 2 }}>{options[2].description}</BodyText>}
                         </When>
                     </Stack>
                 </Grid>
-                <Grid item md={12} xs={12}>
+                <Grid size={{ md: 12, xs: 12 }}>
                     <When condition={showHideStatus}>
                         <DayZeroRules />
                     </When>
                 </Grid>
-                <Grid container direction="row" item xs={12}>
+                <Grid container direction="row" size={12}>
                     <Grid
-                        item
                         container
                         direction={{ xs: 'column', sm: 'row' }}
-                        xs={12}
+                        size={12}
                         justifyContent="flex-end"
                         spacing={1}
                         sx={{ mt: '1em' }}
@@ -676,12 +695,12 @@ const DayCalculatorModal = ({ open, updateModal }: DayCalcModalProps) => {
                             width="100%"
                             justifyContent="flex-end"
                         >
-                            <SecondaryButtonOld data-testid={'cancel-button'} onClick={() => updateModal(false)}>
+                            <Button data-testid={'cancel-button'} onClick={() => updateModal(false)}>
                                 Close
-                            </SecondaryButtonOld>
-                            <PrimaryButtonOld data-testid={'calculator-button'} onClick={() => calculator()}>
+                            </Button>
+                            <Button variant="primary" data-testid={'calculator-button'} onClick={() => calculator()}>
                                 Calculate
-                            </PrimaryButtonOld>
+                            </Button>
                         </Stack>
                     </Grid>
                 </Grid>

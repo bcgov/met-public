@@ -7,21 +7,15 @@ import {
     FormControlLabel,
     FormHelperText,
     FormLabel,
-    Grid,
+    Grid2 as Grid,
     Paper,
     Radio,
     Stack,
     TextField,
-    useTheme,
 } from '@mui/material';
-import {
-    MetHeader3,
-    MetLabel,
-    MetSmallTextOld,
-    modalStyle,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-} from 'components/common';
+import { modalStyle } from 'components/common';
+import { BodyText, Header3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserDetailsContext } from './UserDetailsContext';
 import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
@@ -62,8 +56,6 @@ export const AddToEngagementModal = () => {
     const [engagements, setEngagements] = useState<Engagement[]>([]);
     const [engagementsLoading, setEngagementsLoading] = useState(false);
     const [backendError, setBackendError] = useState('');
-
-    const theme = useTheme();
 
     const methods = useForm<AddUserForm>({
         resolver: yupResolver(schema) as unknown as Resolver<AddUserForm>,
@@ -192,22 +184,21 @@ export const AddToEngagementModal = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <When condition={!userHasRole}>
-                                    <MetHeader3 bold>
+                                    <Header3 weight="bold">
                                         Assign Role to {savedUser?.first_name + ' ' + savedUser?.last_name}
-                                    </MetHeader3>
+                                    </Header3>
                                 </When>
                                 <When condition={userHasRole}>
-                                    <MetHeader3 bold>
+                                    <Header3 weight="bold">
                                         Add {savedUser?.first_name + ' ' + savedUser?.last_name} to Engagement
-                                    </MetHeader3>
+                                    </Header3>
                                 </When>
                             </Grid>
 
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 container
                                 direction="row"
                                 alignItems="flex-start"
@@ -215,7 +206,7 @@ export const AddToEngagementModal = () => {
                                 rowSpacing={4}
                             >
                                 <When condition={!userHasRole}>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <FormControl error={Boolean(errors['role'])}>
                                             <FormLabel
                                                 id="controlled-radio-buttons-group"
@@ -252,11 +243,11 @@ export const AddToEngagementModal = () => {
                                         userHasRole
                                     }
                                 >
-                                    <Grid item xs={12}>
-                                        <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
+                                    <Grid size={12}>
+                                        <BodyText bold sx={{ marginBottom: '2px', display: 'flex' }}>
                                             Which Engagement would you like to add{' '}
                                             {savedUser?.first_name + ' ' + savedUser?.last_name} to?
-                                        </MetLabel>
+                                        </BodyText>
                                         <Controller
                                             control={control}
                                             name="engagement"
@@ -278,20 +269,22 @@ export const AddToEngagementModal = () => {
                                                             placeholder="Type at least 3 letters of the engagement's name"
                                                             error={Boolean(engagementErrors)}
                                                             helperText={String(engagementErrors?.message || '')}
-                                                            InputProps={{
-                                                                ...params.InputProps,
-                                                                endAdornment: (
-                                                                    <>
-                                                                        {engagementsLoading ? (
-                                                                            <CircularProgress
-                                                                                color="primary"
-                                                                                size={20}
-                                                                                sx={{ marginRight: '2em' }}
-                                                                            />
-                                                                        ) : null}
-                                                                        {params.InputProps.endAdornment}
-                                                                    </>
-                                                                ),
+                                                            slotProps={{
+                                                                input: {
+                                                                    ...params.InputProps,
+                                                                    endAdornment: (
+                                                                        <>
+                                                                            {engagementsLoading ? (
+                                                                                <CircularProgress
+                                                                                    color="primary"
+                                                                                    size={20}
+                                                                                    sx={{ marginRight: '2em' }}
+                                                                                />
+                                                                            ) : null}
+                                                                            {params.InputProps.endAdornment}
+                                                                        </>
+                                                                    ),
+                                                                },
                                                             }}
                                                         />
                                                     )}
@@ -304,17 +297,16 @@ export const AddToEngagementModal = () => {
                                 </When>
                             </Grid>
                             <When condition={backendError}>
-                                <Grid item xs={12}>
-                                    <MetSmallTextOld sx={{ color: theme.palette.error.main }}>
+                                <Grid size={12}>
+                                    <BodyText size="small" color="error">
                                         {backendError}
-                                    </MetSmallTextOld>
+                                    </BodyText>
                                 </Grid>
                             </When>
 
                             <Grid
-                                item
                                 container
-                                xs={12}
+                                size={12}
                                 direction="row"
                                 justifyContent="flex-end"
                                 spacing={1}
@@ -326,10 +318,10 @@ export const AddToEngagementModal = () => {
                                     width="100%"
                                     justifyContent="flex-end"
                                 >
-                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
-                                    <PrimaryButtonOld loading={isAssigningRole} type="submit">
+                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button variant="primary" loading={isAssigningRole} type="submit">
                                         Submit
-                                    </PrimaryButtonOld>
+                                    </Button>
                                 </Stack>
                             </Grid>
                         </Grid>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
+import { Header1 } from 'components/common/Typography';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation, useAppSelector } from 'hooks';
@@ -11,7 +12,7 @@ export const NotAvailable = () => {
     const tenant: TenantState = useAppSelector((state) => state.tenant);
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Banner height={'330px'} imageUrl={LandingPageBanner}>
                     <Grid
                         container
@@ -26,9 +27,7 @@ export const NotAvailable = () => {
                         }}
                     >
                         <Grid
-                            item
-                            lg={6}
-                            sm={12}
+                            size={{ sm: 12, lg: 6 }}
                             container
                             direction="row"
                             justifyContent="flex-start"
@@ -42,20 +41,18 @@ export const NotAvailable = () => {
                             m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                             rowSpacing={2}
                         >
-                            <Grid item xs={12}>
-                                <MetHeader1Old>{tenant.title}</MetHeader1Old>
+                            <Grid size={12}>
+                                <Header1>{tenant.title}</Header1>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetParagraphOld>{tenant.description}</MetParagraphOld>
+                            <Grid size={12}>
+                                <BodyText>{tenant.description}</BodyText>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Banner>
             </Grid>
             <Grid
-                item
-                lg={12}
-                sm={12}
+                size={12}
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -67,7 +64,9 @@ export const NotAvailable = () => {
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                 rowSpacing={2}
             >
-                <MetLabel m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>{translate('notAvailable.label')}</MetLabel>
+                <BodyText bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                    {translate('notAvailable.label')}
+                </BodyText>
             </Grid>
         </Grid>
     );

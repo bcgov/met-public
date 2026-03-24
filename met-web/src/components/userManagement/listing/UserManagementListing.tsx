@@ -1,18 +1,20 @@
 import React, { useContext, useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import { TextInput } from 'components/common/Input/TextInput';
+import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { USER_STATUS, User } from 'models/user';
-import { HeadCell, PaginationOptions } from 'components/common/Table/types';
-import { MetPageGridContainer, PrimaryButtonOld } from 'components/common';
+import { HeadCell } from 'components/common/Table/types';
+import { Button } from 'components/common/Input/Button';
+import { ResponsiveContainer } from 'components/common/Layout';
 import { Link } from 'react-router';
 import { Link as MuiLink } from '@mui/material';
 import MetTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
 import { ActionsDropDown } from './ActionsDropDown';
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
 const UserManagementListing = () => {
     const { pageInfo, paginationOptions, setPaginationOptions, users, usersLoading, setSearchText } =
@@ -80,46 +82,51 @@ const UserManagementListing = () => {
     ];
 
     return (
-        <MetPageGridContainer
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            container
-            columnSpacing={2}
-            rowSpacing={1}
-        >
-            <Grid item xs={12} lg={10}>
+        <ResponsiveContainer>
+            <AutoBreadcrumbs />
+            <Grid size={{ xs: 12, lg: 10 }} mt={1}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
-                        <TextField
-                            id="user-name"
-                            variant="outlined"
-                            label="Search Users by name"
-                            fullWidth
-                            name="searchBarText"
+                        <TextInput
+                            title={''}
+                            inputProps={{ 'aria-label': 'Search by name' }}
+                            id="engagement-name"
+                            data-testid="engagement/listing/searchField"
+                            placeholder="Search by name"
+                            name="searchText"
                             value={searchBarText}
-                            onChange={(e) => setSearchBarText(e.target.value)}
+                            sx={{ height: '40px', pr: 0, minWidth: '13em' }}
+                            onChange={(value) => setSearchBarText(value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSearchClick();
+                            }}
                             size="small"
+                            endAdornment={
+                                <Button
+                                    variant="primary"
+                                    size="small"
+                                    data-testid="engagement/listing/searchButton"
+                                    onClick={() => handleSearchClick()}
+                                    sx={{ m: 0, borderRadius: '0px 8px 8px 0px' }}
+                                >
+                                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
+                                </Button>
+                            }
                         />
-                        <PrimaryButtonOld onClick={handleSearchClick}>
-                            <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                        </PrimaryButtonOld>
                     </Stack>
                 </Stack>
             </Grid>
-            <Grid item xs={12} lg={10}>
+            <Grid size={{ xs: 12, lg: 10 }}>
                 <MetTable
                     headCells={headCells}
                     rows={users}
-                    handleChangePagination={(paginationOptions: PaginationOptions<User>) =>
-                        setPaginationOptions(paginationOptions)
-                    }
+                    handleChangePagination={(paginationOptions) => setPaginationOptions(paginationOptions)}
                     paginationOptions={paginationOptions}
                     loading={usersLoading}
                     pageInfo={pageInfo}
                 />
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

@@ -7,21 +7,14 @@ import {
     FormControlLabel,
     FormHelperText,
     FormLabel,
-    Grid,
+    Grid2 as Grid,
     Paper,
     Radio,
     Stack,
     TextField,
     useTheme,
 } from '@mui/material';
-import {
-    MetHeader3,
-    MetLabel,
-    MetSmallTextOld,
-    modalStyle,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-} from 'components/common';
+import { modalStyle } from 'components/common';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserManagementContext } from './UserManagementContext';
 import { Palette } from 'styles/Theme';
@@ -38,6 +31,8 @@ import axios, { AxiosError } from 'axios';
 import { getEngagements } from 'services/engagementService';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
+import { BodyText, Header3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 
 const schema = yup
     .object({
@@ -184,20 +179,21 @@ export const AssignRoleModal = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-                            <Grid item xs={12} mb={2}>
-                                <MetHeader3 bold>Assign Role to {user?.first_name + ' ' + user?.last_name}</MetHeader3>
+                            <Grid size={12} mb={2}>
+                                <Header3 weight="bold">
+                                    Assign Role to {user?.first_name + ' ' + user?.last_name}
+                                </Header3>
                             </Grid>
 
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 container
                                 direction="row"
                                 alignItems="flex-start"
                                 justifyContent="flex-start"
                                 rowSpacing={4}
                             >
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <FormControl error={Boolean(errors['role'])}>
                                         <FormLabel
                                             id="controlled-radio-buttons-group"
@@ -238,11 +234,11 @@ export const AssignRoleModal = () => {
                                         userTypeSelected === USER_COMPOSITE_ROLE.REVIEWER.value
                                     }
                                 >
-                                    <Grid item xs={12}>
-                                        <MetLabel sx={{ marginBottom: '2px', display: 'flex' }}>
+                                    <Grid size={12}>
+                                        <BodyText bold sx={{ marginBottom: '2px', display: 'flex' }}>
                                             Which engagement would you like to assign{' '}
                                             {user?.first_name + ' ' + user?.last_name} to?
-                                        </MetLabel>
+                                        </BodyText>
                                         <Controller
                                             control={control}
                                             name="engagement"
@@ -290,16 +286,15 @@ export const AssignRoleModal = () => {
                                 </When>
                             </Grid>
                             <When condition={backendError}>
-                                <Grid item xs={12}>
-                                    <MetSmallTextOld sx={{ color: theme.palette.error.main }}>
+                                <Grid size={12}>
+                                    <BodyText size="small" sx={{ color: theme.palette.error.main }}>
                                         {backendError}
-                                    </MetSmallTextOld>
+                                    </BodyText>
                                 </Grid>
                             </When>
                             <Grid
-                                item
                                 container
-                                xs={12}
+                                size={12}
                                 direction="row"
                                 justifyContent="flex-end"
                                 spacing={1}
@@ -311,10 +306,10 @@ export const AssignRoleModal = () => {
                                     width="100%"
                                     justifyContent="flex-end"
                                 >
-                                    <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
-                                    <PrimaryButtonOld loading={isAssigningRole} type="submit">
+                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button variant="primary" loading={isAssigningRole} type="submit">
                                         Submit
-                                    </PrimaryButtonOld>
+                                    </Button>
                                 </Stack>
                             </Grid>
                         </Grid>

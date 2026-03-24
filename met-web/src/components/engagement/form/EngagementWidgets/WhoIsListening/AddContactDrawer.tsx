@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { Button } from 'components/common/Input/Button';
+import { BodyText, Header3 } from 'components/common/Typography';
 import ImageUpload from 'components/imageUpload';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -153,12 +154,14 @@ const AddContactDrawer = () => {
                         spacing={2}
                         padding="2em"
                     >
-                        <Grid item xs={12}>
-                            <MetHeader3 bold>{contactToEdit ? 'Edit' : 'Add'} Contact</MetHeader3>
+                        <Grid size={12}>
+                            <Header3 weight="bold">{contactToEdit ? 'Edit' : 'Add'} Contact</Header3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
-                        <Grid item xs={12} lg={5} sx={{ minHeight: '14rem' }}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Profile Picture</MetLabel>
+                        <Grid size={{ xs: 12, lg: 5 }} sx={{ minHeight: '14rem' }}>
+                            <BodyText bold mb="2px">
+                                Profile Picture
+                            </BodyText>
                             <ImageUpload
                                 height="17.813rem"
                                 data-testid="contact/image-upload"
@@ -168,117 +171,92 @@ const AddContactDrawer = () => {
                                 helpText={'Drop an image here or click to select one.'}
                             />
                         </Grid>
-                        <Grid item xs={12} lg={7} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name (Required)</MetLabel>
+                        <Grid size={{ xs: 12, lg: 7 }} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Name (Required)
+                                </BodyText>
                                 <ControlledTextField
                                     name="name"
                                     aria-label="Name: required."
                                     id="contact-name"
                                     data-testid="contact-form/name"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Title (Optional)</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Title (Optional)
+                                </BodyText>
                                 <ControlledTextField
                                     id="contact-title"
                                     aria-label="Title: optional."
                                     data-testid="contact-form/title"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     name="title"
-                                    size="small"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Phone (Optional)</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Phone (Optional)
+                                </BodyText>
                                 <ControlledTextField
                                     id="contact-phone"
                                     data-testid="contact-form/phone"
                                     aria-label="Phone: optional."
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     name="phone_number"
-                                    size="small"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Email (Required)</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Email (Required)
+                                </BodyText>
                                 <ControlledTextField
                                     id="contact-email"
                                     data-testid="contact-form/email"
                                     aria-label="Email: optional."
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     name="email"
-                                    size="small"
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={12}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Address (Optional)</MetLabel>
+                        <Grid size={12}>
+                            <BodyText bold mb="2px">
+                                Address (Optional)
+                            </BodyText>
                             <ControlledTextField
                                 id="contact-address"
                                 data-testid="contact-form/address"
                                 aria-label="Address: optional."
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
                                 name="address"
-                                size="small"
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <MetLabel sx={{ marginBottom: '2px' }}>Biography (Optional)</MetLabel>
+                        <Grid size={12}>
+                            <BodyText bold mb="2px">
+                                Biography (Optional)
+                            </BodyText>
                             <ControlledTextField
                                 id="contact-bio"
                                 data-testid="contact-form/bio"
                                 aria-label="Biography: optional."
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                fullWidth
                                 name="bio"
-                                size="small"
                                 multiline
                                 minRows={5}
                             />
                         </Grid>
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             spacing={1}
                             justifyContent={'flex-start'}
                             marginTop="8em"
                         >
-                            <Grid item>
-                                <PrimaryButtonOld loading={isCreatingContact} onClick={handleSubmit(onSubmit)}>
-                                    {`Save & Close`}
-                                </PrimaryButtonOld>
+                            <Grid>
+                                <Button variant="primary" loading={isCreatingContact} onClick={handleSubmit(onSubmit)}>
+                                    Save &amp; Close
+                                </Button>
                             </Grid>
-                            <Grid item>
-                                <SecondaryButtonOld onClick={handleCloseDrawer}>{`Cancel`}</SecondaryButtonOld>
+                            <Grid>
+                                <Button onClick={handleCloseDrawer}>Cancel</Button>
                             </Grid>
                         </Grid>
                     </Grid>

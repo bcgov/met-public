@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
-import { Grid, IconButton } from '@mui/material';
+import { BodyText } from 'components/common/Typography';
+import { Grid2 as Grid, IconButton, Paper } from '@mui/material';
 import { Contact } from 'models/contact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
@@ -18,38 +18,36 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
     const { handleChangeContactToEdit, handleAddContactDrawerOpen } = useContext(WhoIsListeningContext);
 
     return (
-        <MetWidgetPaper elevation={1} {...rest}>
+        <Paper elevation={3} {...rest}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={12} xl={0.5} sx={{ pb: '0.5rem' }}>
+                <Grid size={{ xs: 12, xl: 0.5 }} sx={{ pb: '0.5rem' }}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
                         <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
                 <Grid
-                    item
-                    xs={12}
-                    xl={3.5}
+                    size={{ xs: 12, xl: 3.5 }}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent="flex-start"
                     sx={{ pb: '0.5rem' }}
                 >
-                    <Grid item xs={12}>
-                        <MetLabel noWrap={true}>{contact.name}</MetLabel>
+                    <Grid size={12}>
+                        <BodyText bold noWrap={true}>
+                            {contact.name}
+                        </BodyText>
                     </Grid>
                     <When condition={Boolean(contact.title)}>
-                        <Grid item xs={12}>
-                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <Grid size={12}>
+                            <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.title}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </When>
                 </Grid>
                 <Grid
-                    item
-                    xs={12}
-                    xl={6.25}
+                    size={{ xs: 12, xl: 6.25 }}
                     container
                     direction="row"
                     alignItems={'flex-start'}
@@ -58,57 +56,45 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                     sx={{ pb: '0.5rem' }}
                 >
                     <When condition={!!contact.phone_number}>
-                        <Grid item xs={12} xl={2.5}>
-                            <MetParagraphOld>Phone:</MetParagraphOld>
+                        <Grid size={{ xs: 12, xl: 2.5 }}>
+                            <BodyText>Phone:</BodyText>
                         </Grid>
-                        <Grid item xs={12} xl={9.5}>
-                            <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                        <Grid size={{ xs: 12, xl: 9.5 }}>
+                            <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.phone_number}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </When>
 
-                    <Grid item xs={12} xl={2.5}>
-                        <MetParagraphOld>Email:</MetParagraphOld>
+                    <Grid size={{ xs: 12, xl: 2.5 }}>
+                        <BodyText>Email:</BodyText>
                     </Grid>
-                    <Grid item xs={12} xl={9.5}>
-                        <MetParagraphOld style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {contact.email}
-                        </MetParagraphOld>
+                    <Grid size={{ xs: 12, xl: 9.5 }}>
+                        <BodyText style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{contact.email}</BodyText>
                     </Grid>
                     <When condition={!!contact.address}>
-                        <Grid item xs={12} xl={2.5}>
-                            <MetParagraphOld>Address:</MetParagraphOld>
+                        <Grid size={{ xs: 12, xl: 2.5 }}>
+                            <BodyText>Address:</BodyText>
                         </Grid>
-                        <Grid item xs={12} xl={9.5}>
-                            <MetParagraphOld
-                                width={'100%'}
-                                overflow="hidden"
-                                textOverflow={'ellipsis'}
-                                whiteSpace="nowrap"
-                            >
+                        <Grid size={{ xs: 12, xl: 9.5 }}>
+                            <BodyText width={'100%'} overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.address}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </When>
                     <When condition={Boolean(contact.bio)}>
-                        <Grid item xs={12} xl={2.5}>
-                            <MetParagraphOld>Bio:</MetParagraphOld>
+                        <Grid size={{ xs: 12, xl: 2.5 }}>
+                            <BodyText>Bio:</BodyText>
                         </Grid>
-                        <Grid item xs={12} xl={9.5}>
-                            <MetParagraphOld
-                                width={'100%'}
-                                overflow="hidden"
-                                textOverflow={'ellipsis'}
-                                whiteSpace="nowrap"
-                            >
+                        <Grid size={{ xs: 12, xl: 9.5 }}>
+                            <BodyText width={'100%'} overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {contact.bio}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </When>
                 </Grid>
-                <Grid container item xs={1.75} sx={{ ml: 'auto', flexWrap: 'nowrap' }}>
-                    <Grid item xs={6} sx={{ display: 'flex' }}>
+                <Grid container size={1.75} sx={{ ml: 'auto', flexWrap: 'nowrap' }}>
+                    <Grid size={{ xs: 6, xl: 6.25 }} sx={{ display: 'flex' }}>
                         <IconButton
                             sx={{ padding: 0, margin: 0, ml: 'auto' }}
                             onClick={() => {
@@ -121,7 +107,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                             <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
                         </IconButton>
                     </Grid>
-                    <Grid item xs={6} sx={{ ml: 'auto', display: 'flex' }}>
+                    <Grid size={{ xs: 6, xl: 6.25 }} sx={{ ml: 'auto', display: 'flex' }}>
                         <IconButton
                             sx={{ padding: 0, margin: 0, ml: 'auto' }}
                             onClick={() => removeContact(contact.id)}
@@ -133,7 +119,7 @@ const ContactInfoPaper = ({ contact, removeContact, ...rest }: ContactInfoPaperP
                     </Grid>
                 </Grid>
             </Grid>
-        </MetWidgetPaper>
+        </Paper>
     );
 };
 

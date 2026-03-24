@@ -1,4 +1,4 @@
-import { Grid, Toolbar, SvgIcon, Box } from '@mui/material';
+import { Grid2 as Grid, Toolbar, SvgIcon, Box } from '@mui/material';
 import { Header1, Header4 } from 'components/common/Typography';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
@@ -43,12 +43,12 @@ const NotFound = () => {
                 spacing={1}
                 padding={'2em 2em 1em 2em'}
             >
-                <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
+                <Grid sx={{ ...marginStyle, marginBottom: 3 }}>
                     <Header1 weight="bold" fontSize="2em">
                         {translate('notFound.header.0')}
                     </Header1>
                 </Grid>
-                <Grid item sx={{ marginStyle, marginBottom: 2 }}>
+                <Grid sx={{ marginStyle, marginBottom: 2 }}>
                     <SvgIcon
                         fontSize="inherit"
                         component={ErrorSvg}
@@ -62,12 +62,12 @@ const NotFound = () => {
                         }}
                     />
                 </Grid>
-                <Grid item xs={6} justifyContent="center" mb={4}>
+                <Grid size={6} justifyContent="center" mb={4}>
                     <Header4 align="left" weight="bold">
                         {translate('notFound.header.1')}
                     </Header4>
                 </Grid>
-                <Grid item xs={6} justifyContent={'left'}>
+                <Grid size={6} justifyContent={'left'}>
                     <SuggestionsList translate={translate} />
                 </Grid>
             </Grid>

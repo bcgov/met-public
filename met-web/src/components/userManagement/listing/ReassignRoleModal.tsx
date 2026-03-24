@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, Stack } from '@mui/material';
-import { MetDescription, MetHeader3, PrimaryButtonOld, SecondaryButtonOld, modalStyle } from 'components/common';
+import { FormControl, FormControlLabel, FormLabel, Grid2 as Grid, Paper, Radio, Stack } from '@mui/material';
+import { modalStyle } from 'components/common';
+import { Button } from 'components/common/Input/Button';
+import { BodyText, Header3 } from 'components/common/Typography';
 import { UserManagementContext } from './UserManagementContext';
 import { useForm, FormProvider, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -65,23 +67,22 @@ export const ReassignRoleModal = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-                            <Grid item xs={12} mb={2}>
-                                <MetHeader3 bold>
+                            <Grid size={12} mb={2}>
+                                <Header3 weight="bold">
                                     Reassign Role for {user?.first_name + ' ' + user?.last_name}
-                                </MetHeader3>
+                                </Header3>
                             </Grid>
                         </Grid>
 
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             alignItems="flex-start"
                             justifyContent="flex-start"
                             rowSpacing={4}
                         >
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <FormControl>
                                     <FormLabel
                                         id="controlled-radio-buttons-group"
@@ -121,17 +122,16 @@ export const ReassignRoleModal = () => {
                                     </ControlledRadioGroup>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetDescription>
+                            <Grid size={12}>
+                                <BodyText>
                                     Reassigning a user role will change their role for all active engagements. Any
                                     assigned engagements will have to be reassigned after changing this user's role.
-                                </MetDescription>
+                                </BodyText>
                             </Grid>
                         </Grid>
                         <Grid
-                            item
                             container
-                            xs={12}
+                            size={12}
                             direction="row"
                             justifyContent="flex-end"
                             spacing={1}
@@ -143,10 +143,10 @@ export const ReassignRoleModal = () => {
                                 width="100%"
                                 justifyContent="flex-end"
                             >
-                                <SecondaryButtonOld onClick={handleClose}>Cancel</SecondaryButtonOld>
-                                <PrimaryButtonOld loading={isSaving} type="submit">
+                                <Button onClick={handleClose}>Cancel</Button>
+                                <Button loading={isSaving} type="submit" variant="primary">
                                     Submit
-                                </PrimaryButtonOld>
+                                </Button>
                             </Stack>
                         </Grid>
                     </form>

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { TenantForm } from './TenantForm';
@@ -47,14 +47,16 @@ const TenantEditPage = () => {
                         <ResponsiveContainer>
                             <AutoBreadcrumbs />
 
-                            <Header1>Edit Tenant Instance</Header1>
-                            <Grid container spacing={0} direction="column" mb="0.5em">
-                                <Grid item xs={12}>
+                            <Grid size={12}>
+                                <Header1>Edit Tenant Instance</Header1>
+                            </Grid>
+                            <Grid container spacing={0} direction="column" mb="0.5em" size={12}>
+                                <Grid size={12}>
                                     <Header2 decorated sx={{ mb: 0 }}>
                                         Tenant Details
                                     </Header2>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <BodyText size="small">* Required fields</BodyText>
                                 </Grid>
                             </Grid>

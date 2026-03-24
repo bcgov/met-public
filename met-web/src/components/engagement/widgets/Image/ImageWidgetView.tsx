@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper } from 'components/common';
-import { Grid, Skeleton, Paper } from '@mui/material';
+
+import { Grid2 as Grid, Skeleton, Paper } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -41,18 +41,18 @@ const ImageWidgetView = ({ widget }: ImageWidgetProps) => {
 
     if (isLoading) {
         return (
-            <MetPaper elevation={1} sx={{ padding: '1em' }}>
+            <Paper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Header2>
                             <Skeleton variant="rectangular" />
                         </Header2>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Skeleton variant="rectangular" height="20em" />
                     </Grid>
                 </Grid>
-            </MetPaper>
+            </Paper>
         );
     }
 
@@ -61,21 +61,20 @@ const ImageWidgetView = ({ widget }: ImageWidgetProps) => {
     }
 
     return (
-        <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+        <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
             <Grid
-                item
                 container
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
                 flexDirection={'column'}
-                xs={12}
+                size={12}
                 paddingBottom={0}
             >
                 <Header2 sx={{ margin: '4rem 0 0 0' }}>{widget.title}</Header2>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <BodyText>{imageWidget.description}</BodyText>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Paper
                     elevation={4}
                     sx={{

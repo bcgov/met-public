@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import MetTable from 'components/common/Table';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { Link, useNavigate } from 'react-router';
-import { MetPageGridContainer } from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
 import { Survey } from 'models/survey';
 import { HeadCell, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
@@ -204,7 +204,7 @@ const Surveys = () => {
                 }
 
                 return (
-                    <MuiLink component={Link} to={`/engagements/${row.engagement.id}/view`}>
+                    <MuiLink component={Link} to={`/engagements/${row.engagement.id}/`}>
                         {row.engagement.name}
                     </MuiLink>
                 );
@@ -393,7 +393,7 @@ const Surveys = () => {
     ];
 
     return (
-        <MetPageGridContainer
+        <ResponsiveContainer
             direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
@@ -401,10 +401,10 @@ const Surveys = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item>
+            <Grid size={12}>
                 <AutoBreadcrumbs />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} alignItems="center">
                         <Stack direction="row" spacing={1} width={{ xs: '100%', md: 'auto' }}>
@@ -432,7 +432,6 @@ const Surveys = () => {
                             />
                         </Stack>
                         <Button
-                            variant="secondary"
                             size="small"
                             data-testid="survey-listing/advanced-search-button"
                             onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
@@ -467,13 +466,13 @@ const Surveys = () => {
                 </Stack>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Collapse in={isAdvancedSearchOpen}>
                     <AdvancedSearch />
                 </Collapse>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <MetTable
                     headCells={headCells}
                     rows={surveys}
@@ -485,7 +484,7 @@ const Surveys = () => {
                     pageInfo={pageInfo}
                 />
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

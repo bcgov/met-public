@@ -4,7 +4,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { FormContext } from './FormContext';
 import { FirstTab } from './FirstTab';
 import { TAB_ONE, TAB_TWO } from './constants';
-import { Grid, Skeleton, Step, StepLabel, Stepper } from '@mui/material';
+import { Grid2 as Grid, Skeleton, Step, StepLabel, Stepper } from '@mui/material';
 import { SecondTab } from './SecondTab';
 import { useAppTranslation } from 'hooks';
 
@@ -18,7 +18,7 @@ export const Tabs = () => {
     return (
         <TabContext value={String(tabValue)}>
             <Grid container spacing={6}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Stepper alternativeLabel>
                         <Step active={tabValue === TAB_ONE}>
                             <StepLabel>{translate('formCAC.tabs.0')}</StepLabel>
@@ -28,7 +28,7 @@ export const Tabs = () => {
                         </Step>
                     </Stepper>
                 </Grid>
-                <Grid container item xs={12} spacing={3}>
+                <Grid container size={12} spacing={3}>
                     <TabPanel value={String(TAB_ONE)}>
                         <FirstTab />
                     </TabPanel>

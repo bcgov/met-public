@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, SxProps, Theme } from '@mui/material';
-import { MetBodyOld, MetPaper } from 'components/common';
+import { Grid2 as Grid, Paper, SxProps, Theme } from '@mui/material';
+
 import { DASHBOARD } from './constants';
 import { useAppTranslation } from 'hooks';
+import { BodyText } from 'components/common/Typography/Body';
 
 interface NoDataProps {
     height?: number | string;
@@ -12,7 +13,7 @@ export const NoData = ({ sx }: NoDataProps) => {
     const { t: translate } = useAppTranslation();
 
     return (
-        <MetPaper
+        <Paper
             sx={{
                 width: '100%',
                 height: '100%',
@@ -29,10 +30,10 @@ export const NoData = ({ sx }: NoDataProps) => {
                 textAlign={'center'}
                 height="100%"
             >
-                <Grid item>
-                    <MetBodyOld>{translate('dashboard.noData')}</MetBodyOld>
+                <Grid>
+                    <BodyText>{translate('dashboard.noData')}</BodyText>
                 </Grid>
             </Grid>
-        </MetPaper>
+        </Paper>
     );
 };

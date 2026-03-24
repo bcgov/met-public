@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-    Grid,
+    Grid2 as Grid,
     Stack,
     TextField,
     FormGroup,
@@ -11,8 +11,8 @@ import {
     Theme,
 } from '@mui/material';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
-import { Button } from 'components/common/Input';
-import { BodyText } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
 import { SearchOptions } from './SearchTypes';
 
 interface filterParams {
@@ -104,7 +104,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
             spacing={1}
             mt={{ md: 2 }}
         >
-            <Grid item xs={12} lg={2}>
+            <Grid size={{ xs: 12, lg: 2 }}>
                 <FormControl component="fieldset">
                     <BodyText bold>Status</BodyText>
                     <FormGroup row={isMediumScreen}>
@@ -202,9 +202,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                 </FormControl>
             </Grid>
             <Grid
-                item
-                xs={12}
-                lg={10}
+                size={{ xs: 12, lg: 10 }}
                 container
                 direction="row"
                 alignItems={'flex-start'}
@@ -213,16 +211,14 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                 rowSpacing={4}
             >
                 <Grid
-                    item
-                    xs={12}
-                    xl={6}
+                    size={{ xs: 12, lg: 8 }}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent={'flex-start'}
                     spacing={2}
                 >
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <BodyText bold>Date Created - From</BodyText>
                         <TextField
                             id="createdFrom-date"
@@ -238,7 +234,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                             InputProps={{ inputProps: { max: createdToDate || null } }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <BodyText bold>Date Created - To</BodyText>
                         <TextField
                             id="createdTo-date"
@@ -256,7 +252,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <BodyText bold>Date Published - From</BodyText>
                         <TextField
                             id="publishedFrom-date"
@@ -272,7 +268,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                             InputProps={{ inputProps: { max: publishedToDate || null } }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <BodyText bold>Date Published - To</BodyText>
                         <TextField
                             id="publishedTo-date"
@@ -290,7 +286,7 @@ const AdvancedSearch: React.FC<filterParams> = ({ filterParams, setFilterParams 
                         />
                     </Grid>
                 </Grid>
-                <Grid item xs={12} container justifyContent="flex-end">
+                <Grid size={12} container justifyContent="flex-end">
                     <Stack
                         direction={{ xs: 'column-reverse', md: 'row' }}
                         spacing={2}

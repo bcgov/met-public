@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
-import { MetLabel } from 'components/common';
+import { BodyText } from './Typography/Body';
 import { Palette } from 'styles/Theme';
-import { Grid, MenuItem, Select } from '@mui/material';
+import { Grid2 as Grid, MenuItem, Select } from '@mui/material';
 import { useLocation } from 'react-router';
 import { Language } from 'models/language';
 import { LanguageContext } from './LanguageContext';
@@ -79,19 +79,18 @@ const LanguageSelector = () => {
 
     return (
         <Grid container direction="row" alignItems="center">
-            <Grid item sx={{ paddingRight: '8px' }}>
-                <MetLabel>Select Language:</MetLabel>
+            <Grid pr="8px">
+                <BodyText bold>Select Language:</BodyText>
             </Grid>
-            <Grid item>
+            <Grid>
                 <Select
                     id="language"
                     aria-label="select-language"
                     value={0}
                     size="small"
                     sx={{
-                        backgroundColor: 'var(--bcds-surface-background-white)',
+                        bgcolor: 'background.paper',
                         color: Palette.info.main,
-                        minWidth: '8ch',
                     }}
                     onChange={(event) => handleChangeLanguage(event.target.value as string)}
                 >

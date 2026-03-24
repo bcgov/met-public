@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { MetLabel, MetParagraphOld, MetWidgetPaper } from 'components/common';
-import { Grid, IconButton, useMediaQuery } from '@mui/material';
+import { BodyText } from 'components/common/Typography';
+import { Grid2 as Grid, IconButton, Paper, useMediaQuery } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
@@ -25,39 +25,37 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
     }
 
     return (
-        <MetWidgetPaper elevation={1} {...rest}>
+        <Paper elevation={3}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={1}>
+                <Grid size={1}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
                         <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
                 <Grid
-                    item
-                    xs={9.5}
+                    size={9.5}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent="flex-start"
                     spacing={1}
                 >
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Switch>
                             <Case condition={subscribeForm.type === SUBSCRIBE_TYPE.EMAIL_LIST}>
-                                <MetLabel>Email List</MetLabel>
+                                <BodyText bold>Email List</BodyText>
                             </Case>
                             <Case condition={subscribeForm.type === SUBSCRIBE_TYPE.SIGN_UP}>
-                                <MetLabel>Form Sign-up</MetLabel>
+                                <BodyText bold>Form Sign-up</BodyText>
                             </Case>
                         </Switch>
                     </Grid>
                     <When condition={Boolean(subscribeItem.description)}>
-                        <Grid item xs={isMediumScreen ? 4 : 3}>
-                            <MetParagraphOld>Description:</MetParagraphOld>
+                        <Grid size={isMediumScreen ? 4 : 3}>
+                            <BodyText>Description:</BodyText>
                         </Grid>
                         <Grid
-                            item
-                            xs={isMediumScreen ? 8 : 9}
+                            size={isMediumScreen ? 8 : 9}
                             sx={{
                                 position: 'relative',
                                 height: 'auto',
@@ -73,17 +71,17 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                         </Grid>
                     </When>
 
-                    <Grid item xs={3}>
-                        <MetParagraphOld>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</MetParagraphOld>
+                    <Grid size={3}>
+                        <BodyText>{capitalizeFirstLetter(subscribeItem.call_to_action_type)}:</BodyText>
                     </Grid>
-                    <Grid item xs={9}>
-                        <MetParagraphOld overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
+                    <Grid size={9}>
+                        <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {subscribeItem.call_to_action_text}
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
                 </Grid>
-                <Grid container item xs={1.5}>
-                    <Grid item xs={6}>
+                <Grid container size={1.5}>
+                    <Grid size={6}>
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
                             <FontAwesomeIcon
                                 icon={faPen}
@@ -95,7 +93,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                             />
                         </IconButton>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <IconButton
                             onClick={() => removeSubscribeForm(subscribeForm.id)}
                             sx={{ padding: 1, margin: 0 }}
@@ -107,7 +105,7 @@ const SubscribeInfoPaper = ({ subscribeForm, removeSubscribeForm, ...rest }: Sub
                     </Grid>
                 </Grid>
             </Grid>
-        </MetWidgetPaper>
+        </Paper>
     );
 };
 

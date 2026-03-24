@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, Suspense } from 'react';
 import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import FormBuilderSkeleton from './FormBuilderSkeleton';
 import {
-    Grid,
+    Grid2 as Grid,
     Stack,
     Divider,
     TextField,
@@ -18,7 +18,8 @@ import FormBuilder from 'components/Form/FormBuilder';
 import { putSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { MetHeader3, MetPageGridContainer, MetTooltip } from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
+import { Header3 } from 'components/common/Typography/Headers';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -28,7 +29,7 @@ import { USER_ROLES } from 'services/userService/constants';
 import axios from 'axios';
 import { AutoSaveSnackBar } from './AutoSaveSnackBar';
 import { debounce } from 'lodash';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { Controller, useForm } from 'react-hook-form';
 import {
     faCircleQuestion,
@@ -200,16 +201,16 @@ export const FormBuilderPage = () => {
     };
 
     return (
-        <MetPageGridContainer
+        <ResponsiveContainer
             container
             direction="row"
             alignItems="flex-start"
             justifyContent="flex-start"
-            xs={12}
+            size={12}
             spacing={4}
         >
             <UnsavedWorkConfirmation blockNavigationWhen={hasUnsavedWork} />
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack direction="row" justifyContent="flex-start" alignItems="center">
                     <If condition={isEditingName}>
                         <Then>
@@ -236,14 +237,14 @@ export const FormBuilderPage = () => {
                             </IconButton>
                         </Then>
                         <Else>
-                            <MetHeader3
+                            <Header3
                                 sx={{ p: 0.5, cursor: 'pointer' }}
                                 onClick={() => {
                                     setIsEditingName(true);
                                 }}
                             >
                                 {name}
-                            </MetHeader3>
+                            </Header3>
                             <IconButton
                                 size="small"
                                 onClick={() => {
@@ -259,7 +260,7 @@ export const FormBuilderPage = () => {
                 </Stack>
                 <Divider />
             </Grid>
-            <Grid item>
+            <Grid>
                 <FormGroup>
                     <FormControlLabel
                         control={
@@ -306,10 +307,10 @@ export const FormBuilderPage = () => {
                     />
                 </FormGroup>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <FormBuilder handleFormChange={onEditorChange} savedForm={formDefinition} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack direction="row">
                     <FormGroup>
                         <FormControlLabel
@@ -383,7 +384,7 @@ export const FormBuilderPage = () => {
                     </Tooltip>
                 </Stack>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack direction="row" spacing={2}>
                     <Button
                         variant="primary"
@@ -392,9 +393,7 @@ export const FormBuilderPage = () => {
                     >
                         Report Settings
                     </Button>
-                    <Button variant="secondary" href="/surveys">
-                        Cancel
-                    </Button>
+                    <Button href="/surveys">Cancel</Button>
                 </Stack>
             </Grid>
             <AutoSaveSnackBar
@@ -403,7 +402,7 @@ export const FormBuilderPage = () => {
                     setAutoSaveNotificationOpen(false);
                 }}
             />
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 
@@ -432,7 +431,7 @@ const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: bo
     };
     const { icon, color, tint, text } = saveStatusData();
     return (
-        <MetTooltip title={text}>
+        <Tooltip title={text}>
             <Avatar
                 sizes="small"
                 sx={{
@@ -445,7 +444,7 @@ const SaveStatusIndicator = ({ hasUnsavedWork, saveError }: { hasUnsavedWork: bo
             >
                 <FontAwesomeIcon icon={icon} />
             </Avatar>
-        </MetTooltip>
+        </Tooltip>
     );
 };
 

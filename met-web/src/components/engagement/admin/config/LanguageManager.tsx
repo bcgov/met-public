@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Box, FormControlLabel, Grid, Radio, RadioGroup, TextField } from '@mui/material';
+import { Box, FormControlLabel, Grid2 as Grid, Radio, RadioGroup, TextField } from '@mui/material';
 import { textInputStyles } from 'components/common/Input/TextInput';
 import { useFetcher } from 'react-router';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';
@@ -95,11 +95,11 @@ export const LanguageManager = () => {
                         return (
                             <li {...props}>
                                 <Grid container direction="row" spacing={2} alignItems={'center'}>
-                                    <Grid item>
+                                    <Grid>
                                         <BodyText>{`${option.name}`}</BodyText>
                                     </Grid>
                                     {props['aria-disabled'] && (
-                                        <Grid item alignSelf="flex-end" marginLeft="auto">
+                                        <Grid alignSelf="flex-end" marginLeft="auto">
                                             <FontAwesomeIcon icon={faCheck} color={colors.notification.success.shade} />
                                         </Grid>
                                     )}
@@ -110,7 +110,7 @@ export const LanguageManager = () => {
                     renderSelectedOption={(props, option, state) => {
                         return (
                             <Grid container direction="row" spacing={1} alignItems="center">
-                                <Grid item>
+                                <Grid>
                                     <BodyText bold={requiredLanguageCodes.includes(option.code)}>
                                         {`${option.name}`}
                                         {requiredLanguageCodes.includes(option.code) && ' (Default)'}

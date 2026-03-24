@@ -2,15 +2,7 @@ import React, { useContext, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, MenuItem } from '@mui/material';
-import {
-    MetHeader3,
-    MetLabel,
-    MetParagraphOld,
-    MetWidgetPaper,
-    PrimaryButtonOld,
-    SecondaryButtonOld,
-} from 'components/common';
+import { Grid2 as Grid, MenuItem, Paper } from '@mui/material';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -25,6 +17,8 @@ import { saveObject } from 'services/objectStorageService';
 import FileUpload from 'components/common/FileUpload';
 import { If, Then, Else } from 'react-if';
 import { WidgetLocation } from 'models/widget';
+import { BodyText, Header3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 
 const schema = yup
     .object({
@@ -149,29 +143,28 @@ const UploadFileDrawer = () => {
                         spacing={2}
                         padding="2em"
                     >
-                        <Grid item xs={12}>
-                            <MetHeader3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</MetHeader3>
+                        <Grid size={12}>
+                            <Header3 weight="bold">{documentToEdit ? 'Edit File' : 'Add File'}</Header3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
+                        <Grid size={12} container direction="row" spacing={2}>
                             <If condition={Boolean(fileToUpload)}>
                                 <Then>
                                     <Grid
-                                        item
-                                        xs={12}
+                                        size={12}
                                         container
                                         direction="row"
                                         alignItems="flex-start"
                                         justifyContent="flex-start"
                                     >
-                                        <Grid item xs={12}>
-                                            <MetLabel sx={{ marginBottom: '2px' }}>
+                                        <Grid size={12}>
+                                            <BodyText bold mb="2px">
                                                 You have successfully added this document
-                                            </MetLabel>
+                                            </BodyText>
                                         </Grid>
-                                        <Grid item xs={12}>
-                                            <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
+                                        <Grid size={12}>
+                                            <Paper elevation={1} sx={{ width: '100%' }}>
                                                 <Grid
                                                     container
                                                     direction="row"
@@ -179,26 +172,26 @@ const UploadFileDrawer = () => {
                                                     justifyContent="flex-start"
                                                     spacing={1}
                                                 >
-                                                    <Grid item xs={12}>
-                                                        <MetLabel>{fileToUpload?.name}</MetLabel>
+                                                    <Grid size={12}>
+                                                        <BodyText bold>{fileToUpload?.name}</BodyText>
                                                     </Grid>
-                                                    <Grid item xs={12}>
-                                                        <MetParagraphOld>{fileToUpload?.type}</MetParagraphOld>
+                                                    <Grid size={12}>
+                                                        <BodyText>{fileToUpload?.type}</BodyText>
                                                     </Grid>
-                                                    <Grid item xs={12}>
+                                                    <Grid size={12}>
                                                         {fileToUpload && (
-                                                            <MetParagraphOld>
+                                                            <BodyText>
                                                                 {`${fileToUpload.size / OneMegaByte} MB`}
-                                                            </MetParagraphOld>
+                                                            </BodyText>
                                                         )}
                                                     </Grid>
                                                 </Grid>
-                                            </MetWidgetPaper>
+                                            </Paper>
                                         </Grid>
                                     </Grid>
                                 </Then>
                                 <Else>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <FileUpload
                                             handleAddFile={(file: File[]) => {
                                                 setFileToUpload(file[0]);
@@ -209,38 +202,30 @@ const UploadFileDrawer = () => {
                             </If>
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
+                        <Grid size={12} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Name
+                                </BodyText>
                                 <ControlledTextField
                                     name="name"
                                     id="document-name"
                                     data-testid="document-form/name"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     size="small"
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Folder</MetLabel>
+                        <Grid size={12} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Folder
+                                </BodyText>
                                 <ControlledSelect
                                     id="document-folder"
                                     name="folderId"
                                     data-testid="document-form/folderId"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
                                     defaultValue={parentDocument?.title}
-                                    fullWidth
                                     size="small"
                                 >
                                     <MenuItem
@@ -264,24 +249,20 @@ const UploadFileDrawer = () => {
                         </Grid>
 
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             spacing={1}
                             justifyContent={'flex-start'}
                             marginTop="8em"
                         >
-                            <Grid item>
-                                <PrimaryButtonOld loading={isUploadingFile} onClick={handleSubmit(onSubmit)}>
-                                    {`Save & Close`}
-                                </PrimaryButtonOld>
+                            <Grid>
+                                <Button variant="primary" loading={isUploadingFile} onClick={handleSubmit(onSubmit)}>
+                                    Save &amp; Close
+                                </Button>
                             </Grid>
-                            <Grid item>
-                                <SecondaryButtonOld
-                                    disabled={isUploadingFile}
-                                    onClick={() => handleClose()}
-                                >{`Cancel`}</SecondaryButtonOld>
+                            <Grid>
+                                <Button disabled={isUploadingFile} onClick={() => handleClose()}>{`Cancel`}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

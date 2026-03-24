@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Grid, Skeleton } from '@mui/material';
+import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
 import { Header1, Header2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer } from 'components/common/Layout';
@@ -31,9 +31,11 @@ const TenantListingPage = () => {
         <ResponsiveContainer>
             <AutoBreadcrumbs />
 
-            <Header1>Tenant Admin</Header1>
-            <Grid container spacing={0} direction="row" mb="0.5em">
-                <Grid item xs={12} sm={7} lg={9}>
+            <Grid size={12}>
+                <Header1>Tenant Admin</Header1>
+            </Grid>
+            <Grid container direction="row" mb="0.5em" alignItems="flex-start" size={12}>
+                <Grid size={{ xs: 12, sm: 'grow' }}>
                     <Header2 decorated>
                         Tenant Instances{' '}
                         <Suspense fallback={<span />}>
@@ -43,7 +45,7 @@ const TenantListingPage = () => {
                         </Suspense>
                     </Header2>
                 </Grid>
-                <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
+                <Grid size="auto">
                     <Button
                         variant="primary"
                         icon={circlePlusIcon}

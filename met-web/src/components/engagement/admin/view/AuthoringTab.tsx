@@ -4,10 +4,10 @@ import { Header2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightLong } from '@fortawesome/pro-light-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
-import { MetLabel, MetHeader3 } from 'components/common';
+import { BodyText, Header3 } from 'components/common/Typography';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { Unless, When } from 'react-if';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { colors } from 'styles/Theme';
 import { Link } from 'components/common/Navigation';
 import { getDefaultAuthoringTabValues } from './AuthoringTabElements';
@@ -80,10 +80,6 @@ export const AuthoringTab = () => {
     const systemMessageStyles = {
         marginBottom: '1.5rem',
     };
-    const metHeaderStyles = {
-        marginBottom: '1.5rem',
-        fontSize: '1.2rem',
-    };
     const metLabelStyles = {
         textTransform: 'uppercase',
         marginBottom: '1.1rem',
@@ -130,7 +126,9 @@ export const AuthoringTab = () => {
     return (
         <Grid container id="admin-authoring-section" direction="column" maxWidth={'700px'}>
             <Header2 decorated>Authoring</Header2>
-            <MetHeader3 style={metHeaderStyles}>Page Section Authoring</MetHeader3>
+            <Header3 weight="bold" mb="1.5rem">
+                Page Section Authoring
+            </Header3>
             <When condition={!requiredSectionsCompleted}>
                 <SystemMessage sx={systemMessageStyles} status="danger">
                     There are incomplete or missing sections of required content in your engagement. Please complete all
@@ -148,29 +146,37 @@ export const AuthoringTab = () => {
                     rowGap: '1.25rem',
                 }}
             >
-                <Grid item xs={12} md={6}>
-                    <MetLabel sx={metLabelStyles}>Required Sections</MetLabel>
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <BodyText bold sx={metLabelStyles}>
+                        Required Sections
+                    </BodyText>
                     {sectionValues.map(
                         (section) => section.required && <AuthoringButton key={section.id} item={section} />,
                     )}
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <MetLabel sx={metLabelStyles}>Optional Sections</MetLabel>
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <BodyText bold sx={metLabelStyles}>
+                        Optional Sections
+                    </BodyText>
                     {sectionValues.map(
                         (section) => !section.required && <AuthoringButton key={section.id} item={section} />,
                     )}
                 </Grid>
             </Grid>
             <Grid container direction="column" id="feedback-container" sx={{ ...anchorContainerStyles }}>
-                <MetHeader3 style={metHeaderStyles}>Feedback Configuration</MetHeader3>
+                <Header3 weight="bold" mb="1.5rem">
+                    Feedback Configuration
+                </Header3>
                 <When condition={!feedbackCompleted}>
                     <SystemMessage sx={systemMessageStyles} status="danger">
                         There are feedback methods included in your engagement that are incomplete. Please complete
                         configuration for all of the feedback methods included in your engagement.
                     </SystemMessage>
                 </When>
-                <MetLabel sx={metLabelStyles}>Feedback Methods</MetLabel>
-                <Grid item xs={12} sx={{ width: '100%' }}>
+                <BodyText bold sx={metLabelStyles}>
+                    Feedback Methods
+                </BodyText>
+                <Grid size={12} sx={{ width: '100%' }}>
                     {feedbackMethods.map((method) => (
                         <AuthoringButton item={method} key={method.id} />
                     ))}

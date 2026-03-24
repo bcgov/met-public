@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { useForm, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid, Link } from '@mui/material';
-import { MetLabel, MetParagraphOld } from 'components/common';
+import { Checkbox, FormControlLabel, FormGroup, FormHelperText, Grid2 as Grid, Link } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
 import { FormContext } from './FormContext';
 import { TAB_TWO } from './constants';
 import { When } from 'react-if';
@@ -51,27 +51,27 @@ export const FirstTab: React.FC = () => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <MetLabel>{translate('formCAC.tab1.labels.0')}</MetLabel>
-                <MetParagraphOld>{translate('formCAC.tab1.paragraph.0')}</MetParagraphOld>
+            <Grid size={12}>
+                <BodyText bold>{translate('formCAC.tab1.labels.0')}</BodyText>
+                <BodyText>{translate('formCAC.tab1.paragraph.0')}</BodyText>
             </Grid>
-            <Grid item xs={12}>
-                <MetParagraphOld>{translate('formCAC.tab1.paragraph.1')}</MetParagraphOld>
-            </Grid>
-
-            <Grid item xs={12}>
-                <MetLabel>{translate('formCAC.tab1.labels.1')}</MetLabel>
-                <MetParagraphOld>{translate('formCAC.tab1.paragraph.2')}</MetParagraphOld>
+            <Grid size={12}>
+                <BodyText>{translate('formCAC.tab1.paragraph.1')}</BodyText>
             </Grid>
 
-            <Grid item xs={12}>
-                <MetLabel>{translate('formCAC.tab1.labels.2')}</MetLabel>
+            <Grid size={12}>
+                <BodyText bold>{translate('formCAC.tab1.labels.1')}</BodyText>
+                <BodyText>{translate('formCAC.tab1.paragraph.2')}</BodyText>
             </Grid>
-            <Grid item xs={12}>
+
+            <Grid size={12}>
+                <BodyText bold>{translate('formCAC.tab1.labels.2')}</BodyText>
+            </Grid>
+            <Grid size={12}>
                 <Editor editorState={getEditorStateFromRaw(consentMessage)} readOnly={true} toolbarHidden />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <FormGroup>
                     <FormControlLabel
                         control={
@@ -81,7 +81,7 @@ export const FirstTab: React.FC = () => {
                                 render={({ field }) => <Checkbox {...field} />}
                             />
                         }
-                        label={<MetLabel>{translate('formCAC.tab1.labels.3')}</MetLabel>}
+                        label={<BodyText bold>{translate('formCAC.tab1.labels.3')}</BodyText>}
                     />
                     <When condition={Boolean(errors.understand)}>
                         <FormHelperText
@@ -103,12 +103,12 @@ export const FirstTab: React.FC = () => {
                             />
                         }
                         label={
-                            <MetLabel>
+                            <BodyText bold>
                                 {translate('formCAC.tab1.labels.4')}
                                 <Link href="https://www2.gov.bc.ca/assets/gov/environment/natural-resource-stewardship/environmental-assessments/guidance-documents/2018-act/community_advisory_committee_guideline_v1.pdf">
                                     {translate('formCAC.tab1.link.text')}
                                 </Link>
-                            </MetLabel>
+                            </BodyText>
                         }
                     />
                     <When condition={Boolean(errors.termsOfReference)}>
@@ -125,7 +125,7 @@ export const FirstTab: React.FC = () => {
                 </FormGroup>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Button variant="primary" size="small" onClick={handleSubmit(handleNextClick)}>
                     {translate('formCAC.tab1.button.next')}
                 </Button>

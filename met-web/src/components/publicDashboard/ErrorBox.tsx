@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, IconButton, SxProps, Theme } from '@mui/material';
-import { MetBodyOld, MetHeader4, MetPaper } from 'components/common';
+import { Grid2 as Grid, IconButton, Paper, SxProps, Theme } from '@mui/material';
+import { BodyText, Header4 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate } from '@fortawesome/pro-regular-svg-icons/faArrowsRotate';
 import { DASHBOARD } from './constants';
@@ -20,7 +20,7 @@ export const ErrorBox = ({
     const { t: translate } = useAppTranslation();
 
     return (
-        <MetPaper
+        <Paper
             sx={{
                 width: '100%',
                 height: '100%',
@@ -37,9 +37,9 @@ export const ErrorBox = ({
                 textAlign={'center'}
                 height="100%"
             >
-                <Grid item>
-                    <MetHeader4 color="error">{translate('dashboard.errorBox.header')}</MetHeader4>
-                    <MetBodyOld color="error">{translate('dashboard.errorBox.body')}</MetBodyOld>
+                <Grid>
+                    <Header4 color="error">{translate('dashboard.errorBox.header')}</Header4>
+                    <BodyText color="error">{translate('dashboard.errorBox.body')}</BodyText>
                     <IconButton onClick={() => onClick()}>
                         <FontAwesomeIcon
                             icon={faArrowsRotate}
@@ -48,6 +48,6 @@ export const ErrorBox = ({
                     </IconButton>
                 </Grid>
             </Grid>
-        </MetPaper>
+        </Paper>
     );
 };

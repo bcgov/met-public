@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, useMemo, memo } from 'react';
-import { Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
+import { Grid2 as Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch, useSubmittedPolls, useAppSelector } from 'hooks';
 import { PollWidget } from 'models/pollWidget';
@@ -10,7 +10,7 @@ import { BaseTheme, colors } from 'styles/Theme';
 import { Await } from 'react-router';
 import { PollStatus } from 'constants/engagementStatus';
 import PollDisplay from 'components/engagement/form/EngagementWidgets/Poll/PollDisplay';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import {
     faCheckCircle,
     faInboxFull,
@@ -52,8 +52,7 @@ const RESPONSE_MESSAGES = {
 
 const PollMessage = ({ message, color, icon }: { message: string; color: string; icon: IconDefinition }) => (
     <Grid
-        item
-        xs={12}
+        size={12}
         sx={{
             mt: 2,
             textAlign: 'center',
@@ -95,7 +94,7 @@ const SubmitSection = memo(
 
         return (
             <>
-                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Grid size={12} sx={{ mt: 2 }}>
                     <Button onClick={onSubmit} variant="primary" size="small">
                         Submit
                     </Button>
@@ -219,24 +218,19 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     const cachedPollDetails = useMemo(() => fetchPollDetails(widget.id), [widget.id]);
 
     return (
-        <Grid container gap="1rem">
-            <Grid item xs={12} mt="4rem">
-                <Header3 sx={{ fontSize: '1.375rem' }} weight="thin">
-                    {widget.title}
-                </Header3>
+        <Grid container gap="1rem" size={12}>
+            <Grid size={12}>
+                <Header3 weight="thin">{widget.title}</Header3>
             </Grid>
             <Grid
-                item
-                xs={12}
+                size={12}
                 component={Paper}
                 sx={{
-                    mt: '1.5rem',
                     bgcolor: 'white',
                     padding: '2em',
                     borderRadius: '16px',
                     border: '1px solid',
                     borderColor: 'blue.90',
-                    height: 'calc(100% - 9em)',
                     display: 'flex',
                     flexDirection: 'column',
                 }}
@@ -266,13 +260,13 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
 
 const PollWidgetSkeleton = () => (
     <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
             <Skeleton variant="text" width="60%" height={40} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
             <Skeleton variant="rectangular" width="100%" height={115} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
             <Skeleton variant="text" width="30%" height={40} />
         </Grid>
     </Grid>

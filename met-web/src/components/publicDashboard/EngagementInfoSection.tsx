@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Stack } from '@mui/material';
-import { MetHeader1Old, MetLabel } from 'components/common';
+import { Grid2 as Grid, Stack } from '@mui/material';
+import { BodyText, Header1 } from 'components/common/Typography';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
@@ -37,9 +37,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
             }}
         >
             <Grid
-                item
-                lg={6}
-                sm={12}
+                size={{ lg: 6, sm: 12 }}
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -53,18 +51,18 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                 spacing={1}
             >
-                <Grid item xs={12} sx={{ maxHeight: '15em', overflowY: 'auto', overflowX: 'auto' }}>
-                    <MetHeader1Old>{name}</MetHeader1Old>
-                    <Grid item xs={12}>
+                <Grid size={12} sx={{ maxHeight: '15em', overflowY: 'auto', overflowX: 'auto' }}>
+                    <Header1>{name}</Header1>
+                    <Grid size={12}>
                         <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetLabel>{EngagementDate}</MetLabel>
+                <Grid size={12}>
+                    <BodyText bold>{EngagementDate}</BodyText>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Stack direction="row" spacing={1}>
-                        <MetLabel>Status:</MetLabel>
+                        <BodyText bold>Status:</BodyText>
                         <EngagementStatusChip statusId={statusId} />
                         <When condition={savedEngagement.status_id === EngagementStatus.Unpublished}>
                             <EngagementStatusChip statusId={SubmissionStatus.Unpublished} />
