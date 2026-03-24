@@ -83,7 +83,9 @@ const UserManagementListing = () => {
 
     return (
         <ResponsiveContainer>
-            <AutoBreadcrumbs />
+            <Grid size={12}>
+                <AutoBreadcrumbs />
+            </Grid>
             <Grid size={{ xs: 12, lg: 10 }} mt={1}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="space-between">
                     <Stack direction="row" spacing={1} alignItems="center">
