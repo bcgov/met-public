@@ -42,7 +42,6 @@ export const LanguageManager = () => {
         fetcher.load('/languages/');
     }, []);
 
-    if (!fetcherData) return null;
     return (
         <Box width="100%">
             <RadioGroup

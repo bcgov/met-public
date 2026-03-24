@@ -222,7 +222,7 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                     </LazyRoute>
                     <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
                     <LazyRoute
-                        path="config/edit"
+                        path="details/config/edit"
                         ComponentLazy={() => import('engagements/admin/config/wizard/ConfigWizard')}
                         actionLazy={() => import('engagements/admin/config/EngagementUpdateAction')}
                         handle={{ crumb: () => ({ name: 'Configure' }) }}

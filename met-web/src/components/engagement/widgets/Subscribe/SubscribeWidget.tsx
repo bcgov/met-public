@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MetPaper } from 'components/common';
-import { Divider, Grid, Skeleton } from '@mui/material';
+import { Divider, Grid, Skeleton, ThemeProvider } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { getSubscriptionsForms } from 'services/subscriptionService';
@@ -13,6 +13,7 @@ import FormSignUpSection from './FormSignUpSection';
 import { Header2 } from 'components/common/Typography';
 import { useRouteLoaderData } from 'react-router';
 import { EngagementLoaderPublicData } from 'engagements/public/view';
+import { BaseTheme } from 'styles/Theme';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
@@ -50,7 +51,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     }
 
     return (
-        <>
+        <ThemeProvider theme={BaseTheme}>
             <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -79,7 +80,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                 </Grid>
             </MetPaper>
             <EmailListModal open={open} setOpen={setOpen} />
-        </>
+        </ThemeProvider>
     );
 };
 

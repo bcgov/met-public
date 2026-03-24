@@ -55,7 +55,7 @@ const AdminEngagementView = () => {
                         component="nav"
                         variant="scrollable"
                         aria-label="Admin Engagement View Tabs"
-                        TabIndicatorProps={{ sx: { display: 'none' } }}
+                        slotProps={{ indicator: { sx: { display: 'none' } } }}
                         sx={{
                             '& .MuiTabs-flexContainer': {
                                 justifyContent: 'flex-start',
