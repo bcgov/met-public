@@ -34,7 +34,10 @@ from .engagement_status import EngagementStatus
 
 
 def _suggested_engagement_order_by():
-    from .suggested_engagement import SuggestedEngagement
+    # Importing here to avoid circular import between engagement and
+    # suggested engagement models as the sort index for suggested engagement is defined in
+    # the suggested engagement model while the relationship is defined in the engagement model
+    from .suggested_engagement import SuggestedEngagement # pylint: disable=import-outside-toplevel
 
     return SuggestedEngagement.sort_index
 
