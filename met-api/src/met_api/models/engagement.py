@@ -33,6 +33,12 @@ from .engagement_metadata import EngagementMetadata as EngagementMetadataModel
 from .engagement_status import EngagementStatus
 
 
+def _suggested_engagement_order_by():
+    from .suggested_engagement import SuggestedEngagement
+
+    return SuggestedEngagement.sort_index
+
+
 class Engagement(BaseModel):
     """Definition of the Engagement entity."""
 
@@ -80,7 +86,7 @@ class Engagement(BaseModel):
         back_populates='source_engagement',
         primaryjoin='SuggestedEngagement.engagement_id == Engagement.id',
         foreign_keys='SuggestedEngagement.engagement_id',
-        order_by='SuggestedEngagement.sort_index',
+        order_by=_suggested_engagement_order_by,
         collection_class=ordering_list('sort_index', count_from=1),
         cascade='all, delete-orphan',
         passive_deletes=True,
