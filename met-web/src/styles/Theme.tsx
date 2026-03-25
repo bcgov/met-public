@@ -261,7 +261,7 @@ export const BaseTheme = createTheme({
             styleOverrides: {
                 root: {
                     backgroundColor: Palette.background.paper,
-                    borderRadius: '1rem',
+                    borderRadius: '8px',
                     backgroundImage: 'none',
                 },
             },
@@ -280,10 +280,29 @@ export const BaseTheme = createTheme({
                     style: {
                         backgroundColor: 'white',
                         borderRadius: '8px',
+                        transition: 'box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                        '&:hover, &:has(:focus), &:has(:focus-visible)': {
+                            backgroundColor: 'color-mix(in srgb, white, black 20%)',
+                            boxShadow: elevations.hover,
+                        },
+                        '&:has(:focus-visible)': {
+                            backgroundColor: 'color-mix(in srgb, white, black 20%)',
+                            outline: `2px solid ${Palette.focus.outer}`,
+                            boxShadow: `0 0 0 2px ${Palette.focus.inner} inset,${elevations.hover}`,
+                        },
+                        '&:has(:active)': {
+                            backgroundColor: 'color-mix(in srgb, white, black 20%)',
+                            boxShadow: elevations.pressed,
+                        },
+                        '&.Mui-disabled, &:has(:disabled)': {
+                            backgroundColor: colors.surface.gray[10],
+                            color: colors.type.regular.disabled,
+                        },
                     },
                 },
             ],
             defaultProps: {
+                disableUnderline: true,
                 IconComponent: CustomSelectIcon,
                 MenuProps: {
                     sx: {

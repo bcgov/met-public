@@ -25,7 +25,7 @@ export const LanguageManager = () => {
     const engagementForm = useFormContext();
     const { setValue, watch } = engagementForm;
     const selectedLanguages = watch('languages') as Language[];
-    const fetcher = useFetcher();
+    const fetcher = useFetcher({ key: 'language-loader' });
     const fetcherData = fetcher.data as Awaited<LanguageLoaderData>;
     const { languages: availableLanguages } = fetcherData ?? { languages: [] };
 

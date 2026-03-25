@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { useFetcher, createSearchParams, useRouteLoaderData, Await, useAsyncValue, useNavigation } from 'react-router';
+import { useFetcher, createSearchParams, useRouteLoaderData, Await, useAsyncValue } from 'react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '.';
@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import { Language } from 'models/language';
 import { CircularProgress, Grid2 as Grid, Modal, Skeleton } from '@mui/material';
 import { modalStyle } from 'components/common';
+
+type ConfigUpdateFetcherData = { status?: 'failure' };
 
 const EngagementConfigurationWizard = () => {
     const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
@@ -43,9 +45,8 @@ const EngagementConfigurationWizard = () => {
 };
 
 const ConfigForm = () => {
+    const fetcher = useFetcher<ConfigUpdateFetcherData>({ key: 'config-update' });
     const [engagement, teamMembers, slug] = useAsyncValue() as [Engagement, EngagementTeamMember[], string];
-    const fetcher = useFetcher();
-    const navigation = useNavigation();
 
     const engagementConfigForm = useForm<EngagementConfigurationData>({
         defaultValues: {
@@ -65,7 +66,7 @@ const ConfigForm = () => {
     });
 
     const onSubmit = async (data: EngagementConfigurationData) => {
-        fetcher.submit(
+        await fetcher.submit(
             createSearchParams({
                 name: data.name,
                 feedback_methods: data.feedback_methods,
@@ -84,17 +85,22 @@ const ConfigForm = () => {
     };
 
     const {
-        formState: { isSubmitting, isSubmitted },
+        getValues,
+        reset,
+        formState: { isSubmitting, isSubmitted, defaultValues },
     } = engagementConfigForm;
+
+    useEffect(() => {
+        if (fetcher.state === 'idle' && fetcher.data?.status === 'failure') {
+            // Keep entered field values but clear submit state so the modal can close.
+            reset(defaultValues, { keepValues: true, keepDirty: false, keepSubmitCount: false });
+        }
+    }, [fetcher.state, fetcher.data, getValues, reset]);
 
     return (
         <FormProvider {...engagementConfigForm}>
             <EngagementForm onSubmit={onSubmit} />
-            <Modal
-                open={
-                    isSubmitting || isSubmitted || fetcher.state === 'submitting' || navigation.state === 'submitting'
-                }
-            >
+            <Modal open={isSubmitting || isSubmitted}>
                 <Grid
                     container
                     direction="row"
