@@ -59,7 +59,7 @@ export const SystemMessage = ({
             container
             direction="row"
             justifyContent="flex-start"
-            alignItems="flex-start"
+            alignItems="center"
             sx={{
                 maxWidth: { xs: '100%', md: '700px' },
                 borderRadius: '8px',
@@ -72,7 +72,7 @@ export const SystemMessage = ({
                 ...props.sx,
             }}
         >
-            <Grid sx={{ pr: 1, mt: -0.5, fontSize: '18px' }}>
+            <Grid sx={{ pr: 1, fontSize: '18px' }}>
                 <StatusIcon status={status} color={color} />
             </Grid>
             <Grid sx={{ width: '100%', maxWidth: { xs: '100%', md: '600px', fontSize: '14px' } }}>{children}</Grid>

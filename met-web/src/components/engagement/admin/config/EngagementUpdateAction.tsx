@@ -1,24 +1,38 @@
+import axios from 'axios';
 import { ENGAGEMENT_MEMBERSHIP_STATUS } from 'models/engagementTeamMember';
 import { ActionFunction, redirect } from 'react-router';
-import { patchEngagement } from 'services/engagementService';
+import { ApiErrorBody, patchEngagement } from 'services/engagementService';
 import { patchEngagementSlug } from 'services/engagementSlugService';
+import { openNotification } from 'services/notificationService/notificationSlice';
 import {
     addTeamMemberToEngagement,
     revokeMembership,
     reinstateMembership,
     getTeamMembers,
 } from 'services/membershipService';
+import { store } from 'store';
 
 export const engagementUpdateAction: ActionFunction = async ({ request, params }) => {
     const formData = (await request.formData()) as FormData;
     const engagementId = Number(params.engagementId);
-    await patchEngagement({
-        id: engagementId,
-        name: formData.get('name') as string,
-        start_date: formData.get('start_date') as string,
-        end_date: formData.get('end_date') as string,
-        is_internal: formData.get('is_internal') === 'true',
-    });
+    try {
+        await patchEngagement({
+            id: engagementId,
+            name: formData.get('name') as string,
+            start_date: formData.get('start_date') as string,
+            end_date: formData.get('end_date') as string,
+            is_internal: formData.get('is_internal') === 'true',
+        });
+    } catch (e) {
+        const message = axios.isAxiosError<ApiErrorBody>(e)
+            ? typeof e.response?.data === 'string'
+                ? e.response.data
+                : (e.response?.data?.message ?? 'Failed to update engagement')
+            : 'Failed to update engagement';
+        console.error('Error updating engagement:', e);
+        store.dispatch(openNotification({ severity: 'error', text: message }));
+        return { status: 'failure' };
+    }
     try {
         await patchEngagementSlug({
             engagement_id: engagementId,

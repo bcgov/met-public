@@ -7,7 +7,7 @@ export type LanguageLoaderData = {
 
 export const languageLoader = async () => {
     const tenantId = sessionStorage.getItem('tenantId');
-    const languages = getTenantLanguages(tenantId ?? '').then((response) => response);
+    const languages = await getTenantLanguages(tenantId ?? '').then((response) => response);
     return { languages };
 };
 

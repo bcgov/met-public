@@ -9,7 +9,7 @@ import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import Grid from '@mui/material/Grid2';
 
 const EngagementCreationWizard = () => {
-    const fetcher = useFetcher();
+    const fetcher = useFetcher({ key: 'config-update' });
 
     const engagementCreationForm = useForm<EngagementConfigurationData>({
         defaultValues: {

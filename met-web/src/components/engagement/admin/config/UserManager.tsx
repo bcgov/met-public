@@ -13,7 +13,7 @@ import MultiSelect from './MultiSelect';
 
 export const UserManager = () => {
     const currentUser = useAppSelector((state) => state.user);
-    const fetcher = useFetcher();
+    const fetcher = useFetcher({ key: 'user-search' });
 
     const engagementForm = useFormContext();
     const { setValue, watch } = engagementForm;

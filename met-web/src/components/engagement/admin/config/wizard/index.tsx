@@ -47,7 +47,7 @@ const EngagementForm = ({
         control,
         handleSubmit,
         watch,
-        formState: { errors, isDirty, isValid, isSubmitting, touchedFields },
+        formState: { errors, isDirty, isValid, isSubmitting, isSubmitted, touchedFields },
     } = engagementForm;
 
     const [nameHasBeenEdited, setNameHasBeenEdited] = useState(false);
@@ -143,6 +143,7 @@ const EngagementForm = ({
                         !isValid ||
                         !isDirty ||
                         isSubmitting ||
+                        isSubmitted ||
                         !watch('_dateConfirmed') ||
                         !watch('_visibilityConfirmed')
                     }
