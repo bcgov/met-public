@@ -2,28 +2,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Chart.Name }}-scheduled-worker"
+  name: "{{ .Chart.Name }}-adhoc-worker"
   labels:
     app: "{{ .Chart.Name }}"
-    app-group: met-app
+    app-group: engagement-app
     role: worker
-    sub-role: scheduled-worker
+    sub-role: adhoc-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      app-group: met-app
+      app-group: engagement-app
       role: worker
-      sub-role: scheduled-worker
+      sub-role: adhoc-worker
   strategy:
   template:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: met-app
+        app-group: engagement-app
         role: worker
-        sub-role: scheduled-worker
+        sub-role: adhoc-worker
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
@@ -38,7 +38,7 @@ spec:
           export REDASH_SECRET_KEY='{{ .Data.data.SECRET_KEY_2 }}'
           {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        # Custom built URI for met-patroni by indexing into the secret data object
+        # Custom built URI for engagement-patroni by indexing into the secret data object
         vault.hashicorp.com/agent-inject-template-met-patroni: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
           export REDASH_DATABASE_URL='postgresql://{{ index .Data.data "redash-username" }}:{{ index .Data.data "redash-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
@@ -51,21 +51,21 @@ spec:
         - -c
         - |
           . /vault/secrets/global && \
-          . /vault/secrets/met-patroni && \
+          . /vault/secrets/engagement-patroni && \
           bash /app/bin/docker-entrypoint worker
         envFrom:
         - configMapRef:
             name: "{{ .Chart.Name }}" # default redash environment variables
-        env:
+        env: 
         - name: WORKERS_COUNT
           valueFrom:
             configMapKeyRef:
-              key: SCHEDULED_WORKERS_COUNT
+              key: ADHOC_WORKERS_COUNT
               name: "{{ .Chart.Name }}"
         - name: QUEUES
-          value: "scheduled_queries"
+          value: "adhoc_queries"
         image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
-        name: "{{ .Chart.Name }}-scheduled-worker"
+        name: "{{ .Chart.Name }}-adhoc-worker"
         resources:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"

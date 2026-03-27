@@ -2,28 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Chart.Name }}-adhoc-worker"
+  name: "{{ .Chart.Name }}-worker"
   labels:
     app: "{{ .Chart.Name }}"
-    app-group: met-app
-    role: worker
-    sub-role: adhoc-worker
+    app-group: engagement-app
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      app-group: met-app
+      app-group: engagement-app
       role: worker
-      sub-role: adhoc-worker
+      sub-role: worker
   strategy:
   template:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: met-app
+        app-group: engagement-app
         role: worker
-        sub-role: adhoc-worker
+        sub-role: worker
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
@@ -56,16 +54,11 @@ spec:
         envFrom:
         - configMapRef:
             name: "{{ .Chart.Name }}" # default redash environment variables
-        env: 
-        - name: WORKERS_COUNT
-          valueFrom:
-            configMapKeyRef:
-              key: ADHOC_WORKERS_COUNT
-              name: "{{ .Chart.Name }}"
+        env:
         - name: QUEUES
-          value: "adhoc_queries"
+          value: "queries"
         image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
-        name: "{{ .Chart.Name }}-adhoc-worker"
+        name: "{{ .Chart.Name }}-worker"
         resources:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"

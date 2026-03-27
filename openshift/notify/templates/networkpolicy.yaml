@@ -14,10 +14,10 @@ spec:
   policyTypes:
   - Ingress
   ingress:
-  # Allow from met-api
+  # Allow from engagement-api
   - from:
     - podSelector:
         matchLabels:
-          app: met-api
+          app: engagement-api
           role: api
-          app-group: met-app
+          app-group: engagement-app

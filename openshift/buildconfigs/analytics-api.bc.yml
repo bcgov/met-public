@@ -4,7 +4,7 @@ metadata:
   name: api-build-template
   annotations:
     description: "Build Configuration Template for the Analytics API "
-    tags: "met, api, python"
+    tags: "engagement, api, python"
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream

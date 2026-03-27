@@ -1,5 +1,0 @@
----
-apiVersion: v2
-description: Redis and exporter Primary/Secondary templates based on Statefulsets
-name: redis-exporter
-version: v1.0.1

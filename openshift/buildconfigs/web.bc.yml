@@ -3,8 +3,8 @@ kind: Template
 metadata:
   name: web-build-template
   annotations:
-    description: "Build Configuration Template for the MET WEB Project"
-    tags: "met, web, reactjs, typescript, jest"
+    description: "Build Configuration Template for the Engagement Web Project"
+    tags: "engagement, web, reactjs, typescript, jest"
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
@@ -48,10 +48,10 @@ objects:
 parameters:
   - name: APP
     description: "The application name"
-    value: met-web
+    value: engagement-web
   - name: GITHUB_REPO
     description: "The github repo uri"
     value: 'https://github.com/bcgov/met-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
-    value: /met-web
+    value: /dep-web

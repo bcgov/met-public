@@ -2,26 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Chart.Name }}-worker"
+  name: "{{ .Chart.Name }}-scheduler"
   labels:
     app: "{{ .Chart.Name }}"
-    app-group: met-app
+    app-group: engagement-app
+    role: scheduler
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      app-group: met-app
-      role: worker
-      sub-role: worker
+      app-group: engagement-app
+      role: scheduler
   strategy:
   template:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: met-app
-        role: worker
-        sub-role: worker
+        app-group: engagement-app
+        role: scheduler
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
@@ -50,15 +49,12 @@ spec:
         - |
           . /vault/secrets/global && \
           . /vault/secrets/met-patroni && \
-          bash /app/bin/docker-entrypoint worker
+          bash /app/bin/docker-entrypoint scheduler
         envFrom:
         - configMapRef:
             name: "{{ .Chart.Name }}" # default redash environment variables
-        env:
-        - name: QUEUES
-          value: "queries"
         image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
-        name: "{{ .Chart.Name }}-worker"
+        name: "{{ .Chart.Name }}-scheduler"
         resources:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"

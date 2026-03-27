@@ -4,12 +4,12 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: met-api
+    app: engagement-api
     role: api
 spec:
   podSelector:
     matchLabels:
-      app: met-api
+      app: engagement-api
       role: api
   policyTypes:
   - Ingress
@@ -19,12 +19,12 @@ spec:
     - namespaceSelector:
         matchLabels:
           network.openshift.io/policy-group: ingress
-    # Allow from met-cron (same app, different role)
+    # Allow from engagement-cron (same app, different role)
     - podSelector:
         matchLabels:
-          app: met-api
+          app: engagement-api
           role: cron
-          app-group: met-app
+          app-group: engagement-app
   {{- range .Values.app.allowIngressPodselectors }}
     - podSelector:
         matchLabels:

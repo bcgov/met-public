@@ -8,10 +8,10 @@ image:
   namespace: e903c2-tools
 
 cors:
-  origins: 'https://met-analytics-api.apps.gold.devops.gov.bc.ca'
+  origins: 'https://dep-analytics-api.apps.gold.devops.gov.bc.ca'
 
 route:
-  host: met-analytics-api.apps.gold.devops.gov.bc.ca
+  host: dep-analytics-api.apps.gold.devops.gov.bc.ca
   path: /api/
   tls:
     insecureEdgeTerminationPolicy: Redirect

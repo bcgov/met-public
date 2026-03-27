@@ -1,33 +1,29 @@
-# Compiled for: {{required "Please use one of --values values_dev.yaml, --values values_test.yaml, or --values values_prod.yaml" .Values.environment }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Chart.Name }}-server"
-  annotations:
-    image.openshift.io/triggers: >-
-      [{"from":{"kind":"ImageStreamTag","name":"{{ .Chart.Name }}:{{ .Values.redash.image.tag }}","namespace":"{{ .Values.redash.image.namespace }}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"{{ .Chart.Name }}-server\")].image"}]
+  name: "{{ .Chart.Name }}-scheduled-worker"
   labels:
     app: "{{ .Chart.Name }}"
-    role: server
-    app-group: met-app
+    app-group: engagement-app
+    role: worker
+    sub-role: scheduled-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      role: server
+      app-group: engagement-app
+      role: worker
+      sub-role: scheduled-worker
   strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: met-app
-        role: server
-      name: "{{ .Chart.Name }}-server"
+        app-group: engagement-app
+        role: worker
+        sub-role: scheduled-worker
       annotations:
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-init-first: 'true'
@@ -56,28 +52,27 @@ spec:
         - |
           . /vault/secrets/global && \
           . /vault/secrets/met-patroni && \
-          python -v ./manage.py database create_tables && \
-          bash /app/bin/docker-entrypoint server
+          bash /app/bin/docker-entrypoint worker
         envFrom:
         - configMapRef:
-            name: "{{ .Chart.Name }}"
+            name: "{{ .Chart.Name }}" # default redash environment variables
         env:
-        - name: REDASH_WEB_WORKERS
+        - name: WORKERS_COUNT
           valueFrom:
             configMapKeyRef:
-              key: WEB_WORKERS_COUNT
+              key: SCHEDULED_WORKERS_COUNT
               name: "{{ .Chart.Name }}"
-        imagePullPolicy: Always
-        image: "{{ .Values.redash.image.registry}}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
-        name: "{{ .Chart.Name }}-server"
-        ports:
-        - containerPort: {{ int .Values.ingress.port }}
-          protocol: TCP
+        - name: QUEUES
+          value: "scheduled_queries"
+        image: "{{ .Values.redash.image.registry }}/{{ .Values.redash.image.repository }}:{{ .Values.redash.image.tag }}"
+        name: "{{ .Chart.Name }}-scheduled-worker"
         resources:
           limits:
             cpu: "{{ .Values.resources.limits.cpu }}"
             memory: "{{ .Values.resources.limits.memory }}"
+            ephemeral-storage: "{{ .Values.resources.limits.ephemeralStorage }}"
           requests:
             cpu: "{{ .Values.resources.requests.cpu }}"
             memory: "{{ .Values.resources.requests.memory }}"
+            ephemeral-storage: "{{ .Values.resources.requests.ephemeralStorage }}"
       restartPolicy: Always

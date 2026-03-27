@@ -1,7 +1,7 @@
 apiVersion: v2
-name: met-api
+name: engagement-api
 version: 0.1.1
 description: |
-  A Helm chart for the MET API project, designed to be used with OpenShift
+  A Helm chart for the Engagement API project, designed to be used with OpenShift
   Environment-agnostic values are in values.yaml
   Environment-specific values are in values_dev.yaml, values_test.yaml, and values_prod.yaml

@@ -1,5 +1,5 @@
 app:
-  name: met-web
+  name: engagement-web
   licenseplate: e903c2
   ratelimits:
     enabled: true # Enable or disable rate limiting

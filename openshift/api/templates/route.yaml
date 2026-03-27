@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: engagement-app
   annotations:
     # Managed by setup job - do not modify manually
     haproxy.router.openshift.io/ip_whitelist: "0.0.0.0/32"

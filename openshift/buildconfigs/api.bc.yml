@@ -45,10 +45,10 @@ objects:
 parameters:
   - name: APP
     description: "The application name"
-    value: met-api
+    value: engagement-api
   - name: GITHUB_REPO
     description: "The github repo uri"
     value: 'https://github.com/bcgov/met-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
-    value: /met-api
+    value: /dep-api

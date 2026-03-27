@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app_cron.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: engagement-app
 spec:
   strategy:
     type: RollingUpdate
@@ -18,7 +18,7 @@ spec:
       labels:
         app: {{ .Values.app.name }}
         role: cron
-        app-group: met-app
+        app-group: engagement-app
         environment: {{ .Values.environment }}
       annotations:
         image.openshift.io/triggers: >
@@ -81,7 +81,7 @@ spec:
           source /vault/secrets/email && \
           source /vault/secrets/met-jwt-oidc && \
           source /vault/secrets/met-patroni && \
-          bash /met-cron/docker-entrypoint.sh
+          bash /engagement-cron/docker-entrypoint.sh
         envFrom:
         - configMapRef:
             name: {{ .Values.app.name }}

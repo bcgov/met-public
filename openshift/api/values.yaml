@@ -1,5 +1,5 @@
 app:
-  name: met-api
+  name: engagement-api
   licenseplate: "e903c2"
   allowIngressPodselectors: []
   ratelimits:
@@ -8,7 +8,7 @@ app:
     tcp: 65 # Max TCP connections per 3 seconds
 
 app_cron:
-  name: met-cron
+  name: engagement-cron
   deployment:
     replicas: 1
 

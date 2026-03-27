@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: engagement-app
   name: {{ .Values.app.name }}
 spec:
   replicas: 1 # This is managed by the HPA
@@ -21,7 +21,7 @@ spec:
         app: {{ .Values.app.name }}
         environment: {{ .Values.environment | default "dev" }}
         role: api
-        app-group: met-app
+        app-group: engagement-app
       annotations:
         image.openshift.io/triggers: >
           [
@@ -78,7 +78,7 @@ spec:
           {{- end }}
           {{- end }}` }}
         vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        # Custom built URI for met-patroni by indexing into the secret data object
+        # Custom built URI for engagement-patroni by indexing into the secret data object
         # All patroni logins are stored in the same secret, so we shouldn't inject them all
         # Plus, they are not in the uppercase environment variable format
         vault.hashicorp.com/agent-inject-template-met-patroni: |
