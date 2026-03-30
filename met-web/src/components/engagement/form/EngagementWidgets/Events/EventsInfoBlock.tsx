@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { EventsContext } from './EventsContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
+import { DraggableBox, DroppableBox } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 import { Event, EVENT_TYPE } from 'models/event';
 import EventInfoPaper from './EventInfoPaper';
@@ -83,12 +83,12 @@ const EventsInfoBlock = () => {
 
     return (
         <DragDropContext onDragEnd={moveEvent}>
-            <MetDroppable droppableId="droppable">
+            <DroppableBox droppableId="droppable">
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
                     {events.map((event: Event, index) => {
                         return (
                             <Grid size={12} key={`Grid-${event.id}`}>
-                                <MetDraggable draggableId={String(event.id)} index={index}>
+                                <DraggableBox draggableId={String(event.id)} index={index}>
                                     <When condition={event.type === EVENT_TYPE.MEETUP}>
                                         <EventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
@@ -98,12 +98,12 @@ const EventsInfoBlock = () => {
                                     <When condition={event.type === EVENT_TYPE.VIRTUAL}>
                                         <VirtualEventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
-                                </MetDraggable>
+                                </DraggableBox>
                             </Grid>
                         );
                     })}
                 </Grid>
-            </MetDroppable>
+            </DroppableBox>
         </DragDropContext>
     );
 };

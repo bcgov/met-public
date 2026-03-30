@@ -18,7 +18,7 @@ import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
-import { MetDroppable } from 'components/common/Dragdrop';
+import { DroppableBox } from 'components/common/Dragdrop';
 
 const DocumentFolder = ({
     documentItem,
@@ -159,7 +159,7 @@ const DocumentFolder = ({
             </Grid>
             <When condition={documentItem.children && documentItem.children.length > 0}>
                 <Grid size={12} container justifyContent={'flex-end'}>
-                    <MetDroppable droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
+                    <DroppableBox droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
                         {documentItem.children?.map((item, index) => {
                             return (
                                 <Draggable key={item.id} draggableId={String(item.id)} index={index}>
@@ -185,7 +185,7 @@ const DocumentFolder = ({
                                 </Draggable>
                             );
                         })}
-                    </MetDroppable>
+                    </DroppableBox>
                 </Grid>
             </When>
         </Grid>

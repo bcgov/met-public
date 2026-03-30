@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
+import { DraggableBox, DroppableBox } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 import SubscribeInfoPaper from './SubscribeInfoPaper';
 import { debounce } from 'lodash';
@@ -97,22 +97,22 @@ const SubscribeInfoBlock = () => {
 
     return (
         <DragDropContext onDragEnd={moveSubscribeForm}>
-            <MetDroppable droppableId="droppable">
+            <DroppableBox droppableId="droppable">
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     {subscribeOptions.map((subscribeForm: SubscribeForm, index: number) => {
                         return (
                             <Grid size={12} key={`Grid-${subscribeForm.widget_id}`}>
-                                <MetDraggable draggableId={String(subscribeForm.id)} index={index}>
+                                <DraggableBox draggableId={String(subscribeForm.id)} index={index}>
                                     <SubscribeInfoPaper
                                         removeSubscribeForm={handleRemoveSubscribeForm}
                                         subscribeForm={subscribeForm}
                                     />
-                                </MetDraggable>
+                                </DraggableBox>
                             </Grid>
                         );
                     })}
                 </Grid>
-            </MetDroppable>
+            </DroppableBox>
         </DragDropContext>
     );
 };

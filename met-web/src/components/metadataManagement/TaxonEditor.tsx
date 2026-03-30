@@ -9,7 +9,7 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { reorder } from 'utils';
 import { MetadataTaxon } from 'models/engagement';
-import { MetDroppable } from 'components/common/Dragdrop';
+import { DroppableBox } from 'components/common/Dragdrop';
 import { ActionContext } from './ActionContext';
 import TaxonEditForm from './TaxonEditForm';
 import { Else, If, Then } from 'react-if';
@@ -219,7 +219,7 @@ export const TaxonEditor = () => {
                         ref={scrollableRef}
                     >
                         <DragDropContext onDragEnd={repositionTaxon}>
-                            <MetDroppable droppableId="metadataTaxa">
+                            <DroppableBox droppableId="metadataTaxa">
                                 <Grid container direction="column" width={'100%'} pr={1.5}>
                                     {!isLoading &&
                                         orderedMetadataTaxa.map((taxon: MetadataTaxon, index) => {
@@ -252,7 +252,7 @@ export const TaxonEditor = () => {
                                         </>
                                     )}
                                 </Grid>
-                            </MetDroppable>
+                            </DroppableBox>
                         </DragDropContext>
                     </Box>
                     <Fade in={showScrollIndicators.bottom} timeout={300}>

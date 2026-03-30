@@ -3,7 +3,7 @@ import { Box, Grid2 as Grid } from '@mui/material';
 import DocumentSwitch from './DocumentSwitch';
 import { DocumentsContext } from './DocumentsContext';
 import { DragDropContext, Draggable, DropResult } from '@hello-pangea/dnd';
-import { MetDroppable } from 'components/common/Dragdrop';
+import { DroppableBox } from 'components/common/Dragdrop';
 import { sortDocuments } from 'services/widgetService/DocumentService';
 
 const DocumentsBlock = () => {
@@ -61,7 +61,7 @@ const DocumentsBlock = () => {
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
             <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
-                <MetDroppable droppableId="folders" type="FOLDER" style={{ width: '100%' }}>
+                <DroppableBox droppableId="folders" type="FOLDER" style={{ width: '100%' }}>
                     {documents.map((document, index) => {
                         return (
                             <Draggable key={document.id} draggableId={String(document.id)} index={index}>
@@ -77,7 +77,7 @@ const DocumentsBlock = () => {
                             </Draggable>
                         );
                     })}
-                </MetDroppable>
+                </DroppableBox>
             </Grid>
         </DragDropContext>
     );

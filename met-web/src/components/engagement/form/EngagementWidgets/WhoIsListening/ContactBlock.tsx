@@ -4,7 +4,7 @@ import ContactInfoPaper from './ContactInfoPaper';
 import { Contact } from 'models/contact';
 import { WhoIsListeningContext } from './WhoIsListeningContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
+import { DraggableBox, DroppableBox } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 
 const ContactBlock = () => {
@@ -27,19 +27,19 @@ const ContactBlock = () => {
 
     return (
         <DragDropContext onDragEnd={moveContact}>
-            <MetDroppable droppableId="droppable">
+            <DroppableBox droppableId="droppable">
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     {addedContacts.map((addedContact: Contact, index) => {
                         return (
                             <Grid size={12} key={`Grid-${addedContact.id}`}>
-                                <MetDraggable draggableId={String(addedContact.id)} index={index}>
+                                <DraggableBox draggableId={String(addedContact.id)} index={index}>
                                     <ContactInfoPaper contact={addedContact} removeContact={removeContact} />
-                                </MetDraggable>
+                                </DraggableBox>
                             </Grid>
                         );
                     })}
                 </Grid>
-            </MetDroppable>
+            </DroppableBox>
         </DragDropContext>
     );
 };

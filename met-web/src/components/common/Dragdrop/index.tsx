@@ -18,16 +18,16 @@ interface MetDroppableProps {
  * @param {object} [props.rest] - Additional properties to be passed to the Box component.
  * @returns {JSX.Element} A Box component that serves as a droppable area.
  * @example
- * <MetDroppable droppableId="droppable-1" type="TYPE_1">
- *     <MetDraggable draggableId="draggable-1" index={0}>
+ * <DroppableBox droppableId="droppable-1" type="TYPE_1">
+ *     <DraggableBox draggableId="draggable-1" index={0}>
  *         <div>Draggable Item 1</div>
- *     </MetDraggable>
- *     <MetDraggable draggableId="draggable-2" index={1}>
+ *     </DraggableBox>
+ *     <DraggableBox draggableId="draggable-2" index={1}>
  *         <div>Draggable Item 2</div>
- *     </MetDraggable>
- * </MetDroppable>
+ *     </DraggableBox>
+ * </DroppableBox>
  */
-export const MetDroppable = ({ droppableId, type, children, ...rest }: MetDroppableProps) => {
+export const DroppableBox = ({ droppableId, type, children, ...rest }: MetDroppableProps) => {
     return (
         <Droppable droppableId={droppableId} type={type}>
             {(provided: DroppableProvided) => (
@@ -56,16 +56,16 @@ interface MetDraggableProps {
  * @param {object} [props.sx] - Additional styles to be applied to the draggable item.
  * @returns {JSX.Element} A Box component that serves as a draggable item.
  * @example
- * <MetDroppable droppableId="droppable-1">
- *     <MetDraggable draggableId="draggable-1" index={0}>
+ * <DroppableBox droppableId="droppable-1">
+ *     <DraggableBox draggableId="draggable-1" index={0}>
  *         <div>Draggable Item 1</div>
- *     </MetDraggable>
- *     <MetDraggable draggableId="draggable-2" index={1}>
+ *     </DraggableBox>
+ *     <DraggableBox draggableId="draggable-2" index={1}>
  *         <div>Draggable Item 2</div>
- *     </MetDraggable>
- * </MetDroppable>
+ *     </DraggableBox>
+ * </DroppableBox>
  */
-export const MetDraggable = ({ children, draggableId, index, sx }: MetDraggableProps) => {
+export const DraggableBox = ({ children, draggableId, index, sx }: MetDraggableProps) => {
     return (
         <Draggable key={draggableId} draggableId={draggableId} index={index}>
             {(provided: DraggableProvided) => (
