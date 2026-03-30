@@ -152,7 +152,7 @@ def test_post_subscription_email_verification_invalid_type(client, jwt, session,
     """Assert subscribe endpoint rejects invalid subscription type values."""
     claims = TestJwtClaims.public_user_role
     set_global_tenant()
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     to_dict = {
         'email_address': fake.email(),
         'survey_id': survey.id,
@@ -171,7 +171,7 @@ def test_post_subscription_email_verification_lowercase_type(client, jwt, sessio
     """Assert subscribe endpoint accepts case-insensitive subscription type values."""
     claims = TestJwtClaims.public_user_role
     set_global_tenant()
-    survey, eng = factory_survey_and_eng_model()
+    survey, _ = factory_survey_and_eng_model()
     to_dict = {
         'email_address': fake.email(),
         'survey_id': survey.id,

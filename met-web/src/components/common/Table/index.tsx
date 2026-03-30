@@ -135,7 +135,7 @@ function CustomTable<T>({
         total: rows.length,
     },
     emptyText = 'No records were found',
-}: CustomTableProps<T>) {
+}: Readonly<CustomTableProps<T>>) {
     const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
 
