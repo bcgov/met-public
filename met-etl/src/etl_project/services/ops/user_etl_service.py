@@ -2,7 +2,7 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime, timezone
 
-from met_api.models.participant import Participant as MetParticipantModel
+from met_api.models.participant import Participant as ParticipantModel
 from analytics_api.models.user_details import UserDetails as EtlUserDetailsModel
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
@@ -62,15 +62,15 @@ def extract_participant(
     for last_run_cycle_time in user_details_last_run_cycle_datetime:
 
         context.log.info("started extracting new data from user_details table")
-        new_participants = session.query(MetParticipantModel).filter(
-            MetParticipantModel.created_date > last_run_cycle_time).all()
+        new_participants = session.query(ParticipantModel).filter(
+            ParticipantModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info(
                 "started extracting updated data from user_details table")
-            updated_participants = session.query(MetParticipantModel).filter(
-                MetParticipantModel.updated_date > last_run_cycle_time,
-                MetParticipantModel.updated_date != MetParticipantModel.created_date).all()
+            updated_participants = session.query(ParticipantModel).filter(
+                ParticipantModel.updated_date > last_run_cycle_time,
+                ParticipantModel.updated_date != ParticipantModel.created_date).all()
 
     yield Output(new_participants, "new_participants")
 

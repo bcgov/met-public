@@ -1,5 +1,5 @@
-CREATE SCHEMA met AUTHORIZATION met;
-ALTER ROLE met SET search_path TO met;
+CREATE SCHEMA engagement AUTHORIZATION engagement;
+ALTER ROLE engagement SET search_path TO engagement;
 
 CREATE SCHEMA analytics AUTHORIZATION analytics;
 ALTER ROLE analytics SET search_path TO analytics;

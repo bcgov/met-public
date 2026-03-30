@@ -2,8 +2,8 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime, timezone
 
-from met_api.models.email_verification import EmailVerification as MetEmailVerificationModel
-from met_api.models.survey import Survey as MetSurveyModel
+from met_api.models.email_verification import EmailVerification as EmailVerificationModel
+from met_api.models.survey import Survey as SurveyModel
 from analytics_api.models.email_verification import EmailVerification as EtlEmailVerificationModel
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
@@ -70,15 +70,15 @@ def extract_email_ver(
 
         context.log.info(
             "started extracting new data from email_verification table")
-        new_email_ver = session.query(MetEmailVerificationModel).filter(
-            MetEmailVerificationModel.created_date > last_run_cycle_time).all()
+        new_email_ver = session.query(EmailVerificationModel).filter(
+            EmailVerificationModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info(
                 "started extracting updated data from email_verification table")
-            updated_email_ver = session.query(MetEmailVerificationModel).filter(
-                MetEmailVerificationModel.updated_date > last_run_cycle_time,
-                MetEmailVerificationModel.updated_date != MetEmailVerificationModel.created_date
+            updated_email_ver = session.query(EmailVerificationModel).filter(
+                EmailVerificationModel.updated_date > last_run_cycle_time,
+                EmailVerificationModel.updated_date != EmailVerificationModel.created_date
             ).all()
 
     yield Output(new_email_ver, "new_email_ver")
@@ -117,8 +117,8 @@ def load_email_ver(
                 EtlEmailVerificationModel.source_email_ver_id == email_ver.id).update(
                 {'is_active': False})
 
-            survey = met_session.query(MetSurveyModel).filter(
-                MetSurveyModel.id == email_ver.survey_id).first()
+            survey = met_session.query(SurveyModel).filter(
+                SurveyModel.id == email_ver.survey_id).first()
 
             email_ver_model = EtlEmailVerificationModel(
                 source_email_ver_id=email_ver.id,

@@ -6,8 +6,8 @@
 MKFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_ABS_DIR:=$(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
-PROJECT_NAME:=met-cron
-DOCKER_NAME:=met-cron
+PROJECT_NAME:=cron
+DOCKER_NAME:=cron
 
 #################################################################################
 # COMMANDS -- Setup                                                             #

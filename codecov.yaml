@@ -39,9 +39,9 @@ comment:
 flags:
   metapi:
     paths:
-      - met-api/src/met_api
+      - api/src/met_api
     carryforward: true
   metweb:
     paths:
-      - met-web/src
+      - web/src
     carryforward: true

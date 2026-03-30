@@ -54,7 +54,7 @@ export const FormField = ({
     return (
         <label style={{ width: '100%', display: 'block' }}>
             <Grid
-                className="met-input-form-field"
+                className="dep-input-form-field"
                 container
                 spacing={0}
                 direction="column"
@@ -62,7 +62,7 @@ export const FormField = ({
                 sx={{ opacity: disabled ? '0.5' : '1', ...gridProps.sx }}
             >
                 <Grid size={12}>
-                    <BodyText bold className="met-input-form-field-title">
+                    <BodyText bold className="dep-input-form-field-title">
                         {title}
                         {required && title && <span title="(Required)">*</span>}
                         {optional && title && <span style={{ fontWeight: '400' }}> (Optional)</span>}

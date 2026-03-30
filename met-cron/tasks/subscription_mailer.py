@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Subscription Emailer."""
+"""DEP Subscription Emailer."""
 from datetime import datetime
 
 from met_cron.services.publish_mail_service import PublishEmailService
 
 
-class SubscriptionMailer:  # pylint:disable=too-few-public-methods
+class SubscriptionMailerTask:  # pylint:disable=too-few-public-methods
     """Task to handle Emails."""
 
     @classmethod
     def do_email(cls):
         """Email subscribed users."""
-        print('Starting SubscriptionMailer ------------------------', datetime.now())
+        print('Starting Subscription Mailer ------------------------', datetime.now())
 
         PublishEmailService.do_mail()

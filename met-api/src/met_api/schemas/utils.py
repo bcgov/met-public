@@ -23,7 +23,7 @@ from jsonschema import Draft7Validator, RefResolver, SchemaError, draft7_format_
 from met_api.constants.user import SYSTEM_REVIEWER
 
 
-BASE_URI = 'https://met.gov.bc.ca/.well_known/schemas'
+BASE_URI = 'https://dep.gov.bc.ca/.well_known/schemas'
 
 
 def get_schema(filename: str) -> dict:

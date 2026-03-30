@@ -1,6 +1,6 @@
 # Pylint Plugins
 
-This directory contains custom Pylint checkers for the MET API.
+This directory contains custom Pylint checkers for the DEP API.
 
 ## no_print_checker
 
@@ -9,17 +9,20 @@ This directory contains custom Pylint checkers for the MET API.
 **Why:** Print statements output directly to stdout/stderr and bypass the logging system's `SensitiveDataFilter`. This creates a security risk where passwords, tokens, API keys, and other credentials could be exposed in logs.
 
 **What it does:**
+
 - Flags any use of `print()` function with error code **W9001**
 - Exception: Allows print in `config.py` for startup messages before logging is initialized
 
 **Usage:**
 Instead of:
+
 ```python
 print(f'User ID: {user_id}')
 print(f'Database URL: {db_url}')
 ```
 
 Use:
+
 ```python
 from flask import current_app
 current_app.logger.info('User ID: %s', user_id)
@@ -32,11 +35,13 @@ logger.info('Database URL: %s', db_url)
 
 **Configuration:**
 The checker is automatically loaded via `.pylintrc`:
+
 ```ini
 load-plugins=pylint_plugins.no_print_checker
 ```
 
 **Testing:**
+
 ```bash
 # Test with a file containing print statements
 pylint --rcfile=.pylintrc path/to/file.py

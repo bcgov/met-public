@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Colima
-met-api/colima.yaml
+api/colima.yaml
 
 # Sphinx documentation
 docs/_build/
@@ -131,18 +131,18 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .DS_Store
-met-api/.DS_Store
-met-api/.DS_Store
+api/.DS_Store
+api/.DS_Store
 /.idea/vcs.xml
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/misc.xml
 /.idea/modules.xml
-/.idea/met-public.iml
+/.idea/engagement-public.iml
 
 # VSCode config and Chrome extension user data
 .vscode/chrome
-met-web/.vscode/
+web/.vscode/
 
 # Helm dependency files
 openshift/**/charts/

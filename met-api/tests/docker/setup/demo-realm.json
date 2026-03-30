@@ -279,8 +279,8 @@
           "containerId": "9e254d9e-9aa8-4357-b86e-4762544c8dce"
         }
       ],
-      "met-web": [],
-      "met-admin": []
+      "engagement-web": [],
+      "engagement-admin": []
     }
   },
   "groups": [
@@ -383,7 +383,7 @@
       }
     },
     {
-      "clientId": "met-web",
+      "clientId": "engagement-web",
       "rootUrl": "http://localhost:8080/*",
       "adminUrl": "/",
       "baseUrl": "/*",
@@ -548,7 +548,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "met-web",
+            "included.client.audience": "engagement-web",
             "id.token.claim": "false",
             "access.token.claim": "true",
             "userinfo.token.claim": "false"
@@ -569,7 +569,7 @@
       }
     },
     {
-      "clientId": "met-admin",
+      "clientId": "engagement-admin",
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
@@ -623,7 +623,7 @@
           "protocolMapper": "oidc-audience-mapper",
           "consentRequired": false,
           "config": {
-            "included.client.audience": "met-web",
+            "included.client.audience": "engagement-web",
             "id.token.claim": "false",
             "access.token.claim": "true"
           }
@@ -634,7 +634,7 @@
           "protocolMapper": "oidc-hardcoded-claim-mapper",
           "consentRequired": false,
           "config": {
-            "claim.value": "met-admin",
+            "claim.value": "engagement-admin",
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -824,12 +824,12 @@
       ]
     },
     {
-      "username": "service-account-met-admin",
+      "username": "service-account-engagement-admin",
       "enabled": true,
       "totp": false,
       "emailVerified": false,
-      "email": "service-account-met-admin@placeholder.org",
-      "serviceAccountClientId": "met-admin",
+      "email": "service-account-engagement-admin@placeholder.org",
+      "serviceAccountClientId": "engagement-admin",
       "credentials": [],
       "disableableCredentialTypes": [],
       "requiredActions": [],

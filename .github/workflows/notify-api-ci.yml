@@ -1,4 +1,4 @@
-name: MET NOTIFY API CI
+name: NOTIFY API CI
 
 on:
   pull_request:

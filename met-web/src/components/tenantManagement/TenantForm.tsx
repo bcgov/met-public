@@ -127,7 +127,7 @@ export const TenantForm = ({
                         xs: '0 -16px',
                         sm: '0',
                     },
-                    '& .met-input-form-field-title': {
+                    '& .dep-input-form-field-title': {
                         fontSize: '18px',
                     },
                 }}

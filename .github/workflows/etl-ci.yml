@@ -5,12 +5,12 @@ on:
         branches:
             - main
         paths:
-            - "met-etl/**"
+            - "etl/**"
 
 defaults:
     run:
         shell: bash
-        working-directory: ./met-etl
+        working-directory: ./etl
 
 jobs:
     setup-job:
@@ -62,7 +62,7 @@ jobs:
             - name: Build Docker image
               id: build
               run: |
-                  docker build . --file container/user_code/Dockerfile --tag met-etl-ci:latest
+                  docker build . --file container/user_code/Dockerfile --tag etl-ci:latest
 
     tests:
         needs: setup-job

@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 from analytics_api.models.request_type_option import RequestTypeOption as EtlRequestTypeOptionModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
-from met_api.models.report_setting import ReportSetting as MetReportSettingModel
+from met_api.models.report_setting import ReportSetting as ReportSettingModel
 
 
 # get the last run cycle id for report setting etl
@@ -68,15 +68,15 @@ def extract_setting(
     for last_run_cycle_time in setting_last_run_cycle_time:
         context.log.info(
             "started extracting new data from report setting table")
-        new_setting = session.query(MetReportSettingModel).filter(
-            MetReportSettingModel.created_date > last_run_cycle_time).all()
+        new_setting = session.query(ReportSettingModel).filter(
+            ReportSettingModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info(
                 "started extracting updated data from report setting table")
-            updated_setting = session.query(MetReportSettingModel).filter(
-                MetReportSettingModel.updated_date > last_run_cycle_time,
-                MetReportSettingModel.updated_date != MetReportSettingModel.created_date).all()
+            updated_setting = session.query(ReportSettingModel).filter(
+                ReportSettingModel.updated_date > last_run_cycle_time,
+                ReportSettingModel.updated_date != ReportSettingModel.created_date).all()
 
     yield Output(new_setting, "new_setting")
 

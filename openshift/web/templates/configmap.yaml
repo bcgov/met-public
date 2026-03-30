@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-app
+    app-group: dep-app
     environment: {{ .Values.environment }}
 data:
     ENV: "{{ .Values.environment }}"

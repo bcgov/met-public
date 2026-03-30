@@ -3,7 +3,7 @@ kind: Route
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: met-analytics
+    app-group: dep-analytics
   name: {{ .Values.app.name }}
   annotations:
     # Managed by setup job - do not modify manually

@@ -132,7 +132,7 @@ const EngagementForm = ({
                     step={6}
                     completed={watch('users').some((u) => u)}
                     question="Who would you like to add to this engagement?"
-                    details="In addition to yourself, please add the team members that you would like to have access to this engagement. You can only add individuals that have already signed into MET."
+                    details="In addition to yourself, please add the team members that you would like to have access to this engagement. You can only add individuals that have already signed into DEP."
                     isGroup
                 >
                     <UserManager />

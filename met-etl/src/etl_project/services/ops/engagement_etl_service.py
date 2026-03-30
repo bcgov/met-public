@@ -1,8 +1,8 @@
 from dagster import Out, Output, op
-from met_api.constants.engagement_status import Status as MetEngagementStatus
-from met_api.models.engagement import Engagement as MetEngagementModel
+from met_api.constants.engagement_status import Status as EngagementStatus
+from met_api.models.engagement import Engagement as EngagementModel
 from met_api.models.engagement_status import EngagementStatus as EngagementStatusModel
-from met_api.models.widget_map import WidgetMap as MetWidgetMap
+from met_api.models.widget_map import WidgetMap
 from analytics_api.models.engagement import Engagement as EtlEngagementModel
 from sqlalchemy import func
 from datetime import datetime, timezone
@@ -60,17 +60,17 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
 
     for last_run_cycle_time in eng_last_run_cycle_time:
         context.log.info("started extracting new data from engagement table")
-        new_engagements = session.query(MetEngagementModel).filter(
-            MetEngagementModel.created_date > last_run_cycle_time,
-            MetEngagementModel.status_id != MetEngagementStatus.Draft.value).all()
+        new_engagements = session.query(EngagementModel).filter(
+            EngagementModel.created_date > last_run_cycle_time,
+            EngagementModel.status_id != EngagementStatus.Draft.value).all()
 
         context.log.info(last_run_cycle_time)
         context.log.info(len(new_engagements))
 
         if last_run_cycle_time > default_datetime:
-            updated_engagements = session.query(MetEngagementModel).filter(
-                MetEngagementModel.updated_date > last_run_cycle_time,
-                MetEngagementModel.status_id != MetEngagementStatus.Draft.value).all()
+            updated_engagements = session.query(EngagementModel).filter(
+                EngagementModel.updated_date > last_run_cycle_time,
+                EngagementModel.status_id != EngagementStatus.Draft.value).all()
 
         context.log.info(len(updated_engagements))
 
@@ -113,9 +113,9 @@ def load_engagement(
             longitude = None
             geojson = None
             marker_label = None
-            map_widget = met_session.query(MetWidgetMap).filter(
-                MetWidgetMap.engagement_id == engagement.id).order_by(
-                MetWidgetMap.created_date.desc()).first()
+            map_widget = met_session.query(WidgetMap).filter(
+                WidgetMap.engagement_id == engagement.id).order_by(
+                WidgetMap.created_date.desc()).first()
             if map_widget:
                 latitude = map_widget.latitude
                 longitude = map_widget.longitude

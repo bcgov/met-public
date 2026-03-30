@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Checkbox } from '@mui/material';
 import { HeadCell } from 'components/common/Table/types';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { ClientSidePagination } from 'components/common/Table/ClientSidePagination';
 import { SurveyReportSetting } from 'models/surveyReportSetting';
 import { useAsyncValue } from 'react-router';
@@ -72,7 +72,7 @@ const SettingsTable = ({
 
     return (
         <ClientSidePagination rows={surveyReportSettings} searchFilter={{ key: 'question', value: searchTerm }}>
-            {(props) => <MetTable {...props} headCells={headCells} />}
+            {(props) => <CustomTable {...props} headCells={headCells} />}
         </ClientSidePagination>
     );
 };

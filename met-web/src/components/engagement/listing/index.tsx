@@ -18,7 +18,7 @@ import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'co
 import { formatDate } from 'components/common/dateHelper';
 import { Link as MuiLink, useMediaQuery, Theme, Tooltip } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
 import { SearchOptions } from './AdvancedSearch/SearchTypes';
 import { PermissionsGate } from 'components/permissionsGate';
@@ -496,7 +496,7 @@ const EngagementListing = () => {
                 </Collapse>
             </Grid>
             <Grid size={12}>
-                <MetTable
+                <CustomTable
                     headCells={headCells}
                     rows={engagementPage?.items ?? []}
                     handleChangePagination={setPaginationOptions}

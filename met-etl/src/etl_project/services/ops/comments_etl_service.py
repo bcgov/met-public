@@ -2,7 +2,7 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime, timezone
 
-from met_api.models.comment import Comment as MetCommentModel
+from met_api.models.comment import Comment as CommentModel
 from met_api.constants.comment_status import Status as CommentStatus
 from analytics_api.models.user_feedback import UserFeedback as UserFeedbackModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
@@ -61,9 +61,9 @@ def extract_comments(
 
     for last_run_cycle_time in comments_last_run_cycle_datetime:
         context.log.info("started extracting new data from comments table")
-        new_comments = session.query(MetCommentModel).filter(
-            MetCommentModel.submission_date > last_run_cycle_time,
-            MetCommentModel.status_id == CommentStatus.Approved.value).all()
+        new_comments = session.query(CommentModel).filter(
+            CommentModel.submission_date > last_run_cycle_time,
+            CommentModel.status_id == CommentStatus.Approved.value).all()
 
     yield Output(new_comments, "new_comments")
 

@@ -86,7 +86,7 @@ def test_get_staff_users(client, jwt, session, setup_admin_user_and_claims, setu
     assert rv.json.get('total') == 5
     assert len(rv.json.get('items')) == 5
 
-    # Check that MET admins (super admins) can see all users, even across tenants
+    # Check that super admins can see all users, even across tenants
     _, claims = setup_super_admin_user_and_claims
     headers = factory_auth_header(jwt=jwt, claims=claims)
     rv = client.get('/api/user/', headers=headers, content_type=ContentType.JSON.value)
@@ -213,7 +213,7 @@ def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
         headers=headers,
         content_type=ContentType.JSON.value
     )
-    # assert MET admin can do cross tenant operation
+    # assert super admins can do cross tenant operations
     # TODO Needs to be modified once the actual role for super admin is finalized
     assert rv.status_code == HTTPStatus.OK
 

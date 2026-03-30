@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { MetTableProps } from '.';
+import { CustomTableProps } from '.';
 import { PaginationOptions } from './types';
 
 interface ClientSidePaginationProps<T> {
@@ -8,7 +8,7 @@ interface ClientSidePaginationProps<T> {
         key: keyof T;
         value: string;
     };
-    children: (props: MetTableProps<T>) => React.ReactElement<MetTableProps<T>>;
+    children: (props: CustomTableProps<T>) => React.ReactElement<CustomTableProps<T>>;
 }
 
 export function ClientSidePagination<T>({ rows, searchFilter, children }: ClientSidePaginationProps<T>) {

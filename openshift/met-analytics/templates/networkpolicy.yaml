@@ -5,12 +5,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: met-analytics
-    app-group: met-app
+    app-group: dep-app
 spec:
   podSelector:
     matchLabels:
       app: {{ .Chart.Name }}
-      app-group: met-app
+      app-group: dep-app
   policyTypes:
   - Ingress
   ingress:
@@ -24,4 +24,4 @@ spec:
     - podSelector:
         matchLabels:
           app: met-analytics
-          app-group: met-app
+          app-group: dep-app

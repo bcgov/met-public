@@ -10,7 +10,7 @@ from analytics_api.models.survey import Survey as EtlSurveyModel
 from analytics_api.utils.util import FormIoComponentType
 from dagster import Out, Output, op
 from datetime import datetime, timezone
-from met_api.models.survey import Survey as MetSurveyModel
+from met_api.models.survey import Survey as SurveyModel
 from sqlalchemy import func
 
 
@@ -64,15 +64,15 @@ def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
     for last_run_cycle_time in survey_last_run_cycle_time:
 
         context.log.info("started extracting new data from survey table")
-        new_survey = session.query(MetSurveyModel).filter(
-            MetSurveyModel.created_date > last_run_cycle_time).all()
+        new_survey = session.query(SurveyModel).filter(
+            SurveyModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info(
                 "started extracting updated data from survey table")
-            updated_survey = session.query(MetSurveyModel).filter(
-                MetSurveyModel.updated_date > last_run_cycle_time,
-                MetSurveyModel.updated_date != MetSurveyModel.created_date).all()
+            updated_survey = session.query(SurveyModel).filter(
+                SurveyModel.updated_date > last_run_cycle_time,
+                SurveyModel.updated_date != SurveyModel.created_date).all()
 
     yield Output(new_survey, "new_survey")
 

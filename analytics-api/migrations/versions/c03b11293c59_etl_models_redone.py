@@ -44,7 +44,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('source_survey_id', sa.Integer(), nullable=True),
                     sa.Column('name', sa.String(length=100), nullable=True),
-                    sa.Column('engagement_id', sa.Integer(), nullable=True, comment='Source System Engagement Id.MET DB Eng Id'),
+                    sa.Column('engagement_id', sa.Integer(), nullable=True, comment='foreign key to engagement table'),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_table('request_type_radio',

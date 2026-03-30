@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { HeadCell } from 'components/common/Table/types';
 import { BodyText } from 'components/common/Typography';
 import { Skeleton } from '@mui/material';
@@ -77,7 +77,7 @@ const CommentTable = () => {
 
     return (
         <>
-            <MetTable
+            <CustomTable
                 headCells={headCells}
                 rows={transformedArray}
                 hideHeader={true}

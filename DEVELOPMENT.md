@@ -9,9 +9,9 @@ The below docker compose command will setup the initial database structure and r
 docker compose -f ./tools/postgres/docker-compose.yml up -d
 ```
 
-⚠️ Note that the following sections assume your working directory is the listed component's root directory (e.g. `met-api`, `met-web`)
+⚠️ Note that the following sections assume your working directory is the listed component's root directory (e.g. `api/`, `web/`)
 
-## met-web
+## web
 
 Create a .env file based on the sample.env
 
@@ -33,7 +33,7 @@ Running the unit test:
 npm run test
 ```
 
-## met-api
+## api
 
 ## analytics-api
 
@@ -75,7 +75,7 @@ make port-forward
 oc port-forward svc/notify-api 8081:8080 -n e903c2-dev
 ```
 
-## met-cron
+## cron
 
 Create a .env file based on the sample.env
 
@@ -95,7 +95,7 @@ make run_closeout
 make run_publish
 ```
 
-## met-etl
+## etl
 
 Create a .env file based on the sample.env
 
@@ -107,7 +107,7 @@ docker compose up
 
 ## redash
 
-A custom redash project is used for some of the dashboards whithin MET.
+A custom redash project is used for some of the dashboards within the platform.
 
 To start an instance clone the following repository:
 

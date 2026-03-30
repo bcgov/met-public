@@ -3,9 +3,9 @@ from sqlalchemy import func
 from datetime import datetime, timezone
 
 from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
-from met_api.models.submission import Submission as MetSubmissionModel
-from met_api.models.survey import Survey as MetSurveyModel
-from met_api.models.participant import Participant as MetParticipantModel
+from met_api.models.submission import Submission as SubmissionModel
+from met_api.models.survey import Survey as SurveyModel
+from met_api.models.participant import Participant as ParticipantModel
 from analytics_api.models.response_type_option import (
     ResponseTypeOption as EtlResponseTypeOptionModel
 )
@@ -85,19 +85,19 @@ def extract_submission(
     for last_run_cycle_time in submission_last_run_cycle_time:
 
         context.log.info("started extracting new data from submission table")
-        new_submission = session.query(MetSubmissionModel).filter(
-            MetSubmissionModel.created_date > last_run_cycle_time).all()
+        new_submission = session.query(SubmissionModel).filter(
+            SubmissionModel.created_date > last_run_cycle_time).all()
 
 # commenting out the logic for updated submission, this is not needed as of now
         if last_run_cycle_time > DEFAULT_DATETIME:
             context.log.info(
                 "started extracting updated data from submission table")
             updated_submission = session.query(
-                MetSubmissionModel
-            ).filter(MetSubmissionModel.updated_date >
+                SubmissionModel
+            ).filter(SubmissionModel.updated_date >
                      last_run_cycle_time,
-                     MetSubmissionModel.updated_date !=
-                     MetSubmissionModel.created_date).all()
+                     SubmissionModel.updated_date !=
+                     SubmissionModel.created_date).all()
 
     yield Output(new_submission, "new_submission")
 
@@ -132,8 +132,8 @@ def load_submission(
         # go thru each submission.
         for submission in all_submissions:
 
-            met_survey = metsession.query(MetSurveyModel).filter(
-                MetSurveyModel.id == submission.survey_id).first()
+            met_survey = metsession.query(SurveyModel).filter(
+                SurveyModel.id == submission.survey_id).first()
             etl_survey = met_etl_session.query(EtlSurveyModel).filter(
                 EtlSurveyModel.source_survey_id == submission.survey_id,
                 EtlSurveyModel.is_active).first()
@@ -205,8 +205,8 @@ def _extract_submission(
             met_survey.id)
         return
 
-    user = metsession.query(MetParticipantModel).filter(
-        MetParticipantModel.id == submission.participant_id).first()
+    user = metsession.query(ParticipantModel).filter(
+        ParticipantModel.id == submission.participant_id).first()
 
     context.log.info(
         'User : %s Found for submission id : %s with mappedd user id %s',
@@ -537,8 +537,8 @@ def load_user_response_details(
 
         for submission in all_submissions:
 
-            met_survey = metsession.query(MetSurveyModel).filter(
-                MetSurveyModel.id == submission.survey_id).first()
+            met_survey = metsession.query(SurveyModel).filter(
+                SurveyModel.id == submission.survey_id).first()
             etl_survey = session.query(EtlSurveyModel).filter(
                 EtlSurveyModel.source_survey_id == submission.survey_id,
                 EtlSurveyModel.is_active).first()

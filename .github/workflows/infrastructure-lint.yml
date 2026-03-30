@@ -17,10 +17,10 @@ on:
         options:
           - engagement-db
           - notify-api
-          - met-api
-          - met-web
+          - api
+          - web
           - analytics-api
-          - met-analytics
+          - analytics
           - locust
           - all
   workflow_call:
@@ -72,7 +72,7 @@ jobs:
             openshift/api/**
             openshift/web/**
             openshift/analytics-api/**
-            openshift/met-analytics/**
+            openshift/analytics/**
             openshift/dagster/**
             openshift/locust/**
 
@@ -83,10 +83,10 @@ jobs:
           declare -A chart_dirs=(
             [engagement-db]="openshift/db"
             [notify-api]="openshift/notify"
-            [met-api]="openshift/api"
-            [met-web]="openshift/web"
+            [api]="openshift/api"
+            [web]="openshift/web"
             [analytics-api]="openshift/analytics-api"
-            [met-analytics]="openshift/met-analytics"
+            [analytics]="openshift/analytics"
             [dagster]="openshift/dagster"
             [locust]="openshift/locust"
           )

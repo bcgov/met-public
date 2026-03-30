@@ -5,7 +5,7 @@ import {
     IconButton as MuiIconButton,
     useTheme,
 } from '@mui/material';
-import { globalFocusShadow, colors, elevations } from '../../common';
+import { globalFocusShadow, colors, elevations } from '..';
 import { isDarkColor } from 'utils';
 import { IconParams, IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -299,7 +299,7 @@ const TertiaryButton = ({
 };
 
 /**
- * The main MET-styled button component. Matches the MET design system styling
+ * The main DEP-styled button component. Matches the DEP design system styling
  * and provides a consistent interface for different button variants.
  * @param {ButtonProps} props - Button properties including variant, children, onClick, etc.
  * @param {('primary' | 'secondary' | 'tertiary')} props.variant - The variant of the button, can be 'primary', 'secondary', or 'tertiary'. Default is 'secondary'.

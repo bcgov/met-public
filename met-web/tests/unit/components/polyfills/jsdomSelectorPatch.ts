@@ -1,7 +1,7 @@
 const isInvalidSelectorError = (error: unknown): error is Error =>
     error instanceof Error && error.message.includes('is not a valid selector');
 
-const createEmptyNodeList = () => document.createElement('div').querySelectorAll('met-empty-selector');
+const createEmptyNodeList = () => document.createElement('div').querySelectorAll('dep-empty-selector');
 
 const swallowSelectorErrors = <T extends (...args: never[]) => unknown>(fn: T, fallback: () => ReturnType<T>): T => {
     return function patched(this: unknown, ...args: Parameters<T>): ReturnType<T> {

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const EnvironmentBanner = () => {
     const host = window.location.hostname;
+    // TODO: Replace this when implementing DEP-242
     const isTestEnvironment =
         host.startsWith('met-web-dev') ||
         host.startsWith('met-web-test') ||

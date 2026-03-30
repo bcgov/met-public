@@ -71,7 +71,7 @@ export const Routes: Route[] = [
         icon: faHouseUser,
     },
     {
-        name: 'MET Feedback',
+        name: 'Site Feedback',
         path: '/feedback',
         base: 'feedback',
         authenticated: true,

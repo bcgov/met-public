@@ -14,7 +14,7 @@ class Survey(BaseModel):  # pylint: disable=too-few-public-methods
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     source_survey_id = db.Column(db.Integer)
     name = db.Column(db.String(100))
-    engagement_id = db.Column(db.Integer, comment='Source System Engagement Id.MET DB Eng Id')
+    engagement_id = db.Column(db.Integer, comment='ID of the engagement this survey belongs to')
     generate_dashboard = db.Column(db.Boolean)
 
     @classmethod

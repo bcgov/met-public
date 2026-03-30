@@ -1,18 +1,18 @@
-# MET-WEB
+# DEP WEB
 
-React.js frontend application for The Modern Engagement Tool project.
+React.js frontend application for The Digital Engagement Platform project.
 
 ## Getting Started
 
 ### Development Environment
 
--   Install the following:
-    -   [Node.js](https://nodejs.org/en/)
--   Install Dependencies
-    -   Login to artifactory package registry
-        `npm login --registry=https://artifacts.developer.gov.bc.ca/artifactory/api/npm/ee90-font-awesome-pro-dev/ --auth-type=web --scope=@bcgov-artifactory`
-        -   Alternatively, edit your .npmrc with a username and password from a ServiceAccount
-    -   Run `npm install` in the root of the project (met-web)
+- Install the following:
+    - [Node.js](https://nodejs.org/en/)
+- Install Dependencies
+    - Login to artifactory package registry
+      `npm login --registry=https://artifacts.developer.gov.bc.ca/artifactory/api/npm/ee90-font-awesome-pro-dev/ --auth-type=web --scope=@bcgov-artifactory`
+        - Alternatively, edit your .npmrc with a username and password from a ServiceAccount
+    - Run `npm install` in the root of the project (`web/`)
 
 ## Environment Variables
 
@@ -24,7 +24,7 @@ The development scripts for this application allow customization via an environm
 
 The following commands support various development scenarios and needs.
 
-> _Note: you must be running the [API application](../met-api/README.md) concurrently._  
+> _Note: you must be running the [API application](../api/README.md) concurrently._  
 > `npm start`
 >
 > Runs the react.js application.  
@@ -57,4 +57,4 @@ These commands are here to support the continuous integration and other esoteric
 
 Ensure the latest version of [VS Code](https://code.visualstudio.com) and VS Code [Chrome Debugger Extension](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) is installed.
 
-The [`launch.json`](.vscode/launch.json) is already configured with a launch task (MET-WEB Launch) that allows you to launch chrome in a debugging capacity and debug through code within the editor.
+The [`launch.json`](.vscode/launch.json) is already configured with a launch task (Engagement WEB Launch) that allows you to launch chrome in a debugging capacity and debug through code within the editor.

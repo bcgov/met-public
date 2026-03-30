@@ -30,7 +30,7 @@ ARG user=pay
 RUN useradd -U -ms /bin/bash -u $uid $user \
     && usermod -a -G root $user
 
-ENV HOME=/met-cron
+ENV HOME=/cron
 
 RUN mkdir $HOME && chmod 755 $HOME
 
@@ -47,7 +47,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install .
 
 # Set Python path
-ENV PYTHONPATH=/met-cron/src
+ENV PYTHONPATH=/cron/src
 
 
 # Set ownership and permissions
@@ -57,7 +57,7 @@ RUN chown -R $user:root $HOME \
     && chmod -R ug+rw $HOME \
     && chmod ug+x $HOME/*.sh \
     && chmod g+rw /etc/passwd \
-    && chmod g-w $HOME/cron/crontab
+    && chmod g-w $HOME/config/crontab
 
 USER $user
 ENTRYPOINT ["bash", "docker-entrypoint.sh"]

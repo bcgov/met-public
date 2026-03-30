@@ -21,7 +21,7 @@ export const DetailsContainer = ({ children, ...formContainerProps }: GridProps)
             // Set as a container unless explicitly disabled
             container={formContainerProps.container === false ? false : true}
             size={12}
-            className="met-layout-details-container"
+            className="dep-layout-details-container"
             padding={{ xs: 2, sm: 4 }}
             direction="column"
             justifyContent="center"
@@ -56,7 +56,7 @@ export const Detail = ({ children, invisible, ...containerProps }: { invisible?:
             size={12}
             // Set as a container unless explicitly disabled
             container={containerProps.container === false ? false : true}
-            className="met-layout-detail"
+            className="dep-layout-detail"
             direction="column"
             padding={2}
             rowSpacing={1}

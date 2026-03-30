@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "8cbabcb2-0fd9-4771-9299-0c83ac125853",
-		"name": "MET",
+		"name": "Digital Engagement Platform API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23501006"
 	},
@@ -189,7 +189,7 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
@@ -204,7 +204,7 @@
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
@@ -372,7 +372,7 @@
                             "oauth2": [
                                 {
                                     "key": "clientId",
-                                    "value": "met-web",
+                                    "value": "engagement-web",
                                     "type": "string"
                                 },
                                 {
@@ -387,7 +387,7 @@
                                 },
                                 {
                                     "key": "redirect_uri",
-                                    "value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+                                    "value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
                                     "type": "string"
                                 },
                                 {
@@ -479,7 +479,7 @@
                                 },
                                 {
                                     "key": "clientId",
-                                    "value": "met-web",
+                                    "value": "engagement-web",
                                     "type": "string"
                                 },
                                 {
@@ -494,7 +494,7 @@
                                 },
                                 {
                                     "key": "redirect_uri",
-                                    "value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+                                    "value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
                                     "type": "string"
                                 },
                                 {
@@ -562,7 +562,7 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
@@ -577,7 +577,7 @@
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
@@ -667,7 +667,7 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
@@ -682,7 +682,7 @@
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
@@ -763,7 +763,7 @@
 								},
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
@@ -778,7 +778,7 @@
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
@@ -866,7 +866,7 @@
 								},
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
@@ -881,7 +881,7 @@
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://engagement-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{

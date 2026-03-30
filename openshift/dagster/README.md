@@ -77,8 +77,8 @@ The `dagster-vault-secrets` Secret contains:
 
 - `DAGSTER_DB_USER` / `DAGSTER_DB_PASSWORD` - Dagster database credentials
 - `DAGSTER_PG_PASSWORD` - PostgreSQL password for Dagster
-- `MET_DB_*` - MET database connection info
-- `MET_ANALYTICS_DB_*` - Analytics database connection info
+- `ENGAGEMENT_DB_*` - MET database connection info
+- `ANALYTICS_DB_*` - Analytics database connection info
 
 All secrets are sourced from Vault at `{engine}{path}/engagement-patroni`.
 

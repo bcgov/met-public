@@ -4,6 +4,7 @@ import { EngagementHero } from './EngagementHero';
 import { EngagementDescription } from './EngagementDescription';
 import { EngagementDetailsTabs } from './EngagementDetailsTabs';
 import { EngagementSurveyBlock } from './EngagementSurveyBlock';
+import { EngagementSubscribeBlock } from './EngagementSubscribeBlock';
 import { SuggestedEngagements } from './SuggestedEngagements';
 
 export enum EngagementViewSections {
@@ -26,6 +27,7 @@ export const PublicEngagementView = () => {
             <EngagementDescription />
             <EngagementDetailsTabs />
             <EngagementSurveyBlock />
+            <EngagementSubscribeBlock />
             <SuggestedEngagements />
         </main>
     );

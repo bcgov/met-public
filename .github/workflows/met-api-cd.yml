@@ -1,11 +1,11 @@
-name: MET API CD
+name: API CD
 run-name: Build API image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:
       - main
     paths:
-      - "met-api/**"
+      - "api/**"
   workflow_dispatch:
     inputs:
       environment:
@@ -21,10 +21,10 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./met-api
+    working-directory: ./api
 
 env:
-  APP_NAME: "met-api"
+  APP_NAME: "api"
   TAG_NAME: "${{ github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
@@ -34,7 +34,7 @@ env:
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
-  met-api-cd:
+  api-cd:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'

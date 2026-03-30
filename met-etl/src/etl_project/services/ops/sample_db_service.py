@@ -14,7 +14,7 @@ def run_sample_db_test(context):
     default_datetime = datetime(1900, 1, 1, 15, 59, 56, 721228)
     new_participants = met_db_session.query(ParticipantModel).filter(
         ParticipantModel.created_date > default_datetime).all()
-    context.log.info('MET DB')
+    context.log.info('Found new participants since default datetime:')
     context.log.info(new_participants)
 
     met_etl_db_session = context.resources.met_etl_db_session
@@ -22,7 +22,7 @@ def run_sample_db_test(context):
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'survey', EtlRunCycleModel.success).first()
 
-    context.log.info('MET ETL DB')
+    context.log.info('Last successful survey ETL run cycle time:')
     context.log.info(survey_last_run_cycle_time)
 
     yield Output(new_participants, "newparticipants")
