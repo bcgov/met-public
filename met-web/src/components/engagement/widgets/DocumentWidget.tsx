@@ -131,13 +131,12 @@ const DocumentIcon = (documentItem: DocumentItem) => {
     if (documentItem.type === DOCUMENT_TYPE.FOLDER) {
         return null;
     } else {
-        const Icon = (
+        return (
             <FontAwesomeIcon
                 icon={getFileIcon(documentItem.url ?? '', documentItem.is_uploaded ?? false)}
                 style={{ height: iconSize, maxWidth: iconSize }}
             />
         );
-        return () => Icon;
     }
 };
 
@@ -164,9 +163,7 @@ const RecursiveDocumentTree = ({ documentItem, expandedItems }: DocumentTreeProp
             sx={treeItemStyles(documentItem.type === DOCUMENT_TYPE.FOLDER)}
             itemId={documentItem.id.toString()}
             label={<DocumentLabel documentItem={documentItem} expandedItems={expandedItems} />}
-            slots={{
-                icon: DocumentIcon(documentItem),
-            }}
+            slots={{ icon: () => DocumentIcon(documentItem) }}
         >
             {documentItem.children?.map((document: DocumentItem) => (
                 <RecursiveDocumentTree key={document.id} documentItem={document} />
