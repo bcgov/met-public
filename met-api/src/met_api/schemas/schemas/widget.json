@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://met.gov.bc.ca/.well_known/schemas/widget",
+  "$id": "https://dep.gov.bc.ca/.well_known/schemas/widget",
   "type": "object",
   "title": "The root schema",
   "description": "The root schema comprises the entire JSON document.",

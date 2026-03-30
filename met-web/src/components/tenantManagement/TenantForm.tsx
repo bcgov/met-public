@@ -228,7 +228,7 @@ export const TenantForm = ({
                                         placeholder="shortname"
                                         startAdornment={
                                             <BodyText bold sx={{ mr: '-8px' }}>
-                                                met.gov.bc.ca/
+                                                dep.gov.bc.ca/
                                             </BodyText>
                                         }
                                     />
