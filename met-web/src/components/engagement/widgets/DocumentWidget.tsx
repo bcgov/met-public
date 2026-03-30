@@ -1,9 +1,9 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { Grid2 as Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { DocumentItem, DOCUMENT_TYPE } from 'models/document';
 import { useLazyGetDocumentsQuery } from 'apiManager/apiSlices/documents';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { BaseTheme } from 'styles/Theme';
 import { Await } from 'react-router';
 import { SimpleTreeView as TreeView } from '@mui/x-tree-view/SimpleTreeView';
@@ -16,7 +16,7 @@ import {
     faFolderOpen,
     faFileVideo,
     faFileMusic,
-    faFileZip,
+    faFileZipper,
     faFile,
     faFileDoc,
     faFileSpreadsheet,
@@ -26,12 +26,19 @@ import {
     faChainBroken,
     faChevronDown,
     faChevronRight,
+    faFaceThinking,
 } from '@fortawesome/pro-regular-svg-icons';
 import { Link } from 'components/common/Navigation';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 interface DocumentTreeProps {
     documentItem: DocumentItem;
+    expandedItems?: string[]; // Pass down the list of expanded item IDs to determine folder icon state
 }
+
+const iconSize = '20px';
+const folderSize = '24px';
+const chevronSize = '14px';
 
 const getFileIcon = (url: string, isFile: boolean) => {
     if (!isFile) {
@@ -45,7 +52,7 @@ const getFileIcon = (url: string, isFile: boolean) => {
         case 'pdf':
             return faFilePdf;
         case 'zip':
-            return faFileZip;
+            return faFileZipper;
         case 'mid':
         case 'midi':
             return faFileMusic;
@@ -85,81 +92,67 @@ const getFileIcon = (url: string, isFile: boolean) => {
     }
 };
 
-const treeItemStyles = {
+const treeItemStyles = (isFolder: boolean) => ({
     color: 'text.primary',
-    '& div.MuiTreeItem-label': {
-        padding: '0.5em',
-        paddingLeft: '1em',
+    '& .MuiTreeItem-label': {
+        lineHeight: '28px',
+        fontWeight: isFolder ? 700 : 400,
     },
     '& div.MuiTreeItem-content': {
-        borderRadius: '8px',
+        padding: '0.25em 0.75em',
+        marginTop: '0.25em',
+        marginBottom: '0.25em',
     },
     userSelect: 'none',
-};
+});
 
 const CollapseIcon = () => (
-    <>
-        <FontAwesomeIcon
-            icon={faChevronDown}
-            style={{
-                fontSize: '12px',
-                color: BaseTheme.palette.primary.main,
-                marginRight: '0.5em',
-                marginLeft: '1em',
-                marginTop: '0.2em',
-            }}
-        />
-        <FontAwesomeIcon
-            icon={faFolderOpen}
-            style={{
-                color: BaseTheme.palette.primary.main,
-            }}
-        />
-    </>
+    <FontAwesomeIcon
+        icon={faChevronDown}
+        style={{
+            color: BaseTheme.palette.primary.main,
+            width: chevronSize,
+            height: chevronSize,
+        }}
+    />
 );
 
 const ExpandIcon = () => (
-    <>
-        <FontAwesomeIcon
-            icon={faChevronRight}
-            style={{
-                fontSize: '12px',
-                marginRight: '0.5em',
-                marginLeft: '1em',
-                marginTop: '0.2em',
-            }}
-        />
-        <FontAwesomeIcon
-            icon={faFolder}
-            style={{
-                fontSize: '18px',
-            }}
-        />
-    </>
+    <FontAwesomeIcon
+        icon={faChevronRight}
+        style={{
+            width: chevronSize,
+            height: chevronSize,
+        }}
+    />
 );
 
 const DocumentIcon = (documentItem: DocumentItem) => {
-    if (documentItem.type === DOCUMENT_TYPE.FILE) {
-        return () => <></>;
+    if (documentItem.type === DOCUMENT_TYPE.FOLDER) {
+        return null;
     } else {
         return () => (
             <FontAwesomeIcon
                 icon={getFileIcon(documentItem.url ?? '', documentItem.is_uploaded ?? false)}
-                style={{ fontSize: '18px' }}
+                style={{ height: iconSize, maxWidth: iconSize }}
             />
         );
     }
 };
 
-const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
+const RecursiveDocumentTree = ({ documentItem, expandedItems }: DocumentTreeProps) => {
     const renderEmptyFolder = () => (
         <TreeItem
             sx={{ '& div.MuiTreeItem-content.Mui-disabled': { cursor: 'not-allowed' } }}
             disabled
             itemId={`${documentItem.id}-empty`}
+            color="text.secondary"
+            slots={{
+                icon: () => <FontAwesomeIcon icon={faFaceThinking} style={{ height: iconSize, color: 'inherit' }} />,
+            }}
             label={
                 <BodyText color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                    [Empty Folder]
+                    Folder is empty
                 </BodyText>
             }
         />
@@ -167,9 +160,9 @@ const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
 
     return (
         <TreeItem
-            sx={treeItemStyles}
+            sx={treeItemStyles(documentItem.type === DOCUMENT_TYPE.FOLDER)}
             itemId={documentItem.id.toString()}
-            label={<DocumentLabel documentItem={documentItem} />}
+            label={<DocumentLabel documentItem={documentItem} expandedItems={expandedItems} />}
             slots={{
                 icon: DocumentIcon(documentItem),
             }}
@@ -182,15 +175,39 @@ const RecursiveDocumentTree = ({ documentItem }: DocumentTreeProps) => {
     );
 };
 
-const DocumentLabel = ({ documentItem }: DocumentTreeProps) =>
+const DocumentLabel = ({ documentItem, expandedItems }: DocumentTreeProps) =>
     documentItem.type === DOCUMENT_TYPE.FOLDER ? (
-        <BodyText color="inherit" fontWeight="inherit">
+        <BodyText color="inherit" fontWeight="inherit" lineHeight="inherit" my="2px">
+            <FontAwesomeIcon
+                icon={expandedItems?.includes(documentItem.id.toString()) ? faFolderOpen : faFolder}
+                style={{
+                    verticalAlign: '-5px',
+                    marginRight: '0.75em',
+                    color: expandedItems?.includes(documentItem.id.toString())
+                        ? BaseTheme.palette.primary.main
+                        : 'inherit',
+                    height: folderSize,
+                    width: folderSize,
+                }}
+            />
             {documentItem.title}
         </BodyText>
     ) : (
-        <Link to={documentItem.url ?? ''} underline="hover" color="#292929">
-            <BodyText>{documentItem.title}</BodyText>
-        </Link>
+        <BodyText lineHeight="inherit">
+            <Link
+                to={documentItem.url ?? ''}
+                underline="hover"
+                color="text.primary"
+                lineHeight="inherit"
+                target="_blank"
+            >
+                {documentItem.title}
+            </Link>
+            <FontAwesomeIcon
+                icon={faArrowUpRightFromSquare}
+                style={{ marginLeft: '0.5em', height: '12px', width: '12px', verticalAlign: 'baseline' }}
+            />
+        </BodyText>
     );
 
 // Skeleton component for the DocumentWidget
@@ -217,37 +234,52 @@ interface DocumentWidgetProps {
 }
 const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
     const [getDocuments] = useLazyGetDocumentsQuery();
+    const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const documents = useMemo(() => getDocuments(widget.id, false).unwrap(), [widget.id]);
 
     return (
         <Grid container size={12} gap="1rem">
             <Grid size={12}>
-                <Header3 weight="thin">{widget.title}</Header3>
+                <Heading3 weight="thin">{widget.title}</Heading3>
             </Grid>
             <Grid
                 size={12}
                 component={Paper}
+                direction="column"
                 sx={{
                     mt: '1.5rem',
                     bgcolor: 'white',
-                    padding: '2em',
+                    padding: '2em 1em',
                     borderRadius: '16px',
                     border: '1px solid',
                     borderColor: 'blue.90',
-                    display: 'flex', // Use flexbox to align content
-                    flexDirection: 'column',
                 }}
             >
                 <section aria-label="Document Tree Widget" style={{ flexGrow: 1 }}>
                     <ThemeProvider theme={BaseTheme}>
                         <Suspense fallback={<DocumentWidgetSkeleton />}>
-                            <Grid container spacing={1} rowSpacing={1} size={12} paddingTop={2} flexGrow={1}>
+                            <Grid container spacing={1} rowSpacing={1} size={12} flexGrow={1}>
                                 <TreeView
+                                    onItemExpansionToggle={(_event, itemId, expanded) => {
+                                        setExpandedItems((prevExpanded) =>
+                                            expanded
+                                                ? [...prevExpanded, itemId]
+                                                : prevExpanded.filter((id) => id !== itemId),
+                                        );
+                                    }}
                                     sx={{
+                                        mt: '-0.5rem',
+                                        mb: '-0.5rem',
                                         width: '100%',
                                         '& .Mui-expanded .MuiTreeItem-label': {
                                             color: BaseTheme.palette.primary.main,
-                                            fontWeight: 700,
+                                        },
+                                        '& .MuiTreeItem-iconContainer': {
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-start',
+                                        },
+                                        '& .MuiTreeItem-groupTransition': {
+                                            marginLeft: '3.75em',
                                         },
                                     }}
                                     slots={{
@@ -259,7 +291,11 @@ const DocumentWidget = ({ widget }: DocumentWidgetProps) => {
                                         {(documents: DocumentItem[]) => {
                                             return documents.map((document: DocumentItem) => {
                                                 return (
-                                                    <RecursiveDocumentTree documentItem={document} key={document.id} />
+                                                    <RecursiveDocumentTree
+                                                        expandedItems={expandedItems}
+                                                        documentItem={document}
+                                                        key={document.id}
+                                                    />
                                                 );
                                             });
                                         }}

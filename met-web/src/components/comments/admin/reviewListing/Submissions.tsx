@@ -18,7 +18,7 @@ import { CommentListingContext } from './CommentListingContext';
 import { useAppSelector } from 'hooks';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
-import { Header1 } from 'components/common/Typography';
+import { Heading1 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { RouterLinkRenderer } from 'components/common/Navigation/Link';
 
@@ -168,9 +168,9 @@ const Submissions = () => {
             </Grid>
 
             <Grid size={12}>
-                <Header1>
+                <Heading1>
                     <strong>{`${survey.name} Comments`}</strong>
-                </Header1>
+                </Heading1>
                 <MetTable
                     headCells={headCells}
                     rows={submissions}

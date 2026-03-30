@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { colors } from 'components/common';
-import { BodyText, Header2, Header3 } from 'components/common/Typography';
-import { Grid2 as Grid, Skeleton, useTheme } from '@mui/material';
+import { BodyText, Heading2, Heading3 } from 'components/common/Typography';
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -20,7 +20,6 @@ import {
     faDailymotion,
 } from '@fortawesome/free-brands-svg-icons';
 import { faQuestionCircle, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-import { Palette } from 'styles/Theme';
 
 interface VideoWidgetProps {
     widget: Widget;
@@ -39,9 +38,7 @@ interface VideoOverlayProps {
 }
 
 const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
-    const theme = useTheme();
     const dispatch = useAppDispatch();
-    const isDarkMode = 'dark' === theme.palette.mode;
 
     const [videoWidget, setVideoWidget] = useState<VideoWidget | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -83,9 +80,9 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
         return (
             <Grid container size={12} justifyContent="flex-start" spacing={3}>
                 <Grid size={12}>
-                    <Header2>
+                    <Heading2>
                         <Skeleton variant="rectangular" />
-                    </Header2>
+                    </Heading2>
                 </Grid>
                 <Grid size={12}>
                     <Skeleton variant="rectangular" height="20em" />
@@ -148,25 +145,15 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
     return (
         <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-            <Grid size={12} sx={{ height: 0 === widget.title.length ? '0px' : 'auto' }}>
-                <Header3
-                    fontWeight="lighter"
-                    fontSize="1.5rem"
-                    marginBottom="0.2rem"
-                    marginTop="3.3rem"
-                    color={isDarkMode ? colors.surface.white : Palette.text.primary}
-                >
+            <Grid size={12} sx={{ height: !widget.title.length ? '0px' : 'auto' }}>
+                <Heading3 fontWeight="lighter" fontSize="1.5rem">
                     {widget.title}
-                </Header3>
+                </Heading3>
             </Grid>
             <Grid size={12}>
-                <BodyText
-                    style={{ marginBottom: '2.5rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
-                >
-                    {videoWidget.description}
-                </BodyText>
+                <BodyText mb="1.5rem">{videoWidget.description}</BodyText>
             </Grid>
-            <Grid size={12} container pt={0} mt={0} spacing={0}>
+            <Grid size={12} container pt={0} mt={0} spacing={0} position="relative">
                 <When condition={showOverlay && 'Mixcloud' !== videoSource}>
                     <VideoOverlay
                         videoOverlayTitle={videoOverlayTitle}
@@ -174,7 +161,15 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                         videoSources={videoSources}
                     />
                 </When>
-                <Grid borderRadius="16px" overflow="hidden" position="relative" size={12} paddingTop="56.25%">
+                <Grid
+                    borderRadius="16px"
+                    overflow="hidden"
+                    position="relative"
+                    size={12}
+                    paddingTop="56.25%"
+                    height="100%"
+                    bgcolor="black"
+                >
                     {/* Overlay covers play button for Mixcloud so it shouldn't be displayed */}
                     <ReactPlayer
                         onDuration={(duration) => {
@@ -199,12 +194,8 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
                     />
                 </Grid>
             </Grid>
-            <Grid size={12} sx={{ pt: '0.5rem !important' }}>
-                <BodyText
-                    style={{ fontSize: '0.875rem', color: isDarkMode ? colors.surface.white : Palette.text.primary }}
-                >
-                    {videoDuration}
-                </BodyText>
+            <Grid size={12} pt="0.5rem">
+                <BodyText>{videoDuration}</BodyText>
             </Grid>
         </Grid>
     );
@@ -214,19 +205,37 @@ const VideoOverlay = ({ videoOverlayTitle, source, videoSources }: VideoOverlayP
     return (
         <Grid
             container
-            marginBottom="-3.9rem"
-            bgcolor="black"
             size={12}
-            borderRadius="16px 16px 0 0"
-            zIndex="10000"
-            padding="1rem"
+            height="0"
+            overflow="visible"
+            position="absolute"
+            top={0}
+            left={0}
+            justifyContent="center"
+            alignItems="center"
         >
-            <Grid container alignItems="center" size={12}>
-                <FontAwesomeIcon
-                    icon={videoSources.find((vs) => vs.name === source)?.icon || faQuestionCircle}
-                    style={{ fontSize: '1.9rem', paddingRight: '0.65rem', color: colors.surface.white }}
-                />{' '}
-                <BodyText size="small">{videoOverlayTitle}</BodyText>
+            <Grid
+                container
+                size={12}
+                borderRadius="16px 16px 0 0"
+                zIndex="10000"
+                padding="0.65rem 1rem"
+                bgcolor="black"
+            >
+                <Grid container alignItems="center" size={12}>
+                    <BodyText size="small" textOverflow="ellipsis" whiteSpace="nowrap" overflow="hidden" width="100%">
+                        <FontAwesomeIcon
+                            icon={videoSources.find((vs) => vs.name === source)?.icon || faQuestionCircle}
+                            style={{
+                                fontSize: '1.9rem',
+                                paddingRight: '0.65rem',
+                                color: colors.surface.white,
+                                verticalAlign: 'middle',
+                            }}
+                        />
+                        {videoOverlayTitle}
+                    </BodyText>
+                </Grid>
             </Grid>
         </Grid>
     );

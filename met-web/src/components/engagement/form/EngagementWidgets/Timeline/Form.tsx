@@ -14,7 +14,7 @@ import { patchTimeline, postTimeline } from 'services/widgetService/TimelineServ
 import { WidgetTitle } from '../WidgetTitle';
 import { TimelineEvent } from 'models/timelineWidget';
 import { WidgetLocation } from 'models/widget';
-import { Header3 } from 'components/common/Typography';
+import { Heading3 } from 'components/common/Typography';
 
 interface DetailsForm {
     title: string;
@@ -263,7 +263,7 @@ const Form = () => {
                                         mb={'1em'}
                                         size={12}
                                     >
-                                        <Header3 weight="bold">{`Event ${index + 1}`}</Header3>
+                                        <Heading3 bold>{`Event ${index + 1}`}</Heading3>
 
                                         <Grid size={12}>
                                             <BodyText bold>Event Description</BodyText>

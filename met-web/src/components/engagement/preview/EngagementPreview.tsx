@@ -1,6 +1,6 @@
-import React, { Suspense, useEffect, useState, useRef } from 'react';
-import { Await, useLoaderData, useRevalidator } from 'react-router';
-import { Box, CircularProgress } from '@mui/material';
+import React, { useEffect, useState, useRef } from 'react';
+import { useLoaderData, useRevalidator } from 'react-router';
+import { Box } from '@mui/material';
 import PreviewControlBar from './PreviewControlBar';
 import PreviewContent from './PreviewContent';
 import { SubmissionStatusTypes } from './PreviewStateTabs';
@@ -121,6 +121,7 @@ export const EngagementPreview: React.FC = () => {
     const [previewState, setPreviewState] = useState<SubmissionStatusTypes>('Upcoming');
     const [isReloading, setIsReloading] = useState(false);
     const [contentVersion, setContentVersion] = useState(0);
+    const [resolvedEngagement, setResolvedEngagement] = useState<Engagement | null>(null);
 
     const getPreviewStateFromEngagement = (engagement: Engagement): SubmissionStatusTypes => {
         switch (engagement.submission_status) {
@@ -177,6 +178,7 @@ export const EngagementPreview: React.FC = () => {
         loaderData.engagement
             .then((engagement) => {
                 if (!isMounted) return;
+                setResolvedEngagement(engagement);
                 setPreviewState(getPreviewStateFromEngagement(engagement));
             })
             .catch(() => {
@@ -292,49 +294,32 @@ export const EngagementPreview: React.FC = () => {
         };
     }, [contentVersion]);
 
+    const isComplete = resolvedEngagement ? checkEngagementCompleteness(resolvedEngagement) : false;
+
+    const previewLoaderData: EngagementLoaderPublicData = {
+        ...loaderData,
+        engagement: resolvedEngagement
+            ? Promise.resolve({
+                  ...resolvedEngagement,
+                  submission_status: getSubmissionStatusId(previewState),
+              })
+            : loaderData.engagement,
+    };
+
     return (
-        <Suspense
-            fallback={
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                    <CircularProgress />
-                </Box>
-            }
-        >
-            <Await key={contentVersion} resolve={loaderData.engagement}>
-                {(engagement: Engagement) => {
-                    const isComplete = checkEngagementCompleteness(engagement);
-
-                    // Create preview engagement with selected state
-                    const previewEngagement: Engagement = {
-                        ...engagement,
-                        submission_status: getSubmissionStatusId(previewState),
-                    };
-
-                    const previewLoaderData: EngagementLoaderPublicData = {
-                        ...loaderData,
-                        engagement: Promise.resolve(previewEngagement),
-                    };
-
-                    return (
-                        <PreviewLoaderDataProvider loaderData={previewLoaderData}>
-                            <>
-                                <PreviewControlBar
-                                    engagement={engagement}
-                                    previewState={previewState}
-                                    onStateChange={setPreviewState}
-                                    onReload={handleReload}
-                                    isReloading={isReloading}
-                                    isComplete={isComplete}
-                                />
-                                <PublicHeader />
-                                <PreviewContent key={contentVersion} previewStateType={previewState} />
-                                <MeasurementBar />
-                            </>
-                        </PreviewLoaderDataProvider>
-                    );
-                }}
-            </Await>
-        </Suspense>
+        <PreviewLoaderDataProvider loaderData={previewLoaderData}>
+            <PreviewControlBar
+                engagement={resolvedEngagement ?? undefined}
+                previewState={previewState}
+                onStateChange={setPreviewState}
+                onReload={handleReload}
+                isReloading={isReloading}
+                isComplete={isComplete}
+            />
+            <PublicHeader />
+            <PreviewContent key={contentVersion} previewStateType={previewState} />
+            <MeasurementBar />
+        </PreviewLoaderDataProvider>
     );
 };
 

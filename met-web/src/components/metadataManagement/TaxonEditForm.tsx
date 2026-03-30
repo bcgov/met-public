@@ -35,7 +35,7 @@ import { useForm, SubmitHandler, Controller, FormProvider } from 'react-hook-for
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Button } from 'components/common/Input/Button';
 import { faFilterSlash, faSave } from '@fortawesome/pro-regular-svg-icons';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 
 const HelpTooltip = ({ children }: { children: string | string[] }) => {
     if (Array.isArray(children)) children = children.join(' ');
@@ -208,7 +208,7 @@ const TaxonEditForm = ({ taxon }: { taxon: MetadataTaxon }): JSX.Element => {
                                     <FontAwesomeIcon icon={faPen} style={{ fontSize: '20px' }} />
                                 </Avatar>
                             )}
-                            <Header3>Edit taxon</Header3>
+                            <Heading3>Edit taxon</Heading3>
                         </Grid>
                         <Grid size="auto" justifySelf="flex-end">
                             <Button

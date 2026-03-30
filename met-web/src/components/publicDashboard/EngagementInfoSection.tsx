@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid2 as Grid, Stack } from '@mui/material';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { EngagementStatusChip } from 'components/common/Indicators';
 import { Editor } from 'react-draft-wysiwyg';
 import dayjs from 'dayjs';
@@ -52,7 +52,7 @@ const EngagementInfoSection = ({ savedEngagement, children }: EngagementInfoSect
                 spacing={1}
             >
                 <Grid size={12} sx={{ maxHeight: '15em', overflowY: 'auto', overflowX: 'auto' }}>
-                    <Header1>{name}</Header1>
+                    <Heading1>{name}</Heading1>
                     <Grid size={12}>
                         <Editor editorState={getEditorStateFromRaw(rich_description)} readOnly={true} toolbarHidden />
                     </Grid>

@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { getLanguages, getTenantLanguages, postTenantLanguage, deleteTenantLanguage } from 'services/languageService';
 import { Language } from 'models/language';
-import { Header1, BodyText } from 'components/common/Typography/';
+import { Heading1, BodyText } from 'components/common/Typography/';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ResponsiveContainer } from 'components/common/Layout';
@@ -89,7 +89,7 @@ const LanguageAdminPanel = () => {
         <ResponsiveContainer component="main" data-testid="language-admin-panel">
             <AutoBreadcrumbs />
             <Grid size={12}>
-                <Header1>Languages</Header1>
+                <Heading1>Languages</Heading1>
             </Grid>
             <Grid size={12}>
                 <BodyText>Select which languages are available for translations.</BodyText>

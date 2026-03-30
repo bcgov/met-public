@@ -4,7 +4,7 @@ import { useNavigate, useRouteLoaderData } from 'react-router';
 import { useAppSelector } from 'hooks';
 import { PermissionsGate } from 'components/permissionsGate';
 import { USER_ROLES } from 'services/userService/constants';
-import { Header1 } from 'components/common/Typography';
+import { Heading1 } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
 
 export const PreviewBanner = () => {
@@ -20,7 +20,7 @@ export const PreviewBanner = () => {
         <Box sx={{ backgroundColor: 'secondary.light' }}>
             <Grid container direction="row" justifyContent="flex-end" alignItems="flex-start" padding={4}>
                 <Grid size={12}>
-                    <Header1 sx={{ mb: 2 }}>Preview Survey</Header1>
+                    <Heading1 sx={{ mb: 2 }}>Preview Survey</Heading1>
                 </Grid>
                 <Grid sx={{ pt: 2 }} size={12} container direction="row">
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} width="100%" justifyContent="flex-start">

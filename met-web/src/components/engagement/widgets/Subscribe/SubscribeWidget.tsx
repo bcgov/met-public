@@ -10,7 +10,7 @@ import { Case, Switch, Unless } from 'react-if';
 import EmailListSection from './EmailListSection';
 import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
-import { Header2 } from 'components/common/Typography';
+import { Heading2 } from 'components/common/Typography';
 import { useLoaderData } from 'react-router';
 import { EngagementLoaderPublicData } from 'engagements/public/view';
 import { BaseTheme } from 'styles/Theme';
@@ -55,7 +55,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
             <Paper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid container spacing={2}>
                     <Grid size={12}>
-                        <Header2>{widget.title}</Header2>
+                        <Heading2>{widget.title}</Heading2>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     {subscribeItems?.map((item, index) => {

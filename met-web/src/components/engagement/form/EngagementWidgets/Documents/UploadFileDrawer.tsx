@@ -17,7 +17,7 @@ import { saveObject } from 'services/objectStorageService';
 import FileUpload from 'components/common/FileUpload';
 import { If, Then, Else } from 'react-if';
 import { WidgetLocation } from 'models/widget';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 
 const schema = yup
@@ -144,7 +144,7 @@ const UploadFileDrawer = () => {
                         padding="2em"
                     >
                         <Grid size={12}>
-                            <Header3 weight="bold">{documentToEdit ? 'Edit File' : 'Add File'}</Header3>
+                            <Heading3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</Heading3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 
@@ -179,11 +179,9 @@ const UploadFileDrawer = () => {
                                                         <BodyText>{fileToUpload?.type}</BodyText>
                                                     </Grid>
                                                     <Grid size={12}>
-                                                        {fileToUpload && (
-                                                            <BodyText>
-                                                                {`${fileToUpload.size / OneMegaByte} MB`}
-                                                            </BodyText>
-                                                        )}
+                                                        <BodyText>
+                                                            {`${fileToUpload?.size ?? 0 / OneMegaByte} MB`}
+                                                        </BodyText>
                                                     </Grid>
                                                 </Grid>
                                             </Paper>

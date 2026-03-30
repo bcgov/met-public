@@ -3,7 +3,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
-import { Header1, Header2, BodyText } from 'components/common/Typography/';
+import { Heading1, Heading2, BodyText } from 'components/common/Typography/';
 import { ResponsiveContainer } from 'components/common/Layout';
 import {
     Table,
@@ -32,18 +32,18 @@ const TenantListingPage = () => {
             <AutoBreadcrumbs />
 
             <Grid size={12}>
-                <Header1>Tenant Admin</Header1>
+                <Heading1>Tenant Admin</Heading1>
             </Grid>
             <Grid container direction="row" mb="0.5em" alignItems="flex-start" size={12}>
                 <Grid size={{ xs: 12, sm: 'grow' }}>
-                    <Header2 decorated>
+                    <Heading2 decorated>
                         Tenant Instances{' '}
                         <Suspense fallback={<span />}>
                             <Await resolve={tenants}>
                                 {(resolvedTenants) => <span>({resolvedTenants.length})</span>}
                             </Await>
                         </Suspense>
-                    </Header2>
+                    </Heading2>
                 </Grid>
                 <Grid size="auto">
                     <Button

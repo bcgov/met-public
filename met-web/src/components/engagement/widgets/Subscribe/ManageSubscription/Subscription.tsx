@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Grid2 as Grid } from '@mui/material';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -101,7 +101,7 @@ export const Subscription = () => {
                             rowSpacing={2}
                         >
                             <Grid size={12}>
-                                <Header1>{tenant?.name}</Header1>
+                                <Heading1>{tenant?.name}</Heading1>
                             </Grid>
                             <Grid size={12}>
                                 <BodyText>{translate('subscription.paragraph')}</BodyText>

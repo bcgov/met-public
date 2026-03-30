@@ -8,7 +8,7 @@ import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
 import { MetDisclaimer, modalStyle } from 'components/common';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -137,9 +137,9 @@ export const FeedbackModal = () => {
                                         viewBox="0 0 64 64"
                                         sx={{ marginBottom: 2 }}
                                     />
-                                    <Header3 data-testid="success-title">
+                                    <Heading3 data-testid="success-title">
                                         {translate('feedback.submitModal.header')}
-                                    </Header3>
+                                    </Heading3>
                                 </Stack>
                             </Grid>
                             <Grid size={12} display="flex" alignItems="end" justifyContent="flex-end">

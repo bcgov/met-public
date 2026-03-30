@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid2 as Grid } from '@mui/material';
 import { Button } from 'components/common/Input/Button';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import ImageUpload from 'components/imageUpload';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -155,7 +155,7 @@ const AddContactDrawer = () => {
                         padding="2em"
                     >
                         <Grid size={12}>
-                            <Header3 weight="bold">{contactToEdit ? 'Edit' : 'Add'} Contact</Header3>
+                            <Heading3 bold>{contactToEdit ? 'Edit' : 'Add'} Contact</Heading3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
                         <Grid size={{ xs: 12, lg: 5 }} sx={{ minHeight: '14rem' }}>

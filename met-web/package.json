@@ -19,7 +19,6 @@
     "@fortawesome/react-fontawesome": "^3.1.1",
     "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.2",
-    "@mui/icons-material": "^7.3.6",
     "@mui/lab": "^7.0.1-beta.20",
     "@mui/material": "^6.5.0",
     "@mui/x-date-pickers": "^8.10.2",

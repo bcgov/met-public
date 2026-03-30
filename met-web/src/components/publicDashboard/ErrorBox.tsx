@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid2 as Grid, IconButton, Paper, SxProps, Theme } from '@mui/material';
-import { BodyText, Header4 } from 'components/common/Typography';
+import { BodyText, Heading4 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate } from '@fortawesome/pro-regular-svg-icons/faArrowsRotate';
 import { DASHBOARD } from './constants';
@@ -38,7 +38,7 @@ export const ErrorBox = ({
                 height="100%"
             >
                 <Grid>
-                    <Header4 color="error">{translate('dashboard.errorBox.header')}</Header4>
+                    <Heading4 color="error">{translate('dashboard.errorBox.header')}</Heading4>
                     <BodyText color="error">{translate('dashboard.errorBox.body')}</BodyText>
                     <IconButton onClick={() => onClick()}>
                         <FontAwesomeIcon

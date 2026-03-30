@@ -18,7 +18,7 @@ import { useDispatch } from 'react-redux';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { CALL_TO_ACTION_TYPE, RichTextToolbarConfig } from './constants';
 import { Button } from 'components/common/Input/Button';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 
 const schema = yup
     .object({
@@ -173,7 +173,7 @@ const FormSignUpDrawer = () => {
                         padding="2em"
                     >
                         <Grid size={12}>
-                            <Header3 weight="bold">Form Sign-Up</Header3>
+                            <Heading3 bold>Form Sign-Up</Heading3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
                         <Grid size={12}>

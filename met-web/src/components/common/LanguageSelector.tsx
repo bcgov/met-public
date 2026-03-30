@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useAppDispatch } from 'hooks';
 import { BodyText } from './Typography/Body';
-import { Palette } from 'styles/Theme';
 import { Grid2 as Grid, MenuItem, Select } from '@mui/material';
 import { useLocation } from 'react-router';
 import { Language } from 'models/language';
@@ -90,7 +89,7 @@ const LanguageSelector = () => {
                     size="small"
                     sx={{
                         bgcolor: 'background.paper',
-                        color: Palette.info.main,
+                        color: 'info.main',
                     }}
                     onChange={(event) => handleChangeLanguage(event.target.value as string)}
                 >

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid2';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Header1, Header3 } from 'components/common/Typography';
+import { Heading1, Heading3 } from 'components/common/Typography';
 import { Accordion, AccordionDetails, AccordionSummary, Skeleton, styled } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
@@ -43,7 +43,7 @@ const EngagementList = () => {
             rowSpacing={3}
         >
             <Grid size={12}>
-                <Header1>Engagements Dashboard</Header1>
+                <Heading1>Engagements Dashboard</Heading1>
             </Grid>
             <Grid size={12}>
                 <StyledAccordion defaultExpanded={true}>
@@ -51,7 +51,7 @@ const EngagementList = () => {
                         expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
                         sx={{ flexDirection: 'row-reverse' }}
                     >
-                        <Header3 weight="bold">Upcoming Engagements</Header3>
+                        <Heading3 bold>Upcoming Engagements</Heading3>
                     </AccordionSummary>
                     <AccordionDetails>
                         <EngagementAccordion
@@ -69,7 +69,7 @@ const EngagementList = () => {
                         expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
                         sx={{ flexDirection: 'row-reverse' }}
                     >
-                        <Header3 weight="bold">Open Engagements</Header3>
+                        <Heading3 bold>Open Engagements</Heading3>
                     </AccordionSummary>
                     <AccordionDetails>
                         <EngagementAccordion
@@ -86,7 +86,7 @@ const EngagementList = () => {
                         expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
                         sx={{ flexDirection: 'row-reverse' }}
                     >
-                        <Header3 weight="bold">Recently Closed Engagements (last 30 days)</Header3>
+                        <Heading3 bold>Recently Closed Engagements (last 30 days)</Heading3>
                     </AccordionSummary>
                     <AccordionDetails>
                         <EngagementAccordion
@@ -103,7 +103,7 @@ const EngagementList = () => {
                         expandIcon={<FontAwesomeIcon icon={faChevronDown} style={{ margin: '0 6px' }} />}
                         sx={{ flexDirection: 'row-reverse' }}
                     >
-                        <Header3 weight="bold">Closed Engagements (over 30 days ago)</Header3>
+                        <Heading3 bold>Closed Engagements (over 30 days ago)</Heading3>
                     </AccordionSummary>
                     <AccordionDetails>
                         <EngagementAccordion

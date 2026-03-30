@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Autocomplete, CircularProgress, Grid2 as Grid, Paper, Stack, TextField, useTheme } from '@mui/material';
 import { modalStyle } from 'components/common';
-import { Header3, BodyText } from 'components/common/Typography';
+import { Heading3, BodyText } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { UserManagementContext } from './UserManagementContext';
 import { useForm, FormProvider, SubmitHandler, Controller, Resolver } from 'react-hook-form';
@@ -144,9 +144,7 @@ export const AddUserModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid size={12}>
-                                <Header3 weight="bold">
-                                    Add {user?.first_name + ' ' + user?.last_name} to Engagement
-                                </Header3>
+                                <Heading3 bold>Add {user?.first_name + ' ' + user?.last_name} to Engagement</Heading3>
                             </Grid>
 
                             <Grid
@@ -187,13 +185,13 @@ export const AddUserModal = () => {
                                                             ...params.InputProps,
                                                             endAdornment: (
                                                                 <>
-                                                                    {engagementsLoading ? (
+                                                                    {engagementsLoading && (
                                                                         <CircularProgress
                                                                             color="primary"
                                                                             size={20}
                                                                             sx={{ marginRight: '2em' }}
                                                                         />
-                                                                    ) : null}
+                                                                    )}
                                                                     {params.InputProps.endAdornment}
                                                                 </>
                                                             ),

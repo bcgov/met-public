@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid2 as Grid, Skeleton, Divider, Paper } from '@mui/material';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { SurveyBarData } from '../types';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
@@ -60,7 +60,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
     return (
         <>
             <Grid size={12} mb={2}>
-                <Header1>{translate('dashboard.barBlock.label')}</Header1>
+                <Heading1>{translate('dashboard.barBlock.label')}</Heading1>
             </Grid>
             {Object.values(data).map((value) => {
                 {

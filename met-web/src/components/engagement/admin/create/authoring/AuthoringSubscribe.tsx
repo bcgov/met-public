@@ -2,7 +2,7 @@ import { Grid2 as Grid } from '@mui/material';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
-import { BodyText, ErrorMessage, Header3 } from 'components/common/Typography';
+import { BodyText, ErrorMessage, Heading3 } from 'components/common/Typography';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { ContentState, EditorState } from 'draft-js';
 import React, { useEffect } from 'react';
@@ -75,7 +75,7 @@ const AuthoringSubscribe = () => {
 
             <AuthoringFormContainer>
                 <Grid container direction="column" mt="1rem">
-                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <Heading3 bold>Primary Content (Required)</Heading3>
                     <BodyText size="small">
                         The content in this section will be shown to users in the subscription section. It should
                         include a heading and some body copy that encourages users to subscribe to updates about the

@@ -7,7 +7,7 @@ import FilterBlock from './FilterBlock';
 import FilterDrawer from './FilterDrawer';
 import { TenantState } from 'reduxSlices/tenantSlice';
 import { useAppSelector } from '../../hooks';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { DarkTheme } from 'styles/Theme';
 
 const LandingComponent = () => {
@@ -49,7 +49,7 @@ const LandingComponent = () => {
                             rowSpacing={2}
                         >
                             <Grid size={12}>
-                                <Header1 sx={{ mt: 0 }}>{tenant.title}</Header1>
+                                <Heading1 sx={{ mt: 0 }}>{tenant.title}</Heading1>
                             </Grid>
                             <Grid size={12}>
                                 <BodyText>{tenant.description}</BodyText>

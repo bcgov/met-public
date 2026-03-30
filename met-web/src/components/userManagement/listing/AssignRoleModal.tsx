@@ -31,7 +31,7 @@ import axios, { AxiosError } from 'axios';
 import { getEngagements } from 'services/engagementService';
 import { debounce } from 'lodash';
 import { Engagement } from 'models/engagement';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 
 const schema = yup
@@ -173,6 +173,8 @@ export const AssignRoleModal = () => {
         }
     };
 
+    const userName = `${user?.first_name || ''} ${user?.last_name || ''}`.trim();
+
     return (
         <Modal open={assignRoleModalOpen} onClose={handleClose} keepMounted={false}>
             <Paper sx={{ ...modalStyle }}>
@@ -180,9 +182,7 @@ export const AssignRoleModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid size={12} mb={2}>
-                                <Header3 weight="bold">
-                                    Assign Role to {user?.first_name + ' ' + user?.last_name}
-                                </Header3>
+                                <Heading3 bold>Assign Role to {userName || 'User'}</Heading3>
                             </Grid>
 
                             <Grid
@@ -264,13 +264,13 @@ export const AssignRoleModal = () => {
                                                                 ...params.InputProps,
                                                                 endAdornment: (
                                                                     <>
-                                                                        {engagementsLoading ? (
+                                                                        {engagementsLoading && (
                                                                             <CircularProgress
                                                                                 color="primary"
                                                                                 size={20}
                                                                                 sx={{ marginRight: '2em' }}
                                                                             />
-                                                                        ) : null}
+                                                                        )}
                                                                         {params.InputProps.endAdornment}
                                                                     </>
                                                                 ),

@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { FormControl, FormControlLabel, FormLabel, Grid2 as Grid, Paper, Radio, Stack } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input/Button';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { UserManagementContext } from './UserManagementContext';
 import { useForm, FormProvider, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -36,6 +36,8 @@ export const ReassignRoleModal = () => {
 
     const { reset, handleSubmit } = methods;
 
+    const userName = user ? `${user.first_name} ${user.last_name}`.trim() : 'this user';
+
     const handleClose = () => {
         setReassignRoleModalOpen(false);
         reset({});
@@ -51,7 +53,7 @@ export const ReassignRoleModal = () => {
             dispatch(
                 openNotification({
                     severity: 'success',
-                    text: `You have reassigned ${user.first_name} ${user.last_name} as ${role}.`,
+                    text: `You have reassigned ${userName} as ${role}.`,
                 }),
             );
             setIsSaving(false);
@@ -68,9 +70,7 @@ export const ReassignRoleModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid size={12} mb={2}>
-                                <Header3 weight="bold">
-                                    Reassign Role for {user?.first_name + ' ' + user?.last_name}
-                                </Header3>
+                                <Heading3 bold>Reassign Role for {userName}</Heading3>
                             </Grid>
                         </Grid>
 

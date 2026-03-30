@@ -3,7 +3,7 @@ import { AuthoringValue, AuthoringButtonProps, StatusCircleProps } from './types
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRightLong } from '@fortawesome/pro-light-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
-import { BodyText, Header2, Header3 } from 'components/common/Typography';
+import { BodyText, Heading2, Heading3 } from 'components/common/Typography';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { Unless, When } from 'react-if';
 import { Grid2 as Grid } from '@mui/material';
@@ -109,25 +109,18 @@ export const AuthoringTab = () => {
 
     // Check if all required items are completed.
     const allRequiredItemsComplete = (values: AuthoringValue[]) => {
-        const itemChecklist = values.map((value) => {
-            if (undefined === value.required || undefined === value.completed) {
-                return false;
-            }
-            if (true === value.required) {
-                return true === value.completed;
-            } else {
-                return true;
-            }
+        return values.every((item) => {
+            if (!item.required) return true;
+            return item.completed;
         });
-        return !itemChecklist.includes(false);
     };
 
     return (
         <Grid container id="admin-authoring-section" direction="column" maxWidth={'700px'}>
-            <Header2 decorated>Authoring</Header2>
-            <Header3 weight="bold" mb="1.5rem">
+            <Heading2 decorated>Authoring</Heading2>
+            <Heading3 bold mb="1.5rem">
                 Page Section Authoring
-            </Header3>
+            </Heading3>
             <When condition={!requiredSectionsCompleted}>
                 <SystemMessage sx={systemMessageStyles} status="danger">
                     There are incomplete or missing sections of required content in your engagement. Please complete all
@@ -163,9 +156,9 @@ export const AuthoringTab = () => {
                 </Grid>
             </Grid>
             <Grid container direction="column" id="feedback-container" sx={{ ...anchorContainerStyles }}>
-                <Header3 weight="bold" mb="1.5rem">
+                <Heading3 bold mb="1.5rem">
                     Feedback Configuration
-                </Header3>
+                </Heading3>
                 <When condition={!feedbackCompleted}>
                     <SystemMessage sx={systemMessageStyles} status="danger">
                         There are feedback methods included in your engagement that are incomplete. Please complete

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 
 import { Grid2 as Grid } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Header1, Header2, BodyText } from 'components/common/Typography/';
+import { Heading1, Heading2, BodyText } from 'components/common/Typography/';
 import { TenantForm } from './TenantForm';
 import { updateTenant } from 'services/tenantService';
 import { SubmitHandler } from 'react-hook-form';
@@ -48,13 +48,13 @@ const TenantEditPage = () => {
                             <AutoBreadcrumbs />
 
                             <Grid size={12}>
-                                <Header1>Edit Tenant Instance</Header1>
+                                <Heading1>Edit Tenant Instance</Heading1>
                             </Grid>
                             <Grid container spacing={0} direction="column" mb="0.5em" size={12}>
                                 <Grid size={12}>
-                                    <Header2 decorated sx={{ mb: 0 }}>
+                                    <Heading2 decorated sx={{ mb: 0 }}>
                                         Tenant Details
-                                    </Header2>
+                                    </Heading2>
                                 </Grid>
                                 <Grid size={12}>
                                     <BodyText size="small">* Required fields</BodyText>

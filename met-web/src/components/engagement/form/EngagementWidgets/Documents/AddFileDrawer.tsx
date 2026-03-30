@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import { Grid2 as Grid, MenuItem } from '@mui/material';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -144,7 +144,7 @@ const AddFileDrawer = () => {
                         padding="2em"
                     >
                         <Grid size={12}>
-                            <Header3 weight="bold">{documentToEdit ? 'Edit File' : 'Add File'}</Header3>
+                            <Heading3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</Heading3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 

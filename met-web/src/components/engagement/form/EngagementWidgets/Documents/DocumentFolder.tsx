@@ -95,14 +95,14 @@ const DocumentFolder = ({
                         <FontAwesomeIcon icon={faFolder} style={{ fontSize: '22px' }} />
                         <If condition={!edit}>
                             <Then>
-                                <Typography onClick={() => setEdit(true)}>{document ? document.title : ''}</Typography>
+                                <Typography onClick={() => setEdit(true)}>{document?.title ?? ''}</Typography>
                             </Then>
                             <Else>
                                 <TextField
                                     size="small"
                                     autoFocus
                                     sx={{ p: 0, m: 0 }}
-                                    value={document ? document.title : ''}
+                                    value={document?.title ?? ''}
                                     onChange={(event) =>
                                         setDocument(
                                             document
@@ -158,7 +158,7 @@ const DocumentFolder = ({
                 </Grid>
             </Grid>
             <When condition={documentItem.children && documentItem.children.length > 0}>
-                <Grid size={12} mt={-2} container justifyContent={'flex-end'} spacing={2}>
+                <Grid size={12} container justifyContent={'flex-end'}>
                     <MetDroppable droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
                         {documentItem.children?.map((item, index) => {
                             return (

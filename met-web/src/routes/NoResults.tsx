@@ -5,13 +5,13 @@ import { useAppTranslation } from 'hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePhone } from '@fortawesome/pro-solid-svg-icons/faCirclePhone';
 import { faCircleEnvelope } from '@fortawesome/pro-solid-svg-icons/faCircleEnvelope';
-import { BodyText, Header1, Header2 } from 'components/common/Typography';
+import { BodyText, Heading1, Heading2 } from 'components/common/Typography';
 
 const marginStyle = { mr: 2 };
 
 const SuggestionsList = ({ translate }: { translate: (key: string) => string }) => (
     <Box>
-        <Header2>{translate('NoResults.paragraph')}</Header2>
+        <Heading2>{translate('NoResults.paragraph')}</Heading2>
         <ul>
             <BodyText component="li" size="small">
                 {translate('NoResults.list.0')}
@@ -41,7 +41,7 @@ const NoResults = () => {
                 padding={'2em 2em 1em 1em'}
             >
                 <Grid sx={{ ...marginStyle, marginBottom: 3 }}>
-                    <Header1 data-testid="NoResultsHeader">{translate('NoResults.header')}</Header1>
+                    <Heading1 data-testid="NoResultsHeader">{translate('NoResults.header')}</Heading1>
                 </Grid>
                 <Grid size={6} justifyContent={'left'} sx={{ ...marginStyle, marginBottom: 3 }}>
                     <SuggestionsList translate={translate} />

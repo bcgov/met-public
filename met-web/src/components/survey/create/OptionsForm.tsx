@@ -11,10 +11,9 @@ import {
 } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { Button } from 'components/common/Input/Button';
-import { Header3 } from 'components/common/Typography/Headers';
+import { Heading3 } from 'components/common/Typography/Headings';
 import CloneOptions from './CloneOptions';
 import { CreateOptions } from './CreateOptions';
-import { Palette } from 'styles/Theme';
 import { CreateSurveyContext } from './CreateSurveyContext';
 import { OptionsFormSkeleton } from './OptionsFormSkeleton';
 import { When } from 'react-if';
@@ -38,17 +37,14 @@ const OptionsForm = () => {
         <ResponsiveContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid size={12}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Header3>Survey</Header3>
+                    <Heading3>Survey</Heading3>
                 </Stack>
                 <Divider />
             </Grid>
 
             <Grid size={12}>
                 <FormControl>
-                    <FormLabel
-                        id="controlled-radio-buttons-group"
-                        sx={{ fontWeight: 'bold', color: Palette.text.primary }}
-                    >
+                    <FormLabel id="controlled-radio-buttons-group" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
                         I want to
                     </FormLabel>
                     <RadioGroup

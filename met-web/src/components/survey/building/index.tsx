@@ -19,7 +19,7 @@ import { putSurvey } from 'services/surveyService';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Header3 } from 'components/common/Typography/Headers';
+import { Heading3 } from 'components/common/Typography/Headings';
 import { FormBuilderData } from 'components/Form/types';
 import { EngagementStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -237,14 +237,14 @@ export const FormBuilderPage = () => {
                             </IconButton>
                         </Then>
                         <Else>
-                            <Header3
+                            <Heading3
                                 sx={{ p: 0.5, cursor: 'pointer' }}
                                 onClick={() => {
                                     setIsEditingName(true);
                                 }}
                             >
                                 {name}
-                            </Header3>
+                            </Heading3>
                             <IconButton
                                 size="small"
                                 onClick={() => {

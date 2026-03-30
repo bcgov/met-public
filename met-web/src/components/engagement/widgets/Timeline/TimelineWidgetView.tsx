@@ -5,7 +5,7 @@ import { TimelineWidget, TimelineEvent as TimelineEventType, EventStatus } from 
 import { fetchTimelineWidgets } from 'services/widgetService/TimelineService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BaseTheme } from 'styles/Theme';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Await } from 'react-router';
 import { faCircle, faCircleHalf } from '@fortawesome/pro-solid-svg-icons';
 interface TimelineWidgetProps {
@@ -23,7 +23,7 @@ const TimelineWidgetView = ({ widget }: TimelineWidgetProps) => {
                     return (
                         <Grid container gap="1rem">
                             <Grid size={12}>
-                                <Header3 weight="thin">{timelineWidget.title}</Header3>
+                                <Heading3 weight="thin">{timelineWidget.title}</Heading3>
                             </Grid>
                             <Grid size={12}>
                                 <BodyText>{timelineWidget.description}</BodyText>

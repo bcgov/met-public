@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid2 as Grid } from '@mui/material';
 import { BodyText } from 'components/common/Typography/Body';
-import { Header1 } from 'components/common/Typography';
+import { Heading1 } from 'components/common/Typography';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppTranslation, useAppSelector } from 'hooks';
@@ -42,7 +42,7 @@ export const NotAvailable = () => {
                             rowSpacing={2}
                         >
                             <Grid size={12}>
-                                <Header1>{tenant.title}</Header1>
+                                <Heading1>{tenant.title}</Heading1>
                             </Grid>
                             <Grid size={12}>
                                 <BodyText>{tenant.description}</BodyText>

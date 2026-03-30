@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid2 as Grid, Skeleton, Divider, useMediaQuery, Stack, ToggleButtonGroup, Paper } from '@mui/material';
 import { Palette } from 'styles/Theme';
 import { Button } from 'components/common/Input/Button';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -98,7 +98,7 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                         <BodyText bold>{translate('dashboard.barBlock.label')}</BodyText>
                     </Then>
                     <Else>
-                        <Header1>{translate('dashboard.barBlock.label')}</Header1>
+                        <Heading1>{translate('dashboard.barBlock.label')}</Heading1>
                     </Else>
                 </If>
             </Grid>

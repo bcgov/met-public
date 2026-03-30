@@ -19,7 +19,7 @@ import { useAppDispatch, useAppTranslation, useAppSelector } from 'hooks';
 import { useParams, useNavigate } from 'react-router';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { BodyText, Header3, Header4 } from 'components/common/Typography';
+import { BodyText, Heading3, Heading4 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { CommentStatus } from 'constants/commentStatus';
 import { StaffNoteType } from 'constants/staffNoteType';
@@ -267,7 +267,7 @@ const CommentReview = () => {
                 <Grid container rowSpacing={2}>
                     <Grid size={12}>
                         <Grid size={12}>
-                            <Header3 weight="bold">Comment(s)</Header3>
+                            <Heading3 bold>Comment(s)</Heading3>
                         </Grid>
                     </Grid>
                     {submission.comments?.map((comment) => {
@@ -341,7 +341,7 @@ const CommentReview = () => {
                         <Grid size={12}>
                             <FormControl>
                                 <FormLabel id="controlled-radio-buttons-group">
-                                    <Header3 sx={{ color: '#494949' }}>Comments Approval</Header3>
+                                    <Heading3 sx={{ color: '#494949' }}>Comments Approval</Heading3>
                                 </FormLabel>
                                 <RadioGroup
                                     defaultValue={defaultVerdict}
@@ -369,7 +369,7 @@ const CommentReview = () => {
                             <Grid size={12}>
                                 <FormControl>
                                     <FormLabel id="controlled-checkbox-group">
-                                        <Header4 sx={{ color: '#494949' }}>Reason for Rejection</Header4>
+                                        <Heading4 sx={{ color: '#494949' }}>Reason for Rejection</Heading4>
                                     </FormLabel>
                                     <FormControlLabel
                                         label={<BodyText>Contains personal information</BodyText>}

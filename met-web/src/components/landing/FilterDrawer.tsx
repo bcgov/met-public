@@ -8,7 +8,7 @@ import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
 import { Button } from 'components/common/Input/Button';
 import { DarkTheme } from 'styles/Theme';
-import { Header2, Header4 } from 'components/common/Typography';
+import { Heading2, Heading4 } from 'components/common/Typography';
 
 const FilterDrawer = () => {
     const { searchFilters, setSearchFilters, setPage, metadataFilters, clearFilters, drawerOpened, setDrawerOpened } =
@@ -90,10 +90,10 @@ const FilterDrawer = () => {
                     >
                         <FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px', height: '20px', width: '20px' }} />
                     </IconButton>
-                    <Header2 mt={3} mb={6}>
+                    <Heading2 mt={3} mb={6}>
                         {translate('landing.filters.drawer.title')}
-                    </Header2>
-                    <Header4 mt={3}>{translate('landing.filters.drawer.statusFilter')}</Header4>
+                    </Heading2>
+                    <Heading4 mt={3}>{translate('landing.filters.drawer.statusFilter')}</Heading4>
                     <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
                         {[
                             -1,
@@ -118,12 +118,12 @@ const FilterDrawer = () => {
 
                     {metadataFilters.map((metadataFilter) => (
                         <React.Fragment key={metadataFilter.taxon_id}>
-                            <Header4 mt={3}>
+                            <Heading4 mt={3}>
                                 {translate('landing.filters.drawer.filterHeader').replace(
                                     '{0}',
                                     metadataFilter.name ?? 'metadata',
                                 )}
-                            </Header4>
+                            </Heading4>
                             <Stack direction="row" sx={{ mb: 2, mt: 2.5 }} flexWrap="wrap">
                                 {metadataFilter.values.map((value) => (
                                     <MetadataFilterChip

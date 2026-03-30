@@ -5,7 +5,7 @@ import { useAppDispatch, useSubmittedPolls, useAppSelector } from 'hooks';
 import { PollWidget } from 'models/pollWidget';
 import { fetchPollWidgets, postPollResponse } from 'services/widgetService/PollService/index';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { BaseTheme, colors } from 'styles/Theme';
 import { Await } from 'react-router';
 import { PollStatus } from 'constants/engagementStatus';
@@ -220,7 +220,7 @@ const PollWidgetView = ({ widget }: PollWidgetViewProps) => {
     return (
         <Grid container gap="1rem" size={12}>
             <Grid size={12}>
-                <Header3 weight="thin">{widget.title}</Header3>
+                <Heading3 weight="thin">{widget.title}</Heading3>
             </Grid>
             <Grid
                 size={12}

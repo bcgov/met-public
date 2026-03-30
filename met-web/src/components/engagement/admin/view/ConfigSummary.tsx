@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { Avatar, Grid2 as Grid, IconButton, Skeleton, Tooltip } from '@mui/material';
-import { BodyText, Header2 } from '../../../common/Typography';
+import { BodyText, Heading2 } from '../../../common/Typography';
 import { OutlineBox } from 'components/common/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopy } from '@fortawesome/pro-light-svg-icons';
@@ -34,7 +34,7 @@ export const ConfigSummary = () => {
 
     return (
         <Grid container direction="column" spacing={1}>
-            <Header2 decorated>Configuration</Header2>
+            <Heading2 decorated>Configuration</Heading2>
             <Grid container spacing={2} width="624px" maxWidth="100%" direction="column">
                 <Grid>
                     <OutlineBox>

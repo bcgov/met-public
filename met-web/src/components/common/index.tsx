@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid2 as Grid, CircularProgress, Typography, Box } from '@mui/material';
-import { Palette, colors } from 'styles/Theme';
+import { colors } from 'styles/Theme';
+import { BodyText } from './Typography/Body';
+
 export { colors, elevations } from 'styles/Theme';
 
 export const globalFocusShadow = `inset 0px 0px 0px 2px ${colors.focus.regular.inner}`;
@@ -45,11 +47,11 @@ export const modalStyle = {
     borderTop: '8px solid',
     borderColor: colors.notification.default.shade,
     position: 'absolute',
-    top: '50%',
+    top: '48%',
     left: '48%',
     transform: 'translate(-50%, -50%)',
-    maxWidth: 'min(95vw, 700px)',
     maxHeight: '95vh',
+    width: { xs: '90%', sm: '75%', md: '700px' },
     bgcolor: 'background.paper',
     boxShadow: 10,
     pt: 2,
@@ -57,8 +59,8 @@ export const modalStyle = {
     pl: 3,
     pr: 4,
     m: 1,
-    overflowY: 'scroll',
-    color: Palette.text.primary,
+    overflowY: 'auto',
+    color: 'text.primary',
 };
 
 export const MetDisclaimer = ({
@@ -72,19 +74,13 @@ export const MetDisclaimer = ({
         <Box
             sx={{
                 borderLeft: 8,
-                borderColor: '#003366',
+                borderColor: 'primary.main',
                 backgroundColor: '#aaaaaa22',
             }}
         >
-            <Typography
-                sx={{
-                    p: '1em',
-                    mt: marginTop,
-                    fontSize: '0.8rem',
-                }}
-            >
+            <BodyText size="small" mt={marginTop} component="div" p="1em">
                 {children}
-            </Typography>
+            </BodyText>
         </Box>
     );
 };

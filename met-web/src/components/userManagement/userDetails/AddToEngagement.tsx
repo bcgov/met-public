@@ -14,7 +14,7 @@ import {
     TextField,
 } from '@mui/material';
 import { modalStyle } from 'components/common';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { USER_COMPOSITE_ROLE } from 'models/user';
 import { UserDetailsContext } from './UserDetailsContext';
@@ -186,14 +186,14 @@ export const AddToEngagementModal = () => {
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
                             <Grid size={12}>
                                 <When condition={!userHasRole}>
-                                    <Header3 weight="bold">
+                                    <Heading3 bold>
                                         Assign Role to {savedUser?.first_name + ' ' + savedUser?.last_name}
-                                    </Header3>
+                                    </Heading3>
                                 </When>
                                 <When condition={userHasRole}>
-                                    <Header3 weight="bold">
+                                    <Heading3 bold>
                                         Add {savedUser?.first_name + ' ' + savedUser?.last_name} to Engagement
-                                    </Header3>
+                                    </Heading3>
                                 </When>
                             </Grid>
 
@@ -274,13 +274,13 @@ export const AddToEngagementModal = () => {
                                                                     ...params.InputProps,
                                                                     endAdornment: (
                                                                         <>
-                                                                            {engagementsLoading ? (
+                                                                            {engagementsLoading && (
                                                                                 <CircularProgress
                                                                                     color="primary"
                                                                                     size={20}
                                                                                     sx={{ marginRight: '2em' }}
                                                                                 />
-                                                                            ) : null}
+                                                                            )}
                                                                             {params.InputProps.endAdornment}
                                                                         </>
                                                                     ),

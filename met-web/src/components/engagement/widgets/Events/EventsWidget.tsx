@@ -8,7 +8,7 @@ import { Switch, Case } from 'react-if';
 import { getEvents } from 'services/widgetService/EventService';
 import VirtualSession from './VirtualSession';
 import InPersonEvent from './InPersonEvent';
-import { Header2, BodyText } from 'components/common/Typography';
+import { Heading2, BodyText } from 'components/common/Typography';
 import { BaseTheme } from 'styles/Theme';
 
 interface EventsWidgetProps {
@@ -43,9 +43,9 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
     if (isLoading) {
         return (
             <Grid container justifyContent="flex-start" flexDirection={'column'} size={12} paddingBottom={0}>
-                <Header2 mb={0} pb={0}>
+                <Heading2 mb={0} pb={0}>
                     <Skeleton variant="rectangular" sx={{ width: '90%' }} />
-                </Header2>
+                </Heading2>
                 <BodyText m="1rem 0 1.5rem;">
                     <Skeleton variant="text" sx={{ width: '80%' }} />
                 </BodyText>
@@ -79,9 +79,9 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                 const eventItem = event.event_items[0];
                 return (
                     <>
-                        <Header2 mb={0} pb={0}>
+                        <Heading2 mb={0} pb={0}>
                             {eventItem.event_name}
-                        </Header2>
+                        </Heading2>
                         <BodyText m="1rem 0 1.5rem;">{eventItem.description}</BodyText>
                         <ThemeProvider key={event.id} theme={BaseTheme}>
                             <Paper elevation={1} sx={{ minHeight: '12em', p: '2em', mb: '2.5rem' }}>

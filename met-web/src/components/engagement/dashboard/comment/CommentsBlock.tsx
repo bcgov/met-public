@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { CommentViewContext } from './CommentViewContext';
-import { Header4 } from 'components/common/Typography/Headers';
+import { Heading4 } from 'components/common/Typography/Headings';
 import CommentTable from './CommentTable';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
@@ -81,7 +81,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                 <Paper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
                         <Grid size={{ xs: 12, sm: 6 }}>
-                            <Header4>{translate('commentDashboard.block.header')}</Header4>
+                            <Heading4>{translate('commentDashboard.block.header')}</Heading4>
                         </Grid>
                         <Grid
                             size={{ xs: 12, sm: 6 }}

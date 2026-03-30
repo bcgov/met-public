@@ -6,7 +6,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { ImageWidget } from 'models/imageWidget';
 import { fetchImageWidgets } from 'services/widgetService/ImageService';
-import { BodyText, Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 
 interface ImageWidgetProps {
     widget: Widget;
@@ -44,9 +44,9 @@ const ImageWidgetView = ({ widget }: ImageWidgetProps) => {
             <Paper elevation={1} sx={{ padding: '1em' }}>
                 <Grid container justifyContent="flex-start" spacing={3}>
                     <Grid size={12}>
-                        <Header2>
+                        <Heading2>
                             <Skeleton variant="rectangular" />
-                        </Header2>
+                        </Heading2>
                     </Grid>
                     <Grid size={12}>
                         <Skeleton variant="rectangular" height="20em" />
@@ -61,7 +61,7 @@ const ImageWidgetView = ({ widget }: ImageWidgetProps) => {
     }
 
     return (
-        <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+        <Grid container size={12} alignItems="center" rowSpacing={2}>
             <Grid
                 container
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
@@ -69,36 +69,29 @@ const ImageWidgetView = ({ widget }: ImageWidgetProps) => {
                 size={12}
                 paddingBottom={0}
             >
-                <Header2 sx={{ margin: '4rem 0 0 0' }}>{widget.title}</Header2>
+                <Heading2>{widget.title}</Heading2>
             </Grid>
             <Grid size={12}>
                 <BodyText>{imageWidget.description}</BodyText>
             </Grid>
-            <Grid size={12}>
-                <Paper
-                    elevation={4}
-                    sx={{
+            <Grid
+                container
+                size={12}
+                maxWidth="32rem"
+                component={Paper}
+                elevation={4}
+                sx={{ borderRadius: '16px', backgroundClip: 'padding-box' }}
+            >
+                <img
+                    style={{
                         width: '100%',
                         aspectRatio: '3/2',
-                        position: 'relative',
+                        objectFit: 'cover',
                         borderRadius: '16px',
-                        backgroundClip: 'padding-box',
                     }}
-                >
-                    <img
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            aspectRatio: '3/2',
-                            objectFit: 'cover',
-                            borderRadius: '16px',
-                        }}
-                        src={imageWidget.image_url}
-                        alt={imageWidget.alt_text}
-                    />
-                </Paper>
+                    src={imageWidget.image_url}
+                    alt={imageWidget.alt_text}
+                />
             </Grid>
         </Grid>
     );

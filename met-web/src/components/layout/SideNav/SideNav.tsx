@@ -70,7 +70,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
                     key={key}
                     sx={{
                         ...routeItemStyle,
-                        backgroundColor: 'selected' === itemType ? colors.surface.blue[10] : Palette.background.default,
+                        backgroundColor: 'selected' === itemType ? 'blue.10' : 'background.default',
                     }}
                 >
                     <ListItemButton
@@ -131,7 +131,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen }: DrawerBoxProps) => {
             sx={{
                 mr: isMediumScreenOrLarger ? '1.25rem' : '0',
                 overflow: 'auto',
-                backgroundColor: Palette.background.default,
+                backgroundColor: 'background.default',
                 borderTopRightRadius: '16px',
                 borderBottomRightRadius: '16px',
                 boxShadow: '0 5px 10px rgba(0, 0, 0, 0.4)',
@@ -232,7 +232,7 @@ const SideNav = ({ open, setOpen, isMediumScreen }: SideNavProps) => {
                         <Grid>
                             <Avatar
                                 sx={{
-                                    backgroundColor: colors.surface.blue[10],
+                                    backgroundColor: 'blue.10',
                                     height: 32,
                                     width: 32,
                                     fontSize: '16px',

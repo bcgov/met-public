@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Header2, Header3 } from 'components/common/Typography';
+import { Heading2, Heading3 } from 'components/common/Typography';
 import { Grid2 as Grid, Skeleton, Box, useMediaQuery, Theme, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
@@ -61,9 +61,9 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
         return (
             <Grid container size={12} justifyContent="flex-start" spacing={3}>
                 <Grid size={12}>
-                    <Header2>
+                    <Heading2>
                         <Skeleton variant="rectangular" />
-                    </Header2>
+                    </Heading2>
                 </Grid>
                 <Grid size={12}>
                     <Skeleton variant="rectangular" height="10em" />
@@ -102,14 +102,13 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
     return (
         <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
             <Grid
-                mt={8}
                 container
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
                 flexDirection={'column'}
                 size={12}
                 paddingBottom={0}
             >
-                <Header3 lineHeight="normal">{widget.title}</Header3>
+                <Heading3 lineHeight="normal">{widget.title}</Heading3>
             </Grid>
             <Grid size={12}>
                 <Box sx={outerContainerStyles}>

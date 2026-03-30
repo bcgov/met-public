@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BodyText, Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { Grid2 as Grid, Avatar, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Contact } from 'models/contact';
@@ -79,9 +79,9 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
             <Grid container justifyContent="flex-start" spacing={3} width="100%">
                 <Grid size={12}>
                     <Skeleton>
-                        <Header2 weight="thin" decorated mb={0}>
+                        <Heading2 weight="thin" decorated mb={0}>
                             Who is Listening
-                        </Header2>
+                        </Heading2>
                     </Skeleton>
                 </Grid>
                 <Grid size={12}>
@@ -101,15 +101,14 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
     return (
         <Grid container direction="row" size={12}>
             <Grid justifyContent="flex-start" size={12}>
-                <Header2 weight="thin" decorated mb={0}>
+                <Heading2 weight="thin" decorated mb={0}>
                     {widget.title}
-                </Header2>
+                </Heading2>
             </Grid>
-            <When condition={Boolean(listeningWidget?.description)}>
-                <Grid size={12} sx={{ whiteSpace: 'pre-line' }}>
-                    <BodyText>{listeningWidget?.description}</BodyText>
-                </Grid>
-            </When>
+            <Grid size={12} sx={{ whiteSpace: 'pre-line' }}>
+                <BodyText>{listeningWidget?.description}</BodyText>
+            </Grid>
+
             {contacts.map((contact) => {
                 return (
                     <Grid key={contact.id} container sx={{ margin: '2rem 0 0.5rem' }} columnSpacing={3} size={12}>

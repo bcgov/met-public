@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid2 as Grid } from '@mui/material';
 import { useNavigate } from 'react-router';
-import { Header2, Header4 } from 'components/common/Typography';
+import { Heading2, Heading4 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 
 const Unauthorized = () => {
@@ -16,14 +16,14 @@ const Unauthorized = () => {
             padding={'2em 2em 1em 2em'}
         >
             <Grid size={12}>
-                <Header2 decorated align="center">
+                <Heading2 decorated align="center">
                     Unauthorized
-                </Header2>
+                </Heading2>
             </Grid>
             <Grid size={12}>
-                <Header4 variant="h2" align="center">
+                <Heading4 variant="h2" align="center">
                     You don't have the necessary authorization to view this page. Click the button below to go back
-                </Header4>
+                </Heading4>
             </Grid>
             <Grid container size={12} justifyContent="center">
                 <Grid>

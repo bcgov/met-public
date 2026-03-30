@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Header3 } from 'components/common/Typography';
+import { Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { Widget } from 'models/widget';
 import { IconButton, Grid2 as Grid } from '@mui/material';
@@ -80,9 +80,9 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
             <Else>
                 <Grid container size={12} spacing={1} alignItems="center" mt={2}>
                     <Grid size="grow">
-                        <Header3 weight="bold" width="max-content">
+                        <Heading3 bold width="max-content">
                             {widget.title}
-                        </Header3>
+                        </Heading3>
                     </Grid>
                     <Grid size="auto">
                         <IconButton

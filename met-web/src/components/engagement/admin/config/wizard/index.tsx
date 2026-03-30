@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { Button, TextField } from 'components/common/Input';
 import { Form } from 'react-router';
 import Grid from '@mui/material/Grid2';
 import { Dayjs } from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 import EngagementVisibilityControl from '../EngagementVisibilityControl';
-import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { FeedbackMethodSelector } from '../FeedbackMethodSelector';
 import { DateRangePickerWithCalculation } from '../DateRangePickerWithCalculation';
 import { LanguageManager } from '../LanguageManager';
@@ -14,6 +13,9 @@ import { UserManager } from '../UserManager';
 import { User } from 'models/user';
 import { Language } from 'models/language';
 import { FormStep } from 'components/common/Layout/FormStep';
+import { Modal, CircularProgress } from '@mui/material';
+import { modalStyle } from 'components/common';
+import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export interface EngagementConfigurationData {
     // 1. Title
@@ -53,9 +55,9 @@ const EngagementForm = ({
     const [nameHasBeenEdited, setNameHasBeenEdited] = useState(false);
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container sx={{ maxWidth: '788px' }}>
-                <Header2 decorated>{isNewEngagement ? 'Configure Engagement' : 'Edit Configuration'}</Header2>
+        <Form onSubmit={handleSubmit(onSubmit)} id="engagement-config-form">
+            <Grid container sx={{ maxWidth: '49.25rem' }}>
+                <Heading2 decorated>{isNewEngagement ? 'Configure Engagement' : 'Edit Configuration'}</Heading2>
                 <Controller
                     control={control}
                     name="name"
@@ -155,6 +157,47 @@ const EngagementForm = ({
                 <Button href={isNewEngagement ? '/engagements' : '../'}>Cancel</Button>
             </Grid>
             <UnsavedWorkConfirmation blockNavigationWhen={isDirty && !isSubmitting} />
+            <Modal open={isSubmitting || isSubmitted}>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    sx={{ ...modalStyle, borderColor: 'notification.default.shade' }}
+                >
+                    <Grid size={1} sx={{ pt: 1.25, fontSize: '16px' }}>
+                        <CircularProgress
+                            variant="indeterminate"
+                            sx={{
+                                color: 'notification.default.shade',
+                                width: '24px',
+                                height: '24px',
+                                animationDuration: '550ms',
+                                '& .MuiCircularProgress-circle': {
+                                    strokeLinecap: 'round',
+                                },
+                            }}
+                        />
+                    </Grid>
+                    <Grid
+                        size={11}
+                        container
+                        direction="row"
+                        justifyContent="flex-start"
+                        alignItems="space-between"
+                        rowSpacing={1}
+                    >
+                        <Grid container direction="row" size={12}>
+                            <Grid size={12}>
+                                <Heading2 mb={0}>We're just looking over your configuration.</Heading2>
+                            </Grid>
+                        </Grid>
+                        <Grid container direction="row" size={12}>
+                            <BodyText bold>This should only take a few seconds.</BodyText>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Modal>
         </Form>
     );
 };

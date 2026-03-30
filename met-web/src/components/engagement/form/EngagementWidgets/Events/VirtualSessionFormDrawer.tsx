@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { Grid2 as Grid } from '@mui/material';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
@@ -170,7 +170,7 @@ const VirtualSessionFormDrawer = () => {
                             padding="2em"
                         >
                             <Grid size={12}>
-                                <Header3 weight="bold">Virtual Information Session</Header3>
+                                <Heading3 bold>Virtual Information Session</Heading3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid size={12}>

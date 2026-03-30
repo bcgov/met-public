@@ -12,7 +12,7 @@ import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { updatedDiff } from 'deep-object-diff';
 import { SurveyLoaderData } from '../building/SurveyLoader';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 
 const SettingsFormPage = () => {
     return (
@@ -22,7 +22,7 @@ const SettingsFormPage = () => {
             sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '1000px', mt: '3rem' }}
         >
             <Paper elevation={0} sx={{ padding: '3rem', mr: '1rem' }}>
-                <Header3 style={{ fontWeight: 'bold', marginBottom: '3rem' }}>Report Settings</Header3>
+                <Heading3 style={{ fontWeight: 'bold', marginBottom: '3rem' }}>Report Settings</Heading3>
                 <SettingsForm />
             </Paper>
         </Grid>
@@ -107,13 +107,8 @@ const SettingsForm = () => {
                     <Tooltip
                         title="Link copied!"
                         slotProps={{
-                            popper: {
-                                disablePortal: true,
-                                sx: {
-                                    pointerEvents: 'none',
-                                    '.MuiTooltip-tooltip': { backgroundColor: 'primary.main' },
-                                },
-                            },
+                            tooltip: { sx: { backgroundColor: 'primary.main' } },
+                            popper: { disablePortal: true, sx: { pointerEvents: 'none' } },
                         }}
                         sx={{ height: '40px', pr: 0 }}
                         onClose={handleTooltipClose}

@@ -1,4 +1,4 @@
-import { BodyText, EyebrowText, Header1 } from 'components/common/Typography';
+import { BodyText, EyebrowText, Heading1 } from 'components/common/Typography';
 import React, { Suspense } from 'react';
 import { Button } from 'components/common/Input/Button';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
@@ -94,9 +94,9 @@ export const EngagementHero = () => {
                                 <EyebrowText m="0">Sponsor Name</EyebrowText>
                             </Skeleton>
                             <Skeleton>
-                                <Header1 weight="thin" sx={{ mb: '32px' }}>
+                                <Heading1 weight="thin" sx={{ mb: '32px' }}>
                                     Engagement Name
-                                </Header1>
+                                </Heading1>
                             </Skeleton>
                             <Grid container mb="48px" flexDirection="row" alignItems="center" columnSpacing={1}>
                                 <Grid>
@@ -162,13 +162,13 @@ export const EngagementHero = () => {
                                             previewFallback={<TextPlaceholder type="short" />}
                                         />
                                     </EyebrowText>
-                                    <Header1 weight="thin" sx={{ color: colors.surface.gray[110], mb: '32px', mt: 0 }}>
+                                    <Heading1 weight="thin" sx={{ color: colors.surface.gray[110], mb: '32px', mt: 0 }}>
                                         <PreviewSwitch
                                             hasValue={Boolean(engagement.name?.trim())}
                                             value={engagement.name}
                                             previewFallback={<TextPlaceholder type="short" />}
                                         />
-                                    </Header1>
+                                    </Heading1>
                                     <Grid container mb="48px" flexDirection="row" alignItems="center" columnSpacing={1}>
                                         <Grid>
                                             <EngagementStatusChip statusId={effectiveStatusId} />

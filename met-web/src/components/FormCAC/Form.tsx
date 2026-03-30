@@ -1,5 +1,5 @@
 import React from 'react';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { Grid2 as Grid, Paper } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
@@ -41,7 +41,7 @@ export const Form = () => {
                             rowSpacing={2}
                         >
                             <Grid size={12}>
-                                <Header1>{translate('formCAC.form.header')}</Header1>
+                                <Heading1>{translate('formCAC.form.header')}</Heading1>
                             </Grid>
                             <Grid size={12}>
                                 <BodyText>{translate('formCAC.form.paragraph')}</BodyText>

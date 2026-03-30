@@ -1,5 +1,5 @@
 import { Grid2 as Grid, Toolbar, SvgIcon, Box } from '@mui/material';
-import { Header1, Header4 } from 'components/common/Typography';
+import { Heading1, Heading4 } from 'components/common/Typography';
 import React from 'react';
 import { ReactComponent as ErrorSvg } from 'assets/images/404.svg';
 import { Link } from 'components/common/Navigation';
@@ -44,9 +44,9 @@ const NotFound = () => {
                 padding={'2em 2em 1em 2em'}
             >
                 <Grid sx={{ ...marginStyle, marginBottom: 3 }}>
-                    <Header1 weight="bold" fontSize="2em">
+                    <Heading1 bold fontSize="2em">
                         {translate('notFound.header.0')}
-                    </Header1>
+                    </Heading1>
                 </Grid>
                 <Grid sx={{ marginStyle, marginBottom: 2 }}>
                     <SvgIcon
@@ -63,9 +63,9 @@ const NotFound = () => {
                     />
                 </Grid>
                 <Grid size={6} justifyContent="center" mb={4}>
-                    <Header4 align="left" weight="bold">
+                    <Heading4 align="left" bold>
                         {translate('notFound.header.1')}
-                    </Header4>
+                    </Heading4>
                 </Grid>
                 <Grid size={6} justifyContent={'left'}>
                     <SuggestionsList translate={translate} />

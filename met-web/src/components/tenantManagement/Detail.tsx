@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
-import { Header1, Header2, BodyText, Header4 } from 'components/common/Typography/';
+import { Heading1, Heading2, BodyText, Heading4 } from 'components/common/Typography/';
 import { ResponsiveContainer, DetailsContainer, Detail } from 'components/common/Layout';
 import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import { deleteTenant } from 'services/tenantService';
@@ -79,12 +79,12 @@ const TenantDetail = () => {
                 <ResponsiveContainer>
                     <AutoBreadcrumbs />
                     <Skeleton variant="text" width="40%">
-                        <Header1>Loading...</Header1>
+                        <Heading1>Loading...</Heading1>
                     </Skeleton>
                     <Grid container spacing={0} direction="row" mb="0.5em">
                         <Grid size={{ xs: 12, sm: 7, lg: 9 }}>
                             <Skeleton variant="text" width="60%">
-                                <Header2 decorated>Loading...</Header2>
+                                <Heading2 decorated>Loading...</Heading2>
                             </Skeleton>
                         </Grid>
                         <Grid size={{ xs: 'auto', sm: 5, lg: 3 }} sx={{ textAlign: 'right' }}>
@@ -183,11 +183,11 @@ const TenantDetail = () => {
                     <ResponsiveContainer>
                         <AutoBreadcrumbs />
                         <Grid size={12}>
-                            <Header1>{resolvedTenant.name}</Header1>
+                            <Heading1>{resolvedTenant.name}</Heading1>
                         </Grid>
                         <Grid container spacing={0} direction="row" mb="0.5em" size={12}>
                             <Grid size={{ xs: 12, sm: 'grow' }}>
-                                <Header2 decorated>Tenant Details</Header2>
+                                <Heading2 decorated>Tenant Details</Heading2>
                             </Grid>
                             <Grid size="auto">
                                 <Button
@@ -212,12 +212,12 @@ const TenantDetail = () => {
                             }}
                         >
                             <Detail spacing={2}>
-                                <Header4>Tenant Instance Name</Header4>
+                                <Heading4>Tenant Instance Name</Heading4>
                                 <BodyText>{resolvedTenant.name}</BodyText>
                             </Detail>
 
                             <Detail spacing={2}>
-                                <Header4>Primary Contact</Header4>
+                                <Heading4>Primary Contact</Heading4>
                                 <Grid container size={12} alignItems="center">
                                     <Grid size="auto">
                                         <BodyText>{resolvedTenant.contact_name}</BodyText>
@@ -250,23 +250,23 @@ const TenantDetail = () => {
                             </Detail>
 
                             <Detail spacing={2}>
-                                <Header4>Short Name</Header4>
+                                <Heading4>Short Name</Heading4>
                                 <BodyText>{resolvedTenant.short_name}</BodyText>
                             </Detail>
 
                             <Detail>
-                                <Header4>Hero Banner Title</Header4>
+                                <Heading4>Hero Banner Title</Heading4>
                                 <BodyText>{resolvedTenant.title}</BodyText>
                             </Detail>
 
                             <Detail>
-                                <Header4>Hero Banner Description</Header4>
+                                <Heading4>Hero Banner Description</Heading4>
                                 <BodyText>{resolvedTenant.description}</BodyText>
                             </Detail>
 
                             <Detail>
                                 <Grid size={12} gap={1}>
-                                    <Header4>Hero Banner Image</Header4>
+                                    <Heading4>Hero Banner Image</Heading4>
                                     <div
                                         style={{
                                             height: '166px',

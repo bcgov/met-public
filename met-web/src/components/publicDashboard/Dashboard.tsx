@@ -3,7 +3,7 @@ import { Grid2 as Grid, useMediaQuery, Stack, Theme, Box, Backdrop, Paper, Circu
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { useNavigate, useParams } from 'react-router';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { ReportBanner } from './ReportBanner';
 import SurveysCompleted from './KPI/SurveysCompleted';
 import ProjectLocation from './KPI/ProjectLocation';
@@ -100,9 +100,9 @@ const Dashboard = () => {
                             >
                                 <When condition={!isTablet}>
                                     <Grid size={{ xs: 12, sm: 6 }}>
-                                        <Header1 textAlign={{ xs: 'center', sm: 'left' }}>
+                                        <Heading1 textAlign={{ xs: 'center', sm: 'left' }}>
                                             {translate('dashboard.header')}
-                                        </Header1>
+                                        </Heading1>
                                     </Grid>
                                     <Grid
                                         size={{ xs: 12, sm: 6 }}
@@ -159,7 +159,7 @@ const Dashboard = () => {
                                                     size={12}
                                                     sx={{ mb: 1 }}
                                                 >
-                                                    <Header1 weight="bold">{engagement.name}</Header1>
+                                                    <Heading1 bold>{engagement.name}</Heading1>
                                                 </Grid>
                                                 <Grid
                                                     container

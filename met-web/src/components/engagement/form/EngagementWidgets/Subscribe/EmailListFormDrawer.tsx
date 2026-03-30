@@ -18,7 +18,7 @@ import ControlledRadioGroup from 'components/common/ControlledInputComponents/Co
 import { When } from 'react-if';
 import { Palette } from 'styles/Theme';
 import { Button } from 'components/common/Input/Button';
-import { Header3, BodyText } from 'components/common/Typography';
+import { Heading3, BodyText } from 'components/common/Typography';
 
 const schema = yup
     .object({
@@ -176,7 +176,7 @@ const EmailListDrawer = () => {
                             padding="2em"
                         >
                             <Grid size={12}>
-                                <Header3 weight="bold">Email List</Header3>
+                                <Heading3 bold>Email List</Heading3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
                             <Grid size={12}>

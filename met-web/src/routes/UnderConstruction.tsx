@@ -3,7 +3,7 @@ import React from 'react';
 import { IProps } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faScrewdriverWrench } from '@fortawesome/pro-regular-svg-icons/faScrewdriverWrench';
-import { Header2 } from 'components/common/Typography/Headers';
+import { Heading2 } from 'components/common/Typography/Headings';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { useMatches } from 'react-router';
 import { BreadcrumbTrail } from 'components/common/Navigation/Breadcrumb';
@@ -29,9 +29,9 @@ const UnderConstruction = React.memo(({ errorMessage = 'This page is under const
                     />
                 </Grid>
                 <Grid size={12} justifyContent={alignment} alignItems={alignment} container>
-                    <Header2 decorated width="max-content">
+                    <Heading2 decorated width="max-content">
                         {errorMessage}
-                    </Header2>
+                    </Heading2>
                 </Grid>
                 <Grid size="auto" m={4}>
                     <FontAwesomeIcon
