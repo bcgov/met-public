@@ -131,14 +131,17 @@ const DocumentIcon = (documentItem: DocumentItem) => {
     if (documentItem.type === DOCUMENT_TYPE.FOLDER) {
         return null;
     } else {
-        return () => (
+        const Icon = (
             <FontAwesomeIcon
                 icon={getFileIcon(documentItem.url ?? '', documentItem.is_uploaded ?? false)}
                 style={{ height: iconSize, maxWidth: iconSize }}
             />
         );
+        return () => Icon;
     }
 };
+
+const ThinkingIcon = () => <FontAwesomeIcon icon={faFaceThinking} style={{ height: iconSize, color: 'inherit' }} />;
 
 const RecursiveDocumentTree = ({ documentItem, expandedItems }: DocumentTreeProps) => {
     const renderEmptyFolder = () => (
@@ -147,9 +150,7 @@ const RecursiveDocumentTree = ({ documentItem, expandedItems }: DocumentTreeProp
             disabled
             itemId={`${documentItem.id}-empty`}
             color="text.secondary"
-            slots={{
-                icon: () => <FontAwesomeIcon icon={faFaceThinking} style={{ height: iconSize, color: 'inherit' }} />,
-            }}
+            slots={{ icon: ThinkingIcon }}
             label={
                 <BodyText color="text.secondary" sx={{ fontStyle: 'italic' }}>
                     Folder is empty

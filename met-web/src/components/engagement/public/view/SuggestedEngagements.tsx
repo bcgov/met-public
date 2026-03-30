@@ -56,8 +56,14 @@ export const SuggestedEngagements = () => {
                         overflow="auto"
                         pb={1}
                     >
-                        {Array.from({ length: 3 }).map((_, i) => (
-                            <Grid size="auto" key={i}>
+                        {engagementSlots.map((_, i) => (
+                            <Grid
+                                size="auto"
+                                key={`placeholder-${i + 1}`}
+                                container
+                                width="320px"
+                                sx={placeholderStyles}
+                            >
                                 <TileSkeleton />
                             </Grid>
                         ))}
@@ -114,7 +120,7 @@ export const SuggestedEngagements = () => {
                                             isPreviewMode: isPreviewMode,
                                             hasValue: Boolean(sug),
                                             value: sug ? (
-                                                <Grid size="auto" key={`Grid-${sug.suggested_engagement_id}`}>
+                                                <Grid size="auto" key={`suggestion-${sug.suggested_engagement_id}`}>
                                                     <EngagementTile
                                                         passedEngagement={sug.engagement as Engagement}
                                                         engagementId={sug.suggested_engagement_id}
@@ -123,7 +129,7 @@ export const SuggestedEngagements = () => {
                                             ) : null,
                                             previewFallback: (
                                                 <Grid
-                                                    key={`Placeholder-${i + 1}`}
+                                                    key={`placeholder-${i + 1}`}
                                                     size="auto"
                                                     container
                                                     width="320px"

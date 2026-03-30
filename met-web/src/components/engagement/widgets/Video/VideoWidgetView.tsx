@@ -145,7 +145,7 @@ const VideoWidgetView = ({ widget }: VideoWidgetProps) => {
 
     return (
         <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
-            <Grid size={12} sx={{ height: !widget.title.length ? '0px' : 'auto' }}>
+            <Grid size={12} sx={{ height: widget.title.length ? 'auto' : '0px' }}>
                 <Heading3 fontWeight="lighter" fontSize="1.5rem">
                     {widget.title}
                 </Heading3>
