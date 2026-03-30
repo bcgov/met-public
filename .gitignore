@@ -145,4 +145,4 @@ met-api/.DS_Store
 met-web/.vscode/
 
 # Helm dependency files
-openshift/**/charts/
+openshift/**/charts/*.tgz
