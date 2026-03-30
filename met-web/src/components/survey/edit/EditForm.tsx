@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Grid, Stack, TextField } from '@mui/material';
+import { Grid2 as Grid, Stack, TextField } from '@mui/material';
 import { SurveyFormProps } from '../types';
 import { useAppDispatch, useAppTranslation } from 'hooks';
 import { updateSubmission } from 'services/submissionService';
@@ -9,8 +9,8 @@ import { useAsyncValue, useNavigate } from 'react-router';
 import { Engagement } from 'models/engagement';
 import { SurveySubmission } from 'models/surveySubmission';
 import { EmailVerification } from 'models/emailVerification';
-import { Button } from 'components/common/Input';
-import { BodyText } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 
 export const EditForm = ({ handleClose }: SurveyFormProps) => {
@@ -83,7 +83,7 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
             <UnsavedWorkConfirmation blockNavigationWhen={isChanged} />
             {submission.comments?.map((comment, index) => {
                 return (
-                    <Grid item xs={12} key={index}>
+                    <Grid size={12} key={index}>
                         <BodyText size="small">{comment.label}</BodyText>
                         <TextField
                             defaultValue={comment.text}
@@ -97,16 +97,14 @@ export const EditForm = ({ handleClose }: SurveyFormProps) => {
                     </Grid>
                 );
             })}
-            <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+            <Grid container size={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                 <Stack
                     direction={{ md: 'column-reverse', lg: 'row' }}
                     spacing={1}
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <Button variant="secondary" onClick={() => handleClose()}>
-                        {translate('surveyEdit.editForm.button.cancel')}
-                    </Button>
+                    <Button onClick={() => handleClose()}>{translate('surveyEdit.editForm.button.cancel')}</Button>
                     <Button
                         variant="primary"
                         onClick={() => {

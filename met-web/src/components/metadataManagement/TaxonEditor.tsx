@@ -18,7 +18,7 @@ import { Button } from 'components/common/Input/Button';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { faArrowsFromLine, faArrowsToLine, faPlusCircle } from '@fortawesome/pro-regular-svg-icons';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { DarkTheme, BaseTheme } from 'styles/Theme';
 
 export const TaxonEditor = () => {
@@ -133,7 +133,7 @@ export const TaxonEditor = () => {
         <ResponsiveContainer>
             <AutoBreadcrumbs />
             <Grid size={12}>
-                <Header1 mb={1}>Metadata Management</Header1>
+                <Heading1 mb={1}>Metadata Management</Heading1>
             </Grid>
             <Grid size={12}>
                 <BodyText mb={1}>Manage the ways metadata is collected and organized for your engagements.</BodyText>

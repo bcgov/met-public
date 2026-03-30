@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid, Modal } from '@mui/material';
-import { PrimaryButtonOld, modalStyle } from 'components/common';
+import { Grid2 as Grid, Modal } from '@mui/material';
+import { modalStyle } from 'components/common';
+import { Button } from 'components/common/Input/Button';
 
 type EmailModal = {
     open: boolean;
@@ -22,11 +23,13 @@ const EmailPreviewModal = ({ open, header, renderEmail, handleClose }: EmailModa
                 }}
                 rowSpacing={2}
             >
-                <Grid sx={{ alignItems: 'center', justifyContent: 'center' }} item xs={12}>
+                <Grid sx={{ alignItems: 'center', justifyContent: 'center' }} size={12}>
                     {renderEmail}
                 </Grid>
-                <Grid item xs={3}>
-                    <PrimaryButtonOld onClick={() => handleClose()}>Close Preview</PrimaryButtonOld>
+                <Grid size={3}>
+                    <Button variant="primary" onClick={() => handleClose()}>
+                        Close Preview
+                    </Button>
                 </Grid>
             </Grid>
         </Modal>

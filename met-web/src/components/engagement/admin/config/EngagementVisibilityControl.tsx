@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { Grid, FormControl, FormControlLabel, IconButton, Radio, RadioGroup } from '@mui/material';
+import { Grid2 as Grid, FormControl, FormControlLabel, IconButton, Radio, RadioGroup } from '@mui/material';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Unless, When } from 'react-if';
 import { TextField, Button } from 'components/common/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { getBaseUrl } from 'helper';
 import { colors } from 'styles/Theme';
 import { Link } from 'components/common/Navigation';
@@ -92,14 +92,14 @@ const EngagementVisibilityControl = () => {
                                 width: '100%',
                             }}
                         >
-                            <Grid item container spacing={1} alignItems="center">
-                                <Grid item>
+                            <Grid container spacing={1} alignItems="center">
+                                <Grid>
                                     <BodyText bold color="primary.main">
                                         Engagement URL
                                     </BodyText>
                                 </Grid>
                                 <When condition={isConfirmed}>
-                                    <Grid item>
+                                    <Grid>
                                         <IconButton
                                             size="small"
                                             onClick={() => setIsEditing(true)}
@@ -110,15 +110,15 @@ const EngagementVisibilityControl = () => {
                                     </Grid>
                                 </When>
                             </Grid>
-                            <Grid item>
+                            <Grid>
                                 <BodyText>
                                     <span style={{ fontWeight: 'bold' }}>{siteUrl}/</span>
                                     {formSlug || '???'}
                                 </BodyText>
                             </Grid>
                             <Unless condition={isConfirmed}>
-                                <Grid item container spacing={2} flexDirection="row" alignItems="center">
-                                    <Grid item>
+                                <Grid container spacing={2} flexDirection="row" alignItems="center">
+                                    <Grid>
                                         <Button
                                             variant="primary"
                                             disabled={!watch('slug')}
@@ -131,7 +131,7 @@ const EngagementVisibilityControl = () => {
                                             Confirm
                                         </Button>
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <Link
                                             tabIndex={0}
                                             sx={{ cursor: 'pointer', color: colors.type.regular.primary }}
@@ -173,7 +173,7 @@ const EngagementVisibilityControl = () => {
                         }
                     />
                     <Grid container spacing={2} mt={1} flexDirection="row" alignItems="center">
-                        <Grid item>
+                        <Grid>
                             <Button
                                 disabled={!currentSlug}
                                 variant="primary"
@@ -187,7 +187,7 @@ const EngagementVisibilityControl = () => {
                                 Confirm
                             </Button>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <Link
                                 tabIndex={0}
                                 sx={{ cursor: 'pointer', color: colors.type.regular.primary }}

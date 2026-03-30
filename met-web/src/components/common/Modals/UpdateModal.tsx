@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid2 as Grid } from '@mui/material';
 import { modalStyle, colors } from 'components/common';
 import { NotificationModalProps } from './types';
-import { BodyText, Header1 } from '../Typography';
+import { BodyText, Heading1 } from '../Typography';
 import { Button } from '../Input/Button';
 
 const UpdateModal = ({ header, style = 'default', subText, handleClose }: NotificationModalProps) => {
@@ -18,9 +18,9 @@ const UpdateModal = ({ header, style = 'default', subText, handleClose }: Notifi
         >
             <Grid container direction="row" size={{ xs: 12 }}>
                 <Grid size={12}>
-                    <Header1 weight="bold" sx={{ mb: 2 }}>
+                    <Heading1 bold sx={{ mb: 2 }}>
                         {header}
-                    </Header1>
+                    </Heading1>
                 </Grid>
             </Grid>
             <Grid container direction="row" size={{ xs: 12 }}>

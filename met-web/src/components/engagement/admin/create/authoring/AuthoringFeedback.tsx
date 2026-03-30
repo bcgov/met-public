@@ -1,5 +1,5 @@
 import { Autocomplete, Grid2 as Grid, Modal, TextField as MUITextField } from '@mui/material';
-import { BodyText, ErrorMessage, Header3 } from 'components/common/Typography';
+import { BodyText, ErrorMessage, Heading3 } from 'components/common/Typography';
 import { TextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -140,7 +140,7 @@ const AuthoringFeedback = () => {
             {/* Feedback form */}
             <AuthoringFormContainer>
                 <Grid sx={{ mt: '1rem' }} direction="column" gap="0.5rem">
-                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <Heading3 bold>Primary Content (Required)</Heading3>
                     <BodyText size="small">
                         This section of content should provide a brief overview of your approach to feedback and what
                         you would like your audience to do.
@@ -269,7 +269,7 @@ const AuthoringFeedback = () => {
                 </AuthoringFormSection>
 
                 <Grid sx={{ mt: '1rem' }}>
-                    <Header3 weight="bold">Supporting Content (Optional)</Header3>
+                    <Heading3 bold>Supporting Content (Optional)</Heading3>
                     <BodyText size="small">
                         You may use a widget to add supporting content to your primary content.
                     </BodyText>

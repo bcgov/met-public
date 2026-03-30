@@ -1,3 +1,15 @@
+## March 23, 2026
+
+- **Chore** Remove & replace deprecated components [🎟️ DEP-250](https://citz-gdx.atlassian.net/browse/DEP-250)
+  - Visited all instances of deprecated components in the codebase and removed them, replacing them with their new design system counterparts where necessary. Notable changes include:
+    - Typography (BodyText, Header1, Header2, etc. instead of MetBodyTextOld, MetLabel, MetParagraphOld, MetHeader1Old, etc.)
+    - Layout (MetPageGridContainer -> ResponsiveContainer)
+    - Buttons (Universal Button component instead of MetPrimaryButtonOld, MetSecondaryButtonOld, etc.)
+    - Grid -> Grid2 as Grid (deprecated by MUI in favor of a new implementation)
+    - Replaced some custom components with plain MUI components, opting to style them at the theme level instead of creating new custom components for them (e.g. replaced MetPaper with MUI Paper component, and count on "elevation1" variant in `Theme.tsx` to handle styling)
+  - Removed custom inline styling wherever updates made it redundant
+  - Because the old components had "MET" in their names, removing them is in line with upcoming work for DEP-221 to remove all instances of "MET" from the codebase as part of the rebranding to the Digital Engagement Platform (DEP).
+
 ## March 17, 2026
 
 - **Feature** Added More Engagements to authoring section [🎟️ DEP-228](https://citz-gdx.atlassian.net/browse/DEP-228)

@@ -34,6 +34,7 @@ export const EngagementPreviewTag: React.FC<PreviewTagProps> = ({ children, requ
             zIndex={100}
             justifyContent="center"
             height="100%"
+            sx={{ pointerEvents: 'none' }} // Ensure the container does not interfere with interactions
         >
             {/* Centers its content vertically so the tag is always in the middle of its section */}
             <Grid

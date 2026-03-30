@@ -3,7 +3,7 @@ import { Grid2 as Grid } from '@mui/material';
 import { SuccessPanelProps } from 'engagements/public/email/types';
 import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 
 const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
     return (
@@ -17,9 +17,9 @@ const SuccessPanel = ({ email, handleClose }: SuccessPanelProps) => {
         >
             <Grid container direction="row" size={12}>
                 <Grid size={12}>
-                    <Header1 weight="bold" sx={{ mb: 2 }}>
+                    <Heading1 bold sx={{ mb: 2 }}>
                         Thank you
-                    </Header1>
+                    </Heading1>
                 </Grid>
                 <Grid size={12}>
                     <BodyText id="modal-modal-header">

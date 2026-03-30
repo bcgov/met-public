@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { UserDetailsContext } from './UserDetailsContext';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
@@ -7,6 +6,9 @@ import { openNotification } from 'services/notificationService/notificationSlice
 import { toggleUserStatus } from 'services/userService/api';
 import { USER_ROLES } from 'services/userService/constants';
 import { USER_COMPOSITE_ROLE } from 'models/user';
+import { Button } from 'components/common/Input/Button';
+import { faUserPlus, faUserSlash } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const UserStatusButton = () => {
     const { roles, userDetail } = useAppSelector((state) => state.user);
@@ -113,18 +115,16 @@ const UserStatusButton = () => {
         );
     };
 
-    return disabled ? (
-        <PrimaryButtonOld data-testid="user-status-toggle" disabled>
-            {userStatus ? 'Deactivate User' : 'Reactivate User'}
-        </PrimaryButtonOld>
-    ) : (
-        <SecondaryButtonOld
+    return (
+        <Button
             data-testid="user-status-toggle"
             loading={togglingUserStatus}
             onClick={() => handleToggleUserStatus(!userStatus)}
+            disabled={disabled}
+            icon={<FontAwesomeIcon icon={userStatus ? faUserSlash : faUserPlus} />}
         >
             {userStatus ? 'Deactivate User' : 'Reactivate User'}
-        </SecondaryButtonOld>
+        </Button>
     );
 };
 

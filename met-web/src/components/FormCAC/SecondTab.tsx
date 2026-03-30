@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Grid } from '@mui/material';
-import { MetDescription, MetLabel } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
 import { FormContext } from './FormContext';
 import * as yup from 'yup';
 import ControlledTextField from 'components/common/ControlledInputComponents/ControlledTextField';
@@ -52,77 +52,45 @@ export const SecondTab = () => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <FormProvider {...methods}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <MetDescription>{translate('formCAC.tab2.description.0')}</MetDescription>
+                        <Grid size={12}>
+                            <BodyText>{translate('formCAC.tab2.description.0')}</BodyText>
                         </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={12} sm={6}>
-                                <MetLabel>{translate('formCAC.tab2.labels.0')}</MetLabel>
-                                <ControlledTextField
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="firstName"
-                                />
+                        <Grid container size={12}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <BodyText bold>{translate('formCAC.tab2.labels.0')}</BodyText>
+                                <ControlledTextField name="firstName" />
                             </Grid>
                         </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={12} sm={6}>
-                                <MetLabel>{translate('formCAC.tab2.labels.1')}</MetLabel>
-                                <ControlledTextField
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="lastName"
-                                />
+                        <Grid container size={12}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <BodyText bold>{translate('formCAC.tab2.labels.1')}</BodyText>
+                                <ControlledTextField name="lastName" />
                             </Grid>
                         </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={12} sm={6}>
-                                <MetLabel>{translate('formCAC.tab2.labels.2')}</MetLabel>
-                                <ControlledTextField
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="city"
-                                />
+                        <Grid container size={12}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <BodyText bold>{translate('formCAC.tab2.labels.2')}</BodyText>
+                                <ControlledTextField name="city" />
                             </Grid>
                         </Grid>
-                        <Grid container item xs={12}>
-                            <Grid item xs={12} sm={6}>
-                                <MetLabel>{translate('formCAC.tab2.labels.3')}</MetLabel>
-                                <ControlledTextField
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    name="email"
-                                />
+                        <Grid container size={12}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <BodyText bold>{translate('formCAC.tab2.labels.3')}</BodyText>
+                                <ControlledTextField name="email" />
                             </Grid>
                         </Grid>
                     </Grid>
                 </FormProvider>
             </Grid>
 
-            <Grid item xs={12}>
-                <MetDescription>{translate('formCAC.tab2.description.1')}</MetDescription>
+            <Grid size={12}>
+                <BodyText>{translate('formCAC.tab2.description.1')}</BodyText>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Button variant="primary" size="small" loading={submittingForm} onClick={handleSubmit(onSubmit)}>
                     {translate('formCAC.tab2.button.submit')}
                 </Button>

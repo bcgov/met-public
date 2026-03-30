@@ -4,7 +4,7 @@ import {
     AutocompleteProps,
     Box,
     BoxProps,
-    Grid,
+    Grid2 as Grid,
     IconButton,
     Paper,
     PaperProps,
@@ -15,9 +15,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown, faPlus, faXmark } from '@fortawesome/pro-regular-svg-icons';
 import { colors } from 'styles/Theme';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { When } from 'react-if';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { OutlineBox } from 'components/common/Layout';
 
 import {
@@ -180,24 +180,24 @@ const MultiSelect = <T,>({
             <When condition={selectedOptions?.length}>
                 <OutlineBox sx={{ width: '300px', maxWidth: '100%', marginTop: '1rem' }}>
                     <Grid container spacing={2} direction="column">
-                        <Grid item>
+                        <Grid>
                             <BodyText bold color="primary.main">
                                 {selectedOptions?.length === 1 ? selectedLabel.singular : selectedLabel.plural}
                             </BodyText>
                         </Grid>
                         {selectedOptions?.map((option, index) => (
-                            <Grid item container key={getOptionLabel?.(option)} alignItems="center" spacing={2}>
-                                <Grid item>
+                            <Grid container key={getOptionLabel?.(option)} alignItems="center" spacing={2}>
+                                <Grid>
                                     <FontAwesomeIcon icon={faCheck} color={colors.type.regular.primary} />
                                 </Grid>
-                                <Grid item>
+                                <Grid>
                                     {renderSelectedOption?.({}, option, {
                                         selected: false,
                                         inputValue: searchTerm,
                                         index: index,
                                     })}
                                 </Grid>
-                                <Grid item marginLeft="auto" hidden={getOptionRequired?.(option) === true}>
+                                <Grid marginLeft="auto" hidden={getOptionRequired?.(option) === true}>
                                     <IconButton
                                         sx={{ height: '16px', width: '16px' }}
                                         onClick={(e) => handleRemoveOption(e, option)}

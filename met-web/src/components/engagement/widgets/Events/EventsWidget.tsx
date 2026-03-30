@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
+import { Grid2 as Grid, Skeleton, Paper, ThemeProvider } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Event, EVENT_TYPE } from 'models/event';
 import { useAppDispatch } from 'hooks';
@@ -8,7 +8,7 @@ import { Switch, Case } from 'react-if';
 import { getEvents } from 'services/widgetService/EventService';
 import VirtualSession from './VirtualSession';
 import InPersonEvent from './InPersonEvent';
-import { Header2, BodyText } from 'components/common/Typography';
+import { Heading2, BodyText } from 'components/common/Typography';
 import { BaseTheme } from 'styles/Theme';
 
 interface EventsWidgetProps {
@@ -42,24 +42,24 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
 
     if (isLoading) {
         return (
-            <Grid item container justifyContent="flex-start" flexDirection={'column'} xs={12} paddingBottom={0}>
-                <Header2 mb={0} pb={0}>
+            <Grid container justifyContent="flex-start" flexDirection={'column'} size={12} paddingBottom={0}>
+                <Heading2 mb={0} pb={0}>
                     <Skeleton variant="rectangular" sx={{ width: '90%' }} />
-                </Header2>
+                </Heading2>
                 <BodyText m="1rem 0 1.5rem;">
                     <Skeleton variant="text" sx={{ width: '80%' }} />
                 </BodyText>
                 <ThemeProvider theme={BaseTheme}>
                     <Paper elevation={1} sx={{ padding: '1em' }}>
                         <Grid container justifyContent="flex-start" spacing={3}>
-                            <Grid item xs={12}></Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}></Grid>
+                            <Grid size={12}>
                                 <Skeleton variant="rectangular" height="3em" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Skeleton variant="rectangular" height="1.5em" />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Skeleton variant="rectangular" height="1.5em" />
                             </Grid>
                         </Grid>
@@ -74,14 +74,14 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
     }
 
     return (
-        <Grid item container justifyContent="flex-start" flexDirection={'column'} xs={12} paddingBottom={0}>
+        <Grid container justifyContent="flex-start" flexDirection={'column'} size={12} paddingBottom={0}>
             {events.map((event: Event) => {
                 const eventItem = event.event_items[0];
                 return (
                     <>
-                        <Header2 mb={0} pb={0}>
+                        <Heading2 mb={0} pb={0}>
                             {eventItem.event_name}
-                        </Header2>
+                        </Heading2>
                         <BodyText m="1rem 0 1.5rem;">{eventItem.description}</BodyText>
                         <ThemeProvider key={event.id} theme={BaseTheme}>
                             <Paper elevation={1} sx={{ minHeight: '12em', p: '2em', mb: '2.5rem' }}>
@@ -90,7 +90,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                                     columnSpacing={1}
                                     rowSpacing={1}
                                     margin={0}
-                                    xs={12}
+                                    size={12}
                                     lineHeight="2.25rem"
                                 >
                                     <Switch>

@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
 import React from 'react';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { TaxonTypes } from './TaxonTypes';
 import { TaxonCardProps } from './types';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
@@ -132,8 +132,8 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                         </Grid>
                         <Grid size="auto">{taxonTypeIcon()}</Grid>
                         <Grid size="grow">
-                            <Header3
-                                weight="bold"
+                            <Heading3
+                                bold
                                 sx={{
                                     textOverflow: 'ellipsis',
                                     overflow: 'hidden',
@@ -143,7 +143,7 @@ export const TaxonCard: React.FC<TaxonCardProps> = ({ taxon, isExpanded, onExpan
                                 }}
                             >
                                 {taxon.name}
-                            </Header3>
+                            </Heading3>
                         </Grid>
                         <Grid size="auto" mr={2}>
                             <IconButton

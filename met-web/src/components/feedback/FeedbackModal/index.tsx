@@ -1,4 +1,4 @@
-import { Box, Grid, IconContainerProps, InputAdornment, Modal, Stack, SvgIcon } from '@mui/material';
+import { Box, Grid2 as Grid, IconContainerProps, InputAdornment, Modal, Stack, SvgIcon } from '@mui/material';
 import * as React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
@@ -7,7 +7,8 @@ import { faFaceMeh } from '@fortawesome/pro-regular-svg-icons/faFaceMeh';
 import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetBodyOld, MetHeader3, MetLabel, modalStyle, MetDisclaimer } from '../../common';
+import { MetDisclaimer, modalStyle } from 'components/common';
+import { BodyText, Heading3 } from 'components/common/Typography';
 import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
 import { CommentTypeButton, StyledRating } from './styledComponents';
@@ -123,7 +124,7 @@ export const FeedbackModal = () => {
                 >
                     <If condition={isSubmitted}>
                         <Then>
-                            <Grid item xs={12} justifyContent="center" textAlign="center" alignItems="center">
+                            <Grid size={12} justifyContent="center" textAlign="center" alignItems="center">
                                 <Stack
                                     justifyContent="center"
                                     textAlign="center"
@@ -136,12 +137,12 @@ export const FeedbackModal = () => {
                                         viewBox="0 0 64 64"
                                         sx={{ marginBottom: 2 }}
                                     />
-                                    <MetHeader3 data-testid="success-title">
+                                    <Heading3 data-testid="success-title">
                                         {translate('feedback.submitModal.header')}
-                                    </MetHeader3>
+                                    </Heading3>
                                 </Stack>
                             </Grid>
-                            <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
+                            <Grid size={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <Button variant="primary" onClick={handleClose}>
                                     {translate('feedback.submitModal.button')}
                                 </Button>
@@ -149,8 +150,7 @@ export const FeedbackModal = () => {
                         </Then>
                         <Else>
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 display="flex"
                                 alignItems={'flex-start'}
                                 justifyContent={'flex-end'}
@@ -160,10 +160,10 @@ export const FeedbackModal = () => {
                                     <IconButton onClick={handleClose} icon={faXmark} />
                                 </Box>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel>{translate('feedback.feedbackModal.label.0')}</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold>{translate('feedback.feedbackModal.label.0')}</BodyText>
                             </Grid>
-                            <Grid item xs={12} textAlign="center">
+                            <Grid size={12} textAlign="center">
                                 <StyledRating
                                     data-testid="rating-input"
                                     value={rating}
@@ -175,20 +175,20 @@ export const FeedbackModal = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12} justifyContent="space-around" textAlign="center">
+                            <Grid size={12} justifyContent="space-around" textAlign="center">
                                 {customRatings[rating].label}
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel>{translate('feedback.feedbackModal.label.1')}</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold>{translate('feedback.feedbackModal.label.1')}</BodyText>
                             </Grid>
-                            <Grid item container xs={12} alignItems="space-evenly" justifyContent="space-evenly">
+                            <Grid container size={12} alignItems="space-between" justifyContent="space-between">
                                 <CommentTypeButton
                                     data-testid="comment-type-issue-button"
                                     onClick={() => handleCommentTypeChanged(CommentTypeEnum.Issue)}
                                     sx={{ border: comment_type == CommentTypeEnum.Issue ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBodyOld>{commentTypes[CommentTypeEnum.Issue].label}</MetBodyOld>
+                                        <BodyText>{commentTypes[CommentTypeEnum.Issue].label}</BodyText>
                                         <When condition={!comment_type}>
                                             {commentTypes[CommentTypeEnum.Issue].icon}
                                         </When>
@@ -199,12 +199,12 @@ export const FeedbackModal = () => {
                                     sx={{ border: comment_type == CommentTypeEnum.Idea ? '2px solid black' : '' }}
                                 >
                                     <Stack spacing={0} justifyContent="space-around" alignItems="center">
-                                        <MetBodyOld>{commentTypes[CommentTypeEnum.Idea].label}</MetBodyOld>
+                                        <BodyText>{commentTypes[CommentTypeEnum.Idea].label}</BodyText>
                                         <When condition={!comment_type}>{commentTypes[CommentTypeEnum.Idea].icon}</When>
                                     </Stack>
                                 </CommentTypeButton>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <When condition={Boolean(comment_type)}>
                                     <CustomTextField
                                         InputProps={{
@@ -213,6 +213,7 @@ export const FeedbackModal = () => {
                                                     position="start"
                                                     sx={{
                                                         padding: '35px 14px',
+                                                        width: '100px',
                                                         borderRight: (theme) => `1px solid ${theme.palette.divider}`,
                                                         color: (theme) => theme.palette.text.primary,
                                                     }}
@@ -222,7 +223,7 @@ export const FeedbackModal = () => {
                                                         justifyContent="space-around"
                                                         alignItems="center"
                                                     >
-                                                        <MetBodyOld>{commentTypes[comment_type].label}</MetBodyOld>
+                                                        <BodyText>{commentTypes[comment_type].label}</BodyText>
                                                         {commentTypes[comment_type].icon}
                                                     </Stack>
                                                 </InputAdornment>
@@ -243,12 +244,12 @@ export const FeedbackModal = () => {
                                     />
                                 </When>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <MetDisclaimer marginTop={0}>
                                     {translate('feedback.feedbackModal.disclaimer')}
                                 </MetDisclaimer>
                             </Grid>
-                            <Grid item xs={12} display="flex" alignItems="end" justifyContent="flex-end">
+                            <Grid size={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <Button
                                     variant="primary"
                                     size="small"

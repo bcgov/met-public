@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { Grid, Divider } from '@mui/material';
-import { PrimaryButtonOld, WidgetButton } from 'components/common';
+import { Grid2 as Grid, Divider } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { EventsContext } from './EventsContext';
 import EventsInfoBlock from './EventsInfoBlock';
 import { WidgetTitle } from '../WidgetTitle';
+import { Button } from 'components/common/Input/Button';
 
 const Form = () => {
     const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
@@ -15,43 +15,46 @@ const Form = () => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
-            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
-                <Grid item>
-                    <WidgetButton
+            <Grid size={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
+                <Grid>
+                    <Button
+                        size="small"
                         onClick={() => {
                             setInPersonFormTabOpen(true);
                         }}
                     >
                         Add In-Person Event
-                    </WidgetButton>
+                    </Button>
                 </Grid>
-                <Grid item>
-                    <WidgetButton
+                <Grid>
+                    <Button
+                        size="small"
                         onClick={() => {
                             setVirtualSessionFormTabOpen(true);
                         }}
                     >
                         Add Virtual Session
-                    </WidgetButton>
+                    </Button>
                 </Grid>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <EventsInfoBlock />
             </Grid>
-            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
-                <Grid item>
-                    <PrimaryButtonOld
+            <Grid size={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
+                <Grid>
+                    <Button
+                        variant="primary"
                         onClick={() => {
                             setWidgetDrawerOpen(false);
                         }}
                     >
                         Close
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

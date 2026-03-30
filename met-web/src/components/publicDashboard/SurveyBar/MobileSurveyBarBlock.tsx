@@ -2,7 +2,7 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { SurveyBarData } from '../types';
 import { DASHBOARD } from '../constants';
-import { MetPaper } from 'components/common';
+import Paper from '@mui/material/Paper';
 
 interface BarBlockProps {
     data: SurveyBarData;
@@ -10,7 +10,7 @@ interface BarBlockProps {
 export const MobileSurveyBarBlock = ({ data }: BarBlockProps) => {
     const height = 250;
     return (
-        <MetPaper sx={{ pt: 4, pb: 1 }}>
+        <Paper sx={{ pt: 4, pb: 1 }}>
             <ResponsiveContainer width={'100%'} height={height} key={data.position}>
                 <BarChart data={data.result} layout={'horizontal'} key={data.position} margin={{ left: 20 }}>
                     <XAxis
@@ -44,6 +44,6 @@ export const MobileSurveyBarBlock = ({ data }: BarBlockProps) => {
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
-        </MetPaper>
+        </Paper>
     );
 };

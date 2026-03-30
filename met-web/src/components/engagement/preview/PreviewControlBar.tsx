@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { AppBar, Box, Grid2 as Grid, ThemeProvider, Toolbar } from '@mui/material';
+import { AppBar, Box, Grid2 as Grid, ThemeProvider, Toolbar, Skeleton } from '@mui/material';
 import { colors, AdminDarkTheme } from 'styles/Theme';
-import { Header2 } from 'components/common/Typography';
+import { Heading2 } from 'components/common/Typography';
 import { Button } from 'components/common/Input';
 import PreviewStateTabs, { SubmissionStatusTypes } from './PreviewStateTabs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,7 +10,7 @@ import { Engagement } from 'models/engagement';
 import { StatusLabel } from 'engagements/admin/create/authoring/StatusLabel';
 
 interface PreviewControlBarProps {
-    engagement: Engagement;
+    engagement?: Engagement;
     previewState: SubmissionStatusTypes;
     onStateChange: (state: SubmissionStatusTypes) => void;
     onReload: () => void;
@@ -66,12 +66,16 @@ export const PreviewControlBar: React.FC<PreviewControlBarProps> = ({
                         <Grid container direction="column" alignSelf="flex-start" size="grow">
                             <Grid container direction="row" gap={1} alignSelf="flex-start">
                                 {/* Status Chip */}
-                                <StatusLabel status={engagement.status_id} />
+                                {engagement ? (
+                                    <StatusLabel status={engagement.status_id} />
+                                ) : (
+                                    <Skeleton variant="rectangular" width={80} height={24} />
+                                )}
                                 {/* Completeness Indicator */}
                                 <StatusLabel completed={!!isComplete} text={isComplete ? 'Complete' : 'Incomplete'} />
                             </Grid>
                             {/* Left Section: Title */}
-                            <Grid component={Header2} my={0} weight="bold" fontSize="2rem" lineHeight="2.5rem">
+                            <Grid component={Heading2} my={0} bold fontSize="2rem" lineHeight="2.5rem">
                                 Engagement Preview
                             </Grid>
                         </Grid>

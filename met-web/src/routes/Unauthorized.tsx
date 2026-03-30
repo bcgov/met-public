@@ -1,7 +1,8 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { MetHeader2Old, MetHeader4, PrimaryButtonOld } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { Heading2, Heading4 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 
 const Unauthorized = () => {
     const navigate = useNavigate();
@@ -14,25 +15,26 @@ const Unauthorized = () => {
             spacing={1}
             padding={'2em 2em 1em 2em'}
         >
-            <Grid item xs={12}>
-                <MetHeader2Old variant="h2" align="center">
+            <Grid size={12}>
+                <Heading2 decorated align="center">
                     Unauthorized
-                </MetHeader2Old>
+                </Heading2>
             </Grid>
-            <Grid item xs={12}>
-                <MetHeader4 variant="h2" align="center">
+            <Grid size={12}>
+                <Heading4 variant="h2" align="center">
                     You don't have the necessary authorization to view this page. Click the button below to go back
-                </MetHeader4>
+                </Heading4>
             </Grid>
-            <Grid container item xs={12} justifyContent="center">
-                <Grid item>
-                    <PrimaryButtonOld
+            <Grid container size={12} justifyContent="center">
+                <Grid>
+                    <Button
+                        variant="primary"
                         onClick={() => {
                             navigate('/');
                         }}
                     >
                         Go to home page
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

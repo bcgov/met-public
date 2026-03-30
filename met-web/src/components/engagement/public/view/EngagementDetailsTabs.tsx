@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Tab, Grid2 as Grid, useMediaQuery, Theme } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
-import { Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { colors } from 'components/common';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { EngagementViewSections } from '.';
@@ -48,70 +48,6 @@ export const EngagementDetailsTabs = () => {
         });
     }, [details]);
 
-    // STYLES
-
-    const containerStyles = {
-        padding: { xs: '0 16px 24px 16px', md: '0 5vw 40px 5vw', lg: '0 10em 40px 10em' },
-        boxSizing: 'border-box',
-        marginTop: 0,
-        position: 'relative',
-        zIndex: 10,
-    };
-
-    const tabListStyles = {
-        mb: '1rem',
-        width: '100%',
-        '& .MuiTabs-scroller': {
-            width: 'max-content',
-            pb: '1rem',
-            '.MuiTabs-indicator': {
-                display: 'flex',
-                justifyContent: 'center',
-                height: '6px',
-                backgroundColor: colors.surface.blue[90],
-                width: '4px',
-                color: colors.surface.blue[90],
-            },
-        },
-        '& .MuiTabs-flexContainer': {
-            justifyContent: 'flex-start',
-            width: 'max-content',
-        },
-        '& .Mui-focusVisible': {
-            outline: `2px solid`,
-            outlineColor: 'focus.inner',
-            border: '4px solid',
-            borderColor: 'focus.outer',
-            padding: '0px 20px 0px 14px',
-        },
-    };
-
-    const tabStyles = {
-        width: 'max-content',
-        maxWidth: '100%',
-        color: colors.type.regular.primary,
-        background: 'transparent',
-        minWidth: '3rem',
-        fontSize: '14px',
-        fontWeight: 'normal',
-        mr: { xs: 0, md: '2rem' },
-        padding: { xs: '0.75rem', md: '1.25rem 0' },
-        mt: '0.75rem',
-        alignItems: { xs: 'flex-start', md: 'center' },
-        '&.Mui-selected': {
-            fontWeight: 'bold',
-        },
-    };
-
-    const tabIndicatorStyles = { marginBottom: '16px' };
-
-    const tabLayoutStyles = {
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        width: '100%',
-        gap: '3rem',
-    };
-
     const hasBodyContent = (tab: FormDetailsTabWithWidget) => tab.body?.getCurrentContent()?.hasText?.() ?? false;
     const previewDisplay: FormDetailsTabWithWidget[] = [
         {
@@ -144,23 +80,54 @@ export const EngagementDetailsTabs = () => {
             style={{ position: 'relative' }}
         >
             <EngagementPreviewTag required>Details Section</EngagementPreviewTag>
-            <Grid container sx={{ ...containerStyles, minHeight: '500px' }}>
+            <Grid
+                container
+                p={{ xs: '0 16px 24px 16px', md: '0 5vw 40px 5vw', lg: '0 10em 40px 10em' }}
+                position="relative"
+                zIndex={10}
+            >
                 {displayTabs.length > 0 && (
                     <TabContext value={selectedTab}>
                         <TabList
                             onChange={(_, value) => setSelectedTab(value)}
                             orientation="horizontal"
-                            variant={isMobile ? 'scrollable' : 'standard'}
-                            scrollButtons={false}
-                            slotProps={{ indicator: { sx: tabIndicatorStyles } }}
-                            sx={tabListStyles}
+                            variant="scrollable"
+                            scrollButtons="auto"
                             selectionFollowsFocus
+                            sx={{
+                                mt: '-1.875rem',
+                                mb: '1rem',
+                                bgcolor: 'white',
+                                '& .MuiTabs-indicator': { height: '0.375rem' },
+                                borderRadius: '0 1.5rem 0 0',
+                            }}
                         >
                             {displayTabs.map((tab, key) => (
                                 <Tab
-                                    sx={tabStyles}
+                                    sx={{
+                                        minWidth: '8.5rem',
+                                        margin: '0.25rem 2rem',
+                                        color: colors.type.regular.primary,
+                                        background: 'transparent',
+                                        fontSize: '14px',
+                                        fontWeight: 'normal',
+                                        '&.Mui-selected': {
+                                            fontWeight: 'bold',
+                                            '& .tab-label': {
+                                                visibility: 'hidden',
+                                            },
+                                            '::before': {
+                                                content: `"${tab.label}"`,
+                                                position: 'absolute',
+                                            },
+                                        },
+                                    }}
                                     key={tab.id}
-                                    label={tab.label || `Tab ${key + 1} Label`}
+                                    label={
+                                        <BodyText size="small" className="tab-label">
+                                            {tab.label || `Tab ${key + 1} Label`}
+                                        </BodyText>
+                                    }
                                     aria-label={tab.label || `Tab ${key + 1} Label`}
                                     value={String(key)}
                                     disableRipple
@@ -168,10 +135,15 @@ export const EngagementDetailsTabs = () => {
                             ))}
                         </TabList>
                         {displayTabs.map((tab, key) => (
-                            <TabPanel key={tab.id} value={String(key)} sx={{ padding: '1.5rem 0', width: '100%' }}>
-                                <Grid container sx={tabLayoutStyles} direction="row" size={12}>
+                            <TabPanel
+                                key={tab.id}
+                                keepMounted
+                                value={String(key)}
+                                sx={{ padding: '1.5rem 0', width: '100%' }}
+                            >
+                                <Grid container size={12} gap="3rem">
                                     <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-                                        <Header2
+                                        <Heading2
                                             decorated
                                             weight="thin"
                                             aria-label={tab.heading || `Tab ${key + 1} Heading`}
@@ -181,7 +153,7 @@ export const EngagementDetailsTabs = () => {
                                                 value={tab.heading}
                                                 previewFallback={<TextPlaceholder text={`Tab ${key + 1} Heading`} />}
                                             />
-                                        </Header2>
+                                        </Heading2>
                                         <PreviewSwitch
                                             hasValue={hasBodyContent(tab)}
                                             value={
@@ -195,7 +167,7 @@ export const EngagementDetailsTabs = () => {
                                             previewFallback={<TextPlaceholder type="long" />}
                                         />
                                     </Grid>
-                                    <Grid size="grow">
+                                    <Grid container size="grow">
                                         <EngagementWidgetDisplay
                                             location={WidgetLocation.Details}
                                             detailsTabId={tab.id > 0 ? tab.id : undefined}

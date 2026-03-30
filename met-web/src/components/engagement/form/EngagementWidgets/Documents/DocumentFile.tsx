@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { Grid, IconButton, Stack, Typography } from '@mui/material';
-import { MetWidgetPaper } from 'components/common';
+import { Grid2 as Grid, IconButton, Paper, Stack, Typography } from '@mui/material';
 import { DocumentItem } from 'models/document';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
@@ -44,71 +43,77 @@ const DocumentFile = ({
     };
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
-            <MetWidgetPaper elevation={1} sx={{ width: '100%' }}>
-                <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
-                    <Grid item sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <IconButton
-                            sx={{ margin: '0 0.5em 0 0', padding: 0 }}
-                            color="inherit"
-                            aria-label="drag-indicator"
-                            {...draggableProvided.dragHandleProps}
-                        >
-                            <FontAwesomeIcon
-                                icon={faGripDotsVertical}
-                                style={{ fontSize: '24px', margin: '0px 4px' }}
-                            />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs>
-                        <Stack spacing={2} direction="row" alignItems="center">
-                            {documentItem.is_uploaded ? (
-                                <FontAwesomeIcon icon={faFileLines} style={{ fontSize: '22px' }} />
-                            ) : (
-                                <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '22px' }} />
-                            )}
-                            <Typography>{documentItem.title}</Typography>
-                        </Stack>
-                    </Grid>
-                    <Grid item xs container justifyContent={'flex-end'}>
-                        <IconButton
-                            onClick={() => handleEditDocument()}
-                            sx={{ padding: 0, mr: 1 }}
-                            color="inherit"
-                            aria-label="Edit Folder"
-                        >
-                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
-                        </IconButton>
-                        <IconButton
-                            onClick={() =>
-                                dispatch(
-                                    openNotificationModal({
-                                        open: true,
-                                        data: {
-                                            header: 'Remove File',
-                                            subText: [
-                                                {
-                                                    text: 'You will be removing this file from the engagement.',
-                                                },
-                                                { text: 'Do you want to remove this file?' },
-                                            ],
-                                            handleConfirm: () => {
-                                                handleDeleteDocument();
-                                            },
-                                        },
-                                        type: 'confirm',
-                                    }),
-                                )
-                            }
-                            sx={{ padding: 0, margin: 0 }}
-                            color="inherit"
-                            aria-label="Remove File"
-                        >
-                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
-                        </IconButton>
-                    </Grid>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2} mb={2}>
+            <Grid
+                container
+                size={12}
+                p={2}
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-start"
+                component={Paper}
+                spacing={1}
+                elevation={3}
+                sx={{ width: '100%' }}
+            >
+                <Grid sx={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <IconButton
+                        sx={{ margin: '0 0.5em 0 0', padding: 0 }}
+                        color="inherit"
+                        aria-label="drag-indicator"
+                        {...draggableProvided.dragHandleProps}
+                    >
+                        <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
+                    </IconButton>
                 </Grid>
-            </MetWidgetPaper>
+                <Grid size="auto">
+                    <Stack spacing={2} direction="row" alignItems="center">
+                        {documentItem.is_uploaded ? (
+                            <FontAwesomeIcon icon={faFileLines} style={{ fontSize: '22px' }} />
+                        ) : (
+                            <FontAwesomeIcon icon={faLinkSimple} style={{ fontSize: '22px' }} />
+                        )}
+                        <Typography>{documentItem.title}</Typography>
+                    </Stack>
+                </Grid>
+                <Grid size="auto" container justifyContent={'flex-end'}>
+                    <IconButton
+                        onClick={() => handleEditDocument()}
+                        sx={{ padding: 0, mr: 1 }}
+                        color="inherit"
+                        aria-label="Edit Folder"
+                    >
+                        <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
+                    </IconButton>
+                    <IconButton
+                        onClick={() =>
+                            dispatch(
+                                openNotificationModal({
+                                    open: true,
+                                    data: {
+                                        header: 'Remove File',
+                                        subText: [
+                                            {
+                                                text: 'You will be removing this file from the engagement.',
+                                            },
+                                            { text: 'Do you want to remove this file?' },
+                                        ],
+                                        handleConfirm: () => {
+                                            handleDeleteDocument();
+                                        },
+                                    },
+                                    type: 'confirm',
+                                }),
+                            )
+                        }
+                        sx={{ padding: 0, margin: 0 }}
+                        color="inherit"
+                        aria-label="Remove File"
+                    >
+                        <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
+                    </IconButton>
+                </Grid>
+            </Grid>
         </Grid>
     );
 };

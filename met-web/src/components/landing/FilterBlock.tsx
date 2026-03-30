@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { LandingContext } from './LandingContext';
-import { Button as MuiButton, Grid, IconButton, Stack, useTheme } from '@mui/material';
+import { IconButton, Stack, useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { DeletableFilterChip } from './DeletableFilterChip';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
@@ -8,7 +9,6 @@ import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark'
 import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faSliders } from '@fortawesome/pro-regular-svg-icons/faSliders';
 import { MetadataFilter } from 'components/metadataManagement/types';
-import { MetLabel } from 'components/common';
 import { debounce } from 'lodash';
 import { EngagementDisplayStatus } from 'constants/engagementStatus';
 import { useAppTranslation } from 'hooks';
@@ -16,6 +16,7 @@ import { Button } from 'components/common/Input/Button';
 import { colors } from '../common';
 import { CustomTextField, Select } from 'components/common/Input';
 import { When } from 'react-if';
+import { BodyText } from 'components/common/Typography/Body';
 
 const FilterBlock = () => {
     const { searchFilters, setSearchFilters, setPage, clearFilters, page, setDrawerOpened } =
@@ -75,20 +76,21 @@ const FilterBlock = () => {
     };
 
     return (
-        <Grid container item xs={10} justifyContent="flex-start" alignItems="flex-start" rowSpacing={3}>
+        <Grid container size={12} justifyContent="flex-start" alignItems="flex-start" rowSpacing={3}>
             <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 justifyContent="flex-start"
-                alignItems="self-end"
+                alignItems="flex-end"
                 columnSpacing={2}
                 rowSpacing={4}
                 marginTop="2em"
                 ref={tileBlockRef}
             >
-                <Grid item xl={6} lg={8} md={10} sm={8} xs={12}>
-                    <MetLabel paddingBottom={'3px'}>{translate('landing.filters.search')}</MetLabel>
+                <Grid size={{ xs: 12, sm: 8, md: 10, lg: 8, xl: 6 }}>
+                    <BodyText bold pb="0.25em">
+                        {translate('landing.filters.search')}
+                    </BodyText>
                     <CustomTextField
                         aria-label="Search box for filtering engagements. Search by title or select filters to narrow results automatically."
                         tabIndex={0}
@@ -99,44 +101,41 @@ const FilterBlock = () => {
                             setSearchText(event.target.value);
                             debounceSetSearchFilters(event.target.value);
                         }}
-                        InputProps={{
-                            sx: { height: 48 },
-                            startAdornment: (
-                                <FontAwesomeIcon
-                                    icon={faMagnifyingGlass}
-                                    style={{
-                                        fontSize: '20px',
-                                        color: theme.palette.primary.main,
-                                        marginRight: '5px',
-                                    }}
-                                />
-                            ),
-                            endAdornment: searchText ? (
-                                <IconButton
-                                    aria-label="clear search"
-                                    title="Clear search"
-                                    sx={{ color: '#9F9D9C' }}
-                                    onClick={() => {
-                                        setSearchFilters({
-                                            ...searchFilters,
-                                            name: '',
-                                        });
-                                        setSearchText('');
-                                    }}
-                                >
-                                    <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
-                                </IconButton>
-                            ) : undefined,
+                        slotProps={{
+                            input: {
+                                sx: { height: 48 },
+                                startAdornment: (
+                                    <FontAwesomeIcon
+                                        icon={faMagnifyingGlass}
+                                        style={{
+                                            fontSize: '20px',
+                                            color: theme.palette.primary.main,
+                                            marginRight: '5px',
+                                        }}
+                                    />
+                                ),
+                                endAdornment: searchText ? (
+                                    <IconButton
+                                        aria-label="clear search"
+                                        title="Clear search"
+                                        sx={{ color: '#9F9D9C' }}
+                                        onClick={() => {
+                                            setSearchFilters({
+                                                ...searchFilters,
+                                                name: '',
+                                            });
+                                            setSearchText('');
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
+                                    </IconButton>
+                                ) : undefined,
+                            },
                         }}
                     />
                 </Grid>
                 <Grid
-                    item
-                    xs={12}
-                    sm={3}
-                    md={2}
-                    lg={2}
-                    xl={1}
+                    size={{ xs: 12, sm: 3, md: 2, lg: 2, xl: 1 }}
                     container
                     justifyContent="flex-start"
                     alignItems="flex-start"
@@ -152,16 +151,18 @@ const FilterBlock = () => {
                     </Button>
                 </Grid>
             </Grid>
-            <Grid item xs={12} container justifyContent="flex-start" alignItems="flex-start">
+            <Grid size={12} container justifyContent="flex-start" alignItems="flex-start">
                 <Stack
                     direction="row"
                     sx={{ mb: 2 }}
                     flexWrap="wrap"
                     justifyContent="flex-start"
                     alignItems="flex-start"
-                    spacing={2}
+                    gap={2}
+                    rowGap={1}
                 >
                     <Select
+                        style={{ margin: 0 }}
                         value={selectedValue}
                         id="status-filter"
                         aria-label={`Filtering by ${selectableStatuses.get(
@@ -202,8 +203,8 @@ const FilterBlock = () => {
                         )),
                     )}
                     <When condition={searchFilters.status.length || searchFilters.metadata.length}>
-                        <MuiButton
-                            variant="text"
+                        <Button
+                            variant="tertiary"
                             onClick={clearFilters}
                             sx={{
                                 fontWeight: 'normal',
@@ -219,7 +220,7 @@ const FilterBlock = () => {
                             endIcon={<FontAwesomeIcon icon={faXmark} style={{ fontSize: '20px' }} />}
                         >
                             {translate('landing.filters.clear')}
-                        </MuiButton>
+                        </Button>
                     </When>
                 </Stack>
             </Grid>

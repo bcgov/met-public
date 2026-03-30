@@ -1,5 +1,5 @@
-import { Divider, Grid, Stack, useMediaQuery, Theme } from '@mui/material';
-import { BodyText } from 'components/common/Typography';
+import { Divider, Grid2 as Grid, Stack, useMediaQuery, Theme } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
 import React, { Suspense, useState } from 'react';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDarkCropped.svg';
 import { Palette } from 'styles/Theme';
@@ -74,7 +74,6 @@ const VersionInfoDisplay = ({
     return (
         <Stack direction="row" width={{ xs: '100%', sm: 'auto' }} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
             <Grid
-                item
                 px="0.5rem"
                 display="inline-flex"
                 alignItems="baseline"
@@ -139,8 +138,7 @@ const Footer = () => {
         <Grid container component="footer" spacing={0} mt="2em" aria-label="footer">
             {/* Footer acknowledgement container */}
             <Grid
-                item
-                xs={12}
+                size={12}
                 sx={{
                     backgroundColor: Palette.acknowledgement.background,
                     borderTop: `0.375rem solid ${Palette.acknowledgement.border}`,
@@ -152,12 +150,10 @@ const Footer = () => {
             </Grid>
 
             {/* Footer main container */}
-            <Grid item xs={12} padding={{ xs: '2em 1em', md: '2em 2em', lg: '2em 3em' }} container rowSpacing={2}>
+            <Grid size={12} padding={{ xs: '2em 1em', md: '2em 2em', lg: '2em 3em' }} container rowSpacing={2}>
                 <Grid
-                    item
+                    size={{ xs: 10, md: 6 }}
                     columns={10}
-                    xs={10}
-                    md={6}
                     container
                     sx={{
                         pr: isMediumScreenOrLarger ? '4rem' : '2rem',
@@ -210,10 +206,7 @@ const Footer = () => {
 
                 {/* Footer more info */}
                 <Grid
-                    item
-                    columns={10}
-                    xs={10}
-                    md={2}
+                    size={{ xs: 10, md: 2 }}
                     container
                     sx={{
                         height: isMediumScreenOrLarger ? '15.625rem' : 'auto',
@@ -235,10 +228,8 @@ const Footer = () => {
 
                 {/* Footer connect with us */}
                 <Grid
-                    item
+                    size={{ xs: 10, md: 2 }}
                     columns={10}
-                    xs={10}
-                    md={2}
                     container
                     sx={{ height: isMediumScreenOrLarger ? '15.625rem' : 'auto' }}
                 >
@@ -263,17 +254,17 @@ const Footer = () => {
                 </Grid>
 
                 {/* Footer divider */}
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Divider sx={{ borderColor: Palette.text.primary }} />
                 </Grid>
 
                 {/* Footer copyright date */}
-                <Grid item xs={12} sm={6} container justifyContent={'flex-start'} alignItems="flex-start">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent={'flex-start'} alignItems="flex-start">
                     <p style={{ margin: '0' }}>{translate('footer.copyrightNotice')}</p>
                 </Grid>
 
                 {/* Footer copyright, privacy, and disclaimer links */}
-                <Grid item xs={12} sm={6} container justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}>
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}>
                     <Stack direction="row" spacing={4}>
                         <Link href="https://www2.gov.bc.ca/gov/content/home/copyright" sx={linkStyles}>
                             {translate('footer.copyright')}
@@ -288,9 +279,9 @@ const Footer = () => {
                 </Grid>
 
                 {/* Footer admin login */}
-                <Grid item xs={12} sm={6} container justifyContent={'flex-start'} alignItems="baseline">
+                <Grid size={{ xs: 12, sm: 6 }} container justifyContent={'flex-start'} alignItems="baseline">
                     <Unless condition={isLoggedIn}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Link
                                 href="/"
                                 onClick={(event) => {
@@ -308,7 +299,12 @@ const Footer = () => {
 
                 {/* Footer version info */}
                 <When condition={isLoggedIn}>
-                    <Grid item container xs={12} sm={6} gap={1} justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}>
+                    <Grid
+                        container
+                        size={{ xs: 12, sm: 6 }}
+                        gap={1}
+                        justifyContent={{ xs: 'flex-start', sm: 'flex-end' }}
+                    >
                         <VersionInfoDisplay
                             label={translate('footer.appVersion')}
                             version={AppConfig.version.version}

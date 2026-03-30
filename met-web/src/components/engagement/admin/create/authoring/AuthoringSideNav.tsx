@@ -12,7 +12,7 @@ import {
     ThemeProvider,
 } from '@mui/material';
 import { getAuthoringRoutes as getRoutes, AuthoringRoute as Route } from './AuthoringNavElements';
-import { AdminDarkTheme, Palette, colors, ZIndex } from 'styles/Theme';
+import { AdminDarkTheme, ZIndex } from 'styles/Theme';
 import { AuthoringNavProps, DrawerBoxProps } from './types';
 import { When } from 'react-if';
 import { useAppSelector } from 'hooks';
@@ -29,7 +29,7 @@ import { StatusCircle } from '../../view/AuthoringTab';
 
 export const routeItemStyle = {
     padding: 0,
-    backgroundColor: Palette.background.default,
+    backgroundColor: 'background.default',
     '&:hover, &:focus': {
         filter: 'brightness(96%)',
     },
@@ -51,28 +51,19 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
         return !route.authenticated || route.allowedRoles.some((role) => permissions.includes(role));
     });
 
-    const renderListItem = (route: Route, itemType: string, key: number, engagementId: number) => {
-        const navLabelTextStyles: React.CSSProperties = {
-            display: 'flex',
-            textTransform: 'uppercase',
-            fontWeight: 'bold',
-            fontSize: '0.95rem',
-            color: Palette.text.primary,
-            marginTop: '1.4rem',
-            marginBottom: '1rem',
-        };
+    const renderListItem = (route: Route, isSelected: boolean) => {
         return (
-            <React.Fragment key={key}>
+            <React.Fragment key={route.name}>
                 <When condition={'Hero Banner' === route.name || 'View Results' === route.name}>
-                    <span style={navLabelTextStyles}>
+                    <BodyText bold size="small" sx={{ textTransform: 'uppercase', mt: '2rem', mb: '1rem' }}>
                         {'Hero Banner' === route.name ? 'Required' : 'Optional'} Sections
-                    </span>
+                    </BodyText>
                 </When>
                 <ListItem
-                    key={key}
+                    key={route.name}
                     sx={{
                         ...routeItemStyle,
-                        backgroundColor: 'selected' === itemType ? colors.surface.blue[10] : Palette.background.default,
+                        backgroundColor: isSelected ? 'blue.10' : 'background.default',
                     }}
                 >
                     <ListItemButton
@@ -90,7 +81,13 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                             setOpen(false);
                         }}
                     >
-                        <When condition={true}>
+                        <BodyText
+                            sx={{
+                                color: isSelected ? 'primary.main' : 'text.primary',
+                                fontWeight: isSelected ? 'bold' : '500',
+                                fontSize: '1rem',
+                            }}
+                        >
                             <span
                                 style={{
                                     paddingRight: '0.6rem',
@@ -99,21 +96,14 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                                 <FontAwesomeIcon
                                     icon={faCheck}
                                     style={{
-                                        color: 'selected' === itemType ? Palette.primary.main : Palette.text.primary,
+                                        color: 'inherit',
                                         fontWeight: 'bold',
                                     }}
                                 />
                             </span>
-                        </When>
-                        <span
-                            style={{
-                                color: 'selected' === itemType ? Palette.primary.main : Palette.text.primary,
-                                fontWeight: 'selected' === itemType ? 'bold' : '500',
-                                fontSize: '1rem',
-                            }}
-                        >
+
                             {route.name}
-                        </span>
+                        </BodyText>
                         <StatusCircle required={route.required || false} />
                         <When condition={currentRoutePath === route.path}>
                             <span
@@ -125,7 +115,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                                 <FontAwesomeIcon
                                     icon={faPencil}
                                     style={{
-                                        color: 'selected' === itemType ? Palette.primary.main : Palette.text.primary,
+                                        color: isSelected ? 'primary.main' : 'text.primary',
                                     }}
                                 />
                             </span>
@@ -145,7 +135,7 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                 mt: isMediumScreenOrLarger ? '9rem' : '5.625rem',
                 pl: '3.1rem',
                 overflow: 'auto',
-                backgroundColor: Palette.background.default,
+                backgroundColor: 'background.default',
                 zIndex: ZIndex.sideNav,
                 borderRadius: '0 8px 8px 0',
             }}
@@ -154,8 +144,9 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                 {/* Engagement Home link */}
                 <Link
                     to={getRoutes(Number(engagementId))[0].path}
-                    style={{
-                        color: Palette.text.primary,
+                    sx={{
+                        height: '3rem',
+                        color: 'text.primary',
                         textDecoration: 'none',
                         display: 'flex',
                         alignItems: 'center',
@@ -167,17 +158,9 @@ const DrawerBox = ({ isMediumScreenOrLarger, setOpen, engagementId }: DrawerBoxP
                     />
                     <span style={{ fontWeight: 'bold' }}>{getRoutes(Number(engagementId))[0].name}</span>
                 </Link>
-                <br />
                 {/* All other menu items */}
                 {allowedRoutes.map(
-                    (route, key) =>
-                        0 !== key &&
-                        renderListItem(
-                            route,
-                            currentRoutePath === route.path ? 'selected' : 'other',
-                            key,
-                            Number(engagementId),
-                        ),
+                    (route, index) => 0 !== index && renderListItem(route, currentRoutePath === route.path),
                 )}
             </List>
         </Box>
@@ -242,8 +225,15 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
         );
     return (
         <SwipeableDrawer
-            PaperProps={{
-                sx: { width: '100%', height: '100%', minHeight: 'calc(100vh)', background: colors.surface.blue[90] },
+            slotProps={{
+                paper: {
+                    sx: {
+                        width: '100%',
+                        height: '100%',
+                        minHeight: 'calc(100vh)',
+                        background: 'blue.90',
+                    },
+                },
             }}
             sx={{
                 mt: '5rem',
@@ -271,7 +261,7 @@ const AuthoringSideNav = ({ open, setOpen, isMediumScreen, engagementId }: Autho
                         <Grid>
                             <Avatar
                                 sx={{
-                                    backgroundColor: colors.surface.blue[10],
+                                    backgroundColor: 'blue.10',
                                     height: 32,
                                     width: 32,
                                     fontSize: '16px',

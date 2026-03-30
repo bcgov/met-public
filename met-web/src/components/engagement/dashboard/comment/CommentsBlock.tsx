@@ -1,15 +1,17 @@
 import React, { useContext } from 'react';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid2 as Grid, Paper, Skeleton } from '@mui/material';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'components/common/Navigation';
 import { Button } from 'components/common/Input/Button';
 import { CommentViewContext } from './CommentViewContext';
-import { MetPaper, MetHeader4 } from 'components/common';
+import { Heading4 } from 'components/common/Typography/Headings';
 import CommentTable from './CommentTable';
 import { useAppSelector, useAppDispatch } from 'hooks';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import { useAppTranslation } from 'hooks';
+import { faFileChartPie } from '@fortawesome/pro-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface CommentsBlockProps {
     dashboardType: string;
@@ -65,7 +67,7 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
 
     return (
         <>
-            <Grid item xs={12} container direction="row" justifyContent="flex-end" paddingBottom={'8px'}>
+            <Grid size={12} container direction="row" justifyContent="flex-end" paddingBottom={'8px'}>
                 <Link
                     to={isLoggedIn ? `${basePath}/view` : `${basePath}/view${languagePath}`}
                     style={{ color: '#1A5A96' }}
@@ -75,21 +77,20 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                         translate('commentDashboard.block.link.1')}
                 </Link>
             </Grid>
-            <Grid item xs={12}>
-                <MetPaper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
+            <Grid size={12}>
+                <Paper elevation={1} sx={{ padding: '2em 2em 0 2em' }}>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start" rowSpacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <MetHeader4>{translate('commentDashboard.block.header')}</MetHeader4>
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <Heading4>{translate('commentDashboard.block.header')}</Heading4>
                         </Grid>
                         <Grid
-                            item
-                            xs={12}
-                            sm={6}
+                            size={{ xs: 12, sm: 6 }}
                             container
                             direction={{ xs: 'column', sm: 'row' }}
                             justifyContent="flex-end"
                         >
                             <Button
+                                icon={<FontAwesomeIcon icon={faFileChartPie} />}
                                 variant="primary"
                                 size="small"
                                 data-testid="SurveyBlock/take-me-to-survey-button"
@@ -98,11 +99,11 @@ export const CommentsBlock: React.FC<CommentsBlockProps> = ({ dashboardType }) =
                                 {translate('commentDashboard.block.buttonText')}
                             </Button>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <CommentTable />
                         </Grid>
                     </Grid>
-                </MetPaper>
+                </Paper>
             </Grid>
         </>
     );

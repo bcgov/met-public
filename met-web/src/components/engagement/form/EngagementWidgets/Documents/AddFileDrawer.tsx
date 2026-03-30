@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid, MenuItem } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid, MenuItem } from '@mui/material';
+import { BodyText, Heading3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -142,62 +143,50 @@ const AddFileDrawer = () => {
                         spacing={2}
                         padding="2em"
                     >
-                        <Grid item xs={12}>
-                            <MetHeader3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</MetHeader3>
+                        <Grid size={12}>
+                            <Heading3 bold>{documentToEdit ? 'Edit File' : 'Add File'}</Heading3>
                             <Divider sx={{ marginTop: '1em' }} />
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Link</MetLabel>
+                        <Grid size={12} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Link
+                                </BodyText>
                                 <ControlledTextField
                                     name="link"
                                     id="document-link"
                                     data-testid="document-form/link"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     size="small"
                                     disabled={documentToEdit?.is_uploaded}
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
+                        <Grid size={12} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Name
+                                </BodyText>
                                 <ControlledTextField
                                     name="name"
                                     id="document-name"
                                     data-testid="document-form/name"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     size="small"
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid item xs={12} container direction="row" spacing={2}>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Folder</MetLabel>
+                        <Grid size={12} container direction="row" spacing={2}>
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Folder
+                                </BodyText>
                                 <ControlledSelect
                                     id="document-folder"
                                     name="folderId"
                                     data-testid="document-form/folderId"
-                                    variant="outlined"
-                                    label=" "
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
                                     defaultValue={parentDocument?.title}
-                                    fullWidth
                                     size="small"
                                 >
                                     <MenuItem
@@ -221,21 +210,20 @@ const AddFileDrawer = () => {
                         </Grid>
 
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             spacing={1}
                             justifyContent={'flex-start'}
                             marginTop="8em"
                         >
-                            <Grid item>
-                                <PrimaryButtonOld loading={isCreatingFile} onClick={handleSubmit(onSubmit)}>
-                                    {`Save & Close`}
-                                </PrimaryButtonOld>
+                            <Grid>
+                                <Button variant="primary" loading={isCreatingFile} onClick={handleSubmit(onSubmit)}>
+                                    Save &amp; Close
+                                </Button>
                             </Grid>
-                            <Grid item>
-                                <SecondaryButtonOld onClick={() => handleClose()}>{`Cancel`}</SecondaryButtonOld>
+                            <Grid>
+                                <Button onClick={() => handleClose()}>{`Cancel`}</Button>
                             </Grid>
                         </Grid>
                     </Grid>

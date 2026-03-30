@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
-import { Box, Grid, Skeleton } from '@mui/material';
-import { Header1, Header2, BodyText } from 'components/common/Typography/';
+import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
+import { Heading1, Heading2, BodyText, Heading4 } from 'components/common/Typography/';
 import { ResponsiveContainer, DetailsContainer, Detail } from 'components/common/Layout';
 import { useNavigate, useRouteLoaderData, Await, useRevalidator } from 'react-router';
 import { deleteTenant } from 'services/tenantService';
@@ -79,15 +79,15 @@ const TenantDetail = () => {
                 <ResponsiveContainer>
                     <AutoBreadcrumbs />
                     <Skeleton variant="text" width="40%">
-                        <Header1>Loading...</Header1>
+                        <Heading1>Loading...</Heading1>
                     </Skeleton>
                     <Grid container spacing={0} direction="row" mb="0.5em">
-                        <Grid item xs={12} sm={7} lg={9}>
+                        <Grid size={{ xs: 12, sm: 7, lg: 9 }}>
                             <Skeleton variant="text" width="60%">
-                                <Header2 decorated>Loading...</Header2>
+                                <Heading2 decorated>Loading...</Heading2>
                             </Skeleton>
                         </Grid>
-                        <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
+                        <Grid size={{ xs: 'auto', sm: 5, lg: 3 }} sx={{ textAlign: 'right' }}>
                             <Skeleton variant="rectangular" height={36} width={100} />
                         </Grid>
                     </Grid>
@@ -169,7 +169,7 @@ const TenantDetail = () => {
                                 </Skeleton>
                             </Detail>
                             <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Skeleton variant="rectangular" height={36} width={100} />
                                 </Grid>
                             </Grid>
@@ -182,12 +182,14 @@ const TenantDetail = () => {
                 {(resolvedTenant) => (
                     <ResponsiveContainer>
                         <AutoBreadcrumbs />
-                        <Header1>{resolvedTenant.name}</Header1>
-                        <Grid container spacing={0} direction="row" mb="0.5em">
-                            <Grid item xs={12} sm={7} lg={9}>
-                                <Header2 decorated>Tenant Details</Header2>
+                        <Grid size={12}>
+                            <Heading1>{resolvedTenant.name}</Heading1>
+                        </Grid>
+                        <Grid container spacing={0} direction="row" mb="0.5em" size={12}>
+                            <Grid size={{ xs: 12, sm: 'grow' }}>
+                                <Heading2 decorated>Tenant Details</Heading2>
                             </Grid>
-                            <Grid item xs="auto" sm={5} lg={3} sx={{ textAlign: 'right' }}>
+                            <Grid size="auto">
                                 <Button
                                     variant="primary"
                                     icon={penToSquareIcon}
@@ -199,148 +201,113 @@ const TenantDetail = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Box
-                            style={{
-                                // Allow the table to scroll horizontally
-                                display: 'block',
-                                overflowX: 'auto',
-                                // Allow the keyboard focus outline on table rows to
-                                // display outside the scrollable area
-                                width: 'calc(100% + 4px)',
-                                padding: '0px 2px 2px',
-                                margin: '0px -2px -2px',
+                        <DetailsContainer
+                            sx={{
+                                margin: {
+                                    // on small screens, negate the padding of the ResponsiveContainer
+                                    // so the container hugs the edge of the screen
+                                    xs: '0 -16px',
+                                    sm: '0',
+                                },
                             }}
                         >
-                            <DetailsContainer
-                                sx={{
-                                    margin: {
-                                        // on small screens, negate the padding of the ResponsiveContainer
-                                        // so the container hugs the edge of the screen
-                                        xs: '0 -16px',
-                                        sm: '0',
-                                    },
-                                }}
-                            >
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Tenant Instance Name</BodyText>
-                                            <BodyText>{resolvedTenant.name}</BodyText>
-                                        </Grid>
-                                    </Grid>
-                                </Detail>
+                            <Detail spacing={2}>
+                                <Heading4>Tenant Instance Name</Heading4>
+                                <BodyText>{resolvedTenant.name}</BodyText>
+                            </Detail>
 
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Primary Contact</BodyText>
-                                            <Grid container alignItems="center">
-                                                <Grid item xs>
-                                                    <BodyText>{resolvedTenant.contact_name}</BodyText>
-                                                </Grid>
-                                                <Grid
-                                                    item
-                                                    xs="auto"
-                                                    component={'a'}
-                                                    tabIndex={0}
-                                                    target="#"
-                                                    sx={{
-                                                        cursor: 'pointer',
-                                                        display: { xs: 'none', sm: 'block' },
-                                                        ...globalFocusVisible,
-                                                    }}
-                                                    onClick={() => copyEmail(resolvedTenant)}
-                                                    onKeyDown={(e: React.KeyboardEvent<HTMLAnchorElement>) => {
-                                                        if (e.key === 'Enter' || e.key === ' ') {
-                                                            e.preventDefault();
-                                                            copyEmail(resolvedTenant);
-                                                        }
-                                                    }}
-                                                >
-                                                    <BodyText>
-                                                        {resolvedTenant.contact_email} {faCopyIcon}
-                                                    </BodyText>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
+                            <Detail spacing={2}>
+                                <Heading4>Primary Contact</Heading4>
+                                <Grid container size={12} alignItems="center">
+                                    <Grid size="auto">
+                                        <BodyText>{resolvedTenant.contact_name}</BodyText>
                                     </Grid>
-                                </Detail>
-
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Short Name</BodyText>
-                                            <BodyText>{resolvedTenant.short_name}</BodyText>
-                                        </Grid>
-                                    </Grid>
-                                </Detail>
-
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Hero Banner Title</BodyText>
-                                            <BodyText>{resolvedTenant.title}</BodyText>
-                                        </Grid>
-                                    </Grid>
-                                </Detail>
-
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Hero Banner Description</BodyText>
-                                            <BodyText>{resolvedTenant.description}</BodyText>
-                                        </Grid>
-                                    </Grid>
-                                </Detail>
-
-                                <Detail>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12}>
-                                            <BodyText bold>Hero Banner Image</BodyText>
-                                            <div
-                                                style={{
-                                                    height: '166px',
-                                                    alignSelf: 'stretch',
-                                                    margin: '16px 0',
-                                                    backgroundImage: `url(${
-                                                        resolvedTenant.hero_image_url || LandingPageBanner
-                                                    })`,
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition: 'center',
-                                                }}
-                                            />
-                                        </Grid>
-                                        {resolvedTenant.hero_image_credit && (
-                                            <Grid item xs={12}>
-                                                <BodyText bold>Photo Credit</BodyText>
-                                                <BodyText>{resolvedTenant.hero_image_credit}</BodyText>
-                                            </Grid>
-                                        )}
-                                        {resolvedTenant.hero_image_description && (
-                                            <Grid item xs={12}>
-                                                <BodyText bold>Description</BodyText>
-                                                <BodyText>{resolvedTenant.hero_image_description}</BodyText>
-                                            </Grid>
-                                        )}
-                                    </Grid>
-                                </Detail>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12}>
-                                        <Button
-                                            variant="secondary"
-                                            color="danger"
-                                            icon={trashCanIcon}
-                                            onClick={() => {
-                                                handleDeleteClick(resolvedTenant);
-                                            }}
-                                            sx={{ marginTop: '20px' }}
-                                        >
-                                            Delete Tenant Instance
-                                        </Button>
+                                    <Grid
+                                        size="grow"
+                                        alignSelf="flex-end"
+                                        textAlign="right"
+                                        component={'a'}
+                                        tabIndex={0}
+                                        target="#"
+                                        sx={{
+                                            cursor: 'pointer',
+                                            display: { xs: 'none', sm: 'block' },
+                                            ...globalFocusVisible,
+                                        }}
+                                        onClick={() => copyEmail(resolvedTenant)}
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLAnchorElement>) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                copyEmail(resolvedTenant);
+                                            }
+                                        }}
+                                    >
+                                        <BodyText>
+                                            {resolvedTenant.contact_email} {faCopyIcon}
+                                        </BodyText>
                                     </Grid>
                                 </Grid>
-                            </DetailsContainer>
-                        </Box>
+                            </Detail>
+
+                            <Detail spacing={2}>
+                                <Heading4>Short Name</Heading4>
+                                <BodyText>{resolvedTenant.short_name}</BodyText>
+                            </Detail>
+
+                            <Detail>
+                                <Heading4>Hero Banner Title</Heading4>
+                                <BodyText>{resolvedTenant.title}</BodyText>
+                            </Detail>
+
+                            <Detail>
+                                <Heading4>Hero Banner Description</Heading4>
+                                <BodyText>{resolvedTenant.description}</BodyText>
+                            </Detail>
+
+                            <Detail>
+                                <Grid size={12} gap={1}>
+                                    <Heading4>Hero Banner Image</Heading4>
+                                    <div
+                                        style={{
+                                            height: '166px',
+                                            alignSelf: 'stretch',
+                                            margin: '16px 0',
+                                            backgroundImage: `url(${
+                                                resolvedTenant.hero_image_url || LandingPageBanner
+                                            })`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                        }}
+                                    />
+                                </Grid>
+                                {resolvedTenant.hero_image_credit && (
+                                    <Grid size={12}>
+                                        <BodyText bold>Photo Credit</BodyText>
+                                        <BodyText size="small">{resolvedTenant.hero_image_credit}</BodyText>
+                                    </Grid>
+                                )}
+                                {resolvedTenant.hero_image_description && (
+                                    <Grid size={12}>
+                                        <BodyText bold>Description</BodyText>
+                                        <BodyText size="small">{resolvedTenant.hero_image_description}</BodyText>
+                                    </Grid>
+                                )}
+                            </Detail>
+                            <Grid container spacing={2} size={12}>
+                                <Grid size={12}>
+                                    <Button
+                                        color="danger"
+                                        icon={trashCanIcon}
+                                        onClick={() => {
+                                            handleDeleteClick(resolvedTenant);
+                                        }}
+                                        sx={{ marginTop: '20px' }}
+                                    >
+                                        Delete Tenant Instance
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </DetailsContainer>
                     </ResponsiveContainer>
                 )}
             </Await>

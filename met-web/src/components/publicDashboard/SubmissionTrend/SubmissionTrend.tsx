@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import { Stack, useMediaQuery, Theme, Grid, ToggleButtonGroup, CircularProgress } from '@mui/material';
-import { MetPaper, MetLabel, SecondaryButtonOld, MetToggleButton } from 'components/common';
+import { Stack, useMediaQuery, Theme, Grid2 as Grid, ToggleButtonGroup, CircularProgress, Paper } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input/Button';
 import { DASHBOARD } from '../constants';
 import { ErrorBox } from '../ErrorBox';
 import { NoData } from '../NoData';
@@ -111,8 +112,10 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <MetLabel mb={0.5}>{translate('dashboard.submissionTrend.label')}</MetLabel>
-                <MetPaper sx={{ p: 2 }}>
+                <BodyText bold mb={0.5}>
+                    {translate('dashboard.submissionTrend.label')}
+                </BodyText>
+                <Paper sx={{ p: 2 }}>
                     <Stack direction="column" alignItems="center" gap={1}>
                         <Grid
                             container
@@ -125,7 +128,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             <CircularProgress color="inherit" />
                         </Grid>
                     </Stack>
-                </MetPaper>
+                </Paper>
             </>
         );
     }
@@ -140,10 +143,10 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
 
     return (
         <>
-            <MetLabel mb={0.5} mt={1}>
+            <BodyText bold mb={0.5} mt={1}>
                 {translate('dashboard.submissionTrend.label')}
-            </MetLabel>
-            <MetPaper sx={{ p: { md: 1, lg: 2 } }}>
+            </BodyText>
+            <Paper sx={{ p: { md: 1, lg: 2 } }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Grid
                         container
@@ -156,31 +159,22 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                             justifyContent={'center'}
                             direction="row"
                             container
-                            item
-                            lg={3}
                             sx={{ mt: isTablet ? 2 : 0, mb: isTablet ? 4 : 0 }}
                             rowSpacing={isTablet ? 1 : 0}
-                            md={isBetweenMdAndLg ? 3 : 4}
+                            size={{ md: isBetweenMdAndLg ? 3 : 4, lg: 3 }}
                         >
                             <Grid
                                 container
-                                item
                                 alignItems={'center'}
                                 justifyContent={'center'}
-                                xs={12}
+                                size={12}
                                 sx={{ ...marginXStyling, mb: 1 }}
                             >
-                                <MetLabel>{translate('dashboard.submissionTrend.filter.label')}</MetLabel>
+                                <BodyText bold>{translate('dashboard.submissionTrend.filter.label')}</BodyText>
                             </Grid>
-                            <Grid
-                                container
-                                item
-                                sx={{ mb: 1, ...marginXStyling }}
-                                direction="column"
-                                alignItems="center"
-                            >
+                            <Grid container sx={{ mb: 1, ...marginXStyling }} direction="column" alignItems="center">
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
-                                    <MetLabel>{translate('dashboard.submissionTrend.filter.from')}</MetLabel>
+                                    <BodyText bold>{translate('dashboard.submissionTrend.filter.from')}</BodyText>
                                     <DatePicker
                                         value={fromDate}
                                         onChange={(newDate: Dayjs | null) => setFromDate(newDate)}
@@ -188,15 +182,9 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid
-                                container
-                                item
-                                sx={{ mb: 1, ...marginXStyling }}
-                                direction="column"
-                                alignItems="center"
-                            >
+                            <Grid container sx={{ mb: 1, ...marginXStyling }} direction="column" alignItems="center">
                                 <Stack flexDirection={'column'} alignItems={'flex-start'}>
-                                    <MetLabel>{translate('dashboard.submissionTrend.filter.to')}</MetLabel>
+                                    <BodyText bold>{translate('dashboard.submissionTrend.filter.to')}</BodyText>
                                     <DatePicker
                                         value={toDate}
                                         onChange={(newDate: Dayjs | null) => setToDate(newDate)}
@@ -204,8 +192,8 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     />
                                 </Stack>
                             </Grid>
-                            <Grid container item justifyContent="center" alignItems="center">
-                                <SecondaryButtonOld
+                            <Grid container justifyContent="center" alignItems="center">
+                                <Button
                                     sx={{
                                         ...dashboardCustomStyles.primaryButton,
                                         ...extraSmallStyling,
@@ -214,13 +202,11 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                     onClick={clearDates}
                                 >
                                     {translate('dashboard.submissionTrend.filter.reset')}
-                                </SecondaryButtonOld>
+                                </Button>
                             </Grid>
                         </Grid>
                         <Grid
-                            item
-                            lg={9}
-                            md={isBetweenMdAndLg ? 9 : 8}
+                            size={{ lg: 9, md: isBetweenMdAndLg ? 9 : 8 }}
                             alignItems={'flex-end'}
                             justifyContent={'flex-end'}
                         >
@@ -241,12 +227,12 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                                         ...marginXStyling,
                                     }}
                                 >
-                                    <MetToggleButton value="weekly" sx={extraSmallStyling}>
+                                    <Button variant="primary" size="small" value="weekly" sx={extraSmallStyling}>
                                         {translate('dashboard.submissionTrend.filter.toggleBy.0')}
-                                    </MetToggleButton>
-                                    <MetToggleButton value="monthly" sx={extraSmallStyling}>
+                                    </Button>
+                                    <Button variant="primary" size="small" value="monthly" sx={extraSmallStyling}>
                                         {translate('dashboard.submissionTrend.filter.toggleBy.1')}
-                                    </MetToggleButton>
+                                    </Button>
                                 </ToggleButtonGroup>
                             </Stack>
                             <If condition={!isLoading}>
@@ -296,7 +282,7 @@ const SubmissionTrend = ({ engagement, engagementIsLoading }: SubmissionTrendPro
                         </Grid>
                     </Grid>
                 </LocalizationProvider>
-            </MetPaper>
+            </Paper>
         </>
     );
 };

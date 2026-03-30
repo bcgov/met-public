@@ -55,9 +55,9 @@ jest.mock('@mui/material', () => ({
 }));
 
 jest.mock('components/common/Typography/', () => ({
-    Header1: ({ children }: { children: ReactNode }) => <h1>{children}</h1>,
-    Header2: ({ children }: { children: ReactNode }) => <h2>{children}</h2>,
-    Header4: ({ children }: { children: ReactNode }) => <h4>{children}</h4>,
+    Heading1: ({ children }: { children: ReactNode }) => <h1>{children}</h1>,
+    Heading2: ({ children }: { children: ReactNode }) => <h2>{children}</h2>,
+    Heading4: ({ children }: { children: ReactNode }) => <h4>{children}</h4>,
     BodyText: ({ children }: { children: ReactNode }) => <p>{children}</p>,
 }));
 

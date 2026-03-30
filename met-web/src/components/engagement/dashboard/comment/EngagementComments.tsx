@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { CommentBanner } from './CommentBanner';
 import CommentsBlock from './CommentsBlock';
 
@@ -8,13 +8,12 @@ export const EngagementComments = () => {
     const { dashboardType } = useParams<{ dashboardType: string }>();
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <CommentBanner />
             </Grid>
             <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 direction="row"
                 justifyContent={'flex-end'}
                 alignItems="flex-end"

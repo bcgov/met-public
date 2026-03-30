@@ -5,7 +5,7 @@ import maplibregl, { type LayerSpecification } from 'maplibre-gl';
 import { GeoJSON } from 'geojson';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/pro-solid-svg-icons/faLocationDot';
-import { MetSmallTextOld } from 'components/common';
+import { BodyText } from 'components/common/Typography/Body';
 import { Stack } from '@mui/material';
 import { When } from 'react-if';
 import { colors, Palette } from 'styles/Theme';
@@ -74,7 +74,8 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                 <Stack direction="column" alignItems="center" justifyContent="center">
                     <FontAwesomeIcon icon={faLocationDot} style={{ fontSize: '22px', color: 'red' }} />
                     <When condition={Boolean(markerLabel)}>
-                        <MetSmallTextOld
+                        <BodyText
+                            size="small"
                             bold
                             bgcolor={'#12508F'}
                             style={{ color: colors.surface.white, padding: '1px 4px' }}
@@ -82,7 +83,7 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
                             padding="0 2px 0 2px"
                         >
                             {markerLabel}
-                        </MetSmallTextOld>
+                        </BodyText>
                     </When>
                 </Stack>
             </Marker>

@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
-import { MetHeader3, PrimaryButtonOld } from 'components/common';
+import { Heading3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
 import { Widget } from 'models/widget';
-import { CircularProgress, IconButton, Stack, TextField } from '@mui/material';
+import { IconButton, Grid2 as Grid } from '@mui/material';
+import { TextInput } from 'components/common/Input/TextInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/pro-regular-svg-icons/faPen';
 import { Else, If, Then } from 'react-if';
@@ -55,54 +57,43 @@ export const WidgetTitle = ({ widget }: { widget: Widget }) => {
     return (
         <If condition={editing}>
             <Then>
-                <Stack
-                    direction={'row'}
-                    spacing={1}
-                    alignItems={'flex-start'}
-                    justifyContent={'space-between'}
-                    width={'100%'}
-                >
-                    <TextField
+                <Grid container spacing={1} alignItems="center" size={12} mt={2}>
+                    <TextInput
                         name="title"
                         value={title}
-                        onChange={(e) => handleTitleChange(e.target.value)}
+                        onChange={(value) => handleTitleChange(value)}
                         inputProps={{ maxLength: 100 }}
                         fullWidth
                     />
-                    <If condition={isSaving}>
-                        <Then>
-                            <CircularProgress size={20} color="info" />
-                        </Then>
-                        <Else>
-                            <PrimaryButtonOld
-                                onClick={() => {
-                                    saveTitle();
-                                }}
-                            >
-                                Save
-                            </PrimaryButtonOld>
-                        </Else>
-                    </If>
-                </Stack>
-            </Then>
-            <Else>
-                <Stack
-                    direction={'row'}
-                    spacing={1}
-                    alignItems={'flex-start'}
-                    justifyContent={'space-between'}
-                    width={'100%'}
-                >
-                    <MetHeader3>{widget.title}</MetHeader3>
-                    <IconButton
-                        sx={{ paddingY: 0 }}
+
+                    <Button
+                        loading={isSaving}
+                        variant="primary"
                         onClick={() => {
-                            setEditing(true);
+                            saveTitle();
                         }}
                     >
-                        <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px', color: '#757575' }} />
-                    </IconButton>
-                </Stack>
+                        Save
+                    </Button>
+                </Grid>
+            </Then>
+            <Else>
+                <Grid container size={12} spacing={1} alignItems="center" mt={2}>
+                    <Grid size="grow">
+                        <Heading3 bold width="max-content">
+                            {widget.title}
+                        </Heading3>
+                    </Grid>
+                    <Grid size="auto">
+                        <IconButton
+                            onClick={() => {
+                                setEditing(true);
+                            }}
+                        >
+                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px', color: '#757575' }} />
+                        </IconButton>
+                    </Grid>
+                </Grid>
             </Else>
         </If>
     );

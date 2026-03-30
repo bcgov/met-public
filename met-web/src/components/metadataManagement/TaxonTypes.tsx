@@ -11,7 +11,7 @@ import {
     faClock,
     faHashtag,
     faInputText,
-    faLineColumns,
+    faAlignLeft,
     faLinkSimple,
     faPhone,
     faToggleOff,
@@ -30,7 +30,7 @@ export const TaxonTypes: { [key: string]: TaxonType } = {
     },
     long_text: {
         name: 'Multiline Text',
-        icon: faLineColumns,
+        icon: faAlignLeft,
         supportsPresetValues: false,
         supportsFreeform: true,
         supportsMulti: false,

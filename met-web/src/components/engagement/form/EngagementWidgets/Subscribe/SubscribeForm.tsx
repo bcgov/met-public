@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
-import { Grid, Divider } from '@mui/material';
-import { PrimaryButtonOld, WidgetButton, MetParagraphOld } from 'components/common';
+import { Grid2 as Grid, Divider } from '@mui/material';
 import { WidgetDrawerContext } from '../WidgetDrawerContext';
 import { SubscribeContext } from './SubscribeContext';
 import { SUBSCRIBE_TYPE } from 'models/subscription';
 import { WidgetTitle } from '../WidgetTitle';
 import { When } from 'react-if';
 import SubscribeInfoBlock from './SubscribeInfoBlock';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input/Button';
 
 const Form = () => {
     const { setWidgetDrawerOpen } = useContext(WidgetDrawerContext);
@@ -24,63 +25,66 @@ const Form = () => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
             <When condition={!subscribeFormExists}>
-                <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
-                    <Grid item xs={12}>
-                        <MetParagraphOld>
+                <Grid size={12} container direction="row" spacing={1} justifyContent={'flex-start'}>
+                    <Grid size={12}>
+                        <BodyText>
                             The email list will collect email addresses for a mailing list. A "double-opt-in" email will
                             be sent to confirm the subscription. Only the email addresses that have been double-opted-in
                             will be on the list.
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
-                    <Grid item xs={12} marginBottom="1em">
-                        <MetParagraphOld>
+                    <Grid size={12} marginBottom="1em">
+                        <BodyText>
                             The form sign-up will open the pre-defined form. The text and CTA for both are customizable.
-                        </MetParagraphOld>
+                        </BodyText>
                     </Grid>
                 </Grid>
             </When>
-            <Grid item>
-                <WidgetButton
+            <Grid>
+                <Button
+                    size="small"
                     onClick={() => {
                         handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.EMAIL_LIST, true);
                         setSubscribeOptionToEdit(emailListOption || null);
                     }}
                 >
                     Email List
-                </WidgetButton>
+                </Button>
             </Grid>
-            <Grid item>
-                <WidgetButton
+            <Grid>
+                <Button
+                    size="small"
                     onClick={() => {
                         handleSubscribeDrawerOpen(SUBSCRIBE_TYPE.SIGN_UP, true);
                         setSubscribeOptionToEdit(signUpOption || null);
                     }}
                 >
                     Form Sign-up
-                </WidgetButton>
+                </Button>
             </Grid>
 
             <When condition={subscribeFormExists}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <SubscribeInfoBlock />
                 </Grid>
             </When>
 
-            <Grid item xs={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
-                <Grid item>
-                    <PrimaryButtonOld
+            <Grid size={12} container direction="row" spacing={1} justifyContent={'flex-start'} marginTop="2em">
+                <Grid>
+                    <Button
+                        variant="primary"
                         onClick={() => {
                             setWidgetDrawerOpen(false);
                         }}
                     >
                         Close
-                    </PrimaryButtonOld>
+                    </Button>
                 </Grid>
             </Grid>
         </Grid>

@@ -1,6 +1,6 @@
-import { Box, Grid, Stack, Link } from '@mui/material';
+import { Box, Grid2 as Grid, Stack, Link } from '@mui/material';
 import * as React from 'react';
-import { MetBodyOld } from 'components/common';
+import { BodyText } from 'components/common/Typography/Body';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { Survey } from 'models/survey';
 import dayjs from 'dayjs';
@@ -35,14 +35,14 @@ export default function EmailPreview({
                         alt="British Columbia Logo"
                     />
                 </Stack>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1 }}>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1 }}>
                         Thank you for taking the time to provide your feedback on {engagementName}.
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
                 {children}
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 2 }}>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 2 }}>
                         {!isClosed ? (
                             <>
                                 You can edit and re-submit your feedback. The comment period is open until {''}
@@ -54,11 +54,11 @@ export default function EmailPreview({
                                 your feedback cannot be edited.
                             </>
                         )}
-                    </MetBodyOld>
+                    </BodyText>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     {!isClosed ? (
-                        <MetBodyOld
+                        <BodyText
                             sx={{
                                 borderLeft: '4px solid grey',
                                 paddingLeft: '8px',
@@ -66,15 +66,15 @@ export default function EmailPreview({
                                 mb: 2,
                             }}
                         >
-                            <Link>Edit your feedback</Link>
-                        </MetBodyOld>
+                            <Link sx={{ color: (theme) => theme.palette.action.active }}>Edit your feedback</Link>
+                        </BodyText>
                     ) : null}
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1 }}>Thank you,</MetBodyOld>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1 }}>Thank you,</BodyText>
                 </Grid>
-                <Grid item xs={12}>
-                    <MetBodyOld sx={{ mb: 1 }}>The {tenant.name} Team</MetBodyOld>
+                <Grid size={12}>
+                    <BodyText sx={{ mb: 1 }}>The {tenant.name} Team</BodyText>
                 </Grid>
             </Box>
         </Box>

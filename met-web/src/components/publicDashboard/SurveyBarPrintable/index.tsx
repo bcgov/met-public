@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Skeleton, Divider } from '@mui/material';
-import { MetHeader1Old, MetPaper, MetLabel } from 'components/common';
+import { Box, Grid2 as Grid, Skeleton, Divider, Paper } from '@mui/material';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { SurveyBarData } from '../types';
 import { getSurveyResultData } from 'services/analytics/surveyResult';
 import { Engagement } from 'models/engagement';
@@ -48,10 +48,10 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
     if (isError) {
         return (
             <>
-                <Grid item xs={12}>
-                    <MetLabel mb={2} color="primary">
+                <Grid size={12}>
+                    <BodyText bold mb={2} color="primary">
                         {translate('dashboard.barBlock.label')}
-                    </MetLabel>
+                    </BodyText>
                 </Grid>
             </>
         );
@@ -59,20 +59,20 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
 
     return (
         <>
-            <Grid item xs={12} mb={2}>
-                <MetHeader1Old>{translate('dashboard.barBlock.label')}</MetHeader1Old>
+            <Grid size={12} mb={2}>
+                <Heading1>{translate('dashboard.barBlock.label')}</Heading1>
             </Grid>
             {Object.values(data).map((value) => {
                 {
                     return value.map((result: SurveyBarData, i: number) => {
                         return (
                             <div id={'question' + i} key={i}>
-                                <Grid key={result.position} mb={2} item xs={12}>
-                                    <MetPaper sx={{ p: 2 }}>
-                                        <Grid item xs={12}>
-                                            <MetLabel mb={2} color="primary">
+                                <Grid key={result.position} mb={2} size={12}>
+                                    <Paper sx={{ p: 2 }}>
+                                        <Grid size={12}>
+                                            <BodyText bold mb={2} color="primary">
                                                 {result.label}
-                                            </MetLabel>
+                                            </BodyText>
                                             <Divider sx={{ marginTop: '1em' }} />
                                             <Box marginLeft={{ xs: 0, sm: '2em' }} marginTop={'3em'}>
                                                 <ResponsiveContainer width={'100%'} height={400} key={result.position}>
@@ -119,7 +119,7 @@ export const SurveyBarPrintable = ({ engagement, engagementIsLoading, dashboardT
                                                 </ResponsiveContainer>
                                             </Box>
                                         </Grid>
-                                    </MetPaper>
+                                    </Paper>
                                 </Grid>
                             </div>
                         );

@@ -33,13 +33,6 @@ jest.mock('@mui/material', () => ({
     },
 }));
 
-jest.mock('components/common', () => ({
-    ...jest.requireActual('components/common'),
-    PrimaryButtonOld: ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
-        return <button onClick={onClick}>{children}</button>;
-    },
-}));
-
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useSelector: jest.fn(() => {

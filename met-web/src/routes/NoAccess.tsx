@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShieldKeyhole } from '@fortawesome/pro-regular-svg-icons';
 import { Grid2 as Grid } from '@mui/material';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import React from 'react';
 
 const NoAccess = () => {
@@ -24,9 +24,9 @@ const NoAccess = () => {
                         size={{ xs: 12, sm: 10, xl: 8 }}
                         justifyContent="flex-start"
                     >
-                        <Header1 weight="bold" sx={{ mb: 1 }}>
+                        <Heading1 bold sx={{ mb: 1 }}>
                             <FontAwesomeIcon icon={faShieldKeyhole} /> Access Requested
-                        </Header1>
+                        </Heading1>
                         <BodyText>
                             Your IDIR login was successful and an email has been sent to our administrators to request
                             that you be granted access. Once your request is processed, you'll get a notification email

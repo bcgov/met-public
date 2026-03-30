@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { EngagementViewSections } from 'engagements/public/view';
 import { useEngagementLoaderData } from 'engagements/preview/PreviewLoaderDataContext';
 import PreviewSwitch, { PreviewRender } from 'engagements/preview/PreviewSwitch';
-import { Header2, BodyText } from 'components/common/Typography';
+import { Heading2, BodyText } from 'components/common/Typography';
 import { EngagementPreviewTag } from './EngagementPreviewTag';
 import { Await } from 'react-router';
 import TextPlaceholder from 'engagements/preview/placeholders/TextPlaceholder';
@@ -48,7 +48,11 @@ export const EngagementSubscribeBlock = () => {
                         return null;
                     }
                     return (
-                        <section id={EngagementViewSections.SUBSCRIBE} aria-label="Subscribe Section">
+                        <section
+                            id={EngagementViewSections.SUBSCRIBE}
+                            aria-label="Subscribe Section"
+                            style={{ position: 'relative' }}
+                        >
                             <EngagementPreviewTag>Subscribe Section (Optional)</EngagementPreviewTag>
                             <Grid
                                 container
@@ -66,14 +70,14 @@ export const EngagementSubscribeBlock = () => {
                                 }}
                             >
                                 <Grid size={{ xs: 12, lg: 3.5 }}>
-                                    <Header2 weight="thin" decorated sx={{ mb: '24px' }}>
+                                    <Heading2 weight="thin" decorated sx={{ mb: '24px' }}>
                                         <PreviewSwitch
                                             hasValue={!!resolvedEngagement.subscribe_section_heading}
                                             value={resolvedEngagement.subscribe_section_heading}
                                             previewFallback={<TextPlaceholder text="Subscribe Section" />}
                                             fallback="Subscribe Section"
                                         />
-                                    </Header2>
+                                    </Heading2>
 
                                     <PreviewRender
                                         hasValue={hasSubscribeDescription}
