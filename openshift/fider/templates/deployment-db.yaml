@@ -36,9 +36,9 @@ spec:
         vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
-        vault.hashicorp.com/agent-inject-secret-met-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider
-        vault.hashicorp.com/agent-inject-template-met-fider: |
-            {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider"{{ ` }}
+        vault.hashicorp.com/agent-inject-secret-engagement-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-fider
+        vault.hashicorp.com/agent-inject-template-engagement-fider: |
+            {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-fider"{{ ` }}
             {{- range $k, $v := .Data.data }}
             export {{ $k }}='{{ $v }}'
             {{- end }}
@@ -63,7 +63,7 @@ spec:
             - '-c'
             - |
               set -euo pipefail
-              . /vault/secrets/met-fider && \
+              . /vault/secrets/engagement-fider && \
               postgres -D /var/lib/pgsql/data/userdata
 
           resources:

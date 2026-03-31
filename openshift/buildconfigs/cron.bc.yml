@@ -56,7 +56,7 @@ parameters:
       The URL to your GIT repo, don't use the this default unless you're just
       experimenting.
     required: true
-    value: https://github.com/bcgov/met-public.git
+    value: https://github.com/bcgov/dep-public.git
   - name: GIT_REF
     displayName: Git Reference
     description: The git reference or branch.

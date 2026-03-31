@@ -48,7 +48,7 @@ parameters:
     value: analytics-api
   - name: GITHUB_REPO
     description: "The github repo uri"
-    value: 'https://github.com/bcgov/met-public.git'
+    value: 'https://github.com/bcgov/dep-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
     value: /analytics-api

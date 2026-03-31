@@ -1,9 +1,10 @@
-## March 27, 2026
+## March 31, 2026
 
 - **Chore** OpenShift and Helm value changes from MET to DEP [🎟️ DEP-231](https://citz-gdx.atlassian.net/browse/DEP-231)
   - Updated Helm templates and values
     - Internal values use 'engagement'
     - External values use 'dep'
+    - Some values just omit 'met'
 
 ## March 17, 2026
 

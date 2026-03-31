@@ -47,8 +47,8 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}` }}
-        vault.hashicorp.com/agent-inject-secret-met-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
-        vault.hashicorp.com/agent-inject-template-met-jwt-oidc: |
+        vault.hashicorp.com/agent-inject-secret-engagement-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-engagement-jwt-oidc: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
@@ -61,12 +61,12 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}` }}
-        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        # Custom built URI for met-patroni by indexing into the secret data object
+        vault.hashicorp.com/agent-inject-secret-engagement-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni
+        # Custom built URI for engagement-patroni by indexing into the secret data object
         # All patroni logins are stored in the same secret, so we shouldn't inject them all
-        vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
-          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "met-username" }}:{{ index .Data.data "met-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+        vault.hashicorp.com/agent-inject-template-engagement-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni"{{ ` }}
+          export SQLALCHEMY_DATABASE_URI='postgresql://{{ index .Data.data "engagement-username" }}:{{ index .Data.data "engagement-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "app-db-name" }}'
           {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.app.licenseplate }}-vault
