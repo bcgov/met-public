@@ -21,11 +21,11 @@ db:
       app.kubernetes.io/component: run_worker
     - app: analytics-api
       role: api
-    - app-group: met-app
+    - app-group: engagement-app
       role: worker
-    - app: met-api
+    - app: engagement-api
       role: api
-    - app: met-api
+    - app: engagement-api
       role: cron
     - app: engagement-db
       role: backup
@@ -57,9 +57,9 @@ backup:
       cpu: 500m
       memory: 512Mi
       ephemeralStorage: 2Gi
-  dbName: met
+  dbName: engagement
   strategy: rolling
-  schema: met
+  schema: engagement
   databaseName: app
   mountPath: "/backups/"
   environment: dev

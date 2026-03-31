@@ -63,7 +63,7 @@ spec:
             oc login --token=$PIPELINE_TOKEN --server=$(oc whoami --show-server) --insecure-skip-tls-verify
 
             echo "Getting route"
-            ROUTE_NAME=$(oc get route -n {{ .Release.Namespace }} -l app=met-web -o jsonpath='{.items[0].metadata.name}')
+            ROUTE_NAME=$(oc get route -n {{ .Release.Namespace }} -l app=engagement-web -o jsonpath='{.items[0].metadata.name}')
             if [ -z "$ROUTE_NAME" ]; then
               echo "No matching Route found!" >&2
               exit 1

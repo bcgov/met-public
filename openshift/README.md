@@ -1,6 +1,6 @@
 # Openshift Configuration
 
-Notes and example commands to deploy MET in an Openshift environment.
+Notes and example commands to deploy DEP in an Openshift environment.
 
 ## Deployment Configuration
 
@@ -52,33 +52,33 @@ Some charts may include parameters for configuring Horizontal Pod Autoscalers (H
 cd ./openshift/web
 ### Dev
 oc project e903c2-dev
-helm upgrade --install met-web . --values values_dev.yaml
+helm upgrade --install engagement-web . --values values_dev.yaml
 ### Test
 oc project e903c2-test
-helm upgrade --install met-web . --values values_test.yaml
+helm upgrade --install engagement-web . --values values_test.yaml
 ### Prod
 oc project e903c2-prod
-helm upgrade --install met-web . --values values_prod.yaml
+helm upgrade --install engagement-web . --values values_prod.yaml
 ```
 
 **Deploy the `API` (and `cron`) applications**:
 
 > Accessible to the public: _Yes_ (API only)
 > This deployment uses the helm chart located in the `openshift/api` folder.
-> This creates 2 deployments as the met-api and met-cron submodules are deployed together.
+> This creates 2 deployments as the engagement-api and engagement-cron submodules are deployed together.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the api application.
 
 ```bash
 cd ./openshift/api
 ### Dev
 oc project e903c2-dev
-helm upgrade --install met-api . --values values_dev.yaml
+helm upgrade --install engagement-api . --values values_dev.yaml
 ### Test
 oc project e903c2-test
-helm upgrade --install met-api . --values values_test.yaml
+helm upgrade --install engagement-api . --values values_test.yaml
 ### Prod
 oc project e903c2-prod
-helm upgrade --install met-api . --values values_prod.yaml
+helm upgrade --install engagement-api . --values values_prod.yaml
 ```
 
 **Deploy the `Notify API` application:**
@@ -108,7 +108,7 @@ helm upgrade --install notify-api . --values values_prod.yaml
 
 > Accessible to the public: _No_
 > This deployment uses the helm chart located in the `openshift/analytics-api` folder.
-> This application is used to collect and process analytics data from the MET applications.
+> This application is used to collect and process analytics data from the engagement applications.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the analytics-api application.
 > The analytics-api is used by the redash application to collect and process analytics data.
 
@@ -116,13 +116,13 @@ helm upgrade --install notify-api . --values values_prod.yaml
 cd ./openshift/analytics-api
 ### Dev
 oc project e903c2-dev
-helm upgrade --install met-analytics . --values values_dev.yaml
+helm upgrade --install engagement-analytics . --values values_dev.yaml
 ### Test
 oc project e903c2-test
-helm upgrade --install met-analytics . --values values_test.yaml
+helm upgrade --install engagement-analytics . --values values_test.yaml
 ### Prod
 oc project e903c2-prod
-helm upgrade --install met-analytics . --values values_prod.yaml
+helm upgrade --install engagement-analytics . --values values_prod.yaml
 ```
 
 **Deploy the `Redash` application**:
@@ -134,14 +134,14 @@ helm upgrade --install met-analytics . --values values_prod.yaml
 ```bash
 cd redash
 helm dependency build
-helm install met-analytics ./ -f ./values.yaml --set redash.image.tag=test
+helm install engagement-analytics ./ -f ./values.yaml --set redash.image.tag=test
 ```
 
 **Deploy the `Dagster` application**:
 
 > Accessible to the public: _No_
 > This deployment uses the helm chart located in the `openshift/dagster` folder.
-> Dagster is used to orchestrate and schedule ETL jobs for the MET applications.
+> Dagster is used to orchestrate and schedule ETL jobs for the engagement applications.
 > Use one of dev, test or prod and the corresponding values.yaml file to deploy the dagster application.
 
 ```bash
@@ -165,7 +165,7 @@ helm upgrade --install dagster . --values values.yaml --values values_prod.yaml
 > - Vault integration for database credentials
 > - Image puller role binding for user deployments
 
-**Deploying the MET RBAC chart**:
+**Deploying the Engagement RBAC chart**:
 
 > RBAC in this project is managed by the helm chart located in the `openshift/rbac` folder.
 > This chart determines its environment based on the namespace it is being deployed to.
@@ -378,7 +378,7 @@ source /vault/secrets/engagement-patroni
 **What it does**:
 
 1. Extracts `CREATE ROLE` statements from the backup
-2. Creates all roles first (analytics, app, backup, dagster, met, redash, replication)
+2. Creates all roles first (analytics, app, backup, dagster, engagement, redash, replication)
 3. Restores the full backup (object ownership now works correctly)
 4. Ignores duplicate role creation errors at the end of the backup
 
@@ -392,7 +392,7 @@ psql -U postgres -d app
 # Set passwords for each role
 ALTER ROLE analytics WITH PASSWORD 'foo';
 ALTER ROLE dagster WITH PASSWORD 'bar';
-ALTER ROLE met WITH PASSWORD 'baz';
+ALTER ROLE engagement WITH PASSWORD 'baz';
 ALTER ROLE redash WITH PASSWORD 'qux';
 ALTER ROLE replication WITH PASSWORD 'quux';
 ```

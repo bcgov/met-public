@@ -3,7 +3,7 @@ kind: Template
 apiVersion: template.openshift.io/v1
 metadata:
   annotations:
-    description: Build template for the MET Cron job runner.
+    description: Build template for the Engagement Cron job runner.
     tags: flask
     iconClass: icon-python
   name: "${NAME}-build-template"
@@ -44,19 +44,19 @@ parameters:
       The name assigned to all of the objects defined in this template. You
       should keep this as default unless you know what you're doing.
     required: true
-    value: met-cron
+    value: engagement-cron
   - name: APP_GROUP
     displayName: App Group
     description: The name assigned to all of the deployments in this project.
     required: true
-    value: met-app
+    value: engagement-app
   - name: GIT_REPO_URL
     displayName: Git Repo URL
     description:
       The URL to your GIT repo, don't use the this default unless you're just
       experimenting.
     required: true
-    value: https://github.com/bcgov/met-public.git
+    value: https://github.com/bcgov/dep-public.git
   - name: GIT_REF
     displayName: Git Reference
     description: The git reference or branch.
@@ -66,7 +66,7 @@ parameters:
     displayName: Source Context Directory
     description: The source context directory.
     required: true
-    value: met-cron
+    value: engagement-cron
   - name: SOURCE_IMAGE_KIND
     displayName: Source Image Kind
     required: true
