@@ -81,7 +81,7 @@ spec:
           source /vault/secrets/email && \
           source /vault/secrets/jwt-oidc && \
           source /vault/secrets/engagement-patroni && \
-          bash /engagement-cron/docker-entrypoint.sh
+          bash /cron/docker-entrypoint.sh
         envFrom:
         - configMapRef:
             name: {{ .Values.app.name }}
