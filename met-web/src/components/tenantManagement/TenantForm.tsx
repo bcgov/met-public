@@ -357,11 +357,7 @@ export const TenantForm = ({
                     <Button disabled={!isDirty || !isValid} onClick={handleSubmit(onFormSubmit)} variant="primary">
                         {submitText}
                     </Button>
-                    {onCancel && (
-                        <Button variant="secondary" onClick={onCancel}>
-                            {cancelText}
-                        </Button>
-                    )}
+                    {onCancel && <Button onClick={onCancel}>{cancelText}</Button>}
                 </Detail>
             </DetailsContainer>
         </FormGroup>

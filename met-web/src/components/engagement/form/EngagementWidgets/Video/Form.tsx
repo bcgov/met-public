@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { MidScreenLoader } from 'components/common';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input/Button';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -117,7 +119,7 @@ const Form = () => {
     if (isLoadingVideoWidget || !widget) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <MidScreenLoader />
                 </Grid>
             </Grid>
@@ -125,12 +127,12 @@ const Form = () => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} aria-label="Video widget form">
                         <Grid
@@ -140,40 +142,24 @@ const Form = () => {
                             justifyContent="flex-start"
                             spacing={2}
                         >
-                            <Grid item xs={12}>
-                                <MetLabel>Description (Optional)</MetLabel>
+                            <Grid size={12}>
+                                <BodyText bold>Description (Optional)</BodyText>
                                 <ControlledTextField
                                     name="description"
-                                    variant="outlined"
-                                    label=" "
                                     aria-label="Description: optional."
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
                                     multiline
                                     rows={4}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel>Video Link</MetLabel>
-                                <MetDescription>
+                            <Grid size={12}>
+                                <BodyText bold>Video Link</BodyText>
+                                <BodyText>
                                     The video must be hosted on one of the following platforms: YouTube, Vimeo
-                                </MetDescription>
-                                <ControlledTextField
-                                    name="videoUrl"
-                                    variant="outlined"
-                                    label=" "
-                                    aria-label="Video URL: required."
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                />
+                                </BodyText>
+                                <ControlledTextField name="videoUrl" aria-label="Video URL: required." />
                             </Grid>
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 container
                                 direction="row"
                                 alignItems={'flex-start'}
@@ -181,15 +167,13 @@ const Form = () => {
                                 spacing={2}
                                 mt={'3em'}
                             >
-                                <Grid item>
-                                    <PrimaryButtonOld type="submit" disabled={isCreating}>
+                                <Grid>
+                                    <Button variant="primary" type="submit" disabled={isCreating}>
                                         Save & Close
-                                    </PrimaryButtonOld>
+                                    </Button>
                                 </Grid>
-                                <Grid item>
-                                    <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>
-                                        Cancel
-                                    </SecondaryButtonOld>
+                                <Grid>
+                                    <Button onClick={() => setWidgetDrawerOpen(false)}>Cancel</Button>
                                 </Grid>
                             </Grid>
                         </Grid>

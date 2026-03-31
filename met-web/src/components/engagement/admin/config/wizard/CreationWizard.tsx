@@ -4,12 +4,12 @@ import { useFetcher, createSearchParams } from 'react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '.';
-import { Header1, Header2 } from 'components/common/Typography';
+import { Heading1, Heading2 } from 'components/common/Typography';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
-import { Link } from 'components/common/Navigation';
+import Grid from '@mui/material/Grid2';
 
 const EngagementCreationWizard = () => {
-    const fetcher = useFetcher();
+    const fetcher = useFetcher({ key: 'config-update' });
 
     const engagementCreationForm = useForm<EngagementConfigurationData>({
         defaultValues: {
@@ -48,22 +48,27 @@ const EngagementCreationWizard = () => {
     };
 
     return (
-        <ResponsiveContainer>
+        <ResponsiveContainer gap={1}>
             <AutoBreadcrumbs />
-            <Header1 sx={{ mb: 0 }}>New Engagement</Header1>
-            <Header2 weight="thin">Create a new engagement in six easy configuration steps.</Header2>
-            <SystemMessage status="info">
-                You will be able to modify the configuration of your engagement later in the case the parameters of your
-                engagement change. If you prefer, you can use{' '}
-                <Link size="small" to="../form">
-                    the old form
-                </Link>
-                .
-            </SystemMessage>
-            <br />
-            <FormProvider {...engagementCreationForm}>
-                <EngagementForm isNewEngagement onSubmit={onSubmit} />
-            </FormProvider>
+            <Grid size={12}>
+                <Heading1 mb={0}>New Engagement</Heading1>
+            </Grid>
+            <Grid size={12}>
+                <Heading2 weight="thin" mb="1rem">
+                    Create a new engagement in six easy configuration steps.
+                </Heading2>
+            </Grid>
+            <Grid>
+                <SystemMessage status="info">
+                    You will be able to modify the configuration of your engagement later in the case the parameters of
+                    your engagement change.
+                </SystemMessage>
+            </Grid>
+            <Grid size={12} mt={5}>
+                <FormProvider {...engagementCreationForm}>
+                    <EngagementForm isNewEngagement onSubmit={onSubmit} />
+                </FormProvider>
+            </Grid>
         </ResponsiveContainer>
     );
 };

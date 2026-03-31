@@ -6,7 +6,7 @@ import { ResponsiveContainer } from 'components/common/Layout';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { EngagementLoaderAdminData } from 'components/engagement/admin/EngagementLoaderAdmin';
 import { RouterLinkRenderer } from 'components/common/Navigation/Link';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { StatusLabel } from '../create/authoring/StatusLabel';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
@@ -38,15 +38,15 @@ const AdminEngagementView = () => {
                 <Suspense
                     fallback={
                         <Skeleton variant="text">
-                            <Header1 mt={1} mb={3}>
+                            <Heading1 mt={1} mb={3}>
                                 Loading...
-                            </Header1>
+                            </Heading1>
                         </Skeleton>
                     }
                 >
-                    <Header1 mt={1} mb={3}>
+                    <Heading1 mt={1} mb={3}>
                         <Await resolve={engagement}>{(engagement: Engagement) => engagement?.name}</Await>
-                    </Header1>
+                    </Heading1>
                 </Suspense>
             </Grid>
             <TabContext value={currentTab}>
@@ -55,7 +55,7 @@ const AdminEngagementView = () => {
                         component="nav"
                         variant="scrollable"
                         aria-label="Admin Engagement View Tabs"
-                        TabIndicatorProps={{ sx: { display: 'none' } }}
+                        slotProps={{ indicator: { sx: { display: 'none' } } }}
                         sx={{
                             '& .MuiTabs-flexContainer': {
                                 justifyContent: 'flex-start',

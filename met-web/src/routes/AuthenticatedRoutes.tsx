@@ -107,6 +107,12 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                 >
                     <LazyRoute index element={<Navigate to="details/authoring" />} />
                     <LazyRoute path="details">
+                        <LazyRoute
+                            path="config/edit"
+                            ComponentLazy={() => import('engagements/admin/config/wizard/ConfigWizard')}
+                            actionLazy={() => import('engagements/admin/config/EngagementUpdateAction')}
+                            handle={{ crumb: () => ({ name: 'Configure' }) }}
+                        />
                         <LazyRoute index element={<Navigate to="config" />} />
                         {/* Wraps the tabs with the engagement title and TabContext */}
                         <LazyRoute
@@ -210,6 +216,10 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                                     <LazyRoute
                                         path="more"
                                         ComponentLazy={() => import('engagements/admin/create/authoring/AuthoringMore')}
+                                        loaderLazy={() => import('engagements/admin/create/authoring/authoringLoader')}
+                                        actionLazy={() =>
+                                            import('engagements/admin/create/authoring/authoringUpdateAction')
+                                        }
                                         handle={{ crumb: () => ({ name: 'More Engagements' }) }}
                                     />
                                 </LazyRoute>
@@ -217,12 +227,6 @@ const AuthenticatedRoutes = resolveLazyRouteTree(
                         </LazyRoute>
                     </LazyRoute>
                     <LazyRoute path="*" ComponentLazy={() => import('routes/NotFound')} />
-                    <LazyRoute
-                        path="config/edit"
-                        ComponentLazy={() => import('engagements/admin/config/wizard/ConfigWizard')}
-                        actionLazy={() => import('engagements/admin/config/EngagementUpdateAction')}
-                        handle={{ crumb: () => ({ name: 'Configure' }) }}
-                    />
                 </LazyRoute>
                 <LazyRoute
                     path="comments/:dashboardType"

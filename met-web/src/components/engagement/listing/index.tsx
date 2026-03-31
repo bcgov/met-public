@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { When } from 'react-if';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/pro-solid-svg-icons/faChevronDown';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
@@ -11,12 +11,12 @@ import { faXmark } from '@fortawesome/pro-regular-svg-icons/faXmark';
 import { faCommentsQuestionCheck } from '@fortawesome/pro-regular-svg-icons/faCommentsQuestionCheck';
 import Collapse from '@mui/material/Collapse';
 import { Link, useNavigate, useFetcher, createSearchParams, useSearchParams } from 'react-router';
-import { MetPageGridContainer, MetTooltip } from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
 import { Engagement } from 'models/engagement';
 import { useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import { formatDate } from 'components/common/dateHelper';
-import { Link as MuiLink, useMediaQuery, Theme } from '@mui/material';
+import { Link as MuiLink, useMediaQuery, Theme, Tooltip } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import MetTable from 'components/common/Table';
 import { EngagementStatus, SubmissionStatus } from 'constants/engagementStatus';
@@ -30,10 +30,7 @@ import AdvancedSearch from './AdvancedSearch/SearchComponent';
 import { Button, TextInput } from 'components/common/Input';
 import { faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { EngagementListLoaderData } from 'engagements/public/view/EngagementListLoader';
-// Prevents page load fail due to waiting for engagement title on refresh
-const AutoBreadcrumbs = React.lazy(() =>
-    import('components/common/Navigation/Breadcrumb').then((m) => ({ default: m.AutoBreadcrumbs })),
-);
+import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 
 interface SearchFilter {
     key?: string;
@@ -134,7 +131,7 @@ const EngagementListing = () => {
             label: 'Engagement Name',
             allowSort: true,
             renderCell: (row: Engagement) => (
-                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/details/config`}>
+                <MuiLink component={Link} to={`/engagements/${Number(row.id)}/details/authoring`}>
                     {row.name}
                 </MuiLink>
             ),
@@ -222,7 +219,7 @@ const EngagementListing = () => {
 
                 const { approved } = row.submissions_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'Approved'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'Approved'} placement="right" arrow>
                         <span>
                             <ApprovedIcon
                                 onClick={() => {
@@ -237,7 +234,7 @@ const EngagementListing = () => {
                                 {approved}
                             </ApprovedIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -266,7 +263,7 @@ const EngagementListing = () => {
                 }
                 const { needs_further_review } = row.submissions_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'Need further review'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'Need further review'} placement="right" arrow>
                         <span>
                             <NFRIcon
                                 onClick={() => {
@@ -281,7 +278,7 @@ const EngagementListing = () => {
                                 {needs_further_review || 0}
                             </NFRIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -310,7 +307,7 @@ const EngagementListing = () => {
                 }
                 const { rejected } = row.submissions_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'Rejected'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'Rejected'} placement="right" arrow>
                         <span>
                             <RejectedIcon
                                 onClick={() => {
@@ -325,7 +322,7 @@ const EngagementListing = () => {
                                 {rejected || 0}
                             </RejectedIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -354,7 +351,7 @@ const EngagementListing = () => {
                 }
                 const { pending } = row.submissions_meta_data;
                 return (
-                    <MetTooltip disableInteractive title={'New comments'} placement="right" arrow>
+                    <Tooltip disableInteractive title={'New comments'} placement="right" arrow>
                         <span>
                             <NewIcon
                                 onClick={() => {
@@ -369,7 +366,7 @@ const EngagementListing = () => {
                                 {pending || 0}
                             </NewIcon>
                         </span>
-                    </MetTooltip>
+                    </Tooltip>
                 );
             },
         },
@@ -389,7 +386,7 @@ const EngagementListing = () => {
     ];
 
     return (
-        <MetPageGridContainer
+        <ResponsiveContainer
             direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
@@ -397,10 +394,10 @@ const EngagementListing = () => {
             columnSpacing={2}
             rowSpacing={1}
         >
-            <Grid item>
+            <Grid>
                 <AutoBreadcrumbs />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Stack
                     direction={{ xs: 'column', md: 'row' }}
                     spacing={1}
@@ -408,7 +405,7 @@ const EngagementListing = () => {
                     justifyContent="space-between"
                     alignItems="flex-start"
                 >
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" spacing={1} alignItems="center" width="100%">
                         <TextInput
                             title={''}
                             inputProps={{ 'aria-label': 'Search by name' }}
@@ -417,6 +414,7 @@ const EngagementListing = () => {
                             placeholder="Search by name"
                             name="searchText"
                             value={searchText}
+                            fullWidth={isMediumScreen}
                             sx={{ height: '40px', pr: 0, minWidth: '13em' }}
                             onChange={(value) => setSearchText(value)}
                             onKeyDown={(e) => {
@@ -463,6 +461,7 @@ const EngagementListing = () => {
                             data-testid="engagement/listing/advancedSearch"
                             name="advancedSearch"
                             onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
+                            fullWidth={isMediumScreen}
                             icon={
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
@@ -484,18 +483,19 @@ const EngagementListing = () => {
                             icon={<FontAwesomeIcon icon={faPlus} />}
                             href="/engagements/create/wizard"
                             sx={{ minWidth: 'max-content' }}
+                            fullWidth={isMediumScreen}
                         >
                             Create Engagement
                         </Button>
                     </PermissionsGate>
                 </Stack>
             </Grid>
-            <Grid item xs={12} style={{ width: '100%' }}>
+            <Grid size={12} style={{ width: '100%' }}>
                 <Collapse in={advancedSearchOpen} timeout="auto" style={{ width: '100%' }}>
                     <AdvancedSearch filterParams={searchOptions} setFilterParams={setSearchOptions} />
                 </Collapse>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <MetTable
                     headCells={headCells}
                     rows={engagementPage?.items ?? []}
@@ -505,7 +505,7 @@ const EngagementListing = () => {
                     pageInfo={{ ...pageInfo, total: engagementPage?.total ?? 0 }}
                 />
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

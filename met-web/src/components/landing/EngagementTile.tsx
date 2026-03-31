@@ -7,7 +7,7 @@ import { EngagementStatusChip } from 'components/common/Indicators/StatusChip';
 import { TileSkeleton } from './TileSkeleton';
 import { getSlugByEngagementId } from 'services/engagementSlugService';
 import { useAppTranslation } from 'hooks';
-import { BodyText, Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/pro-regular-svg-icons';
 import { colors, elevations, globalFocusShadow } from 'components/common';
@@ -88,6 +88,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
     return (
         <ThemeProvider theme={isHovered || isFocused ? DarkTheme : BaseTheme}>
             <Card
+                draggable={false}
                 className={isActive ? 'active' : ''}
                 sx={{
                     cursor: isLoadingEngagement ? 'not-allowed' : 'pointer',
@@ -153,7 +154,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                 display: 'flex',
                             }}
                         >
-                            <Header2
+                            <Heading2
                                 weight="thin"
                                 component="p"
                                 sx={{
@@ -176,7 +177,7 @@ const EngagementTile = ({ passedEngagement, engagementId }: EngagementTileProps)
                                     style={{ flexGrow: 0, whiteSpace: 'nowrap', marginLeft: '8px' }}
                                     icon={faArrowRight}
                                 />
-                            </Header2>
+                            </Heading2>
                         </Box>
                         <Grid container flexDirection="row" alignItems="flex-start" columnSpacing={2}>
                             <Grid size="auto" alignContent={'flex-start'} alignItems={'flex-start'}>

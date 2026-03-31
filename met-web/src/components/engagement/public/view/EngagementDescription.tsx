@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BodyText, Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { Link } from 'components/common/Navigation';
 import { Engagement } from 'models/engagement';
 import { Grid2 as Grid, Skeleton, ThemeProvider } from '@mui/material';
@@ -34,13 +34,14 @@ export const EngagementDescription = () => {
                     container
                     size={12}
                     justifyContent="space-between"
-                    spacing={8}
+                    rowSpacing={3}
+                    columnSpacing={11}
                     margin={0}
                     sx={{
                         background: colors.surface.blue[90],
                         color: colors.surface.white,
-                        borderRadius: '0px 24px 0px 0px' /* upper right corner */,
-                        padding: { xs: '43px 16px 24px 16px', md: '32px 5vw 40px 5vw', lg: '32px 10em 40px 10em' },
+                        borderRadius: '0px 1.5rem 0px 0px' /* upper right corner */,
+                        padding: { xs: '2rem 2rem 4rem 2rem', md: '2rem 5vw 4rem 5vw', lg: '2rem 10rem 4rem 10rem' },
                         marginTop: '-56px',
                         zIndex: 10,
                         position: 'relative',
@@ -60,24 +61,26 @@ export const EngagementDescription = () => {
                             </BodyText>
                         </Grid>
                     </Grid>
-                    <Grid size={{ xs: 12, md: 6 }} direction="column" minHeight="120px">
-                        <Suspense fallback={<Skeleton variant="rectangular" height="288px" width="100%" />}>
-                            <Await resolve={engagement}>
-                                {(engagement: Engagement) => {
-                                    const summaryEditorState = getEditorStateFromRaw(engagement.rich_description);
-                                    const hasSummaryBody =
-                                        summaryEditorState?.getCurrentContent()?.hasText?.() ?? false;
+                    <Suspense fallback={<Skeleton variant="rectangular" height="288px" width="100%" />}>
+                        <Await resolve={engagement}>
+                            {(engagement: Engagement) => {
+                                const summaryEditorState = getEditorStateFromRaw(engagement.rich_description);
+                                const hasSummaryBody = summaryEditorState?.getCurrentContent()?.hasText?.() ?? false;
 
-                                    return (
-                                        <>
-                                            <Header2 decorated id="description-header" sx={{ mb: 1 }}>
+                                return (
+                                    <>
+                                        <Grid size={12}>
+                                            <Heading2 decorated id="description-header" sx={{ mb: 1 }}>
                                                 <PreviewSwitch
                                                     isPreviewMode={isPreviewMode}
                                                     hasValue={Boolean(engagement.description_title?.trim())}
                                                     value={engagement.description_title}
+                                                    fallback={'Summary'}
                                                     previewFallback={<TextPlaceholder text="Summary Section" />}
                                                 />
-                                            </Header2>
+                                            </Heading2>
+                                        </Grid>
+                                        <Grid size={{ xs: 12, md: 6 }} direction="column" minHeight="60px">
                                             <PreviewSwitch
                                                 isPreviewMode={isPreviewMode}
                                                 hasValue={hasSummaryBody}
@@ -90,12 +93,12 @@ export const EngagementDescription = () => {
                                                 }
                                                 previewFallback={<TextPlaceholder type="long" />}
                                             />
-                                        </>
-                                    );
-                                }}
-                            </Await>
-                        </Suspense>
-                    </Grid>
+                                        </Grid>
+                                    </>
+                                );
+                            }}
+                        </Await>
+                    </Suspense>
                     <Grid container size={{ xs: 12, md: 6 }} justifyContent="flex-end" alignItems="flex-start">
                         <EngagementWidgetDisplay location={WidgetLocation.Summary} />
                     </Grid>

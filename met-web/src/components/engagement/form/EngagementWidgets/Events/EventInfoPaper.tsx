@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { MetWidgetPaper } from 'components/common';
-import { Grid, IconButton } from '@mui/material';
+import { Grid2 as Grid, IconButton, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripDotsVertical } from '@fortawesome/pro-solid-svg-icons/faGripDotsVertical';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
@@ -9,7 +8,7 @@ import { When } from 'react-if';
 import { Event } from 'models/event';
 import { formatDate } from 'components/common/dateHelper';
 import { EventsContext } from './EventsContext';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 
 export interface EventInfoPaperProps {
     event: Event;
@@ -21,17 +20,16 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
     const { handleChangeEventToEdit, handleEventDrawerOpen } = useContext(EventsContext);
 
     return (
-        <MetWidgetPaper elevation={1} {...rest}>
+        <Paper elevation={3}>
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                <Grid item xs={1}>
+                <Grid size={1}>
                     <IconButton sx={{ padding: 0, margin: 0 }} color="inherit" aria-label="drag-indicator">
                         <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', margin: '0px 4px' }} />
                     </IconButton>
                 </Grid>
 
                 <Grid
-                    item
-                    xs={9.5}
+                    size={9.5}
                     container
                     direction="row"
                     alignItems={'flex-start'}
@@ -39,10 +37,10 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                     spacing={1}
                 >
                     <When condition={!!eventItem.event_name}>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <BodyText>Name:</BodyText>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid size={9}>
                             <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {eventItem.event_name}
                             </BodyText>
@@ -50,47 +48,47 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                     </When>
 
                     <When condition={!!eventItem.description}>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <BodyText>Description:</BodyText>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid size={9}>
                             <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                                 {eventItem.description}
                             </BodyText>
                         </Grid>
                     </When>
 
-                    <Grid item xs={3}>
+                    <Grid size={3}>
                         <BodyText>Location:</BodyText>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid size={9}>
                         <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {eventItem.location_name}
                         </BodyText>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid size={3}>
                         <BodyText>Address:</BodyText>
                     </Grid>
 
-                    <Grid item xs={9}>
+                    <Grid size={9}>
                         <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {eventItem.location_address}
                         </BodyText>
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid size={3}>
                         <BodyText>Date:</BodyText>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid size={9}>
                         <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {formatDate(eventItem.start_date, 'MMMM DD, YYYY')}
                         </BodyText>
                     </Grid>
 
-                    <Grid item xs={3}>
+                    <Grid size={3}>
                         <BodyText>Time:</BodyText>
                     </Grid>
-                    <Grid item xs={9}>
+                    <Grid size={9}>
                         <BodyText overflow="hidden" textOverflow={'ellipsis'} whiteSpace="nowrap">
                             {`${formatDate(eventItem.start_date, 'h:mm a')} to ${formatDate(
                                 eventItem.end_date,
@@ -99,8 +97,8 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                         </BodyText>
                     </Grid>
                 </Grid>
-                <Grid container item xs={1.5}>
-                    <Grid item xs={6}>
+                <Grid container size={1.5}>
+                    <Grid size={6}>
                         <IconButton sx={{ padding: 1, margin: 0 }} color="inherit" aria-label="edit-icon">
                             <FontAwesomeIcon
                                 icon={faPen}
@@ -112,7 +110,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                             />
                         </IconButton>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <IconButton
                             onClick={() => removeEvent(event.id)}
                             sx={{ padding: 1, margin: 0 }}
@@ -124,7 +122,7 @@ const EventInfoPaper = ({ event, removeEvent, ...rest }: EventInfoPaperProps) =>
                     </Grid>
                 </Grid>
             </Grid>
-        </MetWidgetPaper>
+        </Paper>
     );
 };
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
-import { MetLabel } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { BodyText } from 'components/common/Typography';
 import { useForm, SubmitHandler, Controller, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -153,17 +153,17 @@ const Form = () => {
     };
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <form onSubmit={uploadImageAndSubmit}>
                     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <label htmlFor="description">
-                                <MetLabel>Description</MetLabel>
+                                <BodyText bold>Description</BodyText>
                             </label>
                             <Controller
                                 name="description"
@@ -185,9 +185,9 @@ const Form = () => {
                                 </SystemMessage>
                             </When>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <label htmlFor="select-file-button">
-                                <MetLabel>Image Upload</MetLabel>
+                                <BodyText bold>Image Upload</BodyText>
                             </label>
                             <Controller
                                 name="image_url"
@@ -207,9 +207,9 @@ const Form = () => {
                                 </SystemMessage>
                             </When>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <label htmlFor="alt_text">
-                                <MetLabel>Image Alt Text</MetLabel>
+                                <BodyText bold>Image Alt Text</BodyText>
                             </label>
                             <Controller
                                 name="alt_text"
@@ -225,8 +225,7 @@ const Form = () => {
                             </When>
                         </Grid>
                         <Grid
-                            item
-                            xs={12}
+                            size={12}
                             container
                             direction="row"
                             alignItems={'flex-start'}
@@ -234,15 +233,13 @@ const Form = () => {
                             spacing={2}
                             mt={'3em'}
                         >
-                            <Grid item>
+                            <Grid>
                                 <Button variant="primary" type="submit" disabled={isCreating}>
                                     Save & Close
                                 </Button>
                             </Grid>
-                            <Grid item>
-                                <Button variant="secondary" onClick={() => setWidgetDrawerOpen(false)}>
-                                    Cancel
-                                </Button>
+                            <Grid>
+                                <Button onClick={() => setWidgetDrawerOpen(false)}>Cancel</Button>
                             </Grid>
                         </Grid>
                     </Grid>

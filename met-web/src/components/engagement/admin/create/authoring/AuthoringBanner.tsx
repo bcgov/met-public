@@ -6,7 +6,7 @@ import { AuthoringTemplateOutletContext } from './types';
 import { BodyText, ErrorMessage } from 'components/common/Typography/Body';
 import ImageUpload from 'components/imageUpload';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
-import { Header3 } from 'components/common/Typography/Headers';
+import { Heading3 } from 'components/common/Typography/Headings';
 import { EngagementViewSections as Sections } from 'engagements/public/view';
 import { EngagementLoaderAdminData } from 'engagements/admin/EngagementLoaderAdmin';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -193,7 +193,7 @@ const AuthoringBanner = () => {
                 </AuthoringFormSection>
 
                 <Grid sx={{ mt: '1rem' }}>
-                    <Header3>Engagement State Content Variants</Header3>
+                    <Heading3>Engagement State Content Variants</Heading3>
                     <BodyText size="small">
                         The content in this section of your engagement may be changed based on the state or status of
                         your engagement. Select the Section Preview or Page Preview button to see each of these states.

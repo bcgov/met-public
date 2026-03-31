@@ -1,5 +1,5 @@
 import { Params } from 'react-router';
-import { getEngagement, getEngagements } from 'services/engagementService';
+import { getEngagement } from 'services/engagementService';
 import { getEngagementIdBySlug, getSlugByEngagementId } from 'services/engagementSlugService';
 import { getWidgets } from 'services/widgetService';
 import { getEngagementMetadata, getMetadataTaxa } from 'services/engagementMetadataService';
@@ -9,6 +9,7 @@ import { EngagementDetailsTab } from 'models/engagementDetailsTab';
 import { getDetailsTabs } from 'services/engagementDetailsTabService';
 import { getTenantLanguages } from 'services/languageService';
 import { Language } from 'models/language';
+import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
 
 export type EngagementLoaderPublicData = {
     engagement: Promise<Engagement>;
@@ -18,7 +19,7 @@ export type EngagementLoaderPublicData = {
     metadata: Promise<EngagementMetadata[]>;
     taxa: Promise<MetadataTaxon[]>;
     languages: Promise<Language[]>;
-    suggestedEngagements: Promise<Engagement[]>;
+    suggestions: Promise<SuggestedEngagementWithAttachment[]>;
 };
 
 export const engagementLoaderPublic = async ({ params }: { params: Params<string> }) => {
@@ -37,6 +38,9 @@ export const engagementLoaderPublic = async ({ params }: { params: Params<string
         : getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
     const details = engagement.then((response) => getDetailsTabs(response.id));
+    const suggestions = engagement.then(
+        (response) => response.suggested_engagements ?? ([] as SuggestedEngagementWithAttachment[]),
+    );
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
 
@@ -55,18 +59,6 @@ export const engagementLoaderPublic = async ({ params }: { params: Params<string
 
     const taxa = taxaData.then((taxa) => Object.values(taxa));
 
-    const suggestedEngagements = Promise.all([
-        getEngagements({ size: 5, page: 1, include_banner_url: true }),
-        engagement,
-    ]).then(([response, currentEngagement]) => {
-        return response.items
-            .filter((engagement) => engagement.id !== currentEngagement.id)
-            .slice(0, 4)
-            .map((value) => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value);
-    });
-
     return {
         engagement,
         slug,
@@ -75,7 +67,7 @@ export const engagementLoaderPublic = async ({ params }: { params: Params<string
         metadata,
         taxa,
         languages,
-        suggestedEngagements,
+        suggestions,
     };
 };
 

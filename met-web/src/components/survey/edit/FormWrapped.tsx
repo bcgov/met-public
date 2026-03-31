@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid, Paper } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import { EditForm } from './EditForm';
-import { MetPaper } from 'components/common';
 import { InvalidTokenModal } from '../submit/InvalidTokenModal';
 import { When } from 'react-if';
 import EngagementInfoSection from 'components/publicDashboard/EngagementInfoSection';
@@ -25,29 +24,28 @@ const FormWrapped = () => {
 
     return (
         <Grid container direction="row" justifyContent="flex-start" alignItems="flex-start">
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Banner imageUrl={engagement.banner_url}>
                     <EngagementInfoSection savedEngagement={engagement} />
                 </Banner>
             </Grid>
             <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 direction="row"
                 justifyContent={'flex-start'}
                 alignItems="flex-start"
                 m={{ lg: '0 8em 1em 3em', md: '2em', xs: '1em' }}
             >
                 <When condition={isTokenValid && !!submission}>
-                    <Grid item xs={12}>
-                        <MetPaper elevation={2}>
+                    <Grid size={12}>
+                        <Paper elevation={2}>
                             <EditForm
                                 handleClose={() => {
                                     navigate(engagementPath);
                                 }}
                             />
-                        </MetPaper>
+                        </Paper>
                     </Grid>
                 </When>
 

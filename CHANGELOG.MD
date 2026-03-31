@@ -1,3 +1,32 @@
+## March 23, 2026
+
+- **Chore** Remove & replace deprecated components [🎟️ DEP-250](https://citz-gdx.atlassian.net/browse/DEP-250)
+  - Visited all instances of deprecated components in the codebase and removed them, replacing them with their new design system counterparts where necessary. Notable changes include:
+    - Typography (BodyText, Header1, Header2, etc. instead of MetBodyTextOld, MetLabel, MetParagraphOld, MetHeader1Old, etc.)
+    - Layout (MetPageGridContainer -> ResponsiveContainer)
+    - Buttons (Universal Button component instead of MetPrimaryButtonOld, MetSecondaryButtonOld, etc.)
+    - Grid -> Grid2 as Grid (deprecated by MUI in favor of a new implementation)
+    - Replaced some custom components with plain MUI components, opting to style them at the theme level instead of creating new custom components for them (e.g. replaced MetPaper with MUI Paper component, and count on "elevation1" variant in `Theme.tsx` to handle styling)
+  - Removed custom inline styling wherever updates made it redundant
+  - Because the old components had "MET" in their names, removing them is in line with upcoming work for DEP-221 to remove all instances of "MET" from the codebase as part of the rebranding to the Digital Engagement Platform (DEP).
+
+## March 17, 2026
+
+- **Feature** Added More Engagements to authoring section [🎟️ DEP-228](https://citz-gdx.atlassian.net/browse/DEP-228)
+  - Created SuggestedEngagement data type, as these are many to one with engagements
+    - Added schema, model, and migration to the API
+  - Updated engagement data type to store more engagements custom header string
+  - Updated engagement API endpoints to include suggested engagement data and allow updating suggested engagements via the engagement details endpoint
+  - Created More Engagements authoring component, updated authoring action/loader
+  - Integrated data with existing preview window / public engagement More Engagements section
+    - Added reload trigger when pressing on Preview button and preview window is already open
+  - Modified suggestion section styling slightly to match hi-fi prototype
+
+## March 16, 2026
+
+- **Chore** Update user guide link to point to new location [🎟️ DEP-222](https://citz-gdx.atlassian.net/browse/DEP-222)
+  - Updated the user guide link in the application to point to the new location of the user guide documentation, which has been moved from `bcgov.github.io/met-guide` to `bcgov.github.io/dep-guide` to reflect the rebranding of the project to the Digital Engagement Platform (DEP).
+
 ## March 12, 2026
 
 - **Bugfix** Always let users with SUPER_ADMIN role list engagements, even if they don't have the VIEW_ENGAGEMENT permission. [🎟️ DEP-238](https://citz-gdx.atlassian.net/browse/DEP-238)
@@ -11,10 +40,9 @@
   - Populated form components in AuthoringSubscribe.tsx to allow users to input data for the subscribe section
   - Modified AuthoringContext to include subscribe section data and actions for updating it
 
-
 ## March 8, 2026
 
-- Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
+- **Feature** Added delete functionality to engagement section [🎟️ DEP-175](https://citz-gdx.atlassian.net/browse/DEP-175)
   - All attempts to delete an engagement from the production environment will fail
   - Published engagements can not be deleted in any environment
   - Only super admins or users authorized to unpublish a specific engagement can delete

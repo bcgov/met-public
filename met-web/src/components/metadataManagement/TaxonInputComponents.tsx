@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { FieldError } from 'react-hook-form';
 import dayjs from 'dayjs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors, trigger }: TaxonInputProps) => {
     const [inputValue, setInputValue] = useState('');
@@ -56,7 +57,7 @@ export const DefaultAutocomplete = ({ taxon, taxonType, field, setValue, errors,
                         color={errorIndices.has(index) ? 'error' : 'default'}
                         disabled={errorIndices.has(index) && !!taxonType.externalResource}
                         onClick={taxonType.externalResource ? handleChipClick(option) : undefined}
-                        icon={taxonType.externalResource ? <taxonType.icon /> : undefined}
+                        icon={taxonType.externalResource ? <FontAwesomeIcon icon={taxonType.icon} /> : undefined}
                     />
                 ))}
             </Stack>

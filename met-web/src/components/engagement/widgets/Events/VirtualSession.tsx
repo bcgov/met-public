@@ -1,11 +1,11 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { formatDate } from 'components/common/dateHelper';
 import { EventProps } from './InPersonEvent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDays, faClock } from '@fortawesome/pro-regular-svg-icons';
 import { BodyText } from 'components/common/Typography/Body';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 
 const VirtualSession = ({ eventItem }: EventProps) => {
     // Define styles
@@ -28,29 +28,29 @@ const VirtualSession = ({ eventItem }: EventProps) => {
 
     return (
         <>
-            <Grid item container justifyContent="flex-start" xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+            <Grid container justifyContent="flex-start" size={12} sx={containerStyles}>
+                <Grid size={{ xs: 0, sm: 1 }} style={{ maxWidth: '2rem' }}>
                     <FontAwesomeIcon icon={faCalendarDays} style={iconStyles} />
                 </Grid>
-                <Grid item xs={6} md={3} xl={2}>
+                <Grid size={{ xs: 6, md: 3, xl: 2 }}>
                     <BodyText bold>Date</BodyText>
                 </Grid>
-                <Grid item xs={12} md={8} xl={9}>
+                <Grid size={{ xs: 12, md: 8, xl: 9 }}>
                     <BodyText>{startDate}</BodyText>
                 </Grid>
             </Grid>
-            <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
-                <Grid item xs={0} sm={1} style={{ maxWidth: '2rem' }}>
+            <Grid container justifyContent="flex-start" size={12} sx={containerStyles}>
+                <Grid size={{ xs: 0, sm: 1 }} style={{ maxWidth: '2rem' }}>
                     <FontAwesomeIcon icon={faClock} style={iconStyles} />
                 </Grid>
-                <Grid item xs={6} md={3} xl={2}>
+                <Grid size={{ xs: 6, md: 3, xl: 2 }}>
                     <BodyText bold>Time</BodyText>
                 </Grid>
-                <Grid item xs={12} md={8} xl={9}>
+                <Grid size={{ xs: 12, md: 8, xl: 9 }}>
                     <BodyText>{`${startTime} to ${endTime} PT`}</BodyText>
                 </Grid>
             </Grid>
-            <Grid container justifyContent="flex-start" item xs={12} sx={containerStyles}>
+            <Grid container justifyContent="flex-start" size={12} sx={containerStyles}>
                 <Button variant="primary" size="large" href={eventItem.url} sx={{ mt: '2em' }}>
                     {eventItem.url_label}
                 </Button>

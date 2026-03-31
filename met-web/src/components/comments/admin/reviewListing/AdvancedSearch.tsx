@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Grid, MenuItem, Stack, TextField } from '@mui/material';
-import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid, MenuItem, Stack, TextField } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
+import { Button } from 'components/common/Input/Button';
 import { COMMENTS_STATUS, CommentStatus } from 'constants/commentStatus';
 import { AdvancedSearchFilters, CommentListingContext, initialSearchFilters } from './CommentListingContext';
 
@@ -30,12 +31,10 @@ export const AdvancedSearch = () => {
                 alignItems={'flex-start'}
                 justifyContent={'flex-start'}
                 spacing={2}
-                item
-                xs={12}
-                lg={10}
+                size={{ xs: 12, lg: 10 }}
             >
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Status</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Status</BodyText>
                     <TextField
                         id="status"
                         name="status"
@@ -62,8 +61,8 @@ export const AdvancedSearch = () => {
                         </MenuItem>
                     </TextField>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Comment Date - From</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Comment Date - From</BodyText>
                     <TextField
                         name="commentDateFrom"
                         type="date"
@@ -78,8 +77,8 @@ export const AdvancedSearch = () => {
                         }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Comment Date - To</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Comment Date - To</BodyText>
                     <TextField
                         name="commentDateTo"
                         type="date"
@@ -101,12 +100,10 @@ export const AdvancedSearch = () => {
                 alignItems={'flex-start'}
                 justifyContent={'flex-start'}
                 spacing={2}
-                item
-                xs={12}
-                lg={10}
+                size={{ xs: 12, lg: 10 }}
             >
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Reviewer</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Reviewer</BodyText>
                     <TextField
                         name="reviewer"
                         variant="outlined"
@@ -119,8 +116,8 @@ export const AdvancedSearch = () => {
                         onChange={handleChange}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Review Date - From</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Review Date - From</BodyText>
                     <TextField
                         name="reviewedDateFrom"
                         type="date"
@@ -135,8 +132,8 @@ export const AdvancedSearch = () => {
                         }}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4} lg={4}>
-                    <MetLabel>Review Date - To</MetLabel>
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 4 }}>
+                    <BodyText bold>Review Date - To</BodyText>
                     <TextField
                         name="reviewedDateTo"
                         type="date"
@@ -152,29 +149,30 @@ export const AdvancedSearch = () => {
                     />
                 </Grid>
             </Grid>
-            <Grid item xs={12} container justifyContent="flex-end" direction="row">
+            <Grid size={12} container justifyContent="flex-end" direction="row">
                 <Stack
                     direction={{ sm: 'column-reverse', lg: 'row' }}
                     spacing={1}
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButtonOld
+                    <Button
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
-                    </SecondaryButtonOld>
-                    <PrimaryButtonOld
+                    </Button>
+                    <Button
+                        variant="primary"
                         data-testid="advanced-search-button"
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}
                     >
                         Search
-                    </PrimaryButtonOld>
+                    </Button>
                 </Stack>
             </Grid>
         </Grid>

@@ -1,8 +1,8 @@
-import { Avatar, Grid } from '@mui/material';
+import { Avatar, Grid2 as Grid } from '@mui/material';
 import { User, USER_COMPOSITE_ROLE } from 'models/user';
 import React, { useEffect, useRef } from 'react';
 import { useFetcher } from 'react-router';
-import { BodyText } from 'components/common/Typography';
+import { BodyText } from 'components/common/Typography/Body';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/pro-regular-svg-icons';
 import { colors } from 'styles/Theme';
@@ -13,7 +13,7 @@ import MultiSelect from './MultiSelect';
 
 export const UserManager = () => {
     const currentUser = useAppSelector((state) => state.user);
-    const fetcher = useFetcher();
+    const fetcher = useFetcher({ key: 'user-search' });
 
     const engagementForm = useFormContext();
     const { setValue, watch } = engagementForm;
@@ -88,7 +88,7 @@ export const UserManager = () => {
                 return (
                     <li {...props}>
                         <Grid container direction="row" spacing={2} alignItems={'center'}>
-                            <Grid item>
+                            <Grid>
                                 <Avatar
                                     sx={{
                                         height: '30px',
@@ -100,10 +100,10 @@ export const UserManager = () => {
                                     {`${option.first_name[0]}${option.last_name[0]}`}
                                 </Avatar>
                             </Grid>
-                            <Grid item>{`${option.first_name} ${option.last_name}`}</Grid>
+                            <Grid>{`${option.first_name} ${option.last_name}`}</Grid>
                         </Grid>
                         {props['aria-disabled'] && (
-                            <Grid item alignSelf="flex-end" marginLeft="auto">
+                            <Grid alignSelf="flex-end" marginLeft="auto">
                                 <FontAwesomeIcon icon={faCheck} color={colors.notification.success.shade} />
                             </Grid>
                         )}
@@ -113,7 +113,7 @@ export const UserManager = () => {
             renderSelectedOption={(props, option, state) => {
                 return (
                     <Grid container direction="row" spacing={1} alignItems="center">
-                        <Grid item>
+                        <Grid>
                             <Avatar
                                 sx={{
                                     height: '30px',
@@ -125,7 +125,7 @@ export const UserManager = () => {
                                 {`${option.first_name[0]}${option.last_name[0]}`}
                             </Avatar>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <BodyText>{`${option.first_name} ${option.last_name}`}</BodyText>
                         </Grid>
                     </Grid>

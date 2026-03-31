@@ -6,7 +6,7 @@ import { Button } from './Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronUp, faChevronDown } from '@fortawesome/pro-regular-svg-icons';
 import { colors } from 'styles/Theme';
-import { Header2 } from '../Typography';
+import { Heading2 } from '../Typography';
 import { Link } from '../Navigation/Link';
 
 export type ContainerSx = SxProps<Theme>;
@@ -31,11 +31,11 @@ const LinkRenderer = ({
     return <Link to={url}>{children}</Link>;
 };
 
-const Header2Renderer = ({ children }: { children: React.ReactNode }) => {
+const Heading2Renderer = ({ children }: { children: React.ReactNode }) => {
     return (
-        <Header2 decorated weight="thin">
+        <Heading2 decorated weight="thin">
             {children}
-        </Header2>
+        </Heading2>
     );
 };
 
@@ -80,7 +80,7 @@ const setClampStyles = (target: HTMLElement, maxLines: number) => {
 /**
  * A Rich Text Area component that uses react-draft-wysiwyg to render rich text.
  * Its primary purpose is to display rich text content created in {@link RichTextEditor}.
- * It contains custom styling for links and headers.
+ * It contains custom styling for links and headings.
  * It also truncates text if the maxLines argument is present.
  * @param {EditorProps} props - Other props to pass to the Editor component.
  * @param {Array} props.customDecorators - Optional custom decorators to extend the functionality of the editor.
@@ -140,6 +140,7 @@ export const RichTextArea = ({
         px: 0,
         fontWeight: 400,
         background: 'none',
+        color: 'blue.90',
         '&:hover, &:active, &:focus': { background: 'none' },
     };
 
@@ -213,7 +214,7 @@ export const RichTextArea = ({
                                 callback(contentBlock.getDepth(), contentBlock.getDepth() + contentBlock.getLength());
                             }
                         },
-                        component: Header2Renderer,
+                        component: Heading2Renderer,
                     },
                     ...(customDecorators || []),
                 ]}
@@ -229,7 +230,7 @@ export const RichTextArea = ({
                     aria-controls={contentRegionId}
                     aria-expanded={expanded}
                 >
-                    <span style={{ color: colors.surface.blue[90] }}>
+                    <span style={{ color: 'inherit' }}>
                         {expanded ? readLessLabel : readMoreLabel}
                         <FontAwesomeIcon
                             icon={expanded ? faChevronUp : faChevronDown}

@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
@@ -43,7 +43,7 @@ const SubscribeInfoBlock = () => {
     if (isLoadingSubscribe) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Skeleton variant="rectangular" width="100%" height="12em" />
                 </Grid>
             </Grid>
@@ -101,7 +101,7 @@ const SubscribeInfoBlock = () => {
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
                     {subscribeOptions.map((subscribeForm: SubscribeForm, index: number) => {
                         return (
-                            <Grid item xs={12} key={`Grid-${subscribeForm.widget_id}`}>
+                            <Grid size={12} key={`Grid-${subscribeForm.widget_id}`}>
                                 <MetDraggable draggableId={String(subscribeForm.id)} index={index}>
                                     <SubscribeInfoPaper
                                         removeSubscribeForm={handleRemoveSubscribeForm}

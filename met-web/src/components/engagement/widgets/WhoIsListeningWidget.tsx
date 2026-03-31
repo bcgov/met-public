@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BodyText, Header3 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { Grid2 as Grid, Avatar, Skeleton } from '@mui/material';
 import { Widget } from 'models/widget';
 import { Contact } from 'models/contact';
@@ -69,36 +69,9 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
         getListeningWidget();
     }, [widget]);
 
-    const descriptionTextStyles = {
-        fontSize: '1rem',
-    };
-
     const avatarStyles = {
-        height: 100,
-        width: 100,
-        borderRadius: '50%',
-        pl: '0',
-    };
-
-    const contactNameStyles = {
-        fontSize: '1rem',
-        lineHeight: '1.75rem',
-        fontWeight: 700,
-        letterSpacing: '0.16px',
-    };
-
-    const contactTitleStyles = {
-        fontSize: '0.875rem',
-        lineHeight: '1rem',
-        fontWeight: 400,
-        letterSpacing: '0.14px',
-    };
-    const contactEmailStyles = {
-        fontSize: '0.875rem',
-    };
-
-    const contactPhoneNumberStyles = {
-        fontSize: '0.875rem',
+        height: 72,
+        width: 72,
     };
 
     if (isLoading) {
@@ -106,7 +79,9 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
             <Grid container justifyContent="flex-start" spacing={3} width="100%">
                 <Grid size={12}>
                     <Skeleton>
-                        <Header3>Who is Listening</Header3>
+                        <Heading2 weight="thin" decorated mb={0}>
+                            Who is Listening
+                        </Heading2>
                     </Skeleton>
                 </Grid>
                 <Grid size={12}>
@@ -125,23 +100,24 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
 
     return (
         <Grid container direction="row" size={12}>
-            <Grid justifyContent="flex-start" sx={{ pb: '1rem !important' }} size={12}>
-                <Header3>{widget.title}</Header3>
+            <Grid justifyContent="flex-start" size={12}>
+                <Heading2 weight="thin" decorated mb={0}>
+                    {widget.title}
+                </Heading2>
             </Grid>
-            <When condition={Boolean(listeningWidget?.description)}>
-                <Grid size={12} sx={{ whiteSpace: 'pre-line', pb: '1rem' }}>
-                    <BodyText style={descriptionTextStyles}>{listeningWidget?.description}</BodyText>
-                </Grid>
-            </When>
+            <Grid size={12} sx={{ whiteSpace: 'pre-line' }}>
+                <BodyText>{listeningWidget?.description}</BodyText>
+            </Grid>
+
             {contacts.map((contact) => {
                 return (
-                    <Grid key={contact.id} container sx={{ margin: '2rem 0 1rem' }} columnSpacing={3} size={12}>
-                        <Grid sx={{ display: 'flex', pl: '0' }} size={{ xs: 12, md: 'grow' }}>
+                    <Grid key={contact.id} container sx={{ margin: '2rem 0 0.5rem' }} columnSpacing={3} size={12}>
+                        <Grid size="auto">
                             <Avatar
                                 src={contact.avatar_url}
                                 alt={contact.name}
                                 sizes="lg"
-                                variant="square"
+                                variant="circular"
                                 sx={avatarStyles}
                             />
                         </Grid>
@@ -149,17 +125,18 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                             container
                             justifyContent="flex-start"
                             alignItems="flex-start"
-                            direction="row"
-                            rowSpacing={1}
+                            direction="column"
                             columnSpacing={1}
-                            size={{ sm: 12, md: 9 }}
+                            size="grow"
                         >
-                            <Grid justifyContent="flex-start" size={12}>
-                                <BodyText sx={contactNameStyles}>{contact.name}</BodyText>
+                            <Grid container justifyContent="flex-start" size={12}>
+                                <BodyText bold size="small">
+                                    {contact.name}
+                                </BodyText>
                             </Grid>
                             <When condition={Boolean(contact.title)}>
-                                <Grid justifyContent="flex-start" size={12}>
-                                    <BodyText sx={contactTitleStyles}>{contact.title}</BodyText>
+                                <Grid container justifyContent="flex-start" size={12}>
+                                    <BodyText size="small">{contact.title}</BodyText>
                                 </Grid>
                             </When>
                             <When condition={Boolean(contact.bio)}>
@@ -169,13 +146,13 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                     </BodyText>
                                 </Grid>
                             </When>
-                            <Grid container justifyContent="flex-start" alignItems="center" size={12}>
+                            <Grid mt="0.75rem" container justifyContent="flex-start" alignItems="center" size={12}>
                                 <FontAwesomeIcon
                                     style={{ fontSize: '1rem' }}
                                     icon={faEnvelope}
                                     aria-label="Email address:"
                                 />{' '}
-                                <Link style={contactEmailStyles} href={`mailto:${contact.email}`}>
+                                <Link size="small" href={`mailto:${contact.email}`}>
                                     {' ' + contact.email}
                                 </Link>
                             </Grid>
@@ -186,7 +163,7 @@ const WhoIsListeningWidget = ({ widget }: WhoIsListeningWidgetProps) => {
                                         icon={faPhone}
                                         aria-label="Phone number:"
                                     />{' '}
-                                    <Link style={contactPhoneNumberStyles} href={`tel:${contact.phone_number}`}>
+                                    <Link size="small" href={`tel:${contact.phone_number}`}>
                                         {' ' + contact.phone_number}
                                     </Link>
                                 </When>

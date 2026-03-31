@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid2 as Grid, Stack } from '@mui/material';
 import { colors, modalStyle } from 'components/common';
 import { Button } from '../Input/Button';
-import { Header2, BodyText } from '../Typography';
+import { Heading2, BodyText } from '../Typography';
 import { NotificationModalProps } from './types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -66,12 +66,13 @@ const ConfirmModal = ({
             alignItems="flex-start"
             sx={{ ...modalStyle, borderColor: palette.shade }}
             aria-label={`${header} ${subHeader}`}
+            spacing={2}
         >
-            <Grid size={1} sx={{ pt: 1.25, fontSize: '16px' }}>
+            <Grid size="auto" sx={{ pt: 1.25, fontSize: '16px' }}>
                 <FontAwesomeIcon icon={icon ?? iconMap[style]} color={palette.icon} size="2x" />
             </Grid>
             <Grid
-                size={11}
+                size="grow"
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -80,7 +81,7 @@ const ConfirmModal = ({
             >
                 <Grid container direction="row" size={12}>
                     <Grid size={12}>
-                        <Header2 sx={{ mb: 0 }}>{header}</Header2>
+                        <Heading2 sx={{ mb: 0 }}>{header}</Heading2>
                     </Grid>
                 </Grid>
                 {subHeader && (

@@ -146,7 +146,7 @@ describe('TimeLine Widget tests', () => {
         await addTimeLineWidget();
         expect(getWidgetsMock).toHaveBeenCalled();
         expect(screen.getByText('Description')).toBeVisible();
-        expect(screen.getByText('EVENT 1')).toBeVisible();
+        expect(screen.getByText('Event 1')).toBeVisible();
     });
 
     test('TimeLine widget handles input correctly', async () => {

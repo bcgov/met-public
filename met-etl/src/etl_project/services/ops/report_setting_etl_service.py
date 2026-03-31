@@ -115,12 +115,13 @@ def load_setting(
 
             # update the display flag for the report setting question key and
             # survey id fetched above
-            met_etl_db_session.query(EtlRequestTypeOptionModel) .filter(
+            met_etl_db_session.query(EtlRequestTypeOptionModel).filter(
                 EtlRequestTypeOptionModel.key == setting.question_key,
                 EtlRequestTypeOptionModel.survey_id == analytics_survey_data.id,
                 EtlRequestTypeOptionModel.is_active).update(
                 {
-                    'display': setting.display})
+                    'display': setting.display},
+                synchronize_session=False)
             met_etl_db_session.commit()
 
     yield Output(setting_new_runcycleid, "setting_new_runcycleid")

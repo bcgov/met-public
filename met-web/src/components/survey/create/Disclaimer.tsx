@@ -7,8 +7,8 @@ export const Disclaimer = () => {
     const { isDisclaimerChecked, setIsDisclaimerChecked, disclaimerError, setDisclaimerError } =
         useContext(CreateSurveyContext);
     return (
-        <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
-            <Grid>
+        <Grid size={12} container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+            <Grid size={6}>
                 <MetDisclaimer>
                     <strong>Disclaimer and statement of responsibility for Survey Designers:</strong>
                     <br />
@@ -23,7 +23,7 @@ export const Disclaimer = () => {
                 `}
                 </MetDisclaimer>
             </Grid>
-            <Grid>
+            <Grid size={12}>
                 <FormControl required error={disclaimerError} component="fieldset" variant="standard">
                     <FormControlLabel
                         control={

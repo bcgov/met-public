@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Grid2 as Grid } from '@mui/material';
-import { Header3 } from 'components/common/Typography';
+import { Heading3 } from 'components/common/Typography';
 import WidgetOptionCard from './WidgetOptionCard';
 import { WidgetType } from 'models/widget';
 import {
@@ -19,7 +19,7 @@ const WidgetOptionCards = () => {
     return (
         <Grid size={12} container alignItems="stretch" justifyContent={'flex-start'} spacing={3}>
             <Grid size={12}>
-                <Header3>Select Widget</Header3>
+                <Heading3>Select Widget</Heading3>
                 <Divider sx={{ marginTop: '1em' }} />
             </Grid>
             <Grid size={{ xs: 12, lg: 6, xl: 4 }}>

@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Skeleton, Divider, useMediaQuery, Theme, Stack, ToggleButtonGroup } from '@mui/material';
+import { Box, Grid2 as Grid, Skeleton, Divider, useMediaQuery, Stack, ToggleButtonGroup, Paper } from '@mui/material';
 import { Palette } from 'styles/Theme';
-import {
-    MetHeader1Old,
-    MetPaper,
-    MetParagraphOld,
-    MetLabel,
-    PrimaryButtonOld,
-    MetToggleButton,
-} from 'components/common';
+import { Button } from 'components/common/Input/Button';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { QuestionBlock } from './QuestionBlock';
 import { SurveyBarData } from '../types';
 import { BarBlock } from './BarBlock';
@@ -35,7 +29,7 @@ interface SurveyQuestionProps {
 
 export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashboardType }: SurveyQuestionProps) => {
     const { t: translate } = useAppTranslation();
-    const isTablet = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+    const isTablet = useMediaQuery((theme) => theme.breakpoints.down('md'));
     const [data, setData] = useState<SurveyResultData | null>(null);
     const [selectedData, setSelectedData] = useState(defaultData[0]);
     const [selectedDataIndex, setSelectedDataIndex] = useState(0);
@@ -98,30 +92,29 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
 
     return (
         <>
-            <Grid item xs={12} mb={0.5} mt={1}>
+            <Grid size={12} mb={0.5} mt={1}>
                 <If condition={isTablet}>
                     <Then>
-                        <MetLabel>{translate('dashboard.barBlock.label')}</MetLabel>
+                        <BodyText bold>{translate('dashboard.barBlock.label')}</BodyText>
                     </Then>
                     <Else>
-                        <MetHeader1Old>{translate('dashboard.barBlock.label')}</MetHeader1Old>
+                        <Heading1>{translate('dashboard.barBlock.label')}</Heading1>
                     </Else>
                 </If>
             </Grid>
-            <Grid ml={0} item xs={12}>
-                <MetPaper sx={{ p: 2 }}>
-                    <Grid item xs={12}>
+            <Grid ml={0} size={12}>
+                <Paper sx={{ p: 2 }}>
+                    <Grid size={12}>
                         <Stack direction={{ xs: 'column', sm: 'row' }} width="100%" justifyContent="flex-end">
-                            <Grid item container xs={12} md={8} direction="row" justifyContent="flex-start">
-                                <MetLabel mb={{ xs: 1, m: 2 }} color={Palette.text.primary}>
+                            <Grid container size={{ xs: 12, md: 8 }} direction="row" justifyContent="flex-start">
+                                <BodyText bold mb={{ xs: 1, m: 2 }} color={Palette.text.primary}>
                                     {translate('dashboard.barBlock.questionLabel')}
-                                </MetLabel>
+                                </BodyText>
                             </Grid>
                             <When condition={!isTablet}>
                                 <Grid
-                                    item
                                     container
-                                    xs={12}
+                                    size={12}
                                     direction="row"
                                     justifyContent={isTablet ? 'center' : 'flex-end'}
                                     alignItems={isTablet ? 'center' : 'flex-end'}
@@ -133,21 +126,21 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                                         onChange={handleToggleChange}
                                         sx={dashboardCustomStyles.toggleGroup}
                                     >
-                                        <MetToggleButton value="bar">
+                                        <Button variant="primary" size="small" value="bar">
                                             {translate('dashboard.barBlock.charType.0')}
-                                        </MetToggleButton>
-                                        <MetToggleButton value="treemap">
+                                        </Button>
+                                        <Button variant="primary" size="small" value="treemap">
                                             {translate('dashboard.barBlock.charType.1')}
-                                        </MetToggleButton>
+                                        </Button>
                                     </ToggleButtonGroup>
                                 </Grid>
                             </When>
                         </Stack>
                         <Divider sx={{ marginTop: '1em' }} />
                     </Grid>
-                    <Grid container direction="row" item xs={12} spacing={1} alignItems={'flex-start'}>
-                        <Grid container item xs={12} md={4}>
-                            <Grid item container alignItems={'center'} justifyContent={'center'}>
+                    <Grid container direction="row" size={12} spacing={1} alignItems={'flex-start'}>
+                        <Grid container size={{ xs: 12, md: 4 }}>
+                            <Grid container alignItems={'center'} justifyContent={'center'}>
                                 <Box
                                     sx={{
                                         width: '100%',
@@ -165,13 +158,11 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                             </Grid>
                         </Grid>
                         <When condition={isTablet}>
-                            <Grid item xs={12}>
-                                <MetParagraphOld sx={{ fontWeight: 'bold' }}>
-                                    {translate('dashboard.barBlock.label')}
-                                </MetParagraphOld>
+                            <Grid size={12}>
+                                <BodyText sx={{ fontWeight: 'bold' }}>{translate('dashboard.barBlock.label')}</BodyText>
                             </Grid>
                         </When>
-                        <Grid item xs={12} md={8}>
+                        <Grid size={{ xs: 12, md: 8 }}>
                             {chartType == 'bar' ? (
                                 <BarBlock data={selectedData} />
                             ) : (
@@ -181,17 +172,18 @@ export const SurveyBar = ({ readComments, engagement, engagementIsLoading, dashb
                     </Grid>
 
                     <When condition={isTablet}>
-                        <Grid container item xs={12} alignItems="center" justifyContent="center">
-                            <PrimaryButtonOld
+                        <Grid container size={12} alignItems="center" justifyContent="center">
+                            <Button
+                                variant="primary"
                                 sx={{ mt: 3, width: '80%' }}
                                 data-testid="SurveyBlock/take-me-to-survey-button-mobile"
                                 onClick={readComments}
                             >
                                 {translate('dashboard.barBlock.button')}
-                            </PrimaryButtonOld>
+                            </Button>
                         </Grid>
                     </When>
-                </MetPaper>
+                </Paper>
             </Grid>
         </>
     );

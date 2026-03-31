@@ -3,7 +3,7 @@ import { Autocomplete, TextField, Chip, IconButton, Stack } from '@mui/material'
 import { Control, Controller, FieldError } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/pro-regular-svg-icons/faCircleXmark';
-import { AddCircleOutline } from '@mui/icons-material';
+import { faPlusCircle } from '@fortawesome/pro-regular-svg-icons';
 
 const PresetValuesEditor = ({
     control, // The control object (from react-hook-form)
@@ -82,7 +82,7 @@ const PresetValuesEditor = ({
                                                         onArrayChange(null, [...value, inputValue]);
                                                     }}
                                                 >
-                                                    <AddCircleOutline />
+                                                    <FontAwesomeIcon icon={faPlusCircle} style={{ fontSize: '22px' }} />
                                                 </IconButton>
                                             )}
                                             <IconButton

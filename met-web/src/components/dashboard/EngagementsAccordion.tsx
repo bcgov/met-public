@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Grid from '@mui/material/Grid';
-import { MetBodyOld, MetLabel } from 'components/common';
+import Grid from '@mui/material/Grid2';
+import { BodyText } from 'components/common/Typography/Body';
 import { Accordion, AccordionDetails, AccordionSummary, useMediaQuery, Theme } from '@mui/material';
 import { Engagement } from 'models/engagement';
 import { When } from 'react-if';
@@ -30,8 +30,8 @@ const EngagementsAccordion = ({
 
     if (engagements.length == 0) {
         return (
-            <Grid item xs={12}>
-                <MetLabel>No Engagements Found</MetLabel>
+            <Grid size={12}>
+                <BodyText bold>No Engagements Found</BodyText>
             </Grid>
         );
     }
@@ -76,32 +76,26 @@ const EngagementsAccordion = ({
                                 borderBottom: `solid 1px ${borderColor}`,
                             }}
                         >
-                            <Grid container direction={isMobile ? 'column' : 'row'}>
-                                <Grid item md={7} sm={12}>
-                                    <MetLabel>{engagement.name}</MetLabel>
+                            <Grid container size={12} direction={isMobile ? 'column' : 'row'}>
+                                <Grid size={{ xs: 12, md: 8 }}>
+                                    <BodyText bold>{engagement.name}</BodyText>
                                 </Grid>
-                                <Grid item md={5} sm={12} textAlign={isMobile ? 'left' : 'right'}>
-                                    <MetBodyOld>
+                                <Grid size={{ xs: 12, md: 'grow' }} textAlign="right">
+                                    <BodyText>
                                         {engagement.start_date}
                                         {' - '}
                                         {engagement.end_date}
-                                    </MetBodyOld>
+                                    </BodyText>
                                 </Grid>
                             </Grid>
                         </AccordionSummary>
                         <AccordionDetails>
                             <When condition={openedEngagements.some((id) => id == engagement.id)}>
-                                <Grid
-                                    container
-                                    item
-                                    xs={12}
-                                    spacing={3}
-                                    data-testid={`dashboard-frame-${engagement.id}`}
-                                >
-                                    <Grid item xs={12} sm={!mapExists ? 6 : 4}>
+                                <Grid container size={12} spacing={3} data-testid={`dashboard-frame-${engagement.id}`}>
+                                    <Grid size={{ xs: 12, sm: mapExists ? 4 : 6 }}>
                                         <SurveyEmailsSent engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
-                                    <Grid item xs={12} sm={!mapExists ? 6 : 4}>
+                                    <Grid size={{ xs: 12, sm: mapExists ? 4 : 6 }}>
                                         <SurveysCompleted engagement={engagement} engagementIsLoading={false} />
                                     </Grid>
                                     <ProjectLocation
@@ -110,10 +104,10 @@ const EngagementsAccordion = ({
                                         handleProjectMapData={handleProjectMapData}
                                     />
                                 </Grid>
-                                <Grid item xs={12} mt={2}>
+                                <Grid size={12} mt={2}>
                                     <SubmissionTrend engagement={engagement} engagementIsLoading={false} />
                                 </Grid>
-                                <Grid item xs={12} mt={2}>
+                                <Grid size={12} mt={2}>
                                     <SurveyBar
                                         engagement={engagement}
                                         engagementIsLoading={false}

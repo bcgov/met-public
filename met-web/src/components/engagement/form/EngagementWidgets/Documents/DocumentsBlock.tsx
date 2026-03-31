@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid2 as Grid } from '@mui/material';
 import DocumentSwitch from './DocumentSwitch';
 import { DocumentsContext } from './DocumentsContext';
 import { DragDropContext, Draggable, DropResult } from '@hello-pangea/dnd';
@@ -60,26 +60,18 @@ const DocumentsBlock = () => {
 
     return (
         <DragDropContext onDragEnd={handleDragEnd}>
-            <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
+            <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={2}>
                 <MetDroppable droppableId="folders" type="FOLDER" style={{ width: '100%' }}>
                     {documents.map((document, index) => {
                         return (
                             <Draggable key={document.id} draggableId={String(document.id)} index={index}>
                                 {(provided) => (
-                                    <Box
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        sx={{
-                                            margin: '1em',
-                                        }}
-                                    >
-                                        <Stack direction="row" spacing={1} alignItems="flex-start">
-                                            <DocumentSwitch
-                                                key={`document-${document.id}`}
-                                                documentItem={document}
-                                                draggableProvided={provided}
-                                            />
-                                        </Stack>
+                                    <Box ref={provided.innerRef} {...provided.draggableProps} mb={2}>
+                                        <DocumentSwitch
+                                            key={`document-${document.id}`}
+                                            documentItem={document}
+                                            draggableProvided={provided}
+                                        />
                                     </Box>
                                 )}
                             </Draggable>

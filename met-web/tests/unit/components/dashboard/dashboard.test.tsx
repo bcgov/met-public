@@ -42,6 +42,38 @@ jest.mock('@mui/material', () => ({
     useMediaQuery: jest.fn(() => true),
 }));
 
+jest.mock('hooks', () => ({
+    ...jest.requireActual('hooks'),
+    useAppTranslation: () => ({
+        t: (key: string) => key,
+    }),
+}));
+
+jest.mock('components/publicDashboard/KPI/SurveyEmailsSent', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Survey Emails Sent');
+});
+
+jest.mock('components/publicDashboard/KPI/SurveysCompleted', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Surveys Completed');
+});
+
+jest.mock('components/publicDashboard/KPI/ProjectLocation', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Project Location');
+});
+
+jest.mock('components/publicDashboard/SubmissionTrend/SubmissionTrend', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Submission Trend');
+});
+
+jest.mock('components/publicDashboard/SurveyBar', () => {
+    const React = require('react');
+    return () => React.createElement('div', null, 'Survey Bar');
+});
+
 jest.mock('react-redux', () => ({
     ...jest.requireActual('react-redux'),
     useDispatch: jest.fn(() => jest.fn()),

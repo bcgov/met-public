@@ -4,13 +4,12 @@ import {
     FormControl,
     FormControlLabel,
     FormGroup,
-    Grid,
+    Grid2 as Grid,
     Stack,
     TextField,
     Theme,
     useMediaQuery,
 } from '@mui/material';
-import { MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
 import { AdvancedSearchFilters, SurveyListingContext } from './SurveyListingContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/pro-solid-svg-icons/faEyeSlash';
@@ -18,6 +17,8 @@ import { faCheck } from '@fortawesome/pro-solid-svg-icons/faCheck';
 import { faLinkSimple } from '@fortawesome/pro-regular-svg-icons/faLinkSimple';
 import { faObjectsColumn } from '@fortawesome/pro-solid-svg-icons/faObjectsColumn';
 import { Palette } from 'styles/Theme';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
 
 export const AdvancedSearch = () => {
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
@@ -58,9 +59,9 @@ export const AdvancedSearch = () => {
             spacing={2}
             mt={{ md: 2 }}
         >
-            <Grid item xs={12} lg={2}>
+            <Grid size={{ xs: 12, lg: 2 }}>
                 <FormControl component="fieldset">
-                    <MetLabel>Status</MetLabel>
+                    <BodyText bold>Status</BodyText>
                     <FormGroup row={isMediumScreen}>
                         <FormControlLabel
                             control={<Checkbox checked={status.hidden} onChange={handleStatusChange} name="hidden" />}
@@ -115,9 +116,7 @@ export const AdvancedSearch = () => {
                 </FormControl>
             </Grid>
             <Grid
-                item
-                xs={12}
-                lg={10}
+                size={{ xs: 12, lg: 10 }}
                 container
                 direction="row"
                 alignItems={'flex-start'}
@@ -125,16 +124,15 @@ export const AdvancedSearch = () => {
                 spacing={4}
             >
                 <Grid
-                    item
-                    xs={12}
+                    size={12}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent={'flex-start'}
                     spacing={2}
                 >
-                    <Grid item xs={12} sm={6} lg={4}>
-                        <MetLabel>Date Created - From</MetLabel>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
+                        <BodyText bold>Date Created - From</BodyText>
                         <TextField
                             name="createdDateFrom"
                             type="date"
@@ -149,8 +147,8 @@ export const AdvancedSearch = () => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} lg={4}>
-                        <MetLabel>Date Created - To</MetLabel>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
+                        <BodyText bold>Date Created - To</BodyText>
                         <TextField
                             name="createdDateTo"
                             type="date"
@@ -167,16 +165,15 @@ export const AdvancedSearch = () => {
                     </Grid>
                 </Grid>
                 <Grid
-                    item
-                    xs={12}
+                    size={12}
                     container
                     direction="row"
                     alignItems={'flex-start'}
                     justifyContent={'flex-start'}
                     spacing={2}
                 >
-                    <Grid item xs={12} sm={6} lg={4}>
-                        <MetLabel>Date Published - From</MetLabel>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
+                        <BodyText bold>Date Published - From</BodyText>
                         <TextField
                             name="publishedDateFrom"
                             type="date"
@@ -191,8 +188,8 @@ export const AdvancedSearch = () => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} lg={4}>
-                        <MetLabel>Date Published - To</MetLabel>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
+                        <BodyText bold>Date Published - To</BodyText>
                         <TextField
                             name="publishedDateTo"
                             type="date"
@@ -209,28 +206,29 @@ export const AdvancedSearch = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12} container justifyContent="flex-end">
+            <Grid size={12} container justifyContent="flex-end">
                 <Stack
                     direction={{ xs: 'column-reverse', md: 'row' }}
                     spacing={2}
                     width="100%"
                     justifyContent="flex-end"
                 >
-                    <SecondaryButtonOld
+                    <Button
                         onClick={() => {
                             setAdvancedSearchFilters(initialSearchFilters);
                             setSearchFilters(initialSearchFilters);
                         }}
                     >
                         Reset All Filters
-                    </SecondaryButtonOld>
-                    <PrimaryButtonOld
+                    </Button>
+                    <Button
+                        variant="primary"
                         onClick={() => {
                             setAdvancedSearchFilters(searchFilters);
                         }}
                     >
                         Search
-                    </PrimaryButtonOld>
+                    </Button>
                 </Stack>
             </Grid>
         </Grid>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { MetHeader1Old, MetPaper, MetParagraphOld } from 'components/common';
-import { Grid } from '@mui/material';
+import { BodyText, Heading1 } from 'components/common/Typography';
+import { Grid2 as Grid, Paper } from '@mui/material';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { Tabs } from './Tabs';
@@ -11,7 +11,7 @@ export const Form = () => {
 
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Banner height={'330px'} imageUrl={LandingPageBanner}>
                     <Grid
                         container
@@ -26,9 +26,7 @@ export const Form = () => {
                         }}
                     >
                         <Grid
-                            item
-                            lg={6}
-                            sm={12}
+                            size={{ lg: 6, sm: 12 }}
                             container
                             direction="row"
                             justifyContent="flex-start"
@@ -42,20 +40,20 @@ export const Form = () => {
                             m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                             rowSpacing={2}
                         >
-                            <Grid item xs={12}>
-                                <MetHeader1Old>{translate('formCAC.form.header')}</MetHeader1Old>
+                            <Grid size={12}>
+                                <Heading1>{translate('formCAC.form.header')}</Heading1>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetParagraphOld>{translate('formCAC.form.paragraph')}</MetParagraphOld>
+                            <Grid size={12}>
+                                <BodyText>{translate('formCAC.form.paragraph')}</BodyText>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Banner>
             </Grid>
-            <Grid item xs={12} m={'1em'}>
-                <MetPaper sx={{ padding: '3em' }}>
+            <Grid size={12} m={'1em'}>
+                <Paper sx={{ padding: '3em' }}>
                     <Tabs />
-                </MetPaper>
+                </Paper>
             </Grid>
         </Grid>
     );

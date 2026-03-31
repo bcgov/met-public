@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid2 as Grid, Typography } from '@mui/material';
 import { modalStyle } from 'components/common';
 import { Button } from 'components/common/Input';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { ThankYouPanelProps } from 'engagements/public/email/types';
 import { useAsyncValue } from 'react-router';
 import { Engagement } from 'models/engagement';
@@ -19,9 +19,9 @@ const ThankYouPanel = ({ handleClose }: ThankYouPanelProps) => {
         >
             <Grid container size={12}>
                 <Grid size={12}>
-                    <Header1 weight="bold" sx={{ mb: 2 }}>
+                    <Heading1 bold sx={{ mb: 2 }}>
                         Thank you
-                    </Header1>
+                    </Heading1>
                 </Grid>
                 <Grid size={12}>
                     <Typography id="modal-modal-header"></Typography>

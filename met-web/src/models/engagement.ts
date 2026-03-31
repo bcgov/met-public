@@ -1,6 +1,7 @@
 import { Survey, SurveySubmissionData } from './survey';
 import { EngagementStatusBlock } from './engagementStatusBlock';
 import { SubmissionStatus } from 'constants/engagementStatus';
+import { SuggestedEngagementWithAttachment } from './suggestedEngagement';
 
 export interface Engagement {
     id: number;
@@ -35,6 +36,8 @@ export interface Engagement {
     subscribe_section_shown?: boolean;
     subscribe_section_heading?: string;
     subscribe_section_description?: string;
+    more_engagements_heading?: string;
+    suggested_engagements?: SuggestedEngagementWithAttachment[];
 }
 
 export interface Status {
@@ -108,6 +111,8 @@ export const createDefaultEngagement = (sponsorName?: string): Engagement => {
         subscribe_consent_message: '',
         sponsor_name: sponsorName ?? '',
         tenant_id: 0,
+        more_engagements_heading: '',
+        suggested_engagements: [],
     };
 };
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from 'react';
-import { Grid, Stack } from '@mui/material';
+import { Grid2 as Grid, Stack } from '@mui/material';
 import Dropzone, { Accept } from 'react-dropzone';
 import { ImageUploadContext } from './imageUploadContext';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 
 interface UploaderProps {
     height?: string;
@@ -37,12 +37,12 @@ const Uploader = ({ height = '10em', bgColor = 'blue.10', accept = {}, children 
         return (
             <Grid container direction="row" alignItems="flex-start" justifyContent={'flex-end'} spacing={1} padding={1}>
                 <Grid
-                    item
-                    xs={12}
+                    size={12}
                     style={{
                         borderRadius: '8px',
                         height: height,
                         padding: '0',
+                        overflow: 'hidden',
                     }}
                 >
                     <img
@@ -62,10 +62,9 @@ const Uploader = ({ height = '10em', bgColor = 'blue.10', accept = {}, children 
                         }}
                     />
                 </Grid>
-                <Grid item xs={12} container justifyContent="flex-end" direction="row">
+                <Grid size={12} container justifyContent="flex-end" direction="row">
                     <Stack direction="row" spacing={1} width="100%" justifyContent="flex-end">
                         <Button
-                            variant="secondary"
                             onClick={() => {
                                 setAddedImageFileUrl('');
                                 setAddedImageFileName('');
@@ -80,7 +79,6 @@ const Uploader = ({ height = '10em', bgColor = 'blue.10', accept = {}, children 
                             Remove
                         </Button>
                         <Button
-                            variant="secondary"
                             onClick={() => {
                                 setCropModalOpen(true);
                             }}

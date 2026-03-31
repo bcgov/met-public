@@ -14,6 +14,7 @@ import { Language } from 'models/language';
 import { Tenant } from 'models/tenant';
 import { fetchVersion } from 'services/versionService';
 import { getMyTenants } from 'services/tenantService';
+import { SuggestedEngagementWithAttachment } from 'models/suggestedEngagement';
 
 export type EngagementPreviewLoaderData = {
     engagement: Promise<Engagement>;
@@ -26,6 +27,7 @@ export type EngagementPreviewLoaderData = {
     languages: Promise<Language[]>;
     tenants: Promise<Tenant[]>;
     apiVersion: Promise<string>;
+    suggestions: Promise<SuggestedEngagementWithAttachment[]>;
 };
 
 /**
@@ -49,6 +51,9 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
     const engagement = getEngagement(Number(engagementId));
     const widgets = engagement.then((response) => getWidgets(Number(response.id)));
     const details = engagement.then((response) => getDetailsTabs(response.id));
+    const suggestions = engagement.then(
+        (response) => response.suggested_engagements ?? ([] as SuggestedEngagementWithAttachment[]),
+    );
     const engagementMetadata = engagement.then((response) => getEngagementMetadata(Number(response.id)));
     const taxaData = getMetadataTaxa();
     const teamMembers = engagement.then((response) => getTeamMembers({ engagement_id: response.id }).catch(() => []));
@@ -79,6 +84,7 @@ export const engagementPreviewLoader = async ({ params }: { params: Params<strin
         languages,
         tenants: myTenants,
         apiVersion,
+        suggestions,
     };
 };
 

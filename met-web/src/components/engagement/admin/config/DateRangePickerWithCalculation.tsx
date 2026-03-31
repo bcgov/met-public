@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { PickerDayOwnerState, StaticDatePicker } from '@mui/x-date-pickers';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Grid } from '@mui/material';
-import { BodyText } from 'components/common/Typography';
+import { Grid2 as Grid } from '@mui/material';
+import { BodyText } from 'components/common/Typography/Body';
 import dayjs, { Dayjs } from 'dayjs';
 import { When } from 'react-if';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -119,8 +119,8 @@ export const DateRangePickerWithCalculation = () => {
     return (
         <Grid container mt={2} direction="column" spacing={2} sx={{ mt: 0 }}>
             <When condition={isPickingDate}>
-                <Grid item container direction="row">
-                    <Grid item>
+                <Grid container direction="row">
+                    <Grid>
                         <BodyText bold>Start Date</BodyText>
                         <Controller
                             name="start_date"
@@ -146,7 +146,7 @@ export const DateRangePickerWithCalculation = () => {
                             )}
                         />
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <BodyText bold>End Date</BodyText>
                         <Controller
                             name="end_date"
@@ -177,13 +177,13 @@ export const DateRangePickerWithCalculation = () => {
                         />
                     </Grid>
                 </Grid>
-                <Grid item container direction="row" alignItems="center" spacing={2}>
-                    <Grid item>
+                <Grid container direction="row" alignItems="center" spacing={2}>
+                    <Grid>
                         <Button variant="primary" onClick={() => setIsPickingDate(false)}>
                             Select
                         </Button>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         <Link
                             sx={{ cursor: 'pointer', color: colors.type.regular.primary }}
                             onClick={() => {
@@ -203,45 +203,45 @@ export const DateRangePickerWithCalculation = () => {
             </When>
             <When condition={!isPickingDate}>
                 {Boolean(numberOfDays) && (
-                    <Grid item>
+                    <Grid>
                         <OutlineBox sx={{ maxWidth: '400px' }}>
-                            <Grid container direction="column" xs={12} spacing={2}>
-                                <Grid item>
+                            <Grid container direction="column" size={{ xs: 12 }} spacing={2}>
+                                <Grid>
                                     <BodyText bold sx={{ color: 'primary.main' }}>
                                         Engagement Feedback Dates
                                     </BodyText>
                                 </Grid>
-                                <Grid item container direction="row" spacing={1}>
-                                    <Grid item>
+                                <Grid container direction="row" spacing={1}>
+                                    <Grid>
                                         <EngagementStatusChip statusId={SubmissionStatus.Open} />
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <BodyText bold display="inline">
                                             {dayjs(startDate).format('MMM D, YYYY')}{' '}
                                         </BodyText>
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <BodyText thin display="inline">
                                             (12:01 AM)
                                         </BodyText>
                                     </Grid>
                                 </Grid>
-                                <Grid item container direction="row" spacing={1}>
-                                    <Grid item>
+                                <Grid container direction="row" spacing={1}>
+                                    <Grid>
                                         <EngagementStatusChip statusId={SubmissionStatus.Closed} />
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <BodyText bold display="inline">
                                             {dayjs(endDate).format('MMM D, YYYY')}{' '}
                                         </BodyText>
                                     </Grid>
-                                    <Grid item>
+                                    <Grid>
                                         <BodyText thin display="inline">
                                             (11:59 PM)
                                         </BodyText>
                                     </Grid>
                                 </Grid>
-                                <Grid item sx={{ mb: 1 }}>
+                                <Grid sx={{ mb: 1 }}>
                                     <BodyText bold size="large" sx={{ color: 'primary.light', lineHeight: 1 }}>
                                         <span style={{ fontSize: '72px' }}>{numberOfDays}</span>
                                         <span style={{ position: 'relative', bottom: '32px', fontSize: '24px' }}>
@@ -254,7 +254,7 @@ export const DateRangePickerWithCalculation = () => {
                         </OutlineBox>
                     </Grid>
                 )}
-                <Grid item sx={{ '&.MuiGrid-root': { paddingTop: 0 } }}>
+                <Grid sx={{ '&.MuiGrid-root': { paddingTop: 0 } }}>
                     <Button onClick={() => setIsPickingDate(true)} icon={<FontAwesomeIcon icon={faCalendar} />}>
                         {numberOfDays ? 'Change Dates' : 'Select Dates'}
                     </Button>

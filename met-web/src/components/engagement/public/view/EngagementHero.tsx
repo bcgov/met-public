@@ -1,4 +1,4 @@
-import { BodyText, EyebrowText, Header1 } from 'components/common/Typography';
+import { BodyText, EyebrowText, Heading1 } from 'components/common/Typography';
 import React, { Suspense } from 'react';
 import { Button } from 'components/common/Input/Button';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
@@ -94,9 +94,9 @@ export const EngagementHero = () => {
                                 <EyebrowText m="0">Sponsor Name</EyebrowText>
                             </Skeleton>
                             <Skeleton>
-                                <Header1 weight="thin" sx={{ mb: '32px' }}>
+                                <Heading1 weight="thin" sx={{ mb: '32px' }}>
                                     Engagement Name
-                                </Header1>
+                                </Heading1>
                             </Skeleton>
                             <Grid container mb="48px" flexDirection="row" alignItems="center" columnSpacing={1}>
                                 <Grid>
@@ -119,7 +119,7 @@ export const EngagementHero = () => {
                     }
                 >
                     <Await resolve={engagementInfo}>
-                        {([engagement, startDate, endDate]: [Engagement, dayjs.Dayjs, dayjs.Dayjs]) => {
+                        {([engagement, startDate, endDate]: [Engagement, dayjs.Dayjs | null, dayjs.Dayjs | null]) => {
                             const usePreviewState = Boolean(isPreviewMode && previewStateType);
 
                             const effectiveStatusId =
@@ -162,25 +162,25 @@ export const EngagementHero = () => {
                                             previewFallback={<TextPlaceholder type="short" />}
                                         />
                                     </EyebrowText>
-                                    <Header1 weight="thin" sx={{ color: colors.surface.gray[110], mb: '32px', mt: 0 }}>
+                                    <Heading1 weight="thin" sx={{ color: colors.surface.gray[110], mb: '32px', mt: 0 }}>
                                         <PreviewSwitch
                                             hasValue={Boolean(engagement.name?.trim())}
                                             value={engagement.name}
                                             previewFallback={<TextPlaceholder type="short" />}
                                         />
-                                    </Header1>
+                                    </Heading1>
                                     <Grid container mb="48px" flexDirection="row" alignItems="center" columnSpacing={1}>
                                         <Grid>
                                             <EngagementStatusChip statusId={effectiveStatusId} />
                                         </Grid>
                                         <Grid>
                                             <BodyText bold size="small" sx={{ color: '#201F1E' }}>
-                                                <time dateTime={`${startDate.format(semanticDateFormat)}`}>
-                                                    {startDate.format(dateFormat)}
+                                                <time dateTime={`${startDate?.format(semanticDateFormat)}`}>
+                                                    {startDate?.format(dateFormat)}
                                                 </time>{' '}
                                                 to{' '}
-                                                <time dateTime={`${endDate.format(semanticDateFormat)}`}>
-                                                    {endDate.format(dateFormat)}
+                                                <time dateTime={`${endDate?.format(semanticDateFormat)}`}>
+                                                    {endDate?.format(dateFormat)}
                                                 </time>
                                             </BodyText>
                                         </Grid>

@@ -1,4 +1,4 @@
-import { SvgIconComponent } from '@mui/icons-material';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { MetadataTaxon, MetadataTaxonModify } from 'models/engagement';
 import { JSX } from 'react';
 import { ControllerRenderProps, FieldErrorsImpl, FieldValues } from 'react-hook-form';
@@ -53,7 +53,7 @@ export interface MetadataFilterType {
     name: string;
     code: string;
     details: string;
-    icon: SvgIconComponent;
+    icon: IconDefinition;
     // TODO: allow for custom input components based on the passed taxon type
 }
 
@@ -66,7 +66,7 @@ export interface MetadataFilter {
 
 export interface TaxonType {
     name: string;
-    icon: SvgIconComponent;
+    icon: IconDefinition;
     supportsPresetValues: boolean;
     supportsFreeform: boolean;
     supportsMulti: boolean;

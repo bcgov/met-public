@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MetPaper } from 'components/common';
-import { Divider, Grid, Skeleton } from '@mui/material';
+
+import { Divider, Grid2 as Grid, Paper, Skeleton, ThemeProvider } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { Widget } from 'models/widget';
 import { getSubscriptionsForms } from 'services/subscriptionService';
@@ -10,13 +10,14 @@ import { Case, Switch, Unless } from 'react-if';
 import EmailListSection from './EmailListSection';
 import EmailListModal from './EmailListModal';
 import FormSignUpSection from './FormSignUpSection';
-import { Header2 } from 'components/common/Typography';
-import { useRouteLoaderData } from 'react-router';
+import { Heading2 } from 'components/common/Typography';
+import { useLoaderData } from 'react-router';
 import { EngagementLoaderPublicData } from 'engagements/public/view';
+import { BaseTheme } from 'styles/Theme';
 
 const SubscribeWidget = ({ widget }: { widget: Widget }) => {
     const dispatch = useAppDispatch();
-    const { widgets } = useRouteLoaderData('single-engagement') as EngagementLoaderPublicData;
+    const { widgets } = useLoaderData() as EngagementLoaderPublicData;
     const [open, setOpen] = useState(false);
     const [subscribeItems, setSubscribeItems] = useState<SubscribeForm[]>([]);
     const [isLoadingSubscribeItems, setIsLoadingSubscribeItems] = useState(true);
@@ -43,18 +44,18 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
 
     if (isLoadingSubscribeItems) {
         return (
-            <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+            <Paper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Skeleton />
-            </MetPaper>
+            </Paper>
         );
     }
 
     return (
-        <>
-            <MetPaper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
+        <ThemeProvider theme={BaseTheme}>
+            <Paper elevation={1} sx={{ padding: '1em', minHeight: '12em' }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <Header2>{widget.title}</Header2>
+                    <Grid size={12}>
+                        <Heading2>{widget.title}</Heading2>
                         <Divider sx={{ borderWidth: 1, marginTop: 0.5 }} />
                     </Grid>
                     {subscribeItems?.map((item, index) => {
@@ -69,7 +70,7 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                                     </Case>
                                 </Switch>
                                 <Unless condition={index == subscribeItems.length - 1}>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Divider />
                                     </Grid>
                                 </Unless>
@@ -77,9 +78,9 @@ const SubscribeWidget = ({ widget }: { widget: Widget }) => {
                         );
                     })}
                 </Grid>
-            </MetPaper>
+            </Paper>
             <EmailListModal open={open} setOpen={setOpen} />
-        </>
+        </ThemeProvider>
     );
 };
 
