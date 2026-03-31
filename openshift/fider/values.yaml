@@ -69,5 +69,5 @@ email:
   smtp:
     host: "apps.smtp.gov.bc.ca"
     port: 25
-    username: "dep-fider@gov.bc.ca"
+    username: "met-fider@gov.bc.ca"
     noreply: "noreply@gov.bc.ca"
