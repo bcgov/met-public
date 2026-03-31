@@ -6,8 +6,7 @@ from http import HTTPStatus
 from api.constants.membership_type import MembershipType
 from api.exceptions.business_exception import BusinessException
 from api.models.engagement_details_tab_translation import EngagementDetailsTabTranslation as EDTTranslationModel
-from api.schemas.engagement_details_tab_translation import \
-    EngagementDetailsTabTranslationSchema as EDTTranslationSchema
+from api.schemas.engagement_details_tab_translation import EngagementDetailsTabTranslationSchema as EDTTranslationSchema
 from api.services import authorization
 from api.utils.roles import Role
 
