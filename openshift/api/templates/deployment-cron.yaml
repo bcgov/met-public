@@ -79,8 +79,8 @@ spec:
         - -c
         - |
           source /vault/secrets/email && \
-          source /vault/secrets/met-jwt-oidc && \
-          source /vault/secrets/met-patroni && \
+          source /vault/secrets/jwt-oidc && \
+          source /vault/secrets/engagement-patroni && \
           bash /engagement-cron/docker-entrypoint.sh
         envFrom:
         - configMapRef:

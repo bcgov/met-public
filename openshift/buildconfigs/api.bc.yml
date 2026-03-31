@@ -3,8 +3,8 @@ kind: Template
 metadata:
   name: api-build-template
   annotations:
-    description: "Build Configuration Template for the MET API Project"
-    tags: "met, api, python"
+    description: "Build Configuration Template for the Engagement API Project"
+    tags: "engagement, api, python"
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
