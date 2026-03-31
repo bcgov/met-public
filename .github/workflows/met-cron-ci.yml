@@ -1,17 +1,17 @@
-name: MET CRON JOB CI
+name: CRON JOB CI
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - "met-cron/**"
-      - "met-api/**"
+      - "cron/**"
+      - "api/**"
 
 defaults:
   run:
     shell: bash
-    working-directory: ./met-cron
+    working-directory: ./cron
 
 jobs:
   setup-job:

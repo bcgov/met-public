@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Grid2 as Grid, Paper, Skeleton, Tooltip } from '@mui/material';
-import { Header2 } from 'components/common/Typography';
+import { Heading2 } from 'components/common/Typography';
 import { Button } from 'components/common/Input/Button';
 import { WidgetCardSwitch } from './WidgetCardSwitch';
 import { If, Then, Else } from 'react-if';
@@ -41,7 +41,7 @@ const WidgetsBlock = () => {
     return (
         <Grid container size={12} rowSpacing={1}>
             <Grid size={12}>
-                <Header2 weight="bold">Widgets</Header2>
+                <Heading2 bold>Widgets</Heading2>
             </Grid>
             <Grid size={12}>
                 <Paper sx={{ padding: '1em' }}>

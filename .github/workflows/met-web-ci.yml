@@ -1,9 +1,9 @@
-name: MET WEB CI
+name: WEB CI
 
 on:
   pull_request:
     paths:
-      - "met-web/**"
+      - "web/**"
   push:
     branches:
       - main
@@ -11,7 +11,7 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./met-web
+    working-directory: ./web
 
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
@@ -67,10 +67,10 @@ jobs:
         run: |
           npm test -- --coverage
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
-          flags: metweb
-          name: codecov-met-web
+          flags: web
+          name: codecov-engagement-web
           fail_ci_if_error: true
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}

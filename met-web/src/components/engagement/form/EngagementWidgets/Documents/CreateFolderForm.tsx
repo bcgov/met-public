@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { Grid, TextField, Stack } from '@mui/material';
-import { MetLabel, PrimaryButtonOld, SecondaryButtonOld, WidgetButton } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
+import { TextField } from 'components/common/Input/TextInput';
 import { When } from 'react-if';
 import { DocumentsContext } from './DocumentsContext';
 import { useAppDispatch } from 'hooks';
@@ -68,63 +70,56 @@ const CreateFolderForm = () => {
 
     return (
         <>
-            <Grid item xs={12} container direction="row" justifyContent={'flex-start'} spacing={1} sx={{ mb: 5 }}>
-                <Grid item>
-                    <WidgetButton onClick={() => setCreateFolderMode(true)}>Create Folder</WidgetButton>
+            <Grid size={12} container direction="row" justifyContent={'flex-start'} spacing={1} sx={{ mb: 5 }}>
+                <Grid>
+                    <Button size="small" onClick={() => setCreateFolderMode(true)}>
+                        Create Folder
+                    </Button>
                 </Grid>
-                <Grid item>
-                    <WidgetButton onClick={() => handleAddFileDrawerOpen(true)}>Add Document Link</WidgetButton>
+                <Grid>
+                    <Button size="small" onClick={() => handleAddFileDrawerOpen(true)}>
+                        Add Document Link
+                    </Button>
                 </Grid>
-                <Grid item>
-                    <WidgetButton onClick={() => setUploadFileDrawerOpen(true)}>Upload Document</WidgetButton>
+                <Grid>
+                    <Button size="small" onClick={() => setUploadFileDrawerOpen(true)}>
+                        Upload Document
+                    </Button>
                 </Grid>
             </Grid>
 
             <When condition={createFolderMode}>
-                <Grid item xs={12} container direction="row" justifyContent={'center'} mb={5}>
-                    <Grid item xs={12}>
-                        <MetLabel>Folder name</MetLabel>
+                <Grid size={12} container direction="row" justifyContent={'center'} mb={5}>
+                    <Grid size={12}>
+                        <BodyText bold>Folder name</BodyText>
                     </Grid>
-                    <Grid
-                        container
-                        item
-                        justifyContent={'flex-start'}
-                        alignItems={formError.name || folderName.length > 50 ? 'center' : 'flex-start'}
-                        spacing={2}
-                        xs={12}
-                        sx={{ p: 0 }}
-                    >
-                        <Grid item xs={8} sx={{ p: 0 }}>
+                    <Grid container justifyContent={'flex-start'} spacing={2} size={12} sx={{ p: 0 }}>
+                        <Grid size={{ sm: 12, lg: 8 }} sx={{ p: 0 }}>
                             <TextField
-                                label=" "
-                                InputLabelProps={{
-                                    shrink: false,
-                                }}
-                                sx={{ width: '100%', p: 0, m: 0 }}
-                                onChange={(e) => handleFolderNameChange(e.target.value)}
-                                error={formError.name || folderName.length > 50}
-                                helperText={getErrorMessage()}
+                                width="100%"
+                                p={0}
+                                m={0}
+                                onChange={(value) => handleFolderNameChange(value)}
+                                error={getErrorMessage()}
                             />
                         </Grid>
-                        <Grid item lg={4} md={5}>
-                            <Stack
-                                direction={{ md: 'column', lg: 'row' }}
-                                spacing={1}
-                                width="100%"
-                                justifyContent="flex-start"
-                            >
-                                <PrimaryButtonOld
+                        <Grid container size={12}>
+                            <Grid size="auto">
+                                <Button
+                                    variant="primary"
                                     data-testid="create-folder-form/save-button"
                                     sx={{ mb: 1 }}
                                     loading={creatingFolder}
                                     onClick={handleCreateFolder}
                                 >
                                     Save
-                                </PrimaryButtonOld>
-                                <SecondaryButtonOld sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
+                                </Button>
+                            </Grid>
+                            <Grid size="auto">
+                                <Button sx={{ mb: 1 }} onClick={() => setCreateFolderMode(false)}>
                                     Cancel
-                                </SecondaryButtonOld>
-                            </Stack>
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>

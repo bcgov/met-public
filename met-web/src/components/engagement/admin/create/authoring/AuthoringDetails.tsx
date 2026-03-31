@@ -3,11 +3,11 @@ import { BodyText, ErrorMessage } from 'components/common/Typography';
 import React, { useEffect, useRef, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { AuthoringFormContainer, AuthoringFormSection } from './AuthoringFormLayout';
-import { Header3 } from 'components/common/Typography/Headers';
+import { Heading3 } from 'components/common/Typography/Headings';
 import { useLoaderData, useOutletContext } from 'react-router';
 import { Controller, useFormContext } from 'react-hook-form';
 import { TextField } from 'components/common/Input/TextInput';
-import { colors, Palette } from 'styles/Theme';
+import { colors } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { AuthoringTemplateOutletContext, FormDetailsTab } from './types';
 import { EditorState } from 'draft-js';
@@ -286,8 +286,10 @@ const AuthoringDetails = () => {
 
     const tabListStyles = {
         display: tabsEnabled ? 'flex' : 'none',
-        borderBottom: `1px solid ${Palette.primary.main}`,
+        borderBottom: '1px solid',
+        borderColor: 'primary.main',
         '& .MuiTabs-flexContainer': {
+            rowGap: '0.5rem',
             flexWrap: 'wrap', // For 7-10 tabs, a second line of tabs is required.
             marginBottom: '-12px',
         },
@@ -485,7 +487,7 @@ const AuthoringDetails = () => {
                         {tabsEnabled && (
                             <Grid container rowSpacing="0.5rem">
                                 <div ref={tabErrorsRef}></div>
-                                <Header3 weight="bold">Tabs Configuration</Header3>
+                                <Heading3 bold>Tabs Configuration</Heading3>
                                 <BodyText size="small">
                                     You must have a minimum of two tabs to use the tabs configuration. To add additional
                                     tabs, select the Add Tab button. To remove a tab you have added, select the “X”
@@ -617,7 +619,7 @@ const AuthoringDetails = () => {
                                     />
                                 </AuthoringFormSection>
                                 <Grid container direction="column" gap="0.5rem">
-                                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                                    <Heading3 bold>Primary Content (Required)</Heading3>
                                     <BodyText size="small">
                                         {'Primary content will display on the left two thirds of the page on large screens ' +
                                             'and full width on small screens. (If you add optional supporting content in the section ' +
@@ -684,7 +686,7 @@ const AuthoringDetails = () => {
                             {/* Todo: Replace with streamlined widget selector that saves on form save */}
                             <AuthoringFormContainer>
                                 <Grid container direction="column" gap="0.5rem">
-                                    <Header3 weight="bold">Supporting Content (Optional)</Header3>
+                                    <Heading3 bold>Supporting Content (Optional)</Heading3>
                                     <BodyText size="small">
                                         You may use a widget to add supporting content to your primary content. On large
                                         screens this content will be displayed to the right of your primary content. On

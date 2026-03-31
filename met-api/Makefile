@@ -6,8 +6,8 @@
 MKFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_ABS_DIR:=$(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
-PROJECT_NAME:=met_api
-DOCKER_NAME:=met-api
+PROJECT_NAME:=api
+DOCKER_NAME:=engagement-api
 
 #################################################################################
 # COMMANDS -- license                                                           #

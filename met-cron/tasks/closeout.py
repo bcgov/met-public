@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Comments Redact Event Logs."""
+"""Task to update the status of engagements that are due for closeout."""
 from datetime import datetime
 
-from met_cron.services.comment_redact_service import CommentRedactService
+from met_api.services.engagement_service import EngagementService
 
 
-class MetCommentRedact:  # pylint:disable=too-few-public-methods
-    """Task to redact comments of closed engagements."""
+class EngagementCloseoutTask:  # pylint:disable=too-few-public-methods
+    """Task to handles Engagement due closure."""
 
     @classmethod
-    def do_redact(cls):
-        """Comment redaction event logs."""
-        print('Starting comments redaction event logs at------------------------', datetime.now())
+    def do_closeout(cls):
+        """Perform the engagement closeout report."""
+        print('Starting Engagement Closeout at------------------------', datetime.now())
 
-        CommentRedactService.do_redact_comments()
+        EngagementService.close_engagements_due()

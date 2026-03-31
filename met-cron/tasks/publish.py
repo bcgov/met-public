@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Publish Scheduled Engagements."""
+"""Task to update the status of scheduled Engagements that are due for publish."""
 from datetime import datetime
 
 from met_api.services.engagement_service import EngagementService
 
 
-class MetEngagementPublish:  # pylint:disable=too-few-public-methods
-    """Task to publish scheduled Engagements due."""
+class EngagementPublishTask:  # pylint:disable=too-few-public-methods
+    """Task to update the status of scheduled Engagements that are due for publish."""
 
     @classmethod
     def do_publish(cls):
-        """Publish the scheduled engagements."""
-        print('Starting Met Engagement Publish at------------------------', datetime.now())
+        """Update the status of scheduled engagements that are due for publish."""
+        print('Starting Engagement Publish at------------------------', datetime.now())
 
         EngagementService.publish_scheduled_engagements()

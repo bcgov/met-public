@@ -114,7 +114,7 @@ const CloneOptions = () => {
     return (
         <Grid sx={{ gap: '1rem', display: 'flex', flexDirection: 'column' }}>
             <FormControl sx={{ gap: '0.5rem' }}>
-                <BodyText bold sx={{ marginBottom: '2px' }}>
+                <BodyText bold mb="2px">
                     Select Survey to Clone
                 </BodyText>
                 <Autocomplete

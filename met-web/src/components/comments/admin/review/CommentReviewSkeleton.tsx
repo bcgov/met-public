@@ -1,12 +1,13 @@
-import { Grid, Skeleton, Stack, Typography } from '@mui/material';
-import { MetLabel, MetPageGridContainer, RepeatedGrid } from 'components/common';
+import { Grid2 as Grid, Skeleton, Stack, Typography } from '@mui/material';
+import { ResponsiveContainer } from 'components/common/Layout';
+import { BodyText } from 'components/common/Typography';
+import { RepeatedGrid } from 'components/common';
 import React from 'react';
 
 export const CommentReviewSkeleton = () => {
     return (
-        <MetPageGridContainer container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+        <ResponsiveContainer direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
             <Grid
-                container
                 padding="3em"
                 direction="row"
                 justifyContent="flex-start"
@@ -14,30 +15,30 @@ export const CommentReviewSkeleton = () => {
                 rowSpacing={2}
                 columnSpacing={4}
             >
-                <RepeatedGrid times={6} container item xs={5}>
-                    <MetLabel width="100%">
+                <RepeatedGrid times={6} size={5}>
+                    <BodyText bold width="100%">
                         <Skeleton />
-                    </MetLabel>
+                    </BodyText>
                 </RepeatedGrid>
-                <Grid container direction="row" item xs={5}>
-                    <MetLabel width="100%">
+                <Grid container direction="row" size={5}>
+                    <BodyText bold width="100%">
                         <Skeleton />
-                    </MetLabel>
+                    </BodyText>
                 </Grid>
 
-                <Grid container direction="row" item xs={12}>
+                <Grid container direction="row" size={12}>
                     <Skeleton width="100%" height="6em" />
                 </Grid>
 
-                <Grid item xs={12} direction="row" container>
-                    <Grid item xs={4}>
+                <Grid container size={12} direction="row">
+                    <Grid size={4}>
                         <Typography variant="h6">
                             <Skeleton />
                         </Typography>
                     </Grid>
                 </Grid>
-                <RepeatedGrid times={2} item xs={12} container>
-                    <Grid item xs={4}>
+                <RepeatedGrid container times={2} size={12}>
+                    <Grid size={4}>
                         <Stack direction="row" spacing={1} alignItems="center">
                             <Skeleton variant="circular" width={30} height={30} />
                             <Typography variant="h6" width="100%">
@@ -47,6 +48,6 @@ export const CommentReviewSkeleton = () => {
                     </Grid>
                 </RepeatedGrid>
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };

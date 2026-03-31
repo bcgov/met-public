@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
-import { MetHeader3, MetLabel, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { BodyText, Heading3 } from 'components/common/Typography';
+import { Button } from 'components/common/Input/Button';
+import { Grid2 as Grid } from '@mui/material';
 import { useForm, FormProvider, SubmitHandler, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -168,123 +169,74 @@ const VirtualSessionFormDrawer = () => {
                             spacing={2}
                             padding="2em"
                         >
-                            <Grid item xs={12}>
-                                <MetHeader3 bold>Virtual Information Session</MetHeader3>
+                            <Grid size={12}>
+                                <Heading3 bold>Virtual Information Session</Heading3>
                                 <Divider sx={{ marginTop: '1em' }} />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Name</MetLabel>
-                                <ControlledTextField
-                                    name="event_name"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Name
+                                </BodyText>
+                                <ControlledTextField name="event_name" />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Description</MetLabel>
-                                <ControlledTextField
-                                    name="description"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                    multiline
-                                    minRows={4}
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Description
+                                </BodyText>
+                                <ControlledTextField name="description" multiline minRows={4} />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Date</MetLabel>
-                                <ControlledTextField
-                                    name="date"
-                                    type="date"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Date
+                                </BodyText>
+                                <ControlledTextField name="date" type="date" />
                             </Grid>
-                            <Grid item>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Time - From</MetLabel>
-                                <ControlledTextField
-                                    name="time_from"
-                                    type="time"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid>
+                                <BodyText bold mb="2px">
+                                    Time - From
+                                </BodyText>
+                                <ControlledTextField name="time_from" type="time" />
                             </Grid>
-                            <Grid item>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Time - To</MetLabel>
-                                <ControlledTextField
-                                    name="time_to"
-                                    type="time"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid>
+                                <BodyText bold mb="2px">
+                                    Time - To
+                                </BodyText>
+                                <ControlledTextField name="time_to" type="time" />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Virtual Session Link</MetLabel>
-                                <ControlledTextField
-                                    name="session_link"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Virtual Session Link
+                                </BodyText>
+                                <ControlledTextField name="session_link" />
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetLabel sx={{ marginBottom: '2px' }}>Virtual Session Link - Text Displayed</MetLabel>
-                                <ControlledTextField
-                                    name="session_link_text"
-                                    variant="outlined"
-                                    InputLabelProps={{
-                                        shrink: false,
-                                    }}
-                                    fullWidth
-                                    size="small"
-                                />
+                            <Grid size={12}>
+                                <BodyText bold mb="2px">
+                                    Virtual Session Link - Text Displayed
+                                </BodyText>
+                                <ControlledTextField name="session_link_text" />
                             </Grid>
 
                             <Grid
-                                item
-                                xs={12}
+                                size={12}
                                 container
                                 direction="row"
                                 spacing={1}
                                 justifyContent={'flex-start'}
                                 marginTop="2em"
                             >
-                                <Grid item>
-                                    <PrimaryButtonOld
-                                        type="submit"
-                                        loading={isCreating}
-                                    >{`Save & Close`}</PrimaryButtonOld>
+                                <Grid>
+                                    <Button variant="primary" type="submit" loading={isCreating}>
+                                        Save &amp; Close
+                                    </Button>
                                 </Grid>
-                                <Grid item>
-                                    <SecondaryButtonOld
+                                <Grid>
+                                    <Button
                                         onClick={() => {
                                             handleEventDrawerOpen(EVENT_TYPE.VIRTUAL, false);
                                         }}
                                     >
                                         Cancel
-                                    </SecondaryButtonOld>
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </Grid>

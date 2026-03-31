@@ -1,10 +1,10 @@
 // PollAnswerForm.tsx
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
-import { PrimaryButtonOld } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
 import { PollAnswer } from 'models/pollWidget';
 import Typography from '@mui/material/Typography';
 import PollAnswerItemForm from './PolllAnswerItemForm';
+import { Button } from 'components/common/Input/Button';
 
 interface PollAnswerFormProps {
     initialPollAnswers: PollAnswer[];
@@ -39,8 +39,8 @@ const PollAnswerForm: React.FC<PollAnswerFormProps> = ({ initialPollAnswers, onP
     };
 
     return (
-        <Grid item xs={12} container direction="column" alignItems={'stretch'} justifyContent="flex-start" spacing={2}>
-            <Grid item xs={12}>
+        <Grid size={12} container direction="column" alignItems={'stretch'} justifyContent="flex-start" spacing={2}>
+            <Grid size={12}>
                 <Typography variant="h6" gutterBottom>
                     Poll Answers
                 </Typography>
@@ -55,8 +55,10 @@ const PollAnswerForm: React.FC<PollAnswerFormProps> = ({ initialPollAnswers, onP
                     canRemove={pollAnswers.length > 1}
                 />
             ))}
-            <Grid item>
-                <PrimaryButtonOld onClick={() => handleAddAnswer()}>Add Answer</PrimaryButtonOld>
+            <Grid>
+                <Button variant="primary" onClick={() => handleAddAnswer()}>
+                    Add Answer
+                </Button>
             </Grid>
         </Grid>
     );

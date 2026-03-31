@@ -54,7 +54,7 @@ def _get_token_info() -> Dict:
     return g.jwt_oidc_token_info if g and 'jwt_oidc_token_info' in g else {}
 
 
-def is_met_global_admin(token_info) -> bool:
-    """Return True if the user is a MET Admin who can manage all tenants."""
+def is_global_admin(token_info) -> bool:
+    """Return True if the user is an Admin who can manage all tenants."""
     roles = current_app.config['JWT_ROLE_CALLBACK'](token_info)
     return Role.SUPER_ADMIN.value in roles

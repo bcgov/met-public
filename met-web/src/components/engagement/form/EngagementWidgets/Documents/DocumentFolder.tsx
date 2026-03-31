@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, IconButton, Stack, TextField, Typography } from '@mui/material';
-import { MetWidgetPaper } from 'components/common';
+import { Box, Grid2 as Grid, IconButton, Paper, Stack, TextField, Typography } from '@mui/material';
 import { DocumentItem } from 'models/document';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/pro-solid-svg-icons/faFolder';
@@ -19,7 +18,7 @@ import { DocumentsContext } from './DocumentsContext';
 import { updatedDiff } from 'deep-object-diff';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { Draggable, DraggableProvided } from '@hello-pangea/dnd';
-import { MetDroppable } from 'components/common/Dragdrop';
+import { DroppableBox } from 'components/common/Dragdrop';
 
 const DocumentFolder = ({
     documentItem,
@@ -68,107 +67,104 @@ const DocumentFolder = ({
     };
 
     return (
-        <Grid item xs={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
-            <MetWidgetPaper elevation={2} sx={{ width: '100%' }}>
-                <Grid container direction="row" alignItems={'center'} justifyContent="flex-start">
-                    <Grid item sx={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <IconButton
-                            sx={{ margin: '0 0.5em 0 0', padding: 0 }}
-                            color="inherit"
-                            aria-label="drag-indicator"
-                            {...draggableProvided.dragHandleProps}
-                        >
-                            <FontAwesomeIcon
-                                icon={faGripDotsVertical}
-                                style={{ fontSize: '24px', margin: '0px 4px' }}
-                            />
-                        </IconButton>
-                    </Grid>
-
-                    <Grid item xs>
-                        <Stack spacing={2} direction="row" alignItems="center">
-                            <FontAwesomeIcon icon={faFolder} style={{ fontSize: '22px', color: '#757575' }} />
-                            <If condition={!edit}>
-                                <Then>
-                                    <Typography onClick={() => setEdit(true)}>
-                                        {document ? document.title : ''}
-                                    </Typography>
-                                </Then>
-                                <Else>
-                                    <TextField
-                                        size="small"
-                                        autoFocus
-                                        sx={{ p: 0, m: 0 }}
-                                        value={document ? document.title : ''}
-                                        onChange={(event) =>
-                                            setDocument(
-                                                document
-                                                    ? { ...document, title: event.target.value }
-                                                    : { ...documentItem, title: event.target.value },
-                                            )
-                                        }
-                                        onBlur={updateDocument}
-                                    />
-                                </Else>
-                            </If>
-                        </Stack>
-                    </Grid>
-
-                    <Grid item xs container justifyContent={'flex-end'}>
-                        <IconButton
-                            onClick={() => setEdit(!edit)}
-                            sx={{ padding: 0, mr: 1 }}
-                            color="inherit"
-                            aria-label="Edit Folder"
-                        >
-                            <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
-                        </IconButton>
-                        <IconButton
-                            onClick={() =>
-                                dispatch(
-                                    openNotificationModal({
-                                        open: true,
-                                        data: {
-                                            header: 'Remove Folder',
-                                            subText: [
-                                                {
-                                                    text: 'You will be removing this folder from the engagement.',
-                                                },
-                                                {
-                                                    text: 'Do you want to remove this folder?',
-                                                },
-                                            ],
-                                            handleConfirm: () => {
-                                                handleDeleteDocument();
-                                            },
-                                        },
-                                        type: 'confirm',
-                                    }),
-                                )
-                            }
-                            sx={{ padding: 0, margin: 0 }}
-                            color="inherit"
-                            aria-label="Remove Folder"
-                        >
-                            <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
-                        </IconButton>
-                    </Grid>
+        <Grid size={12} container justifyContent={'flex-start'} spacing={2} mb={2}>
+            <Grid
+                container
+                size={12}
+                p={2}
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-start"
+                component={Paper}
+                spacing={1}
+                elevation={3}
+                sx={{ width: '100%' }}
+            >
+                <Grid size="auto" alignItems="center" justifyContent="center">
+                    <IconButton
+                        sx={{ margin: '0 0.5em 0 0', padding: 0, color: 'text.secondary' }}
+                        aria-label="drag-indicator"
+                        {...draggableProvided.dragHandleProps}
+                    >
+                        <FontAwesomeIcon icon={faGripDotsVertical} style={{ fontSize: '24px', width: '24px' }} />
+                    </IconButton>
                 </Grid>
-            </MetWidgetPaper>
+
+                <Grid size="grow">
+                    <Stack spacing={2} direction="row" alignItems="center" color="text.secondary">
+                        <FontAwesomeIcon icon={faFolder} style={{ fontSize: '22px' }} />
+                        <If condition={!edit}>
+                            <Then>
+                                <Typography onClick={() => setEdit(true)}>{document?.title ?? ''}</Typography>
+                            </Then>
+                            <Else>
+                                <TextField
+                                    size="small"
+                                    autoFocus
+                                    sx={{ p: 0, m: 0 }}
+                                    value={document?.title ?? ''}
+                                    onChange={(event) =>
+                                        setDocument(
+                                            document
+                                                ? { ...document, title: event.target.value }
+                                                : { ...documentItem, title: event.target.value },
+                                        )
+                                    }
+                                    onBlur={updateDocument}
+                                />
+                            </Else>
+                        </If>
+                    </Stack>
+                </Grid>
+
+                <Grid size="auto" container justifyContent={'flex-end'}>
+                    <IconButton
+                        onClick={() => setEdit(!edit)}
+                        sx={{ padding: 0, mr: 1 }}
+                        color="inherit"
+                        aria-label="Edit Folder"
+                    >
+                        <FontAwesomeIcon icon={faPen} style={{ fontSize: '22px' }} />
+                    </IconButton>
+                    <IconButton
+                        onClick={() =>
+                            dispatch(
+                                openNotificationModal({
+                                    open: true,
+                                    data: {
+                                        header: 'Remove Folder',
+                                        subText: [
+                                            {
+                                                text: 'You will be removing this folder from the engagement.',
+                                            },
+                                            {
+                                                text: 'Do you want to remove this folder?',
+                                            },
+                                        ],
+                                        handleConfirm: () => {
+                                            handleDeleteDocument();
+                                        },
+                                    },
+                                    type: 'confirm',
+                                }),
+                            )
+                        }
+                        sx={{ padding: 0, margin: 0 }}
+                        color="inherit"
+                        aria-label="Remove Folder"
+                    >
+                        <FontAwesomeIcon icon={faCircleXmark} style={{ fontSize: '22px' }} />
+                    </IconButton>
+                </Grid>
+            </Grid>
             <When condition={documentItem.children && documentItem.children.length > 0}>
-                <Grid item xs={12} container justifyContent={'flex-end'} spacing={2}>
-                    <MetDroppable droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
+                <Grid size={12} container justifyContent={'flex-end'}>
+                    <DroppableBox droppableId={String(documentItem.id)} type="FILE" style={{ width: '100%' }}>
                         {documentItem.children?.map((item, index) => {
                             return (
                                 <Draggable key={item.id} draggableId={String(item.id)} index={index}>
                                     {(provided: DraggableProvided) => (
-                                        <Box
-                                            sx={{
-                                                margin: '1em 0',
-                                            }}
-                                            ref={provided.innerRef}
-                                            {...provided.draggableProps}
-                                        >
+                                        <Box mt={2} ref={provided.innerRef} {...provided.draggableProps}>
                                             <Stack direction="row" spacing={1} alignItems="flex-start">
                                                 <IconButton
                                                     sx={{ padding: 0, margin: 0, height: '2em' }}
@@ -189,7 +185,7 @@ const DocumentFolder = ({
                                 </Draggable>
                             );
                         })}
-                    </MetDroppable>
+                    </DroppableBox>
                 </Grid>
             </When>
         </Grid>

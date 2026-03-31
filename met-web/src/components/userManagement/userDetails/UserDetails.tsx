@@ -11,7 +11,7 @@ import { Button } from 'components/common/Input/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareDashedCirclePlus } from '@fortawesome/pro-regular-svg-icons';
 import { BodyText } from 'components/common/Typography/Body';
-import { Header2 } from 'components/common/Typography';
+import { Heading2 } from 'components/common/Typography';
 
 export const UserDetail = ({ label, value }: { label: string; value: JSX.Element }) => {
     return (
@@ -45,7 +45,7 @@ export const UserDetails = () => {
                 <Grid container spacing={1} size="grow">
                     <Grid container spacing={2} mt={2} mb={1} alignItems="center">
                         <Grid size="auto">
-                            <Header2 decorated mb={0}>{`${savedUser?.last_name}, ${savedUser?.first_name}`}</Header2>
+                            <Heading2 decorated mb={0}>{`${savedUser?.last_name}, ${savedUser?.first_name}`}</Heading2>
                         </Grid>
                         <Grid size="grow" minWidth="max-content">
                             <UserStatusButton />

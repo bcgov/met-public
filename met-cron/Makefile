@@ -6,8 +6,8 @@
 MKFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_ABS_DIR:=$(patsubst %/,%,$(dir $(MKFILE_PATH)))
 
-PROJECT_NAME:=met-cron
-DOCKER_NAME:=met-cron
+PROJECT_NAME:=cron
+DOCKER_NAME:=cron
 
 #################################################################################
 # COMMANDS -- Setup                                                             #
@@ -125,9 +125,6 @@ tag: push ## tag image
 #################################################################################
 run: ## Run the project in local
 	./docker-entrypoint.sh
-
-run_etl: ## Run the etl task in local
-	. venv/bin/activate && python invoke_jobs.py EXTRACT_MET
 
 run_closeout: ## Run the closeout task in local
 	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_CLOSEOUT

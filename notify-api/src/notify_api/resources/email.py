@@ -19,7 +19,7 @@ from flask_restx import Namespace, Resource
 from notify_api.auth import Auth
 from notify_api.services.email import get_email_service
 
-API = Namespace('notifications', description='API for Sending MET Notifications')
+API = Namespace('notifications', description='API for Sending DEP Email Notifications')
 
 
 @API.route('/email')

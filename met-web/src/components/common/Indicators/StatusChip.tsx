@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChipProps as MuiChipProps, Chip as MuiChip, Skeleton, useTheme } from '@mui/material';
-import { colors } from '..';
 import { SubmissionStatus } from 'constants/engagementStatus';
 
 export interface ChipProps {
@@ -80,28 +79,29 @@ export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> =
                     bottom: '1px',
                 },
                 '&.status-chip-open': {
-                    backgroundColor: colors.surface.blue[80],
-                    color: colors.type.inverted.primary,
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
                     '&.status-chip-invert': {
                         backgroundColor: 'transparent',
-                        borderColor: colors.surface.white,
+                        color: 'primary.main',
+                        borderColor: 'white',
                     },
                 },
                 '&.status-chip-upcoming': {
                     backgroundColor: 'transparent',
-                    color: colors.surface.blue[80],
-                    borderColor: colors.surface.blue[80],
+                    color: 'primary.main',
+                    borderColor: 'primary.main',
                     borderStyle: 'dashed',
                     '&.status-chip-invert': {
                         backgroundColor: 'transparent',
-                        borderColor: colors.surface.white,
-                        color: colors.type.inverted.primary,
+                        borderColor: 'white',
+                        color: 'primary.contrastText',
                     },
                 },
                 '&.status-chip-closed': {
-                    backgroundColor: colors.surface.gray[90],
-                    borderColor: colors.surface.gray[100],
-                    color: colors.surface.gray[40],
+                    backgroundColor: 'gray.90',
+                    borderColor: 'gray.100',
+                    color: 'gray.40',
                 },
                 ...props.sx,
             }}

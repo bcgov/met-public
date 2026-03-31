@@ -15,7 +15,7 @@
 
 from flask_restx import Namespace, Resource, cors
 
-API = Namespace('', description='API for Sending MET Notifications')
+API = Namespace('', description='Endpoints to check and manage the health of the service')
 
 
 @API.route('/healthz')

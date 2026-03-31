@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router';
-import {
-    MetPageGridContainer,
-    PrimaryButtonOld,
-    MetParagraphOld,
-    MetLabel,
-    MetTooltip,
-    SecondaryButtonOld,
-} from 'components/common';
+import { ResponsiveContainer } from 'components/common/Layout';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
-import { Link as MuiLink, Grid, Stack, TextField, Menu, MenuItem } from '@mui/material';
+import { Link as MuiLink, Grid2 as Grid, Stack, TextField, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Button } from 'components/common/Input/Button';
+import { RouterLinkRenderer } from 'components/common/Navigation/Link';
+import { BodyText } from 'components/common/Typography/Body';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/pro-regular-svg-icons/faMagnifyingGlass';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -118,8 +114,8 @@ const CommentTextListing = () => {
         }
     };
 
-    const handleExportToCSVOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleExportToCSVOpen = (event?: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event?.currentTarget ?? null);
         setExportToCSVOpen(!exportToCSVOpen);
     };
 
@@ -203,16 +199,16 @@ const CommentTextListing = () => {
             label: 'Content',
             allowSort: true,
             renderCell: (row: SurveySubmission) => (
-                <Grid container xs={12} rowSpacing={2} sx={{ pt: 1.5 }}>
-                    {row.comments?.map((comment, index) => {
+                <Grid container size={12} rowSpacing={2} sx={{ pt: 1.5 }}>
+                    {row.comments?.map((comment) => {
                         return (
-                            <Grid key={index} item xs={12}>
+                            <Grid key={comment.id} size={12}>
                                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start">
-                                    <Grid item xs={1} paddingTop={1}>
+                                    <Grid size={1} paddingTop={1}>
                                         <If condition={comment.is_displayed}>
                                             <Then>
-                                                <Grid xs={12} item>
-                                                    <MetTooltip
+                                                <Grid size={12}>
+                                                    <Tooltip
                                                         disableInteractive
                                                         title={'Displayed to the public'}
                                                         placement="top"
@@ -224,12 +220,12 @@ const CommentTextListing = () => {
                                                                 style={{ fontSize: '24px', color: '#757575' }}
                                                             />
                                                         </span>
-                                                    </MetTooltip>
+                                                    </Tooltip>
                                                 </Grid>
                                             </Then>
                                             <Else>
-                                                <Grid xs={12} item>
-                                                    <MetTooltip
+                                                <Grid size={12}>
+                                                    <Tooltip
                                                         disableInteractive
                                                         title={'Not displayed to the public'}
                                                         placement="top"
@@ -241,14 +237,14 @@ const CommentTextListing = () => {
                                                                 style={{ fontSize: '24px', color: '#757575' }}
                                                             />
                                                         </span>
-                                                    </MetTooltip>
+                                                    </Tooltip>
                                                 </Grid>
                                             </Else>
                                         </If>
                                     </Grid>
-                                    <Grid item xs={11}>
-                                        <MetLabel>{comment.label ?? 'Label not available.'} </MetLabel>
-                                        <MetParagraphOld>{' ' + comment.text}</MetParagraphOld>
+                                    <Grid size={11}>
+                                        <BodyText bold>{comment.label ?? 'Label not available.'} </BodyText>
+                                        <BodyText>{' ' + comment.text}</BodyText>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -269,7 +265,6 @@ const CommentTextListing = () => {
                 <Grid container>
                     <Grid
                         container
-                        item
                         sx={{
                             pb: '0.1em',
                             alignItems: 'flex-start',
@@ -277,7 +272,7 @@ const CommentTextListing = () => {
                         }}
                     >
                         <Grid
-                            xs={12}
+                            size={12}
                             sx={{
                                 display: 'flex',
                                 alignItems: 'flex-start',
@@ -291,19 +286,19 @@ const CommentTextListing = () => {
                                     justifyContent: 'flex-start',
                                 }}
                             >
-                                <MetParagraphOld
+                                <BodyText
                                     sx={{
                                         pb: '0.1em',
                                     }}
                                 >
                                     <b>Comment Date: </b>
-                                </MetParagraphOld>
-                                <MetParagraphOld>{formatDate(row.created_date)}</MetParagraphOld>
+                                </BodyText>
+                                <BodyText>{formatDate(row.created_date)}</BodyText>
                             </Stack>
                         </Grid>
                         <When condition={row.comment_status_id !== CommentStatus.Pending}>
                             <Grid
-                                xs={12}
+                                size={12}
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'flex-start',
@@ -316,19 +311,19 @@ const CommentTextListing = () => {
                                         justifyContent: 'flex-start',
                                     }}
                                 >
-                                    <MetParagraphOld
+                                    <BodyText
                                         sx={{
                                             pb: '0.1em',
                                         }}
                                     >
-                                        <b>Reviewed By: </b>
-                                    </MetParagraphOld>
-                                    <MetParagraphOld>{row.reviewed_by}</MetParagraphOld>
+                                        <BodyText bold>Reviewed By: </BodyText>
+                                    </BodyText>
+                                    <BodyText>{row.reviewed_by}</BodyText>
                                 </Stack>
                             </Grid>
                         </When>
                     </Grid>
-                    <Grid item container xs={12} alignItems={'flex-start'} justifyContent={'flex-start'}>
+                    <Grid container size={12} alignItems={'flex-start'} justifyContent={'flex-start'}>
                         <CommentStatusChip commentStatus={row.comment_status_id} />
                     </Grid>
                 </Grid>
@@ -337,14 +332,14 @@ const CommentTextListing = () => {
     ];
 
     return (
-        <MetPageGridContainer
+        <ResponsiveContainer
             direction="row"
             justifyContent="flex-start"
             alignItems="flex-start"
             container
             rowSpacing={1}
         >
-            <Grid item xs={12} lg={7}>
+            <Grid size={{ xs: 12, lg: 7 }}>
                 <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="flex-start">
                     <TextField
                         id="comments"
@@ -354,31 +349,34 @@ const CommentTextListing = () => {
                         onChange={(e) => setSearchText(e.target.value)}
                         size="small"
                     />
-                    <PrimaryButtonOld
+                    <Button
+                        variant="primary"
                         data-testid="CommentListing/search-button"
-                        variant="contained"
                         onClick={() => handleSearchBarClick(searchText)}
                     >
                         <FontAwesomeIcon icon={faMagnifyingGlass} style={{ fontSize: '20px' }} />
-                    </PrimaryButtonOld>
+                    </Button>
                 </Stack>
             </Grid>
-            <Grid item xs={12} lg={5}>
+            <Grid size={{ xs: 12, lg: 5 }}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={1} width="100%" justifyContent="flex-end">
-                    <PrimaryButtonOld component={Link} to={`/surveys/${submissions[0]?.survey_id || 0}/comments`}>
+                    <Button
+                        variant="primary"
+                        LinkComponent={RouterLinkRenderer}
+                        href={`/surveys/${submissions[0]?.survey_id || 0}/comments`}
+                    >
                         Return to Comments List
-                    </PrimaryButtonOld>
+                    </Button>
                     <PermissionsGate
                         scopes={[USER_ROLES.EXPORT_INTERNAL_COMMENT_SHEET, USER_ROLES.EXPORT_PROPONENT_COMMENT_SHEET]}
                         errorProps={{ disabled: true }}
                     >
-                        <SecondaryButtonOld
-                            variant="contained"
+                        <Button
                             onClick={handleExportToCSVOpen}
                             aria-controls="simple-menu"
                             aria-haspopup="true"
                             loading={isExporting}
-                            startIcon={
+                            icon={
                                 <FontAwesomeIcon
                                     icon={faChevronDown}
                                     style={{
@@ -390,7 +388,7 @@ const CommentTextListing = () => {
                             }
                         >
                             Export to CSV
-                        </SecondaryButtonOld>
+                        </Button>
                     </PermissionsGate>
                     <Menu
                         id="simple-menu"
@@ -410,8 +408,8 @@ const CommentTextListing = () => {
                     </Menu>
                 </Stack>
             </Grid>
-            <Grid item lg={12}>
-                <MetTable
+            <Grid size={12}>
+                <CustomTable
                     hideHeader={true}
                     headCells={headCells}
                     rows={submissions}
@@ -424,7 +422,7 @@ const CommentTextListing = () => {
                     loading={tableLoading}
                 />
             </Grid>
-        </MetPageGridContainer>
+        </ResponsiveContainer>
     );
 };
 

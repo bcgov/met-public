@@ -49,7 +49,7 @@ export const EngagementWidgetDisplay = ({ location, detailsTabId, tabIndex }: En
                     );
                     if (widget)
                         return (
-                            <Grid container size={12} minHeight="360px">
+                            <Grid container size={12}>
                                 <WidgetSwitch widget={widget} />
                             </Grid>
                         );

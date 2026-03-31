@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "8cbabcb2-0fd9-4771-9299-0c83ac125853",
-		"name": "MET",
+		"name": "Digital Engagement Platform API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23501006"
 	},
@@ -189,27 +189,27 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
 									"type": "string"
 								},
 								{
 									"key": "authUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
 									"type": "string"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
 									"key": "tokenName",
-									"value": "met",
+									"value": "dep",
 									"type": "string"
 								},
 								{
@@ -372,27 +372,27 @@
                             "oauth2": [
                                 {
                                     "key": "clientId",
-                                    "value": "met-web",
+                                    "value": "engagement-web",
                                     "type": "string"
                                 },
                                 {
                                     "key": "accessTokenUrl",
-                                    "value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+                                    "value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
                                     "type": "string"
                                 },
                                 {
                                     "key": "authUrl",
-                                    "value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+                                    "value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
                                     "type": "string"
                                 },
                                 {
                                     "key": "redirect_uri",
-                                    "value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+                                    "value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
                                     "type": "string"
                                 },
                                 {
                                     "key": "tokenName",
-                                    "value": "met",
+                                    "value": "dep",
                                     "type": "string"
                                 },
                                 {
@@ -479,27 +479,27 @@
                                 },
                                 {
                                     "key": "clientId",
-                                    "value": "met-web",
+                                    "value": "engagement-web",
                                     "type": "string"
                                 },
                                 {
                                     "key": "accessTokenUrl",
-                                    "value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+                                    "value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
                                     "type": "string"
                                 },
                                 {
                                     "key": "authUrl",
-                                    "value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+                                    "value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
                                     "type": "string"
                                 },
                                 {
                                     "key": "redirect_uri",
-                                    "value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+                                    "value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
                                     "type": "string"
                                 },
                                 {
                                     "key": "tokenName",
-                                    "value": "met",
+                                    "value": "dep",
                                     "type": "string"
                                 },
                                 {
@@ -562,27 +562,27 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
 									"type": "string"
 								},
 								{
 									"key": "authUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
 									"type": "string"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
 									"key": "tokenName",
-									"value": "met",
+									"value": "dep",
 									"type": "string"
 								},
 								{
@@ -667,27 +667,27 @@
 							"oauth2": [
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
 									"type": "string"
 								},
 								{
 									"key": "authUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
 									"type": "string"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
 									"key": "tokenName",
-									"value": "met",
+									"value": "dep",
 									"type": "string"
 								},
 								{
@@ -763,27 +763,27 @@
 								},
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
 									"type": "string"
 								},
 								{
 									"key": "authUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
 									"type": "string"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
 									"key": "tokenName",
-									"value": "met",
+									"value": "dep",
 									"type": "string"
 								},
 								{
@@ -866,27 +866,27 @@
 								},
 								{
 									"key": "clientId",
-									"value": "met-web",
+									"value": "engagement-web",
 									"type": "string"
 								},
 								{
 									"key": "accessTokenUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/token",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/token",
 									"type": "string"
 								},
 								{
 									"key": "authUrl",
-									"value": "https://met-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/met/protocol/openid-connect/auth",
+									"value": "https://dep-oidc-dev.apps.gold.devops.gov.bc.ca/auth/realms/dep/protocol/openid-connect/auth",
 									"type": "string"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://met-web-dev.apps.gold.devops.gov.bc.ca/",
+									"value": "https://dep-web-dev.apps.gold.devops.gov.bc.ca/",
 									"type": "string"
 								},
 								{
 									"key": "tokenName",
-									"value": "met",
+									"value": "dep",
 									"type": "string"
 								},
 								{

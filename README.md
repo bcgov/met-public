@@ -1,4 +1,4 @@
-# met-public
+# The Digital Engagement Platform (DEP)
 
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
@@ -6,35 +6,33 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_met-public&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_met-public)
 
-## The Modern Engagement Tools (MET) 
+The purpose of this project is to develop engagement tools that address shortfalls identified in the Province’s existing public engagement processes.
 
-This project is to develop modern engagement tools that address shortfalls identified in the Province’s existing public engagement processes.
+## Objectives
 
-## Objectives 
 **The goal of this project is** to transform B.C.’s public engagement processes and enable the public to provide more value and influence decision-making while generating useful data insights, an enhanced post commenting experience for the user, and minimize rejected comments. The product will be cost effective, leverage investments and successes to date, explore best in class strategies, and be maintainable and continuously improved by government staff. It will be privacy enhancing, and support DRIPA/ GBA+ implementation and analysis, and continuously delivered and tested with users.
-
 
 ## Directory Structure
 
     .github/                   - PR, CI action workflows and Issue templates
     /docs                      - Miscellaneous documentations
-    met-web/                   - MET Web application root
+    web/                       - DEP Web application root
     ├── src/                   - React.js application
     └── tests/                 - Application tests
         └── unit/              - Jest unit tests
-    met-api/                   - MET API Application Root
+    api/                       - DEP API Application Root
     ├── src/                   - Python flask application
-    │   └── met_api/           - Models, Resources and Services
+    │   └── api/               - Models, Resources and Services
     ├── migrations             - Database migration scripts
     └── tests/                 - API application tests
         └── unit/              - Python unit tests
     notify-api/                - Notification API Application Root
     ├── src/                   - Python flask application
-    │   └── notify_api/           - Models, Resources and Services
+    │   └── notify_api/        - Models, Resources and Services
     └── tests/                 - API application tests
-    met-cron/                  - Job Scheduler Application Root
+    cron/                      - Job Scheduler Application Root
     ├── src/                   - Python application
-    │   └── met_cron/           - Models, Resources and Services
+    │   └── cron/              - Models, Resources and Services
     └── tests/                 - Job Scheduler tests
     openshift/                 - OpenShift templates and documentation
     snowplow/                  - Snowplow custom schemas
@@ -45,20 +43,20 @@ This project is to develop modern engagement tools that address shortfalls ident
 
 ## Documentation
 
-* [Web Application Readme](met-web/README.md)
-* [API Application Readme](met-api/README.md)
-* [Notification API Application Readme](notify-api/README.md)
-* [Job Scheduler Application Readme](met-cron/README.md)
-* [Openshift Readme](openshift/README.md)
+- [Web Application Readme](web/README.md)
+- [API Application Readme](api/README.md)
+- [Notification API Application Readme](notify-api/README.md)
+- [Job Scheduler Application Readme](cron/README.md)
+- [Openshift Readme](openshift/README.md)
 
 ## Auxiliary Repositories
 
-* [Formio Custom Components - bcgov/met-formio](https://github.com/bcgov/met-formio)
-* [Custom Redash - bcgov/redash](https://github.com/bcgov/redash)
+- [Formio Custom Components - bcgov/met-formio](https://github.com/bcgov/met-formio)
+- [Custom Redash - bcgov/redash](https://github.com/bcgov/redash)
 
 ## Getting Help or Reporting an Issue
 
-To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/met-public/issues).
+To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/dep-public/issues).
 
 ## How to Contribute
 

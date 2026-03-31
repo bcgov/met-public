@@ -1,26 +1,27 @@
-import { Grid, Toolbar, Box } from '@mui/material';
-import { MetParagraphOld, HeaderTitleOld, SubHeaderOld, ListItem } from 'components/common';
+import { Grid2 as Grid, Toolbar, Box } from '@mui/material';
+
 import React from 'react';
 import { useAppTranslation } from 'hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePhone } from '@fortawesome/pro-solid-svg-icons/faCirclePhone';
 import { faCircleEnvelope } from '@fortawesome/pro-solid-svg-icons/faCircleEnvelope';
+import { BodyText, Heading1, Heading2 } from 'components/common/Typography';
 
 const marginStyle = { mr: 2 };
 
 const SuggestionsList = ({ translate }: { translate: (key: string) => string }) => (
     <Box>
-        <SubHeaderOld>{translate('NoResults.paragraph')}</SubHeaderOld>
+        <Heading2>{translate('NoResults.paragraph')}</Heading2>
         <ul>
-            <li>
-                <ListItem>{translate('NoResults.list.0')}</ListItem>
-            </li>
-            <li>
-                <ListItem>{translate('NoResults.list.1')}</ListItem>
-            </li>
-            <li>
-                <ListItem>{translate('NoResults.list.2')}</ListItem>
-            </li>
+            <BodyText component="li" size="small">
+                {translate('NoResults.list.0')}
+            </BodyText>
+            <BodyText component="li" size="small">
+                {translate('NoResults.list.1')}
+            </BodyText>
+            <BodyText component="li" size="small">
+                {translate('NoResults.list.2')}
+            </BodyText>
         </ul>
     </Box>
 );
@@ -39,10 +40,10 @@ const NoResults = () => {
                 spacing={1}
                 padding={'2em 2em 1em 1em'}
             >
-                <Grid item sx={{ ...marginStyle, marginBottom: 3 }}>
-                    <HeaderTitleOld data-testid="NoResultsHeader">{translate('NoResults.header')}</HeaderTitleOld>
+                <Grid sx={{ ...marginStyle, marginBottom: 3 }}>
+                    <Heading1 data-testid="NoResultsHeader">{translate('NoResults.header')}</Heading1>
                 </Grid>
-                <Grid item xs={6} justifyContent={'left'} sx={{ ...marginStyle, marginBottom: 3 }}>
+                <Grid size={6} justifyContent={'left'} sx={{ ...marginStyle, marginBottom: 3 }}>
                     <SuggestionsList translate={translate} />
                 </Grid>
                 <Grid
@@ -63,50 +64,46 @@ const NoResults = () => {
                         alignItems="flex-start"
                         justifyContent="space-between"
                         padding="12px 24px"
-                        bgcolor="#12508F"
+                        bgcolor="primary.main"
                         borderRadius="8px 8px 0px 0px"
                     >
-                        <Grid item>
-                            <MetParagraphOld style={{ color: '#FFFFFF', fontSize: '20px' }}>
+                        <Grid>
+                            <BodyText style={{ color: 'primary.contrastText', fontSize: '20px' }}>
                                 {translate('NoResults.contact.header')}
-                            </MetParagraphOld>
+                            </BodyText>
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="space-between" padding="12px 24px" gap={24}>
-                        <Grid item>
-                            <MetParagraphOld>{translate('NoResults.contact.paragraph')}</MetParagraphOld>
+                        <Grid>
+                            <BodyText>{translate('NoResults.contact.paragraph')}</BodyText>
                         </Grid>
                     </Grid>
                     <Grid container justifyContent="space-between" padding="12px 24px">
                         {/* Telephone section */}
-                        <Grid container spacing={2} item xs={12} sm={12} md={6} padding="12px 0px">
-                            <Grid item xs={12} sm={12} md={12} display="flex" alignItems="center">
+                        <Grid container spacing={2} size={{ xs: 12, sm: 12, md: 6 }} padding="12px 0px">
+                            <Grid size={{ xs: 12, sm: 12, md: 12 }} display="flex" alignItems="center">
                                 <FontAwesomeIcon icon={faCirclePhone} style={{ fontSize: '32px', color: '#12508F' }} />
                                 <div style={{ marginLeft: '12px' }}>
-                                    <MetParagraphOld sx={{ fontWeight: 'bold' }}>
-                                        {translate('NoResults.contact.telephone.text')}
-                                    </MetParagraphOld>
-                                    <MetParagraphOld sx={{ color: '#12508F', textDecoration: 'underline' }}>
+                                    <BodyText bold>{translate('NoResults.contact.telephone.text')}</BodyText>
+                                    <BodyText color="primary.main" sx={{ textDecoration: 'underline' }}>
                                         {translate('NoResults.contact.telephone.number')}
-                                    </MetParagraphOld>
+                                    </BodyText>
                                 </div>
                             </Grid>
                         </Grid>
 
                         {/* Email section */}
-                        <Grid container spacing={2} item xs={12} sm={12} md={6} padding="12px 0px">
-                            <Grid item xs={12} sm={12} md={12} display="flex" alignItems="center">
+                        <Grid container spacing={2} size={{ xs: 12, sm: 12, md: 6 }} padding="12px 0px">
+                            <Grid size={{ xs: 12, sm: 12, md: 12 }} display="flex" alignItems="center">
                                 <FontAwesomeIcon
                                     icon={faCircleEnvelope}
                                     style={{ fontSize: '32px', color: '#12508F' }}
                                 />
                                 <div style={{ marginLeft: '12px' }}>
-                                    <MetParagraphOld sx={{ fontWeight: 'bold' }}>
-                                        {translate('NoResults.contact.email.text')}
-                                    </MetParagraphOld>
-                                    <MetParagraphOld sx={{ color: '#12508F', textDecoration: 'underline' }}>
+                                    <BodyText bold>{translate('NoResults.contact.email.text')}</BodyText>
+                                    <BodyText color="primary.main" sx={{ textDecoration: 'underline' }}>
                                         {translate('NoResults.contact.email.address')}
-                                    </MetParagraphOld>
+                                    </BodyText>
                                 </div>
                             </Grid>
                         </Grid>

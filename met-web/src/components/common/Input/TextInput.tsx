@@ -67,7 +67,7 @@ export const TextInput: React.FC<TextInputProps> = ({
 }: TextInputProps) => {
     return (
         <Input
-            className="met-input-text"
+            className="dep-input-text"
             disableUnderline
             type="text"
             value={value}
@@ -204,7 +204,7 @@ export const TextField = ({
     const length = fieldValue.length;
     return (
         <FormField
-            className="met-input-text-field met-input-form-field"
+            className="dep-input-text-field dep-input-form-field"
             title={title}
             disabled={disabled}
             instructions={instructions}

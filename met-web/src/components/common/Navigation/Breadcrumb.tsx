@@ -1,7 +1,7 @@
 import { Breadcrumbs } from '@mui/material';
 import React, { Suspense, useMemo } from 'react';
 import { BodyText } from '../Typography';
-import { Link } from '../Navigation';
+import { Link } from '.';
 import { Await, UIMatch, useMatches } from 'react-router';
 
 type BreadcrumbProps = {

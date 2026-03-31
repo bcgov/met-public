@@ -36,12 +36,12 @@ from etl_project.services.ops.email_verification_etl_service import (
     get_email_ver_last_run_cycle_time,
     load_email_ver,
 )
-from etl_project.services.resources.db import met_db_session, met_etl_db_session
+from etl_project.services.resources.db import engagement_db_session, etl_db_session
 
 
-@job(resource_defs={"met_db_session": met_db_session,
-     "met_etl_db_session": met_etl_db_session})
-def met_data_ingestion():
+@job(resource_defs={"engagement_db_session": engagement_db_session,
+     "etl_db_session": etl_db_session})
+def engagement_data_ingestion():
 
     # etl for user
 

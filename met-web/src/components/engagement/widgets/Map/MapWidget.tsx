@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { MetHeader3 } from 'components/common';
-import { Grid, Skeleton, Box, useMediaQuery, Theme, useTheme } from '@mui/material';
+import { Heading2, Heading3 } from 'components/common/Typography';
+import { Grid2 as Grid, Skeleton, Box, useMediaQuery, Theme, useTheme } from '@mui/material';
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import MetMap from 'components/map';
+import MapWithMarkers from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
 import { ExpandModal } from './ExpandModal';
@@ -12,7 +12,6 @@ import { When } from 'react-if';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import { Link } from 'components/common/Navigation';
 import { faExpand } from '@fortawesome/pro-solid-svg-icons/faExpand';
-import { Header2 } from 'components/common/Typography';
 import { colors, Palette } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -60,16 +59,16 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
 
     if (isLoading) {
         return (
-            <Grid container justifyContent="flex-start" spacing={3}>
-                <Grid item xs={12}>
-                    <Header2>
+            <Grid container size={12} justifyContent="flex-start" spacing={3}>
+                <Grid size={12}>
+                    <Heading2>
                         <Skeleton variant="rectangular" />
-                    </Header2>
+                    </Heading2>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Skeleton variant="rectangular" height="10em" />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Skeleton variant="rectangular" height="10em" />
                 </Grid>
             </Grid>
@@ -81,13 +80,6 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
     }
 
     // Define the styles
-    const metHeader3Styles = {
-        fontWeight: 'lighter',
-        fontSize: '1.5rem',
-        marginBottom: '2.5rem',
-        marginTop: '4rem',
-        color: isDarkMode ? colors.surface.white : Palette.text.primary,
-    };
     const outerContainerStyles = {
         position: 'relative',
         width: '100%',
@@ -103,27 +95,25 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
         overflow: 'hidden',
     };
     const linkStyles = {
-        color: isDarkMode ? colors.surface.white : Palette.text.primary,
-        textDecorationColor: isDarkMode ? colors.surface.white : Palette.text.primary,
+        color: 'text.primary',
         cursor: 'pointer',
     };
 
     return (
-        <Grid container justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
+        <Grid container size={12} justifyContent={{ xs: 'center' }} alignItems="center" rowSpacing={2}>
             <Grid
-                item
                 container
                 justifyContent={{ xs: 'center', md: 'flex-start' }}
                 flexDirection={'column'}
-                xs={12}
+                size={12}
                 paddingBottom={0}
             >
-                <MetHeader3 style={metHeader3Styles}>{widget.title}</MetHeader3>
+                <Heading3 lineHeight="normal">{widget.title}</Heading3>
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Box sx={outerContainerStyles}>
                     <Box sx={innerContainerStyles}>
-                        <MetMap
+                        <MapWithMarkers
                             geojson={geoJSONDecode(map.geojson)}
                             longitude={map.longitude}
                             latitude={map.latitude}
@@ -134,7 +124,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
                 </Box>
             </Grid>
             <When condition={isMediumScreen}>
-                <Grid container item xs={12} alignItems={'center'} justifyContent={'flex-start'}>
+                <Grid container size={12} alignItems={'center'} justifyContent={'flex-start'}>
                     <Link onClick={() => setOpen(true)} sx={linkStyles} tabIndex={0} onKeyDown={() => setOpen(true)}>
                         <FontAwesomeIcon
                             icon={faExpand}

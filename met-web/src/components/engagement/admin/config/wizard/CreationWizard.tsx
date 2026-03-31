@@ -4,7 +4,7 @@ import { useFetcher, createSearchParams } from 'react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '.';
-import { Header1, Header2 } from 'components/common/Typography';
+import { Heading1, Heading2 } from 'components/common/Typography';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import Grid from '@mui/material/Grid2';
 
@@ -51,12 +51,12 @@ const EngagementCreationWizard = () => {
         <ResponsiveContainer gap={1}>
             <AutoBreadcrumbs />
             <Grid size={12}>
-                <Header1 mb={0}>New Engagement</Header1>
+                <Heading1 mb={0}>New Engagement</Heading1>
             </Grid>
             <Grid size={12}>
-                <Header2 weight="thin" mb="1rem">
+                <Heading2 weight="thin" mb="1rem">
                     Create a new engagement in six easy configuration steps.
-                </Header2>
+                </Heading2>
             </Grid>
             <Grid>
                 <SystemMessage status="info">

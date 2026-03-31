@@ -59,36 +59,42 @@ def register_shellcontext(app):
 
 def run(job_name):
     from tasks.closing_soon_mailer import EngagementClosingSoonMailer
-    from tasks.met_closeout import MetEngagementCloseout
-    from tasks.met_publish import MetEngagementPublish
-    from tasks.met_purge import MetPurge
-    from tasks.met_comment_redact import MetCommentRedact
-    from tasks.subscription_mailer import SubscriptionMailer
+    from tasks.closeout import EngagementCloseoutTask
+    from tasks.publish import EngagementPublishTask
+    from tasks.purge import PurgeTask
+    from tasks.comment_redact import CommentRedactTask
+    from tasks.subscription_mailer import SubscriptionMailerTask
     application = create_app()
 
     application.app_context().push()
 
     print('Requested Job:', job_name)
     if job_name == 'ENGAGEMENT_CLOSEOUT':
-        MetEngagementCloseout.do_closeout()
-        application.logger.info(f'<<<< Completed MET Engagement Closeout >>>>')
+        EngagementCloseoutTask.do_closeout()
+        application.logger.info(f'<<<< Completed Engagement Closeout Job >>>>')
     elif job_name == 'ENGAGEMENT_PUBLISH':
-        MetEngagementPublish.do_publish()
-        application.logger.info(f'<<<< Completed MET Engagement Publish >>>>')
+        EngagementPublishTask.do_publish()
+        application.logger.info(f'<<<< Completed Engagement Publish Job >>>>')
     elif job_name == 'PURGE':
-        MetPurge.do_purge()
-        application.logger.info('<<<< Completed MET Purge >>>>')
+        PurgeTask.do_purge()
+        application.logger.info('<<<< Completed Event Log Purge >>>>')
     elif job_name == 'COMMENT_REDACT':
-        MetCommentRedact.do_redact()
-        application.logger.info('<<<< Completed MET COMMENT_REDACT >>>>')
+        CommentRedactTask.do_redact()
+        application.logger.info('<<<< Completed Comment Redaction >>>>')
     elif job_name == 'PUBLISH_EMAIL':
-        SubscriptionMailer.do_email()
-        application.logger.info('<<<< Completed MET PUBLISH_EMAIL >>>>')
+        SubscriptionMailerTask.do_email()
+        application.logger.info(
+            '<<<< Completed sending engagement publication notification emails >>>>'
+        )
     elif job_name == 'CLOSING_SOON_EMAIL':
         EngagementClosingSoonMailer.do_email()
-        application.logger.info('<<<< Completed MET CLOSING_SOON_EMAIL >>>>')
+        application.logger.info(
+            '<<<< Completed sending engagement closing soon notification emails >>>>'
+        )
     else:
-        application.logger.debug('No valid args passed.Exiting job without running any ***************')
+        application.logger.debug(
+            'No valid args passed. Exiting without running any jobs. ***************'
+        )
 
 
 if __name__ == "__main__":

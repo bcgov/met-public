@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { HeadCell } from 'components/common/Table/types';
-import { MetLabel, MetParagraphOld } from 'components/common';
+import { BodyText } from 'components/common/Typography';
 import { Skeleton } from '@mui/material';
 import { CommentViewContext, TransformedComment } from './CommentViewContext';
 import { useAppTranslation } from 'hooks';
@@ -50,9 +50,9 @@ const CommentTable = () => {
                 <>
                     {row.comments.map((comment) => (
                         <div style={{ paddingTop: '10px' }} key={comment.label}>
-                            <MetLabel>{comment.label}</MetLabel>
+                            <BodyText bold>{comment.label}</BodyText>
                             <div style={{ paddingTop: '5px' }}>
-                                <MetParagraphOld>{comment.text}</MetParagraphOld>
+                                <BodyText>{comment.text}</BodyText>
                             </div>
                         </div>
                     ))}
@@ -67,7 +67,7 @@ const CommentTable = () => {
             allowSort: false,
             customStyle: { width: '20%' },
             align: 'right',
-            renderCell: (row: TransformedComment) => <MetParagraphOld>{row.submission_date}</MetParagraphOld>,
+            renderCell: (row: TransformedComment) => <BodyText>{row.submission_date}</BodyText>,
         },
     ];
 
@@ -77,7 +77,7 @@ const CommentTable = () => {
 
     return (
         <>
-            <MetTable
+            <CustomTable
                 headCells={headCells}
                 rows={transformedArray}
                 hideHeader={true}

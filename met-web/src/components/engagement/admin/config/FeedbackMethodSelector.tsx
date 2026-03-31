@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Checkbox, FormControlLabel } from '@mui/material';
+import { Grid2 as Grid, Checkbox, FormControlLabel } from '@mui/material';
 import { SystemMessage } from 'components/common/Layout/SystemMessage';
 import { EngagementConfigurationData } from './wizard';
 import { useFormContext } from 'react-hook-form';
@@ -11,12 +11,12 @@ export const FeedbackMethodSelector = () => {
 
     return (
         <Grid container spacing={1} direction="column">
-            <Grid item>
+            <Grid>
                 <SystemMessage status="warning">
                     Under construction - this setting currently has no effect
                 </SystemMessage>
             </Grid>
-            <Grid item>
+            <Grid>
                 <FormControlLabel
                     control={<Checkbox checked={watch('feedback_methods').includes('survey')} />}
                     label="Survey"
@@ -31,7 +31,7 @@ export const FeedbackMethodSelector = () => {
                     }}
                 />
             </Grid>
-            <Grid item>
+            <Grid>
                 <FormControlLabel
                     control={<Checkbox checked={watch('feedback_methods').includes('3rd_party')} />}
                     label="Third-party"

@@ -13,7 +13,7 @@ import {
 import { modalStyle } from 'components/common';
 import Modal from '@mui/material/Modal';
 import { ModalProps } from './types';
-import { BodyText, Header1 } from '../Typography';
+import { BodyText, Heading1 } from '../Typography';
 import { Button } from '../Input';
 
 /**
@@ -88,16 +88,16 @@ const EmailModal = ({
                     direction="row"
                     sx={{
                         ...modalStyle,
-                        overflowY: 'scroll',
+                        overflowY: 'auto',
                     }}
                     alignItems="flex-start"
                     justifyContent="flex-start"
                     rowSpacing={2}
                 >
                     <Grid size={12}>
-                        <Header1 weight="bold" sx={{ mb: 2 }}>
+                        <Heading1 bold sx={{ mb: 2 }}>
                             {header}
-                        </Header1>
+                        </Heading1>
                     </Grid>
 
                     {subText.map((subtext) => (

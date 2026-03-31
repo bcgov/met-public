@@ -1,22 +1,22 @@
 import React, { Suspense, useEffect } from 'react';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { useFetcher, createSearchParams, useRouteLoaderData, Await, useAsyncValue } from 'react-router';
+import { useFetcher, createSearchParams, useRouteLoaderData, Await } from 'react-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import EngagementForm, { EngagementConfigurationData } from '.';
 import { EngagementLoaderAdminData } from 'engagements/admin/EngagementLoaderAdmin';
 import { Engagement } from 'models/engagement';
 import { ENGAGEMENT_MEMBERSHIP_STATUS, EngagementTeamMember } from 'models/engagementTeamMember';
-import { BodyText, Header1, Header2 } from 'components/common/Typography';
+import { Heading1, Heading2 } from 'components/common/Typography';
 import dayjs from 'dayjs';
 import { Language } from 'models/language';
-import { CircularProgress, Grid2 as Grid, Modal, Skeleton } from '@mui/material';
-import { modalStyle } from 'components/common';
-
-type ConfigUpdateFetcherData = { status?: 'failure' };
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 
 const EngagementConfigurationWizard = () => {
     const { engagement, teamMembers, slug } = useRouteLoaderData('single-engagement') as EngagementLoaderAdminData;
+    const eng = React.use(engagement);
+    const tm = React.use(teamMembers);
+    const sl = React.use(slug);
     return (
         <ResponsiveContainer>
             <AutoBreadcrumbs />
@@ -24,29 +24,34 @@ const EngagementConfigurationWizard = () => {
                 <Suspense
                     fallback={
                         <Skeleton variant="text">
-                            <Header1 mb={0}>Example Engagement</Header1>
+                            <Heading1 mb={0}>Example Engagement</Heading1>
                         </Skeleton>
                     }
                 >
                     <Await resolve={engagement}>
-                        {(resolvedEngagement) => <Header1 mb={0}>{resolvedEngagement.name}</Header1>}
+                        {(resolvedEngagement) => <Heading1 mb={0}>{resolvedEngagement.name}</Heading1>}
                     </Await>
                 </Suspense>
             </Grid>
             <Grid size={12} mt={4}>
-                <Suspense fallback={<Header2 decorated>Edit Configuration</Header2>}>
-                    <Await resolve={Promise.all([engagement, teamMembers, slug])}>
-                        <ConfigForm />
-                    </Await>
+                <Suspense fallback={<Heading2 decorated>Edit Configuration</Heading2>}>
+                    <ConfigForm engagement={eng} teamMembers={tm} slug={sl} />
                 </Suspense>
             </Grid>
         </ResponsiveContainer>
     );
 };
 
-const ConfigForm = () => {
-    const fetcher = useFetcher<ConfigUpdateFetcherData>({ key: 'config-update' });
-    const [engagement, teamMembers, slug] = useAsyncValue() as [Engagement, EngagementTeamMember[], string];
+const ConfigForm = ({
+    engagement,
+    teamMembers,
+    slug,
+}: {
+    engagement: Engagement;
+    teamMembers: EngagementTeamMember[];
+    slug: string;
+}) => {
+    const fetcher = useFetcher();
 
     const engagementConfigForm = useForm<EngagementConfigurationData>({
         defaultValues: {
@@ -87,7 +92,7 @@ const ConfigForm = () => {
     const {
         getValues,
         reset,
-        formState: { isSubmitting, isSubmitted, defaultValues },
+        formState: { defaultValues },
     } = engagementConfigForm;
 
     useEffect(() => {
@@ -100,47 +105,6 @@ const ConfigForm = () => {
     return (
         <FormProvider {...engagementConfigForm}>
             <EngagementForm onSubmit={onSubmit} />
-            <Modal open={isSubmitting || isSubmitted}>
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    sx={{ ...modalStyle, borderColor: 'notification.default.shade' }}
-                >
-                    <Grid size={1} sx={{ pt: 1.25, fontSize: '16px' }}>
-                        <CircularProgress
-                            variant="indeterminate"
-                            sx={{
-                                color: 'notification.default.shade',
-                                width: '24px',
-                                height: '24px',
-                                animationDuration: '550ms',
-                                '& .MuiCircularProgress-circle': {
-                                    strokeLinecap: 'round',
-                                },
-                            }}
-                        />
-                    </Grid>
-                    <Grid
-                        size={11}
-                        container
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="space-between"
-                        rowSpacing={1}
-                    >
-                        <Grid container direction="row" size={12}>
-                            <Grid size={12}>
-                                <Header2 mb={0}>We're saving your configuration.</Header2>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" size={12}>
-                            <BodyText bold>This should only take a few seconds.</BodyText>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Modal>
         </FormProvider>
     );
 };

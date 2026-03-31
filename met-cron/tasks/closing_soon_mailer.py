@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Engagement Closing Soon Emailer."""
+"""Task to handle sending emails for engagements closing soon."""
 from datetime import datetime
 
 from met_cron.services.closing_soon_mail_service import ClosingSoonEmailService

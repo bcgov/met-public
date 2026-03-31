@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
-import { BodyText, Header2 } from 'components/common/Typography';
+import { BodyText, Heading2 } from 'components/common/Typography';
 import { Box, Grid2 as Grid, Modal } from '@mui/material';
 import { DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { Controller, Resolver, useForm } from 'react-hook-form';
@@ -217,7 +217,7 @@ export const PublishingTab = () => {
             </Modal>
 
             <Grid id="admin-authoring-section" direction="column" maxWidth={'700px'}>
-                <Header2 decorated>Publishing</Header2>
+                <Heading2 decorated>Publishing</Heading2>
                 <Suspense>
                     <Await resolve={engagement}>
                         {(eng: Engagement) => (

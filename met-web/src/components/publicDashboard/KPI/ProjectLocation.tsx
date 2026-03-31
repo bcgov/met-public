@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Stack from '@mui/material/Stack';
-import { Box, Grid, CircularProgress, useMediaQuery, Theme } from '@mui/material';
+import { Box, Grid2 as Grid, CircularProgress, useMediaQuery, Theme, Paper } from '@mui/material';
 import { getMapData } from 'services/analytics/mapService';
 import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
-import { MetLabel, MetPaper } from 'components/common';
+import { BodyText } from 'components/common/Typography/Body';
 import { ErrorBox } from '../ErrorBox';
-import MetMap from 'components/map';
+import MapWithMarkers from 'components/map';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
@@ -67,9 +67,11 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
     if (isLoading || engagementIsLoading) {
         return (
             <>
-                <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                    <MetLabel mb={2}>{translate('dashboard.projectLocation')}</MetLabel>
-                    <MetPaper sx={{ p: 2, textAlign: 'center' }}>
+                <Grid size={{ sm: 8, md: 4 }} sx={{ width: isTablet ? '90%' : '100%' }}>
+                    <BodyText bold mb={2}>
+                        {translate('dashboard.projectLocation')}
+                    </BodyText>
+                    <Paper sx={{ p: 2, textAlign: 'center' }}>
                         <Stack alignItems="center" gap={1}>
                             <Grid
                                 container
@@ -82,7 +84,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                                 <CircularProgress color="inherit" />
                             </Grid>
                         </Stack>
-                    </MetPaper>
+                    </Paper>
                 </Grid>
             </>
         );
@@ -105,9 +107,11 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
 
     if (mapExists && data) {
         return (
-            <Grid item sm={8} md={4} sx={{ width: isTablet ? '90%' : '100%' }}>
-                <MetLabel mb={{ md: 0.5, lg: 2 }}>{translate('dashboard.projectLocation')}</MetLabel>
-                <MetPaper sx={{ textAlign: 'center' }}>
+            <Grid size={{ sm: 8, md: 4 }} sx={{ width: isTablet ? '90%' : '100%' }}>
+                <BodyText bold mb={{ md: 0.5, lg: 2 }}>
+                    {translate('dashboard.projectLocation')}
+                </BodyText>
+                <Paper sx={{ textAlign: 'center' }}>
                     <Box
                         sx={{
                             width: '100%',
@@ -115,7 +119,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                         }}
                         ref={mapContainerRef}
                     >
-                        <MetMap
+                        <MapWithMarkers
                             geojson={geoJSONDecode(data.geojson)}
                             latitude={data.latitude}
                             longitude={data.longitude}
@@ -123,7 +127,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                             zoom={calculateZoomLevel(mapWidth, mapHeight, geoJSONDecode(data.geojson))}
                         />
                     </Box>
-                </MetPaper>
+                </Paper>
             </Grid>
         );
     }

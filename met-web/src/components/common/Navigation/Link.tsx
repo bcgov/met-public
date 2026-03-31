@@ -47,6 +47,9 @@ export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regula
             component={to ? NavLink : 'a'}
             to={to}
             href={href}
+            lineHeight={lineHeights[size]}
+            fontSize={fontSizes[size]}
+            borderRadius="8px"
             sx={{
                 '&:focus-visible:not([type="button"])': {
                     outline: `2px solid ${colors.focus.regular.outer}`,
@@ -54,9 +57,6 @@ export const Link: React.FC<FocusableNavLinkProps> = ({ children, size = 'regula
                     boxShadow: '0px 0px 0px 2px white',
                 },
                 outline: 'none',
-                borderRadius: '8px',
-                fontSize: fontSizes[size],
-                lineHeight: lineHeights[size],
                 ...props.sx, // include any other styles passed in props
             }}
             {...props}

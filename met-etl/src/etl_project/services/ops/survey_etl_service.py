@@ -10,29 +10,29 @@ from analytics_api.models.survey import Survey as EtlSurveyModel
 from analytics_api.utils.util import FormIoComponentType
 from dagster import Out, Output, op
 from datetime import datetime, timezone
-from met_api.models.survey import Survey as MetSurveyModel
+from met_api.models.survey import Survey as SurveyModel
 from sqlalchemy import func
 
 
 # get the last run cycle id for survey etl
-@op(required_resource_keys={"met_db_session", "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session", "etl_db_session"},
     out={"survey_last_run_cycle_time": Out(), "survey_new_runcycleid": Out()})
 def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
-    survey_last_run_cycle_time = met_etl_db_session.query(
+    survey_last_run_cycle_time = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'survey', EtlRunCycleModel.success).first()
 
-    max_run_cycle_id = met_etl_db_session.query(
+    max_run_cycle_id = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
 
     for last_run_cycle_time in survey_last_run_cycle_time:
 
         for run_cycle_id in max_run_cycle_id:
             new_run_cycle_id = run_cycle_id + 1
-            met_etl_db_session.add(
+            etl_db_session.add(
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='survey',
@@ -40,9 +40,9 @@ def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
                     enddatetime=None,
                     description='started the load for tables survey and requests',
                     success=False))
-            met_etl_db_session.commit()
+            etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()
 
     yield Output(survey_last_run_cycle_time, "survey_last_run_cycle_time")
 
@@ -50,13 +50,13 @@ def get_survey_last_run_cycle_time(context, flag_to_run_step_after_engagement):
 
 
 # extract the surveys that have been created or updated after the last run
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"new_survey": Out(),
     "updated_survey": Out(),
          "survey_new_runcycleid": Out()})
 def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
-    session = context.resources.met_db_session
+    session = context.resources.engagement_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
     new_survey = []
     updated_survey = []
@@ -64,15 +64,15 @@ def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
     for last_run_cycle_time in survey_last_run_cycle_time:
 
         context.log.info("started extracting new data from survey table")
-        new_survey = session.query(MetSurveyModel).filter(
-            MetSurveyModel.created_date > last_run_cycle_time).all()
+        new_survey = session.query(SurveyModel).filter(
+            SurveyModel.created_date > last_run_cycle_time).all()
 
         if last_run_cycle_time > default_datetime:
             context.log.info(
                 "started extracting updated data from survey table")
-            updated_survey = session.query(MetSurveyModel).filter(
-                MetSurveyModel.updated_date > last_run_cycle_time,
-                MetSurveyModel.updated_date != MetSurveyModel.created_date).all()
+            updated_survey = session.query(SurveyModel).filter(
+                SurveyModel.updated_date > last_run_cycle_time,
+                SurveyModel.updated_date != SurveyModel.created_date).all()
 
     yield Output(new_survey, "new_survey")
 
@@ -88,11 +88,11 @@ def extract_survey(context, survey_last_run_cycle_time, survey_new_runcycleid):
 
 
 # load the surveys created or updated after last run to the analytics database
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"survey_new_runcycleid": Out()})
 def load_survey(context, new_survey, updated_survey, survey_new_runcycleid):
-    session = context.resources.met_etl_db_session
+    session = context.resources.etl_db_session
     all_surveys = new_survey + updated_survey
 
     if len(all_surveys) > 0:
@@ -391,13 +391,13 @@ def _validate_form_type(context, component_type):
 
 
 # update the status for survey etl in run cycle table as successful
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"flag_to_run_step_after_survey": Out()})
 def survey_end_run_cycle(context, survey_new_runcycleid):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
 
-    met_etl_db_session.query(EtlRunCycleModel).filter(
+    etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == survey_new_runcycleid,
         EtlRunCycleModel.packagename == 'survey',
         EtlRunCycleModel.success.is_(False)).update(
@@ -409,9 +409,9 @@ def survey_end_run_cycle(context, survey_new_runcycleid):
 
     context.log.info("run cycle ended for survey table")
 
-    met_etl_db_session.commit()
+    etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()
 
     yield Output("survey", "flag_to_run_step_after_survey")
 

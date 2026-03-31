@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'components/common/Input/Button';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { SubscribeForm, CallToActionType } from 'models/subscription';
 import { When } from 'react-if';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
@@ -16,10 +16,9 @@ const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: Subsc
         window.open(`${baseUrl}/engagements/${widget.engagement_id}/cacform/${widget.id}/${languagePath}`, '_blank');
     };
     return (
-        <Grid spacing={2} container item xs={12}>
+        <Grid spacing={2} container size={12}>
             <Grid
-                item
-                xs={12}
+                size={12}
                 sx={{
                     position: 'relative',
                     height: 'auto',
@@ -33,16 +32,16 @@ const FormSignUpSection = ({ subscribeOption, widget }: { subscribeOption: Subsc
                     toolbarHidden
                 />
             </Grid>
-            <Grid container item xs={12} justifyContent={'flex-end'}>
+            <Grid container size={12} justifyContent={'flex-end'}>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.BUTTON}>
-                    <Grid container xs={12} direction="row" justifyContent="flex-end">
+                    <Grid container size={12} direction="row" justifyContent="flex-end">
                         <Button variant="primary" size="small" onClick={handleNavigate}>
                             {subscribeOption.subscribe_items[0].call_to_action_text}
                         </Button>
                     </Grid>
                 </When>
                 <When condition={subscribeOption.subscribe_items[0].call_to_action_type == CallToActionType.LINK}>
-                    <Grid container xs={12}>
+                    <Grid container size={12}>
                         <Link sx={{ cursor: 'pointer' }}>{subscribeOption.subscribe_items[0].call_to_action_text}</Link>
                     </Grid>
                 </When>

@@ -1,7 +1,7 @@
 version: "3.5"
 services:
-  metdb:
-    container_name: metdb
+  engagement-db:
+    container_name: engagement-db
     image: postgres:14
     command: postgres -c 'max_connections=500'
     ports:
@@ -10,15 +10,15 @@ services:
       - ./postgres.env
     restart: unless-stopped
     networks:
-      - metnetwork
+      - depnetwork
     volumes:
       - ./backups:/backups
       - ./scripts:/scripts
-      - metdb:/var/lib/postgresql/data
+      - engagement-db:/var/lib/postgresql/data
       - ./init://docker-entrypoint-initdb.d
 volumes:
-  metdb:
-    name: metdb.local
+  engagement-db:
+    name: engagement-db.local
 networks:
-  metnetwork:
-    name: metnetwork
+  depnetwork:
+    name: depnetwork

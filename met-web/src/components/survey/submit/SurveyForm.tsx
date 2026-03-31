@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { Grid, Stack } from '@mui/material';
+import { Grid2 as Grid, Stack } from '@mui/material';
 import FormSubmit from 'components/Form/FormSubmit';
 import { FormSubmissionData } from 'components/Form/types';
 import { useAppDispatch, useAppSelector, useAppTranslation } from 'hooks';
 import { When } from 'react-if';
 import { submitSurvey } from 'services/submissionService';
 import { useNavigate, useRouteLoaderData } from 'react-router';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import UnsavedWorkConfirmation from 'components/common/Navigation/UnsavedWorkConfirmation';
 import { SurveyLoaderData } from '../building/SurveyLoader';
@@ -53,7 +53,7 @@ export const SurveyForm = () => {
 
             try {
                 window.snowplow('trackSelfDescribingEvent', {
-                    schema: 'iglu:ca.bc.gov.met/submit-survey/jsonschema/1-0-0',
+                    schema: 'iglu:ca.bc.gov.dep/submit-survey/jsonschema/1-0-0',
                     data: { survey_id: survey.id, engagement_id: survey.engagement_id },
                 });
             } catch (error) {
@@ -92,7 +92,7 @@ export const SurveyForm = () => {
             padding={'2em 2em 1em 2em'}
         >
             <UnsavedWorkConfirmation blockNavigationWhen={isChanged && !isLoggedIn} />
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <FormSubmit
                     savedForm={survey.form_json}
                     handleFormChange={handleChange}
@@ -100,14 +100,14 @@ export const SurveyForm = () => {
                 />
             </Grid>
             <When condition={survey.form_json?.display === 'form'}>
-                <Grid item container xs={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
+                <Grid container size={12} direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: '1em' }}>
                     <Stack
                         direction={{ md: 'column-reverse', lg: 'row' }}
                         spacing={1}
                         width="100%"
                         justifyContent="flex-end"
                     >
-                        <Button variant="secondary" onClick={() => navigateToEngagement()}>
+                        <Button onClick={() => navigateToEngagement()}>
                             {translate('surveySubmit.surveyForm.button.cancel')}
                         </Button>
                         <Button

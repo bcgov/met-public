@@ -1,8 +1,8 @@
 import React, { useContext, useRef } from 'react';
-import { Grid, Skeleton } from '@mui/material';
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { EventsContext } from './EventsContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { MetDraggable, MetDroppable } from 'components/common/Dragdrop';
+import { DraggableBox, DroppableBox } from 'components/common/Dragdrop';
 import { reorder } from 'utils';
 import { Event, EVENT_TYPE } from 'models/event';
 import EventInfoPaper from './EventInfoPaper';
@@ -38,7 +38,7 @@ const EventsInfoBlock = () => {
     if (isLoadingEvents) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Skeleton variant="rectangular" width="100%" height="12em" />
                 </Grid>
             </Grid>
@@ -83,12 +83,12 @@ const EventsInfoBlock = () => {
 
     return (
         <DragDropContext onDragEnd={moveEvent}>
-            <MetDroppable droppableId="droppable">
+            <DroppableBox droppableId="droppable">
                 <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
                     {events.map((event: Event, index) => {
                         return (
-                            <Grid item xs={12} key={`Grid-${event.id}`}>
-                                <MetDraggable draggableId={String(event.id)} index={index}>
+                            <Grid size={12} key={`Grid-${event.id}`}>
+                                <DraggableBox draggableId={String(event.id)} index={index}>
                                     <When condition={event.type === EVENT_TYPE.MEETUP}>
                                         <EventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
@@ -98,12 +98,12 @@ const EventsInfoBlock = () => {
                                     <When condition={event.type === EVENT_TYPE.VIRTUAL}>
                                         <VirtualEventInfoPaper removeEvent={handleRemoveEvent} event={event} />
                                     </When>
-                                </MetDraggable>
+                                </DraggableBox>
                             </Grid>
                         );
                     })}
                 </Grid>
-            </MetDroppable>
+            </DroppableBox>
         </DragDropContext>
     );
 };

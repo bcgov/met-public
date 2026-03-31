@@ -22,7 +22,7 @@ from met_api.utils.logging_masker import SensitiveDataFilter, mask_dict, mask_ur
 def test_logging_masker():
     """Test comprehensive logging masker functionality for sensitive data."""
     # Test URL masking
-    url = 'postgresql://user:secretpassword@localhost:5432/metdb'
+    url = 'postgresql://user:secretpassword@localhost:5432/engagement-db'
     masked_url = mask_url(url)
     assert 'secretpassword' not in masked_url
     assert 'user' not in masked_url
@@ -54,7 +54,7 @@ def test_logging_masker():
     # Test SQLAlchemy URL
     log_record = logging.LogRecord(
         name='test', level=logging.INFO, pathname='', lineno=0,
-        msg='SQLAlchemy URL: postgresql://dbuser:complexP@ss123@localhost:5432/metdb',
+        msg='SQLAlchemy URL: postgresql://dbuser:complexP@ss123@localhost:5432/engagement-db',
         args=(), exc_info=None
     )
     filter_obj.filter(log_record)

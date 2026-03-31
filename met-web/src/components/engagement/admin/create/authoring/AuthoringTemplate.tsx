@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { useOutletContext, Form, useParams, Await, Outlet, useMatch, useRouteLoaderData } from 'react-router';
 import AuthoringBottomNav from './AuthoringBottomNav';
 import { EngagementUpdateData } from './AuthoringContext';
@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { AuthoringContextType } from './types';
 import { AutoBreadcrumbs } from 'components/common/Navigation/Breadcrumb';
 import { ResponsiveContainer } from 'components/common/Layout';
-import { Header1, Header2 } from 'components/common/Typography';
+import { Heading1, Heading2 } from 'components/common/Typography';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { Language } from 'models/language';
 import { getAuthoringRoutes } from './AuthoringNavElements';
@@ -41,21 +41,8 @@ const AuthoringTemplate = () => {
         return pathArray[pathArray.length - 1] === pageName;
     })?.name;
 
-    const {
-        handleSubmit,
-        formState: { isDirty },
-    } = useFormContext<EngagementUpdateData>();
+    const { handleSubmit } = useFormContext<EngagementUpdateData>();
     const outletKey = pageName || 'authoring';
-
-    // Prevent refresh/navigation if there are unsaved changes
-    useEffect(() => {
-        if (!isDirty) return;
-        const handler = (event: BeforeUnloadEvent) => {
-            event.preventDefault();
-        };
-        window.addEventListener('beforeunload', handler);
-        return () => window.removeEventListener('beforeunload', handler);
-    }, [isDirty]);
 
     return (
         <ResponsiveContainer>
@@ -70,7 +57,7 @@ const AuthoringTemplate = () => {
                 {/* <StatusLabel text={'Insert Section Status Text Here'} completed={'Insert Completed Boolean Here'} /> */}
             </Grid>
             <Grid size={12}>
-                <Header1 style={{ marginTop: '0.5rem', paddingBottom: '1rem' }}>{pageTitle}</Header1>
+                <Heading1 style={{ marginTop: '0.5rem', paddingBottom: '1rem' }}>{pageTitle}</Heading1>
             </Grid>
 
             {/* Portal target for anything that needs to be rendered before the section title + content */}
@@ -79,9 +66,9 @@ const AuthoringTemplate = () => {
             </div>
 
             <Grid size={12}>
-                <Header2 decorated style={{ paddingTop: '1rem' }}>
+                <Heading2 decorated style={{ paddingTop: '1rem' }}>
                     {currentLanguage.name}
-                </Header2>
+                </Heading2>
             </Grid>
 
             <Grid>

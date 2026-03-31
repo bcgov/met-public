@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Paper, Grid } from '@mui/material';
-import MetMap from 'components/map';
+import { Box, Paper, Grid2 as Grid } from '@mui/material';
+import MapWithMarkers from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
-import { Button } from 'components/common/Input';
+import { Button } from 'components/common/Input/Button';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 
 interface ExpandModalProps {
@@ -57,7 +57,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                         height: '75vh',
                     }}
                 >
-                    <Grid item>
+                    <Grid>
                         <Box
                             ref={mapContainerRef}
                             sx={{
@@ -65,7 +65,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                                 height: '65vh',
                             }}
                         >
-                            <MetMap
+                            <MapWithMarkers
                                 geojson={geoJSONDecode(map.geojson)}
                                 longitude={map.longitude}
                                 latitude={map.latitude}
@@ -74,8 +74,8 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                             />
                         </Box>
                     </Grid>
-                    <Grid item xs={12} container justifyContent="flex-end" padding={2}>
-                        <Grid item>
+                    <Grid size={12} container justifyContent="flex-end" padding={2}>
+                        <Grid>
                             <Button
                                 variant="primary"
                                 onClick={() => {

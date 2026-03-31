@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pagination as MuiPagination, PaginationItem, PaginationProps, styled } from '@mui/material';
-import { colors, elevations, globalFocusShadow } from '../../common';
+import { colors, elevations, globalFocusShadow } from '..';
 
 const PrimaryButtonStyles = {
     boxShadow: elevations.default,

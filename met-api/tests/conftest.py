@@ -182,7 +182,7 @@ def setup_super_admin_user_and_claims(jwt):
     staff_info = dict(TestUserInfo.user_staff_1)
     user = factory_staff_user_model(user_info=staff_info)
     factory_user_group_membership_model(str(user.external_id), user.tenant_id)
-    claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
+    claims = copy.deepcopy(TestJwtClaims.system_admin_role.value)
     claims['sub'] = str(user.external_id)
 
     return user, claims

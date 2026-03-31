@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useOutletContext, useLoaderData } from 'react-router';
 import { TextField } from 'components/common/Input';
 import { AuthoringTemplateOutletContext } from './types';
-import { Header3, ErrorMessage, BodyText } from 'components/common/Typography';
+import { Heading3, ErrorMessage, BodyText } from 'components/common/Typography';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { convertToRaw, EditorState } from 'draft-js';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -80,7 +80,7 @@ const AuthoringSummary = () => {
 
             <AuthoringFormContainer>
                 <Grid sx={{ mt: '1rem' }} direction="column" gap="0.5rem">
-                    <Header3 weight="bold">Primary Content (Required)</Header3>
+                    <Heading3 bold>Primary Content (Required)</Heading3>
                     <BodyText size="small">
                         This section of content should provide a brief overview of your approach to feedback and what
                         you would like your audience to do.
@@ -141,9 +141,9 @@ const AuthoringSummary = () => {
                 </AuthoringFormSection>
 
                 <Grid sx={{ mt: '1rem' }}>
-                    <Header3 weight="bold" pb="0.5rem">
+                    <Heading3 bold pb="0.5rem">
                         Supporting Content (Optional)
-                    </Header3>
+                    </Heading3>
                     <BodyText size="small">
                         You may use a widget to add supporting content to your primary content.
                     </BodyText>

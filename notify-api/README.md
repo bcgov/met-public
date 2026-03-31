@@ -1,6 +1,6 @@
-# MET Notifications API
+# DEP Notifications API
 
-Python flask notification API application for The Modern Engagement Tool project.
+Python flask notification API application for The Digital Engagement Platform project.
 
 ## APIs are hosted at api/v1/notifications/email
 
@@ -9,10 +9,11 @@ Currently Notification API wraps over GC Notify(https://notification.canada.ca/)
 ## Getting Started
 
 ### Development Environment
-* Install the following:
-    - [Python](https://www.python.org/)
-* Install Dependencies
-    - Run `make setup` in the root of the project (met-api)
+
+- Install the following:
+  - [Python](https://www.python.org/)
+- Install Dependencies
+  - Run `make setup` in the root of the project (`api/`)
 
 ## Environment Variables
 
@@ -24,11 +25,10 @@ The development scripts for this application allow customization via an environm
 
 The following commands support various development scenarios and needs.
 
-
 > `make run`
 >
 > Runs the python application and runs database migrations.  
-Open [http://localhost:5000/api](http://localhost:5000/api) to view it in the browser.<br/>
+> Open [http://localhost:5000/api](http://localhost:5000/api) to view it in the browser.<br/>
 > The page will reload if you make edits.<br/>
 > You will also see any lint errors in the console.
 

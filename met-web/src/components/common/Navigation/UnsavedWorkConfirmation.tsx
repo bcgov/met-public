@@ -1,5 +1,5 @@
 import { Modal } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useBlocker } from 'react-router';
 import ConfirmModal from '../Modals/ConfirmModal';
 import { faFileCircleQuestion } from '@fortawesome/pro-regular-svg-icons';
@@ -27,6 +27,17 @@ const UnsavedWorkConfirmation: React.FC<UnsavedWorkConfirmationProps> = ({ block
             blockNavigationWhen && nextLocation.pathname !== currentLocation.pathname,
     );
 
+    // Prevent refresh/navigation at the browser level if there are unsaved changes
+    useEffect(() => {
+        if (!blockNavigationWhen) return;
+        const handler = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+        };
+        window.addEventListener('beforeunload', handler);
+        return () => window.removeEventListener('beforeunload', handler);
+    }, [blockNavigationWhen]);
+
+    // If navigating at the SPA level, show a nicer confirmation modal
     return (
         <Modal open={blocker.state === 'blocked'} onClose={blocker.reset}>
             <ConfirmModal

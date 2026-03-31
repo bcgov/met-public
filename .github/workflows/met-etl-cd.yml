@@ -1,12 +1,12 @@
-name: MET ETL CD
+name: ETL CD
 run-name: Build ETL image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:
       - main
     paths:
-      - "met-etl/**"
-      - "met-api/**"
+      - "etl/**"
+      - "api/**"
   workflow_dispatch:
     inputs:
       environment:
@@ -22,10 +22,10 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./met-etl
+    working-directory: ./etl
 
 env:
-  APP_NAME: "dagster-etl"
+  APP_NAME: "etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
   TAG_NAME: "${{ github.event.inputs.environment || 'dev' }}"
 
@@ -36,7 +36,7 @@ env:
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
-  met-etl-cd:
+  etl-cd:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'

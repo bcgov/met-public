@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
-import { Grid } from '@mui/material';
-import { MetHeader1Old, MetParagraphOld, MetLabel } from 'components/common';
+import { Grid2 as Grid } from '@mui/material';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { Banner } from 'components/banner/Banner';
 import LandingPageBanner from 'assets/images/LandingPageBanner.png';
 import { useAppDispatch, useAppSelector } from 'hooks';
@@ -71,7 +71,7 @@ export const Subscription = () => {
 
     return (
         <Grid container direction="row" justifyContent={'center'} alignItems="center">
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Banner height={'330px'} imageUrl={LandingPageBanner}>
                     <Grid
                         container
@@ -86,9 +86,7 @@ export const Subscription = () => {
                         }}
                     >
                         <Grid
-                            item
-                            lg={6}
-                            sm={12}
+                            size={{ lg: 6, sm: 12 }}
                             container
                             direction="row"
                             justifyContent="flex-start"
@@ -102,20 +100,18 @@ export const Subscription = () => {
                             m={{ lg: '3em 5em 0 3em', md: '3em', sm: '1em' }}
                             rowSpacing={2}
                         >
-                            <Grid item xs={12}>
-                                <MetHeader1Old>{tenant?.name}</MetHeader1Old>
+                            <Grid size={12}>
+                                <Heading1>{tenant?.name}</Heading1>
                             </Grid>
-                            <Grid item xs={12}>
-                                <MetParagraphOld>{translate('subscription.paragraph')}</MetParagraphOld>
+                            <Grid size={12}>
+                                <BodyText>{translate('subscription.paragraph')}</BodyText>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Banner>
             </Grid>
             <Grid
-                item
-                lg={12}
-                sm={12}
+                size={12}
                 container
                 direction="row"
                 justifyContent="flex-start"
@@ -128,14 +124,14 @@ export const Subscription = () => {
                 rowSpacing={2}
             >
                 <FontAwesomeIcon icon={faCircleCheck} style={{ fontSize: 30, color: '#2e8540', padding: '5px 0px' }} />
-                <MetLabel m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
+                <BodyText bold m={{ lg: '.5em 0 0 .5em', md: '3em', sm: '1em' }}>
                     {subscriptionText.map((text) => (
                         <>
                             {text}
                             <br />
                         </>
                     ))}
-                </MetLabel>
+                </BodyText>
             </Grid>
         </Grid>
     );

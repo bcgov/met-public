@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
-import { MetDescription, MetLabel, MidScreenLoader, PrimaryButtonOld, SecondaryButtonOld } from 'components/common';
+import { Grid2 as Grid, MenuItem, TextField, Select, SelectChangeEvent } from '@mui/material';
+import { MidScreenLoader } from 'components/common';
+import { Button } from 'components/common/Input/Button';
+import { BodyText } from 'components/common/Typography/Body';
 import { SubmitHandler } from 'react-hook-form';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
@@ -152,7 +154,7 @@ const Form = () => {
     if (isLoadingPollWidget || !widget) {
         return (
             <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <MidScreenLoader />
                 </Grid>
             </Grid>
@@ -160,9 +162,9 @@ const Form = () => {
     }
 
     const pollTitleField = (
-        <Grid item xs={12}>
-            <MetLabel>Title</MetLabel>
-            <MetDescription>The title must be less than 255 characters.</MetDescription>
+        <Grid size={12}>
+            <BodyText bold>Title</BodyText>
+            <BodyText>The title must be less than 255 characters.</BodyText>
             <TextField
                 id="title"
                 data-testid="title"
@@ -182,8 +184,8 @@ const Form = () => {
     );
 
     const pollDescriptionField = (
-        <Grid item xs={12}>
-            <MetLabel>Description</MetLabel>
+        <Grid size={12}>
+            <BodyText bold>Description</BodyText>
             <TextField
                 id="description"
                 data-testid="description"
@@ -205,7 +207,7 @@ const Form = () => {
     );
 
     const divider = (
-        <Grid item xs={12}>
+        <Grid size={12}>
             <Divider sx={{ marginTop: '1em' }} />
         </Grid>
     );
@@ -215,8 +217,8 @@ const Form = () => {
     );
 
     const pollStatusField = (
-        <Grid item xs={12}>
-            <MetLabel>Status</MetLabel>
+        <Grid size={12}>
+            <BodyText bold>Status</BodyText>
             <Select
                 name="status"
                 data-testid="status"
@@ -240,16 +242,15 @@ const Form = () => {
     );
 
     const pollPreview = (
-        <Grid item xs={12} style={previewStyle}>
-            <MetLabel style={{ color: '#31a287' }}>Preview</MetLabel>
+        <Grid size={12} style={previewStyle}>
+            <BodyText style={{ color: '#31a287' }}>Preview</BodyText>
             {divider}
             <PollDisplay pollWidget={pollWidgetState} interactionEnabled={interactionEnabled} />
         </Grid>
     );
     const pollFormButtons = (
         <Grid
-            item
-            xs={12}
+            size={12}
             container
             direction="row"
             alignItems={'flex-start'}
@@ -257,29 +258,27 @@ const Form = () => {
             spacing={2}
             mt={'1em'}
         >
-            <Grid item>
-                <PrimaryButtonOld type="submit" disabled={isCreating} data-testid="save-button">
+            <Grid>
+                <Button variant="primary" type="submit" disabled={isCreating} data-testid="save-button">
                     Save & Close
-                </PrimaryButtonOld>
+                </Button>
             </Grid>
-            <Grid item>
-                <SecondaryButtonOld onClick={() => setWidgetDrawerOpen(false)}>Cancel</SecondaryButtonOld>
+            <Grid>
+                <Button onClick={() => setWidgetDrawerOpen(false)}>Cancel</Button>
             </Grid>
         </Grid>
     );
 
     return (
-        <Grid item xs={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
-            <Grid item xs={12}>
+        <Grid size={12} container alignItems="flex-start" justifyContent={'flex-start'} spacing={3}>
+            <Grid size={12}>
                 <WidgetTitle widget={widget} />
                 <Divider sx={{ marginTop: '0.5em' }} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <form onSubmit={(event) => handleOnSubmit(event)} id="timelineForm">
                     <Grid container direction="row" alignItems={'flex-start'} justifyContent="flex-start" spacing={2}>
-                        <Grid item xs={12}>
-                            {engagementPublishedAlert}
-                        </Grid>
+                        <Grid size={12}>{engagementPublishedAlert}</Grid>
                         {(!isEngagementPublished || (isEngagementPublished && !pollWidget)) && (
                             <>
                                 {pollTitleField}

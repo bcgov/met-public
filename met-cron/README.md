@@ -1,14 +1,15 @@
-# MET-CRON Job Scheduler
+# DEP CRON Job Scheduler
 
-Python job scheduler application for The Modern Engagement Tool project.
+Python job scheduler application for The Digital Engagement Platform project.
 
 ## Getting Started
 
 ### Development Environment
-* Install the following:
-    - [Python](https://www.python.org/)
-* Install Dependencies
-    - Run `make setup` in the root of the project (met-api)
+
+- Install the following:
+  - [Python](https://www.python.org/)
+- Install Dependencies
+  - Run `make setup` in the root of the project (`cron/`)
 
 ## Environment Variables
 
@@ -23,7 +24,7 @@ Before running the following commands run `. venv/bin/activate` to enter into th
 
 > `make run`
 >
-> Runs the python application.  
+> Runs the python application.
 
 > `make test`
 >
@@ -33,8 +34,7 @@ Before running the following commands run `. venv/bin/activate` to enter into th
 >
 > Lints the application code.
 
+To run cron functionality on your local machine execute the python commands located in the run files of this directory.
+For example the `run_publish.sh` file contains the command to publish a scheduled engagement
 
-To run met-cron functionality on your local machine execute the pyhton commands located in the run files of this directory.
-For example the `run_met_publish.sh` file contains the coammnd to publish a scheduled engagement 
-
->`python3 invoke_jobs.py ENGAGEMENT_PUBLISH` 
+> `python3 invoke_jobs.py ENGAGEMENT_PUBLISH`

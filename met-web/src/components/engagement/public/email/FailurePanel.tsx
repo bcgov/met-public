@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid2 as Grid, Stack } from '@mui/material';
 import { FailurePanelProps } from './types';
 import { modalStyle } from 'components/common';
-import { BodyText, Header1 } from 'components/common/Typography';
+import { BodyText, Heading1 } from 'components/common/Typography';
 import { When } from 'react-if';
 import { Button } from 'components/common/Input/Button';
 
@@ -17,7 +17,7 @@ const FailurePanel = ({ email, handleClose, tryAgain, isInternal }: FailurePanel
             spacing={2}
         >
             <Grid size={12}>
-                <Header1 weight="bold">We are sorry</Header1>
+                <Heading1 bold>We are sorry</Heading1>
             </Grid>
             <Grid size={12}>
                 <BodyText>There was a problem with the email address you provided:</BodyText>

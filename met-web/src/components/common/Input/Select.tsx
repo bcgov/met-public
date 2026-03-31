@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from '@mui/material/styles';
-import { colors, elevations } from '../../common';
+import { colors, elevations } from '..';
 import { isDarkColor } from 'utils';
 
 type SelectProps = {

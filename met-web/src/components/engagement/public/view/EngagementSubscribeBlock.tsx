@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { EngagementViewSections } from 'engagements/public/view';
 import { useEngagementLoaderData } from 'engagements/preview/PreviewLoaderDataContext';
 import PreviewSwitch, { PreviewRender } from 'engagements/preview/PreviewSwitch';
-import { Header2, BodyText } from 'components/common/Typography';
+import { Heading2, BodyText } from 'components/common/Typography';
 import { EngagementPreviewTag } from './EngagementPreviewTag';
 import { Await } from 'react-router';
 import TextPlaceholder from 'engagements/preview/placeholders/TextPlaceholder';
@@ -12,6 +12,13 @@ import { Box, Checkbox, FormControlLabel, Paper } from '@mui/material';
 import { Button, CustomTextField } from 'components/common/Input';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
+import { useAppDispatch, useAppSelector } from 'hooks';
+import { createSubscribeEmailVerification } from 'services/emailVerificationService';
+import { createSubscription } from 'services/subscriptionService';
+import { EmailVerificationType } from 'models/emailVerification';
+import { SubscriptionType } from 'constants/subscriptionType';
+import { LanguageState } from 'reduxSlices/languageSlice';
+import { openNotification } from 'services/notificationService/notificationSlice';
 
 const previewSubscribeSummary = (
     <Grid container gap={0} direction="column">
@@ -30,6 +37,96 @@ const defaultConsentMessage =
 export const EngagementSubscribeBlock = () => {
     const { engagement } = useEngagementLoaderData();
     const { isPreviewMode } = usePreview();
+    const dispatch = useAppDispatch();
+    const language: LanguageState = useAppSelector((state) => state.language);
+    const [email, setEmail] = useState('');
+    const [hasConsent, setHasConsent] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSubscribe = async (resolvedEngagement: { id: number; surveys: { id: number }[] }) => {
+        if (!hasConsent) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Please agree to the terms and conditions before subscribing.',
+                }),
+            );
+            return;
+        }
+
+        if (!email.trim()) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Please enter a valid email address.',
+                }),
+            );
+            return;
+        }
+
+        if (!resolvedEngagement.surveys?.length) {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: 'Subscription is not available for this engagement right now.',
+                }),
+            );
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+
+            const emailVerification = await createSubscribeEmailVerification(
+                {
+                    email_address: email.trim(),
+                    survey_id: resolvedEngagement.surveys[0].id,
+                    type: EmailVerificationType.Subscribe,
+                    language: language.id,
+                },
+                SubscriptionType.ENGAGEMENT,
+            );
+
+            await createSubscription({
+                engagement_id: resolvedEngagement.id,
+                email_address: emailVerification.email_address,
+                is_subscribed: false,
+                participant_id: emailVerification.participant_id,
+                type: SubscriptionType.ENGAGEMENT,
+            });
+
+            try {
+                window.snowplow('trackSelfDescribingEvent', {
+                    schema: 'iglu:ca.bc.gov.dep/verify-email/jsonschema/1-0-0',
+                    data: {
+                        survey_id: resolvedEngagement.surveys[0].id,
+                        engagement_id: resolvedEngagement.id,
+                    },
+                });
+            } catch (error) {
+                console.log('Create subscription snowplow error:', error);
+            }
+
+            dispatch(
+                openNotification({
+                    severity: 'success',
+                    text: `We sent a confirmation email to ${email.trim()}. Please use the link in that email to complete your subscription.`,
+                }),
+            );
+            setEmail('');
+            setHasConsent(false);
+        } catch {
+            dispatch(
+                openNotification({
+                    severity: 'error',
+                    text: `There was a problem with the email address provided: ${email.trim()}. Please verify it and try again.`,
+                }),
+            );
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     return (
         <Suspense>
             <Await resolve={engagement}>
@@ -43,12 +140,19 @@ export const EngagementSubscribeBlock = () => {
                         resolvedEngagement.subscribe_consent_message || resolvedEngagement.consent_message || '',
                     );
                     const hasConsentMessage = consentMessageEditorState?.getCurrentContent()?.hasText?.() ?? false;
+                    const hasSubscribeHeading = Boolean(resolvedEngagement.subscribe_section_heading?.trim());
+                    const isSubscribeSectionComplete =
+                        hasSubscribeHeading && hasSubscribeDescription && hasConsentMessage;
 
-                    if (!resolvedEngagement.subscribe_section_shown && !isPreviewMode) {
+                    if (!isPreviewMode && !resolvedEngagement.subscribe_section_shown && !isSubscribeSectionComplete) {
                         return null;
                     }
                     return (
-                        <section id={EngagementViewSections.SUBSCRIBE} aria-label="Subscribe Section">
+                        <section
+                            id={EngagementViewSections.SUBSCRIBE}
+                            aria-label="Subscribe Section"
+                            style={{ position: 'relative' }}
+                        >
                             <EngagementPreviewTag>Subscribe Section (Optional)</EngagementPreviewTag>
                             <Grid
                                 container
@@ -66,14 +170,14 @@ export const EngagementSubscribeBlock = () => {
                                 }}
                             >
                                 <Grid size={{ xs: 12, lg: 3.5 }}>
-                                    <Header2 weight="thin" decorated sx={{ mb: '24px' }}>
+                                    <Heading2 weight="thin" decorated sx={{ mb: '24px' }}>
                                         <PreviewSwitch
                                             hasValue={!!resolvedEngagement.subscribe_section_heading}
                                             value={resolvedEngagement.subscribe_section_heading}
                                             previewFallback={<TextPlaceholder text="Subscribe Section" />}
                                             fallback="Subscribe Section"
                                         />
-                                    </Header2>
+                                    </Heading2>
 
                                     <PreviewRender
                                         hasValue={hasSubscribeDescription}
@@ -125,7 +229,13 @@ export const EngagementSubscribeBlock = () => {
 
                                         <Box sx={{ mb: '20px' }}>
                                             <FormControlLabel
-                                                control={<Checkbox />}
+                                                control={
+                                                    <Checkbox
+                                                        checked={hasConsent}
+                                                        onChange={(_event, checked) => setHasConsent(checked)}
+                                                        disabled={isPreviewMode || isSaving}
+                                                    />
+                                                }
                                                 label={
                                                     <BodyText bold size="small" color="text.secondary">
                                                         I agree to the terms and conditions above.
@@ -145,8 +255,11 @@ export const EngagementSubscribeBlock = () => {
                                         >
                                             <CustomTextField
                                                 label=" "
+                                                value={email}
+                                                onChange={(event) => setEmail(event.target.value)}
                                                 InputLabelProps={{ shrink: false }}
                                                 fullWidth
+                                                disabled={isPreviewMode || isSaving}
                                                 sx={{
                                                     '& .MuiOutlinedInput-root': {
                                                         borderRadius: '8px',
@@ -158,11 +271,10 @@ export const EngagementSubscribeBlock = () => {
                                                 variant="primary"
                                                 size="small"
                                                 sx={{ minWidth: '96px', height: '44px' }}
-                                                onClick={() => {
-                                                    /* TODO: Handle subscribe action */
-                                                }}
+                                                disabled={isPreviewMode || isSaving}
+                                                onClick={() => handleSubscribe(resolvedEngagement)}
                                             >
-                                                Subscribe
+                                                {isSaving ? 'Sending...' : 'Subscribe'}
                                             </Button>
                                         </Box>
                                     </Paper>
