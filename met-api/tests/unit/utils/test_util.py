@@ -34,14 +34,14 @@ TEST_SNAKE_DATA = {'login_source': 'PASSCODE', 'user_name': 'test name', 'realm_
 
 
 def test_camelback2snake():
-    """Assert that the options methos is added to the class and that the correct access controls are set."""
+    """Assert that camelback to snake case conversion works as expected."""
     snake = camelback2snake(TEST_CAMEL_DATA)
 
     assert snake['login_source'] == TEST_SNAKE_DATA['login_source']
 
 
 def test_snake2camelback():
-    """Assert that the options methos is added to the class and that the correct access controls are set."""
+    """Assert that snake case to camelback conversion works as expected."""
     camel = snake2camelback(TEST_SNAKE_DATA)
 
     assert camel['loginSource'] == TEST_CAMEL_DATA['loginSource']

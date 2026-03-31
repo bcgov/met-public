@@ -79,7 +79,7 @@ export const AuthoringTab = () => {
     const systemMessageStyles = {
         marginBottom: '1.5rem',
     };
-    const metLabelStyles = {
+    const sectionLabelStyles = {
         textTransform: 'uppercase',
         marginBottom: '1.1rem',
         fontSize: '0.875rem',
@@ -139,7 +139,7 @@ export const AuthoringTab = () => {
                 }}
             >
                 <Grid size={{ xs: 12, md: 6 }}>
-                    <BodyText bold sx={metLabelStyles}>
+                    <BodyText bold sx={sectionLabelStyles}>
                         Required Sections
                     </BodyText>
                     {sectionValues.map(
@@ -147,7 +147,7 @@ export const AuthoringTab = () => {
                     )}
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                    <BodyText bold sx={metLabelStyles}>
+                    <BodyText bold sx={sectionLabelStyles}>
                         Optional Sections
                     </BodyText>
                     {sectionValues.map(
@@ -165,7 +165,7 @@ export const AuthoringTab = () => {
                         configuration for all of the feedback methods included in your engagement.
                     </SystemMessage>
                 </When>
-                <BodyText bold sx={metLabelStyles}>
+                <BodyText bold sx={sectionLabelStyles}>
                     Feedback Methods
                 </BodyText>
                 <Grid size={12} sx={{ width: '100%' }}>

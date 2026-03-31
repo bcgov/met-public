@@ -21,7 +21,7 @@ services:
       DAGSTER_POSTGRES_PORT: "5432"
       DAGSTER_CURRENT_IMAGE: "dagster_user_code_image"
     networks:
-      - metnetwork
+      - depnetwork
 
   # This service runs dagit, which loads your user code from the user code container.
   # Since our instance uses the QueuedRunCoordinator, any runs submitted from dagit will be put on
@@ -53,7 +53,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
-      - metnetwork
+      - depnetwork
     depends_on:
       - dagster_user_code
 
@@ -88,11 +88,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
-      - metnetwork
+      - depnetwork
     depends_on:
       - dagster_user_code
 
 networks:
-  metnetwork:
+  depnetwork:
     external:
-      name: metnetwork
+      name: depnetwork

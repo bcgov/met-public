@@ -29,7 +29,7 @@ from tests.utilities.factory_utils import (
 fake = Faker()
 
 engagement_metadata_service = EngagementMetadataService()
-metatada_taxon_service = MetadataTaxonService()
+metadata_taxon_service = MetadataTaxonService()
 
 
 def test_get_engagement_metadata(client, jwt, session):

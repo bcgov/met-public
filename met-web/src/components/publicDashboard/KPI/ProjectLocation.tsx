@@ -6,7 +6,7 @@ import { Map } from '../../../models/analytics/map';
 import { Engagement } from 'models/engagement';
 import { BodyText } from 'components/common/Typography/Body';
 import { ErrorBox } from '../ErrorBox';
-import MetMap from 'components/map';
+import MapWithMarkers from 'components/map';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
 import axios, { AxiosError } from 'axios';
 import { HTTP_STATUS_CODES } from 'constants/httpResponseCodes';
@@ -119,7 +119,7 @@ const ProjectLocation = ({ engagement, engagementIsLoading, handleProjectMapData
                         }}
                         ref={mapContainerRef}
                     >
-                        <MetMap
+                        <MapWithMarkers
                             geojson={geoJSONDecode(data.geojson)}
                             latitude={data.latitude}
                             longitude={data.longitude}

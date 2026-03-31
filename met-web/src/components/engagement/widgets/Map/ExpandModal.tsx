@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import { Box, Paper, Grid2 as Grid } from '@mui/material';
-import MetMap from 'components/map';
+import MapWithMarkers from 'components/map';
 import { WidgetMap } from 'models/widgetMap';
 import { Button } from 'components/common/Input/Button';
 import { geoJSONDecode, calculateZoomLevel } from 'components/engagement/form/EngagementWidgets/Map/utils';
@@ -65,7 +65,7 @@ export const ExpandModal = ({ open, setOpen, map }: ExpandModalProps) => {
                                 height: '65vh',
                             }}
                         >
-                            <MetMap
+                            <MapWithMarkers
                                 geojson={geoJSONDecode(map.geojson)}
                                 longitude={map.longitude}
                                 latitude={map.latitude}

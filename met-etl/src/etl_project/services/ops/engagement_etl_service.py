@@ -10,26 +10,26 @@ from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
 # get the last run cycle id for engagement etl
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"engagement_last_run_cycle_datetime": Out(),
          "engagement_new_run_cycle_id": Out()})
 def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
-    engagement_last_run_cycle_datetime = met_etl_db_session.query(
+    engagement_last_run_cycle_datetime = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'engagement', EtlRunCycleModel.success).first()
 
-    max_run_cycle_id = met_etl_db_session.query(
+    max_run_cycle_id = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
 
     for last_run_cycle_time in engagement_last_run_cycle_datetime:
 
         for run_cycle_id in max_run_cycle_id:
             new_run_cycle_id = run_cycle_id + 1
-            met_etl_db_session.add(
+            etl_db_session.add(
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='engagement',
@@ -37,9 +37,9 @@ def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
                     enddatetime=None,
                     description='started the load for table engagement',
                     success=False))
-            met_etl_db_session.commit()
+            etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()
 
     yield Output(engagement_last_run_cycle_datetime, "engagement_last_run_cycle_datetime")
 
@@ -47,13 +47,13 @@ def get_engagement_last_run_cycle_time(context, flag_to_run_step_after_user):
 
 
 # extract the engagement that have been created or updated after the last run
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"new_engagements": Out(),
     "updated_engagements": Out(),
          "eng_new_runcycleid": Out()})
 def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
-    session = context.resources.met_db_session
+    session = context.resources.engagement_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
     new_engagements = []
     updated_engagements = []
@@ -89,16 +89,16 @@ def extract_engagement(context, eng_last_run_cycle_time, eng_new_runcycleid):
 
 # load the engagement created or updated after last run to the analytics
 # database
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"engagement_new_runcycleid": Out()})
 def load_engagement(
         context,
         new_engagements,
         updated_engagements,
         engagement_new_runcycleid):
-    met_session = context.resources.met_db_session
-    session = context.resources.met_etl_db_session
+    engagement_session = context.resources.engagement_db_session
+    session = context.resources.etl_db_session
     all_engagements = new_engagements + updated_engagements
     if len(all_engagements) > 0:
 
@@ -113,7 +113,7 @@ def load_engagement(
             longitude = None
             geojson = None
             marker_label = None
-            map_widget = met_session.query(WidgetMap).filter(
+            map_widget = engagement_session.query(WidgetMap).filter(
                 WidgetMap.engagement_id == engagement.id).order_by(
                 WidgetMap.created_date.desc()).first()
             if map_widget:
@@ -122,7 +122,7 @@ def load_engagement(
                 geojson = map_widget.geojson
                 marker_label = map_widget.marker_label
 
-            engagement_status = met_session.query(EngagementStatusModel).filter(
+            engagement_status = engagement_session.query(EngagementStatusModel).filter(
                 EngagementStatusModel.id == engagement.status_id).first()
 
             engagement_model = EtlEngagementModel(
@@ -147,18 +147,18 @@ def load_engagement(
 
     context.log.info("completed loading engagement table")
 
-    met_session.close()
+    engagement_session.close()
     session.close()
 
 
 # update the status for engagement etl in run cycle table as successful
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"flag_to_run_step_after_engagement": Out()})
 def engagement_end_run_cycle(context, engagement_new_runcycleid):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
 
-    met_etl_db_session.query(EtlRunCycleModel).filter(
+    etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == engagement_new_runcycleid,
         EtlRunCycleModel.packagename == 'engagement',
         EtlRunCycleModel.success.is_(False)).update(
@@ -169,8 +169,8 @@ def engagement_end_run_cycle(context, engagement_new_runcycleid):
 
     context.log.info("run cycle ended for Engagement table")
 
-    met_etl_db_session.commit()
+    etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()
 
     yield Output("engagement", "flag_to_run_step_after_engagement")

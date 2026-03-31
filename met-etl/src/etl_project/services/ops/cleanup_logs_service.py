@@ -67,7 +67,7 @@ def cleanup_old_event_and_run_logs(context):
 
 
 @op(required_resource_keys={"dagster_db_session"})
-def vacuum_met_db_schema(context):
+def vacuum_dagster_db_schema(context):
     session = context.resources.dagster_db_session
     start_time = datetime.now(timezone.utc)
 

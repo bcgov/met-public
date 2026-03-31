@@ -2,7 +2,7 @@ import { Draggable, Droppable, DraggableProvided, DroppableProvided } from '@hel
 import { Box } from '@mui/material';
 import React from 'react';
 
-interface MetDroppableProps {
+interface DroppableBoxProps {
     children: React.ReactNode;
     droppableId: string;
     type?: string;
@@ -11,7 +11,7 @@ interface MetDroppableProps {
 /**
  * A wrapper around the Droppable component from @hello-pangea/dnd.
  * It provides a consistent interface for creating droppable areas in drag-and-drop interfaces.
- * @param {MetDroppableProps} props - The properties for the droppable area.
+ * @param {DroppableBoxProps} props - The properties for the droppable area.
  * @param {string} props.droppableId - The unique identifier for the droppable area.
  * @param {string} [props.type] - The type of the droppable area, used for grouping draggable items.
  * @param {React.ReactNode} props.children - The content to be rendered inside the droppable area.
@@ -27,7 +27,7 @@ interface MetDroppableProps {
  *     </DraggableBox>
  * </DroppableBox>
  */
-export const DroppableBox = ({ droppableId, type, children, ...rest }: MetDroppableProps) => {
+export const DroppableBox = ({ droppableId, type, children, ...rest }: DroppableBoxProps) => {
     return (
         <Droppable droppableId={droppableId} type={type}>
             {(provided: DroppableProvided) => (
@@ -40,7 +40,7 @@ export const DroppableBox = ({ droppableId, type, children, ...rest }: MetDroppa
     );
 };
 
-interface MetDraggableProps {
+interface DraggableBoxProps {
     index: number;
     children: React.ReactNode;
     draggableId: string;
@@ -49,7 +49,7 @@ interface MetDraggableProps {
 /**
  * A wrapper around the Draggable component from @hello-pangea/dnd.
  * It provides a consistent interface for creating draggable items in drag-and-drop interfaces.
- * @param {MetDraggableProps} props - The properties for the draggable item.
+ * @param {DraggableBoxProps} props - The properties for the draggable item.
  * @param {number} props.index - The index of the draggable item within its droppable area.
  * @param {React.ReactNode} props.children - The content to be rendered as the draggable item.
  * @param {string} props.draggableId - The unique identifier for the draggable item.
@@ -65,7 +65,7 @@ interface MetDraggableProps {
  *     </DraggableBox>
  * </DroppableBox>
  */
-export const DraggableBox = ({ children, draggableId, index, sx }: MetDraggableProps) => {
+export const DraggableBox = ({ children, draggableId, index, sx }: DraggableBoxProps) => {
     return (
         <Draggable key={draggableId} draggableId={draggableId} index={index}>
             {(provided: DraggableProvided) => (

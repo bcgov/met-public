@@ -19,10 +19,10 @@ def test_repository_registers_expected_jobs_and_schedules():
     repo_def = etl_project()
 
     expected_jobs = {
-        "met_data_ingestion",
+        "engagement_data_ingestion",
         "job_sample_db_test",
         "cleanup_old_logs",
-        "vacuum_met_db",
+        "vacuum_dagster_db",
     }
     get_jobs = getattr(repo_def, "get_all_jobs", None) or getattr(
         repo_def, "get_all_pipelines", None)
@@ -40,6 +40,6 @@ def test_repository_registers_expected_jobs_and_schedules():
     schedule_names = {schedule.name for schedule in schedule_iterable}
     # Some schedules are defined via ScheduleDefinition without an explicit name;
     # they default to the job name, so allow either form for those.
-    assert "met_data_ingestion_schedule" in schedule_names
+    assert "engagement_data_ingestion_schedule" in schedule_names
     assert {"cleanup_old_logs", "cleanup_old_logs_schedule"} & schedule_names
-    assert {"vacuum_met_db", "vacuum_met_db_schedule"} & schedule_names
+    assert {"vacuum_dagster_db", "vacuum_dagster_db_schedule"} & schedule_names

@@ -34,7 +34,7 @@ TEST_CORS_METHODS_DATA = [
 
 @pytest.mark.parametrize('methods', TEST_CORS_METHODS_DATA)
 def test_cors_preflight_post(methods):
-    """Assert that the options methos is added to the class and that the correct access controls are set."""
+    """Assert that the options method is added to the class and that the correct access controls are set."""
     @cors_preflight(methods)  # pylint: disable=too-few-public-methods
     class TestCors():
         pass

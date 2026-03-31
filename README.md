@@ -22,17 +22,17 @@ The purpose of this project is to develop engagement tools that address shortfal
         └── unit/              - Jest unit tests
     api/                       - DEP API Application Root
     ├── src/                   - Python flask application
-    │   └── met_api/           - Models, Resources and Services
+    │   └── api/               - Models, Resources and Services
     ├── migrations             - Database migration scripts
     └── tests/                 - API application tests
         └── unit/              - Python unit tests
     notify-api/                - Notification API Application Root
     ├── src/                   - Python flask application
-    │   └── notify_api/           - Models, Resources and Services
+    │   └── notify_api/        - Models, Resources and Services
     └── tests/                 - API application tests
     cron/                      - Job Scheduler Application Root
     ├── src/                   - Python application
-    │   └── met_cron/          - Models, Resources and Services
+    │   └── cron/              - Models, Resources and Services
     └── tests/                 - Job Scheduler tests
     openshift/                 - OpenShift templates and documentation
     snowplow/                  - Snowplow custom schemas
@@ -56,7 +56,7 @@ The purpose of this project is to develop engagement tools that address shortfal
 
 ## Getting Help or Reporting an Issue
 
-To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/met-public/issues).
+To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/dep-public/issues).
 
 ## How to Contribute
 

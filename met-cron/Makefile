@@ -126,9 +126,6 @@ tag: push ## tag image
 run: ## Run the project in local
 	./docker-entrypoint.sh
 
-run_etl: ## Run the etl task in local
-	. venv/bin/activate && python invoke_jobs.py EXTRACT_MET
-
 run_closeout: ## Run the closeout task in local
 	. venv/bin/activate && python invoke_jobs.py ENGAGEMENT_CLOSEOUT
 

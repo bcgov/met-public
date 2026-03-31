@@ -26,7 +26,7 @@ def dagster_db_session(context):
 
 @resource
 @contextmanager
-def met_db_session(context):
+def engagement_db_session(context):
     try:
         user = os.getenv("ENGAGEMENT_DB_USER", "")
         password = os.getenv("ENGAGEMENT_DB_PASSWORD", "")
@@ -45,7 +45,7 @@ def met_db_session(context):
 
 @resource
 @contextmanager
-def met_etl_db_session(context):
+def etl_db_session(context):
     try:
         user = os.getenv("ANALYTICS_DB_USER", "")
         password = os.getenv("ANALYTICS_DB_PASSWORD", "")

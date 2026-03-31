@@ -29,10 +29,10 @@ class Version(Resource):
     @staticmethod
     def get():
         """Return version information including commit hash."""
-        commit_hash = os.getenv('MET_BUILD_COMMIT_HASH', 'unknown')
-        build_date = os.getenv('MET_BUILD_DATE', 'unknown')
-        branch = os.getenv('MET_BUILD_BRANCH', 'unknown')
-        repo_url = os.getenv('MET_GITHUB_REPO', 'https://github.com/bcgov/met-public')
+        commit_hash = os.getenv('ENGAGEMENT_BUILD_COMMIT_HASH', 'unknown')
+        build_date = os.getenv('ENGAGEMENT_BUILD_DATE', 'unknown')
+        branch = os.getenv('ENGAGEMENT_BUILD_BRANCH', 'unknown')
+        repo_url = os.getenv('ENGAGEMENT_GITHUB_REPO', 'https://github.com/bcgov/dep-public')
 
         return jsonify({
             'commit': commit_hash,

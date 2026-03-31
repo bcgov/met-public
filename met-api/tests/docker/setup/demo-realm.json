@@ -740,7 +740,7 @@
           "protocolMapper": "oidc-hardcoded-claim-mapper",
           "consentRequired": false,
           "config": {
-            "claim.value": "met",
+            "claim.value": "engagement",
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",

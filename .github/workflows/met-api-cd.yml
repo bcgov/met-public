@@ -62,10 +62,10 @@ jobs:
         run: |
           export TZ='America/Vancouver' && 
             docker build . --file Dockerfile \
-            --build-arg MET_BUILD_COMMIT_HASH=${{ github.sha }} \
-            --build-arg MET_BUILD_DATE="$(date +'%b %d, %Y @ %H:%M')" \
-            --build-arg MET_BUILD_BRANCH=${{ github.ref_name }} \
-            --build-arg MET_GITHUB_REPO="https://github.com/${{ github.repository }}" \
+            --build-arg ENGAGEMENT_BUILD_COMMIT_HASH=${{ github.sha }} \
+            --build-arg ENGAGEMENT_BUILD_DATE="$(date +'%b %d, %Y @ %H:%M')" \
+            --build-arg ENGAGEMENT_BUILD_BRANCH=${{ github.ref_name }} \
+            --build-arg ENGAGEMENT_GITHUB_REPO="https://github.com/${{ github.repository }}" \
             --tag image
 
       - name: Push image

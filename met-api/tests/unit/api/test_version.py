@@ -51,10 +51,10 @@ def test_get_version_with_env_vars(mock_getenv, client, session):  # pylint:disa
 
     def getenv_side_effect(key, default=None):
         env_vars = {
-            'MET_BUILD_COMMIT_HASH': test_commit,
-            'MET_BUILD_DATE': test_date,
-            'MET_BUILD_BRANCH': test_branch,
-            'MET_GITHUB_REPO': test_repo,
+            'ENGAGEMENT_BUILD_COMMIT_HASH': test_commit,
+            'ENGAGEMENT_BUILD_DATE': test_date,
+            'ENGAGEMENT_BUILD_BRANCH': test_branch,
+            'ENGAGEMENT_GITHUB_REPO': test_repo,
         }
         return env_vars.get(key, default)
 

@@ -63,7 +63,7 @@ export const modalStyle = {
     color: 'text.primary',
 };
 
-export const MetDisclaimer = ({
+export const DisclaimerBox = ({
     children,
     marginTop = '2em',
 }: {

@@ -52,7 +52,7 @@ export function ClientSidePagination<T>({ rows, searchFilter, children }: Client
         handleChangePagination(paginationOptions);
     }, [searchFilteredRows]);
 
-    const metTableComponent = children({
+    const customTableComponent = children({
         rows: paginatedRows, // Use the filtered rows for rendering
         loading: false,
         handleChangePagination,
@@ -61,5 +61,5 @@ export function ClientSidePagination<T>({ rows, searchFilter, children }: Client
         headCells: [],
     });
 
-    return <>{metTableComponent}</>;
+    return <>{customTableComponent}</>;
 }

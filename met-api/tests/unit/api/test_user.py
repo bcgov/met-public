@@ -204,7 +204,7 @@ def test_add_user_to_team_member_role_across_tenants(client, jwt, session):
     # assert staff admin cant do cross tenant operation
     assert rv.status_code == HTTPStatus.UNAUTHORIZED
 
-    claims = copy.deepcopy(TestJwtClaims.met_admin_role.value)
+    claims = copy.deepcopy(TestJwtClaims.system_admin_role.value)
     # sets a different tenant id in the request
     claims['tenant_id'] = 2
     headers = factory_auth_header(jwt=jwt, claims=claims)

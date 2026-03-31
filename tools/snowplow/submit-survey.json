@@ -19,7 +19,7 @@
     "engagement_id"
   ],
   "self": {
-    "vendor": "ca.bc.gov.met",
+    "vendor": "ca.bc.gov.dep",
     "name": "submit-survey",
     "format": "jsonschema",
     "version": "1-0-0"

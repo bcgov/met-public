@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { Grid2 as Grid, Checkbox, FormControl, FormControlLabel, FormHelperText, Stack } from '@mui/material';
 import { EmailPanelProps } from 'engagements/public/email/types';
-import { modalStyle, MetDisclaimer } from 'components/common';
+import { modalStyle, DisclaimerBox } from 'components/common';
 import { When } from 'react-if';
 import { INTERNAL_EMAIL_DOMAIN } from 'constants/emailVerification';
 import { Editor } from 'react-draft-wysiwyg';
@@ -80,13 +80,13 @@ const EmailPanel = ({ email, checkEmail, handleClose, updateEmail, isSaving, isI
                     </BodyText>
                 </Grid>
                 <Grid size={12}>
-                    <MetDisclaimer>
+                    <DisclaimerBox>
                         <Editor
                             editorState={getEditorStateFromRaw(engagement?.consent_message ?? '')}
                             readOnly={true}
                             toolbarHidden
                         />
-                    </MetDisclaimer>
+                    </DisclaimerBox>
                 </Grid>
                 <Grid
                     container

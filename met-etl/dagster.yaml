@@ -25,7 +25,7 @@ run_launcher:
       - ANALYTICS_DB_DB
       - ANALYTICS_DB_HOST
       - ANALYTICS_DB_PORT
-    network: metnetwork
+    network: depnetwork
     container_kwargs:
       volumes: # Make docker client accessible to any launched containers as well
         - /var/run/docker.sock:/var/run/docker.sock
