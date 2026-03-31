@@ -9,7 +9,7 @@ metadata:
   labels:
     app: "{{ .Chart.Name }}"
     role: server
-    app-group: met-app
+    app-group: engagement-app
 spec:
   replicas: 1
   selector:
@@ -25,7 +25,7 @@ spec:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: met-app
+        app-group: engagement-app
         role: server
       name: "{{ .Chart.Name }}-server"
       annotations:
@@ -41,11 +41,11 @@ spec:
           export REDASH_COOKIE_SECRET='{{ .Data.data.SECRET_KEY }}'
           export REDASH_SECRET_KEY='{{ .Data.data.SECRET_KEY_2 }}'
           {{- end }}` }}
-        vault.hashicorp.com/agent-inject-secret-met-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni
-        # Custom built URI for met-patroni by indexing into the secret data object
-        vault.hashicorp.com/agent-inject-template-met-patroni: |
-          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-patroni"{{ ` }}
-          export REDASH_DATABASE_URL='postgresql://{{ index .Data.data "redash-username" }}:{{ index .Data.data "redash-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "met-app-db-name" }}'
+        vault.hashicorp.com/agent-inject-secret-engagement-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni
+        # Custom built URI for engagement-patroni by indexing into the secret data object
+        vault.hashicorp.com/agent-inject-template-engagement-patroni: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni"{{ ` }}
+          export REDASH_DATABASE_URL='postgresql://{{ index .Data.data "redash-username" }}:{{ index .Data.data "redash-password" }}@{{ index .Data.data "hostname" }}:5432/{{ index .Data.data "app-db-name" }}'
           {{- end }}` }}
     spec:
       serviceAccountName: {{ .Values.licenseplate }}-vault
@@ -55,7 +55,7 @@ spec:
         - -c
         - |
           . /vault/secrets/global && \
-          . /vault/secrets/met-patroni && \
+          . /vault/secrets/engagement-patroni && \
           python -v ./manage.py database create_tables && \
           bash /app/bin/docker-entrypoint server
         envFrom:

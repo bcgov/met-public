@@ -4,13 +4,13 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: met-analytics
-    app-group: met-app
+    app: engagement-analytics
+    app-group: engagement-app
 spec:
   podSelector:
     matchLabels:
       app: {{ .Chart.Name }}
-      app-group: met-app
+      app-group: engagement-app
   policyTypes:
   - Ingress
   ingress:
@@ -19,9 +19,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           network.openshift.io/policy-group: ingress
-  # Allow internal communication between met-analytics components
+  # Allow internal communication between engagement-analytics components
   - from:
     - podSelector:
         matchLabels:
-          app: met-analytics
-          app-group: met-app
+          app: engagement-analytics
+          app-group: engagement-app

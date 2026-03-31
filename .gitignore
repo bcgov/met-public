@@ -145,4 +145,4 @@ api/.DS_Store
 web/.vscode/
 
 # Helm dependency files
-openshift/**/charts/
+openshift/**/charts/*.tgz

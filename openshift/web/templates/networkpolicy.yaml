@@ -4,13 +4,13 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: met-web
-    app-group: met-app
+    app: engagement-web
+    app-group: engagement-app
 spec:
   podSelector:
     matchLabels:
       app: {{ .Values.app.name }}
-      app-group: met-app
+      app-group: engagement-app
   policyTypes:
   - Ingress
   ingress:

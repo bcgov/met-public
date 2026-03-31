@@ -39,9 +39,9 @@ spec:
         vault.hashicorp.com/namespace: {{ .Values.vault.namespace }}
         vault.hashicorp.com/role: {{ .Values.vault.engine }}
         vault.hashicorp.com/auth-path: {{ .Values.vault.authPath }}
-        vault.hashicorp.com/agent-inject-secret-met-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider
-        vault.hashicorp.com/agent-inject-template-met-fider: |
-          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/met-fider"{{ ` }}
+        vault.hashicorp.com/agent-inject-secret-engagement-fider: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-fider
+        vault.hashicorp.com/agent-inject-template-engagement-fider: |
+          {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-fider"{{ ` }}
           {{- range $k, $v := .Data.data }}
           {{- if eq $k "POSTGRESQL_DATABASE" }}
             export DATABASE_NAME='{{ $v }}'
@@ -65,7 +65,7 @@ spec:
             - /bin/bash
             - -c
             - |
-              . /vault/secrets/met-fider && \
+              . /vault/secrets/engagement-fider && \
               ./fider migrate && \
               ./fider server --host
           ports:
@@ -89,7 +89,7 @@ spec:
                 - /bin/bash
                 - -c
                 - |
-                  . /vault/secrets/met-fider && \
+                  . /vault/secrets/engagement-fider && \
                   ./fider ping
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -100,7 +100,7 @@ spec:
                 - /bin/bash
                 - -c
                 - |
-                  . /vault/secrets/met-fider && \
+                  . /vault/secrets/engagement-fider && \
                   ./fider ping
             initialDelaySeconds: 30
             periodSeconds: 10

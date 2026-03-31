@@ -38,7 +38,7 @@ redash:
   image:
     registry: image-registry.openshift-image-registry.svc:5000
     namespace: e903c2-tools
-    repository: e903c2-tools/met-analytics
+    repository: e903c2-tools/engagement-analytics
     tag: latest
 
 resources:

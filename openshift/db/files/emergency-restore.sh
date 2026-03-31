@@ -19,7 +19,7 @@ BACKUP_FILE="$1"
 DATABASE="$2"
 
 source /vault/secrets/engagement-patroni
-export PGPASSWORD="$MET_PATRONI_PASSWORD"
+export PGPASSWORD="$ENGAGEMENT_PATRONI_PASSWORD"
 export DB_HOST="${DATABASE_SERVICE_NAME:-engagement-patroni}"
 
 # Check the file exists
@@ -37,10 +37,10 @@ echo ""
 
 
 # Check if target database already exists and has data
-DB_EXISTS=$(psql -h $DB_HOST -U "$MET_PATRONI_USER" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE'" | grep -q 1 && echo "yes" || echo "no")
+DB_EXISTS=$(psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE'" | grep -q 1 && echo "yes" || echo "no")
 
 if [[ "$DB_EXISTS" = "yes" ]]; then
-    TABLE_COUNT=$(psql -h $DB_HOST -U "$MET_PATRONI_USER" -d "$DATABASE" -tc "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema')" 2>/dev/null | xargs)
+    TABLE_COUNT=$(psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d "$DATABASE" -tc "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema NOT IN ('pg_catalog', 'information_schema')" 2>/dev/null | xargs)
     
     if [[ "$TABLE_COUNT" -gt 0 ]]; then
         echo "⚠️  WARNING: Database '$DATABASE' already exists with $TABLE_COUNT table(s)"
@@ -71,18 +71,18 @@ fi
 
 # Step 0: Create the database if it doesn't exist
 echo "Step 0: Creating database if needed..."
-psql -h $DB_HOST -U "$MET_PATRONI_USER" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE'" | grep -q 1 || \
-psql -h $DB_HOST -U "$MET_PATRONI_USER" -d postgres -c "CREATE DATABASE $DATABASE;"
+psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d postgres -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE'" | grep -q 1 || \
+psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d postgres -c "CREATE DATABASE $DATABASE;"
 echo "✓ Database ready"
 echo ""
 
 # Step 1: Extract and create roles first
 echo "Step 1: Extracting and creating roles..."
-export PGPASSWORD="$MET_PATRONI_PASSWORD"
+export PGPASSWORD="$ENGAGEMENT_PATRONI_PASSWORD"
 gunzip -c "$BACKUP_FILE" | \
     sed -n '/^CREATE ROLE/,/^-- User Configurations/p' | \
     grep -E '^(CREATE ROLE|ALTER ROLE|GRANT)' | \
-    psql -h $DB_HOST -U "$MET_PATRONI_USER" -d postgres
+    psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d postgres
 
 echo "✓ Roles created"
 echo ""
@@ -90,7 +90,7 @@ echo ""
 # Step 2: Restore the emergency backup (ignoring role creation errors at the end)
 echo "Step 2: Restoring database..."
 gunzip -c "$BACKUP_FILE" | \
-    psql -h $DB_HOST -U "$MET_PATRONI_USER" -d "$DATABASE" -v ON_ERROR_STOP=0
+    psql -h $DB_HOST -U "$ENGAGEMENT_PATRONI_USER" -d "$DATABASE" -v ON_ERROR_STOP=0
 
 echo ""
 echo "======================================"

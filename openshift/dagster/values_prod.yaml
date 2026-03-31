@@ -30,7 +30,7 @@ dagster:
         envSecrets:
           - name: dagster-vault-secrets
         env:
-          - name: MET_DB_PORT
+          - name: ENGAGEMENT_DB_PORT
             value: "5432"
-          - name: MET_ANALYTICS_DB_PORT
+          - name: ANALYTICS_DB_PORT
             value: "5432"

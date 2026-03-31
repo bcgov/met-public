@@ -5,14 +5,14 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: analytics-api
-    app-group: met-analytics
+    app-group: engagement-analytics
     role: api
 spec:
   podSelector:
     matchLabels:
       app: {{ .Values.app.name }}
       role: api
-      app-group: met-analytics
+      app-group: engagement-analytics
   policyTypes:
   - Ingress
   ingress:
@@ -21,9 +21,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           network.openshift.io/policy-group: ingress
-    # Allow from met-analytics (Redash) server
+    # Allow from engagement-analytics (Redash) server
     - podSelector:
         matchLabels:
-          app: met-analytics
+          app: engagement-analytics
           role: server
-          app-group: met-app
+          app-group: engagement-app

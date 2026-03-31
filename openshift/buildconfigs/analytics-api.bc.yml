@@ -4,7 +4,7 @@ metadata:
   name: api-build-template
   annotations:
     description: "Build Configuration Template for the Analytics API "
-    tags: "met, api, python"
+    tags: "engagement, api, python"
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
@@ -48,7 +48,7 @@ parameters:
     value: analytics-api
   - name: GITHUB_REPO
     description: "The github repo uri"
-    value: 'https://github.com/bcgov/met-public.git'
+    value: 'https://github.com/bcgov/dep-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
     value: /analytics-api

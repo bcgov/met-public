@@ -79,7 +79,7 @@ Disabling all but 1 class will run only that class at 100% weight.
 **Default behaviour (no user class specified)**
 
 ```bash
-locust -f locustfile.py --host https://met-web-dev.apps.gold.devops.gov.bc.ca
+locust -f locustfile.py --host https://dep-web-dev.apps.gold.devops.gov.bc.ca
 ```
 
 Runs: `RealisticAPIUser` (70%) + `RealisticFrontendUser` (30%) — typical production load pattern.
@@ -151,7 +151,7 @@ Key configuration options in `values.yaml`:
 | `vault.engine`                 | Vault KV engine             | `e903c2_kv2`                                          |
 | `vault.path`                   | Vault secret path           | `/data/e903c2`                                        |
 | `main.replicas`                | Number of main pods         | `1`                                                   |
-| `main.config.target-host`      | Target URL for load testing | `https://met-web-dev.apps.gold.devops.gov.bc.ca/gdx/` |
+| `main.config.target-host`      | Target URL for load testing | `https://dep-web-dev.apps.gold.devops.gov.bc.ca/gdx/` |
 | `worker.replicas`              | Number of worker pods       | `2`                                                   |
 | `networkPolicy.enabled`        | Enable NetworkPolicy        | `true`                                                |
 | `route.enabled`                | Enable OpenShift Route      | `true`                                                |

@@ -1,7 +1,7 @@
 environment: dev
 
 site:
-  url: met-web-dev.apps.gold.devops.gov.bc.ca
+  url: dep-web-dev.apps.gold.devops.gov.bc.ca
 
 keycloak:
   baseUrl: 'dev.loginproxy.gov.bc.ca'

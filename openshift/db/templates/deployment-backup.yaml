@@ -43,8 +43,8 @@ spec:
         vault.hashicorp.com/agent-inject-secret-engagement-patroni: {{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni
         vault.hashicorp.com/agent-inject-template-engagement-patroni: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/engagement-patroni"{{ ` }}
-          export MET_PATRONI_USER='{{ index .Data.data "superuser-username" }}'
-          export MET_PATRONI_PASSWORD='{{ index .Data.data "superuser-password" }}'
+          export ENGAGEMENT_PATRONI_USER='{{ index .Data.data "superuser-username" }}'
+          export ENGAGEMENT_PATRONI_PASSWORD='{{ index .Data.data "superuser-password" }}'
           export POSTGRESQL_DATABASE='{{ index .Data.data "app-db-name" }}'
           export DATABASE_SERVICE_NAME='{{ index .Data.data "hostname" }}'
           {{- end }}` }}

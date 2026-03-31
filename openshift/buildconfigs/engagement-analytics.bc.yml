@@ -1,10 +1,10 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: met-analytics
+  name: engagement-analytics
   annotations:
     description: ""
-    tags: met-analytics
+    tags: engagement-analytics
 parameters:
   - name: SOURCE_REPOSITORY_URL
     displayName: Git Repository URL
@@ -22,9 +22,9 @@ objects:
   apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    name: met-analytics
+    name: engagement-analytics
     labels:
-      app: met-analytics
+      app: engagement-analytics
   spec:
     resources:
       limits:
@@ -40,7 +40,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: 'met-analytics:latest'
+        name: 'engagement-analytics:latest'
     strategy:
       type: Docker
       dockerStrategy:

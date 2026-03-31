@@ -3,8 +3,8 @@ kind: Template
 metadata:
   name: api-build-template
   annotations:
-    description: "Build Configuration Template for the MET API Notify Project"
-    tags: "met, api, python , notify"
+    description: "Build Configuration Template for the Engagement API Notify Project"
+    tags: "engagement, api, python, notify"
 objects:
   - apiVersion: image.openshift.io/v1
     kind: ImageStream
@@ -48,7 +48,7 @@ parameters:
     value: notify-api
   - name: GITHUB_REPO
     description: "The github repo uri"
-    value: 'https://github.com/bcgov/met-public.git'
+    value: 'https://github.com/bcgov/dep-public.git'
   - name: GITHUB_CONTEXT_DIR
     description: "The repository folder context"
     value: /notify-api    
