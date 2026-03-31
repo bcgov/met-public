@@ -8,7 +8,7 @@ export const AuthoringFormContainer = ({
 }: { children: React.ReactNode } & GridProps) => {
     return (
         <Grid
-            className="met-layout-authoring-form-container"
+            className="dep-layout-authoring-form-container"
             container
             display="flex"
             flexDirection="column"
@@ -27,7 +27,7 @@ export const UnnamedAuthoringFormSection = ({ children, required, ...props }: { 
         <Grid
             container
             direction="column"
-            className="met-layout-authoring-form-grid-item met-layout-authoring-form-section"
+            className="dep-layout-authoring-form-grid-item dep-layout-authoring-form-section"
             borderRadius="16px"
             padding="2rem 1.5rem"
             columnGap="0.5rem"
@@ -58,7 +58,7 @@ export const AuthoringFormSection = ({
         <UnnamedAuthoringFormSection required={required} {...formSectionProps}>
             <Grid
                 container
-                className="met-layout-authoring-form-section-title"
+                className="dep-layout-authoring-form-section-title"
                 direction="column"
                 component={labelFor ? 'label' : 'div'}
                 htmlFor={labelFor}

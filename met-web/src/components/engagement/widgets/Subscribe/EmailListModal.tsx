@@ -1,5 +1,5 @@
 import React, { useState, Suspense } from 'react';
-import { MetDisclaimer } from 'components/common';
+import { DisclaimerBox } from 'components/common';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { openNotificationModal } from 'services/notificationModalService/notificationModalSlice';
 import EmailModal from 'components/common/Modals/EmailModal';
@@ -46,7 +46,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
 
             try {
                 window.snowplow('trackSelfDescribingEvent', {
-                    schema: 'iglu:ca.bc.gov.met/verify-email/jsonschema/1-0-0',
+                    schema: 'iglu:ca.bc.gov.dep/verify-email/jsonschema/1-0-0',
                     data: { survey_id: savedEngagement.surveys[0].id, engagement_id: savedEngagement.id },
                 });
             } catch (error) {
@@ -109,7 +109,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
             handleConfirm={sendEmail}
             isSaving={isSaving}
             termsOfService={
-                <MetDisclaimer>
+                <DisclaimerBox>
                     <Suspense fallback={<CircularProgress />}>
                         <Await resolve={engagement}>
                             {(resolvedEngagement) => (
@@ -121,7 +121,7 @@ const EmailListModal = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
                             )}
                         </Await>
                     </Suspense>
-                </MetDisclaimer>
+                </DisclaimerBox>
             }
             header={'Sign Up for Updates'}
             subText={[

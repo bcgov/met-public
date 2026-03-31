@@ -1,7 +1,7 @@
 import { Widget, WidgetType } from 'models/widget';
 import React, { useContext } from 'react';
 import { Switch, Case } from 'react-if';
-import MetWidget from './MetWidget';
+import WidgetPanel from './WidgetPanel';
 import { WidgetDrawerContext } from './WidgetDrawerContext';
 import { WidgetTabValues } from './type';
 
@@ -23,7 +23,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
     return (
         <Switch>
             <Case condition={widget.widget_type_id === WidgetType.WhoIsListening}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`who-is-listening-${widget.widget_type_id}`}
@@ -37,7 +37,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Document}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`document-${widget.widget_type_id}`}
@@ -51,7 +51,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Subscribe}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`subscribe-${widget.widget_type_id}`}
@@ -65,7 +65,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Events}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
@@ -79,7 +79,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Map}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
@@ -93,7 +93,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Video}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
@@ -107,7 +107,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Timeline}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
@@ -121,7 +121,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Poll}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`event-${widget.widget_type_id}`}
@@ -135,7 +135,7 @@ export const WidgetCardSwitch = ({ singleSelection = false, widget, removeWidget
                 />
             </Case>
             <Case condition={widget.widget_type_id === WidgetType.Image}>
-                <MetWidget
+                <WidgetPanel
                     sortable={!singleSelection}
                     widgetTypeId={widget.widget_type_id}
                     testId={`image-${widget.widget_type_id}`}

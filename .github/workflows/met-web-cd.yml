@@ -1,4 +1,4 @@
-name: MET WEB CD
+name: WEB CD
 run-name: Build Web image and push to ${{ github.event.inputs.environment || 'dev' }}
 
 on:
@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "met-web/**"
+      - "web/**"
   workflow_dispatch:
     inputs:
       environment:
@@ -22,10 +22,10 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./met-web
+    working-directory: ./web
 
 env:
-  APP_NAME: "met-web"
+  APP_NAME: "web"
   TAG_NAME: "${{ github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
@@ -37,7 +37,7 @@ env:
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
 jobs:
-  met-web-cd:
+  web-cd:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'

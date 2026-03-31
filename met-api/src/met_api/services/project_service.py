@@ -16,7 +16,7 @@ class ProjectService:
     """Project management service."""
 
     @staticmethod
-    def update_project_info(eng_id: str) -> EngagementModel:
+    def update_project_info(eng_id: str) -> None:
         """Publish new comment period to EPIC/EAO system."""
         logger = logging.getLogger(__name__)
 
@@ -25,7 +25,6 @@ class ProjectService:
             if not epic_integration['ENABLED']:
                 return
 
-            engagement_metadata: EngagementMetadataModel
             engagement, engagement_metadata = ProjectService._get_engagement_and_metadata(eng_id)
 
             epic_comment_period_payload = ProjectService._construct_epic_payload(engagement)
@@ -67,11 +66,12 @@ class ProjectService:
         end_date_utc = convert_and_format_to_utc_str(engagement.end_date)
 
         epic_comment_period_payload = {
-            'isMet': 'true',
-            # metURL is the public url using slug
-            'metURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=True)}',
-            # metURLAdmin is the staff url for editing the engagement
-            'metURLAdmin': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=False)}',
+            # TODO: update EAO integration to use "dep" naming
+            'isDep': 'true',
+            # depURL is the public url using slug
+            'depURL': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=True)}',
+            # depURLAdmin is the staff url for editing the engagement
+            'depURLAdmin': f'{site_url}{EmailVerificationService.get_engagement_path(engagement, is_public_url=False)}',
             'dateCompleted': end_date_utc,
             'dateStarted': start_date_utc,
             'instructions': '',

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-All the configuration for MET's Analytics API.
+All the configuration for the Digital Engagement Platform's Analytics API.
 
 Wherever possible, the configuration is loaded from the environment. The aim is
 to have this be the "single source of truth" for configuration in the API,

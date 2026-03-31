@@ -152,8 +152,8 @@ jest.mock('apiManager/apiSlices/contacts', () => ({
 
 jest.mock('components/common/Dragdrop', () => ({
     ...jest.requireActual('components/common/Dragdrop'),
-    MetDroppable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
-    MetDraggable: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+    DroppableBox: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
+    DraggableBox: ({ children }: { children: React.ReactNode }) => <Box>{children}</Box>,
 }));
 
 jest.mock('@hello-pangea/dnd', () => ({

@@ -1,4 +1,4 @@
-name: MET ANALYTICS API CI
+name: ANALYTICS API CI
 
 on:
   pull_request:
@@ -59,13 +59,13 @@ jobs:
       JWT_OIDC_TEST_ISSUER: "http://localhost:8081/auth/realms/demo"
       JWT_OIDC_TEST_WELL_KNOWN_CONFIG: "http://localhost:8081/auth/realms/demo/.well-known/openid-configuration"
       JWT_OIDC_TEST_ALGORITHMS: "RS256"
-      JWT_OIDC_TEST_AUDIENCE: "met-web"
+      JWT_OIDC_TEST_AUDIENCE: "engagement-web"
       JWT_OIDC_TEST_CLIENT_SECRET: "1111111111"
       JWT_OIDC_TEST_JWKS_CACHE_TIMEOUT: "6000"
 
-      KEYCLOAK_TEST_ADMIN_CLIENTID: "met-admin"
+      KEYCLOAK_TEST_ADMIN_CLIENTID: "engagement-admin"
       KEYCLOAK_TEST_ADMIN_SECRET: "2222222222"
-      KEYCLOAK_TEST_AUTH_AUDIENCE: "met-web"
+      KEYCLOAK_TEST_AUTH_AUDIENCE: "engagement-web"
       KEYCLOAK_TEST_AUTH_CLIENT_SECRET: "1111111111"
       KEYCLOAK_TEST_BASE_URL: "http://localhost:8081"
       KEYCLOAK_TEST_REALMNAME: "demo"

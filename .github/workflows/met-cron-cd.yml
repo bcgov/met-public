@@ -1,12 +1,12 @@
-name: MET CRON CD
+name: CRON JOB CD
 run-name: Build Cron image and push to ${{ github.event.inputs.environment || 'dev' }}
 on:
   push:
     branches:
       - main
     paths:
-      - "met-cron/**"
-      - "met-api/**"
+      - "cron/**"
+      - "api/**"
   workflow_dispatch:
     inputs:
       environment:
@@ -22,10 +22,10 @@ on:
 defaults:
   run:
     shell: bash
-    working-directory: ./met-cron
+    working-directory: ./cron
 
 env:
-  APP_NAME: "met-cron"
+  APP_NAME: "cron"
   TAG_NAME: "${{github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}
@@ -35,7 +35,7 @@ env:
   OPENSHIFT_REPOSITORY: ${{ secrets.OPENSHIFT_REPOSITORY }}
 
 jobs:
-  met-cron-cd:
+  cron-cd:
     runs-on: ubuntu-24.04
 
     if: github.repository == 'bcgov/met-public'

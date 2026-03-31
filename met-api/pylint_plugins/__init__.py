@@ -1,1 +1,1 @@
-"""Pylint plugins for MET API code quality checks."""
+"""Pylint plugins for API code quality checks."""

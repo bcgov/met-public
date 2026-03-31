@@ -24,7 +24,7 @@ from tests.utilities.factory_scenarios import TestEngagementMetadataTaxonInfo
 from tests.utilities.factory_utils import factory_metadata_taxon_model, factory_taxon_requirements
 
 engagement_metadata_service = EngagementMetadataService()
-metatada_taxon_service = MetadataTaxonService()
+metadata_taxon_service = MetadataTaxonService()
 
 TENANT_TAXA_ENDPOINT = '/api/engagement_metadata/taxa'
 TAXON_ENDPOINT = '/api/engagement_metadata/taxon'
@@ -34,7 +34,7 @@ def test_get_tenant_metadata_taxa(client, jwt, session):
     """Test that metadata taxa can be retrieved by tenant id."""
     tenant, headers = factory_taxon_requirements(jwt)
     metadata_taxon = factory_metadata_taxon_model(tenant.id)
-    assert metatada_taxon_service.get_by_tenant(tenant.id) is not None
+    assert metadata_taxon_service.get_by_tenant(tenant.id) is not None
     response = client.get(TENANT_TAXA_ENDPOINT, headers=headers,
                           content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
@@ -48,7 +48,7 @@ def test_get_taxon_by_id(client, jwt, session):
     """Test that metadata taxon can be retrieved by id."""
     tenant, headers = factory_taxon_requirements(jwt)
     metadata_taxon = factory_metadata_taxon_model(tenant.id)
-    assert metatada_taxon_service.get_by_id(metadata_taxon.id) is not None
+    assert metadata_taxon_service.get_by_id(metadata_taxon.id) is not None
     response = client.get(f'{TAXON_ENDPOINT}/{metadata_taxon.id}',
                           headers=headers, content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.OK
@@ -135,9 +135,9 @@ def test_delete_taxon(client, jwt, session):
     """Test that a metadata taxon can be deleted."""
     tenant, headers = factory_taxon_requirements(jwt)
     taxon = factory_metadata_taxon_model(tenant.id)
-    assert metatada_taxon_service.get_by_id(taxon.id) is not None
+    assert metadata_taxon_service.get_by_id(taxon.id) is not None
     response = client.delete(f'{TAXON_ENDPOINT}/{taxon.id}',
                              headers=headers,
                              content_type=ContentType.JSON.value)
     assert response.status_code == HTTPStatus.NO_CONTENT
-    assert metatada_taxon_service.get_by_id(taxon.id) is None
+    assert metadata_taxon_service.get_by_id(taxon.id) is None

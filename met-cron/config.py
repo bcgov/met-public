@@ -138,10 +138,10 @@ class _Config():  # pylint: disable=too-few-public-methods
     KEYCLOAK_CONFIG = KC = {
         'BASE_URL': os.getenv('KEYCLOAK_BASE_URL', ''),
         'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
-        'SERVICE_ACCOUNT_ID': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
-        'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'SERVICE_ACCOUNT_ID': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'SERVICE_ACCOUNT_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
+        'ADMIN_USERNAME': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'ADMIN_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
         'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
     }
 
@@ -190,7 +190,7 @@ class _Config():  # pylint: disable=too-few-public-methods
     # Templates for sending users various notifications by email.
     EMAIL_TEMPLATES = {
         # The time of day when engagements get closed. This should match the
-        # value in met-cron/cron/crontab
+        # value in cron/config/crontab
         'CLOSING_TIME': os.getenv('ENGAGEMENT_END_TIME', '5 PM'),
         'FROM_ADDRESS': os.getenv('EMAIL_FROM_ADDRESS'),
         'ENVIRONMENT': os.getenv('EMAIL_ENVIRONMENT'),
@@ -288,7 +288,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_KEYS = {
         'keys': [
             {
-                'kid': 'met-web',
+                'kid': 'engagement-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',
@@ -302,7 +302,7 @@ class TestConfig(_Config):  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_PRIVATE_KEY_JWKS = {
         'keys': [
             {
-                'kid': 'met-web',
+                'kid': 'engagement-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',

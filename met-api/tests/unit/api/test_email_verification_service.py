@@ -146,3 +146,41 @@ def test_post_subscription_email_verification(client, jwt, session, notify_mock,
                          data=json.dumps(to_dict),
                          headers=headers, content_type=ContentType.JSON.value)
     assert rv.status_code == expected_status
+
+
+def test_post_subscription_email_verification_invalid_type(client, jwt, session, notify_mock):
+    """Assert subscribe endpoint rejects invalid subscription type values."""
+    claims = TestJwtClaims.public_user_role
+    set_global_tenant()
+    survey, _ = factory_survey_and_eng_model()
+    to_dict = {
+        'email_address': fake.email(),
+        'survey_id': survey.id,
+        'type': EmailVerificationType.Subscribe,
+        'language': 'en',
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/email_verification/not-a-valid-type/subscribe',
+                     data=json.dumps(to_dict),
+                     headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.BAD_REQUEST
+
+
+def test_post_subscription_email_verification_lowercase_type(client, jwt, session, notify_mock):
+    """Assert subscribe endpoint accepts case-insensitive subscription type values."""
+    claims = TestJwtClaims.public_user_role
+    set_global_tenant()
+    survey, _ = factory_survey_and_eng_model()
+    to_dict = {
+        'email_address': fake.email(),
+        'survey_id': survey.id,
+        'type': EmailVerificationType.Subscribe,
+        'language': 'en',
+    }
+    headers = factory_auth_header(jwt=jwt, claims=claims)
+    rv = client.post('/api/email_verification/engagement/subscribe',
+                     data=json.dumps(to_dict),
+                     headers=headers, content_type=ContentType.JSON.value)
+
+    assert rv.status_code == HTTPStatus.OK

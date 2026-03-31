@@ -265,9 +265,9 @@ export const EngagementPreview: React.FC = () => {
             if (event.origin !== globalThis.location.origin) return;
 
             const message = event?.data || undefined;
-            if (message?.type === 'met-preview-scroll') {
+            if (message?.type === 'preview-scroll') {
                 animateScrollToElement(event?.data?.targetId);
-            } else if (message?.type === 'met-preview-refresh') {
+            } else if (message?.type === 'preview-refresh') {
                 handleReload();
             }
         };

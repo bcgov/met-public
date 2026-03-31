@@ -1,4 +1,4 @@
-name: ZAP Scanner - MET API
+name: ZAP Scanner - API
 on:
   workflow_dispatch:
 

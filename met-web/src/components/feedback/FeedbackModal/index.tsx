@@ -7,7 +7,7 @@ import { faFaceMeh } from '@fortawesome/pro-regular-svg-icons/faFaceMeh';
 import { faFaceFrown } from '@fortawesome/pro-regular-svg-icons/faFaceFrown';
 import { ReactComponent as CheckIcon } from 'assets/images/check.svg';
 import { useState } from 'react';
-import { MetDisclaimer, modalStyle } from 'components/common';
+import { DisclaimerBox, modalStyle } from 'components/common';
 import { BodyText, Heading3 } from 'components/common/Typography';
 import { CommentTypeEnum, createDefaultFeedback, setFeedbackPath, RatingTypeEnum } from 'models/feedback';
 import { Else, If, Then, When } from 'react-if';
@@ -245,9 +245,9 @@ export const FeedbackModal = () => {
                                 </When>
                             </Grid>
                             <Grid size={12}>
-                                <MetDisclaimer marginTop={0}>
+                                <DisclaimerBox marginTop={0}>
                                     {translate('feedback.feedbackModal.disclaimer')}
-                                </MetDisclaimer>
+                                </DisclaimerBox>
                             </Grid>
                             <Grid size={12} display="flex" alignItems="end" justifyContent="flex-end">
                                 <Button

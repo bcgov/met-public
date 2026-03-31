@@ -47,7 +47,7 @@ const lineStyle: LayerSpecification = {
 export const MAP_STYLE =
     'https://governmentofbc.maps.arcgis.com/sharing/rest/content/items/bbe05270d3a642f5b62203d6c454f457/resources/styles/root.json';
 
-const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) => {
+const MapWithMarkers = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) => {
     return (
         <ReactMapGL
             id="map-gl-container"
@@ -90,4 +90,4 @@ const MetMap = ({ geojson, latitude, longitude, markerLabel, zoom }: MapProps) =
         </ReactMapGL>
     );
 };
-export default MetMap;
+export default MapWithMarkers;

@@ -289,6 +289,7 @@ const AuthoringDetails = () => {
         borderBottom: '1px solid',
         borderColor: 'primary.main',
         '& .MuiTabs-flexContainer': {
+            rowGap: '0.5rem',
             flexWrap: 'wrap', // For 7-10 tabs, a second line of tabs is required.
             marginBottom: '-12px',
         },

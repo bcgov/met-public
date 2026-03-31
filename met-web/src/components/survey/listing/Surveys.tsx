@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import Grid from '@mui/material/Grid2';
 import { Link, useNavigate } from 'react-router';
 import { ResponsiveContainer } from 'components/common/Layout';
@@ -473,7 +473,7 @@ const Surveys = () => {
             </Grid>
 
             <Grid size={12}>
-                <MetTable
+                <CustomTable
                     headCells={headCells}
                     rows={surveys}
                     handleChangePagination={(paginationOptions: PaginationOptions<Survey>) =>

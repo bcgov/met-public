@@ -2,7 +2,7 @@ from dagster import Out, Output, op
 from sqlalchemy import func
 from datetime import datetime, timezone
 
-from met_api.models.comment import Comment as MetCommentModel
+from met_api.models.comment import Comment as CommentModel
 from met_api.constants.comment_status import Status as CommentStatus
 from analytics_api.models.user_feedback import UserFeedback as UserFeedbackModel
 from analytics_api.models.survey import Survey as EtlSurveyModel
@@ -10,26 +10,26 @@ from analytics_api.models.etlruncycle import EtlRunCycle as EtlRunCycleModel
 
 
 # get the last run cycle id for comments etl
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"comments_last_run_cycle_datetime": Out(),
          "comments_new_run_cycle_id": Out()})
 def get_comments_last_run_cycle_time(context, flag_to_trigger_comments_etl):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
     default_datetime = datetime(1900, 1, 1, 0, 0, 0, 0)
 
-    comments_last_run_cycle_datetime = met_etl_db_session.query(
+    comments_last_run_cycle_datetime = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.enddatetime), default_datetime)).filter(
         EtlRunCycleModel.packagename == 'userfeedback', EtlRunCycleModel.success).first()
 
-    max_run_cycle_id = met_etl_db_session.query(
+    max_run_cycle_id = etl_db_session.query(
         func.coalesce(func.max(EtlRunCycleModel.id), 0)).first()
 
     for last_run_cycle_time in comments_last_run_cycle_datetime:
 
         for run_cycle_id in max_run_cycle_id:
             new_run_cycle_id = run_cycle_id + 1
-            met_etl_db_session.add(
+            etl_db_session.add(
                 EtlRunCycleModel(
                     id=new_run_cycle_id,
                     packagename='userfeedback',
@@ -38,9 +38,9 @@ def get_comments_last_run_cycle_time(context, flag_to_trigger_comments_etl):
                     description='started the load for table user_feedback',
                     success=False))
 
-            met_etl_db_session.commit()
+            etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()
 
     yield Output(comments_last_run_cycle_datetime, "comments_last_run_cycle_datetime")
 
@@ -48,22 +48,22 @@ def get_comments_last_run_cycle_time(context, flag_to_trigger_comments_etl):
 
 
 # extract the comments that have been created after the last run
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"new_comments": Out(),
          "comments_new_run_cycle_id": Out()})
 def extract_comments(
         context,
         comments_last_run_cycle_datetime,
         comments_new_run_cycle_id):
-    session = context.resources.met_db_session
+    session = context.resources.engagement_db_session
     new_comments = []
 
     for last_run_cycle_time in comments_last_run_cycle_datetime:
         context.log.info("started extracting new data from comments table")
-        new_comments = session.query(MetCommentModel).filter(
-            MetCommentModel.submission_date > last_run_cycle_time,
-            MetCommentModel.status_id == CommentStatus.Approved.value).all()
+        new_comments = session.query(CommentModel).filter(
+            CommentModel.submission_date > last_run_cycle_time,
+            CommentModel.status_id == CommentStatus.Approved.value).all()
 
     yield Output(new_comments, "new_comments")
 
@@ -77,11 +77,11 @@ def extract_comments(
 
 
 # load the comments created after last run to the analytics database
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"comments_new_run_cycle_id": Out()})
 def load_comments(context, new_comments, comments_new_run_cycle_id):
-    session = context.resources.met_etl_db_session
+    session = context.resources.etl_db_session
 
     if len(new_comments) > 0:
 
@@ -123,13 +123,13 @@ def load_comments(context, new_comments, comments_new_run_cycle_id):
 
 
 # update the status for comments etl in run cycle table as successful
-@op(required_resource_keys={"met_db_session",
-    "met_etl_db_session"},
+@op(required_resource_keys={"engagement_db_session",
+    "etl_db_session"},
     out={"flag_to_run_step_after_comments": Out()})
 def comments_end_run_cycle(context, comments_new_run_cycle_id):
-    met_etl_db_session = context.resources.met_etl_db_session
+    etl_db_session = context.resources.etl_db_session
 
-    met_etl_db_session.query(EtlRunCycleModel).filter(
+    etl_db_session.query(EtlRunCycleModel).filter(
         EtlRunCycleModel.id == comments_new_run_cycle_id,
         EtlRunCycleModel.packagename == 'userfeedback',
         EtlRunCycleModel.success.is_(False)).update(
@@ -144,6 +144,6 @@ def comments_end_run_cycle(context, comments_new_run_cycle_id):
 
     yield Output("userfeedback", "flag_to_run_step_after_comments")
 
-    met_etl_db_session.commit()
+    etl_db_session.commit()
 
-    met_etl_db_session.close()
+    etl_db_session.close()

@@ -16,7 +16,7 @@ import { Unless, When } from 'react-if';
 
 type Order = 'asc' | 'desc';
 
-interface MetTableHeadProps<T> {
+interface CustomTableHeadProps<T> {
     onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T, headCellIndex: number) => void;
     order?: Order;
     orderBy?: keyof T;
@@ -27,10 +27,10 @@ interface MetTableHeadProps<T> {
 }
 
 /**
- * MetTableHead is a component that renders the header of a table with sortable columns.
+ * CustomTableHead is a component that renders the header of a table with sortable columns.
  * It uses Material-UI's TableHead, TableRow, TableCell, and TableSortLabel components.
  * It allows for sorting by clicking on the column headers, and displays the current sort order.
- * @param {MetTableHeadProps<T>} props - The properties for the table head.
+ * @param {CustomTableHeadProps<T>} props - The properties for the table head.
  * @param {Order} [props.order] - The current sort order, either 'asc' or 'desc'.
  * @param {keyof T} [props.orderBy] - The key of the column that is currently sorted.
  * @param {function} props.onRequestSort - The function to call when a column header is clicked for sorting.
@@ -39,7 +39,14 @@ interface MetTableHeadProps<T> {
  * @param {string | null} [props.nestedSortKey] - The nested sort key for sorting within a column.
  * @returns {JSX.Element} A Material-UI TableHead component with sortable column headers.
  */
-function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, nestedSortKey }: MetTableHeadProps<T>) {
+function CustomTableHead<T>({
+    order,
+    orderBy,
+    onRequestSort,
+    headCells,
+    loading,
+    nestedSortKey,
+}: CustomTableHeadProps<T>) {
     const createSortHandler = (property: keyof T, headCellIndex: number) => (event: React.MouseEvent<unknown>) => {
         onRequestSort(event, property, headCellIndex);
     };
@@ -79,7 +86,7 @@ function MetTableHead<T>({ order, orderBy, onRequestSort, headCells, loading, ne
     );
 }
 
-export interface MetTableProps<T> {
+export interface CustomTableProps<T> {
     headCells: HeadCell<T>[];
     rows: T[];
     hideHeader?: boolean;
@@ -93,10 +100,10 @@ export interface MetTableProps<T> {
     commentTable?: boolean;
 }
 /**
- * MetTable is a generic table component that displays data in a tabular format.
+ * CustomTable is a generic table component that displays data in a tabular format.
  * It supports sorting, pagination, and customizable headers.
  * The table can be configured to hide the header, disable row borders, and handle pagination changes.
- * @param {MetTableProps<T>} props - The properties for the table.
+ * @param {CustomTableProps<T>} props - The properties for the table.
  * @param {HeadCell<T>[]} props.headCells - An array of head cells that define the columns of the table.
  * @param {T[]} props.rows - An array of data rows to be displayed in the table.
  * @param {boolean} [props.hideHeader=false] - If true, the table header will not be displayed.
@@ -110,7 +117,7 @@ export interface MetTableProps<T> {
  * @param {boolean} [props.commentTable=false] - If true, the table is styled for comments, typically with no padding in cells.
  * @returns {JSX.Element} A Material-UI Paper component containing the table with the specified properties.
  */
-function MetTable<T>({
+function CustomTable<T>({
     hideHeader = false,
     headCells = [],
     rows = [],
@@ -128,7 +135,7 @@ function MetTable<T>({
         total: rows.length,
     },
     emptyText = 'No records were found',
-}: MetTableProps<T>) {
+}: Readonly<CustomTableProps<T>>) {
     const { page = 1, size, sort_key, sort_order, nested_sort_key } = paginationOptions;
     const { total } = pageInfo;
 
@@ -176,7 +183,7 @@ function MetTable<T>({
                 <TableContainer>
                     <Table aria-labelledby="Engagements">
                         <When condition={!hideHeader}>
-                            <MetTableHead
+                            <CustomTableHead
                                 order={order}
                                 orderBy={orderBy}
                                 nestedSortKey={nested_sort_key}
@@ -264,4 +271,4 @@ function MetTable<T>({
     );
 }
 
-export default MetTable;
+export default CustomTable;

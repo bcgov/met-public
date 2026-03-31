@@ -10,7 +10,7 @@ import { Button } from 'components/common/Input/Button';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { Link } from 'react-router';
 import { Link as MuiLink } from '@mui/material';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { formatDate } from 'components/common/dateHelper';
 import { UserManagementContext } from './UserManagementContext';
 import { ActionsDropDown } from './ActionsDropDown';
@@ -119,7 +119,7 @@ const UserManagementListing = () => {
                 </Stack>
             </Grid>
             <Grid size={{ xs: 12, lg: 10 }}>
-                <MetTable
+                <CustomTable
                     headCells={headCells}
                     rows={users}
                     handleChangePagination={(paginationOptions) => setPaginationOptions(paginationOptions)}

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { createDefaultPageInfo, HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
 import Stack from '@mui/material/Stack';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { getFeedbacksPage } from 'services/feedbackService';
 import { formatDate } from 'components/common/dateHelper';
 import { customRatings } from 'components/feedback/FeedbackModal/constants';
@@ -181,7 +181,7 @@ const FeedbackListing = () => {
                 </Stack>
             </Grid>
             <Grid size={12}>
-                <MetTable
+                <CustomTable
                     headCells={headCells}
                     rows={feedbacks}
                     handleChangePagination={(paginationOptions: PaginationOptions<Feedback>) =>

@@ -4,7 +4,7 @@ import { Grid2 as Grid, Skeleton, Box, useMediaQuery, Theme, useTheme } from '@m
 import { Widget } from 'models/widget';
 import { useAppDispatch } from 'hooks';
 import { openNotification } from 'services/notificationService/notificationSlice';
-import MetMap from 'components/map';
+import MapWithMarkers from 'components/map';
 import { fetchMaps } from 'services/widgetService/MapService';
 import { WidgetMap } from 'models/widgetMap';
 import { ExpandModal } from './ExpandModal';
@@ -113,7 +113,7 @@ const MapWidget = ({ widget }: MapWidgetProps) => {
             <Grid size={12}>
                 <Box sx={outerContainerStyles}>
                     <Box sx={innerContainerStyles}>
-                        <MetMap
+                        <MapWithMarkers
                             geojson={geoJSONDecode(map.geojson)}
                             longitude={map.longitude}
                             latitude={map.latitude}

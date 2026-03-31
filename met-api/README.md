@@ -1,18 +1,19 @@
-# MET-API
+# DEP API
 
-Python flask API application for The Modern Engagement Tool project.
+Python flask API application for The Digital Engagement Platform project.
 
 ## Getting Started
 
 ### Development Environment
-* Install the following:
-    - [Python](https://www.python.org/)
-    - [Docker](https://www.docker.com/)
-    - [Docker-Compose](https://docs.docker.com/compose/install/)
-* Install Dependencies
-    - Run `make setup` in the root of the project (met-api)
-* Start the databases
-    - Run `docker-compose up` in the root of the project (met-api)
+
+- Install the following:
+  - [Python](https://www.python.org/)
+  - [Docker](https://www.docker.com/)
+  - [Docker-Compose](https://docs.docker.com/compose/install/)
+- Install Dependencies
+  - Run `make setup` in the root of the project (`api/`)
+- Start the databases
+  - Run `docker-compose up` in the root of the project (`api/`)
 
 ## Environment Variables
 
@@ -25,11 +26,10 @@ The development scripts for this application allow customization via an environm
 The following commands support various development scenarios and needs.
 Before running the following commands run `. venv/bin/activate` to enter into the virtual env.
 
-
 > `make run`
 >
 > Runs the python application and runs database migrations.  
-Open [http://localhost:5000/api](http://localhost:5000/api) to view it in the browser.<br/>
+> Open [http://localhost:5000/api](http://localhost:5000/api) to view it in the browser.<br/>
 > The page will reload if you make edits.<br/>
 > You will also see any lint errors in the console.
 
@@ -47,4 +47,4 @@ Open [http://localhost:5000/api](http://localhost:5000/api) to view it in the br
 
 Ensure the latest version of [VS Code](https://code.visualstudio.com) is installed.
 
-The [`launch.json`](.vscode/launch.json) is already configured with a launch task (MET-API Launch) that allows you to launch chrome in a debugging capacity and debug through code within the editor. 
+The [`launch.json`](.vscode/launch.json) is already configured with a launch task (Engagement API Launch) that allows you to launch chrome in a debugging capacity and debug through code within the editor.

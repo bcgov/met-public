@@ -43,7 +43,7 @@ def upgrade():
     # Assume current_app.config is available and properly configured
     tenant_data = [
         {
-            'title': 'Modern Engagement',
+            'title': 'Digital Engagement',
             'short_name': current_app.config.get('DEFAULT_TENANT_SHORT_NAME'),
             'name': current_app.config.get('DEFAULT_TENANT_NAME'),
             'description': current_app.config.get(
@@ -110,7 +110,7 @@ def upgrade():
 
     # Sample data for insertion
     sample_data = {
-        'first_name': 'MET',
+        'first_name': 'DEP',
         'middle_name': '',
         'last_name': 'System',
         'external_id': '1',  # Replace with actual external_id value

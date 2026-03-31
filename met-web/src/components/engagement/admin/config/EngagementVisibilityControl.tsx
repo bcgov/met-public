@@ -164,7 +164,7 @@ const EngagementVisibilityControl = () => {
                         title="Engagement URL"
                         placeholder="engagement-title"
                         formFieldProps={{
-                            sx: { '& p.met-input-form-field-title': { mt: 2, fontSize: '14px' } },
+                            sx: { '& p.dep-input-form-field-title': { mt: 2, fontSize: '14px' } },
                         }}
                         startAdornment={
                             <BodyText bold sx={{ textWrap: 'nowrap', mr: '-8px' }}>

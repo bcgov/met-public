@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""MET Purge Event Logs."""
+"""Task to purge Dagster event logs older than a specified number of days."""
 from datetime import datetime
 
 from met_cron.services.database_service import DatabaseService
 
 
-class MetPurge:  # pylint:disable=too-few-public-methods
+class PurgeTask:  # pylint:disable=too-few-public-methods
     """Task to publish scheduled Engagements due."""
 
     @classmethod

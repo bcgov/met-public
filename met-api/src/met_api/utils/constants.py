@@ -50,7 +50,7 @@ class TestKeyConfig:  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_KEYS = {
         'keys': [
             {
-                'kid': 'met-web',
+                'kid': 'engagement-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',
@@ -64,7 +64,7 @@ class TestKeyConfig:  # pylint: disable=too-few-public-methods
     JWT_OIDC_TEST_PRIVATE_KEY_JWKS = {
         'keys': [
             {
-                'kid': 'met-web',
+                'kid': 'engagement-web',
                 'kty': 'RSA',
                 'alg': 'RS256',
                 'use': 'sig',

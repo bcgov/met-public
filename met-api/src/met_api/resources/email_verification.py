@@ -19,6 +19,7 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Namespace, Resource
 
+from met_api.exceptions.business_exception import BusinessException
 from met_api.schemas.email_verification import EmailVerificationSchema
 from met_api.services.email_verification_service import EmailVerificationService
 from met_api.utils.util import allowedorigins, cors_preflight
@@ -106,6 +107,8 @@ class SubscribeEmailVerifications(Resource):
             # don't return the verification token when creating a new email verification
             created_email_verification.pop('verification_token')
             return created_email_verification, HTTPStatus.OK
+        except BusinessException as err:
+            return err.error, err.status_code
         except KeyError as err:
             return str(err), HTTPStatus.INTERNAL_SERVER_ERROR
         except ValueError as err:

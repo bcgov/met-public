@@ -417,7 +417,7 @@ class TestJwtClaims(dict, Enum):
         ]
     }
 
-    met_admin_role = {
+    system_admin_role = {
         'iss': getattr(CONFIG, 'JWT_OIDC_TEST_ISSUER'),
         'aud': getattr(CONFIG, 'JWT_OIDC_TEST_AUDIENCE'),
         'sub': 'f7a4a1d3-73a8-4cbc-a40f-bb1145302064',

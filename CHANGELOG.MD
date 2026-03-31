@@ -1,3 +1,10 @@
+## March 30, 2026
+
+- **Chore** Update references to "MET" to refer to "DEP" or "engagement", or to be generic [🎟️ DEP-221](https://citz-gdx.atlassian.net/browse/DEP-221)
+  - Renamed all remaining instances of "MET" in the codebase to "DEP" to reflect the rebranding of the project to the Digital Engagement Platform (DEP).
+  - This includes renaming files, variables, functions, and any other references to "MET" across the entire codebase.
+  - Updated documentation and comments to reflect the new naming convention.
+
 ## March 23, 2026
 
 - **Chore** Remove & replace deprecated components [🎟️ DEP-250](https://citz-gdx.atlassian.net/browse/DEP-250)

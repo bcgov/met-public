@@ -20,7 +20,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-interface MetWidgetProps {
+interface WidgetProps {
     testId?: string;
     widgetTypeId: WidgetType;
     title: string;
@@ -45,7 +45,7 @@ const icons: Record<WidgetType, IconDefinition> = {
     [WidgetType.Poll]: faPoll,
 };
 
-const MetWidget = ({
+const WidgetPanel = ({
     testId,
     widgetTypeId,
     children,
@@ -55,7 +55,7 @@ const MetWidget = ({
     deleting,
     sortable = true,
     ...rest
-}: MetWidgetProps) => {
+}: WidgetProps) => {
     return (
         <Paper>
             <Grid p={2} container alignItems="flex-start" justifyContent="flex-start">
@@ -107,4 +107,4 @@ const MetWidget = ({
     );
 };
 
-export default MetWidget;
+export default WidgetPanel;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import Grid from '@mui/material/Grid2';
 import { Link, useLocation } from 'react-router';
 import { ResponsiveContainer } from 'components/common/Layout';
@@ -171,7 +171,7 @@ const Submissions = () => {
                 <Heading1>
                     <strong>{`${survey.name} Comments`}</strong>
                 </Heading1>
-                <MetTable
+                <CustomTable
                     headCells={headCells}
                     rows={submissions}
                     handleChangePagination={(pagination: PaginationOptions<SurveySubmission>) =>

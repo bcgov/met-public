@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-All the configuration for MET's API.
+All the configuration for the Digital Engagement Platform API.
 
 Wherever possible, the configuration is loaded from the environment. The aim is
 to have this be the "single source of truth" for configuration in the API,
@@ -154,7 +154,7 @@ class Config:  # pylint: disable=too-few-public-methods
     DEFAULT_TENANT_NAME = os.getenv('DEFAULT_TENANT_NAME', 'Default Tenant')
     DEFAULT_TENANT_DESCRIPTION = os.getenv(
         'DEFAULT_TENANT_DESCRIPTION',
-        'The default tenant for MET. Used for testing and development.'
+        'The default tenant for DEP. Used for testing and development.'
     )
 
     # CORS settings
@@ -186,10 +186,10 @@ class Config:  # pylint: disable=too-few-public-methods
     KEYCLOAK_CONFIG = KC = {
         'BASE_URL': os.getenv('KEYCLOAK_BASE_URL', ''),
         'REALMNAME': os.getenv('KEYCLOAK_REALMNAME', 'standard'),
-        'SERVICE_ACCOUNT_ID': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'SERVICE_ACCOUNT_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
-        'ADMIN_USERNAME': os.getenv('MET_ADMIN_CLIENT_ID'),
-        'ADMIN_SECRET': os.getenv('MET_ADMIN_CLIENT_SECRET'),
+        'SERVICE_ACCOUNT_ID': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'SERVICE_ACCOUNT_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
+        'ADMIN_USERNAME': os.getenv('KEYCLOAK_ADMIN_CLIENT_ID'),
+        'ADMIN_SECRET': os.getenv('KEYCLOAK_ADMIN_CLIENT_SECRET'),
         'CONNECT_TIMEOUT': int(os.getenv('KEYCLOAK_CONNECT_TIMEOUT', '60')),
     }
 
@@ -266,7 +266,7 @@ class Config:  # pylint: disable=too-few-public-methods
     # Templates for sending users various notifications by email.
     EMAIL_TEMPLATES = {
         # The time of day when engagements get closed. This should match the
-        # value in met-cron/cron/crontab
+        # value in cron/config/crontab
         'CLOSING_TIME': os.getenv('ENGAGEMENT_END_TIME', '5 PM'),
         # This only applies when using GC Notify instead of CHES
         'FROM_ADDRESS': os.getenv('EMAIL_FROM_ADDRESS'),
@@ -294,7 +294,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'SUBMISSION_RESPONSE': {
             'ID': os.getenv('SUBMISSION_RESPONSE_EMAIL_TEMPLATE_ID'),
             'SUBJECT': os.getenv('SUBMISSION_RESPONSE_EMAIL_SUBJECT',
-                                 'MET - Your feedback was successfully submitted'),
+                                 'DEP: Your feedback was successfully submitted'),
         },
         'CLOSEOUT': {
             'ID': os.getenv('CLOSEOUT_EMAIL_TEMPLATE_ID'),
@@ -304,7 +304,7 @@ class Config:  # pylint: disable=too-few-public-methods
         'ACCESS_REQUEST': {
             'ID': os.getenv('ACCESS_REQUEST_EMAIL_TEMPLATE_ID'),
             'SUBJECT': os.getenv('ACCESS_REQUEST_EMAIL_SUBJECT',
-                                 'MET - New User Access Request'),
+                                 'DEP: New User Access Request'),
             'DEST_EMAIL_ADDRESS': os.getenv('ACCESS_REQUEST_EMAIL_ADDRESS'),
         }
     }

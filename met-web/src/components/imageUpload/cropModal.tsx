@@ -96,9 +96,9 @@ export const CropModal = () => {
                         <Grid container direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={1}>
                             <Grid size={12}>
                                 <BodyText size="small">
-                                    The image will be cropped at the correct ratio to display as a banner in MET. You
-                                    can zoom in or out and move the image around. Please note that part of the image may
-                                    be hidden depending on the user's display size.
+                                    The image will be cropped at the correct ratio for display. You can zoom in or out
+                                    and move the image around. Please note that part of the image may be hidden
+                                    depending on the user's display size.
                                 </BodyText>
                             </Grid>
                             <Grid size={12} container alignContent="flex-start" justifyContent="flex-end">

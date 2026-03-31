@@ -14,11 +14,11 @@ coverage:
       backend:
         target: 80%
         flags:
-          - metapi
+          - api
       ui:
         target: 35%
         flags:
-          - metweb
+          - web
 
 ignore:
   - "^/tests/**/*" # ignore test harness code
@@ -37,11 +37,11 @@ comment:
   require_changes: false
 
 flags:
-  metapi:
+  api:
     paths:
-      - met-api/src/met_api
+      - api/src/api
     carryforward: true
-  metweb:
+  web:
     paths:
-      - met-web/src
+      - web/src
     carryforward: true

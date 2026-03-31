@@ -46,6 +46,8 @@ class EmailVerificationService:
                subscription_type='', session=None) -> EmailVerificationSchema:
         """Create an email verification."""
         cls.validate_fields(email_verification)
+        if email_verification.get('type', None) == EmailVerificationType.Subscribe:
+            subscription_type = cls._normalize_subscription_type(subscription_type)
         email_address: str = email_verification.get('email_address')
         survey = SurveyModel.find_by_id(email_verification.get('survey_id'))
         engagement: EngagementModel = EngagementModel.find_by_id(
@@ -161,6 +163,7 @@ class EmailVerificationService:
         confirm_path = paths.get('SUBSCRIBE').format(
             engagement_id=engagement.id, token=token, lang=lang_code
         )
+        current_app.logger.info(f'Confirm path: {confirm_path}')
         unsubscribe_path = paths.get('UNSUBSCRIBE').format(
             engagement_id=engagement.id, participant_id=participant_id, lang=lang_code
         )
@@ -188,6 +191,18 @@ class EmailVerificationService:
             is_subscribing_to_project=args.get('is_subscribing_to_project'),
         )
         return subject, body, args, template_id
+
+    @staticmethod
+    def _normalize_subscription_type(subscription_type):
+        """Validate and normalize subscription type to enum values."""
+        normalized_type = (subscription_type or '').strip().upper()
+        valid_types = {subscription_type.value for subscription_type in SubscriptionTypes}
+        if normalized_type not in valid_types:
+            raise BusinessException(
+                error='Invalid subscription type.',
+                status_code=HTTPStatus.BAD_REQUEST,
+            )
+        return normalized_type
 
     @staticmethod
     def _render_survey_email_template(survey: SurveyModel, token, lang_code):

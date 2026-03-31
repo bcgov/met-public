@@ -91,7 +91,7 @@ const AuthoringBottomNav = ({
     const postPreviewScrollMessage = (previewWindow: Window, section?: string) => {
         const targetHash = getPreviewSectionHash(section);
         const targetId = targetHash.replace('#', '');
-        const message = { type: 'met-preview-scroll', targetId };
+        const message = { type: 'preview-scroll', targetId };
 
         [0, 120, 320].forEach((delayMs) => {
             globalThis.setTimeout(() => {
@@ -110,7 +110,7 @@ const AuthoringBottomNav = ({
     };
 
     const postPreviewRefreshMessage = (previewWindow: Window | null) => {
-        const message = { type: 'met-preview-refresh' };
+        const message = { type: 'preview-refresh' };
         if (previewWindow && !previewWindow.closed) {
             previewWindow?.postMessage(message, globalThis.location.origin);
         }

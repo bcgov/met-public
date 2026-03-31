@@ -74,7 +74,7 @@ URL_PREFIX = '/api/'
 API_BLUEPRINT = Blueprint('API', __name__, url_prefix=URL_PREFIX)
 
 API = Api(
-    API_BLUEPRINT, title='MET API', version='1.0', description='The Core API for MET'
+    API_BLUEPRINT, title='DEP API', version='1.0', description='The Core API for the Digital Engagement Platform'
 )
 
 # HANDLER = ExceptionHandler(API)

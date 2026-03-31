@@ -19,7 +19,7 @@ from flask_restx import Namespace, Resource
 from notify_api.auth import jwt
 # from notify_api.services.sms import get_sms_service
 
-API = Namespace('notifications', description='API for Sending MET Notifications')
+API = Namespace('notifications', description='API for Sending DEP SMS Notifications')
 
 
 @API.route('/sms')

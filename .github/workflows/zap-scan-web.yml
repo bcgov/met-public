@@ -1,11 +1,11 @@
-name: ZAP Scanner - MET WEB
+name: ZAP Scanner - WEB
 on:
   workflow_dispatch:
 
 jobs:
   zap_scan_web:
     runs-on: ubuntu-24.04
-    name: Scan the met application
+    name: Scan the application
     steps:
       - name: zap_scan_web
         uses: zaproxy/action-full-scan@v0.13.0

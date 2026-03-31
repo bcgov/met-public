@@ -35,9 +35,9 @@ API_BLUEPRINT = Blueprint('API', __name__, url_prefix=URL_PREFIX)
 
 API = Api(
     API_BLUEPRINT,
-    title='MET ANALYTICS API',
+    title='ANALYTICS API',
     version='1.0',
-    description='The Core API for MET ANALYTICS'
+    description='The Analytics API for the Digital Engagement Platform'
 )
 
 # HANDLER = ExceptionHandler(API)

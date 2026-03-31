@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MetTable from 'components/common/Table';
+import CustomTable from 'components/common/Table';
 import { Link, useLocation, useParams } from 'react-router';
 import { ResponsiveContainer } from 'components/common/Layout';
 import { HeadCell, PageInfo, PaginationOptions } from 'components/common/Table/types';
@@ -409,7 +409,7 @@ const CommentTextListing = () => {
                 </Stack>
             </Grid>
             <Grid size={12}>
-                <MetTable
+                <CustomTable
                     hideHeader={true}
                     headCells={headCells}
                     rows={submissions}
