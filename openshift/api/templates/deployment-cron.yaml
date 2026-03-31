@@ -47,8 +47,8 @@ spec:
           export {{ $k }}='{{ $v }}'
           {{- end }}
           {{- end }}` }}
-        vault.hashicorp.com/agent-inject-secret-engagement-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
-        vault.hashicorp.com/agent-inject-template-engagement-jwt-oidc: |
+        vault.hashicorp.com/agent-inject-secret-jwt-oidc: {{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc
+        vault.hashicorp.com/agent-inject-template-jwt-oidc: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
           export {{ $k }}='{{ $v }}'
