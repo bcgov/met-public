@@ -392,7 +392,7 @@ psql -U postgres -d app
 # Set passwords for each role
 ALTER ROLE analytics WITH PASSWORD 'foo';
 ALTER ROLE dagster WITH PASSWORD 'bar';
-ALTER ROLE engagement WITH PASSWORD 'baz';
+ALTER ROLE met WITH PASSWORD 'baz';
 ALTER ROLE redash WITH PASSWORD 'qux';
 ALTER ROLE replication WITH PASSWORD 'quux';
 ```

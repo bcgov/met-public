@@ -21,7 +21,7 @@ db:
       app.kubernetes.io/component: run_worker
     - app: analytics-api
       role: api
-    - app-group: dep-app
+    - app-group: met-app
       role: worker
     - app: met-api
       role: api

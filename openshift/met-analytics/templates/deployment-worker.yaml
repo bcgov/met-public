@@ -5,13 +5,13 @@ metadata:
   name: "{{ .Chart.Name }}-worker"
   labels:
     app: "{{ .Chart.Name }}"
-    app-group: dep-app
+    app-group: met-app
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      app-group: dep-app
+      app-group: met-app
       role: worker
       sub-role: worker
   strategy:
@@ -19,7 +19,7 @@ spec:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: dep-app
+        app-group: met-app
         role: worker
         sub-role: worker
       annotations:

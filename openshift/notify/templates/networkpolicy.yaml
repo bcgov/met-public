@@ -20,4 +20,4 @@ spec:
         matchLabels:
           app: met-api
           role: api
-          app-group: dep-app
+          app-group: met-app

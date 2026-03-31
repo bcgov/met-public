@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: dep-analytics
+    app-group: met-analytics
   name: {{ .Values.app.name }}
 spec:
   replicas: 1 # This is managed by the HPA
@@ -14,7 +14,7 @@ spec:
       app: {{ .Values.app.name }}
       environment: {{ .Values.environment }}
       role: api
-      app-group: dep-analytics
+      app-group: met-analytics
   strategy:
     type: RollingUpdate
   template:
@@ -23,7 +23,7 @@ spec:
         app: {{ .Values.app.name }}
         environment: {{ .Values.environment }}
         role: api
-        app-group: dep-analytics
+        app-group: met-analytics
       annotations:
         image.openshift.io/triggers: >
           [

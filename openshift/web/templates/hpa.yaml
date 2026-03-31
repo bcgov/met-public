@@ -5,7 +5,7 @@ metadata:
   name: {{ .Values.app.name }}-hpa
   labels:
     app: {{ .Values.app.name }}
-    app-group: dep-app
+    app-group: met-app
 spec:
   scaleTargetRef:
     kind: Deployment

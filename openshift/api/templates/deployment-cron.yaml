@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.app_cron.name }}
   labels:
     app: {{ .Values.app.name }}
-    app-group: dep-app
+    app-group: met-app
 spec:
   strategy:
     type: RollingUpdate
@@ -18,7 +18,7 @@ spec:
       labels:
         app: {{ .Values.app.name }}
         role: cron
-        app-group: dep-app
+        app-group: met-app
         environment: {{ .Values.environment }}
       annotations:
         image.openshift.io/triggers: >

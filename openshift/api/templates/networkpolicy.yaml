@@ -24,7 +24,7 @@ spec:
         matchLabels:
           app: met-api
           role: cron
-          app-group: dep-app
+          app-group: met-app
   {{- range .Values.app.allowIngressPodselectors }}
     - podSelector:
         matchLabels:

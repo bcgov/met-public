@@ -5,9 +5,9 @@ metadata:
     name: {{ .Values.app.name }}
     labels:
         app: {{ .Values.app.name }}
-        app-group: dep-app
+        app-group: met-app
 data:
-    # DEP configuration
+    # MET configuration
     CORS_ORIGINS: {{ .Values.site.url }}
     DEFAULT_TENANT_SHORT_NAME: {{ .Values.tenant.shortName }}
     ACCESS_REQUEST_EMAIL_TEMPLATE_ID: {{ .Values.email.templateID.accessRequest }}

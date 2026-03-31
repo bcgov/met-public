@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   labels:
     app: {{ .Values.app.name }}
-    app-group: dep-app
+    app-group: met-app
   name: {{ .Values.app.name }}
 spec:
   replicas: 1 # This is managed by the HPA
@@ -21,7 +21,7 @@ spec:
         app: {{ .Values.app.name }}
         environment: {{ .Values.environment | default "dev" }}
         role: api
-        app-group: dep-app
+        app-group: met-app
       annotations:
         image.openshift.io/triggers: >
           [

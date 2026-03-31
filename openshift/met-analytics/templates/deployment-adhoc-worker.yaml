@@ -5,7 +5,7 @@ metadata:
   name: "{{ .Chart.Name }}-adhoc-worker"
   labels:
     app: "{{ .Chart.Name }}"
-    app-group: dep-app
+    app-group: met-app
     role: worker
     sub-role: adhoc-worker
 spec:
@@ -13,7 +13,7 @@ spec:
   selector:
     matchLabels:
       app: "{{ .Chart.Name }}"
-      app-group: dep-app
+      app-group: met-app
       role: worker
       sub-role: adhoc-worker
   strategy:
@@ -21,7 +21,7 @@ spec:
     metadata:
       labels:
         app: "{{ .Chart.Name }}"
-        app-group: dep-app
+        app-group: met-app
         role: worker
         sub-role: adhoc-worker
       annotations:

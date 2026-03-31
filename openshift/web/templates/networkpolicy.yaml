@@ -5,12 +5,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: met-web
-    app-group: dep-app
+    app-group: met-app
 spec:
   podSelector:
     matchLabels:
       app: {{ .Values.app.name }}
-      app-group: dep-app
+      app-group: met-app
   policyTypes:
   - Ingress
   ingress:

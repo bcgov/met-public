@@ -5,14 +5,14 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: analytics-api
-    app-group: dep-analytics
+    app-group: met-analytics
     role: api
 spec:
   podSelector:
     matchLabels:
       app: {{ .Values.app.name }}
       role: api
-      app-group: dep-analytics
+      app-group: met-analytics
   policyTypes:
   - Ingress
   ingress:
@@ -26,4 +26,4 @@ spec:
         matchLabels:
           app: met-analytics
           role: server
-          app-group: dep-app
+          app-group: met-app
