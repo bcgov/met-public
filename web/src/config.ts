@@ -30,7 +30,7 @@ const DEFAULT_LANGUAGE_NAME = getEnv('REACT_APP_DEFAULT_LANGUAGE_NAME');
 const BUILD_COMMIT_HASH = getEnv('REACT_APP_BUILD_COMMIT_HASH', 'dev');
 const BUILD_DATE = getEnv('REACT_APP_BUILD_DATE', 'unknown');
 const BUILD_BRANCH = getEnv('REACT_APP_BUILD_BRANCH', 'unknown');
-const GITHUB_REPO = getEnv('REACT_APP_GITHUB_REPO', 'https://github.com/bcgov/met-public');
+const GITHUB_REPO = getEnv('REACT_APP_GITHUB_REPO', 'https://github.com/bcgov/dep-public');
 
 export const AppConfig = {
     apiUrl: API_URL,

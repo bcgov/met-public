@@ -2,9 +2,9 @@
 
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
-[![codecov](https://codecov.io/gh/bcgov/met-public/branch/main/graph/badge.svg?token=E1JXYU701O)](https://codecov.io/gh/bcgov/met-public)
+[![codecov](https://codecov.io/gh/bcgov/dep-public/branch/main/graph/badge.svg?token=E1JXYU701O)](https://codecov.io/gh/bcgov/dep-public)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_met-public&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_met-public)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bcgov_dep-public&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=bcgov_dep-public)
 
 The purpose of this project is to develop engagement tools that address shortfalls identified in the Province’s existing public engagement processes.
 

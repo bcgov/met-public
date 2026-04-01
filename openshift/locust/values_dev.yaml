@@ -31,7 +31,7 @@ route:
 main:
   replicas: 1
   config:
-    targetHost: "https://met-web-dev.apps.gold.devops.gov.bc.ca"
+    targetHost: "https://dep-web-dev.apps.gold.devops.gov.bc.ca"
 
 # Worker configuration
 worker:

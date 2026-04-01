@@ -6,7 +6,7 @@ FROM node:20-alpine AS build-stage
 ARG REACT_APP_BUILD_COMMIT_HASH=dev
 ARG REACT_APP_BUILD_DATE=unknown
 ARG REACT_APP_BUILD_BRANCH=unknown
-ARG REACT_APP_GITHUB_REPO=https://github.com/bcgov/met-public
+ARG REACT_APP_GITHUB_REPO=https://github.com/bcgov/dep-public
 
 # Set as environment variables for runtime access
 ENV REACT_APP_BUILD_COMMIT_HASH=${REACT_APP_BUILD_COMMIT_HASH}

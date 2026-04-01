@@ -21,7 +21,7 @@ jobs:
   setup-job:
     runs-on: ubuntu-24.04
 
-    if: github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/dep-public'
     steps:
       - uses: actions/checkout@v6
 

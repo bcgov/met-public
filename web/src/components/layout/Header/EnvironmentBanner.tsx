@@ -8,9 +8,9 @@ const EnvironmentBanner = () => {
     const host = window.location.hostname;
     // TODO: Replace this when implementing DEP-242
     const isTestEnvironment =
-        host.startsWith('met-web-dev') ||
-        host.startsWith('met-web-test') ||
-        host.startsWith('met-web-demo') ||
+        host.startsWith('dep-web-dev') ||
+        host.startsWith('dep-web-test') ||
+        host.startsWith('dep-web-demo') ||
         host.startsWith('localhost');
     if (!isTestEnvironment) {
         return <></>;

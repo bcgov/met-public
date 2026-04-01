@@ -39,7 +39,7 @@ main:
       cpu: 1000m
       memory: 2Gi
   config:
-    targetHost: "https://met-web-demo.apps.gold.devops.gov.bc.ca/"
+    targetHost: "https://dep-web-demo.apps.gold.devops.gov.bc.ca/"
 
 # Worker configuration
 worker:
