@@ -89,6 +89,7 @@ jobs:
           docker push $IMAGE_ID:$TAG_NAME
 
       - name: Rollout
+        continue-on-error: true
         shell: bash
         run: |
           # Restart the deployment to apply the new image and wait for it to complete

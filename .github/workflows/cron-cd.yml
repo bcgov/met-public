@@ -72,6 +72,7 @@ jobs:
           docker push $IMAGE_ID:$TAG_NAME
 
       - name: Rollout
+        continue-on-error: true
         shell: bash
         run: |
           oc rollout restart deployment/${APP_NAME} -n ${OPENSHIFT_REPOSITORY}-${TAG_NAME}
