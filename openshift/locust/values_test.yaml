@@ -38,7 +38,7 @@ main:
       cpu: 500m
       memory: 1Gi
   config:
-    targetHost: "https://met-web-test.apps.gold.devops.gov.bc.ca"
+    targetHost: "https://dep-web-test.apps.gold.devops.gov.bc.ca"
 
 # Worker configuration - more workers for test environment
 worker:

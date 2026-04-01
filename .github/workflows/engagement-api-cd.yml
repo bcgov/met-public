@@ -37,7 +37,7 @@ jobs:
   api-cd:
     runs-on: ubuntu-24.04
 
-    if: github.repository == 'bcgov/met-public'
+    if: github.repository == 'bcgov/dep-public'
     environment: ${{ github.event.inputs.environment || 'dev' }}
 
     steps:

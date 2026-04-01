@@ -47,7 +47,7 @@ def test_get_version_with_env_vars(mock_getenv, client, session):  # pylint:disa
     test_commit = 'abc123def456'
     test_date = '2025-11-14T12:00:00Z'
     test_branch = 'main'
-    test_repo = 'https://github.com/bcgov/met-public'
+    test_repo = 'https://github.com/bcgov/dep-public'
 
     def getenv_side_effect(key, default=None):
         env_vars = {
