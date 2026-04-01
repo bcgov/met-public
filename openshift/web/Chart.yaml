@@ -1,4 +1,5 @@
 apiVersion: v2
 name: engagement-web
 version: 0.1.1
-description: Helm chart for the MET WEB project
+description: Helm chart for the Digital Engagement Platform web application
+type: application
