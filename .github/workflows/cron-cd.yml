@@ -25,7 +25,7 @@ defaults:
     working-directory: ./cron
 
 env:
-  APP_NAME: "cron"
+  APP_NAME: "engagement-cron"
   TAG_NAME: "${{github.event.inputs.environment || 'dev' }}" # If the environment type is manually selected, use the input value; otherwise, use 'dev' as default
 
   OPENSHIFT_LOGIN_REGISTRY: ${{ secrets.OPENSHIFT_LOGIN_REGISTRY }}

@@ -25,7 +25,7 @@ defaults:
     working-directory: ./etl
 
 env:
-  APP_NAME: "etl"
+  APP_NAME: "dagster-etl"
   DEPLOYMENT_NAME: "dagster-dagster-user-deployments-etl"
   TAG_NAME: "${{ github.event.inputs.environment || 'dev' }}"
 
