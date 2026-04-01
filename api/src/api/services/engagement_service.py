@@ -550,7 +550,7 @@ class EngagementService:
         one_of_roles = (Role.SUPER_ADMIN.value, Role.UNPUBLISH_ENGAGEMENT.value)
         authorization.check_auth(one_of_roles=one_of_roles)
 
-        current_env = os.getenv('FLASK_ENV', 'production').lower()
+        current_env = current_app.config['ENVIRONMENT']
         if current_env in ('prod', 'production'):
             abort(HTTPStatus.FORBIDDEN, 'Cannot delete an engagement in production environment')
 
