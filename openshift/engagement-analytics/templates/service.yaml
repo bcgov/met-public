@@ -10,4 +10,6 @@ spec:
     port: {{ .Values.ingress.port }}
     targetPort: {{ .Values.ingress.port }}
   selector:
-    app: {{ .Chart.Name }}-server
+    app: "{{ .Chart.Name }}"
+    role: server
+    app-group: engagement-app
