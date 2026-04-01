@@ -95,7 +95,7 @@ export const EngagementStatusChip: React.FC<ChipProps & Partial<MuiChipProps>> =
                     '&.status-chip-invert': {
                         backgroundColor: 'transparent',
                         borderColor: 'white',
-                        color: 'primary.contrastText',
+                        color: 'white',
                     },
                 },
                 '&.status-chip-closed': {
