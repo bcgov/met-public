@@ -21,15 +21,15 @@ on:
         default: "all"
         type: choice
         options:
-          - engagement-db
-          - notify-api
-          - engagement-api
-          - engagement-web
-          - dagster
-          - analytics-api
-          - engagement-analytics
-          - locust
           - all
+          - analytics-api
+          - dagster
+          - engagement-analytics
+          - engagement-api
+          - engagement-db
+          - engagement-web
+          - locust
+          - notify-api
 
 env:
   OC_VERSION: "4.16"

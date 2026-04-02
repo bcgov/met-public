@@ -15,14 +15,14 @@ on:
         default: "all"
         type: choice
         options:
-          - engagement-db
-          - notify-api
-          - engagement-api
-          - engagement-web
+          - all
           - analytics-api
           - engagement-analytics
+          - engagement-api
+          - engagement-db
+          - engagement-web
           - locust
-          - all
+          - notify-api
   workflow_call:
     inputs:
       chart:
