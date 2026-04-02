@@ -86,7 +86,7 @@ jobs:
             [api]="openshift/api"
             [web]="openshift/web"
             [analytics-api]="openshift/analytics-api"
-            [engagement-analytics]="openshift/engagement-analytics"
+            [analytics]="openshift/engagement-analytics"
             [dagster]="openshift/dagster"
             [locust]="openshift/locust"
           )
@@ -182,13 +182,6 @@ jobs:
         with:
           oc: ${{ env.OC_VERSION }}
           skip_cache: true
-
-      - name: Install Helm 
-      # We install v3.16 specifically, to avoid the "Error: chart file xxx is larger than the maximum filesize 5242880"
-      # error which occurs with Helm 3.17+ when the chart contains large files
-        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 # 5.0.0
-        with:
-          version: "3.16.0"
 
       - name: Log in to OpenShift
         if: inputs.enable_server_lint == true
