@@ -102,7 +102,7 @@ jobs:
             [api]="openshift/api"
             [web]="openshift/web"
             [analytics-api]="openshift/analytics-api"
-            [engagement-analytics]="openshift/engagement-analytics"
+            [analytics]="openshift/engagement-analytics"
             [dagster]="openshift/dagster"
             [locust]="openshift/locust"
           )
