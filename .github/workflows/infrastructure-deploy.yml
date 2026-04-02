@@ -23,11 +23,11 @@ on:
         options:
           - engagement-db
           - notify-api
-          - api
-          - web
+          - engagement-api
+          - engagement-web
           - dagster
           - analytics-api
-          - analytics
+          - engagement-analytics
           - locust
           - all
 
@@ -99,10 +99,10 @@ jobs:
           declare -A chart_dirs=(
             [engagement-db]="openshift/db"
             [notify-api]="openshift/notify"
-            [api]="openshift/api"
-            [web]="openshift/web"
+            [engagement-api]="openshift/api"
+            [engagement-web]="openshift/web"
             [analytics-api]="openshift/analytics-api"
-            [analytics]="openshift/engagement-analytics"
+            [engagement-analytics]="openshift/engagement-analytics"
             [dagster]="openshift/dagster"
             [locust]="openshift/locust"
           )
