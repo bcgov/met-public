@@ -1,0 +1,6 @@
+dependencies:
+- name: redis-exporter
+  repository: ""
+  version: 1.0.1
+digest: sha256:6bd0e31a24633b0b9315c911844181ee9d9c12312ddb1920649edb9cf356460b
+generated: "2026-04-02T09:58:05.775096897-07:00"
