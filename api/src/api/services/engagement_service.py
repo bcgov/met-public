@@ -552,9 +552,9 @@ class EngagementService:
 
         current_env = (
             (current_app.config.get('ENVIRONMENT') if has_app_context() else '') or
-            os.getenv('ENVIRONMENT') or
-            os.getenv('DEPLOYMENT_ENV') or
-            os.getenv('FLASK_ENV', 'development')
+            os.getenv('ENV') or
+            os.getenv('DEPLOYMENT_ENV')
+            or 'prod'
         ).strip().lower()
 
         if current_env in ('prod', 'production'):
