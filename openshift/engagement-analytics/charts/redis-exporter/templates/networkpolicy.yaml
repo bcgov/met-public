@@ -14,11 +14,6 @@ spec:
   policyTypes:
   - Ingress
   ingress:
-  # Allow from OpenShift router/ingress controller (for Redash web UI)
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          network.openshift.io/policy-group: ingress
   # Allow internal communication between engagement-analytics components
   - from:
     - podSelector:
