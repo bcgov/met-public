@@ -551,10 +551,10 @@ class EngagementService:
         authorization.check_auth(one_of_roles=one_of_roles)
 
         current_env = (
-            (current_app.config.get('ENVIRONMENT') if has_app_context() else '')
-            or os.getenv('ENVIRONMENT')
-            or os.getenv('DEPLOYMENT_ENV')
-            or os.getenv('FLASK_ENV', 'development')
+            (current_app.config.get('ENVIRONMENT') if has_app_context() else '') or
+            os.getenv('ENVIRONMENT') or
+            os.getenv('DEPLOYMENT_ENV') or
+            os.getenv('FLASK_ENV', 'development')
         ).strip().lower()
 
         if current_env in ('prod', 'production'):
