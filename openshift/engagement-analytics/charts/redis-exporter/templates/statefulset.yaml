@@ -17,6 +17,7 @@ spec:
         prometheus.io/scrape: "true"
       labels:
         app: {{ .Chart.Name }}
+        app-group: "engagement-app"
     spec:
       volumes:
       - name: conf
