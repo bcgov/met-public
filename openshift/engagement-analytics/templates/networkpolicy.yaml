@@ -25,3 +25,8 @@ spec:
         matchLabels:
           app: engagement-analytics
           app-group: engagement-app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: redis-exporter
+          app-group: engagement-app
