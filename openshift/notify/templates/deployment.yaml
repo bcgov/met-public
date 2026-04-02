@@ -52,7 +52,8 @@ spec:
         vault.hashicorp.com/agent-inject-template-jwt-oidc: |
           {{ `{{- with secret ` }}"{{ .Values.vault.engine }}{{ .Values.vault.path }}/jwt-oidc"{{ ` }}
           {{- range $k, $v := .Data.data }}
-          {{- if eq $k "ENGAGEMENT_ADMIN_CLIENT_ID" }}
+          {{- if eq $k "JWT_OIDC_AUDIENCE" }}
+          {{- else if eq $k "ENGAGEMENT_ADMIN_CLIENT_ID" }}
           export JWT_OIDC_AUDIENCE='{{ $v }}'
           {{- else if eq $k "ENGAGEMENT_ADMIN_CLIENT_SECRET" }}
           export JWT_OIDC_CLIENT_SECRET='{{ $v }}'
