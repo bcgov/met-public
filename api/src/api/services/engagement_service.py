@@ -2,7 +2,6 @@
 
 from datetime import datetime, timezone
 from http import HTTPStatus
-import os
 from typing import Mapping, Optional, Sequence, Union
 
 from sqlalchemy.exc import SQLAlchemyError
