@@ -9,7 +9,7 @@ import {
     faTrash,
     faUpload,
 } from '@fortawesome/pro-regular-svg-icons';
-import { Grid2 as Grid, Menu, MenuItem, ListItemIcon, Checkbox, TableSortLabel } from '@mui/material';
+import { Grid2 as Grid, Menu, MenuItem, ListItemIcon, Checkbox, TableSortLabel, Tooltip } from '@mui/material';
 import {
     Table,
     TableBody,
@@ -85,11 +85,6 @@ const FilesTab = () => {
                 <Grid container size="auto">
                     <Heading2 decorated>Files</Heading2>
                 </Grid>
-                <Grid container size="grow" justifyContent="flex-end" pr={2}>
-                    <Button icon={<FontAwesomeIcon icon={faUpload} />} variant="primary">
-                        Upload File
-                    </Button>
-                </Grid>
             </Grid>
             <Menu
                 open={!!menuTarget}
@@ -128,12 +123,17 @@ const FilesTab = () => {
                     </ListItemIcon>
                     Unlink
                 </MenuItem>
-                <MenuItem onClick={handleClose} disabled={currentMenuTarget?.location !== undefined}>
-                    <ListItemIcon sx={{ color: 'error.main' }}>
-                        <FontAwesomeIcon icon={faTrash} />
-                    </ListItemIcon>
-                    <BodyText color="error.dark">Delete</BodyText>
-                </MenuItem>
+                <Tooltip arrow title={currentMenuTarget?.location !== undefined ? 'Must unlink before deleting' : ''}>
+                    {/* Wrap the MenuItem in a span to allow Tooltip to work correctly */}
+                    <span>
+                        <MenuItem onClick={handleClose} disabled={currentMenuTarget?.location !== undefined}>
+                            <ListItemIcon sx={{ color: 'error.main' }}>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </ListItemIcon>
+                            <BodyText color="error.dark">Delete</BodyText>
+                        </MenuItem>
+                    </span>
+                </Tooltip>
             </Menu>
             <TableContainer sx={{ maxWidth: 'Layout.width.default', width: '100%', overflowX: 'auto' }}>
                 <Table aria-labelledby="tableTitle" size="medium">
