@@ -210,7 +210,7 @@ const FilesTab = () => {
                                     </TableCell>
                                     <TableCell align="left">{bytesToSize(row.size, 1)}</TableCell>
                                     <TableCell align="left">
-                                        {row.location || <BodyText color="text.secondary">Not linked</BodyText>}
+                                        {row.location || <BodyText color="text.secondary">&ndash;&ndash;</BodyText>}
                                     </TableCell>
                                     <TableCell align="left">{row.fileType}</TableCell>
                                     <TableCell
