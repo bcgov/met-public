@@ -7,7 +7,6 @@ import {
     faEdit,
     faLinkSlash,
     faTrash,
-    faUpload,
 } from '@fortawesome/pro-regular-svg-icons';
 import { Grid2 as Grid, Menu, MenuItem, ListItemIcon, Checkbox, TableSortLabel, Tooltip } from '@mui/material';
 import {
