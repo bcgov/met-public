@@ -196,7 +196,7 @@ const InternalHeader = ({
                 >
                     <Toolbar
                         sx={{
-                            padding: `0 ${Layout.padding.default} !important`,
+                            px: `${Layout.padding.default} !important`,
                             backgroundColor: Palette.internalHeader.backgroundColor,
                         }}
                     >

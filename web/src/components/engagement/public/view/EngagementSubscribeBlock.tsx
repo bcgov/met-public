@@ -20,6 +20,7 @@ import { SubscriptionType } from 'constants/subscriptionType';
 import { LanguageState } from 'reduxSlices/languageSlice';
 import { openNotification } from 'services/notificationService/notificationSlice';
 import { resolveTranslationValue } from './engagementTranslationResolution';
+import { Layout } from 'styles/Theme';
 
 const previewSubscribeSummary = (
     <Grid container gap={0} direction="column">
@@ -172,128 +173,133 @@ export const EngagementSubscribeBlock = () => {
                             <EngagementPreviewTag>Subscribe Section (Optional)</EngagementPreviewTag>
                             <Grid
                                 container
-                                direction="row"
+                                direction="column"
                                 justifyContent="space-between"
                                 size={12}
-                                columns={12}
-                                width="100%"
                                 bgcolor="blue.10"
                                 gap={{ xs: '12px', md: '24px', lg: '48px' }}
-                                padding={{
-                                    xs: '3em 16px',
-                                    md: '4em 5vw',
-                                    lg: '4.5em 10em',
-                                }}
+                                py={{ xs: '3em', md: '4em', lg: '4.5em' }}
+                                px={Layout.padding.default}
                             >
-                                <Grid size={{ xs: 12, lg: 3.5 }}>
-                                    <Heading2 weight="thin" decorated sx={{ mb: '24px' }}>
-                                        <PreviewSwitch
-                                            hasValue={!!resolvedSubscribeHeading}
-                                            value={resolvedSubscribeHeading}
-                                            previewFallback={<TextPlaceholder text="Subscribe Section" />}
-                                            fallback="Subscribe Section"
-                                        />
-                                    </Heading2>
-
-                                    <PreviewRender
-                                        hasValue={hasSubscribeDescription}
-                                        value={
-                                            <RichTextArea
-                                                toolbarHidden
-                                                readOnly
-                                                editorState={subscribeDescriptionEditorState}
+                                <Grid
+                                    container
+                                    direction={{ xs: 'column', md: 'row' }}
+                                    width={Layout.width.default}
+                                    maxWidth="100%"
+                                    m="0 auto"
+                                    flexWrap="nowrap"
+                                    gap="3rem"
+                                >
+                                    <Grid size={{ xs: 12, lg: 4 }}>
+                                        <Heading2 weight="thin" decorated sx={{ mb: '24px' }}>
+                                            <PreviewSwitch
+                                                hasValue={!!resolvedSubscribeHeading}
+                                                value={resolvedSubscribeHeading}
+                                                previewFallback={<TextPlaceholder text="Subscribe Section" />}
+                                                fallback="Subscribe Section"
                                             />
-                                        }
-                                        previewFallback={previewSubscribeSummary}
-                                        fallback={null}
-                                    >
-                                        {(content) => content}
-                                    </PreviewRender>
-                                </Grid>
-
-                                <Grid size={{ xs: 12, lg: 7.5 }}>
-                                    <Paper
-                                        elevation={0}
-                                        sx={{
-                                            p: { xs: '24px 16px', md: '32px 24px' },
-                                            borderRadius: '16px',
-                                            backgroundColor: 'gray.10',
-                                        }}
-                                    >
-                                        <BodyText bold color="text.secondary" mb="12px">
-                                            Your Privacy
-                                        </BodyText>
+                                        </Heading2>
 
                                         <PreviewRender
-                                            hasValue={hasConsentMessage}
+                                            hasValue={hasSubscribeDescription}
                                             value={
                                                 <RichTextArea
                                                     toolbarHidden
                                                     readOnly
-                                                    editorState={consentMessageEditorState}
+                                                    editorState={subscribeDescriptionEditorState}
                                                 />
                                             }
-                                            previewFallback={
-                                                <BodyText>
-                                                    <TextPlaceholder text={defaultConsentMessage} />
-                                                </BodyText>
-                                            }
-                                            fallback={<BodyText>{defaultConsentMessage}</BodyText>}
+                                            previewFallback={previewSubscribeSummary}
+                                            fallback={null}
                                         >
-                                            {(content) => <Box sx={{ mb: '24px' }}>{content}</Box>}
+                                            {(content) => content}
                                         </PreviewRender>
+                                    </Grid>
 
-                                        <Box sx={{ mb: '20px' }}>
-                                            <FormControlLabel
-                                                control={
-                                                    <Checkbox
-                                                        checked={hasConsent}
-                                                        onChange={(_event, checked) => setHasConsent(checked)}
-                                                        disabled={isPreviewMode || isSaving}
-                                                    />
-                                                }
-                                                label={
-                                                    <BodyText bold size="small" color="text.secondary">
-                                                        I agree to the terms and conditions above.
-                                                    </BodyText>
-                                                }
-                                            />
-                                        </Box>
-
-                                        <BodyText sx={{ mb: '8px' }}>Email</BodyText>
-                                        <Box
+                                    <Grid size={{ xs: 12, lg: 8 }}>
+                                        <Paper
+                                            elevation={0}
                                             sx={{
-                                                display: 'flex',
-                                                flexDirection: { xs: 'column', sm: 'row' },
-                                                gap: '12px',
-                                                alignItems: { xs: 'stretch', sm: 'center' },
+                                                p: { xs: '24px 16px', md: '32px 24px' },
+                                                borderRadius: '16px',
+                                                backgroundColor: 'gray.10',
                                             }}
                                         >
-                                            <CustomTextField
-                                                label=" "
-                                                value={email}
-                                                onChange={(event) => setEmail(event.target.value)}
-                                                slotProps={{ inputLabel: { shrink: false } }}
-                                                fullWidth
-                                                disabled={isPreviewMode || isSaving}
-                                                sx={{
-                                                    '& .MuiOutlinedInput-root': {
-                                                        borderRadius: '8px',
-                                                    },
-                                                }}
-                                            />
-                                            <Button
-                                                type="button"
-                                                variant="primary"
-                                                size="small"
-                                                sx={{ minWidth: '96px', height: '44px' }}
-                                                disabled={isPreviewMode || isSaving}
-                                                onClick={() => handleSubscribe(resolvedEngagement)}
+                                            <BodyText bold color="text.secondary" mb="12px">
+                                                Your Privacy
+                                            </BodyText>
+
+                                            <PreviewRender
+                                                hasValue={hasConsentMessage}
+                                                value={
+                                                    <RichTextArea
+                                                        toolbarHidden
+                                                        readOnly
+                                                        editorState={consentMessageEditorState}
+                                                    />
+                                                }
+                                                previewFallback={
+                                                    <BodyText>
+                                                        <TextPlaceholder text={defaultConsentMessage} />
+                                                    </BodyText>
+                                                }
+                                                fallback={<BodyText>{defaultConsentMessage}</BodyText>}
                                             >
-                                                {isSaving ? 'Sending...' : 'Subscribe'}
-                                            </Button>
-                                        </Box>
-                                    </Paper>
+                                                {(content) => <Box sx={{ mb: '24px' }}>{content}</Box>}
+                                            </PreviewRender>
+
+                                            <Box sx={{ mb: '20px' }}>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            checked={hasConsent}
+                                                            onChange={(_event, checked) => setHasConsent(checked)}
+                                                            disabled={isPreviewMode || isSaving}
+                                                        />
+                                                    }
+                                                    label={
+                                                        <BodyText bold size="small" color="text.secondary">
+                                                            I agree to the terms and conditions above.
+                                                        </BodyText>
+                                                    }
+                                                />
+                                            </Box>
+
+                                            <BodyText sx={{ mb: '8px' }}>Email</BodyText>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: { xs: 'column', sm: 'row' },
+                                                    gap: '12px',
+                                                    alignItems: { xs: 'stretch', sm: 'center' },
+                                                }}
+                                            >
+                                                <CustomTextField
+                                                    label=" "
+                                                    value={email}
+                                                    onChange={(event) => setEmail(event.target.value)}
+                                                    slotProps={{ inputLabel: { shrink: false } }}
+                                                    fullWidth
+                                                    disabled={isPreviewMode || isSaving}
+                                                    sx={{
+                                                        '& .MuiOutlinedInput-root': {
+                                                            borderRadius: '8px',
+                                                        },
+                                                    }}
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    variant="primary"
+                                                    size="small"
+                                                    sx={{ minWidth: '96px', height: '44px' }}
+                                                    disabled={isPreviewMode || isSaving}
+                                                    onClick={() => handleSubscribe(resolvedEngagement)}
+                                                >
+                                                    {isSaving ? 'Sending...' : 'Subscribe'}
+                                                </Button>
+                                            </Box>
+                                        </Paper>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </section>

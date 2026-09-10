@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { SubmissionStatus } from 'constants/engagementStatus';
 import { getSubmissionStatusFromPreviewState } from 'components/common/Indicators';
 import { WidgetLocation } from 'models/widget';
-import { BaseTheme, DarkTheme } from 'styles/Theme';
+import { BaseTheme, DarkTheme, Layout } from 'styles/Theme';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/pro-regular-svg-icons';
 import { Switch, Case } from 'react-if';
@@ -24,16 +24,6 @@ import { AppConfig } from 'config';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { resolveTranslationValue } from './engagementTranslationResolution';
-
-const gridContainerStyles = {
-    bgcolor: 'blue.90',
-    borderRadius: '0px 24px 0px 0px' /* upper right corner */,
-    padding: {
-        xs: '3em 16px',
-        md: '4em 5vw',
-        lg: '4.5em 10em',
-    },
-};
 
 const EngagementSurveyContent = ({}) => {
     const isLoggedIn = useAppSelector((state) => state.user.authentication.authenticated);
@@ -93,7 +83,17 @@ const EngagementSurveyContent = ({}) => {
         return null;
 
     return (
-        <Grid container size={12} spacing={4} justifyContent="space-between" sx={gridContainerStyles}>
+        <Grid
+            container
+            columnGap="5.5rem"
+            flexWrap="nowrap"
+            direction={{ xs: 'column', md: 'row' }}
+            width={Layout.width.default}
+            maxWidth="100%"
+            margin="0 auto"
+            borderRadius="0 1.5rem 0 0"
+            p={{ xs: '3em 0 4.5em', lg: '4.5em 0' }}
+        >
             <Grid
                 container
                 size={{ xs: 12, md: 6 }}
@@ -101,7 +101,7 @@ const EngagementSurveyContent = ({}) => {
                 minHeight="60px"
                 display={shouldDisplayFeedbackColumn ? 'flex' : 'none'}
             >
-                <Box>
+                <Grid container>
                     <PreviewSwitch
                         hasValue={Boolean(feedbackHeading?.trim())}
                         value={
@@ -197,7 +197,7 @@ const EngagementSurveyContent = ({}) => {
                             </Box>
                         }
                     />
-                </Box>
+                </Grid>
             </Grid>
             <Grid
                 container
@@ -223,20 +223,43 @@ export const EngagementSurveyBlock = () => {
             <ThemeProvider theme={DarkTheme}>
                 <Suspense
                     fallback={
-                        <Grid container size={12} spacing={4} justifyContent="space-between" sx={gridContainerStyles}>
+                        <Grid
+                            container
+                            size={12}
+                            spacing={4}
+                            justifyContent="space-between"
+                            sx={{
+                                width: Layout.width.default,
+                                maxWidth: '100%',
+                                borderTopRightRadius: '1.5rem',
+                                padding: {
+                                    xs: '3em 1em',
+                                    md: '4.5em 10em',
+                                },
+                            }}
+                        >
                             <Grid container direction="column" size={{ xs: 12, md: 6 }} minHeight="60px" rowGap={1.5}>
                                 <Skeleton variant="text" sx={{ width: '60%', fontSize: '2rem' }} />
                                 <Skeleton variant="text" sx={{ width: '95%', fontSize: '1rem' }} />
                                 <Skeleton variant="text" sx={{ width: '90%', fontSize: '1rem' }} />
                                 <Skeleton variant="rounded" sx={{ mt: 2, width: '240px', height: '48px' }} />
                             </Grid>
-                            <Grid size={{ xs: 12, md: 6 }} minHeight="60px">
+                            <Grid size={{ xs: 12, md: 6 }} minHeight="3.75rem" sx={{ bgcolor: 'blue.90' }}>
                                 <Skeleton variant="rounded" sx={{ width: '100%', height: '360px' }} />
                             </Grid>
                         </Grid>
                     }
                 >
-                    <EngagementSurveyContent />
+                    <Grid
+                        container
+                        mt="-2rem"
+                        size={12}
+                        px={Layout.padding.default}
+                        borderRadius="0 1.5rem 0 0"
+                        sx={{ bgcolor: 'blue.90' }}
+                    >
+                        <EngagementSurveyContent />
+                    </Grid>
                 </Suspense>
             </ThemeProvider>
         </section>

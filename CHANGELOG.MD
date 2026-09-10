@@ -1,3 +1,7 @@
+## September 10, 2026
+
+- **Feature** Implemented new layout system in all engagement components, including description, details tabs, hero, subscribe, survey, and suggested engagements. The preview control bar, internal header, and public header were also updated to match. [🎟️ DEP-329](https://citz-gdx.atlassian.net/browse/DEP-329)
+
 ## September 4, 2026
 
 - **Feature** Added engagement file management tab skeleton [🎟️ DEP-355](https://citz-gdx.atlassian.net/browse/DEP-355)

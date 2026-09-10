@@ -182,7 +182,7 @@ const EventsWidget = ({ widget }: EventsWidgetProps) => {
                         </Heading2>
                         <BodyText m="1rem 0 1.5rem;">{localizedEventItem.description}</BodyText>
                         <ThemeProvider key={event.id} theme={BaseTheme}>
-                            <Paper elevation={1} sx={{ minHeight: '12em', p: '2em', mb: '2.5rem' }}>
+                            <Paper elevation={1} sx={{ minHeight: '12em', p: '2em' }}>
                                 <Grid
                                     container
                                     columnSpacing={1}

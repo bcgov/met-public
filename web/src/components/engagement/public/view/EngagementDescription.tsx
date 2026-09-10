@@ -8,7 +8,7 @@ import { getEditorStateFromRaw } from 'components/common/RichTextEditor/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeftLong } from '@fortawesome/pro-light-svg-icons';
 import { WidgetLocation } from 'models/widget';
-import { DarkTheme } from 'styles/Theme';
+import { DarkTheme, Layout } from 'styles/Theme';
 import { RichTextArea } from 'components/common/Input/RichTextArea';
 import { EngagementViewSections } from '.';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
@@ -35,29 +35,37 @@ export const EngagementDescription = () => {
             <ThemeProvider theme={DarkTheme}>
                 <Grid
                     container
-                    size={12}
+                    gap={0}
                     justifyContent="space-between"
+                    size={12}
+                    color="text.primary"
                     rowSpacing={3}
                     columnSpacing={11}
-                    margin={0}
-                    sx={{
-                        background: colors.surface.blue[90],
-                        color: 'text.primary',
-                        borderRadius: '0px 1.5rem 0px 0px' /* upper right corner */,
-                        padding: { xs: '2rem 2rem 4rem 2rem', md: '2rem 5vw 4rem 5vw', lg: '2rem 10rem 4rem 10rem' },
-                        marginTop: '-56px',
-                        zIndex: 10,
-                        position: 'relative',
-                        flexDirection: { xs: 'column', md: 'row' },
-                    }}
+                    borderRadius="0 1.5rem 0 0"
+                    margin="-2rem 0 0" // For right border radius overlap effect
+                    p={`2rem ${Layout.padding.default}`}
+                    pb={{ xs: '4.5rem', md: '6.5rem' }}
+                    direction={{ xs: 'column', md: 'row' }}
+                    sx={{ background: colors.surface.blue[90] }}
                 >
-                    <Grid size={12}>
+                    <Grid
+                        container
+                        rowGap={0}
+                        alignItems="center"
+                        maxWidth="100%"
+                        width={Layout.width.default}
+                        margin="0 auto"
+                    >
                         <Grid
                             container
+                            gap={0}
                             component={RouterLinkRenderer}
                             href={getPath(ROUTES.PUBLIC_LANDING)}
-                            alignItems="center"
-                            display="flex"
+                            sx={{
+                                textDecoration: 'none !important',
+                                '&:hover': { textDecoration: 'underline !important' },
+                            }}
+                            mb="3rem"
                         >
                             <FontAwesomeIcon
                                 icon={faArrowLeftLong}
@@ -69,59 +77,66 @@ export const EngagementDescription = () => {
                                 All engagements
                             </BodyText>
                         </Grid>
-                    </Grid>
-                    <Suspense fallback={<Skeleton variant="rectangular" height="288px" width="100%" />}>
-                        <Await resolve={descriptionInfo}>
-                            {([engagement, resolvedTranslationBundle]: [Engagement, TranslationBundle]) => {
-                                const resolvedSummaryTitle = resolveTranslationValue<string>({
-                                    translatedValue: resolvedTranslationBundle.currentTranslation?.description_title,
-                                    defaultValue: resolvedTranslationBundle.defaultTranslation?.description_title,
-                                    baseValue: engagement.description_title,
-                                }).value;
+                        <Grid container direction="row" columnGap="5.5rem" rowGap={0} size={12}>
+                            <Suspense fallback={<Skeleton variant="rectangular" height="20rem" width="45%" />}>
+                                <Await resolve={descriptionInfo}>
+                                    {([engagement, resolvedTranslationBundle]: [Engagement, TranslationBundle]) => {
+                                        const resolvedSummaryTitle = resolveTranslationValue<string>({
+                                            translatedValue:
+                                                resolvedTranslationBundle.currentTranslation?.description_title,
+                                            defaultValue:
+                                                resolvedTranslationBundle.defaultTranslation?.description_title,
+                                            baseValue: engagement.description_title,
+                                        }).value;
 
-                                const resolvedSummaryBody = resolveTranslationValue<string>({
-                                    translatedValue: resolvedTranslationBundle.currentTranslation?.rich_description,
-                                    defaultValue: resolvedTranslationBundle.defaultTranslation?.rich_description,
-                                    baseValue: engagement.rich_description,
-                                }).value;
+                                        const resolvedSummaryBody = resolveTranslationValue<string>({
+                                            translatedValue:
+                                                resolvedTranslationBundle.currentTranslation?.rich_description,
+                                            defaultValue:
+                                                resolvedTranslationBundle.defaultTranslation?.rich_description,
+                                            baseValue: engagement.rich_description,
+                                        }).value;
 
-                                const summaryEditorState = getEditorStateFromRaw(resolvedSummaryBody || '');
-                                const hasSummaryBody = summaryEditorState?.getCurrentContent()?.hasText?.() ?? false;
+                                        const summaryEditorState = getEditorStateFromRaw(resolvedSummaryBody || '');
+                                        const hasSummaryBody =
+                                            summaryEditorState?.getCurrentContent()?.hasText?.() ?? false;
 
-                                return (
-                                    <>
-                                        <Grid size={12}>
-                                            <Heading2 decorated id="description-header" sx={{ mb: 1 }}>
-                                                <PreviewSwitch
-                                                    isPreviewMode={isPreviewMode}
-                                                    hasValue={Boolean(resolvedSummaryTitle?.trim())}
-                                                    value={resolvedSummaryTitle}
-                                                    fallback={'Summary'}
-                                                    previewFallback={<TextPlaceholder text="Summary Section" />}
-                                                />
-                                            </Heading2>
-                                        </Grid>
-                                        <Grid size={{ xs: 12, md: 6 }} direction="column" minHeight="60px">
-                                            <PreviewSwitch
-                                                isPreviewMode={isPreviewMode}
-                                                hasValue={hasSummaryBody}
-                                                value={
-                                                    <RichTextArea
-                                                        toolbarHidden
-                                                        readOnly
-                                                        editorState={summaryEditorState}
+                                        return (
+                                            <>
+                                                <Grid size={12}>
+                                                    <Heading2 decorated id="description-header" sx={{ mb: 1 }}>
+                                                        <PreviewSwitch
+                                                            isPreviewMode={isPreviewMode}
+                                                            hasValue={Boolean(resolvedSummaryTitle?.trim())}
+                                                            value={resolvedSummaryTitle}
+                                                            fallback={'Summary'}
+                                                            previewFallback={<TextPlaceholder text="Summary Section" />}
+                                                        />
+                                                    </Heading2>
+                                                </Grid>
+                                                <Grid size={{ xs: 12, md: 6 }} direction="column" minHeight="60px">
+                                                    <PreviewSwitch
+                                                        isPreviewMode={isPreviewMode}
+                                                        hasValue={hasSummaryBody}
+                                                        value={
+                                                            <RichTextArea
+                                                                toolbarHidden
+                                                                readOnly
+                                                                editorState={summaryEditorState}
+                                                            />
+                                                        }
+                                                        previewFallback={<TextPlaceholder type="long" />}
                                                     />
-                                                }
-                                                previewFallback={<TextPlaceholder type="long" />}
-                                            />
-                                        </Grid>
-                                    </>
-                                );
-                            }}
-                        </Await>
-                    </Suspense>
-                    <Grid container size={{ xs: 12, md: 6 }} justifyContent="flex-end" alignItems="flex-start">
-                        <EngagementWidgetDisplay location={WidgetLocation.Summary} />
+                                                </Grid>
+                                            </>
+                                        );
+                                    }}
+                                </Await>
+                            </Suspense>
+                            <Grid container size={{ xs: 12, md: 6 }} justifyContent="flex-end" alignItems="flex-start">
+                                <EngagementWidgetDisplay location={WidgetLocation.Summary} />
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </ThemeProvider>
