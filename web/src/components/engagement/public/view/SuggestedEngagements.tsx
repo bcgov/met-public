@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Box, Grid2 as Grid, Skeleton } from '@mui/material';
+import { Grid2 as Grid, Skeleton } from '@mui/material';
 import { TileSkeleton } from 'components/landing/EngagementSearch/TileSkeleton';
 import EngagementTile from 'components/landing/EngagementSearch/EngagementTile';
 import { Heading2 } from 'components/common/Typography';
@@ -17,6 +17,7 @@ import { EngagementPreviewTag } from './EngagementPreviewTag';
 import { getPath, ROUTES } from 'routes/routes';
 import { TranslationBundle, resolveTranslationValue } from './engagementTranslationResolution';
 import { useEngagementLoaderData } from 'engagements/preview/PreviewLoaderDataContext';
+import { Layout } from 'styles/Theme';
 
 export const SuggestedEngagements = () => {
     const { suggestions, engagement, translationBundle } = useEngagementLoaderData();
@@ -38,21 +39,21 @@ export const SuggestedEngagements = () => {
         // Outer boundary: resolves suggestions to decide whether to render the section at all
         <Suspense
             fallback={
-                <Box
-                    sx={{
-                        padding: {
-                            xs: '64px 16px 24px 16px',
-                            md: '64px 5vw 40px 5vw',
-                            lg: '64px 10em 40px 10em',
-                        },
-                    }}
+                <Grid
+                    container
+                    size={12}
+                    pt={{ xs: '3rem', md: '4rem' }}
+                    pb={{ xs: '24px', md: '40px' }}
+                    px={Layout.padding.default}
                 >
                     <Skeleton variant="text" width="40%" sx={{ mb: '42px', fontSize: '2rem' }} />
                     <Grid
                         container
+                        direction={{ xs: 'column', md: 'row' }}
+                        width={Layout.width.default}
+                        maxWidth="100%"
+                        margin="0 auto"
                         justifyContent="space-between"
-                        alignItems="center"
-                        size={12}
                         columnSpacing={2}
                         wrap="nowrap"
                         overflow="auto"
@@ -70,7 +71,7 @@ export const SuggestedEngagements = () => {
                             </Grid>
                         ))}
                     </Grid>
-                </Box>
+                </Grid>
             }
         >
             <Await resolve={suggestions}>
@@ -82,87 +83,91 @@ export const SuggestedEngagements = () => {
                             style={{ position: 'relative' }}
                         >
                             <EngagementPreviewTag>Suggested Engagements Section</EngagementPreviewTag>
-                            <Box
-                                sx={{
-                                    padding: {
-                                        xs: '64px 16px 24px 16px',
-                                        md: '64px 5vw 40px 5vw',
-                                        lg: '64px 10em 40px 10em',
-                                    },
-                                }}
+                            <Grid
+                                container
+                                size={12}
+                                pt={{ xs: '3rem', md: '4rem' }}
+                                pb={{ xs: '24px', md: '40px' }}
+                                px={Layout.padding.default}
                             >
-                                {/* Inner boundary: resolves engagement only for the heading text */}
-                                <Suspense
-                                    fallback={
-                                        <Skeleton variant="text" width="40%" sx={{ mb: '42px', fontSize: '2rem' }} />
-                                    }
-                                >
-                                    <Await resolve={Promise.all([engagement, translationBundle])}>
-                                        {([eng, resolvedTranslationBundle]: [Engagement, TranslationBundle]) =>
-                                            (() => {
-                                                const resolvedHeading = resolveTranslationValue<string>({
-                                                    translatedValue:
-                                                        resolvedTranslationBundle.currentTranslation
-                                                            ?.more_engagements_heading,
-                                                    defaultValue:
-                                                        resolvedTranslationBundle.defaultTranslation
-                                                            ?.more_engagements_heading,
-                                                    baseValue: eng?.more_engagements_heading,
-                                                    literalFallback: 'You may also be interested in',
-                                                }).value;
-
-                                                return (
-                                                    <Heading2 weight="thin" sx={{ mb: '42px' }} decorated>
-                                                        {resolvedHeading}
-                                                    </Heading2>
-                                                );
-                                            })()
+                                <Grid container width={Layout.width.default} maxWidth="100%" margin="0 auto">
+                                    <Suspense
+                                        fallback={
+                                            <Skeleton
+                                                variant="text"
+                                                width="40%"
+                                                sx={{ mb: '42px', fontSize: '2rem' }}
+                                            />
                                         }
-                                    </Await>
-                                </Suspense>
-                                <Grid
-                                    container
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    size={12}
-                                    columnSpacing={2}
-                                    wrap="nowrap"
-                                    overflow="auto"
-                                    p={2}
-                                    m={-2}
-                                >
-                                    {engagementSlots.map((_, i) => {
-                                        const sug = sugs.find((s) => s.sort_index === i + 1);
-                                        return previewValue<React.ReactNode>({
-                                            isPreviewMode: isPreviewMode,
-                                            hasValue: Boolean(sug),
-                                            value: sug ? (
-                                                <Grid size="auto" key={`suggestion-${sug.suggested_engagement_id}`}>
-                                                    <EngagementTile
-                                                        passedEngagement={sug.engagement as Engagement}
-                                                        engagementId={sug.suggested_engagement_id}
-                                                    />
-                                                </Grid>
-                                            ) : null,
-                                            previewFallback: (
-                                                <Grid
-                                                    key={`placeholder-${i + 1}`}
-                                                    size="auto"
-                                                    container
-                                                    width="320px"
-                                                    sx={placeholderStyles}
-                                                >
-                                                    <p
-                                                        aria-label="There is no engagement loaded in this slot."
-                                                        style={{ fontSize: '1.25rem' }}
+                                    >
+                                        <Await resolve={Promise.all([engagement, translationBundle])}>
+                                            {([eng, resolvedTranslationBundle]: [Engagement, TranslationBundle]) =>
+                                                (() => {
+                                                    const resolvedHeading = resolveTranslationValue<string>({
+                                                        translatedValue:
+                                                            resolvedTranslationBundle.currentTranslation
+                                                                ?.more_engagements_heading,
+                                                        defaultValue:
+                                                            resolvedTranslationBundle.defaultTranslation
+                                                                ?.more_engagements_heading,
+                                                        baseValue: eng?.more_engagements_heading,
+                                                        literalFallback: 'You may also be interested in',
+                                                    }).value;
+
+                                                    return (
+                                                        <Heading2 weight="thin" sx={{ mb: '42px' }} decorated>
+                                                            {resolvedHeading}
+                                                        </Heading2>
+                                                    );
+                                                })()
+                                            }
+                                        </Await>
+                                    </Suspense>
+                                    <Grid
+                                        container
+                                        size={12}
+                                        maxWidth="100%"
+                                        margin="0 auto"
+                                        wrap="nowrap"
+                                        overflow="auto"
+                                        columnSpacing={2}
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                        p="2px"
+                                    >
+                                        {engagementSlots.map((_, i) => {
+                                            const sug = sugs.find((s) => s.sort_index === i + 1);
+                                            return previewValue<React.ReactNode>({
+                                                isPreviewMode: isPreviewMode,
+                                                hasValue: Boolean(sug),
+                                                value: sug ? (
+                                                    <Grid size="auto" key={`suggestion-${sug.suggested_engagement_id}`}>
+                                                        <EngagementTile
+                                                            passedEngagement={sug.engagement as Engagement}
+                                                            engagementId={sug.suggested_engagement_id}
+                                                        />
+                                                    </Grid>
+                                                ) : null,
+                                                previewFallback: (
+                                                    <Grid
+                                                        key={`placeholder-${i + 1}`}
+                                                        size="auto"
+                                                        container
+                                                        width="320px"
+                                                        sx={placeholderStyles}
                                                     >
-                                                        Engagement Card
-                                                    </p>
-                                                </Grid>
-                                            ),
-                                            fallback: null,
-                                        });
-                                    })}
+                                                        <p
+                                                            aria-label="There is no engagement loaded in this slot."
+                                                            style={{ fontSize: '1.25rem' }}
+                                                        >
+                                                            Engagement Card
+                                                        </p>
+                                                    </Grid>
+                                                ),
+                                                fallback: null,
+                                            });
+                                        })}
+                                    </Grid>
                                 </Grid>
                                 <Grid size={12} mt="64px" textAlign={'center'}>
                                     <Link to={getPath(ROUTES.HOME)} sx={{ color: 'text.primary' }}>
@@ -170,7 +175,7 @@ export const SuggestedEngagements = () => {
                                         All engagements
                                     </Link>
                                 </Grid>
-                            </Box>
+                            </Grid>
                         </section>
                     )
                 }

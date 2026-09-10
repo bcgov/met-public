@@ -134,6 +134,14 @@ jest.mock('components/engagement/widgets/WidgetSwitch', () => ({
     WidgetSwitch: () => null,
 }));
 
+jest.mock('components/auth/AuthKeycloakContext', () => {
+    return {
+        AuthKeyCloakContext: React.createContext({
+            isAuthenticated: false,
+        }),
+    };
+});
+
 const rawText = (text: string) => JSON.stringify(convertToRaw(ContentState.createFromText(text)));
 
 const createTranslationBundle = (): TranslationBundle => ({
@@ -169,6 +177,7 @@ const createEngagement = (overrides: Partial<Engagement> = {}): Engagement => ({
     sponsor_name: 'Environment',
     start_date: '2026-04-01 12:00:00',
     end_date: '2026-05-01 12:00:00',
+    banner_url: '/test-banner.jpg',
     submission_status: SubmissionStatus.Upcoming,
     feedback_heading: 'Provide feedback',
     feedback_body: rawText('Feedback section body'),

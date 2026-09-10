@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Box, Toolbar } from '@mui/material';
+import { AppBar, Box, Grid2 as Grid, Toolbar } from '@mui/material';
 import { colors, Layout, Palette } from 'styles/Theme';
 import { ReactComponent as BCLogo } from 'assets/images/BritishColumbiaLogoDark.svg';
 import { BodyText } from 'components/common/Typography';
@@ -27,47 +27,49 @@ const PublicHeader = () => {
             }}
             data-testid="simplified-header"
         >
-            <Toolbar
-                sx={{
-                    height: '4em',
-                    width: Layout.width.default,
-                    margin: '0 auto !important',
-                    padding: `0 ${Layout.padding.default} !important`,
-                    backgroundColor: Palette.internalHeader.backgroundColor,
-                }}
-            >
-                {/* BC Government Logo */}
-                <Link underline="none" sx={{ height: '100%', mr: '2px' }} to={getPath(ROUTES.PUBLIC_LANDING)}>
-                    <Box
-                        component={BCLogo}
-                        sx={{
-                            height: '100%',
-                            width: 'auto',
-                            padding: '0 0',
-                            ml: '-13px',
-                        }}
-                        alt="Government of British Columbia Logo"
-                    />
-                </Link>
-
-                {/* Divider */}
-                <Box
+            <Grid container sx={{ px: Layout.padding.default }}>
+                <Toolbar
                     sx={{
-                        borderLeft: `1px solid ${colors.surface.gray[80]}`,
-                        height: '1.5em',
-                        width: '1px',
-                        marginRight: '1em',
+                        height: '4em',
+                        width: Layout.width.default,
+                        margin: '0 auto !important',
+                        padding: `0 !important`,
+                        backgroundColor: Palette.internalHeader.backgroundColor,
                     }}
-                />
+                >
+                    {/* BC Government Logo */}
+                    <Link underline="none" sx={{ height: '100%', mr: '2px' }} to={getPath(ROUTES.PUBLIC_LANDING)}>
+                        <Box
+                            component={BCLogo}
+                            sx={{
+                                height: '100%',
+                                width: 'auto',
+                                padding: '0 0',
+                                ml: '-13px',
+                            }}
+                            alt="Government of British Columbia Logo"
+                        />
+                    </Link>
 
-                <Link to={getPath(ROUTES.PUBLIC_LANDING)} underline="none">
-                    {/* engageBC Branding */}
-                    <BodyText thin sx={{ color: colors.surface.blue[80], userSelect: 'none' }}>
-                        engage{/*no space*/}
-                        <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
-                    </BodyText>
-                </Link>
-            </Toolbar>
+                    {/* Divider */}
+                    <Box
+                        sx={{
+                            borderLeft: `1px solid ${colors.surface.gray[80]}`,
+                            height: '1.5em',
+                            width: '1px',
+                            marginRight: '1em',
+                        }}
+                    />
+
+                    <Link to={getPath(ROUTES.PUBLIC_LANDING)} underline="none">
+                        {/* engageBC Branding */}
+                        <BodyText thin sx={{ color: colors.surface.blue[80], userSelect: 'none' }}>
+                            engage{/*no space*/}
+                            <span style={{ color: colors.surface.blue[90], fontWeight: 'normal' }}>BC</span>
+                        </BodyText>
+                    </Link>
+                </Toolbar>
+            </Grid>
             <EnvironmentBanner />
         </AppBar>
     );

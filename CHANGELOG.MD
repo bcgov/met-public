@@ -1,3 +1,7 @@
+## September 10, 2026
+
+- **Feature** Implemented new layout system in all engagement components, including description, details tabs, hero, subscribe, survey, and suggested engagements. The preview control bar, internal header, and public header were also updated to match. [🎟️ DEP-329](https://citz-gdx.atlassian.net/browse/DEP-329)
+
 ## August 28, 2026
 
 - **Bugfix** Fixed tab label input for details tabs in authoring section of admin. [🎟️ DEP-333](https://citz-gdx.atlassian.net/browse/DEP-333)

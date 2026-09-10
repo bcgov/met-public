@@ -16,6 +16,7 @@ import { previewValue, PreviewSwitch } from 'engagements/preview/PreviewSwitch';
 import { usePreview } from 'components/engagement/preview/PreviewContext';
 import { resolveDetailsTabs } from './engagementTranslationResolution';
 import { EditorState } from 'draft-js';
+import { Layout } from 'styles/Theme';
 
 interface PublicDetailsTab {
     id: number;
@@ -94,105 +95,120 @@ export const EngagementDetailsTabs = () => {
             style={{ position: 'relative' }}
         >
             <EngagementPreviewTag required>Details Section</EngagementPreviewTag>
-            <Grid
-                container
-                p={{ xs: '0 16px 24px 16px', md: '0 5vw 40px 5vw', lg: '0 10em 40px 10em' }}
-                position="relative"
-                zIndex={10}
-            >
-                {displayTabs.length > 0 && (
-                    <TabContext value={selectedTab}>
-                        <TabList
-                            onChange={(_, value) => setSelectedTab(value)}
-                            orientation="horizontal"
-                            variant="scrollable"
-                            scrollButtons="auto"
-                            selectionFollowsFocus
-                            sx={{
-                                mt: '-1.875rem',
-                                mb: '1rem',
-                                bgcolor: 'white',
-                                '& .MuiTabs-indicator': { height: '0.375rem' },
-                                borderRadius: '0 1.5rem 0 0',
-                            }}
-                        >
-                            {displayTabs.map((tab, key) => (
-                                <Tab
-                                    sx={{
-                                        minWidth: '8.5rem',
-                                        margin: '0.25rem 2rem',
-                                        color: colors.type.regular.primary,
-                                        background: 'transparent',
-                                        fontSize: '14px',
-                                        fontWeight: 'normal',
-                                        '&.Mui-selected': {
-                                            fontWeight: 'bold',
-                                            '& .tab-label': {
-                                                visibility: 'hidden',
-                                            },
-                                            '::before': {
-                                                content: `"${tab.label}"`,
-                                                position: 'absolute',
-                                            },
-                                        },
-                                    }}
-                                    key={tab.id}
-                                    label={
-                                        <BodyText size="small" className="tab-label">
-                                            {tab.label || `Tab ${key + 1} Label`}
-                                        </BodyText>
-                                    }
-                                    aria-label={tab.label || `Tab ${key + 1} Label`}
-                                    value={String(key)}
-                                    disableRipple
-                                />
-                            ))}
-                        </TabList>
-                        {displayTabs.map((tab, key) => (
-                            <TabPanel
-                                key={tab.id}
-                                keepMounted
-                                value={String(key)}
-                                sx={{ padding: '1.5rem 0', width: '100%' }}
+            <Grid container pt={0} pb="6.5rem" px={Layout.padding.default} size={12}>
+                <Grid
+                    container
+                    direction={{ xs: 'column', md: 'row' }}
+                    margin="0 auto"
+                    width={Layout.width.default}
+                    maxWidth="100%"
+                >
+                    {displayTabs.length > 0 && (
+                        <TabContext value={selectedTab}>
+                            <TabList
+                                onChange={(_, value) => setSelectedTab(value)}
+                                orientation="horizontal"
+                                variant="scrollable"
+                                scrollButtons="auto"
+                                selectionFollowsFocus
+                                sx={{
+                                    mt: { xs: 0, md: '-1.875rem' },
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    mb: '2rem',
+                                    ml: `-${Layout.padding.default}`,
+                                    mr: { xs: `-${Layout.padding.default}`, md: 0 },
+                                    bgcolor: 'white',
+                                    '& .MuiTabs-indicator': { height: '0.375rem' },
+                                    borderTopRightRadius: { xs: 0, md: '1.5rem' },
+                                }}
                             >
-                                <Grid container size={12} gap="3rem">
-                                    <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-                                        <Heading2
-                                            decorated
-                                            weight="thin"
-                                            aria-label={tab.heading || `Tab ${key + 1} Heading`}
-                                        >
-                                            <PreviewSwitch
-                                                hasValue={Boolean(tab.heading?.trim())}
-                                                value={tab.heading}
-                                                previewFallback={<TextPlaceholder text={`Tab ${key + 1} Heading`} />}
-                                            />
-                                        </Heading2>
-                                        <PreviewSwitch
-                                            hasValue={hasBodyContent(tab)}
-                                            value={
-                                                <RichTextArea
-                                                    maxLines={isMobile ? 15 : 9} // Lines are short on mobile, show a few more.
-                                                    editorState={tab.body}
-                                                    readOnly={true}
-                                                    toolbarHidden
+                                {displayTabs.map((tab, key) => (
+                                    <Tab
+                                        sx={{
+                                            minWidth: '8.5rem',
+                                            margin: '0.25rem 2rem',
+                                            color: colors.type.regular.primary,
+                                            background: 'transparent',
+                                            fontSize: '14px',
+                                            fontWeight: 'normal',
+                                            '&.Mui-selected': {
+                                                fontWeight: 'bold',
+                                                '& .tab-label': {
+                                                    visibility: 'hidden',
+                                                },
+                                                '::before': {
+                                                    content: `"${tab.label}"`,
+                                                    position: 'absolute',
+                                                },
+                                            },
+                                        }}
+                                        key={tab.id}
+                                        label={
+                                            <BodyText size="small" className="tab-label">
+                                                {tab.label || `Tab ${key + 1} Label`}
+                                            </BodyText>
+                                        }
+                                        aria-label={tab.label || `Tab ${key + 1} Label`}
+                                        value={String(key)}
+                                        disableRipple
+                                    />
+                                ))}
+                            </TabList>
+                            {displayTabs.map((tab, key) => (
+                                <TabPanel
+                                    key={tab.id}
+                                    keepMounted
+                                    value={String(key)}
+                                    sx={{ padding: 0, width: '100%' }}
+                                >
+                                    <Grid
+                                        direction={{ xs: 'column', md: 'row' }}
+                                        container
+                                        size={12}
+                                        columnGap="3rem"
+                                        rowGap="1rem"
+                                    >
+                                        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+                                            <Heading2
+                                                decorated
+                                                weight="thin"
+                                                aria-label={tab.heading || `Tab ${key + 1} Heading`}
+                                            >
+                                                <PreviewSwitch
+                                                    hasValue={Boolean(tab.heading?.trim())}
+                                                    value={tab.heading}
+                                                    previewFallback={
+                                                        <TextPlaceholder text={`Tab ${key + 1} Heading`} />
+                                                    }
                                                 />
-                                            }
-                                            previewFallback={<TextPlaceholder type="long" />}
-                                        />
+                                            </Heading2>
+                                            <PreviewSwitch
+                                                hasValue={hasBodyContent(tab)}
+                                                value={
+                                                    <RichTextArea
+                                                        maxLines={isMobile ? 15 : 9} // Lines are short on mobile, show a few more.
+                                                        editorState={tab.body}
+                                                        readOnly={true}
+                                                        toolbarHidden
+                                                    />
+                                                }
+                                                previewFallback={<TextPlaceholder type="long" />}
+                                            />
+                                        </Grid>
+                                        <Grid container size="grow">
+                                            <EngagementWidgetDisplay
+                                                location={WidgetLocation.Details}
+                                                detailsTabId={tab.id > 0 ? tab.id : undefined}
+                                                tabIndex={key + 1}
+                                            />
+                                        </Grid>
                                     </Grid>
-                                    <Grid container size="grow">
-                                        <EngagementWidgetDisplay
-                                            location={WidgetLocation.Details}
-                                            detailsTabId={tab.id > 0 ? tab.id : undefined}
-                                            tabIndex={key + 1}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </TabPanel>
-                        ))}
-                    </TabContext>
-                )}
+                                </TabPanel>
+                            ))}
+                        </TabContext>
+                    )}
+                </Grid>
             </Grid>
         </section>
     );
