@@ -24,7 +24,7 @@ import { Button } from 'components/common/Input';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { bytesToSize } from 'helper';
 import { BodyText, Heading2 } from 'components/common/Typography';
-import { getFileIcon } from 'engagements/widgets/DocumentWidget';
+import { getFileIcon } from 'helper/getFileIcon';
 
 interface FileRow {
     id: string;
