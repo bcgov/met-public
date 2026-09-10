@@ -174,6 +174,7 @@ const FilesTab = () => {
                     </TableHead>
                     <TableBody>
                         {fileRows.map((row) => {
+                            if (!row?.id) return null;
                             const handleSelect = () => {
                                 const selectedIndex = selectedItems.indexOf(row.id);
                                 let newSelected: readonly string[] = [];
