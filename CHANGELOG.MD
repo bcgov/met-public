@@ -2,6 +2,12 @@
 
 - **Feature** Implemented new layout system in all engagement components, including description, details tabs, hero, subscribe, survey, and suggested engagements. The preview control bar, internal header, and public header were also updated to match. [🎟️ DEP-329](https://citz-gdx.atlassian.net/browse/DEP-329)
 
+## September 4, 2026
+
+- **Feature** Added engagement file management tab skeleton [🎟️ DEP-355](https://citz-gdx.atlassian.net/browse/DEP-355)
+  - Added a new Files tab to the engagement management pages according to the Figma sketch.
+  - Added a table with dummy data to display the structure of the files tab.
+
 ## September 1, 2026
 
 - **Feature** Add ability to review individual survey submissions [🎟️ DEP-328](https://citz-gdx.atlassian.net/browse/DEP-328)
